@@ -245,3 +245,10 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   due after Mon 16 Nov 00:00 UTC.
 - **Version history:** the folder became a local git repository (no remote, nothing pushed); data, caches, models and
   live outputs are ignored.
+- **H40 Deribit options flow** (owner: "Yes. Test them"; free history.deribit.com trades, dev data only to the seal,
+  `research/out/options/study.md`): 6 inputs (put/call, taker and block flow, approximate 25-delta skew), 120 tests.
+  No input meets the bar: best registered-side 7-day partial IC +0.026 (ETH skew); the largest effect had the wrong sign
+  (BTC put/call -0.122, p 0.011, not significant; heavy put buying preceded better weeks, unregistered so not claimed).
+  Only next-day drawdown (size) tests survive Bonferroni. `engine15/sources/options_hist.py` is built, NOT wired.
+  Paid survey (`research/out/paid_data/survey.md`): liquidations via CryptoQuant $39-109/month (owner signs up; unverified
+  which tier has the hourly liquidation API), whale flows $109, order-book depth history has no cheap route to 2021.

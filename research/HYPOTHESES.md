@@ -1260,3 +1260,87 @@ wrong sign). Risk-off tail calls hit 40-54% (r7 < 0) vs base rates 46-50%, no be
 Binance positioning covers BTC from Sep 2020 and ETH from Dec 2021 only. A unit bug made the first run compute nothing;
 fixed and rerun once, disclosed in the study. Holdout not touched. Prior confirmed: nothing here supports an RL round 4
 built on these inputs.
+
+## H40. Deribit options flow (put/call and skew), each input tested ALONE for BTC and ETH risk information (registered 14 Nov 2026, 09:00 UTC, before any H40 history was downloaded, any Deribit history endpoint was probed or any H40 number was computed; EXPLORATION, not a loop round)
+
+**Prompted by:** the owner's "Yes. Test them" (14 Nov 2026) about new data sources, after the paid-data survey
+(`research/out/paid_data/survey.md`) found Deribit's public history API to be the only free source with enough options
+history (start date unverified there). Same question, method and bar as H39: does an input carry a risk-off signal for
+BTC or ETH that is INDEPENDENT of the trend features, at the IC of ~0.12-0.17 that RL loop S4 needs (round 3: an overlay
+information ratio of ~1.15 at 50-100 decisions a year)? The bar is not lowered for this hypothesis.
+
+**Status and scope.** Exploration only: NOT a round of `research/harness/LOOP.md` or `research/rl_loop/LOOP_RL.md`; no
+loop rule changed; it cannot produce a pass; nothing is added to either loop's variant count. If an input is later used
+in an RL round, that round registers it and discloses H40 as already seen. Data module `engine15/sources/options_hist.py`
+(docs `docs/SOURCES_options_hist.md`; NOT wired into the live engine, a test enforces it), study code
+`research/options_study.py`, results `research/out/options/` (`study.md`, `study.json`).
+
+**Data.** `history.deribit.com/api/v2/public/get_last_trades_by_currency_and_time`, `currency` BTC and ETH, `kind=option`,
+`sorting=asc`, `count=1000`, no key, no account; every inverse option trade (instrument `<COIN>-<DDMMMYY>-<strike>-<P|C>`;
+USDC-settled linear options are not under these currencies and are not used). Trades are aggregated as they arrive into
+one row per UTC hour per coin (raw pages are not kept), stored in `data/sources/options_<kind>_<asset>.csv` with
+`known_ms` = the end of the hour (trades are public when they print). Fetched only up to the seal (2025-11-11 00:00 UTC):
+no holdout trade is downloaded. Stop rule (fixed now): if the history API does not serve BTC option trades back to at
+least 2021-01-01, the test is not run and that is reported instead.
+Per trade: notional = amount (coins; one Deribit inverse option = one coin) x index_price (US$); taker side = `direction`;
+block trade = `block_trade_id` present; delta = Black-Scholes delta from the trade's `iv`, strike, time to expiry
+(expiry 08:00 UTC of the instrument's date) and the index price as the underlying (the forward is approximated by the
+index; zero rates); this delta is approximate (basis ignored), stated as a caveat.
+
+**Development data only.** Bars from `research/harness/core.load(asset, dev_only=True)` (before 2025-11-11); every
+options row known at or after 2025-11-11 00:00 UTC dropped before anything is computed (`options_hist.inputs(...,
+cutoff_ms=seal)`); forward windows must end before the seal. Decision times: each daily close (00:00 UTC), as H39.
+
+**The inputs (6, fixed now; one transform and one risk-off side each, same rule for BTC and ETH).** Windows end at the
+decision and use only hours that have ended by it.
+- O1 `pcr_7d`: ln(put notional / call notional), all option trades over the trailing 7 days. Risk-off: HIGH.
+- O2 `pcr_1d_z90`: ln(put notional / call notional) over the trailing 24 hours, z-score against the trailing 90 daily
+  values (30 to speak). Risk-off: HIGH.
+- O3 `taker_bear_7d`: taker bearish flow over 7 days = [(put taker-buy - put taker-sell) - (call taker-buy - call
+  taker-sell)] notional / total option notional. Risk-off: HIGH (takers buying puts / selling calls).
+- O4 `rr25`: approximate 25-delta skew = amount-weighted mean trade IV of puts with |delta| in [0.15, 0.35] minus that of
+  calls with delta in [0.15, 0.35], expiries 7-60 days away, over the trailing 72 hours, in vol points (needs >= 10
+  trades in each side). Risk-off: HIGH (puts dearer than calls).
+- O5 `rr25_chg7`: O4 minus O4 seven days earlier. Risk-off: HIGH (puts bid quickly).
+- O6 `block_bear_7d`: the O3 measure on block trades only, over 7 days, divided by total block notional over 7 days
+  (needs >= 5 block trades). Risk-off: HIGH (large-block put buying). Large-block flow before block trades were common
+  may be thin; reported with its span.
+The opposite (contrarian) reading of the put/call ratio is NOT given a second test; the sign of every IC is reported.
+Not tested here: DVOL (H39 X12), open interest (not in trade history).
+
+**Measures** (exactly H39's code and conventions: oriented s, risk IC = -Spearman(s, outcome), moving-block bootstrap,
+block max(10, 2h) days, 2,000 draws; forward return r_h and forward drawdown dd_h, h = 1, 7, 30 days, daily bars from the
+15m dev bars).
+- Risk IC with r_h and dd_h (6 tests per input per coin).
+- Incremental (partial) IC with r_h controlling for [1, m, D] (30-day momentum sign, 200-day downtrend rule), h = 1, 7,
+  30 (3 tests); added R^2.
+- Added for H40 (registered now, counted): partial IC with r_7 controlling for [1, m, D, DVOL z90] (H39 X12), to check
+  that a skew or put/call reading is not just volatility (1 test).
+- Risk-off calls (descriptive, not tested): s at or above its trailing 365-day 80th percentile (needs 180 days); hit
+  rate (r_h < 0) vs base rate, mean r_h and dd_h in calls vs rest, momentum's own risk-off calls for reference.
+- Halves: risk IC at 7 days in each half of the input's own span.
+- Multiple testing: 6 inputs x 2 coins x (6 + 3 + 1) = **120 tests**; Bonferroni at 0.05 / 120 = 4.17e-04; BH q reported;
+  the number of tests actually run is reported.
+
+**Bar (fixed now, the same as H39's; not lowered):** an input is worth proposing for a registered RL round only if, on
+BOTH coins, its partial risk IC at h = 7 days (controls m, D) is positive, Bonferroni-significant (p <= 0.05 / 120) and
+>= 0.12, AND its risk IC at 7 days has the same sign in both halves of its span. 0.12 is the low end of the 0.12-0.17 band
+S4 needs (~0.16 for IR 1.15 at 7 days). Meeting it proves no edge and is not a pass. Prior, stated now: the H39 inputs all
+fell short (best +0.075); options flow is likely to carry volatility (size) information like DVOL did, and nothing is
+expected to meet the bar.
+
+### H40 results (14 Nov 2026, ~13:15 UTC; development data to 2025-11-11; `research/out/options/study.md`)
+
+Exploration, not a loop verdict; no loop rule or count changed. Data: Deribit's public history API serves option trades
+from 2016-11-29 (BTC) and 2019-03-21 (ETH), so the stop rule (BTC back to 2021) did not trigger; stored 2019-01-01 (BTC)
+/ 2019-03-21 (ETH) to the seal, 20.9 million BTC and 14.8 million ETH trades folded into 60,144 / 58,248 gapless hourly
+rows (28 MB; no raw pages kept; no holdout trade fetched). 120 tests run (as registered), Bonferroni 4.17e-04.
+**No input meets the registered bar** (partial risk IC at 7 days >= 0.12, Bonferroni-significant, both coins, same sign
+in both halves). On the registered side the largest partial IC at 7 days is ETH 25-delta skew +0.026 (p 0.55); every BTC
+partial IC at 7 days is negative. The largest effect is the wrong way round: BTC 7-day put/call notional -0.122 (p 0.011,
+not Bonferroni-significant; -0.085, p 0.11, with DVOL controlled; ETH -0.039): heavy put trading was followed by better,
+not worse, BTC weeks. That contrarian reading was not registered and is not claimed. Two tests pass Bonferroni, both
+next-day drawdown tests of the 7-day put/call ratio (ETH +0.151, BTC +0.129): size-of-move information, as with DVOL in
+H39, not direction. Risk-off tail calls hit 36-48% (r7 < 0) against base rates of 46-48%, below momentum's own 49-51%.
+The skew level correlates -0.48 with the 30-day momentum sign. Holdout not touched. Prior confirmed: options flow from
+free Deribit trade history does not give the independent risk-off IC of ~0.12-0.17 that S4 needs.
