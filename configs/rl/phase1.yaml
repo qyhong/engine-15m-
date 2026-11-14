@@ -1,0 +1,62 @@
+# Mind 15 RL module, Phase 1: data, features, cost model, backtester, benchmarks, walk-forward.
+# Paper only. Every run copies this file (as resolved) into its run folder.
+
+seed: 20261111                    # master seed; the random agent uses seeds below
+
+data:
+  symbol: BTCUSDT                 # Binance USD-M perpetual
+  base_url: https://fapi.binance.com
+  interval_ms: 900000             # 15-minute bars, keyed by OPEN time (UTC)
+  start: "2019-09-01"             # the perpetual listed 2019-09-08; leading no-trade bars are dropped
+  dir: data/rl
+  page_limit: 1500                # klines per request (endpoint maximum)
+  pause_s: 0.25                   # polite pause between requests
+  timeout_s: 20
+  retries: 5
+  save_every_pages: 20            # resumable: progress is saved every N pages
+  funding_snap_s: 60              # settlement stamps arrive a few ms after the hour: snap if within 60 s
+  open_interest:
+    enabled_in_backtest: false    # LIVE ONLY: the free endpoint keeps ~30 days, so it is OFF in history
+    fetch: true                   # still fetched and stored each run, for the live phase
+    period: 15m
+
+features:
+  return_windows: [1, 4, 16, 96]
+  vol_windows: [16, 96, 672]      # 4 hours, 1 day, 1 week of 15m bars
+  momentum_windows: [16, 96, 672] # momentum = window return / (per-bar vol over the window * sqrt(window))
+  volume_z_window: 672
+  daily_closed: true              # last CLOSED UTC day's return, joined via engine15.data.htf_on_15
+
+costs:
+  fee_side: 0.0010                # owner's paper-book rule: 0.10% a side (taker)
+  fee_side_alt: 0.0005            # every report also shows Binance USDT-M taker, 0.05% a side
+  half_spread_bps: 0.5            # paid on every unit traded (BTC perp's real half-spread is far smaller)
+  slippage_coef: 0.10             # slippage per unit traded = coef * per-bar realised vol at the decision
+  slippage_vol_window: 96
+  funding: true                   # funding paid/received on the position held at each settlement
+  delay_bars: 1                   # decide at the close of bar t, fill at the open of bar t+1
+
+walkforward:
+  train_months: 12
+  test_months: 3
+  step_months: 3                  # roll forward by one test window
+  start: "2019-10-01"             # first train window starts here (after the listing month)
+  min_test_days: 30               # a final partial test window is kept if at least this long
+
+benchmarks:
+  # Rules stated before any result was seen (11 Nov 2026) and not changed afterwards.
+  buy_hold: {target: 1.0}
+  # momentum: FROZEN 11 Nov 2026 (Phase 2 task 1), before any RL agent result existed. Decide once a day at
+  # the close of the bar ending 00:00 UTC, fill at the next open; target = sign of the 30-day return,
+  # long/short (Phase 1's design was long/short). Replaces the Phase 1 rule {window: 96, every bar}, which
+  # traded ~1,800 times a year and was a straw man.
+  momentum: {lookback_days: 30, decide_at_utc: "00:00", sides: long_short}
+  random:
+    seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    hold_bars: 96                 # a new random target every 96 bars (once a UTC day, at 00:00)
+    choices: [-1.0, 0.0, 1.0]
+
+report:
+  out_dir: research/out/rl
+  runs_dir: research/out/rl/runs
+  start_equity: 10000.0

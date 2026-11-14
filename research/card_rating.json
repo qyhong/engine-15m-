@@ -1,0 +1,162 @@
+[
+ [
+  "Regime",
+  "regime MOMENTUM_DOWN",
+  44.9,
+  45.4,
+  4.6,
+  "against"
+ ],
+ [
+  "Momentum and stretch",
+  "stretch from the 1h average",
+  55.7,
+  53.3,
+  3.3,
+  "with"
+ ],
+ [
+  "Support and resistance",
+  "place in yesterday's range",
+  55.3,
+  52.9,
+  2.9,
+  "with"
+ ],
+ [
+  "Coinbase premium",
+  "cbp_z",
+  55.4,
+  52.7,
+  2.7,
+  "with"
+ ],
+ [
+  "Order flow (CVD)",
+  "4h order flow (CVD)",
+  52.6,
+  52.4,
+  2.4,
+  "with"
+ ],
+ [
+  "Timeframe strength",
+  "15m trend",
+  52.2,
+  52.3,
+  2.2,
+  "with"
+ ],
+ [
+  "Market breadth and ETH/BTC",
+  "brd_ethbtc_7d",
+  47.4,
+  47.8,
+  2.2,
+  "against"
+ ],
+ [
+  "Working strategies",
+  "StochRSI core zone",
+  48.1,
+  47.2,
+  1.9,
+  "against"
+ ],
+ [
+  "Stablecoin supply",
+  "stb_7d",
+  51.8,
+  51.7,
+  1.7,
+  "with"
+ ],
+ [
+  "Perp basis and premium",
+  "pb_level",
+  48.6,
+  49.0,
+  1.0,
+  "against"
+ ],
+ [
+  "Time and session",
+  "ck_dow_cos",
+  50.6,
+  51.6,
+  0.6,
+  "with"
+ ],
+ [
+  "News and economic events",
+  "US 10-year yield, 5-day change",
+  46.3,
+  49.6,
+  0.4,
+  "against"
+ ],
+ [
+  "Options: implied volatility and skew",
+  "op_dvol_rank",
+  51.8,
+  50.4,
+  0.4,
+  "with"
+ ],
+ [
+  "Funding and positioning",
+  "funding rate",
+  50.2,
+  50.2,
+  0.2,
+  "with"
+ ],
+ [
+  "Liquidity (order book)",
+  null,
+  null,
+  null,
+  0.0,
+  "no history yet"
+ ],
+ [
+  "Kronos forecast",
+  null,
+  null,
+  null,
+  0.0,
+  "no history yet"
+ ],
+ [
+  "Long/short positioning",
+  "ls_global",
+  null,
+  null,
+  0.0,
+  "too little history"
+ ],
+ [
+  "Liquidation pressure (proxy)",
+  null,
+  null,
+  null,
+  0.0,
+  "no history yet"
+ ],
+ [
+  "Spot ETF flows",
+  "etf_1d",
+  null,
+  null,
+  0.0,
+  "too little history"
+ ],
+ [
+  "Fear and Greed",
+  "fng_level",
+  50.6,
+  48.5,
+  0.0,
+  "with"
+ ]
+]

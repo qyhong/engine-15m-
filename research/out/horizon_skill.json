@@ -1,0 +1,102 @@
+{
+ "week": "2026-W46",
+ "generated_utc": "2026-11-11 07:32 UTC",
+ "groups": {
+  "crypto": {
+   "as_of_utc": "2026-11-11 07:30",
+   "assets": {
+    "BTCUSDT": {
+     "1h": {
+      "d7": {
+       "calls": 212,
+       "hit_pct": 50.0,
+       "edge_calls": 3,
+       "edge_hit_pct": 0.0
+      },
+      "d30": {
+       "calls": 1094,
+       "hit_pct": 52.7,
+       "edge_calls": 25,
+       "edge_hit_pct": 56.0
+      }
+     },
+     "4h": {
+      "d7": {
+       "calls": 388,
+       "hit_pct": 54.6,
+       "edge_calls": 0,
+       "edge_hit_pct": null
+      },
+      "d30": {
+       "calls": 1915,
+       "hit_pct": 52.0,
+       "edge_calls": 7,
+       "edge_hit_pct": 14.3
+      }
+     },
+     "24h": {
+      "d7": {
+       "calls": 500,
+       "hit_pct": 60.2,
+       "edge_calls": 10,
+       "edge_hit_pct": 40.0
+      },
+      "d30": {
+       "calls": 2591,
+       "hit_pct": 52.1,
+       "edge_calls": 226,
+       "edge_hit_pct": 23.0
+      },
+      "bars": 96
+     }
+    },
+    "ETHUSDT": {
+     "1h": {
+      "d7": {
+       "calls": 192,
+       "hit_pct": 53.6,
+       "edge_calls": 3,
+       "edge_hit_pct": 0.0
+      },
+      "d30": {
+       "calls": 1069,
+       "hit_pct": 54.6,
+       "edge_calls": 21,
+       "edge_hit_pct": 38.1
+      }
+     },
+     "4h": {
+      "d7": {
+       "calls": 343,
+       "hit_pct": 56.9,
+       "edge_calls": 0,
+       "edge_hit_pct": null
+      },
+      "d30": {
+       "calls": 1875,
+       "hit_pct": 50.7,
+       "edge_calls": 8,
+       "edge_hit_pct": 25.0
+      }
+     },
+     "24h": {
+      "d7": {
+       "calls": 491,
+       "hit_pct": 73.5,
+       "edge_calls": 46,
+       "edge_hit_pct": 28.3
+      },
+      "d30": {
+       "calls": 2570,
+       "hit_pct": 52.6,
+       "edge_calls": 302,
+       "edge_hit_pct": 24.8
+      },
+      "bars": 96
+     }
+    }
+   }
+  }
+ },
+ "note": "Forward grades of the live steps only. Hit rate = direction right on calls graded up or down; claimed-edge hit rate = the same on calls with |P(up) - P(down)| >= 5 points. 50% is a coin."
+}

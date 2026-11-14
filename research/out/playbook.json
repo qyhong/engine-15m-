@@ -1,0 +1,8277 @@
+{
+ "protocol": {
+  "start": "2020-01-01",
+  "split": "2023-06-07",
+  "variants_tried": 29,
+  "variants_by_book": {
+   "p1_liqhunt": 11,
+   "p2_trap": 18
+  },
+  "min_trades_asset": 20,
+  "min_trades_all": 100,
+  "min_lift_pct": 0.02
+ },
+ "spans": {
+  "BTCUSDT": [
+   "2019-01-01",
+   "2026-11-11 05:15"
+  ],
+  "ETHUSDT": [
+   "2019-01-01",
+   "2026-11-11 05:15"
+  ],
+  "XAUUSD": [
+   "2019-01-01",
+   "2026-11-11 05:00"
+  ],
+  "XAGUSD": [
+   "2019-01-01",
+   "2026-11-11 05:00"
+  ],
+  "USDJPY": [
+   "2019-01-01",
+   "2026-11-11 05:15"
+  ],
+  "SPX": [
+   "2019-01-02",
+   "2026-11-10 20:45"
+  ]
+ },
+ "chosen_base": {
+  "p1_liqhunt": "k0.25 m2 fixed",
+  "p2_trap": "pday j2 fixed"
+ },
+ "registered": {
+  "p1_liqhunt": {
+   "k": 0.25,
+   "m": 2,
+   "exit": "fixed",
+   "confirm": "funding",
+   "name": "k0.25 m2 fixed +funding"
+  },
+  "p2_trap": {
+   "level": "pday",
+   "j": 2,
+   "exit": "fixed",
+   "filter": "with_bias",
+   "name": "pday j2 fixed +with_bias"
+  }
+ },
+ "scores_first_half": {
+  "p1_liqhunt": {
+   "k0.10 m0 struct": -0.1101,
+   "k0.10 m0 fixed": -0.1085,
+   "k0.10 m2 struct": -0.1042,
+   "k0.10 m2 fixed": -0.1027,
+   "k0.25 m0 struct": -0.1118,
+   "k0.25 m0 fixed": -0.1091,
+   "k0.25 m2 struct": -0.104,
+   "k0.25 m2 fixed": -0.1015,
+   "k0.25 m2 fixed +volume": -0.1015,
+   "k0.25 m2 fixed +taker": -0.2085,
+   "k0.25 m2 fixed +funding": -0.1769
+  },
+  "p2_trap": {
+   "n48 j2 struct": -0.0778,
+   "n48 j2 fixed": -0.0797,
+   "n48 j4 struct": -0.0822,
+   "n48 j4 fixed": -0.0838,
+   "pday j2 struct": -0.0684,
+   "pday j2 fixed": -0.0597,
+   "pday j4 struct": -0.0702,
+   "pday j4 fixed": -0.0611,
+   "swing j2 struct": -0.0821,
+   "swing j2 fixed": -0.0796,
+   "swing j4 struct": -0.0836,
+   "swing j4 fixed": -0.082,
+   "pday j2 fixed +vol_low": -0.0714,
+   "pday j2 fixed +vol_high": -0.0461,
+   "pday j2 fixed +with_bias": 0.0908,
+   "pday j2 fixed +against_bias": -0.0439,
+   "pday j2 fixed +open_window": -0.0554,
+   "pday j2 fixed +shallow": -0.0729
+  }
+ },
+ "results": {
+  "BTCUSDT": {
+   "p1_liqhunt": {
+    "k0.10 m0 struct": {
+     "first": {
+      "trades": 6827,
+      "win_pct": 29.7,
+      "avg_r": -0.627,
+      "pf": 0.47,
+      "exp_pct": -0.2325,
+      "gross_exp_pct": -0.0325,
+      "net_usd": -158730.66,
+      "fees_usd": 136535.19,
+      "max_dd_usd": 158954.4,
+      "per_month": 165.9,
+      "median_risk_pct": 0.447
+     },
+     "second": {
+      "trades": 5567,
+      "win_pct": 26.2,
+      "avg_r": -0.899,
+      "pf": 0.35,
+      "exp_pct": -0.2162,
+      "gross_exp_pct": -0.0162,
+      "net_usd": -120333.41,
+      "fees_usd": 111336.84,
+      "max_dd_usd": 120378.69,
+      "per_month": 135.2,
+      "median_risk_pct": 0.289
+     }
+    },
+    "k0.10 m0 fixed": {
+     "first": {
+      "trades": 7508,
+      "win_pct": 35.3,
+      "avg_r": -0.617,
+      "pf": 0.41,
+      "exp_pct": -0.2364,
+      "gross_exp_pct": -0.0364,
+      "net_usd": -177471.64,
+      "fees_usd": 150151.87,
+      "max_dd_usd": 177553.19,
+      "per_month": 182.4,
+      "median_risk_pct": 0.45
+     },
+     "second": {
+      "trades": 6062,
+      "win_pct": 29.6,
+      "avg_r": -0.882,
+      "pf": 0.29,
+      "exp_pct": -0.2115,
+      "gross_exp_pct": -0.0115,
+      "net_usd": -128198.78,
+      "fees_usd": 121234.89,
+      "max_dd_usd": 128267.4,
+      "per_month": 147.2,
+      "median_risk_pct": 0.289
+     }
+    },
+    "k0.10 m2 struct": {
+     "first": {
+      "trades": 8954,
+      "win_pct": 33.7,
+      "avg_r": -0.525,
+      "pf": 0.51,
+      "exp_pct": -0.2225,
+      "gross_exp_pct": -0.0225,
+      "net_usd": -199182.97,
+      "fees_usd": 179074.02,
+      "max_dd_usd": 199231.54,
+      "per_month": 217.5,
+      "median_risk_pct": 0.528
+     },
+     "second": {
+      "trades": 7975,
+      "win_pct": 30.1,
+      "avg_r": -0.731,
+      "pf": 0.41,
+      "exp_pct": -0.1992,
+      "gross_exp_pct": 0.0008,
+      "net_usd": -158876.5,
+      "fees_usd": 159497.26,
+      "max_dd_usd": 158986.7,
+      "per_month": 193.7,
+      "median_risk_pct": 0.347
+     }
+    },
+    "k0.10 m2 fixed": {
+     "first": {
+      "trades": 10063,
+      "win_pct": 38.7,
+      "avg_r": -0.51,
+      "pf": 0.48,
+      "exp_pct": -0.2239,
+      "gross_exp_pct": -0.0239,
+      "net_usd": -225265.0,
+      "fees_usd": 201252.21,
+      "max_dd_usd": 225271.76,
+      "per_month": 244.5,
+      "median_risk_pct": 0.537
+     },
+     "second": {
+      "trades": 8818,
+      "win_pct": 33.1,
+      "avg_r": -0.726,
+      "pf": 0.36,
+      "exp_pct": -0.1987,
+      "gross_exp_pct": 0.0013,
+      "net_usd": -175201.54,
+      "fees_usd": 176358.85,
+      "max_dd_usd": 175388.05,
+      "per_month": 214.2,
+      "median_risk_pct": 0.349
+     }
+    },
+    "k0.25 m0 struct": {
+     "first": {
+      "trades": 5312,
+      "win_pct": 31.9,
+      "avg_r": -0.555,
+      "pf": 0.5,
+      "exp_pct": -0.2192,
+      "gross_exp_pct": -0.0192,
+      "net_usd": -116451.8,
+      "fees_usd": 106232.86,
+      "max_dd_usd": 116682.63,
+      "per_month": 129.0,
+      "median_risk_pct": 0.487
+     },
+     "second": {
+      "trades": 4365,
+      "win_pct": 28.1,
+      "avg_r": -0.809,
+      "pf": 0.37,
+      "exp_pct": -0.2156,
+      "gross_exp_pct": -0.0156,
+      "net_usd": -94088.19,
+      "fees_usd": 87298.99,
+      "max_dd_usd": 94140.18,
+      "per_month": 106.0,
+      "median_risk_pct": 0.32
+     }
+    },
+    "k0.25 m0 fixed": {
+     "first": {
+      "trades": 5716,
+      "win_pct": 37.7,
+      "avg_r": -0.542,
+      "pf": 0.45,
+      "exp_pct": -0.2242,
+      "gross_exp_pct": -0.0242,
+      "net_usd": -128163.01,
+      "fees_usd": 114310.72,
+      "max_dd_usd": 128244.06,
+      "per_month": 138.9,
+      "median_risk_pct": 0.488
+     },
+     "second": {
+      "trades": 4636,
+      "win_pct": 31.4,
+      "avg_r": -0.795,
+      "pf": 0.31,
+      "exp_pct": -0.2127,
+      "gross_exp_pct": -0.0128,
+      "net_usd": -98628.38,
+      "fees_usd": 92717.03,
+      "max_dd_usd": 98676.49,
+      "per_month": 112.6,
+      "median_risk_pct": 0.321
+     }
+    },
+    "k0.25 m2 struct": {
+     "first": {
+      "trades": 8038,
+      "win_pct": 35.2,
+      "avg_r": -0.477,
+      "pf": 0.53,
+      "exp_pct": -0.2162,
+      "gross_exp_pct": -0.0163,
+      "net_usd": -173821.33,
+      "fees_usd": 160754.34,
+      "max_dd_usd": 173873.7,
+      "per_month": 195.3,
+      "median_risk_pct": 0.561
+     },
+     "second": {
+      "trades": 7192,
+      "win_pct": 31.3,
+      "avg_r": -0.673,
+      "pf": 0.42,
+      "exp_pct": -0.1966,
+      "gross_exp_pct": 0.0034,
+      "net_usd": -141387.08,
+      "fees_usd": 143840.67,
+      "max_dd_usd": 141525.36,
+      "per_month": 174.7,
+      "median_risk_pct": 0.369
+     }
+    },
+    "k0.25 m2 fixed": {
+     "first": {
+      "trades": 8893,
+      "win_pct": 40.2,
+      "avg_r": -0.459,
+      "pf": 0.51,
+      "exp_pct": -0.2147,
+      "gross_exp_pct": -0.0147,
+      "net_usd": -190897.97,
+      "fees_usd": 177852.0,
+      "max_dd_usd": 190897.97,
+      "per_month": 216.0,
+      "median_risk_pct": 0.571
+     },
+     "second": {
+      "trades": 7839,
+      "win_pct": 34.3,
+      "avg_r": -0.671,
+      "pf": 0.38,
+      "exp_pct": -0.1979,
+      "gross_exp_pct": 0.0021,
+      "net_usd": -155132.68,
+      "fees_usd": 156779.95,
+      "max_dd_usd": 155286.32,
+      "per_month": 190.4,
+      "median_risk_pct": 0.372
+     }
+    },
+    "k0.25 m2 fixed +volume": {
+     "first": {
+      "trades": 3849,
+      "win_pct": 44.3,
+      "avg_r": -0.318,
+      "pf": 0.59,
+      "exp_pct": -0.2203,
+      "gross_exp_pct": -0.0202,
+      "net_usd": -84774.62,
+      "fees_usd": 76981.21,
+      "max_dd_usd": 85096.15,
+      "per_month": 93.5,
+      "median_risk_pct": 0.795
+     },
+     "second": {
+      "trades": 3751,
+      "win_pct": 39.9,
+      "avg_r": -0.463,
+      "pf": 0.45,
+      "exp_pct": -0.204,
+      "gross_exp_pct": -0.004,
+      "net_usd": -76533.14,
+      "fees_usd": 75016.96,
+      "max_dd_usd": 76743.73,
+      "per_month": 91.1,
+      "median_risk_pct": 0.509
+     }
+    },
+    "k0.25 m2 fixed +taker": {
+     "first": {
+      "trades": 5864,
+      "win_pct": 40.4,
+      "avg_r": -0.449,
+      "pf": 0.51,
+      "exp_pct": -0.2178,
+      "gross_exp_pct": -0.0178,
+      "net_usd": -127740.18,
+      "fees_usd": 117276.86,
+      "max_dd_usd": 127875.24,
+      "per_month": 142.5,
+      "median_risk_pct": 0.577
+     },
+     "second": {
+      "trades": 5175,
+      "win_pct": 34.4,
+      "avg_r": -0.66,
+      "pf": 0.39,
+      "exp_pct": -0.1953,
+      "gross_exp_pct": 0.0048,
+      "net_usd": -101045.74,
+      "fees_usd": 103506.21,
+      "max_dd_usd": 101193.71,
+      "per_month": 125.7,
+      "median_risk_pct": 0.391
+     }
+    },
+    "k0.25 m2 fixed +funding": {
+     "first": {
+      "trades": 2291,
+      "win_pct": 43.3,
+      "avg_r": -0.393,
+      "pf": 0.59,
+      "exp_pct": -0.1826,
+      "gross_exp_pct": 0.0174,
+      "net_usd": -41835.29,
+      "fees_usd": 45820.83,
+      "max_dd_usd": 41985.61,
+      "per_month": 55.7,
+      "median_risk_pct": 0.603
+     },
+     "second": {
+      "trades": 2166,
+      "win_pct": 33.6,
+      "avg_r": -0.687,
+      "pf": 0.4,
+      "exp_pct": -0.1905,
+      "gross_exp_pct": 0.0095,
+      "net_usd": -41267.16,
+      "fees_usd": 43320.65,
+      "max_dd_usd": 41362.63,
+      "per_month": 52.6,
+      "median_risk_pct": 0.362
+     }
+    }
+   },
+   "p2_trap": {
+    "n48 j2 struct": {
+     "first": {
+      "trades": 2128,
+      "win_pct": 38.3,
+      "avg_r": -0.289,
+      "pf": 0.77,
+      "exp_pct": -0.1307,
+      "gross_exp_pct": 0.0693,
+      "net_usd": -27808.5,
+      "fees_usd": 42562.26,
+      "max_dd_usd": 29966.93,
+      "per_month": 51.7,
+      "median_risk_pct": 0.704
+     },
+     "second": {
+      "trades": 2625,
+      "win_pct": 34.8,
+      "avg_r": -0.571,
+      "pf": 0.56,
+      "exp_pct": -0.1709,
+      "gross_exp_pct": 0.0291,
+      "net_usd": -44860.36,
+      "fees_usd": 52497.12,
+      "max_dd_usd": 44893.28,
+      "per_month": 63.8,
+      "median_risk_pct": 0.415
+     }
+    },
+    "n48 j2 fixed": {
+     "first": {
+      "trades": 2142,
+      "win_pct": 47.2,
+      "avg_r": -0.304,
+      "pf": 0.69,
+      "exp_pct": -0.1447,
+      "gross_exp_pct": 0.0553,
+      "net_usd": -31003.42,
+      "fees_usd": 42838.41,
+      "max_dd_usd": 32714.97,
+      "per_month": 52.0,
+      "median_risk_pct": 0.704
+     },
+     "second": {
+      "trades": 2647,
+      "win_pct": 37.5,
+      "avg_r": -0.583,
+      "pf": 0.49,
+      "exp_pct": -0.1674,
+      "gross_exp_pct": 0.0326,
+      "net_usd": -44314.04,
+      "fees_usd": 52937.72,
+      "max_dd_usd": 44321.0,
+      "per_month": 64.3,
+      "median_risk_pct": 0.415
+     }
+    },
+    "n48 j4 struct": {
+     "first": {
+      "trades": 2487,
+      "win_pct": 39.0,
+      "avg_r": -0.273,
+      "pf": 0.76,
+      "exp_pct": -0.1336,
+      "gross_exp_pct": 0.0664,
+      "net_usd": -33218.78,
+      "fees_usd": 49740.81,
+      "max_dd_usd": 35606.02,
+      "per_month": 60.4,
+      "median_risk_pct": 0.74
+     },
+     "second": {
+      "trades": 3014,
+      "win_pct": 35.3,
+      "avg_r": -0.549,
+      "pf": 0.55,
+      "exp_pct": -0.1787,
+      "gross_exp_pct": 0.0213,
+      "net_usd": -53854.36,
+      "fees_usd": 60276.79,
+      "max_dd_usd": 53887.28,
+      "per_month": 73.2,
+      "median_risk_pct": 0.44
+     }
+    },
+    "n48 j4 fixed": {
+     "first": {
+      "trades": 2519,
+      "win_pct": 47.0,
+      "avg_r": -0.289,
+      "pf": 0.7,
+      "exp_pct": -0.1469,
+      "gross_exp_pct": 0.0531,
+      "net_usd": -37011.19,
+      "fees_usd": 50376.8,
+      "max_dd_usd": 39135.1,
+      "per_month": 61.2,
+      "median_risk_pct": 0.743
+     },
+     "second": {
+      "trades": 3050,
+      "win_pct": 38.0,
+      "avg_r": -0.557,
+      "pf": 0.49,
+      "exp_pct": -0.174,
+      "gross_exp_pct": 0.026,
+      "net_usd": -53072.46,
+      "fees_usd": 60998.12,
+      "max_dd_usd": 53079.43,
+      "per_month": 74.1,
+      "median_risk_pct": 0.439
+     }
+    },
+    "pday j2 struct": {
+     "first": {
+      "trades": 789,
+      "win_pct": 35.6,
+      "avg_r": -0.364,
+      "pf": 0.71,
+      "exp_pct": -0.1506,
+      "gross_exp_pct": 0.0493,
+      "net_usd": -11882.8,
+      "fees_usd": 15774.14,
+      "max_dd_usd": 11896.95,
+      "per_month": 19.2,
+      "median_risk_pct": 0.623
+     },
+     "second": {
+      "trades": 809,
+      "win_pct": 33.5,
+      "avg_r": -0.551,
+      "pf": 0.63,
+      "exp_pct": -0.1345,
+      "gross_exp_pct": 0.0654,
+      "net_usd": -10885.09,
+      "fees_usd": 16177.05,
+      "max_dd_usd": 10885.09,
+      "per_month": 19.7,
+      "median_risk_pct": 0.414
+     }
+    },
+    "pday j2 fixed": {
+     "first": {
+      "trades": 829,
+      "win_pct": 47.2,
+      "avg_r": -0.35,
+      "pf": 0.68,
+      "exp_pct": -0.1293,
+      "gross_exp_pct": 0.0706,
+      "net_usd": -10718.14,
+      "fees_usd": 16573.6,
+      "max_dd_usd": 10718.14,
+      "per_month": 20.1,
+      "median_risk_pct": 0.595
+     },
+     "second": {
+      "trades": 848,
+      "win_pct": 37.5,
+      "avg_r": -0.614,
+      "pf": 0.5,
+      "exp_pct": -0.1515,
+      "gross_exp_pct": 0.0485,
+      "net_usd": -12847.97,
+      "fees_usd": 16958.66,
+      "max_dd_usd": 12847.97,
+      "per_month": 20.6,
+      "median_risk_pct": 0.405
+     }
+    },
+    "pday j4 struct": {
+     "first": {
+      "trades": 957,
+      "win_pct": 36.7,
+      "avg_r": -0.345,
+      "pf": 0.66,
+      "exp_pct": -0.1885,
+      "gross_exp_pct": 0.0115,
+      "net_usd": -18037.59,
+      "fees_usd": 19136.12,
+      "max_dd_usd": 18492.23,
+      "per_month": 23.2,
+      "median_risk_pct": 0.72
+     },
+     "second": {
+      "trades": 963,
+      "win_pct": 34.2,
+      "avg_r": -0.507,
+      "pf": 0.64,
+      "exp_pct": -0.1378,
+      "gross_exp_pct": 0.0622,
+      "net_usd": -13268.39,
+      "fees_usd": 19258.09,
+      "max_dd_usd": 13293.93,
+      "per_month": 23.4,
+      "median_risk_pct": 0.459
+     }
+    },
+    "pday j4 fixed": {
+     "first": {
+      "trades": 1001,
+      "win_pct": 46.7,
+      "avg_r": -0.319,
+      "pf": 0.64,
+      "exp_pct": -0.1643,
+      "gross_exp_pct": 0.0357,
+      "net_usd": -16442.92,
+      "fees_usd": 20014.25,
+      "max_dd_usd": 16692.01,
+      "per_month": 24.3,
+      "median_risk_pct": 0.702
+     },
+     "second": {
+      "trades": 1012,
+      "win_pct": 38.8,
+      "avg_r": -0.55,
+      "pf": 0.54,
+      "exp_pct": -0.1474,
+      "gross_exp_pct": 0.0526,
+      "net_usd": -14919.82,
+      "fees_usd": 20239.49,
+      "max_dd_usd": 14961.89,
+      "per_month": 24.6,
+      "median_risk_pct": 0.443
+     }
+    },
+    "swing j2 struct": {
+     "first": {
+      "trades": 2603,
+      "win_pct": 36.8,
+      "avg_r": -0.529,
+      "pf": 0.52,
+      "exp_pct": -0.2109,
+      "gross_exp_pct": -0.0109,
+      "net_usd": -54886.68,
+      "fees_usd": 52056.2,
+      "max_dd_usd": 55361.0,
+      "per_month": 63.2,
+      "median_risk_pct": 0.533
+     },
+     "second": {
+      "trades": 2767,
+      "win_pct": 32.3,
+      "avg_r": -0.771,
+      "pf": 0.42,
+      "exp_pct": -0.1785,
+      "gross_exp_pct": 0.0215,
+      "net_usd": -49404.43,
+      "fees_usd": 55342.67,
+      "max_dd_usd": 49606.45,
+      "per_month": 67.2,
+      "median_risk_pct": 0.327
+     }
+    },
+    "swing j2 fixed": {
+     "first": {
+      "trades": 2621,
+      "win_pct": 39.5,
+      "avg_r": -0.503,
+      "pf": 0.54,
+      "exp_pct": -0.1917,
+      "gross_exp_pct": 0.0083,
+      "net_usd": -50245.55,
+      "fees_usd": 52417.24,
+      "max_dd_usd": 50768.06,
+      "per_month": 63.7,
+      "median_risk_pct": 0.533
+     },
+     "second": {
+      "trades": 2773,
+      "win_pct": 32.3,
+      "avg_r": -0.782,
+      "pf": 0.4,
+      "exp_pct": -0.1793,
+      "gross_exp_pct": 0.0207,
+      "net_usd": -49726.73,
+      "fees_usd": 55461.3,
+      "max_dd_usd": 49943.13,
+      "per_month": 67.4,
+      "median_risk_pct": 0.326
+     }
+    },
+    "swing j4 struct": {
+     "first": {
+      "trades": 3122,
+      "win_pct": 38.6,
+      "avg_r": -0.463,
+      "pf": 0.55,
+      "exp_pct": -0.2053,
+      "gross_exp_pct": -0.0053,
+      "net_usd": -64104.27,
+      "fees_usd": 62437.61,
+      "max_dd_usd": 64272.65,
+      "per_month": 75.8,
+      "median_risk_pct": 0.6
+     },
+     "second": {
+      "trades": 3291,
+      "win_pct": 33.7,
+      "avg_r": -0.688,
+      "pf": 0.46,
+      "exp_pct": -0.1732,
+      "gross_exp_pct": 0.0268,
+      "net_usd": -56988.09,
+      "fees_usd": 65823.35,
+      "max_dd_usd": 57097.17,
+      "per_month": 79.9,
+      "median_risk_pct": 0.367
+     }
+    },
+    "swing j4 fixed": {
+     "first": {
+      "trades": 3147,
+      "win_pct": 40.9,
+      "avg_r": -0.449,
+      "pf": 0.57,
+      "exp_pct": -0.1884,
+      "gross_exp_pct": 0.0116,
+      "net_usd": -59292.06,
+      "fees_usd": 62939.59,
+      "max_dd_usd": 59725.2,
+      "per_month": 76.5,
+      "median_risk_pct": 0.598
+     },
+     "second": {
+      "trades": 3302,
+      "win_pct": 34.4,
+      "avg_r": -0.697,
+      "pf": 0.44,
+      "exp_pct": -0.1733,
+      "gross_exp_pct": 0.0267,
+      "net_usd": -57239.95,
+      "fees_usd": 66041.84,
+      "max_dd_usd": 57343.96,
+      "per_month": 80.2,
+      "median_risk_pct": 0.367
+     }
+    },
+    "pday j2 fixed +vol_low": {
+     "first": {
+      "trades": 278,
+      "win_pct": 43.9,
+      "avg_r": -0.528,
+      "pf": 0.59,
+      "exp_pct": -0.119,
+      "gross_exp_pct": 0.081,
+      "net_usd": -3307.98,
+      "fees_usd": 5558.57,
+      "max_dd_usd": 3316.84,
+      "per_month": 6.8,
+      "median_risk_pct": 0.414
+     },
+     "second": {
+      "trades": 287,
+      "win_pct": 29.3,
+      "avg_r": -0.913,
+      "pf": 0.28,
+      "exp_pct": -0.1831,
+      "gross_exp_pct": 0.017,
+      "net_usd": -5253.64,
+      "fees_usd": 5740.15,
+      "max_dd_usd": 5254.4,
+      "per_month": 7.0,
+      "median_risk_pct": 0.263
+     }
+    },
+    "pday j2 fixed +vol_high": {
+     "first": {
+      "trades": 440,
+      "win_pct": 50.9,
+      "avg_r": -0.223,
+      "pf": 0.76,
+      "exp_pct": -0.1107,
+      "gross_exp_pct": 0.0892,
+      "net_usd": -4872.24,
+      "fees_usd": 8795.1,
+      "max_dd_usd": 4872.24,
+      "per_month": 10.7,
+      "median_risk_pct": 0.791
+     },
+     "second": {
+      "trades": 467,
+      "win_pct": 43.0,
+      "avg_r": -0.424,
+      "pf": 0.62,
+      "exp_pct": -0.1254,
+      "gross_exp_pct": 0.0746,
+      "net_usd": -5856.02,
+      "fees_usd": 9338.63,
+      "max_dd_usd": 5908.24,
+      "per_month": 11.3,
+      "median_risk_pct": 0.505
+     }
+    },
+    "pday j2 fixed +with_bias": {
+     "first": {
+      "trades": 1,
+      "win_pct": 0.0,
+      "avg_r": -1.131,
+      "pf": 0.0,
+      "exp_pct": -1.7148,
+      "gross_exp_pct": -1.5163,
+      "net_usd": -171.48,
+      "fees_usd": 19.85,
+      "max_dd_usd": 171.48,
+      "per_month": 0.0,
+      "median_risk_pct": 1.516
+     },
+     "second": {
+      "trades": 5,
+      "win_pct": 40.0,
+      "avg_r": -0.336,
+      "pf": 0.86,
+      "exp_pct": -0.0146,
+      "gross_exp_pct": 0.1855,
+      "net_usd": -7.32,
+      "fees_usd": 100.08,
+      "max_dd_usd": 53.43,
+      "per_month": 0.1,
+      "median_risk_pct": 0.328
+     }
+    },
+    "pday j2 fixed +against_bias": {
+     "first": {
+      "trades": 263,
+      "win_pct": 53.2,
+      "avg_r": -0.251,
+      "pf": 0.91,
+      "exp_pct": -0.0323,
+      "gross_exp_pct": 0.1676,
+      "net_usd": -850.45,
+      "fees_usd": 5258.92,
+      "max_dd_usd": 1577.44,
+      "per_month": 6.4,
+      "median_risk_pct": 0.614
+     },
+     "second": {
+      "trades": 261,
+      "win_pct": 42.9,
+      "avg_r": -0.461,
+      "pf": 0.75,
+      "exp_pct": -0.0704,
+      "gross_exp_pct": 0.1297,
+      "net_usd": -1836.41,
+      "fees_usd": 5220.33,
+      "max_dd_usd": 1836.41,
+      "per_month": 6.3,
+      "median_risk_pct": 0.418
+     }
+    },
+    "pday j2 fixed +open_window": {
+     "first": {
+      "trades": 167,
+      "win_pct": 43.7,
+      "avg_r": -0.382,
+      "pf": 0.59,
+      "exp_pct": -0.1939,
+      "gross_exp_pct": 0.0059,
+      "net_usd": -3238.38,
+      "fees_usd": 3336.83,
+      "max_dd_usd": 3348.98,
+      "per_month": 4.1,
+      "median_risk_pct": 0.625
+     },
+     "second": {
+      "trades": 192,
+      "win_pct": 38.0,
+      "avg_r": -0.599,
+      "pf": 0.37,
+      "exp_pct": -0.2326,
+      "gross_exp_pct": -0.0326,
+      "net_usd": -4465.59,
+      "fees_usd": 3839.43,
+      "max_dd_usd": 4465.59,
+      "per_month": 4.7,
+      "median_risk_pct": 0.44
+     }
+    },
+    "pday j2 fixed +shallow": {
+     "first": {
+      "trades": 285,
+      "win_pct": 40.0,
+      "avg_r": -0.615,
+      "pf": 0.51,
+      "exp_pct": -0.1543,
+      "gross_exp_pct": 0.0458,
+      "net_usd": -4396.34,
+      "fees_usd": 5700.97,
+      "max_dd_usd": 4596.73,
+      "per_month": 6.9,
+      "median_risk_pct": 0.378
+     },
+     "second": {
+      "trades": 284,
+      "win_pct": 27.5,
+      "avg_r": -1.038,
+      "pf": 0.25,
+      "exp_pct": -0.2053,
+      "gross_exp_pct": -0.0054,
+      "net_usd": -5831.56,
+      "fees_usd": 5678.91,
+      "max_dd_usd": 5831.56,
+      "per_month": 6.9,
+      "median_risk_pct": 0.24
+     }
+    }
+   }
+  },
+  "ETHUSDT": {
+   "p1_liqhunt": {
+    "k0.10 m0 struct": {
+     "first": {
+      "trades": 7002,
+      "win_pct": 33.2,
+      "avg_r": -0.48,
+      "pf": 0.57,
+      "exp_pct": -0.2155,
+      "gross_exp_pct": -0.0155,
+      "net_usd": -150861.88,
+      "fees_usd": 140030.49,
+      "max_dd_usd": 151381.36,
+      "per_month": 170.1,
+      "median_risk_pct": 0.558
+     },
+     "second": {
+      "trades": 6007,
+      "win_pct": 29.9,
+      "avg_r": -0.652,
+      "pf": 0.45,
+      "exp_pct": -0.2134,
+      "gross_exp_pct": -0.0134,
+      "net_usd": -128188.04,
+      "fees_usd": 120128.77,
+      "max_dd_usd": 128228.24,
+      "per_month": 145.9,
+      "median_risk_pct": 0.399
+     }
+    },
+    "k0.10 m0 fixed": {
+     "first": {
+      "trades": 7809,
+      "win_pct": 40.7,
+      "avg_r": -0.478,
+      "pf": 0.53,
+      "exp_pct": -0.2091,
+      "gross_exp_pct": -0.0091,
+      "net_usd": -163265.25,
+      "fees_usd": 156164.82,
+      "max_dd_usd": 163265.25,
+      "per_month": 189.7,
+      "median_risk_pct": 0.562
+     },
+     "second": {
+      "trades": 6593,
+      "win_pct": 35.8,
+      "avg_r": -0.636,
+      "pf": 0.4,
+      "exp_pct": -0.2058,
+      "gross_exp_pct": -0.0058,
+      "net_usd": -135676.08,
+      "fees_usd": 131852.21,
+      "max_dd_usd": 135802.46,
+      "per_month": 160.1,
+      "median_risk_pct": 0.399
+     }
+    },
+    "k0.10 m2 struct": {
+     "first": {
+      "trades": 9255,
+      "win_pct": 36.8,
+      "avg_r": -0.405,
+      "pf": 0.63,
+      "exp_pct": -0.1972,
+      "gross_exp_pct": 0.0028,
+      "net_usd": -182483.82,
+      "fees_usd": 185105.64,
+      "max_dd_usd": 182514.33,
+      "per_month": 224.8,
+      "median_risk_pct": 0.664
+     },
+     "second": {
+      "trades": 8428,
+      "win_pct": 32.7,
+      "avg_r": -0.559,
+      "pf": 0.48,
+      "exp_pct": -0.2136,
+      "gross_exp_pct": -0.0136,
+      "net_usd": -180021.27,
+      "fees_usd": 168545.93,
+      "max_dd_usd": 180021.27,
+      "per_month": 204.7,
+      "median_risk_pct": 0.469
+     }
+    },
+    "k0.10 m2 fixed": {
+     "first": {
+      "trades": 10529,
+      "win_pct": 43.7,
+      "avg_r": -0.385,
+      "pf": 0.6,
+      "exp_pct": -0.1957,
+      "gross_exp_pct": 0.0043,
+      "net_usd": -206072.32,
+      "fees_usd": 210579.38,
+      "max_dd_usd": 206079.9,
+      "per_month": 255.8,
+      "median_risk_pct": 0.676
+     },
+     "second": {
+      "trades": 9387,
+      "win_pct": 38.2,
+      "avg_r": -0.537,
+      "pf": 0.46,
+      "exp_pct": -0.2033,
+      "gross_exp_pct": -0.0033,
+      "net_usd": -190861.1,
+      "fees_usd": 187728.72,
+      "max_dd_usd": 190908.0,
+      "per_month": 228.0,
+      "median_risk_pct": 0.472
+     }
+    },
+    "k0.25 m0 struct": {
+     "first": {
+      "trades": 5446,
+      "win_pct": 34.6,
+      "avg_r": -0.447,
+      "pf": 0.58,
+      "exp_pct": -0.2236,
+      "gross_exp_pct": -0.0236,
+      "net_usd": -121770.73,
+      "fees_usd": 108913.23,
+      "max_dd_usd": 122278.76,
+      "per_month": 132.3,
+      "median_risk_pct": 0.613
+     },
+     "second": {
+      "trades": 4739,
+      "win_pct": 31.3,
+      "avg_r": -0.591,
+      "pf": 0.46,
+      "exp_pct": -0.2149,
+      "gross_exp_pct": -0.0149,
+      "net_usd": -101839.71,
+      "fees_usd": 94771.52,
+      "max_dd_usd": 101879.91,
+      "per_month": 115.1,
+      "median_risk_pct": 0.432
+     }
+    },
+    "k0.25 m0 fixed": {
+     "first": {
+      "trades": 5896,
+      "win_pct": 41.9,
+      "avg_r": -0.437,
+      "pf": 0.55,
+      "exp_pct": -0.2135,
+      "gross_exp_pct": -0.0136,
+      "net_usd": -125906.53,
+      "fees_usd": 117906.24,
+      "max_dd_usd": 125906.53,
+      "per_month": 143.2,
+      "median_risk_pct": 0.614
+     },
+     "second": {
+      "trades": 5063,
+      "win_pct": 37.2,
+      "avg_r": -0.578,
+      "pf": 0.42,
+      "exp_pct": -0.2088,
+      "gross_exp_pct": -0.0088,
+      "net_usd": -105696.45,
+      "fees_usd": 101253.52,
+      "max_dd_usd": 105822.84,
+      "per_month": 123.0,
+      "median_risk_pct": 0.434
+     }
+    },
+    "k0.25 m2 struct": {
+     "first": {
+      "trades": 8352,
+      "win_pct": 38.1,
+      "avg_r": -0.366,
+      "pf": 0.64,
+      "exp_pct": -0.1942,
+      "gross_exp_pct": 0.0058,
+      "net_usd": -162159.72,
+      "fees_usd": 167044.45,
+      "max_dd_usd": 162234.7,
+      "per_month": 202.9,
+      "median_risk_pct": 0.706
+     },
+     "second": {
+      "trades": 7599,
+      "win_pct": 34.0,
+      "avg_r": -0.513,
+      "pf": 0.49,
+      "exp_pct": -0.2099,
+      "gross_exp_pct": -0.0099,
+      "net_usd": -159520.58,
+      "fees_usd": 151967.64,
+      "max_dd_usd": 159520.58,
+      "per_month": 184.6,
+      "median_risk_pct": 0.5
+     }
+    },
+    "k0.25 m2 fixed": {
+     "first": {
+      "trades": 9347,
+      "win_pct": 44.5,
+      "avg_r": -0.354,
+      "pf": 0.62,
+      "exp_pct": -0.1947,
+      "gross_exp_pct": 0.0053,
+      "net_usd": -181943.74,
+      "fees_usd": 186939.39,
+      "max_dd_usd": 181951.32,
+      "per_month": 227.1,
+      "median_risk_pct": 0.718
+     },
+     "second": {
+      "trades": 8357,
+      "win_pct": 39.4,
+      "avg_r": -0.495,
+      "pf": 0.48,
+      "exp_pct": -0.2013,
+      "gross_exp_pct": -0.0013,
+      "net_usd": -168228.9,
+      "fees_usd": 167128.48,
+      "max_dd_usd": 168315.05,
+      "per_month": 203.0,
+      "median_risk_pct": 0.505
+     }
+    },
+    "k0.25 m2 fixed +volume": {
+     "first": {
+      "trades": 4257,
+      "win_pct": 48.6,
+      "avg_r": -0.22,
+      "pf": 0.74,
+      "exp_pct": -0.1576,
+      "gross_exp_pct": 0.0424,
+      "net_usd": -67088.19,
+      "fees_usd": 85149.43,
+      "max_dd_usd": 67144.15,
+      "per_month": 103.4,
+      "median_risk_pct": 0.954
+     },
+     "second": {
+      "trades": 4256,
+      "win_pct": 44.7,
+      "avg_r": -0.336,
+      "pf": 0.55,
+      "exp_pct": -0.2019,
+      "gross_exp_pct": -0.0019,
+      "net_usd": -85913.85,
+      "fees_usd": 85112.85,
+      "max_dd_usd": 86040.23,
+      "per_month": 103.4,
+      "median_risk_pct": 0.682
+     }
+    },
+    "k0.25 m2 fixed +taker": {
+     "first": {
+      "trades": 6111,
+      "win_pct": 44.2,
+      "avg_r": -0.351,
+      "pf": 0.62,
+      "exp_pct": -0.1992,
+      "gross_exp_pct": 0.0008,
+      "net_usd": -121742.1,
+      "fees_usd": 122229.57,
+      "max_dd_usd": 121742.1,
+      "per_month": 148.5,
+      "median_risk_pct": 0.736
+     },
+     "second": {
+      "trades": 5496,
+      "win_pct": 39.8,
+      "avg_r": -0.475,
+      "pf": 0.51,
+      "exp_pct": -0.1903,
+      "gross_exp_pct": 0.0097,
+      "net_usd": -104571.57,
+      "fees_usd": 109918.74,
+      "max_dd_usd": 104588.01,
+      "per_month": 133.5,
+      "median_risk_pct": 0.528
+     }
+    },
+    "k0.25 m2 fixed +funding": {
+     "first": {
+      "trades": 2383,
+      "win_pct": 46.4,
+      "avg_r": -0.311,
+      "pf": 0.68,
+      "exp_pct": -0.1712,
+      "gross_exp_pct": 0.0288,
+      "net_usd": -40793.72,
+      "fees_usd": 47661.56,
+      "max_dd_usd": 40960.27,
+      "per_month": 57.9,
+      "median_risk_pct": 0.748
+     },
+     "second": {
+      "trades": 2429,
+      "win_pct": 37.9,
+      "avg_r": -0.534,
+      "pf": 0.46,
+      "exp_pct": -0.22,
+      "gross_exp_pct": -0.02,
+      "net_usd": -53426.32,
+      "fees_usd": 48578.68,
+      "max_dd_usd": 53640.8,
+      "per_month": 59.0,
+      "median_risk_pct": 0.513
+     }
+    }
+   },
+   "p2_trap": {
+    "n48 j2 struct": {
+     "first": {
+      "trades": 2175,
+      "win_pct": 38.5,
+      "avg_r": -0.223,
+      "pf": 0.79,
+      "exp_pct": -0.1384,
+      "gross_exp_pct": 0.0616,
+      "net_usd": -30107.97,
+      "fees_usd": 43506.85,
+      "max_dd_usd": 30230.76,
+      "per_month": 52.8,
+      "median_risk_pct": 0.86
+     },
+     "second": {
+      "trades": 2262,
+      "win_pct": 36.1,
+      "avg_r": -0.391,
+      "pf": 0.64,
+      "exp_pct": -0.1793,
+      "gross_exp_pct": 0.0207,
+      "net_usd": -40551.84,
+      "fees_usd": 45237.5,
+      "max_dd_usd": 40729.79,
+      "per_month": 54.9,
+      "median_risk_pct": 0.617
+     }
+    },
+    "n48 j2 fixed": {
+     "first": {
+      "trades": 2194,
+      "win_pct": 48.6,
+      "avg_r": -0.229,
+      "pf": 0.74,
+      "exp_pct": -0.1508,
+      "gross_exp_pct": 0.0492,
+      "net_usd": -33085.36,
+      "fees_usd": 43877.65,
+      "max_dd_usd": 33128.62,
+      "per_month": 53.3,
+      "median_risk_pct": 0.86
+     },
+     "second": {
+      "trades": 2281,
+      "win_pct": 41.9,
+      "avg_r": -0.406,
+      "pf": 0.57,
+      "exp_pct": -0.1841,
+      "gross_exp_pct": 0.0159,
+      "net_usd": -41985.32,
+      "fees_usd": 45619.02,
+      "max_dd_usd": 42152.19,
+      "per_month": 55.4,
+      "median_risk_pct": 0.617
+     }
+    },
+    "n48 j4 struct": {
+     "first": {
+      "trades": 2616,
+      "win_pct": 38.7,
+      "avg_r": -0.226,
+      "pf": 0.75,
+      "exp_pct": -0.171,
+      "gross_exp_pct": 0.0291,
+      "net_usd": -44727.63,
+      "fees_usd": 52328.05,
+      "max_dd_usd": 44840.76,
+      "per_month": 63.6,
+      "median_risk_pct": 0.905
+     },
+     "second": {
+      "trades": 2680,
+      "win_pct": 37.5,
+      "avg_r": -0.364,
+      "pf": 0.65,
+      "exp_pct": -0.1763,
+      "gross_exp_pct": 0.0237,
+      "net_usd": -47237.03,
+      "fees_usd": 53594.8,
+      "max_dd_usd": 47401.72,
+      "per_month": 65.1,
+      "median_risk_pct": 0.653
+     }
+    },
+    "n48 j4 fixed": {
+     "first": {
+      "trades": 2661,
+      "win_pct": 48.3,
+      "avg_r": -0.225,
+      "pf": 0.71,
+      "exp_pct": -0.1706,
+      "gross_exp_pct": 0.0293,
+      "net_usd": -45409.83,
+      "fees_usd": 53217.55,
+      "max_dd_usd": 45453.08,
+      "per_month": 64.6,
+      "median_risk_pct": 0.907
+     },
+     "second": {
+      "trades": 2708,
+      "win_pct": 43.0,
+      "avg_r": -0.373,
+      "pf": 0.6,
+      "exp_pct": -0.1771,
+      "gross_exp_pct": 0.0229,
+      "net_usd": -47966.17,
+      "fees_usd": 54156.6,
+      "max_dd_usd": 48124.71,
+      "per_month": 65.8,
+      "median_risk_pct": 0.653
+     }
+    },
+    "pday j2 struct": {
+     "first": {
+      "trades": 730,
+      "win_pct": 34.9,
+      "avg_r": -0.242,
+      "pf": 0.83,
+      "exp_pct": -0.1029,
+      "gross_exp_pct": 0.097,
+      "net_usd": -7513.33,
+      "fees_usd": 14595.61,
+      "max_dd_usd": 7941.65,
+      "per_month": 17.7,
+      "median_risk_pct": 0.774
+     },
+     "second": {
+      "trades": 778,
+      "win_pct": 33.8,
+      "avg_r": -0.385,
+      "pf": 0.63,
+      "exp_pct": -0.1745,
+      "gross_exp_pct": 0.0255,
+      "net_usd": -13572.58,
+      "fees_usd": 15558.66,
+      "max_dd_usd": 13689.93,
+      "per_month": 18.9,
+      "median_risk_pct": 0.565
+     }
+    },
+    "pday j2 fixed": {
+     "first": {
+      "trades": 774,
+      "win_pct": 50.5,
+      "avg_r": -0.231,
+      "pf": 0.82,
+      "exp_pct": -0.0858,
+      "gross_exp_pct": 0.1142,
+      "net_usd": -6637.57,
+      "fees_usd": 15475.68,
+      "max_dd_usd": 6766.62,
+      "per_month": 18.8,
+      "median_risk_pct": 0.761
+     },
+     "second": {
+      "trades": 804,
+      "win_pct": 41.4,
+      "avg_r": -0.441,
+      "pf": 0.55,
+      "exp_pct": -0.1798,
+      "gross_exp_pct": 0.0202,
+      "net_usd": -14452.76,
+      "fees_usd": 16079.3,
+      "max_dd_usd": 14543.29,
+      "per_month": 19.5,
+      "median_risk_pct": 0.564
+     }
+    },
+    "pday j4 struct": {
+     "first": {
+      "trades": 880,
+      "win_pct": 37.2,
+      "avg_r": -0.195,
+      "pf": 0.86,
+      "exp_pct": -0.0887,
+      "gross_exp_pct": 0.1112,
+      "net_usd": -7809.0,
+      "fees_usd": 17593.87,
+      "max_dd_usd": 8208.07,
+      "per_month": 21.4,
+      "median_risk_pct": 0.879
+     },
+     "second": {
+      "trades": 932,
+      "win_pct": 37.7,
+      "avg_r": -0.329,
+      "pf": 0.71,
+      "exp_pct": -0.1381,
+      "gross_exp_pct": 0.0619,
+      "net_usd": -12873.26,
+      "fees_usd": 18637.95,
+      "max_dd_usd": 12990.61,
+      "per_month": 22.6,
+      "median_risk_pct": 0.646
+     }
+    },
+    "pday j4 fixed": {
+     "first": {
+      "trades": 926,
+      "win_pct": 50.4,
+      "avg_r": -0.189,
+      "pf": 0.87,
+      "exp_pct": -0.0672,
+      "gross_exp_pct": 0.1327,
+      "net_usd": -6225.96,
+      "fees_usd": 18514.97,
+      "max_dd_usd": 6421.29,
+      "per_month": 22.5,
+      "median_risk_pct": 0.87
+     },
+     "second": {
+      "trades": 962,
+      "win_pct": 44.8,
+      "avg_r": -0.355,
+      "pf": 0.68,
+      "exp_pct": -0.131,
+      "gross_exp_pct": 0.069,
+      "net_usd": -12604.02,
+      "fees_usd": 19238.15,
+      "max_dd_usd": 12663.99,
+      "per_month": 23.4,
+      "median_risk_pct": 0.64
+     }
+    },
+    "swing j2 struct": {
+     "first": {
+      "trades": 2515,
+      "win_pct": 42.4,
+      "avg_r": -0.352,
+      "pf": 0.7,
+      "exp_pct": -0.145,
+      "gross_exp_pct": 0.055,
+      "net_usd": -36477.91,
+      "fees_usd": 50311.71,
+      "max_dd_usd": 36605.53,
+      "per_month": 61.1,
+      "median_risk_pct": 0.673
+     },
+     "second": {
+      "trades": 2691,
+      "win_pct": 35.6,
+      "avg_r": -0.564,
+      "pf": 0.49,
+      "exp_pct": -0.2046,
+      "gross_exp_pct": -0.0046,
+      "net_usd": -55045.59,
+      "fees_usd": 53812.46,
+      "max_dd_usd": 55045.59,
+      "per_month": 65.4,
+      "median_risk_pct": 0.466
+     }
+    },
+    "swing j2 fixed": {
+     "first": {
+      "trades": 2554,
+      "win_pct": 44.5,
+      "avg_r": -0.366,
+      "pf": 0.67,
+      "exp_pct": -0.155,
+      "gross_exp_pct": 0.045,
+      "net_usd": -39592.61,
+      "fees_usd": 51088.22,
+      "max_dd_usd": 39708.51,
+      "per_month": 62.0,
+      "median_risk_pct": 0.673
+     },
+     "second": {
+      "trades": 2725,
+      "win_pct": 36.4,
+      "avg_r": -0.578,
+      "pf": 0.45,
+      "exp_pct": -0.2094,
+      "gross_exp_pct": -0.0094,
+      "net_usd": -57058.16,
+      "fees_usd": 54494.75,
+      "max_dd_usd": 57058.16,
+      "per_month": 66.2,
+      "median_risk_pct": 0.464
+     }
+    },
+    "swing j4 struct": {
+     "first": {
+      "trades": 3015,
+      "win_pct": 44.6,
+      "avg_r": -0.294,
+      "pf": 0.73,
+      "exp_pct": -0.1365,
+      "gross_exp_pct": 0.0635,
+      "net_usd": -41155.14,
+      "fees_usd": 60306.22,
+      "max_dd_usd": 41338.04,
+      "per_month": 73.2,
+      "median_risk_pct": 0.75
+     },
+     "second": {
+      "trades": 3220,
+      "win_pct": 37.6,
+      "avg_r": -0.515,
+      "pf": 0.52,
+      "exp_pct": -0.1955,
+      "gross_exp_pct": 0.0045,
+      "net_usd": -62935.71,
+      "fees_usd": 64390.18,
+      "max_dd_usd": 62935.71,
+      "per_month": 78.2,
+      "median_risk_pct": 0.516
+     }
+    },
+    "swing j4 fixed": {
+     "first": {
+      "trades": 3049,
+      "win_pct": 46.1,
+      "avg_r": -0.306,
+      "pf": 0.72,
+      "exp_pct": -0.1404,
+      "gross_exp_pct": 0.0596,
+      "net_usd": -42820.66,
+      "fees_usd": 60981.55,
+      "max_dd_usd": 42963.5,
+      "per_month": 74.1,
+      "median_risk_pct": 0.752
+     },
+     "second": {
+      "trades": 3249,
+      "win_pct": 38.5,
+      "avg_r": -0.524,
+      "pf": 0.5,
+      "exp_pct": -0.2005,
+      "gross_exp_pct": -0.0006,
+      "net_usd": -65158.37,
+      "fees_usd": 64973.32,
+      "max_dd_usd": 65158.37,
+      "per_month": 78.9,
+      "median_risk_pct": 0.516
+     }
+    },
+    "pday j2 fixed +vol_low": {
+     "first": {
+      "trades": 279,
+      "win_pct": 44.8,
+      "avg_r": -0.428,
+      "pf": 0.6,
+      "exp_pct": -0.1496,
+      "gross_exp_pct": 0.0504,
+      "net_usd": -4172.98,
+      "fees_usd": 5578.88,
+      "max_dd_usd": 4188.65,
+      "per_month": 6.8,
+      "median_risk_pct": 0.489
+     },
+     "second": {
+      "trades": 274,
+      "win_pct": 38.0,
+      "avg_r": -0.586,
+      "pf": 0.41,
+      "exp_pct": -0.1736,
+      "gross_exp_pct": 0.0264,
+      "net_usd": -4755.87,
+      "fees_usd": 5480.26,
+      "max_dd_usd": 4815.15,
+      "per_month": 6.7,
+      "median_risk_pct": 0.359
+     }
+    },
+    "pday j2 fixed +vol_high": {
+     "first": {
+      "trades": 425,
+      "win_pct": 55.8,
+      "avg_r": -0.084,
+      "pf": 0.94,
+      "exp_pct": -0.0356,
+      "gross_exp_pct": 0.1643,
+      "net_usd": -1513.35,
+      "fees_usd": 8496.95,
+      "max_dd_usd": 2877.57,
+      "per_month": 10.3,
+      "median_risk_pct": 0.955
+     },
+     "second": {
+      "trades": 478,
+      "win_pct": 43.3,
+      "avg_r": -0.358,
+      "pf": 0.58,
+      "exp_pct": -0.1927,
+      "gross_exp_pct": 0.0073,
+      "net_usd": -9211.85,
+      "fees_usd": 9558.58,
+      "max_dd_usd": 9277.05,
+      "per_month": 11.6,
+      "median_risk_pct": 0.696
+     }
+    },
+    "pday j2 fixed +with_bias": {
+     "first": {
+      "trades": 2,
+      "win_pct": 50.0,
+      "avg_r": -0.383,
+      "pf": 0.19,
+      "exp_pct": -0.862,
+      "gross_exp_pct": -0.6633,
+      "net_usd": -172.4,
+      "fees_usd": 39.75,
+      "max_dd_usd": 213.55,
+      "per_month": 0.0,
+      "median_risk_pct": 1.58
+     },
+     "second": {
+      "trades": 1,
+      "win_pct": 0.0,
+      "avg_r": -1.142,
+      "pf": 0.0,
+      "exp_pct": -1.6183,
+      "gross_exp_pct": -1.4169,
+      "net_usd": -161.83,
+      "fees_usd": 20.14,
+      "max_dd_usd": 161.83,
+      "per_month": 0.0,
+      "median_risk_pct": 1.417
+     }
+    },
+    "pday j2 fixed +against_bias": {
+     "first": {
+      "trades": 274,
+      "win_pct": 56.9,
+      "avg_r": -0.135,
+      "pf": 1.0,
+      "exp_pct": 0.0015,
+      "gross_exp_pct": 0.2014,
+      "net_usd": 41.18,
+      "fees_usd": 5476.68,
+      "max_dd_usd": 1454.35,
+      "per_month": 6.7,
+      "median_risk_pct": 0.726
+     },
+     "second": {
+      "trades": 234,
+      "win_pct": 45.7,
+      "avg_r": -0.339,
+      "pf": 0.65,
+      "exp_pct": -0.1562,
+      "gross_exp_pct": 0.0438,
+      "net_usd": -3654.91,
+      "fees_usd": 4679.56,
+      "max_dd_usd": 3665.52,
+      "per_month": 5.7,
+      "median_risk_pct": 0.631
+     }
+    },
+    "pday j2 fixed +open_window": {
+     "first": {
+      "trades": 164,
+      "win_pct": 51.2,
+      "avg_r": -0.211,
+      "pf": 0.84,
+      "exp_pct": -0.077,
+      "gross_exp_pct": 0.1229,
+      "net_usd": -1262.59,
+      "fees_usd": 3278.65,
+      "max_dd_usd": 1749.93,
+      "per_month": 4.0,
+      "median_risk_pct": 0.787
+     },
+     "second": {
+      "trades": 173,
+      "win_pct": 47.4,
+      "avg_r": -0.346,
+      "pf": 0.66,
+      "exp_pct": -0.1259,
+      "gross_exp_pct": 0.0741,
+      "net_usd": -2178.53,
+      "fees_usd": 3459.61,
+      "max_dd_usd": 2270.08,
+      "per_month": 4.2,
+      "median_risk_pct": 0.591
+     }
+    },
+    "pday j2 fixed +shallow": {
+     "first": {
+      "trades": 282,
+      "win_pct": 41.5,
+      "avg_r": -0.508,
+      "pf": 0.54,
+      "exp_pct": -0.1658,
+      "gross_exp_pct": 0.0341,
+      "net_usd": -4676.79,
+      "fees_usd": 5637.99,
+      "max_dd_usd": 4692.47,
+      "per_month": 6.9,
+      "median_risk_pct": 0.461
+     },
+     "second": {
+      "trades": 293,
+      "win_pct": 37.2,
+      "avg_r": -0.643,
+      "pf": 0.4,
+      "exp_pct": -0.178,
+      "gross_exp_pct": 0.0219,
+      "net_usd": -5216.39,
+      "fees_usd": 5859.26,
+      "max_dd_usd": 5216.39,
+      "per_month": 7.1,
+      "median_risk_pct": 0.33
+     }
+    }
+   }
+  },
+  "XAUUSD": {
+   "p1_liqhunt": {
+    "k0.10 m0 struct": {
+     "first": {
+      "trades": 3446,
+      "win_pct": 32.8,
+      "avg_r": -0.485,
+      "pf": 0.53,
+      "exp_pct": -0.0508,
+      "gross_exp_pct": -0.0108,
+      "net_usd": -17511.12,
+      "fees_usd": 13783.82,
+      "max_dd_usd": 17547.57,
+      "per_month": 83.7,
+      "median_risk_pct": 0.116
+     },
+     "second": {
+      "trades": 3415,
+      "win_pct": 33.3,
+      "avg_r": -0.438,
+      "pf": 0.61,
+      "exp_pct": -0.0473,
+      "gross_exp_pct": -0.0073,
+      "net_usd": -16169.06,
+      "fees_usd": 13659.76,
+      "max_dd_usd": 16186.64,
+      "per_month": 82.9,
+      "median_risk_pct": 0.128
+     }
+    },
+    "k0.10 m0 fixed": {
+     "first": {
+      "trades": 3640,
+      "win_pct": 40.7,
+      "avg_r": -0.463,
+      "pf": 0.5,
+      "exp_pct": -0.048,
+      "gross_exp_pct": -0.008,
+      "net_usd": -17470.92,
+      "fees_usd": 14559.92,
+      "max_dd_usd": 17486.98,
+      "per_month": 88.4,
+      "median_risk_pct": 0.116
+     },
+     "second": {
+      "trades": 3666,
+      "win_pct": 42.1,
+      "avg_r": -0.418,
+      "pf": 0.59,
+      "exp_pct": -0.0421,
+      "gross_exp_pct": -0.0021,
+      "net_usd": -15421.86,
+      "fees_usd": 14663.74,
+      "max_dd_usd": 15458.51,
+      "per_month": 89.0,
+      "median_risk_pct": 0.128
+     }
+    },
+    "k0.10 m2 struct": {
+     "first": {
+      "trades": 5075,
+      "win_pct": 35.9,
+      "avg_r": -0.395,
+      "pf": 0.6,
+      "exp_pct": -0.0464,
+      "gross_exp_pct": -0.0064,
+      "net_usd": -23539.48,
+      "fees_usd": 20299.97,
+      "max_dd_usd": 23631.35,
+      "per_month": 123.3,
+      "median_risk_pct": 0.139
+     },
+     "second": {
+      "trades": 5172,
+      "win_pct": 36.9,
+      "avg_r": -0.358,
+      "pf": 0.64,
+      "exp_pct": -0.046,
+      "gross_exp_pct": -0.006,
+      "net_usd": -23786.98,
+      "fees_usd": 20688.19,
+      "max_dd_usd": 23966.51,
+      "per_month": 125.6,
+      "median_risk_pct": 0.153
+     }
+    },
+    "k0.10 m2 fixed": {
+     "first": {
+      "trades": 5495,
+      "win_pct": 42.9,
+      "avg_r": -0.385,
+      "pf": 0.57,
+      "exp_pct": -0.0451,
+      "gross_exp_pct": -0.0051,
+      "net_usd": -24804.38,
+      "fees_usd": 21980.0,
+      "max_dd_usd": 24805.85,
+      "per_month": 133.5,
+      "median_risk_pct": 0.14
+     },
+     "second": {
+      "trades": 5617,
+      "win_pct": 44.5,
+      "avg_r": -0.337,
+      "pf": 0.64,
+      "exp_pct": -0.0423,
+      "gross_exp_pct": -0.0023,
+      "net_usd": -23758.68,
+      "fees_usd": 22468.17,
+      "max_dd_usd": 23822.67,
+      "per_month": 136.4,
+      "median_risk_pct": 0.154
+     }
+    },
+    "k0.25 m0 struct": {
+     "first": {
+      "trades": 2603,
+      "win_pct": 33.7,
+      "avg_r": -0.454,
+      "pf": 0.53,
+      "exp_pct": -0.0551,
+      "gross_exp_pct": -0.0151,
+      "net_usd": -14336.15,
+      "fees_usd": 10411.68,
+      "max_dd_usd": 14358.88,
+      "per_month": 63.2,
+      "median_risk_pct": 0.126
+     },
+     "second": {
+      "trades": 2482,
+      "win_pct": 35.2,
+      "avg_r": -0.393,
+      "pf": 0.63,
+      "exp_pct": -0.0469,
+      "gross_exp_pct": -0.0069,
+      "net_usd": -11633.32,
+      "fees_usd": 9927.83,
+      "max_dd_usd": 11667.24,
+      "per_month": 60.3,
+      "median_risk_pct": 0.141
+     }
+    },
+    "k0.25 m0 fixed": {
+     "first": {
+      "trades": 2717,
+      "win_pct": 41.1,
+      "avg_r": -0.442,
+      "pf": 0.5,
+      "exp_pct": -0.0521,
+      "gross_exp_pct": -0.0121,
+      "net_usd": -14147.99,
+      "fees_usd": 10867.72,
+      "max_dd_usd": 14169.16,
+      "per_month": 66.0,
+      "median_risk_pct": 0.126
+     },
+     "second": {
+      "trades": 2613,
+      "win_pct": 43.1,
+      "avg_r": -0.382,
+      "pf": 0.62,
+      "exp_pct": -0.0418,
+      "gross_exp_pct": -0.0018,
+      "net_usd": -10909.43,
+      "fees_usd": 10451.78,
+      "max_dd_usd": 10931.45,
+      "per_month": 63.5,
+      "median_risk_pct": 0.141
+     }
+    },
+    "k0.25 m2 struct": {
+     "first": {
+      "trades": 4450,
+      "win_pct": 36.8,
+      "avg_r": -0.373,
+      "pf": 0.6,
+      "exp_pct": -0.0486,
+      "gross_exp_pct": -0.0086,
+      "net_usd": -21606.22,
+      "fees_usd": 17799.84,
+      "max_dd_usd": 21664.4,
+      "per_month": 108.1,
+      "median_risk_pct": 0.148
+     },
+     "second": {
+      "trades": 4489,
+      "win_pct": 38.7,
+      "avg_r": -0.323,
+      "pf": 0.67,
+      "exp_pct": -0.0445,
+      "gross_exp_pct": -0.0045,
+      "net_usd": -19969.38,
+      "fees_usd": 17956.12,
+      "max_dd_usd": 20166.65,
+      "per_month": 109.0,
+      "median_risk_pct": 0.166
+     }
+    },
+    "k0.25 m2 fixed": {
+     "first": {
+      "trades": 4753,
+      "win_pct": 43.5,
+      "avg_r": -0.362,
+      "pf": 0.58,
+      "exp_pct": -0.0463,
+      "gross_exp_pct": -0.0063,
+      "net_usd": -22026.41,
+      "fees_usd": 19011.86,
+      "max_dd_usd": 22028.01,
+      "per_month": 115.5,
+      "median_risk_pct": 0.148
+     },
+     "second": {
+      "trades": 4803,
+      "win_pct": 45.3,
+      "avg_r": -0.309,
+      "pf": 0.66,
+      "exp_pct": -0.0421,
+      "gross_exp_pct": -0.0021,
+      "net_usd": -20207.72,
+      "fees_usd": 19212.1,
+      "max_dd_usd": 20274.05,
+      "per_month": 116.7,
+      "median_risk_pct": 0.166
+     }
+    },
+    "k0.25 m2 fixed +volume": {
+     "first": {
+      "trades": 732,
+      "win_pct": 44.4,
+      "avg_r": -0.289,
+      "pf": 0.65,
+      "exp_pct": -0.049,
+      "gross_exp_pct": -0.009,
+      "net_usd": -3585.12,
+      "fees_usd": 2928.03,
+      "max_dd_usd": 3684.61,
+      "per_month": 17.8,
+      "median_risk_pct": 0.205
+     },
+     "second": {
+      "trades": 1111,
+      "win_pct": 47.6,
+      "avg_r": -0.237,
+      "pf": 0.79,
+      "exp_pct": -0.0315,
+      "gross_exp_pct": 0.0085,
+      "net_usd": -3496.56,
+      "fees_usd": 4444.13,
+      "max_dd_usd": 3499.73,
+      "per_month": 27.0,
+      "median_risk_pct": 0.209
+     }
+    },
+    "k0.25 m2 fixed +taker": {
+     "first": {
+      "trades": 4753,
+      "win_pct": 43.5,
+      "avg_r": -0.362,
+      "pf": 0.58,
+      "exp_pct": -0.0463,
+      "gross_exp_pct": -0.0063,
+      "net_usd": -22026.41,
+      "fees_usd": 19011.86,
+      "max_dd_usd": 22028.01,
+      "per_month": 115.5,
+      "median_risk_pct": 0.148
+     },
+     "second": {
+      "trades": 4803,
+      "win_pct": 45.3,
+      "avg_r": -0.309,
+      "pf": 0.66,
+      "exp_pct": -0.0421,
+      "gross_exp_pct": -0.0021,
+      "net_usd": -20207.72,
+      "fees_usd": 19212.1,
+      "max_dd_usd": 20274.05,
+      "per_month": 116.7,
+      "median_risk_pct": 0.166
+     }
+    },
+    "k0.25 m2 fixed +funding": {
+     "first": {
+      "trades": 4753,
+      "win_pct": 43.5,
+      "avg_r": -0.362,
+      "pf": 0.58,
+      "exp_pct": -0.0463,
+      "gross_exp_pct": -0.0063,
+      "net_usd": -22026.41,
+      "fees_usd": 19011.86,
+      "max_dd_usd": 22028.01,
+      "per_month": 115.5,
+      "median_risk_pct": 0.148
+     },
+     "second": {
+      "trades": 4803,
+      "win_pct": 45.3,
+      "avg_r": -0.309,
+      "pf": 0.66,
+      "exp_pct": -0.0421,
+      "gross_exp_pct": -0.0021,
+      "net_usd": -20207.72,
+      "fees_usd": 19212.1,
+      "max_dd_usd": 20274.05,
+      "per_month": 116.7,
+      "median_risk_pct": 0.166
+     }
+    }
+   },
+   "p2_trap": {
+    "n48 j2 struct": {
+     "first": {
+      "trades": 1977,
+      "win_pct": 36.2,
+      "avg_r": -0.274,
+      "pf": 0.73,
+      "exp_pct": -0.0369,
+      "gross_exp_pct": 0.0031,
+      "net_usd": -7297.96,
+      "fees_usd": 7908.08,
+      "max_dd_usd": 8002.84,
+      "per_month": 48.0,
+      "median_risk_pct": 0.166
+     },
+     "second": {
+      "trades": 2103,
+      "win_pct": 33.1,
+      "avg_r": -0.328,
+      "pf": 0.71,
+      "exp_pct": -0.0463,
+      "gross_exp_pct": -0.0063,
+      "net_usd": -9733.34,
+      "fees_usd": 8412.11,
+      "max_dd_usd": 9924.38,
+      "per_month": 51.1,
+      "median_risk_pct": 0.179
+     }
+    },
+    "n48 j2 fixed": {
+     "first": {
+      "trades": 1999,
+      "win_pct": 45.7,
+      "avg_r": -0.311,
+      "pf": 0.65,
+      "exp_pct": -0.0412,
+      "gross_exp_pct": -0.0012,
+      "net_usd": -8236.47,
+      "fees_usd": 7996.05,
+      "max_dd_usd": 8494.34,
+      "per_month": 48.6,
+      "median_risk_pct": 0.165
+     },
+     "second": {
+      "trades": 2118,
+      "win_pct": 45.1,
+      "avg_r": -0.308,
+      "pf": 0.69,
+      "exp_pct": -0.0414,
+      "gross_exp_pct": -0.0014,
+      "net_usd": -8761.26,
+      "fees_usd": 8472.02,
+      "max_dd_usd": 8903.76,
+      "per_month": 51.4,
+      "median_risk_pct": 0.179
+     }
+    },
+    "n48 j4 struct": {
+     "first": {
+      "trades": 2277,
+      "win_pct": 37.5,
+      "avg_r": -0.251,
+      "pf": 0.75,
+      "exp_pct": -0.0336,
+      "gross_exp_pct": 0.0064,
+      "net_usd": -7653.11,
+      "fees_usd": 9108.25,
+      "max_dd_usd": 8476.06,
+      "per_month": 55.3,
+      "median_risk_pct": 0.176
+     },
+     "second": {
+      "trades": 2432,
+      "win_pct": 34.1,
+      "avg_r": -0.31,
+      "pf": 0.7,
+      "exp_pct": -0.0485,
+      "gross_exp_pct": -0.0085,
+      "net_usd": -11784.15,
+      "fees_usd": 9728.14,
+      "max_dd_usd": 12057.92,
+      "per_month": 59.1,
+      "median_risk_pct": 0.19
+     }
+    },
+    "n48 j4 fixed": {
+     "first": {
+      "trades": 2315,
+      "win_pct": 46.6,
+      "avg_r": -0.283,
+      "pf": 0.69,
+      "exp_pct": -0.0369,
+      "gross_exp_pct": 0.0031,
+      "net_usd": -8542.36,
+      "fees_usd": 9260.17,
+      "max_dd_usd": 9045.1,
+      "per_month": 56.2,
+      "median_risk_pct": 0.176
+     },
+     "second": {
+      "trades": 2460,
+      "win_pct": 45.6,
+      "avg_r": -0.29,
+      "pf": 0.69,
+      "exp_pct": -0.0428,
+      "gross_exp_pct": -0.0028,
+      "net_usd": -10540.35,
+      "fees_usd": 9840.08,
+      "max_dd_usd": 10867.96,
+      "per_month": 59.8,
+      "median_risk_pct": 0.189
+     }
+    },
+    "pday j2 struct": {
+     "first": {
+      "trades": 763,
+      "win_pct": 33.0,
+      "avg_r": -0.405,
+      "pf": 0.58,
+      "exp_pct": -0.0569,
+      "gross_exp_pct": -0.0169,
+      "net_usd": -4342.93,
+      "fees_usd": 3052.13,
+      "max_dd_usd": 4342.93,
+      "per_month": 18.5,
+      "median_risk_pct": 0.159
+     },
+     "second": {
+      "trades": 715,
+      "win_pct": 36.8,
+      "avg_r": -0.3,
+      "pf": 0.79,
+      "exp_pct": -0.0308,
+      "gross_exp_pct": 0.0092,
+      "net_usd": -2204.75,
+      "fees_usd": 2860.18,
+      "max_dd_usd": 2252.18,
+      "per_month": 17.4,
+      "median_risk_pct": 0.188
+     }
+    },
+    "pday j2 fixed": {
+     "first": {
+      "trades": 772,
+      "win_pct": 42.4,
+      "avg_r": -0.383,
+      "pf": 0.56,
+      "exp_pct": -0.0526,
+      "gross_exp_pct": -0.0126,
+      "net_usd": -4060.7,
+      "fees_usd": 3088.12,
+      "max_dd_usd": 4060.7,
+      "per_month": 18.8,
+      "median_risk_pct": 0.159
+     },
+     "second": {
+      "trades": 746,
+      "win_pct": 47.9,
+      "avg_r": -0.255,
+      "pf": 0.8,
+      "exp_pct": -0.0255,
+      "gross_exp_pct": 0.0145,
+      "net_usd": -1901.21,
+      "fees_usd": 2984.04,
+      "max_dd_usd": 2053.15,
+      "per_month": 18.1,
+      "median_risk_pct": 0.188
+     }
+    },
+    "pday j4 struct": {
+     "first": {
+      "trades": 907,
+      "win_pct": 36.6,
+      "avg_r": -0.313,
+      "pf": 0.7,
+      "exp_pct": -0.0421,
+      "gross_exp_pct": -0.0021,
+      "net_usd": -3821.3,
+      "fees_usd": 3628.23,
+      "max_dd_usd": 3821.3,
+      "per_month": 22.0,
+      "median_risk_pct": 0.176
+     },
+     "second": {
+      "trades": 867,
+      "win_pct": 39.2,
+      "avg_r": -0.272,
+      "pf": 0.84,
+      "exp_pct": -0.0244,
+      "gross_exp_pct": 0.0156,
+      "net_usd": -2117.21,
+      "fees_usd": 3468.2,
+      "max_dd_usd": 2307.35,
+      "per_month": 21.1,
+      "median_risk_pct": 0.21
+     }
+    },
+    "pday j4 fixed": {
+     "first": {
+      "trades": 920,
+      "win_pct": 44.6,
+      "avg_r": -0.312,
+      "pf": 0.67,
+      "exp_pct": -0.0407,
+      "gross_exp_pct": -0.0007,
+      "net_usd": -3745.24,
+      "fees_usd": 3680.19,
+      "max_dd_usd": 3745.24,
+      "per_month": 22.4,
+      "median_risk_pct": 0.175
+     },
+     "second": {
+      "trades": 910,
+      "win_pct": 48.9,
+      "avg_r": -0.23,
+      "pf": 0.83,
+      "exp_pct": -0.0233,
+      "gross_exp_pct": 0.0167,
+      "net_usd": -2120.31,
+      "fees_usd": 3640.09,
+      "max_dd_usd": 2424.28,
+      "per_month": 22.1,
+      "median_risk_pct": 0.207
+     }
+    },
+    "swing j2 struct": {
+     "first": {
+      "trades": 1843,
+      "win_pct": 43.3,
+      "avg_r": -0.318,
+      "pf": 0.66,
+      "exp_pct": -0.0371,
+      "gross_exp_pct": 0.0029,
+      "net_usd": -6837.82,
+      "fees_usd": 7371.78,
+      "max_dd_usd": 6952.01,
+      "per_month": 44.8,
+      "median_risk_pct": 0.143
+     },
+     "second": {
+      "trades": 1766,
+      "win_pct": 43.5,
+      "avg_r": -0.289,
+      "pf": 0.72,
+      "exp_pct": -0.0349,
+      "gross_exp_pct": 0.0051,
+      "net_usd": -6157.16,
+      "fees_usd": 7064.17,
+      "max_dd_usd": 6401.46,
+      "per_month": 42.9,
+      "median_risk_pct": 0.161
+     }
+    },
+    "swing j2 fixed": {
+     "first": {
+      "trades": 1857,
+      "win_pct": 46.4,
+      "avg_r": -0.326,
+      "pf": 0.64,
+      "exp_pct": -0.0376,
+      "gross_exp_pct": 0.0024,
+      "net_usd": -6984.75,
+      "fees_usd": 7427.84,
+      "max_dd_usd": 7035.59,
+      "per_month": 45.1,
+      "median_risk_pct": 0.143
+     },
+     "second": {
+      "trades": 1780,
+      "win_pct": 45.7,
+      "avg_r": -0.308,
+      "pf": 0.68,
+      "exp_pct": -0.0384,
+      "gross_exp_pct": 0.0016,
+      "net_usd": -6827.52,
+      "fees_usd": 7120.04,
+      "max_dd_usd": 7038.37,
+      "per_month": 43.2,
+      "median_risk_pct": 0.161
+     }
+    },
+    "swing j4 struct": {
+     "first": {
+      "trades": 2243,
+      "win_pct": 44.4,
+      "avg_r": -0.289,
+      "pf": 0.68,
+      "exp_pct": -0.0366,
+      "gross_exp_pct": 0.0034,
+      "net_usd": -8204.87,
+      "fees_usd": 8971.73,
+      "max_dd_usd": 8274.27,
+      "per_month": 54.5,
+      "median_risk_pct": 0.161
+     },
+     "second": {
+      "trades": 2150,
+      "win_pct": 44.7,
+      "avg_r": -0.261,
+      "pf": 0.71,
+      "exp_pct": -0.0385,
+      "gross_exp_pct": 0.0015,
+      "net_usd": -8269.72,
+      "fees_usd": 8599.94,
+      "max_dd_usd": 8313.78,
+      "per_month": 52.2,
+      "median_risk_pct": 0.186
+     }
+    },
+    "swing j4 fixed": {
+     "first": {
+      "trades": 2248,
+      "win_pct": 47.1,
+      "avg_r": -0.294,
+      "pf": 0.67,
+      "exp_pct": -0.0361,
+      "gross_exp_pct": 0.0039,
+      "net_usd": -8120.53,
+      "fees_usd": 8991.67,
+      "max_dd_usd": 8207.7,
+      "per_month": 54.6,
+      "median_risk_pct": 0.16
+     },
+     "second": {
+      "trades": 2170,
+      "win_pct": 46.3,
+      "avg_r": -0.282,
+      "pf": 0.68,
+      "exp_pct": -0.0424,
+      "gross_exp_pct": -0.0024,
+      "net_usd": -9190.91,
+      "fees_usd": 8679.89,
+      "max_dd_usd": 9382.07,
+      "per_month": 52.7,
+      "median_risk_pct": 0.185
+     }
+    },
+    "pday j2 fixed +vol_low": {
+     "first": {
+      "trades": 350,
+      "win_pct": 40.9,
+      "avg_r": -0.48,
+      "pf": 0.46,
+      "exp_pct": -0.059,
+      "gross_exp_pct": -0.019,
+      "net_usd": -2066.01,
+      "fees_usd": 1400.12,
+      "max_dd_usd": 2066.01,
+      "per_month": 8.5,
+      "median_risk_pct": 0.132
+     },
+     "second": {
+      "trades": 326,
+      "win_pct": 47.2,
+      "avg_r": -0.298,
+      "pf": 0.63,
+      "exp_pct": -0.0399,
+      "gross_exp_pct": 0.0001,
+      "net_usd": -1302.16,
+      "fees_usd": 1304.07,
+      "max_dd_usd": 1356.35,
+      "per_month": 7.9,
+      "median_risk_pct": 0.147
+     }
+    },
+    "pday j2 fixed +vol_high": {
+     "first": {
+      "trades": 203,
+      "win_pct": 41.9,
+      "avg_r": -0.31,
+      "pf": 0.6,
+      "exp_pct": -0.0526,
+      "gross_exp_pct": -0.0126,
+      "net_usd": -1068.73,
+      "fees_usd": 812.0,
+      "max_dd_usd": 1111.39,
+      "per_month": 4.9,
+      "median_risk_pct": 0.188
+     },
+     "second": {
+      "trades": 250,
+      "win_pct": 53.2,
+      "avg_r": -0.104,
+      "pf": 1.1,
+      "exp_pct": 0.0142,
+      "gross_exp_pct": 0.0542,
+      "net_usd": 354.35,
+      "fees_usd": 999.96,
+      "max_dd_usd": 566.32,
+      "per_month": 6.1,
+      "median_risk_pct": 0.232
+     }
+    },
+    "pday j2 fixed +with_bias": {
+     "first": {
+      "trades": 32,
+      "win_pct": 34.4,
+      "avg_r": -0.511,
+      "pf": 0.68,
+      "exp_pct": -0.0373,
+      "gross_exp_pct": 0.0027,
+      "net_usd": -119.23,
+      "fees_usd": 128.01,
+      "max_dd_usd": 240.2,
+      "per_month": 0.8,
+      "median_risk_pct": 0.138
+     },
+     "second": {
+      "trades": 28,
+      "win_pct": 39.3,
+      "avg_r": -0.38,
+      "pf": 0.48,
+      "exp_pct": -0.0535,
+      "gross_exp_pct": -0.0135,
+      "net_usd": -149.77,
+      "fees_usd": 112.03,
+      "max_dd_usd": 157.39,
+      "per_month": 0.7,
+      "median_risk_pct": 0.144
+     }
+    },
+    "pday j2 fixed +against_bias": {
+     "first": {
+      "trades": 222,
+      "win_pct": 40.1,
+      "avg_r": -0.424,
+      "pf": 0.48,
+      "exp_pct": -0.0627,
+      "gross_exp_pct": -0.0227,
+      "net_usd": -1390.84,
+      "fees_usd": 888.0,
+      "max_dd_usd": 1548.46,
+      "per_month": 5.4,
+      "median_risk_pct": 0.153
+     },
+     "second": {
+      "trades": 227,
+      "win_pct": 46.7,
+      "avg_r": -0.297,
+      "pf": 0.75,
+      "exp_pct": -0.0295,
+      "gross_exp_pct": 0.0105,
+      "net_usd": -669.33,
+      "fees_usd": 907.96,
+      "max_dd_usd": 719.0,
+      "per_month": 5.5,
+      "median_risk_pct": 0.185
+     }
+    },
+    "pday j2 fixed +open_window": {
+     "first": {
+      "trades": 217,
+      "win_pct": 41.9,
+      "avg_r": -0.312,
+      "pf": 0.52,
+      "exp_pct": -0.0687,
+      "gross_exp_pct": -0.0287,
+      "net_usd": -1491.31,
+      "fees_usd": 867.96,
+      "max_dd_usd": 1491.31,
+      "per_month": 5.3,
+      "median_risk_pct": 0.203
+     },
+     "second": {
+      "trades": 192,
+      "win_pct": 51.6,
+      "avg_r": -0.196,
+      "pf": 0.69,
+      "exp_pct": -0.0405,
+      "gross_exp_pct": -0.0005,
+      "net_usd": -777.16,
+      "fees_usd": 768.0,
+      "max_dd_usd": 918.02,
+      "per_month": 4.7,
+      "median_risk_pct": 0.208
+     }
+    },
+    "pday j2 fixed +shallow": {
+     "first": {
+      "trades": 290,
+      "win_pct": 34.8,
+      "avg_r": -0.594,
+      "pf": 0.32,
+      "exp_pct": -0.0623,
+      "gross_exp_pct": -0.0223,
+      "net_usd": -1807.83,
+      "fees_usd": 1159.97,
+      "max_dd_usd": 1807.83,
+      "per_month": 7.0,
+      "median_risk_pct": 0.094
+     },
+     "second": {
+      "trades": 288,
+      "win_pct": 41.7,
+      "avg_r": -0.443,
+      "pf": 0.52,
+      "exp_pct": -0.0467,
+      "gross_exp_pct": -0.0067,
+      "net_usd": -1345.3,
+      "fees_usd": 1152.04,
+      "max_dd_usd": 1345.3,
+      "per_month": 7.0,
+      "median_risk_pct": 0.119
+     }
+    }
+   }
+  },
+  "XAGUSD": {
+   "p1_liqhunt": {
+    "k0.10 m0 struct": {
+     "first": {
+      "trades": 4000,
+      "win_pct": 36.2,
+      "avg_r": -0.376,
+      "pf": 0.64,
+      "exp_pct": -0.0774,
+      "gross_exp_pct": -0.0174,
+      "net_usd": -30942.98,
+      "fees_usd": 24001.05,
+      "max_dd_usd": 31132.13,
+      "per_month": 97.2,
+      "median_risk_pct": 0.252
+     },
+     "second": {
+      "trades": 4057,
+      "win_pct": 37.4,
+      "avg_r": -0.311,
+      "pf": 0.69,
+      "exp_pct": -0.074,
+      "gross_exp_pct": -0.014,
+      "net_usd": -30009.73,
+      "fees_usd": 24339.72,
+      "max_dd_usd": 30040.4,
+      "per_month": 98.5,
+      "median_risk_pct": 0.272
+     }
+    },
+    "k0.10 m0 fixed": {
+     "first": {
+      "trades": 4298,
+      "win_pct": 43.7,
+      "avg_r": -0.364,
+      "pf": 0.61,
+      "exp_pct": -0.0746,
+      "gross_exp_pct": -0.0146,
+      "net_usd": -32066.92,
+      "fees_usd": 25788.78,
+      "max_dd_usd": 32274.05,
+      "per_month": 104.4,
+      "median_risk_pct": 0.252
+     },
+     "second": {
+      "trades": 4339,
+      "win_pct": 45.8,
+      "avg_r": -0.304,
+      "pf": 0.66,
+      "exp_pct": -0.0714,
+      "gross_exp_pct": -0.0114,
+      "net_usd": -30998.54,
+      "fees_usd": 26032.7,
+      "max_dd_usd": 31006.67,
+      "per_month": 105.4,
+      "median_risk_pct": 0.274
+     }
+    },
+    "k0.10 m2 struct": {
+     "first": {
+      "trades": 5701,
+      "win_pct": 39.6,
+      "avg_r": -0.295,
+      "pf": 0.69,
+      "exp_pct": -0.0712,
+      "gross_exp_pct": -0.0112,
+      "net_usd": -40575.7,
+      "fees_usd": 34208.22,
+      "max_dd_usd": 40867.29,
+      "per_month": 138.5,
+      "median_risk_pct": 0.305
+     },
+     "second": {
+      "trades": 5711,
+      "win_pct": 39.5,
+      "avg_r": -0.27,
+      "pf": 0.73,
+      "exp_pct": -0.0694,
+      "gross_exp_pct": -0.0094,
+      "net_usd": -39624.21,
+      "fees_usd": 34263.89,
+      "max_dd_usd": 39865.29,
+      "per_month": 138.7,
+      "median_risk_pct": 0.323
+     }
+    },
+    "k0.10 m2 fixed": {
+     "first": {
+      "trades": 6233,
+      "win_pct": 45.4,
+      "avg_r": -0.297,
+      "pf": 0.66,
+      "exp_pct": -0.0738,
+      "gross_exp_pct": -0.0138,
+      "net_usd": -45983.09,
+      "fees_usd": 37399.89,
+      "max_dd_usd": 46221.97,
+      "per_month": 151.4,
+      "median_risk_pct": 0.308
+     },
+     "second": {
+      "trades": 6275,
+      "win_pct": 46.5,
+      "avg_r": -0.261,
+      "pf": 0.71,
+      "exp_pct": -0.0683,
+      "gross_exp_pct": -0.0084,
+      "net_usd": -42888.66,
+      "fees_usd": 37648.09,
+      "max_dd_usd": 43103.88,
+      "per_month": 152.4,
+      "median_risk_pct": 0.326
+     }
+    },
+    "k0.25 m0 struct": {
+     "first": {
+      "trades": 2964,
+      "win_pct": 38.4,
+      "avg_r": -0.302,
+      "pf": 0.67,
+      "exp_pct": -0.0762,
+      "gross_exp_pct": -0.0162,
+      "net_usd": -22575.07,
+      "fees_usd": 17784.93,
+      "max_dd_usd": 22840.98,
+      "per_month": 72.0,
+      "median_risk_pct": 0.28
+     },
+     "second": {
+      "trades": 2998,
+      "win_pct": 39.3,
+      "avg_r": -0.286,
+      "pf": 0.69,
+      "exp_pct": -0.078,
+      "gross_exp_pct": -0.018,
+      "net_usd": -23382.08,
+      "fees_usd": 17986.24,
+      "max_dd_usd": 23382.08,
+      "per_month": 72.8,
+      "median_risk_pct": 0.307
+     }
+    },
+    "k0.25 m0 fixed": {
+     "first": {
+      "trades": 3121,
+      "win_pct": 45.6,
+      "avg_r": -0.305,
+      "pf": 0.64,
+      "exp_pct": -0.0749,
+      "gross_exp_pct": -0.0149,
+      "net_usd": -23363.16,
+      "fees_usd": 18726.36,
+      "max_dd_usd": 23564.75,
+      "per_month": 75.8,
+      "median_risk_pct": 0.281
+     },
+     "second": {
+      "trades": 3145,
+      "win_pct": 47.2,
+      "avg_r": -0.269,
+      "pf": 0.69,
+      "exp_pct": -0.0727,
+      "gross_exp_pct": -0.0127,
+      "net_usd": -22851.61,
+      "fees_usd": 18868.44,
+      "max_dd_usd": 22856.94,
+      "per_month": 76.4,
+      "median_risk_pct": 0.309
+     }
+    },
+    "k0.25 m2 struct": {
+     "first": {
+      "trades": 4997,
+      "win_pct": 40.6,
+      "avg_r": -0.26,
+      "pf": 0.7,
+      "exp_pct": -0.0722,
+      "gross_exp_pct": -0.0122,
+      "net_usd": -36073.63,
+      "fees_usd": 29984.32,
+      "max_dd_usd": 36431.03,
+      "per_month": 121.4,
+      "median_risk_pct": 0.33
+     },
+     "second": {
+      "trades": 4934,
+      "win_pct": 41.0,
+      "avg_r": -0.243,
+      "pf": 0.74,
+      "exp_pct": -0.0681,
+      "gross_exp_pct": -0.0081,
+      "net_usd": -33588.46,
+      "fees_usd": 29602.86,
+      "max_dd_usd": 33753.49,
+      "per_month": 119.8,
+      "median_risk_pct": 0.351
+     }
+    },
+    "k0.25 m2 fixed": {
+     "first": {
+      "trades": 5380,
+      "win_pct": 46.2,
+      "avg_r": -0.265,
+      "pf": 0.66,
+      "exp_pct": -0.0758,
+      "gross_exp_pct": -0.0158,
+      "net_usd": -40784.58,
+      "fees_usd": 32281.68,
+      "max_dd_usd": 41148.34,
+      "per_month": 130.7,
+      "median_risk_pct": 0.333
+     },
+     "second": {
+      "trades": 5358,
+      "win_pct": 47.4,
+      "avg_r": -0.234,
+      "pf": 0.73,
+      "exp_pct": -0.0664,
+      "gross_exp_pct": -0.0064,
+      "net_usd": -35581.18,
+      "fees_usd": 32146.82,
+      "max_dd_usd": 35791.69,
+      "per_month": 130.1,
+      "median_risk_pct": 0.354
+     }
+    },
+    "k0.25 m2 fixed +volume": {
+     "first": {
+      "trades": 1382,
+      "win_pct": 46.7,
+      "avg_r": -0.229,
+      "pf": 0.75,
+      "exp_pct": -0.0649,
+      "gross_exp_pct": -0.0049,
+      "net_usd": -8972.81,
+      "fees_usd": 8292.34,
+      "max_dd_usd": 8972.81,
+      "per_month": 33.6,
+      "median_risk_pct": 0.406
+     },
+     "second": {
+      "trades": 1342,
+      "win_pct": 48.7,
+      "avg_r": -0.194,
+      "pf": 0.82,
+      "exp_pct": -0.053,
+      "gross_exp_pct": 0.007,
+      "net_usd": -7114.51,
+      "fees_usd": 8052.3,
+      "max_dd_usd": 7174.16,
+      "per_month": 32.6,
+      "median_risk_pct": 0.43
+     }
+    },
+    "k0.25 m2 fixed +taker": {
+     "first": {
+      "trades": 5380,
+      "win_pct": 46.2,
+      "avg_r": -0.265,
+      "pf": 0.66,
+      "exp_pct": -0.0758,
+      "gross_exp_pct": -0.0158,
+      "net_usd": -40784.58,
+      "fees_usd": 32281.68,
+      "max_dd_usd": 41148.34,
+      "per_month": 130.7,
+      "median_risk_pct": 0.333
+     },
+     "second": {
+      "trades": 5358,
+      "win_pct": 47.4,
+      "avg_r": -0.234,
+      "pf": 0.73,
+      "exp_pct": -0.0664,
+      "gross_exp_pct": -0.0064,
+      "net_usd": -35581.18,
+      "fees_usd": 32146.82,
+      "max_dd_usd": 35791.69,
+      "per_month": 130.1,
+      "median_risk_pct": 0.354
+     }
+    },
+    "k0.25 m2 fixed +funding": {
+     "first": {
+      "trades": 5380,
+      "win_pct": 46.2,
+      "avg_r": -0.265,
+      "pf": 0.66,
+      "exp_pct": -0.0758,
+      "gross_exp_pct": -0.0158,
+      "net_usd": -40784.58,
+      "fees_usd": 32281.68,
+      "max_dd_usd": 41148.34,
+      "per_month": 130.7,
+      "median_risk_pct": 0.333
+     },
+     "second": {
+      "trades": 5358,
+      "win_pct": 47.4,
+      "avg_r": -0.234,
+      "pf": 0.73,
+      "exp_pct": -0.0664,
+      "gross_exp_pct": -0.0064,
+      "net_usd": -35581.18,
+      "fees_usd": 32146.82,
+      "max_dd_usd": 35791.69,
+      "per_month": 130.1,
+      "median_risk_pct": 0.354
+     }
+    }
+   },
+   "p2_trap": {
+    "n48 j2 struct": {
+     "first": {
+      "trades": 1899,
+      "win_pct": 36.4,
+      "avg_r": -0.198,
+      "pf": 0.78,
+      "exp_pct": -0.0591,
+      "gross_exp_pct": 0.0009,
+      "net_usd": -11224.24,
+      "fees_usd": 11395.07,
+      "max_dd_usd": 11955.96,
+      "per_month": 46.1,
+      "median_risk_pct": 0.368
+     },
+     "second": {
+      "trades": 1994,
+      "win_pct": 33.7,
+      "avg_r": -0.211,
+      "pf": 0.79,
+      "exp_pct": -0.0671,
+      "gross_exp_pct": -0.0071,
+      "net_usd": -13386.82,
+      "fees_usd": 11963.44,
+      "max_dd_usd": 13452.4,
+      "per_month": 48.4,
+      "median_risk_pct": 0.375
+     }
+    },
+    "n48 j2 fixed": {
+     "first": {
+      "trades": 1924,
+      "win_pct": 48.0,
+      "avg_r": -0.205,
+      "pf": 0.71,
+      "exp_pct": -0.0698,
+      "gross_exp_pct": -0.0098,
+      "net_usd": -13439.06,
+      "fees_usd": 11544.88,
+      "max_dd_usd": 13604.52,
+      "per_month": 46.7,
+      "median_risk_pct": 0.368
+     },
+     "second": {
+      "trades": 2017,
+      "win_pct": 47.3,
+      "avg_r": -0.22,
+      "pf": 0.73,
+      "exp_pct": -0.069,
+      "gross_exp_pct": -0.009,
+      "net_usd": -13914.62,
+      "fees_usd": 12101.41,
+      "max_dd_usd": 13975.68,
+      "per_month": 49.0,
+      "median_risk_pct": 0.373
+     }
+    },
+    "n48 j4 struct": {
+     "first": {
+      "trades": 2198,
+      "win_pct": 37.0,
+      "avg_r": -0.193,
+      "pf": 0.77,
+      "exp_pct": -0.0656,
+      "gross_exp_pct": -0.0056,
+      "net_usd": -14422.08,
+      "fees_usd": 13188.38,
+      "max_dd_usd": 14884.71,
+      "per_month": 53.4,
+      "median_risk_pct": 0.381
+     },
+     "second": {
+      "trades": 2306,
+      "win_pct": 34.0,
+      "avg_r": -0.221,
+      "pf": 0.76,
+      "exp_pct": -0.0777,
+      "gross_exp_pct": -0.0177,
+      "net_usd": -17924.62,
+      "fees_usd": 13835.77,
+      "max_dd_usd": 18171.46,
+      "per_month": 56.0,
+      "median_risk_pct": 0.391
+     }
+    },
+    "n48 j4 fixed": {
+     "first": {
+      "trades": 2235,
+      "win_pct": 47.7,
+      "avg_r": -0.205,
+      "pf": 0.69,
+      "exp_pct": -0.0764,
+      "gross_exp_pct": -0.0164,
+      "net_usd": -17067.15,
+      "fees_usd": 13410.5,
+      "max_dd_usd": 17289.38,
+      "per_month": 54.3,
+      "median_risk_pct": 0.382
+     },
+     "second": {
+      "trades": 2343,
+      "win_pct": 47.2,
+      "avg_r": -0.22,
+      "pf": 0.72,
+      "exp_pct": -0.0757,
+      "gross_exp_pct": -0.0157,
+      "net_usd": -17744.45,
+      "fees_usd": 14057.57,
+      "max_dd_usd": 17972.57,
+      "per_month": 56.9,
+      "median_risk_pct": 0.392
+     }
+    },
+    "pday j2 struct": {
+     "first": {
+      "trades": 773,
+      "win_pct": 36.4,
+      "avg_r": -0.264,
+      "pf": 0.73,
+      "exp_pct": -0.0689,
+      "gross_exp_pct": -0.0089,
+      "net_usd": -5324.71,
+      "fees_usd": 4638.67,
+      "max_dd_usd": 5345.85,
+      "per_month": 18.8,
+      "median_risk_pct": 0.355
+     },
+     "second": {
+      "trades": 779,
+      "win_pct": 39.4,
+      "avg_r": -0.217,
+      "pf": 0.81,
+      "exp_pct": -0.058,
+      "gross_exp_pct": 0.002,
+      "net_usd": -4516.88,
+      "fees_usd": 4674.1,
+      "max_dd_usd": 5127.88,
+      "per_month": 18.9,
+      "median_risk_pct": 0.377
+     }
+    },
+    "pday j2 fixed": {
+     "first": {
+      "trades": 788,
+      "win_pct": 46.8,
+      "avg_r": -0.246,
+      "pf": 0.76,
+      "exp_pct": -0.0517,
+      "gross_exp_pct": 0.0083,
+      "net_usd": -4074.61,
+      "fees_usd": 4728.14,
+      "max_dd_usd": 4118.73,
+      "per_month": 19.1,
+      "median_risk_pct": 0.351
+     },
+     "second": {
+      "trades": 802,
+      "win_pct": 52.9,
+      "avg_r": -0.144,
+      "pf": 0.83,
+      "exp_pct": -0.0437,
+      "gross_exp_pct": 0.0163,
+      "net_usd": -3505.65,
+      "fees_usd": 4812.05,
+      "max_dd_usd": 4415.6,
+      "per_month": 19.5,
+      "median_risk_pct": 0.373
+     }
+    },
+    "pday j4 struct": {
+     "first": {
+      "trades": 958,
+      "win_pct": 37.4,
+      "avg_r": -0.241,
+      "pf": 0.71,
+      "exp_pct": -0.079,
+      "gross_exp_pct": -0.019,
+      "net_usd": -7567.21,
+      "fees_usd": 5748.74,
+      "max_dd_usd": 7706.83,
+      "per_month": 23.3,
+      "median_risk_pct": 0.397
+     },
+     "second": {
+      "trades": 948,
+      "win_pct": 38.8,
+      "avg_r": -0.229,
+      "pf": 0.81,
+      "exp_pct": -0.0591,
+      "gross_exp_pct": 0.0009,
+      "net_usd": -5598.46,
+      "fees_usd": 5687.94,
+      "max_dd_usd": 5795.99,
+      "per_month": 23.0,
+      "median_risk_pct": 0.421
+     }
+    },
+    "pday j4 fixed": {
+     "first": {
+      "trades": 975,
+      "win_pct": 46.3,
+      "avg_r": -0.234,
+      "pf": 0.73,
+      "exp_pct": -0.0657,
+      "gross_exp_pct": -0.0057,
+      "net_usd": -6407.37,
+      "fees_usd": 5850.26,
+      "max_dd_usd": 6464.49,
+      "per_month": 23.7,
+      "median_risk_pct": 0.396
+     },
+     "second": {
+      "trades": 971,
+      "win_pct": 50.8,
+      "avg_r": -0.155,
+      "pf": 0.85,
+      "exp_pct": -0.0419,
+      "gross_exp_pct": 0.0181,
+      "net_usd": -4072.98,
+      "fees_usd": 5825.84,
+      "max_dd_usd": 4393.49,
+      "per_month": 23.6,
+      "median_risk_pct": 0.423
+     }
+    },
+    "swing j2 struct": {
+     "first": {
+      "trades": 1928,
+      "win_pct": 44.7,
+      "avg_r": -0.246,
+      "pf": 0.75,
+      "exp_pct": -0.0546,
+      "gross_exp_pct": 0.0054,
+      "net_usd": -10518.59,
+      "fees_usd": 11568.01,
+      "max_dd_usd": 10623.39,
+      "per_month": 46.8,
+      "median_risk_pct": 0.323
+     },
+     "second": {
+      "trades": 1821,
+      "win_pct": 43.8,
+      "avg_r": -0.243,
+      "pf": 0.69,
+      "exp_pct": -0.0775,
+      "gross_exp_pct": -0.0175,
+      "net_usd": -14117.06,
+      "fees_usd": 10925.8,
+      "max_dd_usd": 14128.64,
+      "per_month": 44.2,
+      "median_risk_pct": 0.331
+     }
+    },
+    "swing j2 fixed": {
+     "first": {
+      "trades": 1945,
+      "win_pct": 48.8,
+      "avg_r": -0.224,
+      "pf": 0.75,
+      "exp_pct": -0.0524,
+      "gross_exp_pct": 0.0076,
+      "net_usd": -10184.09,
+      "fees_usd": 11669.81,
+      "max_dd_usd": 10345.05,
+      "per_month": 47.3,
+      "median_risk_pct": 0.323
+     },
+     "second": {
+      "trades": 1852,
+      "win_pct": 47.5,
+      "avg_r": -0.247,
+      "pf": 0.7,
+      "exp_pct": -0.0714,
+      "gross_exp_pct": -0.0114,
+      "net_usd": -13226.47,
+      "fees_usd": 11112.29,
+      "max_dd_usd": 13284.37,
+      "per_month": 45.0,
+      "median_risk_pct": 0.33
+     }
+    },
+    "swing j4 struct": {
+     "first": {
+      "trades": 2315,
+      "win_pct": 45.7,
+      "avg_r": -0.215,
+      "pf": 0.76,
+      "exp_pct": -0.057,
+      "gross_exp_pct": 0.003,
+      "net_usd": -13186.22,
+      "fees_usd": 13889.88,
+      "max_dd_usd": 13247.93,
+      "per_month": 56.2,
+      "median_risk_pct": 0.357
+     },
+     "second": {
+      "trades": 2269,
+      "win_pct": 44.4,
+      "avg_r": -0.234,
+      "pf": 0.71,
+      "exp_pct": -0.0771,
+      "gross_exp_pct": -0.0171,
+      "net_usd": -17488.85,
+      "fees_usd": 13612.88,
+      "max_dd_usd": 18060.02,
+      "per_month": 55.1,
+      "median_risk_pct": 0.366
+     }
+    },
+    "swing j4 fixed": {
+     "first": {
+      "trades": 2326,
+      "win_pct": 48.8,
+      "avg_r": -0.203,
+      "pf": 0.75,
+      "exp_pct": -0.0567,
+      "gross_exp_pct": 0.0033,
+      "net_usd": -13182.53,
+      "fees_usd": 13955.66,
+      "max_dd_usd": 13296.28,
+      "per_month": 56.5,
+      "median_risk_pct": 0.356
+     },
+     "second": {
+      "trades": 2304,
+      "win_pct": 48.0,
+      "avg_r": -0.222,
+      "pf": 0.75,
+      "exp_pct": -0.0641,
+      "gross_exp_pct": -0.0041,
+      "net_usd": -14757.46,
+      "fees_usd": 13823.33,
+      "max_dd_usd": 15762.2,
+      "per_month": 56.0,
+      "median_risk_pct": 0.364
+     }
+    },
+    "pday j2 fixed +vol_low": {
+     "first": {
+      "trades": 342,
+      "win_pct": 47.4,
+      "avg_r": -0.275,
+      "pf": 0.75,
+      "exp_pct": -0.0457,
+      "gross_exp_pct": 0.0143,
+      "net_usd": -1563.49,
+      "fees_usd": 2051.99,
+      "max_dd_usd": 1743.0,
+      "per_month": 8.3,
+      "median_risk_pct": 0.271
+     },
+     "second": {
+      "trades": 363,
+      "win_pct": 48.8,
+      "avg_r": -0.245,
+      "pf": 0.7,
+      "exp_pct": -0.0665,
+      "gross_exp_pct": -0.0065,
+      "net_usd": -2414.11,
+      "fees_usd": 2177.96,
+      "max_dd_usd": 2514.85,
+      "per_month": 8.8,
+      "median_risk_pct": 0.3
+     }
+    },
+    "pday j2 fixed +vol_high": {
+     "first": {
+      "trades": 268,
+      "win_pct": 44.4,
+      "avg_r": -0.22,
+      "pf": 0.77,
+      "exp_pct": -0.0578,
+      "gross_exp_pct": 0.0022,
+      "net_usd": -1548.84,
+      "fees_usd": 1608.17,
+      "max_dd_usd": 1728.84,
+      "per_month": 6.5,
+      "median_risk_pct": 0.449
+     },
+     "second": {
+      "trades": 264,
+      "win_pct": 56.1,
+      "avg_r": -0.04,
+      "pf": 0.96,
+      "exp_pct": -0.0122,
+      "gross_exp_pct": 0.0478,
+      "net_usd": -323.16,
+      "fees_usd": 1583.84,
+      "max_dd_usd": 1784.72,
+      "per_month": 6.4,
+      "median_risk_pct": 0.456
+     }
+    },
+    "pday j2 fixed +with_bias": {
+     "first": {
+      "trades": 28,
+      "win_pct": 57.1,
+      "avg_r": 0.01,
+      "pf": 1.9,
+      "exp_pct": 0.1209,
+      "gross_exp_pct": 0.1809,
+      "net_usd": 338.51,
+      "fees_usd": 168.15,
+      "max_dd_usd": 140.23,
+      "per_month": 0.7,
+      "median_risk_pct": 0.313
+     },
+     "second": {
+      "trades": 28,
+      "win_pct": 64.3,
+      "avg_r": 0.15,
+      "pf": 1.79,
+      "exp_pct": 0.0948,
+      "gross_exp_pct": 0.1548,
+      "net_usd": 265.45,
+      "fees_usd": 168.02,
+      "max_dd_usd": 134.61,
+      "per_month": 0.7,
+      "median_risk_pct": 0.286
+     }
+    },
+    "pday j2 fixed +against_bias": {
+     "first": {
+      "trades": 212,
+      "win_pct": 43.9,
+      "avg_r": -0.298,
+      "pf": 0.8,
+      "exp_pct": -0.0431,
+      "gross_exp_pct": 0.0169,
+      "net_usd": -913.07,
+      "fees_usd": 1271.89,
+      "max_dd_usd": 1322.27,
+      "per_month": 5.2,
+      "median_risk_pct": 0.343
+     },
+     "second": {
+      "trades": 246,
+      "win_pct": 54.1,
+      "avg_r": -0.149,
+      "pf": 0.82,
+      "exp_pct": -0.038,
+      "gross_exp_pct": 0.022,
+      "net_usd": -934.02,
+      "fees_usd": 1476.08,
+      "max_dd_usd": 1892.77,
+      "per_month": 6.0,
+      "median_risk_pct": 0.337
+     }
+    },
+    "pday j2 fixed +open_window": {
+     "first": {
+      "trades": 198,
+      "win_pct": 48.0,
+      "avg_r": -0.206,
+      "pf": 0.79,
+      "exp_pct": -0.0485,
+      "gross_exp_pct": 0.0115,
+      "net_usd": -960.79,
+      "fees_usd": 1188.01,
+      "max_dd_usd": 1179.91,
+      "per_month": 4.8,
+      "median_risk_pct": 0.41
+     },
+     "second": {
+      "trades": 184,
+      "win_pct": 52.2,
+      "avg_r": -0.18,
+      "pf": 0.8,
+      "exp_pct": -0.0493,
+      "gross_exp_pct": 0.0107,
+      "net_usd": -906.31,
+      "fees_usd": 1103.56,
+      "max_dd_usd": 1102.72,
+      "per_month": 4.5,
+      "median_risk_pct": 0.441
+     }
+    },
+    "pday j2 fixed +shallow": {
+     "first": {
+      "trades": 297,
+      "win_pct": 45.5,
+      "avg_r": -0.352,
+      "pf": 0.72,
+      "exp_pct": -0.0421,
+      "gross_exp_pct": 0.0179,
+      "net_usd": -1249.21,
+      "fees_usd": 1782.03,
+      "max_dd_usd": 1403.74,
+      "per_month": 7.2,
+      "median_risk_pct": 0.214
+     },
+     "second": {
+      "trades": 313,
+      "win_pct": 45.7,
+      "avg_r": -0.362,
+      "pf": 0.7,
+      "exp_pct": -0.0493,
+      "gross_exp_pct": 0.0107,
+      "net_usd": -1543.24,
+      "fees_usd": 1878.01,
+      "max_dd_usd": 1587.87,
+      "per_month": 7.6,
+      "median_risk_pct": 0.212
+     }
+    }
+   }
+  },
+  "USDJPY": {
+   "p1_liqhunt": {
+    "k0.10 m0 struct": {
+     "first": {
+      "trades": 3099,
+      "win_pct": 31.8,
+      "avg_r": -0.454,
+      "pf": 0.61,
+      "exp_pct": -0.0209,
+      "gross_exp_pct": -0.0009,
+      "net_usd": -6462.53,
+      "fees_usd": 6198.03,
+      "max_dd_usd": 6494.3,
+      "per_month": 75.3,
+      "median_risk_pct": 0.055
+     },
+     "second": {
+      "trades": 3008,
+      "win_pct": 32.7,
+      "avg_r": -0.441,
+      "pf": 0.6,
+      "exp_pct": -0.0233,
+      "gross_exp_pct": -0.0033,
+      "net_usd": -6993.93,
+      "fees_usd": 6016.11,
+      "max_dd_usd": 7045.45,
+      "per_month": 73.1,
+      "median_risk_pct": 0.061
+     }
+    },
+    "k0.10 m0 fixed": {
+     "first": {
+      "trades": 3271,
+      "win_pct": 41.1,
+      "avg_r": -0.457,
+      "pf": 0.52,
+      "exp_pct": -0.0223,
+      "gross_exp_pct": -0.0023,
+      "net_usd": -7305.05,
+      "fees_usd": 6541.99,
+      "max_dd_usd": 7330.24,
+      "per_month": 79.5,
+      "median_risk_pct": 0.055
+     },
+     "second": {
+      "trades": 3179,
+      "win_pct": 41.8,
+      "avg_r": -0.428,
+      "pf": 0.55,
+      "exp_pct": -0.0221,
+      "gross_exp_pct": -0.0021,
+      "net_usd": -7027.97,
+      "fees_usd": 6358.14,
+      "max_dd_usd": 7067.92,
+      "per_month": 77.2,
+      "median_risk_pct": 0.061
+     }
+    },
+    "k0.10 m2 struct": {
+     "first": {
+      "trades": 4799,
+      "win_pct": 35.7,
+      "avg_r": -0.364,
+      "pf": 0.67,
+      "exp_pct": -0.0184,
+      "gross_exp_pct": 0.0016,
+      "net_usd": -8840.01,
+      "fees_usd": 9598.05,
+      "max_dd_usd": 8930.88,
+      "per_month": 116.6,
+      "median_risk_pct": 0.066
+     },
+     "second": {
+      "trades": 4760,
+      "win_pct": 36.8,
+      "avg_r": -0.326,
+      "pf": 0.68,
+      "exp_pct": -0.0192,
+      "gross_exp_pct": 0.0008,
+      "net_usd": -9118.74,
+      "fees_usd": 9520.09,
+      "max_dd_usd": 9217.02,
+      "per_month": 115.6,
+      "median_risk_pct": 0.074
+     }
+    },
+    "k0.10 m2 fixed": {
+     "first": {
+      "trades": 5205,
+      "win_pct": 43.5,
+      "avg_r": -0.373,
+      "pf": 0.61,
+      "exp_pct": -0.0196,
+      "gross_exp_pct": 0.0004,
+      "net_usd": -10223.95,
+      "fees_usd": 10410.01,
+      "max_dd_usd": 10293.47,
+      "per_month": 126.4,
+      "median_risk_pct": 0.067
+     },
+     "second": {
+      "trades": 5158,
+      "win_pct": 44.6,
+      "avg_r": -0.336,
+      "pf": 0.63,
+      "exp_pct": -0.0196,
+      "gross_exp_pct": 0.0004,
+      "net_usd": -10134.67,
+      "fees_usd": 10316.13,
+      "max_dd_usd": 10196.13,
+      "per_month": 125.3,
+      "median_risk_pct": 0.074
+     }
+    },
+    "k0.25 m0 struct": {
+     "first": {
+      "trades": 2304,
+      "win_pct": 33.6,
+      "avg_r": -0.415,
+      "pf": 0.6,
+      "exp_pct": -0.0223,
+      "gross_exp_pct": -0.0023,
+      "net_usd": -5144.0,
+      "fees_usd": 4608.0,
+      "max_dd_usd": 5183.06,
+      "per_month": 56.0,
+      "median_risk_pct": 0.059
+     },
+     "second": {
+      "trades": 2230,
+      "win_pct": 34.0,
+      "avg_r": -0.407,
+      "pf": 0.6,
+      "exp_pct": -0.0242,
+      "gross_exp_pct": -0.0042,
+      "net_usd": -5395.4,
+      "fees_usd": 4460.14,
+      "max_dd_usd": 5428.53,
+      "per_month": 54.2,
+      "median_risk_pct": 0.067
+     }
+    },
+    "k0.25 m0 fixed": {
+     "first": {
+      "trades": 2395,
+      "win_pct": 43.3,
+      "avg_r": -0.407,
+      "pf": 0.55,
+      "exp_pct": -0.0223,
+      "gross_exp_pct": -0.0023,
+      "net_usd": -5343.8,
+      "fees_usd": 4789.98,
+      "max_dd_usd": 5369.51,
+      "per_month": 58.2,
+      "median_risk_pct": 0.059
+     },
+     "second": {
+      "trades": 2318,
+      "win_pct": 42.8,
+      "avg_r": -0.388,
+      "pf": 0.58,
+      "exp_pct": -0.022,
+      "gross_exp_pct": -0.002,
+      "net_usd": -5105.87,
+      "fees_usd": 4636.17,
+      "max_dd_usd": 5138.08,
+      "per_month": 56.3,
+      "median_risk_pct": 0.067
+     }
+    },
+    "k0.25 m2 struct": {
+     "first": {
+      "trades": 4190,
+      "win_pct": 37.4,
+      "avg_r": -0.332,
+      "pf": 0.68,
+      "exp_pct": -0.0186,
+      "gross_exp_pct": 0.0014,
+      "net_usd": -7789.6,
+      "fees_usd": 8380.05,
+      "max_dd_usd": 7884.07,
+      "per_month": 101.8,
+      "median_risk_pct": 0.071
+     },
+     "second": {
+      "trades": 4143,
+      "win_pct": 38.1,
+      "avg_r": -0.299,
+      "pf": 0.69,
+      "exp_pct": -0.0192,
+      "gross_exp_pct": 0.0008,
+      "net_usd": -7956.78,
+      "fees_usd": 8286.11,
+      "max_dd_usd": 8023.84,
+      "per_month": 100.6,
+      "median_risk_pct": 0.079
+     }
+    },
+    "k0.25 m2 fixed": {
+     "first": {
+      "trades": 4487,
+      "win_pct": 45.0,
+      "avg_r": -0.34,
+      "pf": 0.63,
+      "exp_pct": -0.0192,
+      "gross_exp_pct": 0.0008,
+      "net_usd": -8597.42,
+      "fees_usd": 8974.02,
+      "max_dd_usd": 8678.42,
+      "per_month": 109.0,
+      "median_risk_pct": 0.071
+     },
+     "second": {
+      "trades": 4419,
+      "win_pct": 45.6,
+      "avg_r": -0.307,
+      "pf": 0.65,
+      "exp_pct": -0.0195,
+      "gross_exp_pct": 0.0005,
+      "net_usd": -8619.58,
+      "fees_usd": 8838.17,
+      "max_dd_usd": 8664.05,
+      "per_month": 107.3,
+      "median_risk_pct": 0.079
+     }
+    },
+    "k0.25 m2 fixed +volume": {
+     "first": {
+      "trades": 916,
+      "win_pct": 46.1,
+      "avg_r": -0.281,
+      "pf": 0.69,
+      "exp_pct": -0.0216,
+      "gross_exp_pct": -0.0016,
+      "net_usd": -1981.11,
+      "fees_usd": 1832.02,
+      "max_dd_usd": 2049.67,
+      "per_month": 22.3,
+      "median_risk_pct": 0.1
+     },
+     "second": {
+      "trades": 808,
+      "win_pct": 48.6,
+      "avg_r": -0.202,
+      "pf": 0.74,
+      "exp_pct": -0.0198,
+      "gross_exp_pct": 0.0002,
+      "net_usd": -1599.13,
+      "fees_usd": 1616.0,
+      "max_dd_usd": 1818.56,
+      "per_month": 19.6,
+      "median_risk_pct": 0.121
+     }
+    },
+    "k0.25 m2 fixed +taker": {
+     "first": {
+      "trades": 4487,
+      "win_pct": 45.0,
+      "avg_r": -0.34,
+      "pf": 0.63,
+      "exp_pct": -0.0192,
+      "gross_exp_pct": 0.0008,
+      "net_usd": -8597.42,
+      "fees_usd": 8974.02,
+      "max_dd_usd": 8678.42,
+      "per_month": 109.0,
+      "median_risk_pct": 0.071
+     },
+     "second": {
+      "trades": 4419,
+      "win_pct": 45.6,
+      "avg_r": -0.307,
+      "pf": 0.65,
+      "exp_pct": -0.0195,
+      "gross_exp_pct": 0.0005,
+      "net_usd": -8619.58,
+      "fees_usd": 8838.17,
+      "max_dd_usd": 8664.05,
+      "per_month": 107.3,
+      "median_risk_pct": 0.079
+     }
+    },
+    "k0.25 m2 fixed +funding": {
+     "first": {
+      "trades": 4487,
+      "win_pct": 45.0,
+      "avg_r": -0.34,
+      "pf": 0.63,
+      "exp_pct": -0.0192,
+      "gross_exp_pct": 0.0008,
+      "net_usd": -8597.42,
+      "fees_usd": 8974.02,
+      "max_dd_usd": 8678.42,
+      "per_month": 109.0,
+      "median_risk_pct": 0.071
+     },
+     "second": {
+      "trades": 4419,
+      "win_pct": 45.6,
+      "avg_r": -0.307,
+      "pf": 0.65,
+      "exp_pct": -0.0195,
+      "gross_exp_pct": 0.0005,
+      "net_usd": -8619.58,
+      "fees_usd": 8838.17,
+      "max_dd_usd": 8664.05,
+      "per_month": 107.3,
+      "median_risk_pct": 0.079
+     }
+    }
+   },
+   "p2_trap": {
+    "n48 j2 struct": {
+     "first": {
+      "trades": 2030,
+      "win_pct": 35.6,
+      "avg_r": -0.246,
+      "pf": 0.82,
+      "exp_pct": -0.0124,
+      "gross_exp_pct": 0.0076,
+      "net_usd": -2517.71,
+      "fees_usd": 4060.08,
+      "max_dd_usd": 2936.59,
+      "per_month": 49.3,
+      "median_risk_pct": 0.079
+     },
+     "second": {
+      "trades": 2225,
+      "win_pct": 32.6,
+      "avg_r": -0.3,
+      "pf": 0.72,
+      "exp_pct": -0.0204,
+      "gross_exp_pct": -0.0004,
+      "net_usd": -4549.66,
+      "fees_usd": 4450.06,
+      "max_dd_usd": 4690.47,
+      "per_month": 54.0,
+      "median_risk_pct": 0.086
+     }
+    },
+    "n48 j2 fixed": {
+     "first": {
+      "trades": 2056,
+      "win_pct": 48.9,
+      "avg_r": -0.238,
+      "pf": 0.77,
+      "exp_pct": -0.0124,
+      "gross_exp_pct": 0.0076,
+      "net_usd": -2546.65,
+      "fees_usd": 4112.01,
+      "max_dd_usd": 2745.06,
+      "per_month": 49.9,
+      "median_risk_pct": 0.08
+     },
+     "second": {
+      "trades": 2251,
+      "win_pct": 46.4,
+      "avg_r": -0.268,
+      "pf": 0.7,
+      "exp_pct": -0.0174,
+      "gross_exp_pct": 0.0026,
+      "net_usd": -3925.11,
+      "fees_usd": 4502.03,
+      "max_dd_usd": 3980.94,
+      "per_month": 54.7,
+      "median_risk_pct": 0.086
+     }
+    },
+    "n48 j4 struct": {
+     "first": {
+      "trades": 2437,
+      "win_pct": 36.3,
+      "avg_r": -0.244,
+      "pf": 0.82,
+      "exp_pct": -0.0126,
+      "gross_exp_pct": 0.0074,
+      "net_usd": -3061.49,
+      "fees_usd": 4874.04,
+      "max_dd_usd": 3383.64,
+      "per_month": 59.2,
+      "median_risk_pct": 0.085
+     },
+     "second": {
+      "trades": 2617,
+      "win_pct": 34.0,
+      "avg_r": -0.27,
+      "pf": 0.75,
+      "exp_pct": -0.0184,
+      "gross_exp_pct": 0.0016,
+      "net_usd": -4819.12,
+      "fees_usd": 5234.04,
+      "max_dd_usd": 4958.56,
+      "per_month": 63.6,
+      "median_risk_pct": 0.09
+     }
+    },
+    "n48 j4 fixed": {
+     "first": {
+      "trades": 2483,
+      "win_pct": 48.7,
+      "avg_r": -0.231,
+      "pf": 0.78,
+      "exp_pct": -0.0126,
+      "gross_exp_pct": 0.0074,
+      "net_usd": -3122.03,
+      "fees_usd": 4965.98,
+      "max_dd_usd": 3357.24,
+      "per_month": 60.3,
+      "median_risk_pct": 0.085
+     },
+     "second": {
+      "trades": 2669,
+      "win_pct": 47.2,
+      "avg_r": -0.248,
+      "pf": 0.73,
+      "exp_pct": -0.0163,
+      "gross_exp_pct": 0.0037,
+      "net_usd": -4341.86,
+      "fees_usd": 5338.01,
+      "max_dd_usd": 4404.98,
+      "per_month": 64.8,
+      "median_risk_pct": 0.09
+     }
+    },
+    "pday j2 struct": {
+     "first": {
+      "trades": 756,
+      "win_pct": 33.5,
+      "avg_r": -0.366,
+      "pf": 0.77,
+      "exp_pct": -0.0154,
+      "gross_exp_pct": 0.0046,
+      "net_usd": -1165.46,
+      "fees_usd": 1511.99,
+      "max_dd_usd": 1492.22,
+      "per_month": 18.4,
+      "median_risk_pct": 0.077
+     },
+     "second": {
+      "trades": 726,
+      "win_pct": 34.3,
+      "avg_r": -0.345,
+      "pf": 0.81,
+      "exp_pct": -0.0132,
+      "gross_exp_pct": 0.0068,
+      "net_usd": -957.61,
+      "fees_usd": 1452.1,
+      "max_dd_usd": 1116.48,
+      "per_month": 17.6,
+      "median_risk_pct": 0.084
+     }
+    },
+    "pday j2 fixed": {
+     "first": {
+      "trades": 788,
+      "win_pct": 43.4,
+      "avg_r": -0.376,
+      "pf": 0.66,
+      "exp_pct": -0.0193,
+      "gross_exp_pct": 0.0007,
+      "net_usd": -1517.64,
+      "fees_usd": 1576.01,
+      "max_dd_usd": 1556.7,
+      "per_month": 19.1,
+      "median_risk_pct": 0.076
+     },
+     "second": {
+      "trades": 759,
+      "win_pct": 46.5,
+      "avg_r": -0.281,
+      "pf": 0.78,
+      "exp_pct": -0.0121,
+      "gross_exp_pct": 0.0079,
+      "net_usd": -916.26,
+      "fees_usd": 1518.03,
+      "max_dd_usd": 966.31,
+      "per_month": 18.4,
+      "median_risk_pct": 0.082
+     }
+    },
+    "pday j4 struct": {
+     "first": {
+      "trades": 908,
+      "win_pct": 35.1,
+      "avg_r": -0.308,
+      "pf": 0.82,
+      "exp_pct": -0.0127,
+      "gross_exp_pct": 0.0073,
+      "net_usd": -1155.81,
+      "fees_usd": 1815.99,
+      "max_dd_usd": 1802.24,
+      "per_month": 22.1,
+      "median_risk_pct": 0.087
+     },
+     "second": {
+      "trades": 907,
+      "win_pct": 37.0,
+      "avg_r": -0.278,
+      "pf": 0.87,
+      "exp_pct": -0.0096,
+      "gross_exp_pct": 0.0104,
+      "net_usd": -869.29,
+      "fees_usd": 1814.09,
+      "max_dd_usd": 1031.81,
+      "per_month": 22.0,
+      "median_risk_pct": 0.098
+     }
+    },
+    "pday j4 fixed": {
+     "first": {
+      "trades": 952,
+      "win_pct": 45.3,
+      "avg_r": -0.313,
+      "pf": 0.73,
+      "exp_pct": -0.0159,
+      "gross_exp_pct": 0.0041,
+      "net_usd": -1511.01,
+      "fees_usd": 1904.03,
+      "max_dd_usd": 1751.17,
+      "per_month": 23.1,
+      "median_risk_pct": 0.086
+     },
+     "second": {
+      "trades": 945,
+      "win_pct": 47.6,
+      "avg_r": -0.229,
+      "pf": 0.84,
+      "exp_pct": -0.0099,
+      "gross_exp_pct": 0.0101,
+      "net_usd": -939.54,
+      "fees_usd": 1890.02,
+      "max_dd_usd": 1017.51,
+      "per_month": 23.0,
+      "median_risk_pct": 0.096
+     }
+    },
+    "swing j2 struct": {
+     "first": {
+      "trades": 1824,
+      "win_pct": 41.3,
+      "avg_r": -0.329,
+      "pf": 0.69,
+      "exp_pct": -0.0165,
+      "gross_exp_pct": 0.0035,
+      "net_usd": -3003.23,
+      "fees_usd": 3648.0,
+      "max_dd_usd": 3129.06,
+      "per_month": 44.3,
+      "median_risk_pct": 0.07
+     },
+     "second": {
+      "trades": 1780,
+      "win_pct": 43.1,
+      "avg_r": -0.296,
+      "pf": 0.68,
+      "exp_pct": -0.0188,
+      "gross_exp_pct": 0.0012,
+      "net_usd": -3346.63,
+      "fees_usd": 3560.02,
+      "max_dd_usd": 3470.53,
+      "per_month": 43.2,
+      "median_risk_pct": 0.08
+     }
+    },
+    "swing j2 fixed": {
+     "first": {
+      "trades": 1850,
+      "win_pct": 45.5,
+      "avg_r": -0.334,
+      "pf": 0.65,
+      "exp_pct": -0.0176,
+      "gross_exp_pct": 0.0024,
+      "net_usd": -3264.43,
+      "fees_usd": 3699.95,
+      "max_dd_usd": 3314.16,
+      "per_month": 44.9,
+      "median_risk_pct": 0.07
+     },
+     "second": {
+      "trades": 1805,
+      "win_pct": 45.2,
+      "avg_r": -0.306,
+      "pf": 0.68,
+      "exp_pct": -0.0179,
+      "gross_exp_pct": 0.0021,
+      "net_usd": -3232.09,
+      "fees_usd": 3610.02,
+      "max_dd_usd": 3290.13,
+      "per_month": 43.8,
+      "median_risk_pct": 0.079
+     }
+    },
+    "swing j4 struct": {
+     "first": {
+      "trades": 2208,
+      "win_pct": 42.7,
+      "avg_r": -0.296,
+      "pf": 0.71,
+      "exp_pct": -0.0166,
+      "gross_exp_pct": 0.0034,
+      "net_usd": -3662.99,
+      "fees_usd": 4416.07,
+      "max_dd_usd": 4025.25,
+      "per_month": 53.6,
+      "median_risk_pct": 0.08
+     },
+     "second": {
+      "trades": 2178,
+      "win_pct": 42.7,
+      "avg_r": -0.304,
+      "pf": 0.65,
+      "exp_pct": -0.0224,
+      "gross_exp_pct": -0.0024,
+      "net_usd": -4868.15,
+      "fees_usd": 4356.0,
+      "max_dd_usd": 4932.69,
+      "per_month": 52.9,
+      "median_risk_pct": 0.088
+     }
+    },
+    "swing j4 fixed": {
+     "first": {
+      "trades": 2242,
+      "win_pct": 45.8,
+      "avg_r": -0.303,
+      "pf": 0.68,
+      "exp_pct": -0.018,
+      "gross_exp_pct": 0.002,
+      "net_usd": -4033.8,
+      "fees_usd": 4484.03,
+      "max_dd_usd": 4158.38,
+      "per_month": 54.5,
+      "median_risk_pct": 0.079
+     },
+     "second": {
+      "trades": 2210,
+      "win_pct": 44.6,
+      "avg_r": -0.308,
+      "pf": 0.65,
+      "exp_pct": -0.0219,
+      "gross_exp_pct": -0.0019,
+      "net_usd": -4839.72,
+      "fees_usd": 4419.99,
+      "max_dd_usd": 4872.38,
+      "per_month": 53.7,
+      "median_risk_pct": 0.089
+     }
+    },
+    "pday j2 fixed +vol_low": {
+     "first": {
+      "trades": 339,
+      "win_pct": 40.1,
+      "avg_r": -0.442,
+      "pf": 0.63,
+      "exp_pct": -0.0172,
+      "gross_exp_pct": 0.0028,
+      "net_usd": -582.36,
+      "fees_usd": 678.0,
+      "max_dd_usd": 679.21,
+      "per_month": 8.2,
+      "median_risk_pct": 0.064
+     },
+     "second": {
+      "trades": 335,
+      "win_pct": 43.0,
+      "avg_r": -0.392,
+      "pf": 0.61,
+      "exp_pct": -0.019,
+      "gross_exp_pct": 0.001,
+      "net_usd": -637.89,
+      "fees_usd": 670.0,
+      "max_dd_usd": 685.25,
+      "per_month": 8.1,
+      "median_risk_pct": 0.064
+     }
+    },
+    "pday j2 fixed +vol_high": {
+     "first": {
+      "trades": 261,
+      "win_pct": 48.3,
+      "avg_r": -0.263,
+      "pf": 0.87,
+      "exp_pct": -0.0082,
+      "gross_exp_pct": 0.0118,
+      "net_usd": -214.63,
+      "fees_usd": 522.02,
+      "max_dd_usd": 404.19,
+      "per_month": 6.3,
+      "median_risk_pct": 0.094
+     },
+     "second": {
+      "trades": 189,
+      "win_pct": 51.9,
+      "avg_r": -0.141,
+      "pf": 1.02,
+      "exp_pct": 0.0016,
+      "gross_exp_pct": 0.0216,
+      "net_usd": 29.68,
+      "fees_usd": 378.01,
+      "max_dd_usd": 247.11,
+      "per_month": 4.6,
+      "median_risk_pct": 0.112
+     }
+    },
+    "pday j2 fixed +with_bias": {
+     "first": {
+      "trades": 22,
+      "win_pct": 40.9,
+      "avg_r": -0.444,
+      "pf": 0.59,
+      "exp_pct": -0.0334,
+      "gross_exp_pct": -0.0134,
+      "net_usd": -73.58,
+      "fees_usd": 44.0,
+      "max_dd_usd": 118.68,
+      "per_month": 0.5,
+      "median_risk_pct": 0.124
+     },
+     "second": {
+      "trades": 20,
+      "win_pct": 40.0,
+      "avg_r": -0.466,
+      "pf": 0.57,
+      "exp_pct": -0.0304,
+      "gross_exp_pct": -0.0104,
+      "net_usd": -60.81,
+      "fees_usd": 39.99,
+      "max_dd_usd": 89.25,
+      "per_month": 0.5,
+      "median_risk_pct": 0.065
+     }
+    },
+    "pday j2 fixed +against_bias": {
+     "first": {
+      "trades": 239,
+      "win_pct": 43.9,
+      "avg_r": -0.405,
+      "pf": 0.64,
+      "exp_pct": -0.0184,
+      "gross_exp_pct": 0.0016,
+      "net_usd": -440.4,
+      "fees_usd": 478.04,
+      "max_dd_usd": 557.43,
+      "per_month": 5.8,
+      "median_risk_pct": 0.07
+     },
+     "second": {
+      "trades": 277,
+      "win_pct": 44.0,
+      "avg_r": -0.35,
+      "pf": 0.69,
+      "exp_pct": -0.0159,
+      "gross_exp_pct": 0.0041,
+      "net_usd": -440.21,
+      "fees_usd": 554.01,
+      "max_dd_usd": 463.39,
+      "per_month": 6.7,
+      "median_risk_pct": 0.065
+     }
+    },
+    "pday j2 fixed +open_window": {
+     "first": {
+      "trades": 178,
+      "win_pct": 37.6,
+      "avg_r": -0.447,
+      "pf": 0.51,
+      "exp_pct": -0.0326,
+      "gross_exp_pct": -0.0126,
+      "net_usd": -580.98,
+      "fees_usd": 356.0,
+      "max_dd_usd": 595.49,
+      "per_month": 4.3,
+      "median_risk_pct": 0.088
+     },
+     "second": {
+      "trades": 175,
+      "win_pct": 41.7,
+      "avg_r": -0.35,
+      "pf": 0.69,
+      "exp_pct": -0.0196,
+      "gross_exp_pct": 0.0004,
+      "net_usd": -342.21,
+      "fees_usd": 350.01,
+      "max_dd_usd": 435.65,
+      "per_month": 4.3,
+      "median_risk_pct": 0.09
+     }
+    },
+    "pday j2 fixed +shallow": {
+     "first": {
+      "trades": 292,
+      "win_pct": 34.6,
+      "avg_r": -0.639,
+      "pf": 0.38,
+      "exp_pct": -0.0295,
+      "gross_exp_pct": -0.0095,
+      "net_usd": -862.77,
+      "fees_usd": 584.02,
+      "max_dd_usd": 865.61,
+      "per_month": 7.1,
+      "median_risk_pct": 0.052
+     },
+     "second": {
+      "trades": 294,
+      "win_pct": 39.5,
+      "avg_r": -0.473,
+      "pf": 0.52,
+      "exp_pct": -0.0217,
+      "gross_exp_pct": -0.0017,
+      "net_usd": -638.2,
+      "fees_usd": 588.01,
+      "max_dd_usd": 650.07,
+      "per_month": 7.1,
+      "median_risk_pct": 0.053
+     }
+    }
+   }
+  },
+  "SPX": {
+   "p1_liqhunt": {
+    "k0.10 m0 struct": {
+     "first": {
+      "trades": 1226,
+      "win_pct": 34.3,
+      "avg_r": -0.349,
+      "pf": 0.68,
+      "exp_pct": -0.0633,
+      "gross_exp_pct": -0.0233,
+      "net_usd": -7757.27,
+      "fees_usd": 4903.7,
+      "max_dd_usd": 7796.31,
+      "per_month": 29.8,
+      "median_risk_pct": 0.2
+     },
+     "second": {
+      "trades": 1094,
+      "win_pct": 32.9,
+      "avg_r": -0.39,
+      "pf": 0.61,
+      "exp_pct": -0.0548,
+      "gross_exp_pct": -0.0148,
+      "net_usd": -5993.81,
+      "fees_usd": 4376.32,
+      "max_dd_usd": 6094.75,
+      "per_month": 26.6,
+      "median_risk_pct": 0.133
+     }
+    },
+    "k0.10 m0 fixed": {
+     "first": {
+      "trades": 1293,
+      "win_pct": 42.2,
+      "avg_r": -0.361,
+      "pf": 0.65,
+      "exp_pct": -0.0606,
+      "gross_exp_pct": -0.0206,
+      "net_usd": -7837.3,
+      "fees_usd": 5171.73,
+      "max_dd_usd": 8032.03,
+      "per_month": 31.4,
+      "median_risk_pct": 0.201
+     },
+     "second": {
+      "trades": 1157,
+      "win_pct": 40.4,
+      "avg_r": -0.435,
+      "pf": 0.53,
+      "exp_pct": -0.0585,
+      "gross_exp_pct": -0.0185,
+      "net_usd": -6771.76,
+      "fees_usd": 4628.32,
+      "max_dd_usd": 6877.06,
+      "per_month": 28.1,
+      "median_risk_pct": 0.134
+     }
+    },
+    "k0.10 m2 struct": {
+     "first": {
+      "trades": 1846,
+      "win_pct": 37.4,
+      "avg_r": -0.314,
+      "pf": 0.69,
+      "exp_pct": -0.0693,
+      "gross_exp_pct": -0.0293,
+      "net_usd": -12794.03,
+      "fees_usd": 7383.92,
+      "max_dd_usd": 12855.33,
+      "per_month": 44.8,
+      "median_risk_pct": 0.229
+     },
+     "second": {
+      "trades": 1713,
+      "win_pct": 36.7,
+      "avg_r": -0.358,
+      "pf": 0.75,
+      "exp_pct": -0.0366,
+      "gross_exp_pct": 0.0034,
+      "net_usd": -6275.16,
+      "fees_usd": 6852.35,
+      "max_dd_usd": 6602.95,
+      "per_month": 41.6,
+      "median_risk_pct": 0.159
+     }
+    },
+    "k0.10 m2 fixed": {
+     "first": {
+      "trades": 2005,
+      "win_pct": 45.3,
+      "avg_r": -0.285,
+      "pf": 0.71,
+      "exp_pct": -0.0584,
+      "gross_exp_pct": -0.0184,
+      "net_usd": -11700.7,
+      "fees_usd": 8019.61,
+      "max_dd_usd": 11729.91,
+      "per_month": 48.7,
+      "median_risk_pct": 0.234
+     },
+     "second": {
+      "trades": 1859,
+      "win_pct": 42.6,
+      "avg_r": -0.416,
+      "pf": 0.63,
+      "exp_pct": -0.0498,
+      "gross_exp_pct": -0.0098,
+      "net_usd": -9258.57,
+      "fees_usd": 7436.54,
+      "max_dd_usd": 9520.39,
+      "per_month": 45.2,
+      "median_risk_pct": 0.16
+     }
+    },
+    "k0.25 m0 struct": {
+     "first": {
+      "trades": 862,
+      "win_pct": 36.2,
+      "avg_r": -0.338,
+      "pf": 0.66,
+      "exp_pct": -0.0745,
+      "gross_exp_pct": -0.0345,
+      "net_usd": -6424.5,
+      "fees_usd": 3447.56,
+      "max_dd_usd": 6444.11,
+      "per_month": 20.9,
+      "median_risk_pct": 0.224
+     },
+     "second": {
+      "trades": 753,
+      "win_pct": 35.7,
+      "avg_r": -0.341,
+      "pf": 0.62,
+      "exp_pct": -0.0572,
+      "gross_exp_pct": -0.0172,
+      "net_usd": -4305.61,
+      "fees_usd": 3012.37,
+      "max_dd_usd": 4415.04,
+      "per_month": 18.3,
+      "median_risk_pct": 0.15
+     }
+    },
+    "k0.25 m0 fixed": {
+     "first": {
+      "trades": 894,
+      "win_pct": 44.0,
+      "avg_r": -0.328,
+      "pf": 0.65,
+      "exp_pct": -0.0674,
+      "gross_exp_pct": -0.0274,
+      "net_usd": -6027.8,
+      "fees_usd": 3575.72,
+      "max_dd_usd": 6129.46,
+      "per_month": 21.7,
+      "median_risk_pct": 0.226
+     },
+     "second": {
+      "trades": 779,
+      "win_pct": 42.0,
+      "avg_r": -0.366,
+      "pf": 0.57,
+      "exp_pct": -0.0581,
+      "gross_exp_pct": -0.0181,
+      "net_usd": -4527.13,
+      "fees_usd": 3116.31,
+      "max_dd_usd": 4640.13,
+      "per_month": 18.9,
+      "median_risk_pct": 0.151
+     }
+    },
+    "k0.25 m2 struct": {
+     "first": {
+      "trades": 1563,
+      "win_pct": 39.5,
+      "avg_r": -0.294,
+      "pf": 0.69,
+      "exp_pct": -0.0743,
+      "gross_exp_pct": -0.0343,
+      "net_usd": -11614.59,
+      "fees_usd": 6251.96,
+      "max_dd_usd": 11649.44,
+      "per_month": 38.0,
+      "median_risk_pct": 0.259
+     },
+     "second": {
+      "trades": 1425,
+      "win_pct": 38.7,
+      "avg_r": -0.351,
+      "pf": 0.75,
+      "exp_pct": -0.0383,
+      "gross_exp_pct": 0.0017,
+      "net_usd": -5461.93,
+      "fees_usd": 5700.34,
+      "max_dd_usd": 5794.94,
+      "per_month": 34.6,
+      "median_risk_pct": 0.177
+     }
+    },
+    "k0.25 m2 fixed": {
+     "first": {
+      "trades": 1666,
+      "win_pct": 47.2,
+      "avg_r": -0.242,
+      "pf": 0.73,
+      "exp_pct": -0.0584,
+      "gross_exp_pct": -0.0184,
+      "net_usd": -9734.47,
+      "fees_usd": 6663.59,
+      "max_dd_usd": 9767.32,
+      "per_month": 40.5,
+      "median_risk_pct": 0.264
+     },
+     "second": {
+      "trades": 1518,
+      "win_pct": 43.5,
+      "avg_r": -0.375,
+      "pf": 0.66,
+      "exp_pct": -0.0489,
+      "gross_exp_pct": -0.0089,
+      "net_usd": -7422.34,
+      "fees_usd": 6072.5,
+      "max_dd_usd": 7688.59,
+      "per_month": 36.9,
+      "median_risk_pct": 0.177
+     }
+    },
+    "k0.25 m2 fixed +volume": {
+     "first": {
+      "trades": 382,
+      "win_pct": 48.2,
+      "avg_r": -0.196,
+      "pf": 0.71,
+      "exp_pct": -0.0956,
+      "gross_exp_pct": -0.0556,
+      "net_usd": -3652.0,
+      "fees_usd": 1527.65,
+      "max_dd_usd": 3977.17,
+      "per_month": 9.3,
+      "median_risk_pct": 0.38
+     },
+     "second": {
+      "trades": 350,
+      "win_pct": 44.6,
+      "avg_r": -0.24,
+      "pf": 0.61,
+      "exp_pct": -0.084,
+      "gross_exp_pct": -0.044,
+      "net_usd": -2940.7,
+      "fees_usd": 1400.2,
+      "max_dd_usd": 3016.51,
+      "per_month": 8.5,
+      "median_risk_pct": 0.284
+     }
+    },
+    "k0.25 m2 fixed +taker": {
+     "first": {
+      "trades": 1666,
+      "win_pct": 47.2,
+      "avg_r": -0.242,
+      "pf": 0.73,
+      "exp_pct": -0.0584,
+      "gross_exp_pct": -0.0184,
+      "net_usd": -9734.47,
+      "fees_usd": 6663.59,
+      "max_dd_usd": 9767.32,
+      "per_month": 40.5,
+      "median_risk_pct": 0.264
+     },
+     "second": {
+      "trades": 1518,
+      "win_pct": 43.5,
+      "avg_r": -0.375,
+      "pf": 0.66,
+      "exp_pct": -0.0489,
+      "gross_exp_pct": -0.0089,
+      "net_usd": -7422.34,
+      "fees_usd": 6072.5,
+      "max_dd_usd": 7688.59,
+      "per_month": 36.9,
+      "median_risk_pct": 0.177
+     }
+    },
+    "k0.25 m2 fixed +funding": {
+     "first": {
+      "trades": 1666,
+      "win_pct": 47.2,
+      "avg_r": -0.242,
+      "pf": 0.73,
+      "exp_pct": -0.0584,
+      "gross_exp_pct": -0.0184,
+      "net_usd": -9734.47,
+      "fees_usd": 6663.59,
+      "max_dd_usd": 9767.32,
+      "per_month": 40.5,
+      "median_risk_pct": 0.264
+     },
+     "second": {
+      "trades": 1518,
+      "win_pct": 43.5,
+      "avg_r": -0.375,
+      "pf": 0.66,
+      "exp_pct": -0.0489,
+      "gross_exp_pct": -0.0089,
+      "net_usd": -7422.34,
+      "fees_usd": 6072.5,
+      "max_dd_usd": 7688.59,
+      "per_month": 36.9,
+      "median_risk_pct": 0.177
+     }
+    }
+   },
+   "p2_trap": {
+    "n48 j2 struct": {
+     "first": {
+      "trades": 722,
+      "win_pct": 24.7,
+      "avg_r": -0.394,
+      "pf": 0.69,
+      "exp_pct": -0.0893,
+      "gross_exp_pct": -0.0493,
+      "net_usd": -6444.82,
+      "fees_usd": 2888.57,
+      "max_dd_usd": 6711.17,
+      "per_month": 17.5,
+      "median_risk_pct": 0.263
+     },
+     "second": {
+      "trades": 706,
+      "win_pct": 28.0,
+      "avg_r": -0.399,
+      "pf": 0.85,
+      "exp_pct": -0.0283,
+      "gross_exp_pct": 0.0117,
+      "net_usd": -1997.28,
+      "fees_usd": 2823.96,
+      "max_dd_usd": 2435.66,
+      "per_month": 17.2,
+      "median_risk_pct": 0.177
+     }
+    },
+    "n48 j2 fixed": {
+     "first": {
+      "trades": 726,
+      "win_pct": 45.5,
+      "avg_r": -0.28,
+      "pf": 0.72,
+      "exp_pct": -0.0593,
+      "gross_exp_pct": -0.0193,
+      "net_usd": -4308.13,
+      "fees_usd": 2904.13,
+      "max_dd_usd": 4341.33,
+      "per_month": 17.6,
+      "median_risk_pct": 0.264
+     },
+     "second": {
+      "trades": 716,
+      "win_pct": 44.6,
+      "avg_r": -0.438,
+      "pf": 0.72,
+      "exp_pct": -0.0407,
+      "gross_exp_pct": -0.0007,
+      "net_usd": -2912.87,
+      "fees_usd": 2864.1,
+      "max_dd_usd": 3172.53,
+      "per_month": 17.4,
+      "median_risk_pct": 0.179
+     }
+    },
+    "n48 j4 struct": {
+     "first": {
+      "trades": 818,
+      "win_pct": 25.7,
+      "avg_r": -0.383,
+      "pf": 0.74,
+      "exp_pct": -0.0767,
+      "gross_exp_pct": -0.0367,
+      "net_usd": -6275.64,
+      "fees_usd": 3272.64,
+      "max_dd_usd": 6983.01,
+      "per_month": 19.9,
+      "median_risk_pct": 0.267
+     },
+     "second": {
+      "trades": 818,
+      "win_pct": 29.7,
+      "avg_r": -0.375,
+      "pf": 0.89,
+      "exp_pct": -0.0203,
+      "gross_exp_pct": 0.0197,
+      "net_usd": -1658.06,
+      "fees_usd": 3271.79,
+      "max_dd_usd": 2290.24,
+      "per_month": 19.9,
+      "median_risk_pct": 0.187
+     }
+    },
+    "n48 j4 fixed": {
+     "first": {
+      "trades": 827,
+      "win_pct": 45.7,
+      "avg_r": -0.273,
+      "pf": 0.73,
+      "exp_pct": -0.0593,
+      "gross_exp_pct": -0.0193,
+      "net_usd": -4906.42,
+      "fees_usd": 3308.1,
+      "max_dd_usd": 5258.67,
+      "per_month": 20.1,
+      "median_risk_pct": 0.27
+     },
+     "second": {
+      "trades": 839,
+      "win_pct": 45.2,
+      "avg_r": -0.476,
+      "pf": 0.76,
+      "exp_pct": -0.0361,
+      "gross_exp_pct": 0.0039,
+      "net_usd": -3030.75,
+      "fees_usd": 3356.07,
+      "max_dd_usd": 3247.94,
+      "per_month": 20.4,
+      "median_risk_pct": 0.188
+     }
+    },
+    "pday j2 struct": {
+     "first": {
+      "trades": 328,
+      "win_pct": 40.5,
+      "avg_r": -0.046,
+      "pf": 0.94,
+      "exp_pct": -0.0156,
+      "gross_exp_pct": 0.0244,
+      "net_usd": -510.43,
+      "fees_usd": 1312.13,
+      "max_dd_usd": 2149.02,
+      "per_month": 8.0,
+      "median_risk_pct": 0.316
+     },
+     "second": {
+      "trades": 320,
+      "win_pct": 34.1,
+      "avg_r": -0.273,
+      "pf": 0.73,
+      "exp_pct": -0.0562,
+      "gross_exp_pct": -0.0163,
+      "net_usd": -1799.92,
+      "fees_usd": 1279.75,
+      "max_dd_usd": 2080.19,
+      "per_month": 7.8,
+      "median_risk_pct": 0.218
+     }
+    },
+    "pday j2 fixed": {
+     "first": {
+      "trades": 336,
+      "win_pct": 49.4,
+      "avg_r": -0.103,
+      "pf": 0.92,
+      "exp_pct": -0.0194,
+      "gross_exp_pct": 0.0206,
+      "net_usd": -651.65,
+      "fees_usd": 1344.17,
+      "max_dd_usd": 1974.34,
+      "per_month": 8.2,
+      "median_risk_pct": 0.314
+     },
+     "second": {
+      "trades": 330,
+      "win_pct": 45.2,
+      "avg_r": -0.239,
+      "pf": 0.69,
+      "exp_pct": -0.055,
+      "gross_exp_pct": -0.015,
+      "net_usd": -1813.82,
+      "fees_usd": 1319.84,
+      "max_dd_usd": 2174.16,
+      "per_month": 8.0,
+      "median_risk_pct": 0.218
+     }
+    },
+    "pday j4 struct": {
+     "first": {
+      "trades": 421,
+      "win_pct": 41.1,
+      "avg_r": -0.081,
+      "pf": 0.96,
+      "exp_pct": -0.0101,
+      "gross_exp_pct": 0.0299,
+      "net_usd": -425.5,
+      "fees_usd": 1684.19,
+      "max_dd_usd": 2557.29,
+      "per_month": 10.2,
+      "median_risk_pct": 0.367
+     },
+     "second": {
+      "trades": 408,
+      "win_pct": 38.5,
+      "avg_r": -0.153,
+      "pf": 0.84,
+      "exp_pct": -0.0335,
+      "gross_exp_pct": 0.0065,
+      "net_usd": -1367.02,
+      "fees_usd": 1631.79,
+      "max_dd_usd": 2169.75,
+      "per_month": 9.9,
+      "median_risk_pct": 0.244
+     }
+    },
+    "pday j4 fixed": {
+     "first": {
+      "trades": 427,
+      "win_pct": 47.8,
+      "avg_r": -0.12,
+      "pf": 0.95,
+      "exp_pct": -0.0129,
+      "gross_exp_pct": 0.0272,
+      "net_usd": -549.0,
+      "fees_usd": 1708.32,
+      "max_dd_usd": 2254.09,
+      "per_month": 10.4,
+      "median_risk_pct": 0.365
+     },
+     "second": {
+      "trades": 419,
+      "win_pct": 47.0,
+      "avg_r": -0.167,
+      "pf": 0.79,
+      "exp_pct": -0.0401,
+      "gross_exp_pct": -0.0001,
+      "net_usd": -1678.23,
+      "fees_usd": 1675.92,
+      "max_dd_usd": 2413.99,
+      "per_month": 10.2,
+      "median_risk_pct": 0.241
+     }
+    },
+    "swing j2 struct": {
+     "first": {
+      "trades": 466,
+      "win_pct": 42.7,
+      "avg_r": -0.119,
+      "pf": 0.89,
+      "exp_pct": -0.0285,
+      "gross_exp_pct": 0.0115,
+      "net_usd": -1326.63,
+      "fees_usd": 1863.73,
+      "max_dd_usd": 2120.14,
+      "per_month": 11.3,
+      "median_risk_pct": 0.309
+     },
+     "second": {
+      "trades": 448,
+      "win_pct": 38.2,
+      "avg_r": -0.295,
+      "pf": 0.67,
+      "exp_pct": -0.0629,
+      "gross_exp_pct": -0.0229,
+      "net_usd": -2815.74,
+      "fees_usd": 1791.89,
+      "max_dd_usd": 2972.24,
+      "per_month": 10.9,
+      "median_risk_pct": 0.206
+     }
+    },
+    "swing j2 fixed": {
+     "first": {
+      "trades": 471,
+      "win_pct": 50.3,
+      "avg_r": -0.109,
+      "pf": 0.9,
+      "exp_pct": -0.0232,
+      "gross_exp_pct": 0.0168,
+      "net_usd": -1091.63,
+      "fees_usd": 1883.87,
+      "max_dd_usd": 1894.94,
+      "per_month": 11.4,
+      "median_risk_pct": 0.31
+     },
+     "second": {
+      "trades": 456,
+      "win_pct": 43.9,
+      "avg_r": -0.31,
+      "pf": 0.65,
+      "exp_pct": -0.0604,
+      "gross_exp_pct": -0.0204,
+      "net_usd": -2752.86,
+      "fees_usd": 1823.9,
+      "max_dd_usd": 2845.75,
+      "per_month": 11.1,
+      "median_risk_pct": 0.206
+     }
+    },
+    "swing j4 struct": {
+     "first": {
+      "trades": 547,
+      "win_pct": 41.9,
+      "avg_r": -0.159,
+      "pf": 0.83,
+      "exp_pct": -0.0496,
+      "gross_exp_pct": -0.0096,
+      "net_usd": -2711.59,
+      "fees_usd": 2187.84,
+      "max_dd_usd": 3275.7,
+      "per_month": 13.3,
+      "median_risk_pct": 0.353
+     },
+     "second": {
+      "trades": 528,
+      "win_pct": 39.2,
+      "avg_r": -0.363,
+      "pf": 0.68,
+      "exp_pct": -0.0655,
+      "gross_exp_pct": -0.0255,
+      "net_usd": -3459.02,
+      "fees_usd": 2111.75,
+      "max_dd_usd": 3634.51,
+      "per_month": 12.8,
+      "median_risk_pct": 0.234
+     }
+    },
+    "swing j4 fixed": {
+     "first": {
+      "trades": 557,
+      "win_pct": 48.5,
+      "avg_r": -0.148,
+      "pf": 0.8,
+      "exp_pct": -0.0522,
+      "gross_exp_pct": -0.0122,
+      "net_usd": -2908.43,
+      "fees_usd": 2227.91,
+      "max_dd_usd": 3568.11,
+      "per_month": 13.5,
+      "median_risk_pct": 0.353
+     },
+     "second": {
+      "trades": 535,
+      "win_pct": 43.7,
+      "avg_r": -0.379,
+      "pf": 0.66,
+      "exp_pct": -0.0675,
+      "gross_exp_pct": -0.0275,
+      "net_usd": -3609.65,
+      "fees_usd": 2139.76,
+      "max_dd_usd": 3788.21,
+      "per_month": 13.0,
+      "median_risk_pct": 0.237
+     }
+    },
+    "pday j2 fixed +vol_low": {
+     "first": {
+      "trades": 165,
+      "win_pct": 47.3,
+      "avg_r": -0.137,
+      "pf": 0.82,
+      "exp_pct": -0.0382,
+      "gross_exp_pct": 0.0018,
+      "net_usd": -629.92,
+      "fees_usd": 660.02,
+      "max_dd_usd": 758.69,
+      "per_month": 4.0,
+      "median_risk_pct": 0.243
+     },
+     "second": {
+      "trades": 145,
+      "win_pct": 45.5,
+      "avg_r": -0.263,
+      "pf": 0.83,
+      "exp_pct": -0.0232,
+      "gross_exp_pct": 0.0168,
+      "net_usd": -335.91,
+      "fees_usd": 579.95,
+      "max_dd_usd": 679.66,
+      "per_month": 3.5,
+      "median_risk_pct": 0.169
+     }
+    },
+    "pday j2 fixed +vol_high": {
+     "first": {
+      "trades": 105,
+      "win_pct": 51.4,
+      "avg_r": -0.13,
+      "pf": 0.96,
+      "exp_pct": -0.0114,
+      "gross_exp_pct": 0.0286,
+      "net_usd": -119.38,
+      "fees_usd": 419.97,
+      "max_dd_usd": 900.83,
+      "per_month": 2.6,
+      "median_risk_pct": 0.4
+     },
+     "second": {
+      "trades": 112,
+      "win_pct": 40.2,
+      "avg_r": -0.368,
+      "pf": 0.46,
+      "exp_pct": -0.1292,
+      "gross_exp_pct": -0.0892,
+      "net_usd": -1447.07,
+      "fees_usd": 447.85,
+      "max_dd_usd": 1663.99,
+      "per_month": 2.7,
+      "median_risk_pct": 0.266
+     }
+    },
+    "pday j2 fixed +with_bias": {
+     "first": {
+      "trades": 30,
+      "win_pct": 70.0,
+      "avg_r": 0.584,
+      "pf": 4.24,
+      "exp_pct": 0.313,
+      "gross_exp_pct": 0.353,
+      "net_usd": 938.96,
+      "fees_usd": 120.13,
+      "max_dd_usd": 159.03,
+      "per_month": 0.7,
+      "median_risk_pct": 0.296
+     },
+     "second": {
+      "trades": 29,
+      "win_pct": 31.0,
+      "avg_r": -0.586,
+      "pf": 0.35,
+      "exp_pct": -0.1709,
+      "gross_exp_pct": -0.1309,
+      "net_usd": -495.5,
+      "fees_usd": 115.95,
+      "max_dd_usd": 598.92,
+      "per_month": 0.7,
+      "median_risk_pct": 0.22
+     }
+    },
+    "pday j2 fixed +against_bias": {
+     "first": {
+      "trades": 133,
+      "win_pct": 44.4,
+      "avg_r": -0.285,
+      "pf": 0.55,
+      "exp_pct": -0.1082,
+      "gross_exp_pct": -0.0682,
+      "net_usd": -1438.48,
+      "fees_usd": 531.82,
+      "max_dd_usd": 1586.66,
+      "per_month": 3.2,
+      "median_risk_pct": 0.209
+     },
+     "second": {
+      "trades": 111,
+      "win_pct": 44.1,
+      "avg_r": -0.293,
+      "pf": 0.55,
+      "exp_pct": -0.0672,
+      "gross_exp_pct": -0.0272,
+      "net_usd": -746.37,
+      "fees_usd": 443.92,
+      "max_dd_usd": 1023.53,
+      "per_month": 2.7,
+      "median_risk_pct": 0.154
+     }
+    },
+    "pday j2 fixed +open_window": {
+     "first": {
+      "trades": 155,
+      "win_pct": 54.2,
+      "avg_r": 0.073,
+      "pf": 1.49,
+      "exp_pct": 0.088,
+      "gross_exp_pct": 0.128,
+      "net_usd": 1363.84,
+      "fees_usd": 620.35,
+      "max_dd_usd": 622.94,
+      "per_month": 3.8,
+      "median_risk_pct": 0.325
+     },
+     "second": {
+      "trades": 150,
+      "win_pct": 42.7,
+      "avg_r": -0.306,
+      "pf": 0.59,
+      "exp_pct": -0.0814,
+      "gross_exp_pct": -0.0414,
+      "net_usd": -1220.41,
+      "fees_usd": 599.82,
+      "max_dd_usd": 1363.84,
+      "per_month": 3.6,
+      "median_risk_pct": 0.235
+     }
+    },
+    "pday j2 fixed +shallow": {
+     "first": {
+      "trades": 148,
+      "win_pct": 48.0,
+      "avg_r": -0.139,
+      "pf": 1.11,
+      "exp_pct": 0.0164,
+      "gross_exp_pct": 0.0564,
+      "net_usd": 242.3,
+      "fees_usd": 591.92,
+      "max_dd_usd": 433.31,
+      "per_month": 3.6,
+      "median_risk_pct": 0.191
+     },
+     "second": {
+      "trades": 142,
+      "win_pct": 50.7,
+      "avg_r": -0.236,
+      "pf": 0.87,
+      "exp_pct": -0.017,
+      "gross_exp_pct": 0.023,
+      "net_usd": -240.83,
+      "fees_usd": 567.95,
+      "max_dd_usd": 381.79,
+      "per_month": 3.5,
+      "median_risk_pct": 0.137
+     }
+    }
+   }
+  }
+ },
+ "registered_detail": {
+  "BTCUSDT": {
+   "p1_liqhunt": {
+    "sessions": {
+     "Asia": {
+      "first": {
+       "trades": 598,
+       "win_pct": 42.8,
+       "avg_r": -0.416,
+       "pf": 0.59,
+       "exp_pct": -0.1731,
+       "gross_exp_pct": 0.0269,
+       "net_usd": -10352.11,
+       "fees_usd": 11959.12,
+       "max_dd_usd": 10352.11,
+       "per_month": 14.5,
+       "median_risk_pct": 0.537
+      },
+      "second": {
+       "trades": 585,
+       "win_pct": 32.5,
+       "avg_r": -0.732,
+       "pf": 0.43,
+       "exp_pct": -0.159,
+       "gross_exp_pct": 0.041,
+       "net_usd": -9302.87,
+       "fees_usd": 11698.75,
+       "max_dd_usd": 9454.07,
+       "per_month": 14.2,
+       "median_risk_pct": 0.317
+      }
+     },
+     "London": {
+      "first": {
+       "trades": 586,
+       "win_pct": 41.3,
+       "avg_r": -0.474,
+       "pf": 0.54,
+       "exp_pct": -0.1997,
+       "gross_exp_pct": 0.0004,
+       "net_usd": -11699.66,
+       "fees_usd": 11722.01,
+       "max_dd_usd": 11884.03,
+       "per_month": 14.2,
+       "median_risk_pct": 0.545
+      },
+      "second": {
+       "trades": 481,
+       "win_pct": 28.5,
+       "avg_r": -0.848,
+       "pf": 0.27,
+       "exp_pct": -0.2186,
+       "gross_exp_pct": -0.0185,
+       "net_usd": -10513.05,
+       "fees_usd": 9621.41,
+       "max_dd_usd": 10513.05,
+       "per_month": 11.7,
+       "median_risk_pct": 0.295
+      }
+     },
+     "New York": {
+      "first": {
+       "trades": 748,
+       "win_pct": 45.5,
+       "avg_r": -0.316,
+       "pf": 0.65,
+       "exp_pct": -0.1582,
+       "gross_exp_pct": 0.0418,
+       "net_usd": -11831.81,
+       "fees_usd": 14959.64,
+       "max_dd_usd": 11867.98,
+       "per_month": 18.2,
+       "median_risk_pct": 0.681
+      },
+      "second": {
+       "trades": 793,
+       "win_pct": 36.3,
+       "avg_r": -0.584,
+       "pf": 0.45,
+       "exp_pct": -0.1916,
+       "gross_exp_pct": 0.0084,
+       "net_usd": -15195.21,
+       "fees_usd": 15860.18,
+       "max_dd_usd": 15305.37,
+       "per_month": 19.3,
+       "median_risk_pct": 0.431
+      }
+     },
+     "Late": {
+      "first": {
+       "trades": 359,
+       "win_pct": 42.9,
+       "avg_r": -0.381,
+       "pf": 0.53,
+       "exp_pct": -0.2215,
+       "gross_exp_pct": -0.0215,
+       "net_usd": -7951.71,
+       "fees_usd": 7180.04,
+       "max_dd_usd": 8003.95,
+       "per_month": 8.7,
+       "median_risk_pct": 0.659
+      },
+      "second": {
+       "trades": 307,
+       "win_pct": 36.5,
+       "avg_r": -0.619,
+       "pf": 0.37,
+       "exp_pct": -0.2038,
+       "gross_exp_pct": -0.0038,
+       "net_usd": -6256.02,
+       "fees_usd": 6140.31,
+       "max_dd_usd": 6305.02,
+       "per_month": 7.5,
+       "median_risk_pct": 0.409
+      }
+     }
+    },
+    "pools": {
+     "24h high": {
+      "first": {
+       "trades": 135,
+       "win_pct": 49.6,
+       "avg_r": -0.222,
+       "pf": 0.71,
+       "exp_pct": -0.1065,
+       "gross_exp_pct": 0.0934,
+       "net_usd": -1438.03,
+       "fees_usd": 2698.74,
+       "max_dd_usd": 1963.98,
+       "per_month": 3.3,
+       "median_risk_pct": 0.668
+      },
+      "second": {
+       "trades": 187,
+       "win_pct": 38.0,
+       "avg_r": -0.49,
+       "pf": 0.37,
+       "exp_pct": -0.1929,
+       "gross_exp_pct": 0.0071,
+       "net_usd": -3607.58,
+       "fees_usd": 3739.87,
+       "max_dd_usd": 3625.23,
+       "per_month": 4.5,
+       "median_risk_pct": 0.425
+      }
+     },
+     "24h low": {
+      "first": {
+       "trades": 130,
+       "win_pct": 44.6,
+       "avg_r": -0.359,
+       "pf": 0.56,
+       "exp_pct": -0.315,
+       "gross_exp_pct": -0.1151,
+       "net_usd": -4094.42,
+       "fees_usd": 2598.5,
+       "max_dd_usd": 4508.1,
+       "per_month": 3.2,
+       "median_risk_pct": 0.857
+      },
+      "second": {
+       "trades": 171,
+       "win_pct": 33.9,
+       "avg_r": -0.684,
+       "pf": 0.44,
+       "exp_pct": -0.2009,
+       "gross_exp_pct": -0.0009,
+       "net_usd": -3435.58,
+       "fees_usd": 3419.98,
+       "max_dd_usd": 3435.58,
+       "per_month": 4.2,
+       "median_risk_pct": 0.43
+      }
+     },
+     "7-day high": {
+      "first": {
+       "trades": 3,
+       "win_pct": 0.0,
+       "avg_r": -0.934,
+       "pf": 0.0,
+       "exp_pct": -0.5042,
+       "gross_exp_pct": -0.3039,
+       "net_usd": -151.25,
+       "fees_usd": 60.09,
+       "max_dd_usd": 151.25,
+       "per_month": 0.1,
+       "median_risk_pct": 0.568
+      },
+      "second": {
+       "trades": 13,
+       "win_pct": 61.5,
+       "avg_r": -0.098,
+       "pf": 0.93,
+       "exp_pct": -0.0229,
+       "gross_exp_pct": 0.1769,
+       "net_usd": -29.76,
+       "fees_usd": 259.77,
+       "max_dd_usd": 260.54,
+       "per_month": 0.3,
+       "median_risk_pct": 0.782
+      }
+     },
+     "7-day low": {
+      "first": {
+       "trades": 9,
+       "win_pct": 55.6,
+       "avg_r": 0.085,
+       "pf": 2.49,
+       "exp_pct": 0.5944,
+       "gross_exp_pct": 0.7952,
+       "net_usd": 534.94,
+       "fees_usd": 180.72,
+       "max_dd_usd": 183.54,
+       "per_month": 0.2,
+       "median_risk_pct": 1.501
+      },
+      "second": {
+       "trades": 6,
+       "win_pct": 50.0,
+       "avg_r": -0.448,
+       "pf": 0.54,
+       "exp_pct": -0.1721,
+       "gross_exp_pct": 0.0279,
+       "net_usd": -103.25,
+       "fees_usd": 120.02,
+       "max_dd_usd": 159.12,
+       "per_month": 0.1,
+       "median_risk_pct": 0.596
+      }
+     },
+     "prior-day high": {
+      "first": {
+       "trades": 58,
+       "win_pct": 44.8,
+       "avg_r": -0.43,
+       "pf": 0.54,
+       "exp_pct": -0.1486,
+       "gross_exp_pct": 0.0514,
+       "net_usd": -861.65,
+       "fees_usd": 1159.7,
+       "max_dd_usd": 921.9,
+       "per_month": 1.4,
+       "median_risk_pct": 0.493
+      },
+      "second": {
+       "trades": 71,
+       "win_pct": 33.8,
+       "avg_r": -0.668,
+       "pf": 0.39,
+       "exp_pct": -0.1291,
+       "gross_exp_pct": 0.0709,
+       "net_usd": -916.26,
+       "fees_usd": 1419.5,
+       "max_dd_usd": 947.99,
+       "per_month": 1.7,
+       "median_risk_pct": 0.33
+      }
+     },
+     "prior-day low": {
+      "first": {
+       "trades": 42,
+       "win_pct": 42.9,
+       "avg_r": -0.408,
+       "pf": 0.82,
+       "exp_pct": -0.091,
+       "gross_exp_pct": 0.1091,
+       "net_usd": -382.35,
+       "fees_usd": 840.46,
+       "max_dd_usd": 578.56,
+       "per_month": 1.0,
+       "median_risk_pct": 0.616
+      },
+      "second": {
+       "trades": 42,
+       "win_pct": 33.3,
+       "avg_r": -0.811,
+       "pf": 0.22,
+       "exp_pct": -0.2649,
+       "gross_exp_pct": -0.065,
+       "net_usd": -1112.62,
+       "fees_usd": 839.73,
+       "max_dd_usd": 1154.6,
+       "per_month": 1.0,
+       "median_risk_pct": 0.386
+      }
+     },
+     "round number": {
+      "first": {
+       "trades": 1389,
+       "win_pct": 43.4,
+       "avg_r": -0.377,
+       "pf": 0.57,
+       "exp_pct": -0.1994,
+       "gross_exp_pct": 0.0006,
+       "net_usd": -27698.1,
+       "fees_usd": 27781.19,
+       "max_dd_usd": 27897.84,
+       "per_month": 33.7,
+       "median_risk_pct": 0.643
+      },
+      "second": {
+       "trades": 1046,
+       "win_pct": 35.4,
+       "avg_r": -0.618,
+       "pf": 0.43,
+       "exp_pct": -0.1932,
+       "gross_exp_pct": 0.0068,
+       "net_usd": -20210.84,
+       "fees_usd": 20920.95,
+       "max_dd_usd": 20239.12,
+       "per_month": 25.4,
+       "median_risk_pct": 0.396
+      }
+     },
+     "swing high": {
+      "first": {
+       "trades": 258,
+       "win_pct": 37.2,
+       "avg_r": -0.549,
+       "pf": 0.5,
+       "exp_pct": -0.1741,
+       "gross_exp_pct": 0.0259,
+       "net_usd": -4491.76,
+       "fees_usd": 5159.33,
+       "max_dd_usd": 4491.76,
+       "per_month": 6.3,
+       "median_risk_pct": 0.447
+      },
+      "second": {
+       "trades": 320,
+       "win_pct": 25.3,
+       "avg_r": -0.981,
+       "pf": 0.27,
+       "exp_pct": -0.2013,
+       "gross_exp_pct": -0.0013,
+       "net_usd": -6440.28,
+       "fees_usd": 6400.04,
+       "max_dd_usd": 6535.75,
+       "per_month": 7.8,
+       "median_risk_pct": 0.276
+      }
+     },
+     "swing low": {
+      "first": {
+       "trades": 267,
+       "win_pct": 44.6,
+       "avg_r": -0.426,
+       "pf": 0.65,
+       "exp_pct": -0.1218,
+       "gross_exp_pct": 0.0783,
+       "net_usd": -3252.67,
+       "fees_usd": 5342.09,
+       "max_dd_usd": 3324.38,
+       "per_month": 6.5,
+       "median_risk_pct": 0.469
+      },
+      "second": {
+       "trades": 310,
+       "win_pct": 31.6,
+       "avg_r": -0.756,
+       "pf": 0.37,
+       "exp_pct": -0.1745,
+       "gross_exp_pct": 0.0255,
+       "net_usd": -5410.98,
+       "fees_usd": 6200.79,
+       "max_dd_usd": 5690.97,
+       "per_month": 7.5,
+       "median_risk_pct": 0.297
+      }
+     }
+    },
+    "exits": {
+     "first": {
+      "STOP": 1532,
+      "T2": 457,
+      "TIME": 302,
+      "t1_hit": 1079
+     },
+     "second": {
+      "STOP": 1445,
+      "T2": 448,
+      "TIME": 273,
+      "t1_hit": 1011
+     }
+    }
+   },
+   "p2_trap": {
+    "sessions": {
+     "Asia": {
+      "first": {
+       "trades": 0
+      },
+      "second": {
+       "trades": 1,
+       "win_pct": 0.0,
+       "avg_r": -0.031,
+       "pf": 0.0,
+       "exp_pct": -0.0115,
+       "gross_exp_pct": 0.1883,
+       "net_usd": -1.15,
+       "fees_usd": 19.98,
+       "max_dd_usd": 1.15,
+       "per_month": 0.0,
+       "median_risk_pct": 0.377
+      }
+     },
+     "London": {
+      "first": {
+       "trades": 1,
+       "win_pct": 0.0,
+       "avg_r": -1.131,
+       "pf": 0.0,
+       "exp_pct": -1.7148,
+       "gross_exp_pct": -1.5163,
+       "net_usd": -171.48,
+       "fees_usd": 19.85,
+       "max_dd_usd": 171.48,
+       "per_month": 0.0,
+       "median_risk_pct": 1.516
+      },
+      "second": {
+       "trades": 1,
+       "win_pct": 0.0,
+       "avg_r": -0.833,
+       "pf": 0.0,
+       "exp_pct": -0.1249,
+       "gross_exp_pct": 0.075,
+       "net_usd": -12.49,
+       "fees_usd": 19.99,
+       "max_dd_usd": 12.49,
+       "per_month": 0.0,
+       "median_risk_pct": 0.15
+      }
+     },
+     "New York": {
+      "first": {
+       "trades": 0
+      },
+      "second": {
+       "trades": 1,
+       "win_pct": 0.0,
+       "avg_r": -2.013,
+       "pf": 0.0,
+       "exp_pct": -0.3978,
+       "gross_exp_pct": -0.1976,
+       "net_usd": -39.78,
+       "fees_usd": 20.02,
+       "max_dd_usd": 39.78,
+       "per_month": 0.0,
+       "median_risk_pct": 0.198
+      }
+     },
+     "Late": {
+      "first": {
+       "trades": 0
+      },
+      "second": {
+       "trades": 2,
+       "win_pct": 100.0,
+       "avg_r": 0.598,
+       "pf": null,
+       "exp_pct": 0.2306,
+       "gross_exp_pct": 0.431,
+       "net_usd": 46.11,
+       "fees_usd": 40.09,
+       "max_dd_usd": 0.0,
+       "per_month": 0.0,
+       "median_risk_pct": 0.363
+      }
+     }
+    },
+    "pools": {
+     "prior-day high": {
+      "first": {
+       "trades": 0
+      },
+      "second": {
+       "trades": 3,
+       "win_pct": 0.0,
+       "avg_r": -0.959,
+       "pf": 0.0,
+       "exp_pct": -0.1781,
+       "gross_exp_pct": 0.0219,
+       "net_usd": -53.43,
+       "fees_usd": 59.99,
+       "max_dd_usd": 53.43,
+       "per_month": 0.1,
+       "median_risk_pct": 0.198
+      }
+     },
+     "prior-day low": {
+      "first": {
+       "trades": 1,
+       "win_pct": 0.0,
+       "avg_r": -1.131,
+       "pf": 0.0,
+       "exp_pct": -1.7148,
+       "gross_exp_pct": -1.5163,
+       "net_usd": -171.48,
+       "fees_usd": 19.85,
+       "max_dd_usd": 171.48,
+       "per_month": 0.0,
+       "median_risk_pct": 1.516
+      },
+      "second": {
+       "trades": 2,
+       "win_pct": 100.0,
+       "avg_r": 0.598,
+       "pf": null,
+       "exp_pct": 0.2306,
+       "gross_exp_pct": 0.431,
+       "net_usd": 46.11,
+       "fees_usd": 40.09,
+       "max_dd_usd": 0.0,
+       "per_month": 0.0,
+       "median_risk_pct": 0.363
+      }
+     }
+    },
+    "exits": {
+     "first": {
+      "STOP": 1,
+      "T2": 0,
+      "TIME": 0,
+      "t1_hit": 0
+     },
+     "second": {
+      "STOP": 3,
+      "T2": 1,
+      "TIME": 1,
+      "t1_hit": 4
+     }
+    }
+   }
+  },
+  "ETHUSDT": {
+   "p1_liqhunt": {
+    "sessions": {
+     "Asia": {
+      "first": {
+       "trades": 634,
+       "win_pct": 48.1,
+       "avg_r": -0.256,
+       "pf": 0.78,
+       "exp_pct": -0.1093,
+       "gross_exp_pct": 0.0907,
+       "net_usd": -6930.95,
+       "fees_usd": 12679.26,
+       "max_dd_usd": 7670.52,
+       "per_month": 15.4,
+       "median_risk_pct": 0.743
+      },
+      "second": {
+       "trades": 622,
+       "win_pct": 35.9,
+       "avg_r": -0.556,
+       "pf": 0.51,
+       "exp_pct": -0.186,
+       "gross_exp_pct": 0.014,
+       "net_usd": -11568.54,
+       "fees_usd": 12440.24,
+       "max_dd_usd": 11568.54,
+       "per_month": 15.1,
+       "median_risk_pct": 0.455
+      }
+     },
+     "London": {
+      "first": {
+       "trades": 605,
+       "win_pct": 45.0,
+       "avg_r": -0.379,
+       "pf": 0.73,
+       "exp_pct": -0.1342,
+       "gross_exp_pct": 0.0658,
+       "net_usd": -8120.46,
+       "fees_usd": 12100.25,
+       "max_dd_usd": 8349.51,
+       "per_month": 14.7,
+       "median_risk_pct": 0.679
+      },
+      "second": {
+       "trades": 577,
+       "win_pct": 35.4,
+       "avg_r": -0.63,
+       "pf": 0.4,
+       "exp_pct": -0.2201,
+       "gross_exp_pct": -0.0201,
+       "net_usd": -12698.54,
+       "fees_usd": 11539.38,
+       "max_dd_usd": 12817.91,
+       "per_month": 14.0,
+       "median_risk_pct": 0.416
+      }
+     },
+     "New York": {
+      "first": {
+       "trades": 778,
+       "win_pct": 45.5,
+       "avg_r": -0.326,
+       "pf": 0.59,
+       "exp_pct": -0.2367,
+       "gross_exp_pct": -0.0367,
+       "net_usd": -18418.37,
+       "fees_usd": 15561.9,
+       "max_dd_usd": 18874.02,
+       "per_month": 18.9,
+       "median_risk_pct": 0.791
+      },
+      "second": {
+       "trades": 883,
+       "win_pct": 40.1,
+       "avg_r": -0.478,
+       "pf": 0.47,
+       "exp_pct": -0.2396,
+       "gross_exp_pct": -0.0397,
+       "net_usd": -21159.97,
+       "fees_usd": 17658.46,
+       "max_dd_usd": 21586.7,
+       "per_month": 21.4,
+       "median_risk_pct": 0.579
+      }
+     },
+     "Late": {
+      "first": {
+       "trades": 366,
+       "win_pct": 47.5,
+       "avg_r": -0.26,
+       "pf": 0.65,
+       "exp_pct": -0.2001,
+       "gross_exp_pct": -0.0001,
+       "net_usd": -7323.95,
+       "fees_usd": 7320.15,
+       "max_dd_usd": 7372.88,
+       "per_month": 8.9,
+       "median_risk_pct": 0.785
+      },
+      "second": {
+       "trades": 347,
+       "win_pct": 40.1,
+       "avg_r": -0.476,
+       "pf": 0.46,
+       "exp_pct": -0.2305,
+       "gross_exp_pct": -0.0305,
+       "net_usd": -7999.27,
+       "fees_usd": 6940.6,
+       "max_dd_usd": 8198.51,
+       "per_month": 8.4,
+       "median_risk_pct": 0.558
+      }
+     }
+    },
+    "pools": {
+     "24h high": {
+      "first": {
+       "trades": 192,
+       "win_pct": 49.5,
+       "avg_r": -0.242,
+       "pf": 0.64,
+       "exp_pct": -0.1661,
+       "gross_exp_pct": 0.0339,
+       "net_usd": -3188.61,
+       "fees_usd": 3839.35,
+       "max_dd_usd": 3316.97,
+       "per_month": 4.7,
+       "median_risk_pct": 0.747
+      },
+      "second": {
+       "trades": 233,
+       "win_pct": 43.3,
+       "avg_r": -0.397,
+       "pf": 0.53,
+       "exp_pct": -0.1858,
+       "gross_exp_pct": 0.0141,
+       "net_usd": -4330.19,
+       "fees_usd": 4659.67,
+       "max_dd_usd": 4337.22,
+       "per_month": 5.7,
+       "median_risk_pct": 0.567
+      }
+     },
+     "24h low": {
+      "first": {
+       "trades": 131,
+       "win_pct": 42.0,
+       "avg_r": -0.377,
+       "pf": 0.53,
+       "exp_pct": -0.3572,
+       "gross_exp_pct": -0.1574,
+       "net_usd": -4679.73,
+       "fees_usd": 2617.94,
+       "max_dd_usd": 4949.25,
+       "per_month": 3.2,
+       "median_risk_pct": 0.967
+      },
+      "second": {
+       "trades": 158,
+       "win_pct": 39.9,
+       "avg_r": -0.393,
+       "pf": 0.56,
+       "exp_pct": -0.2321,
+       "gross_exp_pct": -0.0322,
+       "net_usd": -3667.86,
+       "fees_usd": 3159.49,
+       "max_dd_usd": 4351.79,
+       "per_month": 3.8,
+       "median_risk_pct": 0.756
+      }
+     },
+     "7-day high": {
+      "first": {
+       "trades": 12,
+       "win_pct": 75.0,
+       "avg_r": 0.227,
+       "pf": 2.67,
+       "exp_pct": 0.5483,
+       "gross_exp_pct": 0.7476,
+       "net_usd": 658.01,
+       "fees_usd": 239.1,
+       "max_dd_usd": 302.7,
+       "per_month": 0.3,
+       "median_risk_pct": 1.201
+      },
+      "second": {
+       "trades": 8,
+       "win_pct": 37.5,
+       "avg_r": -0.476,
+       "pf": 0.19,
+       "exp_pct": -0.6044,
+       "gross_exp_pct": -0.404,
+       "net_usd": -483.51,
+       "fees_usd": 160.32,
+       "max_dd_usd": 494.98,
+       "per_month": 0.2,
+       "median_risk_pct": 0.786
+      }
+     },
+     "7-day low": {
+      "first": {
+       "trades": 6,
+       "win_pct": 50.0,
+       "avg_r": 0.065,
+       "pf": 0.66,
+       "exp_pct": -0.2217,
+       "gross_exp_pct": -0.0217,
+       "net_usd": -132.99,
+       "fees_usd": 119.99,
+       "max_dd_usd": 331.72,
+       "per_month": 0.1,
+       "median_risk_pct": 1.262
+      },
+      "second": {
+       "trades": 5,
+       "win_pct": 20.0,
+       "avg_r": -0.822,
+       "pf": 0.56,
+       "exp_pct": -0.3731,
+       "gross_exp_pct": -0.1732,
+       "net_usd": -186.54,
+       "fees_usd": 99.91,
+       "max_dd_usd": 309.91,
+       "per_month": 0.1,
+       "median_risk_pct": 0.918
+      }
+     },
+     "prior-day high": {
+      "first": {
+       "trades": 57,
+       "win_pct": 49.1,
+       "avg_r": -0.262,
+       "pf": 0.39,
+       "exp_pct": -0.28,
+       "gross_exp_pct": -0.0799,
+       "net_usd": -1596.12,
+       "fees_usd": 1140.46,
+       "max_dd_usd": 1680.69,
+       "per_month": 1.4,
+       "median_risk_pct": 0.588
+      },
+      "second": {
+       "trades": 68,
+       "win_pct": 45.6,
+       "avg_r": -0.342,
+       "pf": 0.68,
+       "exp_pct": -0.0832,
+       "gross_exp_pct": 0.1167,
+       "net_usd": -565.74,
+       "fees_usd": 1359.21,
+       "max_dd_usd": 804.57,
+       "per_month": 1.7,
+       "median_risk_pct": 0.405
+      }
+     },
+     "prior-day low": {
+      "first": {
+       "trades": 35,
+       "win_pct": 45.7,
+       "avg_r": -0.326,
+       "pf": 0.55,
+       "exp_pct": -0.2227,
+       "gross_exp_pct": -0.0227,
+       "net_usd": -779.5,
+       "fees_usd": 699.92,
+       "max_dd_usd": 875.49,
+       "per_month": 0.9,
+       "median_risk_pct": 0.832
+      },
+      "second": {
+       "trades": 46,
+       "win_pct": 41.3,
+       "avg_r": -0.55,
+       "pf": 0.5,
+       "exp_pct": -0.2065,
+       "gross_exp_pct": -0.0065,
+       "net_usd": -949.97,
+       "fees_usd": 919.97,
+       "max_dd_usd": 1072.05,
+       "per_month": 1.1,
+       "median_risk_pct": 0.538
+      }
+     },
+     "round number": {
+      "first": {
+       "trades": 1490,
+       "win_pct": 46.6,
+       "avg_r": -0.294,
+       "pf": 0.71,
+       "exp_pct": -0.1595,
+       "gross_exp_pct": 0.0405,
+       "net_usd": -23769.52,
+       "fees_usd": 29804.58,
+       "max_dd_usd": 25639.76,
+       "per_month": 36.2,
+       "median_risk_pct": 0.769
+      },
+      "second": {
+       "trades": 1258,
+       "win_pct": 38.8,
+       "avg_r": -0.505,
+       "pf": 0.48,
+       "exp_pct": -0.2127,
+       "gross_exp_pct": -0.0127,
+       "net_usd": -26758.32,
+       "fees_usd": 25161.17,
+       "max_dd_usd": 26833.08,
+       "per_month": 30.6,
+       "median_risk_pct": 0.527
+      }
+     },
+     "swing high": {
+      "first": {
+       "trades": 245,
+       "win_pct": 44.9,
+       "avg_r": -0.451,
+       "pf": 0.57,
+       "exp_pct": -0.166,
+       "gross_exp_pct": 0.034,
+       "net_usd": -4066.53,
+       "fees_usd": 4899.17,
+       "max_dd_usd": 4208.13,
+       "per_month": 6.0,
+       "median_risk_pct": 0.583
+      },
+      "second": {
+       "trades": 376,
+       "win_pct": 33.0,
+       "avg_r": -0.701,
+       "pf": 0.32,
+       "exp_pct": -0.2314,
+       "gross_exp_pct": -0.0314,
+       "net_usd": -8701.87,
+       "fees_usd": 7521.18,
+       "max_dd_usd": 8701.87,
+       "per_month": 9.1,
+       "median_risk_pct": 0.41
+      }
+     },
+     "swing low": {
+      "first": {
+       "trades": 215,
+       "win_pct": 43.7,
+       "avg_r": -0.338,
+       "pf": 0.7,
+       "exp_pct": -0.1506,
+       "gross_exp_pct": 0.0494,
+       "net_usd": -3238.73,
+       "fees_usd": 4301.06,
+       "max_dd_usd": 3293.44,
+       "per_month": 5.2,
+       "median_risk_pct": 0.712
+      },
+      "second": {
+       "trades": 277,
+       "win_pct": 32.5,
+       "avg_r": -0.673,
+       "pf": 0.37,
+       "exp_pct": -0.281,
+       "gross_exp_pct": -0.081,
+       "net_usd": -7782.32,
+       "fees_usd": 5537.76,
+       "max_dd_usd": 7867.46,
+       "per_month": 6.7,
+       "median_risk_pct": 0.464
+      }
+     }
+    },
+    "exits": {
+     "first": {
+      "STOP": 1588,
+      "T2": 500,
+      "TIME": 295,
+      "t1_hit": 1134
+     },
+     "second": {
+      "STOP": 1654,
+      "T2": 468,
+      "TIME": 307,
+      "t1_hit": 1062
+     }
+    }
+   },
+   "p2_trap": {
+    "sessions": {
+     "Asia": {
+      "first": {
+       "trades": 1,
+       "win_pct": 0.0,
+       "avg_r": -1.102,
+       "pf": 0.0,
+       "exp_pct": -2.1355,
+       "gross_exp_pct": -1.9374,
+       "net_usd": -213.55,
+       "fees_usd": 19.81,
+       "max_dd_usd": 213.55,
+       "per_month": 0.0,
+       "median_risk_pct": 1.937
+      },
+      "second": {
+       "trades": 0
+      }
+     },
+     "London": {
+      "first": {
+       "trades": 1,
+       "win_pct": 100.0,
+       "avg_r": 0.337,
+       "pf": null,
+       "exp_pct": 0.4115,
+       "gross_exp_pct": 0.6109,
+       "net_usd": 41.15,
+       "fees_usd": 19.94,
+       "max_dd_usd": 0.0,
+       "per_month": 0.0,
+       "median_risk_pct": 1.222
+      },
+      "second": {
+       "trades": 1,
+       "win_pct": 0.0,
+       "avg_r": -1.142,
+       "pf": 0.0,
+       "exp_pct": -1.6183,
+       "gross_exp_pct": -1.4169,
+       "net_usd": -161.83,
+       "fees_usd": 20.14,
+       "max_dd_usd": 161.83,
+       "per_month": 0.0,
+       "median_risk_pct": 1.417
+      }
+     },
+     "New York": {
+      "first": {
+       "trades": 0
+      },
+      "second": {
+       "trades": 0
+      }
+     },
+     "Late": {
+      "first": {
+       "trades": 0
+      },
+      "second": {
+       "trades": 0
+      }
+     }
+    },
+    "pools": {
+     "prior-day high": {
+      "first": {
+       "trades": 1,
+       "win_pct": 100.0,
+       "avg_r": 0.337,
+       "pf": null,
+       "exp_pct": 0.4115,
+       "gross_exp_pct": 0.6109,
+       "net_usd": 41.15,
+       "fees_usd": 19.94,
+       "max_dd_usd": 0.0,
+       "per_month": 0.0,
+       "median_risk_pct": 1.222
+      },
+      "second": {
+       "trades": 1,
+       "win_pct": 0.0,
+       "avg_r": -1.142,
+       "pf": 0.0,
+       "exp_pct": -1.6183,
+       "gross_exp_pct": -1.4169,
+       "net_usd": -161.83,
+       "fees_usd": 20.14,
+       "max_dd_usd": 161.83,
+       "per_month": 0.0,
+       "median_risk_pct": 1.417
+      }
+     },
+     "prior-day low": {
+      "first": {
+       "trades": 1,
+       "win_pct": 0.0,
+       "avg_r": -1.102,
+       "pf": 0.0,
+       "exp_pct": -2.1355,
+       "gross_exp_pct": -1.9374,
+       "net_usd": -213.55,
+       "fees_usd": 19.81,
+       "max_dd_usd": 213.55,
+       "per_month": 0.0,
+       "median_risk_pct": 1.937
+      },
+      "second": {
+       "trades": 0
+      }
+     }
+    },
+    "exits": {
+     "first": {
+      "STOP": 2,
+      "T2": 0,
+      "TIME": 0,
+      "t1_hit": 1
+     },
+     "second": {
+      "STOP": 1,
+      "T2": 0,
+      "TIME": 0,
+      "t1_hit": 0
+     }
+    }
+   }
+  },
+  "XAUUSD": {
+   "p1_liqhunt": {
+    "sessions": {
+     "Asia": {
+      "first": {
+       "trades": 1339,
+       "win_pct": 40.6,
+       "avg_r": -0.454,
+       "pf": 0.49,
+       "exp_pct": -0.0431,
+       "gross_exp_pct": -0.0031,
+       "net_usd": -5775.48,
+       "fees_usd": 5355.94,
+       "max_dd_usd": 5919.39,
+       "per_month": 32.5,
+       "median_risk_pct": 0.111
+      },
+      "second": {
+       "trades": 1503,
+       "win_pct": 42.5,
+       "avg_r": -0.37,
+       "pf": 0.65,
+       "exp_pct": -0.0398,
+       "gross_exp_pct": 0.0002,
+       "net_usd": -5974.79,
+       "fees_usd": 6012.18,
+       "max_dd_usd": 6023.67,
+       "per_month": 36.5,
+       "median_risk_pct": 0.144
+      }
+     },
+     "London": {
+      "first": {
+       "trades": 1518,
+       "win_pct": 44.7,
+       "avg_r": -0.362,
+       "pf": 0.54,
+       "exp_pct": -0.0518,
+       "gross_exp_pct": -0.0118,
+       "net_usd": -7867.12,
+       "fees_usd": 6071.71,
+       "max_dd_usd": 7921.74,
+       "per_month": 36.9,
+       "median_risk_pct": 0.148
+      },
+      "second": {
+       "trades": 1371,
+       "win_pct": 43.9,
+       "avg_r": -0.359,
+       "pf": 0.58,
+       "exp_pct": -0.047,
+       "gross_exp_pct": -0.007,
+       "net_usd": -6443.81,
+       "fees_usd": 5483.98,
+       "max_dd_usd": 6487.9,
+       "per_month": 33.3,
+       "median_risk_pct": 0.147
+      }
+     },
+     "New York": {
+      "first": {
+       "trades": 1562,
+       "win_pct": 44.8,
+       "avg_r": -0.272,
+       "pf": 0.64,
+       "exp_pct": -0.048,
+       "gross_exp_pct": -0.008,
+       "net_usd": -7500.13,
+       "fees_usd": 6248.14,
+       "max_dd_usd": 7532.25,
+       "per_month": 37.9,
+       "median_risk_pct": 0.212
+      },
+      "second": {
+       "trades": 1542,
+       "win_pct": 48.8,
+       "avg_r": -0.208,
+       "pf": 0.73,
+       "exp_pct": -0.0368,
+       "gross_exp_pct": 0.0032,
+       "net_usd": -5680.5,
+       "fees_usd": 6167.97,
+       "max_dd_usd": 5808.73,
+       "per_month": 37.5,
+       "median_risk_pct": 0.218
+      }
+     },
+     "Late": {
+      "first": {
+       "trades": 334,
+       "win_pct": 44.0,
+       "avg_r": -0.408,
+       "pf": 0.69,
+       "exp_pct": -0.0265,
+       "gross_exp_pct": 0.0135,
+       "net_usd": -883.68,
+       "fees_usd": 1336.07,
+       "max_dd_usd": 1010.84,
+       "per_month": 8.1,
+       "median_risk_pct": 0.115
+      },
+      "second": {
+       "trades": 387,
+       "win_pct": 47.8,
+       "avg_r": -0.295,
+       "pf": 0.58,
+       "exp_pct": -0.0545,
+       "gross_exp_pct": -0.0145,
+       "net_usd": -2108.62,
+       "fees_usd": 1547.96,
+       "max_dd_usd": 2284.8,
+       "per_month": 9.4,
+       "median_risk_pct": 0.15
+      }
+     }
+    },
+    "pools": {
+     "24h high": {
+      "first": {
+       "trades": 841,
+       "win_pct": 44.2,
+       "avg_r": -0.34,
+       "pf": 0.59,
+       "exp_pct": -0.0418,
+       "gross_exp_pct": -0.0018,
+       "net_usd": -3514.88,
+       "fees_usd": 3364.03,
+       "max_dd_usd": 3515.01,
+       "per_month": 20.4,
+       "median_risk_pct": 0.144
+      },
+      "second": {
+       "trades": 886,
+       "win_pct": 43.7,
+       "avg_r": -0.339,
+       "pf": 0.61,
+       "exp_pct": -0.0426,
+       "gross_exp_pct": -0.0026,
+       "net_usd": -3772.57,
+       "fees_usd": 3544.05,
+       "max_dd_usd": 4041.9,
+       "per_month": 21.5,
+       "median_risk_pct": 0.158
+      }
+     },
+     "24h low": {
+      "first": {
+       "trades": 728,
+       "win_pct": 44.9,
+       "avg_r": -0.332,
+       "pf": 0.58,
+       "exp_pct": -0.0513,
+       "gross_exp_pct": -0.0113,
+       "net_usd": -3735.02,
+       "fees_usd": 2911.84,
+       "max_dd_usd": 3903.04,
+       "per_month": 17.7,
+       "median_risk_pct": 0.164
+      },
+      "second": {
+       "trades": 711,
+       "win_pct": 46.1,
+       "avg_r": -0.284,
+       "pf": 0.69,
+       "exp_pct": -0.0405,
+       "gross_exp_pct": -0.0005,
+       "net_usd": -2879.73,
+       "fees_usd": 2843.99,
+       "max_dd_usd": 2966.01,
+       "per_month": 17.3,
+       "median_risk_pct": 0.19
+      }
+     },
+     "7-day high": {
+      "first": {
+       "trades": 29,
+       "win_pct": 44.8,
+       "avg_r": -0.277,
+       "pf": 0.73,
+       "exp_pct": -0.0452,
+       "gross_exp_pct": -0.0052,
+       "net_usd": -131.04,
+       "fees_usd": 116.0,
+       "max_dd_usd": 293.05,
+       "per_month": 0.7,
+       "median_risk_pct": 0.248
+      },
+      "second": {
+       "trades": 27,
+       "win_pct": 40.7,
+       "avg_r": -0.236,
+       "pf": 0.73,
+       "exp_pct": -0.0385,
+       "gross_exp_pct": 0.0015,
+       "net_usd": -104.04,
+       "fees_usd": 108.0,
+       "max_dd_usd": 175.29,
+       "per_month": 0.7,
+       "median_risk_pct": 0.239
+      }
+     },
+     "7-day low": {
+      "first": {
+       "trades": 33,
+       "win_pct": 45.5,
+       "avg_r": -0.29,
+       "pf": 0.57,
+       "exp_pct": -0.0733,
+       "gross_exp_pct": -0.0333,
+       "net_usd": -241.75,
+       "fees_usd": 131.98,
+       "max_dd_usd": 308.23,
+       "per_month": 0.8,
+       "median_risk_pct": 0.315
+      },
+      "second": {
+       "trades": 24,
+       "win_pct": 54.2,
+       "avg_r": -0.171,
+       "pf": 0.82,
+       "exp_pct": -0.0274,
+       "gross_exp_pct": 0.0126,
+       "net_usd": -65.67,
+       "fees_usd": 96.01,
+       "max_dd_usd": 182.39,
+       "per_month": 0.6,
+       "median_risk_pct": 0.377
+      }
+     },
+     "prior-day high": {
+      "first": {
+       "trades": 211,
+       "win_pct": 40.3,
+       "avg_r": -0.422,
+       "pf": 0.48,
+       "exp_pct": -0.0589,
+       "gross_exp_pct": -0.0189,
+       "net_usd": -1242.92,
+       "fees_usd": 844.08,
+       "max_dd_usd": 1453.37,
+       "per_month": 5.1,
+       "median_risk_pct": 0.143
+      },
+      "second": {
+       "trades": 214,
+       "win_pct": 42.5,
+       "avg_r": -0.378,
+       "pf": 0.69,
+       "exp_pct": -0.0349,
+       "gross_exp_pct": 0.0051,
+       "net_usd": -746.43,
+       "fees_usd": 855.98,
+       "max_dd_usd": 941.19,
+       "per_month": 5.2,
+       "median_risk_pct": 0.159
+      }
+     },
+     "prior-day low": {
+      "first": {
+       "trades": 220,
+       "win_pct": 46.8,
+       "avg_r": -0.256,
+       "pf": 0.78,
+       "exp_pct": -0.0235,
+       "gross_exp_pct": 0.0165,
+       "net_usd": -516.45,
+       "fees_usd": 880.07,
+       "max_dd_usd": 557.34,
+       "per_month": 5.3,
+       "median_risk_pct": 0.156
+      },
+      "second": {
+       "trades": 190,
+       "win_pct": 53.2,
+       "avg_r": -0.158,
+       "pf": 0.79,
+       "exp_pct": -0.0221,
+       "gross_exp_pct": 0.0179,
+       "net_usd": -419.69,
+       "fees_usd": 760.07,
+       "max_dd_usd": 424.27,
+       "per_month": 4.6,
+       "median_risk_pct": 0.161
+      }
+     },
+     "round number": {
+      "first": {
+       "trades": 957,
+       "win_pct": 43.4,
+       "avg_r": -0.332,
+       "pf": 0.59,
+       "exp_pct": -0.0521,
+       "gross_exp_pct": -0.0121,
+       "net_usd": -4989.27,
+       "fees_usd": 3827.8,
+       "max_dd_usd": 5196.05,
+       "per_month": 23.2,
+       "median_risk_pct": 0.171
+      },
+      "second": {
+       "trades": 1095,
+       "win_pct": 46.7,
+       "avg_r": -0.282,
+       "pf": 0.7,
+       "exp_pct": -0.0446,
+       "gross_exp_pct": -0.0046,
+       "net_usd": -4880.75,
+       "fees_usd": 4379.88,
+       "max_dd_usd": 4880.75,
+       "per_month": 26.6,
+       "median_risk_pct": 0.194
+      }
+     },
+     "swing high": {
+      "first": {
+       "trades": 833,
+       "win_pct": 41.9,
+       "avg_r": -0.438,
+       "pf": 0.51,
+       "exp_pct": -0.0462,
+       "gross_exp_pct": -0.0062,
+       "net_usd": -3847.1,
+       "fees_usd": 3332.1,
+       "max_dd_usd": 3865.44,
+       "per_month": 20.2,
+       "median_risk_pct": 0.129
+      },
+      "second": {
+       "trades": 817,
+       "win_pct": 43.0,
+       "avg_r": -0.384,
+       "pf": 0.54,
+       "exp_pct": -0.0483,
+       "gross_exp_pct": -0.0083,
+       "net_usd": -3945.88,
+       "fees_usd": 3268.14,
+       "max_dd_usd": 4009.79,
+       "per_month": 19.8,
+       "median_risk_pct": 0.135
+      }
+     },
+     "swing low": {
+      "first": {
+       "trades": 901,
+       "win_pct": 43.2,
+       "avg_r": -0.384,
+       "pf": 0.58,
+       "exp_pct": -0.0423,
+       "gross_exp_pct": -0.0023,
+       "net_usd": -3808.0,
+       "fees_usd": 3603.96,
+       "max_dd_usd": 3873.53,
+       "per_month": 21.9,
+       "median_risk_pct": 0.137
+      },
+      "second": {
+       "trades": 839,
+       "win_pct": 45.9,
+       "avg_r": -0.282,
+       "pf": 0.65,
+       "exp_pct": -0.0404,
+       "gross_exp_pct": -0.0004,
+       "net_usd": -3392.96,
+       "fees_usd": 3355.99,
+       "max_dd_usd": 3435.86,
+       "per_month": 20.4,
+       "median_risk_pct": 0.166
+      }
+     }
+    },
+    "exits": {
+     "first": {
+      "STOP": 3226,
+      "T2": 905,
+      "TIME": 622,
+      "t1_hit": 2093
+     },
+     "second": {
+      "STOP": 3223,
+      "T2": 982,
+      "TIME": 598,
+      "t1_hit": 2187
+     }
+    }
+   },
+   "p2_trap": {
+    "sessions": {
+     "Asia": {
+      "first": {
+       "trades": 17,
+       "win_pct": 29.4,
+       "avg_r": -0.592,
+       "pf": 0.3,
+       "exp_pct": -0.0742,
+       "gross_exp_pct": -0.0342,
+       "net_usd": -126.15,
+       "fees_usd": 67.99,
+       "max_dd_usd": 142.18,
+       "per_month": 0.4,
+       "median_risk_pct": 0.122
+      },
+      "second": {
+       "trades": 14,
+       "win_pct": 42.9,
+       "avg_r": -0.264,
+       "pf": 0.93,
+       "exp_pct": -0.007,
+       "gross_exp_pct": 0.033,
+       "net_usd": -9.79,
+       "fees_usd": 56.01,
+       "max_dd_usd": 72.98,
+       "per_month": 0.3,
+       "median_risk_pct": 0.173
+      }
+     },
+     "London": {
+      "first": {
+       "trades": 9,
+       "win_pct": 22.2,
+       "avg_r": -0.852,
+       "pf": 0.27,
+       "exp_pct": -0.1244,
+       "gross_exp_pct": -0.0844,
+       "net_usd": -111.92,
+       "fees_usd": 35.98,
+       "max_dd_usd": 149.37,
+       "per_month": 0.2,
+       "median_risk_pct": 0.143
+      },
+      "second": {
+       "trades": 7,
+       "win_pct": 57.1,
+       "avg_r": -0.326,
+       "pf": 0.2,
+       "exp_pct": -0.0725,
+       "gross_exp_pct": -0.0325,
+       "net_usd": -50.78,
+       "fees_usd": 28.01,
+       "max_dd_usd": 53.05,
+       "per_month": 0.2,
+       "median_risk_pct": 0.139
+      }
+     },
+     "New York": {
+      "first": {
+       "trades": 6,
+       "win_pct": 66.7,
+       "avg_r": 0.23,
+       "pf": 4.05,
+       "exp_pct": 0.1981,
+       "gross_exp_pct": 0.2381,
+       "net_usd": 118.84,
+       "fees_usd": 24.04,
+       "max_dd_usd": 38.94,
+       "per_month": 0.1,
+       "median_risk_pct": 0.232
+      },
+      "second": {
+       "trades": 6,
+       "win_pct": 16.7,
+       "avg_r": -0.687,
+       "pf": 0.01,
+       "exp_pct": -0.1452,
+       "gross_exp_pct": -0.1052,
+       "net_usd": -87.15,
+       "fees_usd": 24.01,
+       "max_dd_usd": 87.15,
+       "per_month": 0.1,
+       "median_risk_pct": 0.159
+      }
+     },
+     "Late": {
+      "first": {
+       "trades": 0
+      },
+      "second": {
+       "trades": 1,
+       "win_pct": 0.0,
+       "avg_r": -0.527,
+       "pf": 0.0,
+       "exp_pct": -0.0205,
+       "gross_exp_pct": 0.0195,
+       "net_usd": -2.05,
+       "fees_usd": 4.0,
+       "max_dd_usd": 2.05,
+       "per_month": 0.0,
+       "median_risk_pct": 0.039
+      }
+     }
+    },
+    "pools": {
+     "prior-day high": {
+      "first": {
+       "trades": 6,
+       "win_pct": 16.7,
+       "avg_r": -0.887,
+       "pf": 0.44,
+       "exp_pct": -0.0786,
+       "gross_exp_pct": -0.0386,
+       "net_usd": -47.16,
+       "fees_usd": 24.0,
+       "max_dd_usd": 84.61,
+       "per_month": 0.1,
+       "median_risk_pct": 0.141
+      },
+      "second": {
+       "trades": 8,
+       "win_pct": 25.0,
+       "avg_r": -0.696,
+       "pf": 0.24,
+       "exp_pct": -0.1441,
+       "gross_exp_pct": -0.1041,
+       "net_usd": -115.28,
+       "fees_usd": 32.02,
+       "max_dd_usd": 142.86,
+       "per_month": 0.2,
+       "median_risk_pct": 0.214
+      }
+     },
+     "prior-day low": {
+      "first": {
+       "trades": 26,
+       "win_pct": 38.5,
+       "avg_r": -0.424,
+       "pf": 0.75,
+       "exp_pct": -0.0277,
+       "gross_exp_pct": 0.0123,
+       "net_usd": -72.07,
+       "fees_usd": 104.01,
+       "max_dd_usd": 155.59,
+       "per_month": 0.6,
+       "median_risk_pct": 0.136
+      },
+      "second": {
+       "trades": 20,
+       "win_pct": 45.0,
+       "avg_r": -0.253,
+       "pf": 0.74,
+       "exp_pct": -0.0172,
+       "gross_exp_pct": 0.0228,
+       "net_usd": -34.49,
+       "fees_usd": 80.01,
+       "max_dd_usd": 91.86,
+       "per_month": 0.5,
+       "median_risk_pct": 0.119
+      }
+     }
+    },
+    "exits": {
+     "first": {
+      "STOP": 23,
+      "T2": 6,
+      "TIME": 3,
+      "t1_hit": 11
+     },
+     "second": {
+      "STOP": 19,
+      "T2": 7,
+      "TIME": 2,
+      "t1_hit": 13
+     }
+    }
+   }
+  },
+  "XAGUSD": {
+   "p1_liqhunt": {
+    "sessions": {
+     "Asia": {
+      "first": {
+       "trades": 1547,
+       "win_pct": 45.2,
+       "avg_r": -0.325,
+       "pf": 0.6,
+       "exp_pct": -0.0741,
+       "gross_exp_pct": -0.0141,
+       "net_usd": -11468.62,
+       "fees_usd": 9281.46,
+       "max_dd_usd": 11500.27,
+       "per_month": 37.6,
+       "median_risk_pct": 0.261
+      },
+      "second": {
+       "trades": 1598,
+       "win_pct": 46.5,
+       "avg_r": -0.261,
+       "pf": 0.66,
+       "exp_pct": -0.0816,
+       "gross_exp_pct": -0.0216,
+       "net_usd": -13045.21,
+       "fees_usd": 9587.36,
+       "max_dd_usd": 13067.73,
+       "per_month": 38.8,
+       "median_risk_pct": 0.308
+      }
+     },
+     "London": {
+      "first": {
+       "trades": 1644,
+       "win_pct": 46.8,
+       "avg_r": -0.27,
+       "pf": 0.64,
+       "exp_pct": -0.0803,
+       "gross_exp_pct": -0.0202,
+       "net_usd": -13193.29,
+       "fees_usd": 9864.68,
+       "max_dd_usd": 13501.56,
+       "per_month": 39.9,
+       "median_risk_pct": 0.317
+      },
+      "second": {
+       "trades": 1472,
+       "win_pct": 48.1,
+       "avg_r": -0.262,
+       "pf": 0.69,
+       "exp_pct": -0.0688,
+       "gross_exp_pct": -0.0088,
+       "net_usd": -10124.7,
+       "fees_usd": 8832.05,
+       "max_dd_usd": 10202.96,
+       "per_month": 35.8,
+       "median_risk_pct": 0.299
+      }
+     },
+     "New York": {
+      "first": {
+       "trades": 1768,
+       "win_pct": 46.5,
+       "avg_r": -0.2,
+       "pf": 0.7,
+       "exp_pct": -0.0801,
+       "gross_exp_pct": -0.0201,
+       "net_usd": -14168.02,
+       "fees_usd": 10609.26,
+       "max_dd_usd": 14565.0,
+       "per_month": 43.0,
+       "median_risk_pct": 0.456
+      },
+      "second": {
+       "trades": 1751,
+       "win_pct": 47.0,
+       "avg_r": -0.192,
+       "pf": 0.77,
+       "exp_pct": -0.0683,
+       "gross_exp_pct": -0.0083,
+       "net_usd": -11961.5,
+       "fees_usd": 10504.8,
+       "max_dd_usd": 12111.59,
+       "per_month": 42.5,
+       "median_risk_pct": 0.482
+      }
+     },
+     "Late": {
+      "first": {
+       "trades": 421,
+       "win_pct": 46.3,
+       "avg_r": -0.3,
+       "pf": 0.75,
+       "exp_pct": -0.0464,
+       "gross_exp_pct": 0.0136,
+       "net_usd": -1954.66,
+       "fees_usd": 2526.28,
+       "max_dd_usd": 2025.17,
+       "per_month": 10.2,
+       "median_risk_pct": 0.28
+      },
+      "second": {
+       "trades": 537,
+       "win_pct": 49.2,
+       "avg_r": -0.216,
+       "pf": 0.96,
+       "exp_pct": -0.0084,
+       "gross_exp_pct": 0.0516,
+       "net_usd": -449.76,
+       "fees_usd": 3222.61,
+       "max_dd_usd": 2299.29,
+       "per_month": 13.0,
+       "median_risk_pct": 0.307
+      }
+     }
+    },
+    "pools": {
+     "24h high": {
+      "first": {
+       "trades": 696,
+       "win_pct": 46.1,
+       "avg_r": -0.278,
+       "pf": 0.57,
+       "exp_pct": -0.0977,
+       "gross_exp_pct": -0.0377,
+       "net_usd": -6799.56,
+       "fees_usd": 4176.79,
+       "max_dd_usd": 6999.09,
+       "per_month": 16.9,
+       "median_risk_pct": 0.332
+      },
+      "second": {
+       "trades": 666,
+       "win_pct": 46.2,
+       "avg_r": -0.303,
+       "pf": 0.64,
+       "exp_pct": -0.0773,
+       "gross_exp_pct": -0.0173,
+       "net_usd": -5148.97,
+       "fees_usd": 3996.35,
+       "max_dd_usd": 5310.62,
+       "per_month": 16.2,
+       "median_risk_pct": 0.308
+      }
+     },
+     "24h low": {
+      "first": {
+       "trades": 611,
+       "win_pct": 47.8,
+       "avg_r": -0.209,
+       "pf": 0.74,
+       "exp_pct": -0.0611,
+       "gross_exp_pct": -0.0011,
+       "net_usd": -3733.42,
+       "fees_usd": 3665.98,
+       "max_dd_usd": 3846.34,
+       "per_month": 14.8,
+       "median_risk_pct": 0.37
+      },
+      "second": {
+       "trades": 653,
+       "win_pct": 43.8,
+       "avg_r": -0.279,
+       "pf": 0.61,
+       "exp_pct": -0.1104,
+       "gross_exp_pct": -0.0504,
+       "net_usd": -7208.77,
+       "fees_usd": 3917.01,
+       "max_dd_usd": 7208.77,
+       "per_month": 15.9,
+       "median_risk_pct": 0.384
+      }
+     },
+     "7-day high": {
+      "first": {
+       "trades": 28,
+       "win_pct": 32.1,
+       "avg_r": -0.501,
+       "pf": 0.4,
+       "exp_pct": -0.2024,
+       "gross_exp_pct": -0.1424,
+       "net_usd": -566.83,
+       "fees_usd": 168.12,
+       "max_dd_usd": 642.47,
+       "per_month": 0.7,
+       "median_risk_pct": 0.442
+      },
+      "second": {
+       "trades": 25,
+       "win_pct": 48.0,
+       "avg_r": -0.107,
+       "pf": 0.89,
+       "exp_pct": -0.0248,
+       "gross_exp_pct": 0.0352,
+       "net_usd": -61.89,
+       "fees_usd": 149.97,
+       "max_dd_usd": 333.04,
+       "per_month": 0.6,
+       "median_risk_pct": 0.633
+      }
+     },
+     "7-day low": {
+      "first": {
+       "trades": 30,
+       "win_pct": 50.0,
+       "avg_r": -0.091,
+       "pf": 0.72,
+       "exp_pct": -0.0991,
+       "gross_exp_pct": -0.0391,
+       "net_usd": -297.23,
+       "fees_usd": 179.96,
+       "max_dd_usd": 423.61,
+       "per_month": 0.7,
+       "median_risk_pct": 0.545
+      },
+      "second": {
+       "trades": 30,
+       "win_pct": 56.7,
+       "avg_r": -0.065,
+       "pf": 0.37,
+       "exp_pct": -0.3397,
+       "gross_exp_pct": -0.2797,
+       "net_usd": -1018.96,
+       "fees_usd": 179.75,
+       "max_dd_usd": 1092.46,
+       "per_month": 0.7,
+       "median_risk_pct": 0.532
+      }
+     },
+     "prior-day high": {
+      "first": {
+       "trades": 205,
+       "win_pct": 45.9,
+       "avg_r": -0.251,
+       "pf": 0.71,
+       "exp_pct": -0.0593,
+       "gross_exp_pct": 0.0007,
+       "net_usd": -1215.41,
+       "fees_usd": 1230.0,
+       "max_dd_usd": 1303.33,
+       "per_month": 5.0,
+       "median_risk_pct": 0.304
+      },
+      "second": {
+       "trades": 179,
+       "win_pct": 58.1,
+       "avg_r": -0.113,
+       "pf": 1.09,
+       "exp_pct": 0.0138,
+       "gross_exp_pct": 0.0737,
+       "net_usd": 246.27,
+       "fees_usd": 1073.6,
+       "max_dd_usd": 638.47,
+       "per_month": 4.3,
+       "median_risk_pct": 0.321
+      }
+     },
+     "prior-day low": {
+      "first": {
+       "trades": 184,
+       "win_pct": 46.2,
+       "avg_r": -0.305,
+       "pf": 0.63,
+       "exp_pct": -0.0761,
+       "gross_exp_pct": -0.0161,
+       "net_usd": -1399.58,
+       "fees_usd": 1103.91,
+       "max_dd_usd": 1401.1,
+       "per_month": 4.5,
+       "median_risk_pct": 0.339
+      },
+      "second": {
+       "trades": 211,
+       "win_pct": 51.2,
+       "avg_r": -0.157,
+       "pf": 1.12,
+       "exp_pct": 0.0243,
+       "gross_exp_pct": 0.0844,
+       "net_usd": 513.47,
+       "fees_usd": 1266.53,
+       "max_dd_usd": 661.97,
+       "per_month": 5.1,
+       "median_risk_pct": 0.336
+      }
+     },
+     "round number": {
+      "first": {
+       "trades": 2036,
+       "win_pct": 46.9,
+       "avg_r": -0.238,
+       "pf": 0.71,
+       "exp_pct": -0.0704,
+       "gross_exp_pct": -0.0104,
+       "net_usd": -14341.21,
+       "fees_usd": 12216.64,
+       "max_dd_usd": 14495.35,
+       "per_month": 49.5,
+       "median_risk_pct": 0.355
+      },
+      "second": {
+       "trades": 2074,
+       "win_pct": 47.9,
+       "avg_r": -0.198,
+       "pf": 0.8,
+       "exp_pct": -0.0572,
+       "gross_exp_pct": 0.0028,
+       "net_usd": -11865.28,
+       "fees_usd": 12443.57,
+       "max_dd_usd": 12290.52,
+       "per_month": 50.4,
+       "median_risk_pct": 0.416
+      }
+     },
+     "swing high": {
+      "first": {
+       "trades": 737,
+       "win_pct": 44.1,
+       "avg_r": -0.341,
+       "pf": 0.57,
+       "exp_pct": -0.0861,
+       "gross_exp_pct": -0.0261,
+       "net_usd": -6343.53,
+       "fees_usd": 4422.58,
+       "max_dd_usd": 6380.62,
+       "per_month": 17.9,
+       "median_risk_pct": 0.281
+      },
+      "second": {
+       "trades": 665,
+       "win_pct": 47.8,
+       "avg_r": -0.26,
+       "pf": 0.61,
+       "exp_pct": -0.0753,
+       "gross_exp_pct": -0.0153,
+       "net_usd": -5008.77,
+       "fees_usd": 3990.31,
+       "max_dd_usd": 5050.89,
+       "per_month": 16.2,
+       "median_risk_pct": 0.271
+      }
+     },
+     "swing low": {
+      "first": {
+       "trades": 853,
+       "win_pct": 45.7,
+       "avg_r": -0.288,
+       "pf": 0.66,
+       "exp_pct": -0.0714,
+       "gross_exp_pct": -0.0114,
+       "net_usd": -6087.81,
+       "fees_usd": 5117.71,
+       "max_dd_usd": 6331.59,
+       "per_month": 20.7,
+       "median_risk_pct": 0.313
+      },
+      "second": {
+       "trades": 855,
+       "win_pct": 45.8,
+       "avg_r": -0.267,
+       "pf": 0.69,
+       "exp_pct": -0.0705,
+       "gross_exp_pct": -0.0105,
+       "net_usd": -6028.28,
+       "fees_usd": 5129.73,
+       "max_dd_usd": 6033.08,
+       "per_month": 20.8,
+       "median_risk_pct": 0.336
+      }
+     }
+    },
+    "exits": {
+     "first": {
+      "STOP": 3636,
+      "T2": 963,
+      "TIME": 781,
+      "t1_hit": 2355
+     },
+     "second": {
+      "STOP": 3561,
+      "T2": 1014,
+      "TIME": 783,
+      "t1_hit": 2390
+     }
+    }
+   },
+   "p2_trap": {
+    "sessions": {
+     "Asia": {
+      "first": {
+       "trades": 15,
+       "win_pct": 53.3,
+       "avg_r": -0.083,
+       "pf": 1.72,
+       "exp_pct": 0.1104,
+       "gross_exp_pct": 0.1704,
+       "net_usd": 165.57,
+       "fees_usd": 90.05,
+       "max_dd_usd": 84.11,
+       "per_month": 0.4,
+       "median_risk_pct": 0.27
+      },
+      "second": {
+       "trades": 17,
+       "win_pct": 76.5,
+       "avg_r": 0.428,
+       "pf": 5.01,
+       "exp_pct": 0.2501,
+       "gross_exp_pct": 0.3101,
+       "net_usd": 425.19,
+       "fees_usd": 102.02,
+       "max_dd_usd": 64.59,
+       "per_month": 0.4,
+       "median_risk_pct": 0.32
+      }
+     },
+     "London": {
+      "first": {
+       "trades": 6,
+       "win_pct": 83.3,
+       "avg_r": 0.543,
+       "pf": 94.2,
+       "exp_pct": 0.321,
+       "gross_exp_pct": 0.3811,
+       "net_usd": 192.6,
+       "fees_usd": 36.06,
+       "max_dd_usd": 2.07,
+       "per_month": 0.1,
+       "median_risk_pct": 0.465
+      },
+      "second": {
+       "trades": 4,
+       "win_pct": 75.0,
+       "avg_r": 0.157,
+       "pf": 0.54,
+       "exp_pct": -0.0819,
+       "gross_exp_pct": -0.0218,
+       "net_usd": -32.75,
+       "fees_usd": 24.03,
+       "max_dd_usd": 71.9,
+       "per_month": 0.1,
+       "median_risk_pct": 0.233
+      }
+     },
+     "New York": {
+      "first": {
+       "trades": 6,
+       "win_pct": 33.3,
+       "avg_r": -0.439,
+       "pf": 0.8,
+       "exp_pct": -0.0479,
+       "gross_exp_pct": 0.0121,
+       "net_usd": -28.76,
+       "fees_usd": 36.05,
+       "max_dd_usd": 146.37,
+       "per_month": 0.1,
+       "median_risk_pct": 0.357
+      },
+      "second": {
+       "trades": 7,
+       "win_pct": 28.6,
+       "avg_r": -0.529,
+       "pf": 0.2,
+       "exp_pct": -0.1814,
+       "gross_exp_pct": -0.1215,
+       "net_usd": -126.99,
+       "fees_usd": 41.97,
+       "max_dd_usd": 141.01,
+       "per_month": 0.2,
+       "median_risk_pct": 0.305
+      }
+     },
+     "Late": {
+      "first": {
+       "trades": 1,
+       "win_pct": 100.0,
+       "avg_r": 0.904,
+       "pf": null,
+       "exp_pct": 0.091,
+       "gross_exp_pct": 0.151,
+       "net_usd": 9.1,
+       "fees_usd": 6.0,
+       "max_dd_usd": 0.0,
+       "per_month": 0.0,
+       "median_risk_pct": 0.101
+      },
+      "second": {
+       "trades": 0
+      }
+     }
+    },
+    "pools": {
+     "prior-day high": {
+      "first": {
+       "trades": 8,
+       "win_pct": 62.5,
+       "avg_r": 0.066,
+       "pf": 0.58,
+       "exp_pct": -0.0545,
+       "gross_exp_pct": 0.0055,
+       "net_usd": -43.63,
+       "fees_usd": 48.0,
+       "max_dd_usd": 73.28,
+       "per_month": 0.2,
+       "median_risk_pct": 0.148
+      },
+      "second": {
+       "trades": 8,
+       "win_pct": 87.5,
+       "avg_r": 0.715,
+       "pf": 2.81,
+       "exp_pct": 0.1623,
+       "gross_exp_pct": 0.2223,
+       "net_usd": 129.87,
+       "fees_usd": 47.95,
+       "max_dd_usd": 71.9,
+       "per_month": 0.2,
+       "median_risk_pct": 0.298
+      }
+     },
+     "prior-day low": {
+      "first": {
+       "trades": 20,
+       "win_pct": 55.0,
+       "avg_r": -0.012,
+       "pf": 2.4,
+       "exp_pct": 0.1911,
+       "gross_exp_pct": 0.2511,
+       "net_usd": 382.14,
+       "fees_usd": 120.15,
+       "max_dd_usd": 130.54,
+       "per_month": 0.5,
+       "median_risk_pct": 0.405
+      },
+      "second": {
+       "trades": 20,
+       "win_pct": 55.0,
+       "avg_r": -0.076,
+       "pf": 1.51,
+       "exp_pct": 0.0678,
+       "gross_exp_pct": 0.1278,
+       "net_usd": 135.57,
+       "fees_usd": 120.08,
+       "max_dd_usd": 134.61,
+       "per_month": 0.5,
+       "median_risk_pct": 0.284
+      }
+     }
+    },
+    "exits": {
+     "first": {
+      "STOP": 15,
+      "T2": 9,
+      "TIME": 4,
+      "t1_hit": 15
+     },
+     "second": {
+      "STOP": 14,
+      "T2": 9,
+      "TIME": 5,
+      "t1_hit": 16
+     }
+    }
+   }
+  },
+  "USDJPY": {
+   "p1_liqhunt": {
+    "sessions": {
+     "Asia": {
+      "first": {
+       "trades": 1319,
+       "win_pct": 45.7,
+       "avg_r": -0.318,
+       "pf": 0.71,
+       "exp_pct": -0.0135,
+       "gross_exp_pct": 0.0065,
+       "net_usd": -1776.93,
+       "fees_usd": 2638.02,
+       "max_dd_usd": 2007.93,
+       "per_month": 32.0,
+       "median_risk_pct": 0.068
+      },
+      "second": {
+       "trades": 1455,
+       "win_pct": 44.6,
+       "avg_r": -0.322,
+       "pf": 0.67,
+       "exp_pct": -0.0179,
+       "gross_exp_pct": 0.0021,
+       "net_usd": -2607.24,
+       "fees_usd": 2910.05,
+       "max_dd_usd": 2648.57,
+       "per_month": 35.3,
+       "median_risk_pct": 0.075
+      }
+     },
+     "London": {
+      "first": {
+       "trades": 1325,
+       "win_pct": 44.9,
+       "avg_r": -0.336,
+       "pf": 0.6,
+       "exp_pct": -0.0213,
+       "gross_exp_pct": -0.0013,
+       "net_usd": -2816.55,
+       "fees_usd": 2650.01,
+       "max_dd_usd": 2861.85,
+       "per_month": 32.2,
+       "median_risk_pct": 0.069
+      },
+      "second": {
+       "trades": 1160,
+       "win_pct": 44.9,
+       "avg_r": -0.316,
+       "pf": 0.58,
+       "exp_pct": -0.0246,
+       "gross_exp_pct": -0.0046,
+       "net_usd": -2857.97,
+       "fees_usd": 2320.06,
+       "max_dd_usd": 2883.04,
+       "per_month": 28.2,
+       "median_risk_pct": 0.081
+      }
+     },
+     "New York": {
+      "first": {
+       "trades": 1296,
+       "win_pct": 45.0,
+       "avg_r": -0.316,
+       "pf": 0.61,
+       "exp_pct": -0.0233,
+       "gross_exp_pct": -0.0033,
+       "net_usd": -3014.71,
+       "fees_usd": 2591.99,
+       "max_dd_usd": 3042.66,
+       "per_month": 31.5,
+       "median_risk_pct": 0.086
+      },
+      "second": {
+       "trades": 1253,
+       "win_pct": 47.2,
+       "avg_r": -0.262,
+       "pf": 0.71,
+       "exp_pct": -0.0166,
+       "gross_exp_pct": 0.0034,
+       "net_usd": -2080.72,
+       "fees_usd": 2506.05,
+       "max_dd_usd": 2190.89,
+       "per_month": 30.4,
+       "median_risk_pct": 0.086
+      }
+     },
+     "Late": {
+      "first": {
+       "trades": 547,
+       "win_pct": 43.3,
+       "avg_r": -0.456,
+       "pf": 0.59,
+       "exp_pct": -0.0181,
+       "gross_exp_pct": 0.0019,
+       "net_usd": -989.22,
+       "fees_usd": 1094.0,
+       "max_dd_usd": 1038.03,
+       "per_month": 13.3,
+       "median_risk_pct": 0.056
+      },
+      "second": {
+       "trades": 551,
+       "win_pct": 45.6,
+       "avg_r": -0.349,
+       "pf": 0.61,
+       "exp_pct": -0.0195,
+       "gross_exp_pct": 0.0005,
+       "net_usd": -1073.65,
+       "fees_usd": 1102.02,
+       "max_dd_usd": 1092.79,
+       "per_month": 13.4,
+       "median_risk_pct": 0.064
+      }
+     }
+    },
+    "pools": {
+     "24h high": {
+      "first": {
+       "trades": 929,
+       "win_pct": 44.9,
+       "avg_r": -0.368,
+       "pf": 0.59,
+       "exp_pct": -0.0203,
+       "gross_exp_pct": -0.0003,
+       "net_usd": -1883.72,
+       "fees_usd": 1858.0,
+       "max_dd_usd": 1952.33,
+       "per_month": 22.6,
+       "median_risk_pct": 0.067
+      },
+      "second": {
+       "trades": 1067,
+       "win_pct": 42.1,
+       "avg_r": -0.393,
+       "pf": 0.53,
+       "exp_pct": -0.0237,
+       "gross_exp_pct": -0.0037,
+       "net_usd": -2531.45,
+       "fees_usd": 2134.04,
+       "max_dd_usd": 2531.45,
+       "per_month": 25.9,
+       "median_risk_pct": 0.067
+      }
+     },
+     "24h low": {
+      "first": {
+       "trades": 746,
+       "win_pct": 47.5,
+       "avg_r": -0.278,
+       "pf": 0.69,
+       "exp_pct": -0.0172,
+       "gross_exp_pct": 0.0028,
+       "net_usd": -1279.52,
+       "fees_usd": 1492.02,
+       "max_dd_usd": 1298.37,
+       "per_month": 18.1,
+       "median_risk_pct": 0.083
+      },
+      "second": {
+       "trades": 764,
+       "win_pct": 48.4,
+       "avg_r": -0.204,
+       "pf": 0.73,
+       "exp_pct": -0.0179,
+       "gross_exp_pct": 0.0021,
+       "net_usd": -1368.65,
+       "fees_usd": 1528.02,
+       "max_dd_usd": 1392.56,
+       "per_month": 18.6,
+       "median_risk_pct": 0.101
+      }
+     },
+     "7-day high": {
+      "first": {
+       "trades": 24,
+       "win_pct": 45.8,
+       "avg_r": -0.175,
+       "pf": 0.75,
+       "exp_pct": -0.0154,
+       "gross_exp_pct": 0.0046,
+       "net_usd": -36.97,
+       "fees_usd": 48.0,
+       "max_dd_usd": 73.76,
+       "per_month": 0.6,
+       "median_risk_pct": 0.105
+      },
+      "second": {
+       "trades": 22,
+       "win_pct": 81.8,
+       "avg_r": 0.326,
+       "pf": 3.57,
+       "exp_pct": 0.0474,
+       "gross_exp_pct": 0.0674,
+       "net_usd": 104.35,
+       "fees_usd": 43.99,
+       "max_dd_usd": 15.23,
+       "per_month": 0.5,
+       "median_risk_pct": 0.082
+      }
+     },
+     "7-day low": {
+      "first": {
+       "trades": 20,
+       "win_pct": 50.0,
+       "avg_r": -0.202,
+       "pf": 2.59,
+       "exp_pct": 0.0662,
+       "gross_exp_pct": 0.0862,
+       "net_usd": 132.37,
+       "fees_usd": 40.02,
+       "max_dd_usd": 64.66,
+       "per_month": 0.5,
+       "median_risk_pct": 0.088
+      },
+      "second": {
+       "trades": 25,
+       "win_pct": 36.0,
+       "avg_r": -0.438,
+       "pf": 0.24,
+       "exp_pct": -0.1314,
+       "gross_exp_pct": -0.1114,
+       "net_usd": -328.53,
+       "fees_usd": 49.97,
+       "max_dd_usd": 341.97,
+       "per_month": 0.6,
+       "median_risk_pct": 0.162
+      }
+     },
+     "prior-day high": {
+      "first": {
+       "trades": 260,
+       "win_pct": 42.3,
+       "avg_r": -0.445,
+       "pf": 0.47,
+       "exp_pct": -0.0269,
+       "gross_exp_pct": -0.0069,
+       "net_usd": -699.83,
+       "fees_usd": 520.02,
+       "max_dd_usd": 710.74,
+       "per_month": 6.3,
+       "median_risk_pct": 0.06
+      },
+      "second": {
+       "trades": 241,
+       "win_pct": 42.3,
+       "avg_r": -0.405,
+       "pf": 0.54,
+       "exp_pct": -0.0222,
+       "gross_exp_pct": -0.0022,
+       "net_usd": -535.07,
+       "fees_usd": 482.01,
+       "max_dd_usd": 572.08,
+       "per_month": 5.9,
+       "median_risk_pct": 0.065
+      }
+     },
+     "prior-day low": {
+      "first": {
+       "trades": 204,
+       "win_pct": 40.7,
+       "avg_r": -0.397,
+       "pf": 0.59,
+       "exp_pct": -0.0228,
+       "gross_exp_pct": -0.0028,
+       "net_usd": -464.65,
+       "fees_usd": 407.99,
+       "max_dd_usd": 489.91,
+       "per_month": 5.0,
+       "median_risk_pct": 0.074
+      },
+      "second": {
+       "trades": 194,
+       "win_pct": 55.2,
+       "avg_r": -0.147,
+       "pf": 0.93,
+       "exp_pct": -0.0033,
+       "gross_exp_pct": 0.0167,
+       "net_usd": -64.23,
+       "fees_usd": 388.03,
+       "max_dd_usd": 302.66,
+       "per_month": 4.7,
+       "median_risk_pct": 0.089
+      }
+     },
+     "round number": {
+      "first": {
+       "trades": 556,
+       "win_pct": 44.2,
+       "avg_r": -0.319,
+       "pf": 0.66,
+       "exp_pct": -0.0222,
+       "gross_exp_pct": -0.0022,
+       "net_usd": -1232.18,
+       "fees_usd": 1111.94,
+       "max_dd_usd": 1322.99,
+       "per_month": 13.5,
+       "median_risk_pct": 0.081
+      },
+      "second": {
+       "trades": 406,
+       "win_pct": 50.7,
+       "avg_r": -0.192,
+       "pf": 0.87,
+       "exp_pct": -0.0083,
+       "gross_exp_pct": 0.0117,
+       "net_usd": -337.24,
+       "fees_usd": 812.03,
+       "max_dd_usd": 580.72,
+       "per_month": 9.9,
+       "median_risk_pct": 0.098
+      }
+     },
+     "swing high": {
+      "first": {
+       "trades": 866,
+       "win_pct": 43.0,
+       "avg_r": -0.389,
+       "pf": 0.6,
+       "exp_pct": -0.0193,
+       "gross_exp_pct": 0.0007,
+       "net_usd": -1671.78,
+       "fees_usd": 1731.99,
+       "max_dd_usd": 1739.04,
+       "per_month": 21.0,
+       "median_risk_pct": 0.064
+      },
+      "second": {
+       "trades": 800,
+       "win_pct": 41.8,
+       "avg_r": -0.41,
+       "pf": 0.49,
+       "exp_pct": -0.0264,
+       "gross_exp_pct": -0.0064,
+       "net_usd": -2110.65,
+       "fees_usd": 1600.05,
+       "max_dd_usd": 2110.65,
+       "per_month": 19.4,
+       "median_risk_pct": 0.067
+      }
+     },
+     "swing low": {
+      "first": {
+       "trades": 882,
+       "win_pct": 47.1,
+       "avg_r": -0.289,
+       "pf": 0.66,
+       "exp_pct": -0.0166,
+       "gross_exp_pct": 0.0034,
+       "net_usd": -1461.14,
+       "fees_usd": 1764.03,
+       "max_dd_usd": 1561.22,
+       "per_month": 21.4,
+       "median_risk_pct": 0.073
+      },
+      "second": {
+       "trades": 900,
+       "win_pct": 46.4,
+       "avg_r": -0.273,
+       "pf": 0.69,
+       "exp_pct": -0.0161,
+       "gross_exp_pct": 0.0039,
+       "net_usd": -1448.11,
+       "fees_usd": 1800.04,
+       "max_dd_usd": 1477.98,
+       "per_month": 21.9,
+       "median_risk_pct": 0.078
+      }
+     }
+    },
+    "exits": {
+     "first": {
+      "STOP": 2977,
+      "T2": 939,
+      "TIME": 571,
+      "t1_hit": 2043
+     },
+     "second": {
+      "STOP": 2922,
+      "T2": 915,
+      "TIME": 582,
+      "t1_hit": 2041
+     }
+    }
+   },
+   "p2_trap": {
+    "sessions": {
+     "Asia": {
+      "first": {
+       "trades": 11,
+       "win_pct": 45.5,
+       "avg_r": -0.306,
+       "pf": 0.49,
+       "exp_pct": -0.0391,
+       "gross_exp_pct": -0.0191,
+       "net_usd": -43.01,
+       "fees_usd": 22.0,
+       "max_dd_usd": 45.31,
+       "per_month": 0.3,
+       "median_risk_pct": 0.135
+      },
+      "second": {
+       "trades": 7,
+       "win_pct": 57.1,
+       "avg_r": -0.161,
+       "pf": 0.5,
+       "exp_pct": -0.0291,
+       "gross_exp_pct": -0.0091,
+       "net_usd": -20.35,
+       "fees_usd": 14.0,
+       "max_dd_usd": 23.02,
+       "per_month": 0.2,
+       "median_risk_pct": 0.103
+      }
+     },
+     "London": {
+      "first": {
+       "trades": 5,
+       "win_pct": 20.0,
+       "avg_r": -0.989,
+       "pf": 0.16,
+       "exp_pct": -0.0574,
+       "gross_exp_pct": -0.0374,
+       "net_usd": -28.69,
+       "fees_usd": 10.0,
+       "max_dd_usd": 34.07,
+       "per_month": 0.1,
+       "median_risk_pct": 0.059
+      },
+      "second": {
+       "trades": 4,
+       "win_pct": 50.0,
+       "avg_r": 0.011,
+       "pf": 0.85,
+       "exp_pct": -0.0095,
+       "gross_exp_pct": 0.0105,
+       "net_usd": -3.8,
+       "fees_usd": 8.0,
+       "max_dd_usd": 16.73,
+       "per_month": 0.1,
+       "median_risk_pct": 0.088
+      }
+     },
+     "New York": {
+      "first": {
+       "trades": 4,
+       "win_pct": 50.0,
+       "avg_r": -0.435,
+       "pf": 0.09,
+       "exp_pct": -0.1048,
+       "gross_exp_pct": -0.0848,
+       "net_usd": -41.91,
+       "fees_usd": 8.0,
+       "max_dd_usd": 45.87,
+       "per_month": 0.1,
+       "median_risk_pct": 0.151
+      },
+      "second": {
+       "trades": 6,
+       "win_pct": 33.3,
+       "avg_r": -0.537,
+       "pf": 0.65,
+       "exp_pct": -0.0335,
+       "gross_exp_pct": -0.0135,
+       "net_usd": -20.12,
+       "fees_usd": 11.99,
+       "max_dd_usd": 58.21,
+       "per_month": 0.1,
+       "median_risk_pct": 0.114
+      }
+     },
+     "Late": {
+      "first": {
+       "trades": 2,
+       "win_pct": 50.0,
+       "avg_r": 0.143,
+       "pf": 3.78,
+       "exp_pct": 0.2001,
+       "gross_exp_pct": 0.2201,
+       "net_usd": 40.02,
+       "fees_usd": 3.99,
+       "max_dd_usd": 14.41,
+       "per_month": 0.0,
+       "median_risk_pct": 0.25
+      },
+      "second": {
+       "trades": 3,
+       "win_pct": 0.0,
+       "avg_r": -1.672,
+       "pf": 0.0,
+       "exp_pct": -0.0551,
+       "gross_exp_pct": -0.0352,
+       "net_usd": -16.54,
+       "fees_usd": 6.0,
+       "max_dd_usd": 16.54,
+       "per_month": 0.1,
+       "median_risk_pct": 0.033
+      }
+     }
+    },
+    "pools": {
+     "prior-day high": {
+      "first": {
+       "trades": 12,
+       "win_pct": 50.0,
+       "avg_r": -0.265,
+       "pf": 0.85,
+       "exp_pct": -0.0125,
+       "gross_exp_pct": 0.0075,
+       "net_usd": -14.98,
+       "fees_usd": 24.0,
+       "max_dd_usd": 81.46,
+       "per_month": 0.3,
+       "median_risk_pct": 0.195
+      },
+      "second": {
+       "trades": 6,
+       "win_pct": 50.0,
+       "avg_r": -0.058,
+       "pf": 1.06,
+       "exp_pct": 0.0055,
+       "gross_exp_pct": 0.0255,
+       "net_usd": 3.31,
+       "fees_usd": 12.0,
+       "max_dd_usd": 31.25,
+       "per_month": 0.1,
+       "median_risk_pct": 0.136
+      }
+     },
+     "prior-day low": {
+      "first": {
+       "trades": 10,
+       "win_pct": 30.0,
+       "avg_r": -0.659,
+       "pf": 0.26,
+       "exp_pct": -0.0586,
+       "gross_exp_pct": -0.0386,
+       "net_usd": -58.6,
+       "fees_usd": 20.0,
+       "max_dd_usd": 71.98,
+       "per_month": 0.2,
+       "median_risk_pct": 0.087
+      },
+      "second": {
+       "trades": 14,
+       "win_pct": 35.7,
+       "avg_r": -0.641,
+       "pf": 0.28,
+       "exp_pct": -0.0458,
+       "gross_exp_pct": -0.0258,
+       "net_usd": -64.12,
+       "fees_usd": 28.0,
+       "max_dd_usd": 89.29,
+       "per_month": 0.3,
+       "median_risk_pct": 0.055
+      }
+     }
+    },
+    "exits": {
+     "first": {
+      "STOP": 18,
+      "T2": 2,
+      "TIME": 2,
+      "t1_hit": 9
+     },
+     "second": {
+      "STOP": 14,
+      "T2": 6,
+      "TIME": 0,
+      "t1_hit": 8
+     }
+    }
+   }
+  },
+  "SPX": {
+   "p1_liqhunt": {
+    "sessions": {
+     "Asia": {
+      "first": {
+       "trades": 0
+      },
+      "second": {
+       "trades": 0
+      }
+     },
+     "London": {
+      "first": {
+       "trades": 0
+      },
+      "second": {
+       "trades": 0
+      }
+     },
+     "New York": {
+      "first": {
+       "trades": 1578,
+       "win_pct": 47.5,
+       "avg_r": -0.239,
+       "pf": 0.72,
+       "exp_pct": -0.0591,
+       "gross_exp_pct": -0.0191,
+       "net_usd": -9319.78,
+       "fees_usd": 6311.71,
+       "max_dd_usd": 9352.63,
+       "per_month": 38.3,
+       "median_risk_pct": 0.268
+      },
+      "second": {
+       "trades": 1456,
+       "win_pct": 43.7,
+       "avg_r": -0.38,
+       "pf": 0.65,
+       "exp_pct": -0.0507,
+       "gross_exp_pct": -0.0107,
+       "net_usd": -7384.23,
+       "fees_usd": 5824.45,
+       "max_dd_usd": 7650.48,
+       "per_month": 35.4,
+       "median_risk_pct": 0.178
+      }
+     },
+     "Late": {
+      "first": {
+       "trades": 88,
+       "win_pct": 42.0,
+       "avg_r": -0.3,
+       "pf": 0.78,
+       "exp_pct": -0.0471,
+       "gross_exp_pct": -0.0071,
+       "net_usd": -414.69,
+       "fees_usd": 351.88,
+       "max_dd_usd": 489.77,
+       "per_month": 2.1,
+       "median_risk_pct": 0.198
+      },
+      "second": {
+       "trades": 62,
+       "win_pct": 40.3,
+       "avg_r": -0.241,
+       "pf": 0.94,
+       "exp_pct": -0.0061,
+       "gross_exp_pct": 0.0339,
+       "net_usd": -38.11,
+       "fees_usd": 248.05,
+       "max_dd_usd": 225.83,
+       "per_month": 1.5,
+       "median_risk_pct": 0.144
+      }
+     }
+    },
+    "pools": {
+     "24h high": {
+      "first": {
+       "trades": 391,
+       "win_pct": 45.5,
+       "avg_r": -0.336,
+       "pf": 0.72,
+       "exp_pct": -0.04,
+       "gross_exp_pct": 0.0,
+       "net_usd": -1563.84,
+       "fees_usd": 1564.0,
+       "max_dd_usd": 1963.41,
+       "per_month": 9.5,
+       "median_risk_pct": 0.187
+      },
+      "second": {
+       "trades": 412,
+       "win_pct": 42.2,
+       "avg_r": -0.634,
+       "pf": 0.64,
+       "exp_pct": -0.0419,
+       "gross_exp_pct": -0.0019,
+       "net_usd": -1725.42,
+       "fees_usd": 1648.02,
+       "max_dd_usd": 1841.72,
+       "per_month": 10.0,
+       "median_risk_pct": 0.131
+      }
+     },
+     "24h low": {
+      "first": {
+       "trades": 375,
+       "win_pct": 46.4,
+       "avg_r": -0.259,
+       "pf": 0.62,
+       "exp_pct": -0.0873,
+       "gross_exp_pct": -0.0473,
+       "net_usd": -3274.09,
+       "fees_usd": 1499.65,
+       "max_dd_usd": 3351.14,
+       "per_month": 9.1,
+       "median_risk_pct": 0.285
+      },
+      "second": {
+       "trades": 358,
+       "win_pct": 47.2,
+       "avg_r": -0.176,
+       "pf": 0.83,
+       "exp_pct": -0.0243,
+       "gross_exp_pct": 0.0157,
+       "net_usd": -870.6,
+       "fees_usd": 1432.11,
+       "max_dd_usd": 1026.76,
+       "per_month": 8.7,
+       "median_risk_pct": 0.203
+      }
+     },
+     "7-day high": {
+      "first": {
+       "trades": 20,
+       "win_pct": 50.0,
+       "avg_r": -0.671,
+       "pf": 1.12,
+       "exp_pct": 0.0178,
+       "gross_exp_pct": 0.0578,
+       "net_usd": 35.62,
+       "fees_usd": 79.98,
+       "max_dd_usd": 90.74,
+       "per_month": 0.5,
+       "median_risk_pct": 0.208
+      },
+      "second": {
+       "trades": 22,
+       "win_pct": 40.9,
+       "avg_r": -0.293,
+       "pf": 0.46,
+       "exp_pct": -0.098,
+       "gross_exp_pct": -0.058,
+       "net_usd": -215.6,
+       "fees_usd": 88.03,
+       "max_dd_usd": 273.19,
+       "per_month": 0.5,
+       "median_risk_pct": 0.173
+      }
+     },
+     "7-day low": {
+      "first": {
+       "trades": 16,
+       "win_pct": 50.0,
+       "avg_r": -0.187,
+       "pf": 0.79,
+       "exp_pct": -0.0405,
+       "gross_exp_pct": -0.0005,
+       "net_usd": -64.83,
+       "fees_usd": 64.0,
+       "max_dd_usd": 115.43,
+       "per_month": 0.4,
+       "median_risk_pct": 0.386
+      },
+      "second": {
+       "trades": 17,
+       "win_pct": 29.4,
+       "avg_r": -0.437,
+       "pf": 0.51,
+       "exp_pct": -0.1,
+       "gross_exp_pct": -0.06,
+       "net_usd": -169.94,
+       "fees_usd": 67.98,
+       "max_dd_usd": 169.94,
+       "per_month": 0.4,
+       "median_risk_pct": 0.259
+      }
+     },
+     "prior-day high": {
+      "first": {
+       "trades": 67,
+       "win_pct": 47.8,
+       "avg_r": -0.351,
+       "pf": 0.62,
+       "exp_pct": -0.0626,
+       "gross_exp_pct": -0.0226,
+       "net_usd": -419.43,
+       "fees_usd": 268.03,
+       "max_dd_usd": 461.39,
+       "per_month": 1.6,
+       "median_risk_pct": 0.211
+      },
+      "second": {
+       "trades": 58,
+       "win_pct": 31.0,
+       "avg_r": -0.617,
+       "pf": 0.29,
+       "exp_pct": -0.1136,
+       "gross_exp_pct": -0.0736,
+       "net_usd": -658.9,
+       "fees_usd": 232.09,
+       "max_dd_usd": 721.21,
+       "per_month": 1.4,
+       "median_risk_pct": 0.162
+      }
+     },
+     "prior-day low": {
+      "first": {
+       "trades": 71,
+       "win_pct": 49.3,
+       "avg_r": -0.258,
+       "pf": 0.73,
+       "exp_pct": -0.0508,
+       "gross_exp_pct": -0.0108,
+       "net_usd": -360.64,
+       "fees_usd": 283.98,
+       "max_dd_usd": 481.15,
+       "per_month": 1.7,
+       "median_risk_pct": 0.263
+      },
+      "second": {
+       "trades": 82,
+       "win_pct": 47.6,
+       "avg_r": -0.23,
+       "pf": 0.69,
+       "exp_pct": -0.0435,
+       "gross_exp_pct": -0.0035,
+       "net_usd": -356.82,
+       "fees_usd": 327.99,
+       "max_dd_usd": 525.6,
+       "per_month": 2.0,
+       "median_risk_pct": 0.186
+      }
+     },
+     "round number": {
+      "first": {
+       "trades": 471,
+       "win_pct": 49.3,
+       "avg_r": -0.133,
+       "pf": 0.79,
+       "exp_pct": -0.0579,
+       "gross_exp_pct": -0.0179,
+       "net_usd": -2726.9,
+       "fees_usd": 1884.15,
+       "max_dd_usd": 3718.54,
+       "per_month": 11.4,
+       "median_risk_pct": 0.344
+      },
+      "second": {
+       "trades": 288,
+       "win_pct": 44.1,
+       "avg_r": -0.26,
+       "pf": 0.71,
+       "exp_pct": -0.0475,
+       "gross_exp_pct": -0.0075,
+       "net_usd": -1368.46,
+       "fees_usd": 1152.22,
+       "max_dd_usd": 1468.16,
+       "per_month": 7.0,
+       "median_risk_pct": 0.225
+      }
+     },
+     "swing high": {
+      "first": {
+       "trades": 111,
+       "win_pct": 45.9,
+       "avg_r": -0.103,
+       "pf": 0.93,
+       "exp_pct": -0.0108,
+       "gross_exp_pct": 0.0292,
+       "net_usd": -120.19,
+       "fees_usd": 443.94,
+       "max_dd_usd": 502.43,
+       "per_month": 2.7,
+       "median_risk_pct": 0.198
+      },
+      "second": {
+       "trades": 137,
+       "win_pct": 38.7,
+       "avg_r": -0.504,
+       "pf": 0.43,
+       "exp_pct": -0.0856,
+       "gross_exp_pct": -0.0456,
+       "net_usd": -1173.35,
+       "fees_usd": 548.13,
+       "max_dd_usd": 1185.15,
+       "per_month": 3.3,
+       "median_risk_pct": 0.145
+      }
+     },
+     "swing low": {
+      "first": {
+       "trades": 144,
+       "win_pct": 45.8,
+       "avg_r": -0.29,
+       "pf": 0.64,
+       "exp_pct": -0.0861,
+       "gross_exp_pct": -0.0461,
+       "net_usd": -1240.17,
+       "fees_usd": 575.87,
+       "max_dd_usd": 1372.72,
+       "per_month": 3.5,
+       "median_risk_pct": 0.297
+      },
+      "second": {
+       "trades": 144,
+       "win_pct": 46.5,
+       "avg_r": -0.223,
+       "pf": 0.62,
+       "exp_pct": -0.0613,
+       "gross_exp_pct": -0.0213,
+       "net_usd": -883.26,
+       "fees_usd": 575.94,
+       "max_dd_usd": 946.74,
+       "per_month": 3.5,
+       "median_risk_pct": 0.208
+      }
+     }
+    },
+    "exits": {
+     "first": {
+      "STOP": 1134,
+      "T2": 355,
+      "TIME": 177,
+      "t1_hit": 759
+     },
+     "second": {
+      "STOP": 1045,
+      "T2": 343,
+      "TIME": 130,
+      "t1_hit": 675
+     }
+    }
+   },
+   "p2_trap": {
+    "sessions": {
+     "Asia": {
+      "first": {
+       "trades": 0
+      },
+      "second": {
+       "trades": 0
+      }
+     },
+     "London": {
+      "first": {
+       "trades": 0
+      },
+      "second": {
+       "trades": 0
+      }
+     },
+     "New York": {
+      "first": {
+       "trades": 29,
+       "win_pct": 69.0,
+       "avg_r": 0.597,
+       "pf": 4.23,
+       "exp_pct": 0.3229,
+       "gross_exp_pct": 0.363,
+       "net_usd": 936.46,
+       "fees_usd": 116.13,
+       "max_dd_usd": 159.03,
+       "per_month": 0.7,
+       "median_risk_pct": 0.315
+      },
+      "second": {
+       "trades": 28,
+       "win_pct": 28.6,
+       "avg_r": -0.621,
+       "pf": 0.33,
+       "exp_pct": -0.1816,
+       "gross_exp_pct": -0.1417,
+       "net_usd": -508.59,
+       "fees_usd": 111.94,
+       "max_dd_usd": 598.92,
+       "per_month": 0.7,
+       "median_risk_pct": 0.208
+      }
+     },
+     "Late": {
+      "first": {
+       "trades": 1,
+       "win_pct": 100.0,
+       "avg_r": 0.192,
+       "pf": null,
+       "exp_pct": 0.025,
+       "gross_exp_pct": 0.065,
+       "net_usd": 2.5,
+       "fees_usd": 4.0,
+       "max_dd_usd": 0.0,
+       "per_month": 0.0,
+       "median_risk_pct": 0.13
+      },
+      "second": {
+       "trades": 1,
+       "win_pct": 100.0,
+       "avg_r": 0.383,
+       "pf": null,
+       "exp_pct": 0.1308,
+       "gross_exp_pct": 0.1709,
+       "net_usd": 13.08,
+       "fees_usd": 4.0,
+       "max_dd_usd": 0.0,
+       "per_month": 0.0,
+       "median_risk_pct": 0.342
+      }
+     }
+    },
+    "pools": {
+     "prior-day high": {
+      "first": {
+       "trades": 5,
+       "win_pct": 80.0,
+       "avg_r": 0.377,
+       "pf": 10.18,
+       "exp_pct": 0.3822,
+       "gross_exp_pct": 0.4221,
+       "net_usd": 191.11,
+       "fees_usd": 19.96,
+       "max_dd_usd": 20.82,
+       "per_month": 0.1,
+       "median_risk_pct": 0.277
+      },
+      "second": {
+       "trades": 1,
+       "win_pct": 0.0,
+       "avg_r": -1.069,
+       "pf": 0.0,
+       "exp_pct": -0.6241,
+       "gross_exp_pct": -0.584,
+       "net_usd": -62.41,
+       "fees_usd": 4.01,
+       "max_dd_usd": 62.41,
+       "per_month": 0.0,
+       "median_risk_pct": 0.584
+      }
+     },
+     "prior-day low": {
+      "first": {
+       "trades": 25,
+       "win_pct": 68.0,
+       "avg_r": 0.625,
+       "pf": 3.78,
+       "exp_pct": 0.2991,
+       "gross_exp_pct": 0.3392,
+       "net_usd": 747.85,
+       "fees_usd": 100.17,
+       "max_dd_usd": 173.12,
+       "per_month": 0.6,
+       "median_risk_pct": 0.315
+      },
+      "second": {
+       "trades": 28,
+       "win_pct": 32.1,
+       "avg_r": -0.569,
+       "pf": 0.38,
+       "exp_pct": -0.1547,
+       "gross_exp_pct": -0.1147,
+       "net_usd": -433.09,
+       "fees_usd": 111.94,
+       "max_dd_usd": 536.5,
+       "per_month": 0.7,
+       "median_risk_pct": 0.208
+      }
+     }
+    },
+    "exits": {
+     "first": {
+      "STOP": 14,
+      "T2": 10,
+      "TIME": 6,
+      "t1_hit": 17
+     },
+     "second": {
+      "STOP": 20,
+      "T2": 4,
+      "TIME": 5,
+      "t1_hit": 9
+     }
+    }
+   }
+  }
+ },
+ "truncation": {
+  "BTCUSDT": {
+   "checked": 2893,
+   "mismatched": 0
+  },
+  "ETHUSDT": {
+   "checked": 3277,
+   "mismatched": 0
+  },
+  "XAUUSD": {
+   "checked": 6179,
+   "mismatched": 0
+  },
+  "XAGUSD": {
+   "checked": 6880,
+   "mismatched": 0
+  },
+  "USDJPY": {
+   "checked": 5667,
+   "mismatched": 0
+  },
+  "SPX": {
+   "checked": 1881,
+   "mismatched": 0
+  }
+ }
+}

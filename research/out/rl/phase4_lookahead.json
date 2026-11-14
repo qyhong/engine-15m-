@@ -1,0 +1,277 @@
+{
+ "seed": 20261112,
+ "assets": {
+  "BTCUSDT": {
+   "rows": 275425,
+   "cuts": [
+    "2022-12-11 19:45:00+00:00",
+    "2025-12-30 21:00:00+00:00",
+    "2026-10-01 07:15:00+00:00"
+   ],
+   "build_one_cut": {
+    "2022-12-11 19:45:00+00:00": [],
+    "2025-12-30 21:00:00+00:00": [],
+    "2026-10-01 07:15:00+00:00": []
+   },
+   "sources_cut": {
+    "2022-12-11 19:45:00+00:00": [],
+    "2025-12-30 21:00:00+00:00": [],
+    "2026-10-01 07:15:00+00:00": []
+   },
+   "store_vs_code": {
+    "tr_1h": 0,
+    "tr_4h": 0,
+    "tr_1d": 0,
+    "tr_1w": 0,
+    "fund_z": 0,
+    "fund_3d": 0,
+    "cvd_4h": 0,
+    "cvd_24h": 0,
+    "cvd_div": 0,
+    "vol_rank": 0,
+    "shock_ratio": 0,
+    "rg_er": 0,
+    "sr_room": 0,
+    "sr_lean": 0,
+    "sr_pd_pos": 0,
+    "pb_z": 0,
+    "pb_chg_4h": 0,
+    "pb_premium_pct": 0,
+    "cbp_z": 0,
+    "cbp_bps": 0
+   },
+   "clean": true,
+   "seconds": 13.7
+  },
+  "ETHUSDT": {
+   "rows": 275425,
+   "cuts": [
+    "2020-09-07 05:45:00+00:00",
+    "2022-05-12 07:00:00+00:00",
+    "2026-10-21 17:45:00+00:00"
+   ],
+   "build_one_cut": {
+    "2020-09-07 05:45:00+00:00": [],
+    "2022-05-12 07:00:00+00:00": [],
+    "2026-10-21 17:45:00+00:00": []
+   },
+   "sources_cut": {
+    "2020-09-07 05:45:00+00:00": [],
+    "2022-05-12 07:00:00+00:00": [],
+    "2026-10-21 17:45:00+00:00": []
+   },
+   "store_vs_code": {
+    "tr_1h": 0,
+    "tr_4h": 0,
+    "tr_1d": 0,
+    "tr_1w": 0,
+    "fund_z": 0,
+    "fund_3d": 0,
+    "cvd_4h": 0,
+    "cvd_24h": 0,
+    "cvd_div": 0,
+    "vol_rank": 0,
+    "shock_ratio": 0,
+    "rg_er": 0,
+    "sr_room": 0,
+    "sr_lean": 0,
+    "sr_pd_pos": 0,
+    "pb_z": 0,
+    "pb_chg_4h": 0,
+    "pb_premium_pct": 0,
+    "cbp_z": 0,
+    "cbp_bps": 0
+   },
+   "clean": true,
+   "seconds": 12.4
+  },
+  "XAUUSD": {
+   "rows": 185815,
+   "cuts": [
+    "2023-09-07 14:15:00+00:00"
+   ],
+   "build_one_cut": {
+    "2023-09-07 14:15:00+00:00": []
+   },
+   "sources_cut": {},
+   "store_vs_code": {
+    "tr_1h": 0,
+    "tr_4h": 0,
+    "tr_1d": 0,
+    "tr_1w": 0,
+    "fund_z": 0,
+    "fund_3d": 0,
+    "cvd_4h": 0,
+    "cvd_24h": 0,
+    "cvd_div": 0,
+    "vol_rank": 0,
+    "shock_ratio": 0,
+    "rg_er": 0,
+    "sr_room": 0,
+    "sr_lean": 0,
+    "sr_pd_pos": 0
+   },
+   "clean": true,
+   "seconds": 2.9
+  },
+  "XAGUSD": {
+   "rows": 185815,
+   "cuts": [
+    "2026-01-27 01:45:00+00:00"
+   ],
+   "build_one_cut": {
+    "2026-01-27 01:45:00+00:00": []
+   },
+   "sources_cut": {},
+   "store_vs_code": {
+    "tr_1h": 0,
+    "tr_4h": 0,
+    "tr_1d": 0,
+    "tr_1w": 0,
+    "fund_z": 0,
+    "fund_3d": 0,
+    "cvd_4h": 0,
+    "cvd_24h": 0,
+    "cvd_div": 0,
+    "vol_rank": 0,
+    "shock_ratio": 0,
+    "rg_er": 0,
+    "sr_room": 0,
+    "sr_lean": 0,
+    "sr_pd_pos": 0
+   },
+   "clean": true,
+   "seconds": 3.7
+  },
+  "USDJPY": {
+   "rows": 196013,
+   "cuts": [
+    "2020-09-28 07:30:00+00:00"
+   ],
+   "build_one_cut": {
+    "2020-09-28 07:30:00+00:00": []
+   },
+   "sources_cut": {},
+   "store_vs_code": {
+    "tr_1h": 0,
+    "tr_4h": 0,
+    "tr_1d": 0,
+    "tr_1w": 0,
+    "fund_z": 0,
+    "fund_3d": 0,
+    "cvd_4h": 0,
+    "cvd_24h": 0,
+    "cvd_div": 0,
+    "vol_rank": 0,
+    "shock_ratio": 0,
+    "rg_er": 0,
+    "sr_room": 0,
+    "sr_lean": 0,
+    "sr_pd_pos": 0
+   },
+   "clean": true,
+   "seconds": 2.6
+  },
+  "SPX": {
+   "rows": 51210,
+   "cuts": [
+    "2020-10-28 19:00:00+00:00"
+   ],
+   "build_one_cut": {
+    "2020-10-28 19:00:00+00:00": []
+   },
+   "sources_cut": {},
+   "store_vs_code": {
+    "tr_1h": 0,
+    "tr_4h": 0,
+    "tr_1d": 0,
+    "tr_1w": 0,
+    "fund_z": 0,
+    "fund_3d": 0,
+    "cvd_4h": 0,
+    "cvd_24h": 0,
+    "cvd_div": 0,
+    "vol_rank": 0,
+    "shock_ratio": 0,
+    "rg_er": 0,
+    "sr_room": 0,
+    "sr_lean": 0,
+    "sr_pd_pos": 0
+   },
+   "clean": true,
+   "seconds": 0.8
+  },
+  "WTI": {
+   "rows": 168806,
+   "cuts": [
+    "2020-08-17 04:45:00+00:00"
+   ],
+   "build_one_cut": {
+    "2020-08-17 04:45:00+00:00": []
+   },
+   "sources_cut": {},
+   "store_vs_code": {
+    "tr_1h": 0,
+    "tr_4h": 0,
+    "tr_1d": 0,
+    "tr_1w": 0,
+    "fund_z": 0,
+    "fund_3d": 0,
+    "cvd_4h": 0,
+    "cvd_24h": 0,
+    "cvd_div": 0,
+    "vol_rank": 0,
+    "shock_ratio": 0,
+    "rg_er": 0,
+    "sr_room": 0,
+    "sr_lean": 0,
+    "sr_pd_pos": 0
+   },
+   "clean": true,
+   "seconds": 2.2
+  },
+  "BRENT": {
+   "rows": 168806,
+   "cuts": [
+    "2022-04-04 16:45:00+00:00"
+   ],
+   "build_one_cut": {
+    "2022-04-04 16:45:00+00:00": []
+   },
+   "sources_cut": {},
+   "store_vs_code": {
+    "tr_1h": 0,
+    "tr_4h": 0,
+    "tr_1d": 0,
+    "tr_1w": 0,
+    "fund_z": 0,
+    "fund_3d": 0,
+    "cvd_4h": 0,
+    "cvd_24h": 0,
+    "cvd_div": 0,
+    "vol_rank": 0,
+    "shock_ratio": 0,
+    "rg_er": 0,
+    "sr_room": 0,
+    "sr_lean": 0,
+    "sr_pd_pos": 0
+   },
+   "clean": true,
+   "seconds": 2.5
+  }
+ },
+ "clean": true,
+ "assembled": {
+  "BTCUSDT": {
+   "2021-02-14 12:00:00+00:00": [],
+   "2025-10-09 16:45:00+00:00": [],
+   "2026-05-25 04:45:00+00:00": []
+  },
+  "ETHUSDT": {
+   "2020-07-26 04:00:00+00:00": [],
+   "2025-09-01 07:00:00+00:00": [],
+   "2026-05-08 18:15:00+00:00": []
+  }
+ },
+ "memory_events": []
+}

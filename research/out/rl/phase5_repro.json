@@ -1,0 +1,27 @@
+{
+ "fold": 24,
+ "test_start": "2026-10-01 00:00:00+00:00",
+ "test_end": "2026-11-11 11:30:00+00:00",
+ "seeds": {
+  "0": {
+   "BTCUSDT": 0.0,
+   "ETHUSDT": 0.0,
+   "fallback_same": true,
+   "chosen_same": true
+  },
+  "1": {
+   "BTCUSDT": 0.0,
+   "ETHUSDT": 0.0,
+   "fallback_same": true,
+   "chosen_same": true
+  },
+  "2": {
+   "BTCUSDT": 0.0,
+   "ETHUSDT": 0.0,
+   "fallback_same": true,
+   "chosen_same": true
+  }
+ },
+ "exact": true,
+ "model": "C:\\Ai Dataset\\engine-15m\\research/out/rl/models5\\repro_f24\\model_phase4_f24.json"
+}

@@ -1,0 +1,195 @@
+# Mind 15 RL module, Phase 4: MORE DATA PER MODEL (owner's choice after the Phase 3 review). Paper only.
+# Loaded on top of configs/rl/phase1.yaml (data, costs, walk-forward folds, benchmarks come from there).
+#
+# The question: Phase 3's 15m agent fits its 9-month training slices (train Sharpe ~2.7) but has ~0 validation and negative
+# test Sharpe; on 9 months of 15m data a realistic edge has a t-stat of ~1.6, so the binding limit is how much data each
+# model learns from. Does more data per model (expanding windows from 2019, pooled across markets) and inputs with an
+# economic reason (Mind 15's own readings) give a 15m agent a real out-of-sample edge? 15-minute decision clock kept.
+#
+# STATUS: FROZEN 11 Nov 2026 at 20:30 UTC, before any walk-forward model was trained or any real test window was scored.
+# Drafted ~19:45 UTC before any Phase 4 code ran on any data; the learnability check (synthetic) chose the primary family by
+# the rule in `primary_rule`; the look-ahead check was clean. Changing any value after this is a new experiment and must be
+# reported as such. What was decided when (including every change before the freeze): the freeze block at the end.
+status: frozen
+primary: q_pool2_full             # by primary_rule: both pooled families pass the check at pool2_6y; Q's planted-edge test
+                                  # Sharpe 2.13 > SP's 1.72 (phase4_learnability.json, main check)
+primary_rule: "Among q_pool2_full and sp_pool2_full (the two families on the Phase 4 primary geometry): the one that PASSES
+  the learnability check (Phase 3's frozen criteria) at size pool2_6y; if both pass, the one with the higher mean planted-edge
+  test Sharpe there; if neither passes, still the one with the higher mean planted-edge test Sharpe at pool2_6y, and the
+  report says the check failed. Decided on synthetic data only, before any real test window is touched."
+
+seeds: [0, 1, 2]                  # agent seeds, one after another (SP: block-bootstrap resamples; Q: SGD seeds)
+data_end: "2026-11-11 11:30"      # the same span as Phases 1-3 (comparable benchmarks and Phase 3 rows)
+readings_source: evcache          # Mind 15's readings, read only from data/evcache/<group>/<asset>/ (snapshot in the cache)
+
+assets:                           # eval: scored out of sample (the verdict is per asset; BTC is the headline)
+  BTCUSDT: {source: rl_store, eval: true}                 # Binance USD-M perp, data/rl (Phases 1-3 headline)
+  ETHUSDT: {source: engine_file, eval: true}              # the engine's ETH 15m file, read only
+  XAUUSD: {source: engine_file, cost_side: 0.0002}        # training data only (pool8); engine15/config.py asset_cost a side
+  XAGUSD: {source: engine_file, cost_side: 0.0003}
+  USDJPY: {source: engine_file, cost_side: 0.0001}
+  SPX: {source: engine_file, cost_side: 0.0002}
+  WTI: {source: engine_file, cost_side: 0.0004}
+  BRENT: {source: engine_file, cost_side: 0.0004}
+
+pools:
+  pool2: [BTCUSDT, ETHUSDT]
+  pool8: [BTCUSDT, ETHUSDT, XAUUSD, XAGUSD, USDJPY, SPX, WTI, BRENT]
+
+features:                         # Phase 3's point-in-time set (features3.py), unchanged
+  return_windows: [1, 4, 16, 96, 672, 2880]
+  vol_windows: [16, 96, 672]
+  momentum_windows: [16, 96, 672, 2880]
+  volume_z_window: 672
+  daily_closed: true
+  phase3: {htf: true, momentum_signal: true, time: true}
+# inputs 'p3' = those columns; 'full' = p3 + the 18 readings in features4.READINGS (trend tr_1h/4h/1d/1w; funding fund_z,
+# fund_3d; basis pb_z, pb_chg_4h; flow cvd_4h, cvd_24h, cvd_div, cbp_z; vol regime vol_rank, shock_ratio, rg_er; levels
+# sr_room, sr_lean, sr_pd_pos) + 7 availability flags (avail_<group>). Unavailable = NaN, never a zero-valued signal.
+
+actions: [-1.0, -0.5, 0.0, 0.5, 1.0]
+policy:
+  min_hold_bars: 4                # Phase 3's: a change is refused until 4 bars (1 h) after the last one
+
+qagent:                           # Phase 3's agent / reward constants, unchanged (the Q family uses them as they are;
+  net_arch: []                    # the SP policy uses the same reward units, cost charge and risk aversion)
+  activation: relu
+  learning_rate: 0.0005
+  weight_decay: 0.3
+  batch_size: 256
+  gamma: 0.99
+  n_step: 16
+  target_every: 100
+  reward_scale: 100.0
+  cost_mult: 2.0                  # a full round trip charged on every change
+  risk_aversion: 1.0
+  vol_scale: true
+  vol_ref_annual: 0.60
+  vol_scale_cap: 3.0
+  obs_clip: 5.0
+  huber_beta: 1.0
+  max_grad_norm: 1.0
+  input_noise: 0.0
+  chunk_steps: 500
+  funding_mode: perp
+  torch_threads: 2
+
+train4:
+  warmup_days: 35                 # an asset's first trainable bar = its first bar + 35 days (30-day windows warm)
+  validation_months_expanding: 6  # expanding windows: the last 6 months before the fold choose settings and judge 'do no harm'
+  validation_months_window12: 3   # the 12-month-window ablations keep Phase 3's 9 + 3 split
+
+sp:                               # supervised-then-policy (models4.sp_fold)
+  horizon_bars: 96                # predict the next day's vol-scaled net return: the readings work over hours to days and a
+                                  # round trip (~0.27% at 0.10%) needs about a day of a realistic edge to pay for itself
+  alphas: [0.01, 0.1, 1.0, 10.0]  # ridge penalty x sum of weights (inputs z-scored); chosen on validation
+  half_life_days: [null, 730, 365]   # recency weighting (null = none); chosen on validation
+  select_on: val_r2               # REVISED before the freeze (was val_ic; see the freeze block): the combination with the best
+                                  # validation R2 against a zero forecast, 1 - SSE / sum y^2 (mean over the model's eval
+                                  # assets); scale-aware, because the policy compares the prediction's SIZE with the cost;
+                                  # ties -> larger penalty, then longer half-life
+  intercept: false                # REVISED before the freeze (was an unpenalised intercept): no constant term, so the agent
+                                  # times the market from its inputs and carries no drift bet learned from the sample mean
+  bootstrap_block_bars: 672       # seeds = block-bootstrap resamples of the training rows (1-week blocks)
+  fallback_val_sharpe: 0.5        # 'do no harm' (Phase 3's bar), per asset, validation net Sharpe at 0.10%
+
+q:                                # the Phase 3 Q-learner on pooled rows (models4.q_fold)
+  half_life_days: [null, 730, 365]   # recency-weighted sampling; chosen by the validation Bellman loss
+  evals: 8                        # up to 8 x 1,000 steps, validation loss after each, patience 2, keep the best
+  eval_every: 1000
+  patience: 2
+  fallback_val_sharpe: 0.5
+
+variants:                         # every variant registered here, before any result; the ablations isolate one factor each
+  q_pool2_full:     {model: q,  pool: pool2,  window: expanding, inputs: full}   # candidate primary (RL)
+  sp_pool2_full:    {model: sp, pool: pool2,  window: expanding, inputs: full}   # candidate primary (supervised-then-policy)
+  sp_pool8_full:    {model: sp, pool: pool8,  window: expanding, inputs: full}   # + 6 more markets (statistical power)
+  sp_pool2_p3:      {model: sp, pool: pool2,  window: expanding, inputs: p3}     # readings off
+  sp_single_full:   {model: sp, pool: single, window: expanding, inputs: full}   # pooling off
+  sp_single_p3:     {model: sp, pool: single, window: expanding, inputs: p3}
+  sp_single12_full: {model: sp, pool: single, window: window12,  inputs: full}   # Phase 3's data budget, readings on
+  sp_single12_p3:   {model: sp, pool: single, window: window12,  inputs: p3}     # Phase 3's data budget and inputs
+
+risk3:                            # the Phase 3 risk manager, unchanged (agents are scored through it, as in Phase 3)
+  enabled: true
+  vol_target: 0.60
+  max_position: 1.0
+  vol_short: rv_672
+  vol_long: rv_672
+  rebalance_band: 0.20
+  dd_window_bars: 8640
+  dd_levels: [0.20, 0.30]
+  dd_factors: [0.75, 0.50]
+
+verdict_rules:
+  edge_before_costs: "the primary's gross Sharpe (before every cost, same positions, through the risk manager) > 0 for every
+    seed AND its break-even fee > 0 for every seed, BTC full span; t = gross Sharpe x sqrt(years) is reported beside it"
+  beats_benchmarks: "Phase 3's rule: seed-mean Sharpe above the benchmark's, every seed's Sharpe above it, and seed-mean
+    Calmar above it; after 0.10% fees; buy-and-hold (perp) and momentum"
+
+learnability:
+  families: [sp, q]
+  sizes: [p3_9m, single_3y, pool2_6y]
+  scenarios: {edge: 0.02, edge_small: 0.01, none: 0.0}
+  seeds: [0, 1, 2, 3, 4]
+  seed_base: 7000                 # fresh synthetic series (Phase 3 used 1000+ .. 4000+; Phase 4 run 1 used 5000+ and the
+                                  # SP exploration 9000+, so the frozen check runs on series no setting was chosen on)
+  test_months: 12
+  criteria:                       # Phase 3's frozen criteria, unchanged
+    edge_scenario: edge
+    none_scenario: none
+    edge_min_test_sharpe: 0.5
+    edge_min_oracle_share: 0.25
+    min_train_sharpe: 0.5
+    none_min_test_sharpe: -0.5
+    none_max_turnover: 50
+    none_max_exposure: 0.6
+  power: {scenarios: [edge, none], seeds: 10, test_months: 24, sizes: [p3_9m, pool2_6y], seed_base: 6000}
+
+lookahead:
+  cuts: 3                         # random cuts per crypto asset (and for the assembled matrix on BTC / ETH)
+  cuts_other: 1                   # per other market
+  seed: 20261112
+
+phase3_reference:
+  runs_glob: research/out/rl/runs/phase3_*     # the Phase 3 agents' saved out-of-sample evaluations
+  loop_rules_assets: [BTCUSDT]
+
+benchmarks_note: "buy-and-hold perp and spot, daily 30-day momentum, random (10 seeds), the Phase 3 agent ((c) primary and (a)
+  static), the loop's rules A and B (BTC, to 2025-11-11 only); plus buy-and-hold / momentum through the risk manager"
+
+flags:                            # Phase 3's thresholds, unchanged
+  train_test_sharpe_gap: 1.0
+  seed_sharpe_sd: 0.5
+  min_fold_win_share: 0.5
+  max_turnover_per_year: 100
+
+memory: {start_mb: 1000, floor_mb: 400, poll_s: 20}
+
+report:
+  models_dir: research/out/rl/models4
+  cache_dir: research/out/rl/phase4_cache
+
+freeze:
+  "11 Nov 2026, ~19:45 UTC": "this file drafted with every value (assets, pools, inputs, both families, all eight variants, the
+    validation choices, the 'do no harm' bar, the verdict rules, the learnability sizes and criteria, the primary rule) before
+    any Phase 4 code ran on any data"
+  "11 Nov 2026, ~19:50 UTC": "look-ahead check on real data (inputs only, no model): the truncation tests were clean from the
+    start; a first 'store == code' comparison for metals / energy recomputed the readings on each market's own bars instead
+    of its group's common bars (as the store does) and was fixed in the checking code; rerun CLEAN for all 8 markets"
+  "11 Nov 2026, ~19:52 UTC": "learnability run 1 (seed base 5000, draft SP design: penalty chosen by validation IC, with an
+    intercept) STOPPED after 7 rows: IC is blind to prediction scale and picked the heaviest penalty (alpha 10), whose
+    predictions never cleared the cost band (pool2_6y SP did not trade even in its training slice). Rows kept in
+    phase4_learnability_run1_draft.partial.jsonl. Q results so far: neutral fallback in every fold (unchanged agent)"
+  "11 Nov 2026, ~20:00-20:10 UTC (synthetic seeds 9000+ only, never real data)": "SP exploration (phase4_exploration_sp*.json):
+    selection by validation R2 vs IC, 'do no harm' bar 0.5 / 0 / none, intercept on / off, at p3_9m and pool2_6y, 3-5 seeds.
+    Chosen: select_on val_r2 (scale-aware, fixes run 1's failure; IC vs R2 test Sharpe differences within noise), intercept
+    off (a timing agent should not carry a constant drift bet; little difference on synthetic data), 'do no harm' bar kept at
+    Phase 3's 0.5. Seen there and left as is: without an edge the pooled model still bets on spurious slow trends in some
+    seeds (exposure ~50%, test Sharpe ~-1), a limit of what 6 years of 15m data can tell apart. No Q setting changed.
+    The frozen learnability check then runs on fresh series (seed base 7000)"
+  "11 Nov 2026, ~20:05-20:30 UTC": "learnability check (main, 5 seeds, seed base 7000): at Phase 3's size (p3_9m) both families
+    FAIL (planted edge found in 2 of 5 seeds by SP, 0 of 5 by Q); at single_3y both FAIL; at pool2_6y both PASS (edge found in
+    5 of 5 seeds; test Sharpe SP 1.72, Q 2.13 vs oracle 1.90; near flat without an edge). Primary by the rule: q_pool2_full.
+    The power check (10 seeds, 24-month test) was still running and is reported as found; it decides nothing"
+  "11 Nov 2026, 20:30 UTC": "everything frozen (status: frozen, primary q_pool2_full); then the walk-forward runs once"

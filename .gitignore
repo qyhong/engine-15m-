@@ -1,0 +1,32 @@
+# Mind 15 local version history: code, tests, docs, configs and small research reports only.
+# Data, caches, models, live outputs and the journal are large or regenerated and stay out.
+/data/
+/out/
+/journal/
+__pycache__/
+.pytest_cache/
+*.pyc
+*.tmp
+*.log
+*.lock
+
+# research outputs: keep the reports (md / small json), drop the heavy parts
+research/out/**/models*/
+research/out/**/fits/
+research/out/**/*cache*/
+research/out/**/runs/
+research/out/**/paper_dryrun/
+research/out/**/*.npy
+research/out/**/*.npz
+research/out/**/*.pkl
+research/out/**/*.pt
+research/out/**/*.bin
+research/out/**/*.zip
+research/out/**/*.parquet
+research/out/surprises*.json
+research/out/rl/forward5/
+research/out/rl/forward6/
+
+# never: secrets
+.env
+*.pem

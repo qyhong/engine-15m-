@@ -1,0 +1,2265 @@
+{
+ "phase": 5,
+ "paper_only": true,
+ "run_id": "phase5_20261112T100635Z_b8c8f31f",
+ "generated_utc": "2026-11-12 10:10 UTC",
+ "part2": {
+  "t1_band2x": {
+   "BTCUSDT": {
+    "full": {
+     "sharpe_mean": 0.2970981189101256,
+     "calmar_mean": 0.09536630342812462,
+     "return_mean": 0.3140152009750315,
+     "max_dd_mean": 0.48183999130717226,
+     "turnover_mean": 10.818583683714465,
+     "seeds_beating_bh_sharpe": 0,
+     "seeds_beating_mom_sharpe": 0,
+     "seeds": 3,
+     "break_even_fee": 0.00565481543124077,
+     "sharpe_at_005": 0.32907849701839414,
+     "sharpe_by_seed": [
+      0.2014901602830411,
+      0.35674335184583167,
+      0.3330608446015041
+     ],
+     "beats_bh": false,
+     "beats_momentum": false,
+     "edge": {
+      "gross_sharpe_by_seed": [
+       0.32509882789627603,
+       0.47547640495986165,
+       0.4605301369650006
+      ],
+      "gross_sharpe_mean": 0.4203684566070461,
+      "t_stat_mean": 1.0396282209890446,
+      "break_even_by_seed": [
+       0.002153490448510204,
+       0.008980704613092059,
+       0.0058302512321200504
+      ],
+      "edge_every_seed": true
+     }
+    },
+    "dev": {
+     "sharpe_mean": 0.5640603601940052,
+     "calmar_mean": 0.3303746400665755,
+     "return_mean": 0.8715497430290254,
+     "max_dd_mean": 0.3921499455246649,
+     "turnover_mean": 10.203848569047903,
+     "seeds_beating_bh_sharpe": 0,
+     "seeds_beating_mom_sharpe": 0,
+     "seeds": 3,
+     "break_even_fee": 0.014344730094638339,
+     "sharpe_at_005": 0.5948921116078733,
+     "sharpe_by_seed": [
+      0.45619354106396043,
+      0.6083666781901415,
+      0.6276208613279136
+     ],
+     "beats_bh": false,
+     "beats_momentum": false,
+     "edge": {
+      "gross_sharpe_by_seed": [
+       0.5785733203015706,
+       0.7280654388848465,
+       0.7589936646642159
+      ],
+      "gross_sharpe_mean": 0.6885441412835444,
+      "t_stat_mean": 1.55725183600789,
+      "break_even_by_seed": [
+       0.008065555967134097,
+       0.02198581593264764,
+       0.012982818384133281
+      ],
+      "edge_every_seed": true
+     }
+    },
+    "keeps_edge": false,
+    "trades_less": true,
+    "primary": {
+     "gross": 0.7768478498296038,
+     "turnover": 47.44881197563654,
+     "trades": 109.7050552612648,
+     "net": 0.4768549779866467
+    },
+    "variant": {
+     "gross": 0.4203684566070461,
+     "turnover": 10.818583683714465,
+     "trades": 34.06143047108321,
+     "net": 0.2970981189101256
+    }
+   },
+   "ETHUSDT": {
+    "full": {
+     "sharpe_mean": 0.6575775959565011,
+     "calmar_mean": 0.35905391028488487,
+     "return_mean": 1.893986190717799,
+     "max_dd_mean": 0.5388259980321188,
+     "turnover_mean": 15.38407376921215,
+     "seeds_beating_bh_sharpe": 2,
+     "seeds_beating_mom_sharpe": 1,
+     "seeds": 3,
+     "break_even_fee": 0.012171207316311399,
+     "sharpe_at_005": 0.6929502066072671,
+     "sharpe_by_seed": [
+      0.8610537392033002,
+      0.4920784630843015,
+      0.6196005855819016
+     ],
+     "beats_bh": false,
+     "beats_momentum": false,
+     "edge": {
+      "gross_sharpe_by_seed": [
+       0.9871438938872861,
+       0.6304576968988497,
+       0.7402716045853179
+      ],
+      "gross_sharpe_mean": 0.7859577317904846,
+      "t_stat_mean": 1.9433510201461268,
+      "break_even_by_seed": [
+       0.019488998253655895,
+       0.007335873918396291,
+       0.009688749776882014
+      ],
+      "edge_every_seed": true
+     }
+    },
+    "dev": {
+     "sharpe_mean": 0.6833234438737751,
+     "calmar_mean": 0.39589402741136287,
+     "return_mean": 1.626276445548452,
+     "max_dd_mean": 0.5388259980321188,
+     "turnover_mean": 17.703593129449036,
+     "seeds_beating_bh_sharpe": 1,
+     "seeds_beating_mom_sharpe": 1,
+     "seeds": 3,
+     "break_even_fee": 0.011744122689179287,
+     "sharpe_at_005": 0.7219262765523077,
+     "sharpe_by_seed": [
+      0.9031000828183144,
+      0.5095739515370616,
+      0.6372962972659492
+     ],
+     "beats_bh": false,
+     "beats_momentum": false,
+     "edge": {
+      "gross_sharpe_by_seed": [
+       1.0446517390907775,
+       0.6631771776055594,
+       0.7674767842300864
+      ],
+      "gross_sharpe_mean": 0.8251019003088077,
+      "t_stat_mean": 1.8656063033406658,
+      "break_even_by_seed": [
+       0.019100514713809608,
+       0.006832165182688369,
+       0.009299688171039891
+      ],
+      "edge_every_seed": true
+     }
+    },
+    "keeps_edge": false,
+    "trades_less": true,
+    "primary": {
+     "gross": 1.1146315642092888,
+     "turnover": 62.9643342153968,
+     "trades": 158.38744677254908,
+     "net": 0.7676922619377103
+    },
+    "variant": {
+     "gross": 0.7859577317904846,
+     "turnover": 15.38407376921215,
+     "trades": 48.57941999116738,
+     "net": 0.6575775959565011
+    }
+   }
+  },
+  "t2_hold2d": {
+   "BTCUSDT": {
+    "full": {
+     "sharpe_mean": 0.24435914916491222,
+     "calmar_mean": 0.07393722191051648,
+     "return_mean": 0.2223809865050216,
+     "max_dd_mean": 0.4668493573441524,
+     "turnover_mean": 25.140547345414745,
+     "seeds_beating_bh_sharpe": 0,
+     "seeds_beating_mom_sharpe": 0,
+     "seeds": 3,
+     "break_even_fee": 0.0021652963948180694,
+     "sharpe_at_005": 0.2968659280038546,
+     "sharpe_by_seed": [
+      0.3170341672358885,
+      0.32527988211243475,
+      0.09076339814641339
+     ],
+     "beats_bh": false,
+     "beats_momentum": false,
+     "edge": {
+      "gross_sharpe_by_seed": [
+       0.5107084304115148,
+       0.5087365549781405,
+       0.2676369794865706
+      ],
+      "gross_sharpe_mean": 0.4290273216254086,
+      "t_stat_mean": 1.0610427688537514,
+      "break_even_by_seed": [
+       0.0028209675223676697,
+       0.00310041317957514,
+       0.0005745084825113985
+      ],
+      "edge_every_seed": true
+     }
+    },
+    "dev": {
+     "sharpe_mean": 0.4104109247854457,
+     "calmar_mean": 0.18127498371541914,
+     "return_mean": 0.4922027198890793,
+     "max_dd_mean": 0.45390475192030094,
+     "turnover_mean": 25.645179721690226,
+     "seeds_beating_bh_sharpe": 0,
+     "seeds_beating_mom_sharpe": 0,
+     "seeds": 3,
+     "break_even_fee": 0.003985016024082279,
+     "sharpe_at_005": 0.46325478596282593,
+     "sharpe_by_seed": [
+      0.46912688127855573,
+      0.4530276910148851,
+      0.30907820206289627
+     ],
+     "beats_bh": false,
+     "beats_momentum": false,
+     "edge": {
+      "gross_sharpe_by_seed": [
+       0.6622802986715149,
+       0.6399943270050443,
+       0.49376637420943853
+      ],
+      "gross_sharpe_mean": 0.5986803332953325,
+      "t_stat_mean": 1.3540105743519064,
+      "break_even_by_seed": [
+       0.004514117000735269,
+       0.004560528623461749,
+       0.0028804024480498193
+      ],
+      "edge_every_seed": true
+     }
+    },
+    "keeps_edge": false,
+    "trades_less": true,
+    "primary": {
+     "gross": 0.7768478498296038,
+     "turnover": 47.44881197563654,
+     "trades": 109.7050552612648,
+     "net": 0.4768549779866467
+    },
+    "variant": {
+     "gross": 0.4290273216254086,
+     "turnover": 25.140547345414745,
+     "trades": 60.002615917860176,
+     "net": 0.24435914916491222
+    }
+   },
+   "ETHUSDT": {
+    "full": {
+     "sharpe_mean": 0.7102530323321617,
+     "calmar_mean": 0.39677656855549004,
+     "return_mean": 1.9872073348412858,
+     "max_dd_mean": 0.5113003735817033,
+     "turnover_mean": 30.186806757107416,
+     "seeds_beating_bh_sharpe": 2,
+     "seeds_beating_mom_sharpe": 0,
+     "seeds": 3,
+     "break_even_fee": 0.006771121145236023,
+     "sharpe_at_005": 0.766481380566391,
+     "sharpe_by_seed": [
+      0.827872812663992,
+      0.7578464264427637,
+      0.5450398578897294
+     ],
+     "beats_bh": false,
+     "beats_momentum": false,
+     "edge": {
+      "gross_sharpe_by_seed": [
+       1.0418104597725861,
+       0.9654422912101017,
+       0.7403757823390384
+      ],
+      "gross_sharpe_mean": 0.9158761777739087,
+      "t_stat_mean": 2.2645860361342267,
+      "break_even_by_seed": [
+       0.00831311330032079,
+       0.007167815358980171,
+       0.004832434776407107
+      ],
+      "edge_every_seed": true
+     }
+    },
+    "dev": {
+     "sharpe_mean": 0.7933453747492649,
+     "calmar_mean": 0.5103786852742028,
+     "return_mean": 2.1830943228425697,
+     "max_dd_mean": 0.5113003735817033,
+     "turnover_mean": 33.21249636152326,
+     "seeds_beating_bh_sharpe": 2,
+     "seeds_beating_mom_sharpe": 1,
+     "seeds": 3,
+     "break_even_fee": 0.007475465703906264,
+     "sharpe_at_005": 0.8500589111101186,
+     "sharpe_by_seed": [
+      1.06744072487136,
+      0.7973370914425534,
+      0.515258307933881
+     ],
+     "beats_bh": false,
+     "beats_momentum": false,
+     "edge": {
+      "gross_sharpe_by_seed": [
+       1.289002545574176,
+       1.0202845814363672,
+       0.7214390651111964
+      ],
+      "gross_sharpe_mean": 1.0102420640405798,
+      "t_stat_mean": 2.284219636227484,
+      "break_even_by_seed": [
+       0.01106068575388254,
+       0.007052974279815612,
+       0.004312737078020639
+      ],
+      "edge_every_seed": true
+     }
+    },
+    "keeps_edge": true,
+    "trades_less": true,
+    "primary": {
+     "gross": 1.1146315642092888,
+     "turnover": 62.9643342153968,
+     "trades": 158.38744677254908,
+     "net": 0.7676922619377103
+    },
+    "variant": {
+     "gross": 0.9158761777739087,
+     "turnover": 30.186806757107416,
+     "trades": 76.38582200631369,
+     "net": 0.7102530323321617
+    }
+   }
+  },
+  "t3_tilt": {
+   "BTCUSDT": {
+    "full": {
+     "sharpe_mean": 0.8319242500622782,
+     "calmar_mean": 0.49258724941627435,
+     "return_mean": 6.62505218638809,
+     "max_dd_mean": 0.7995144512075428,
+     "turnover_mean": 23.887901354516355,
+     "seeds_beating_bh_sharpe": 2,
+     "seeds_beating_mom_sharpe": 3,
+     "seeds": 3,
+     "break_even_fee": 0.015048330823599158,
+     "sharpe_at_005": 0.8495377810867953,
+     "sharpe_by_seed": [
+      0.8406216178374417,
+      0.8104219725223474,
+      0.8447291598270453
+     ],
+     "beats_bh": false,
+     "beats_momentum": true,
+     "edge": {
+      "gross_sharpe_by_seed": [
+       0.9224745406266981,
+       0.8741488483190735,
+       0.9213730143451005
+      ],
+      "gross_sharpe_mean": 0.9059988010969574,
+      "t_stat_mean": 2.240657944235603,
+      "break_even_by_seed": [
+       0.013497174628179665,
+       0.01705461624755312,
+       0.014593201595064689
+      ],
+      "edge_every_seed": true
+     }
+    },
+    "dev": {
+     "sharpe_mean": 1.0564625508437884,
+     "calmar_mean": 0.7945597546733548,
+     "return_mean": 11.399627890833749,
+     "max_dd_mean": 0.7995144512075428,
+     "turnover_mean": 26.266543783142865,
+     "seeds_beating_bh_sharpe": 2,
+     "seeds_beating_mom_sharpe": 3,
+     "seeds": 3,
+     "break_even_fee": 0.0198902090801471,
+     "sharpe_at_005": 1.074322382785762,
+     "sharpe_by_seed": [
+      1.0611574518308995,
+      1.0182307626833849,
+      1.089999438017081
+     ],
+     "beats_bh": false,
+     "beats_momentum": true,
+     "edge": {
+      "gross_sharpe_by_seed": [
+       1.1489805645570939,
+       1.0867958764487795,
+       1.1732552493256614
+      ],
+      "gross_sharpe_mean": 1.1363438967771782,
+      "t_stat_mean": 2.5700220414248007,
+      "break_even_by_seed": [
+       0.017800813774790376,
+       0.022444799459211462,
+       0.019425014006439464
+      ],
+      "edge_every_seed": true
+     }
+    },
+    "keeps_edge": true,
+    "trades_less": true,
+    "primary": {
+     "gross": 0.7768478498296038,
+     "turnover": 47.44881197563654,
+     "trades": 109.7050552612648,
+     "net": 0.4768549779866467
+    },
+    "variant": {
+     "gross": 0.9059988010969574,
+     "turnover": 23.887901354516355,
+     "trades": 109.868550127526,
+     "net": 0.8319242500622782
+    }
+   },
+   "ETHUSDT": {
+    "full": {
+     "sharpe_mean": 0.8235928379909826,
+     "calmar_mean": 0.4739491157804508,
+     "return_mean": 6.967188640551631,
+     "max_dd_mean": 0.8497129551390393,
+     "turnover_mean": 31.645734215025314,
+     "seeds_beating_bh_sharpe": 3,
+     "seeds_beating_mom_sharpe": 1,
+     "seeds": 3,
+     "break_even_fee": 0.011670010481553398,
+     "sharpe_at_005": 0.8412539124989095,
+     "sharpe_by_seed": [
+      0.854228881421932,
+      0.8168791381886679,
+      0.7996704943623482
+     ],
+     "beats_bh": true,
+     "beats_momentum": false,
+     "edge": {
+      "gross_sharpe_by_seed": [
+       0.9356347903460184,
+       0.8949054617196114,
+       0.8698915257271586
+      ],
+      "gross_sharpe_mean": 0.9001439259309295,
+      "t_stat_mean": 2.225686631711293,
+      "break_even_by_seed": [
+       0.01208166612966207,
+       0.011339155759837644,
+       0.01158920955516048
+      ],
+      "edge_every_seed": true
+     }
+    },
+    "dev": {
+     "sharpe_mean": 1.0243460450145572,
+     "calmar_mean": 0.7966510444847689,
+     "return_mean": 13.291366006506967,
+     "max_dd_mean": 0.8497129551390393,
+     "turnover_mean": 35.54184781558783,
+     "seeds_beating_bh_sharpe": 3,
+     "seeds_beating_mom_sharpe": 3,
+     "seeds": 3,
+     "break_even_fee": 0.015514226271066614,
+     "sharpe_at_005": 1.0443196992608075,
+     "sharpe_by_seed": [
+      1.0829344574023263,
+      0.998313199039385,
+      0.9917904786019603
+     ],
+     "beats_bh": true,
+     "beats_momentum": true,
+     "edge": {
+      "gross_sharpe_by_seed": [
+       1.1701358463031042,
+       1.085101424681566,
+       1.0686851263184047
+      ],
+      "gross_sharpe_mean": 1.1079741324343584,
+      "t_stat_mean": 2.505197872692234,
+      "break_even_by_seed": [
+       0.016987524397654358,
+       0.014277004385051046,
+       0.015278150030494448
+      ],
+      "edge_every_seed": true
+     }
+    },
+    "keeps_edge": true,
+    "trades_less": true,
+    "primary": {
+     "gross": 1.1146315642092888,
+     "turnover": 62.9643342153968,
+     "trades": 158.38744677254908,
+     "net": 0.7676922619377103
+    },
+    "variant": {
+     "gross": 0.9001439259309295,
+     "turnover": 31.645734215025314,
+     "trades": 158.55101384322643,
+     "net": 0.8235928379909826
+    }
+   }
+  },
+  "rules": {
+   "keeps_edge": "seed-mean gross Sharpe (BTC, full span) >= 0.8 x the primary's",
+   "trades_less": "seed-mean turnover per year (BTC, full span) <= 0.6 x the primary's"
+  }
+ },
+ "part3": {
+  "rows": {
+   "a_p3_only": {
+    "BTCUSDT": {
+     "gross": 0.4218222164481243,
+     "net": 0.128793962179532,
+     "d_gross": -0.35502563338147947,
+     "d_net": -0.3480610158071147,
+     "turnover": 37.369048758010315,
+     "gross_dev": 0.5215788724647799,
+     "net_dev": 0.20848785695269978
+    },
+    "ETHUSDT": {
+     "gross": 0.5611700394407021,
+     "net": 0.2408275409215401,
+     "d_gross": -0.5534615247685867,
+     "d_net": -0.5268647210161702,
+     "turnover": 45.95229787676897,
+     "gross_dev": 0.6360950273765471,
+     "net_dev": 0.2872691126300016
+    }
+   },
+   "a_readings_only": {
+    "BTCUSDT": {
+     "gross": 0.6248123091003784,
+     "net": 0.3942533084936281,
+     "d_gross": -0.15203554072922532,
+     "d_net": -0.08260166949301861,
+     "turnover": 19.15197047907935,
+     "gross_dev": 0.8580255654660717,
+     "net_dev": 0.6129559070708811
+    },
+    "ETHUSDT": {
+     "gross": 0.8769501795912727,
+     "net": 0.628045830531695,
+     "d_gross": -0.23768138461801602,
+     "d_net": -0.1396464314060153,
+     "turnover": 23.738095836360838,
+     "gross_dev": 1.1425328651681688,
+     "net_dev": 0.8759252757423103
+    }
+   },
+   "a_no_trend": {
+    "BTCUSDT": {
+     "gross": 0.7879357897472218,
+     "net": 0.49339484752653767,
+     "d_gross": 0.011087939917618028,
+     "d_net": 0.01653986953989095,
+     "turnover": 47.20585632660479,
+     "gross_dev": 1.0100938106486834,
+     "net_dev": 0.6947621664109378
+    },
+    "ETHUSDT": {
+     "gross": 0.9804465622396314,
+     "net": 0.6533853218868482,
+     "d_gross": -0.13418500196965732,
+     "d_net": -0.11430694005086217,
+     "turnover": 58.235602621148566,
+     "gross_dev": 1.0875452493796558,
+     "net_dev": 0.73448835394098
+    }
+   },
+   "a_no_funding": {
+    "BTCUSDT": {
+     "gross": 0.8310936140248395,
+     "net": 0.501608081403245,
+     "d_gross": 0.054245764195235746,
+     "d_net": 0.024753103416598254,
+     "turnover": 48.77937403019942,
+     "gross_dev": 0.8788539460558452,
+     "net_dev": 0.5227761743586695
+    },
+    "ETHUSDT": {
+     "gross": 0.9208905221820672,
+     "net": 0.5388496031680655,
+     "d_gross": -0.19374104202722153,
+     "d_net": -0.22884265876964482,
+     "turnover": 67.33681821652205,
+     "gross_dev": 1.0075910139036204,
+     "net_dev": 0.5992216392201486
+    }
+   },
+   "a_no_basis": {
+    "BTCUSDT": {
+     "gross": 0.8206882427485289,
+     "net": 0.5370784486383947,
+     "d_gross": 0.043840392918925164,
+     "d_net": 0.06022347065174799,
+     "turnover": 40.822739301756656,
+     "gross_dev": 0.9291357975553677,
+     "net_dev": 0.6231411694676247
+    },
+    "ETHUSDT": {
+     "gross": 0.9896110564647035,
+     "net": 0.6705059166022816,
+     "d_gross": -0.12502050774458529,
+     "d_net": -0.09718634533542869,
+     "turnover": 56.41316573384495,
+     "gross_dev": 1.2352384213871506,
+     "net_dev": 0.8945264931183524
+    }
+   },
+   "a_no_flow": {
+    "BTCUSDT": {
+     "gross": 0.7838921278233283,
+     "net": 0.4791175732467645,
+     "d_gross": 0.007044277993724535,
+     "d_net": 0.0022625952601177945,
+     "turnover": 43.06910173290928,
+     "gross_dev": 0.9520930740181015,
+     "net_dev": 0.6285623069241477
+    },
+    "ETHUSDT": {
+     "gross": 0.6114990016422063,
+     "net": 0.2881748002013998,
+     "d_gross": -0.5031325625670825,
+     "d_net": -0.47951746173631055,
+     "turnover": 53.07041824008351,
+     "gross_dev": 0.7480481095152465,
+     "net_dev": 0.40092412961710583
+    }
+   },
+   "a_no_vol": {
+    "BTCUSDT": {
+     "gross": 0.9142429467776713,
+     "net": 0.5728795405545091,
+     "d_gross": 0.1373950969480675,
+     "d_net": 0.09602456256786235,
+     "turnover": 54.21794660567866,
+     "gross_dev": 0.9906540491377146,
+     "net_dev": 0.6295200132553985
+    },
+    "ETHUSDT": {
+     "gross": 0.9857215034047085,
+     "net": 0.6347842869891356,
+     "d_gross": -0.12891006080458023,
+     "d_net": -0.13290797494857476,
+     "turnover": 61.085204721186585,
+     "gross_dev": 1.087720000292799,
+     "net_dev": 0.7115984575505542
+    }
+   },
+   "a_no_levels": {
+    "BTCUSDT": {
+     "gross": 0.8545229975636807,
+     "net": 0.577865134186916,
+     "d_gross": 0.07767514773407691,
+     "d_net": 0.10101015620026926,
+     "turnover": 41.04548063039473,
+     "gross_dev": 0.9340766229202426,
+     "net_dev": 0.6390094322139303
+    },
+    "ETHUSDT": {
+     "gross": 1.0692080564234223,
+     "net": 0.7187892064556552,
+     "d_gross": -0.04542350778586646,
+     "d_net": -0.04890305548205509,
+     "turnover": 64.11612006197245,
+     "gross_dev": 1.2472651350285242,
+     "net_dev": 0.8789703152933613
+    }
+   }
+  },
+  "occlusion": {
+   "trend": {
+    "BTCUSDT": {
+     "gross": 1.0513519508180795,
+     "d_gross": 0.2745041009884758,
+     "net": 0.7455267919854842
+    },
+    "ETHUSDT": {
+     "gross": 1.1994281950438939,
+     "d_gross": 0.08479663083460509,
+     "net": 0.8573100602817622
+    }
+   },
+   "funding": {
+    "BTCUSDT": {
+     "gross": 0.6531295763826903,
+     "d_gross": -0.12371827344691344,
+     "net": 0.3404956500681829
+    },
+    "ETHUSDT": {
+     "gross": 1.052549661786314,
+     "d_gross": -0.062081902422974844,
+     "net": 0.6750756729373989
+    }
+   },
+   "basis": {
+    "BTCUSDT": {
+     "gross": 0.5411965210003339,
+     "d_gross": -0.23565132882926987,
+     "net": 0.24846496558548078
+    },
+    "ETHUSDT": {
+     "gross": 1.0084995354586768,
+     "d_gross": -0.106132028750612,
+     "net": 0.6959954579847442
+    }
+   },
+   "flow": {
+    "BTCUSDT": {
+     "gross": 0.5864872293627964,
+     "d_gross": -0.19036062046680735,
+     "net": 0.26896034968047644
+    },
+    "ETHUSDT": {
+     "gross": 0.6738352376585399,
+     "d_gross": -0.44079632655074885,
+     "net": 0.32380345866899135
+    }
+   },
+   "vol": {
+    "BTCUSDT": {
+     "gross": 0.620677468543991,
+     "d_gross": -0.15617038128561278,
+     "net": 0.32039242444027155
+    },
+    "ETHUSDT": {
+     "gross": 0.7758112720156688,
+     "d_gross": -0.33882029219362,
+     "net": 0.43581391909543515
+    }
+   },
+   "levels": {
+    "BTCUSDT": {
+     "gross": 0.7439444508740128,
+     "d_gross": -0.03290339895559091,
+     "net": 0.4195554721852666
+    },
+    "ETHUSDT": {
+     "gross": 0.6480577379701783,
+     "d_gross": -0.4665738262391105,
+     "net": 0.26340272994737984
+    }
+   }
+  },
+  "carries_value": [],
+  "correlations": {
+   "BTCUSDT": {
+    "full": {
+     "position_vs_momentum": 0.016176237295528563,
+     "daily_return_vs_momentum": 0.007142417826449693,
+     "daily_return_vs_buy_hold": 0.469899088935163,
+     "same_side_as_momentum_when_in_market": 0.5397751569073729,
+     "long_share": 0.5722664451889249,
+     "short_share": 0.10425162608833602
+    },
+    "dev": {
+     "position_vs_momentum": 0.035547188409983256,
+     "daily_return_vs_momentum": 0.053219470720215774,
+     "daily_return_vs_buy_hold": 0.4547830868096269,
+     "same_side_as_momentum_when_in_market": 0.5557166387090409,
+     "long_share": 0.6228854222460275,
+     "short_share": 0.11217862881628281,
+     "position_vs_rule_A": 0.03886306187727281,
+     "daily_return_vs_rule_A": 0.3610194862802965
+    }
+   },
+   "ETHUSDT": {
+    "full": {
+     "position_vs_momentum": 0.08633198986089348,
+     "daily_return_vs_momentum": 0.1396643540244601,
+     "daily_return_vs_buy_hold": 0.47319899289047807,
+     "same_side_as_momentum_when_in_market": 0.5508341969964844,
+     "long_share": 0.5635456344760624,
+     "short_share": 0.12557883337067743
+    },
+    "dev": {
+     "position_vs_momentum": 0.09977845629664919,
+     "daily_return_vs_momentum": 0.1582167398345426,
+     "daily_return_vs_buy_hold": 0.4863089305537984,
+     "same_side_as_momentum_when_in_market": 0.5635326998323086,
+     "long_share": 0.6177193002043118,
+     "short_share": 0.13128426129576082,
+     "position_vs_rule_A": 0.1023575837465418,
+     "daily_return_vs_rule_A": 0.4191910730115246
+    }
+   }
+  },
+  "mostly_trend": false,
+  "primary_gross": {
+   "BTCUSDT": 0.7768478498296038,
+   "ETHUSDT": 1.1146315642092888
+  }
+ },
+ "repro": {
+  "fold": 24,
+  "test_start": "2026-10-01 00:00:00+00:00",
+  "test_end": "2026-11-11 11:30:00+00:00",
+  "seeds": {
+   "0": {
+    "BTCUSDT": 0.0,
+    "ETHUSDT": 0.0,
+    "fallback_same": true,
+    "chosen_same": true
+   },
+   "1": {
+    "BTCUSDT": 0.0,
+    "ETHUSDT": 0.0,
+    "fallback_same": true,
+    "chosen_same": true
+   },
+   "2": {
+    "BTCUSDT": 0.0,
+    "ETHUSDT": 0.0,
+    "fallback_same": true,
+    "chosen_same": true
+   }
+  },
+  "exact": true,
+  "model": "C:\\Ai Dataset\\engine-15m\\research/out/rl/models5\\repro_f24\\model_phase4_f24.json"
+ },
+ "forward_check": {
+  "model": "model_phase4_f24.json",
+  "fold": 24,
+  "assets": {
+   "BTCUSDT": {
+    "start": "2026-10-20 00:00",
+    "end": "2026-11-11 11:30",
+    "bars": 2158,
+    "decisions_equal": true,
+    "exec_max_diff": 0.0,
+    "equity_max_rel_diff": 0.0,
+    "w_max_diff": 0.0,
+    "fallback": {
+     "0": false,
+     "1": true,
+     "2": false
+    },
+    "changes": {
+     "0": 1,
+     "1": 0,
+     "2": 2
+    },
+    "book_return_pct": 0.8678778708149704
+   },
+   "ETHUSDT": {
+    "start": "2026-10-20 00:00",
+    "end": "2026-11-11 11:30",
+    "bars": 2158,
+    "decisions_equal": true,
+    "exec_max_diff": 0.0,
+    "equity_max_rel_diff": 1.8197918478183001e-16,
+    "w_max_diff": 0.0,
+    "fallback": {
+     "0": true,
+     "1": true,
+     "2": false
+    },
+    "changes": {
+     "0": 0,
+     "1": 0,
+     "2": 5
+    },
+    "book_return_pct": 1.3980397648969412
+   }
+  },
+  "steps": 5,
+  "decisions_equal": true,
+  "exec_max_diff": 0.0,
+  "equity_max_diff": 1.8197918478183001e-16,
+  "w_max_diff": 0.0,
+  "bars": 4316,
+  "start": "2026-10-20 00:00",
+  "end": "2026-11-11 11:30",
+  "seconds": 1.8
+ },
+ "holdout": "no historical span is unseen for RL any more (Phase 4 scored every window to 2026-11-11); loop rules A/B and comparisons with them to 2025-11-11 only",
+ "headline": {
+  "BTCUSDT": {
+   "q_pool2_full": {
+    "full": {
+     "total_return": 0.788094267849672,
+     "sharpe": 0.4768549779866467,
+     "sortino": 0.667338063665262,
+     "max_drawdown": 0.4123416288105992,
+     "calmar": 0.2435847281136149,
+     "turnover_per_year": 47.44881197563654,
+     "avg_holding_hours": 161.99016846399405,
+     "cost_drag_per_year": 0.08425934819579994,
+     "exposure": 0.5018850493192359,
+     "total_return_gross": 2.0142774159172987,
+     "sharpe_gross": 0.7768478498296038,
+     "fee_per_year": 0.04744881197563653,
+     "funding_per_year": 0.012135017790843666,
+     "trades_per_year": 109.7050552612648,
+     "break_even_fee": 0.002979301475874442,
+     "sharpe_sd": 0.0635496032570493
+    },
+    "dev": {
+     "total_return": 1.221086977111826,
+     "sharpe": 0.6732665736512149,
+     "sortino": 0.9434930483057542,
+     "max_drawdown": 0.41214849089490063,
+     "calmar": 0.4122961922805961,
+     "turnover_per_year": 52.142085959429814,
+     "avg_holding_hours": 148.98169199713152,
+     "cost_drag_per_year": 0.09387596285491133,
+     "exposure": 0.5340657174314111,
+     "total_return_gross": 2.6186125845511348,
+     "sharpe_gross": 0.9927218284710976,
+     "fee_per_year": 0.05214208595942982,
+     "funding_per_year": 0.013925563845495086,
+     "trades_per_year": 117.82109180009515,
+     "break_even_fee": 0.003930362718163613,
+     "sharpe_sd": 0.13208150176882788
+    }
+   },
+   "t1_band2x": {
+    "full": {
+     "total_return": 0.3140152009750315,
+     "sharpe": 0.2970981189101256,
+     "sortino": 0.41649784217892943,
+     "max_drawdown": 0.48183999130717226,
+     "calmar": 0.09536630342812462,
+     "turnover_per_year": 10.818583683714465,
+     "avg_holding_hours": 1000.2628367003367,
+     "cost_drag_per_year": 0.0347815775411823,
+     "exposure": 0.5422503009546561,
+     "total_return_gross": 0.6249086082408551,
+     "sharpe_gross": 0.4203684566070461,
+     "fee_per_year": 0.010818583683714467,
+     "funding_per_year": 0.017490082115749133,
+     "trades_per_year": 34.06143047108321,
+     "break_even_fee": 0.00565481543124077,
+     "sharpe_sd": 0.08364135700700423
+    },
+    "dev": {
+     "total_return": 0.8715497430290254,
+     "sharpe": 0.5640603601940052,
+     "sortino": 0.7913379849095303,
+     "max_drawdown": 0.3921499455246649,
+     "calmar": 0.3303746400665755,
+     "turnover_per_year": 10.203848569047903,
+     "avg_holding_hours": 886.3150252525253,
+     "cost_drag_per_year": 0.03632236838708536,
+     "exposure": 0.5728720317800393,
+     "total_return_gross": 1.253666527221777,
+     "sharpe_gross": 0.6885441412835444,
+     "fee_per_year": 0.010203848569047902,
+     "funding_per_year": 0.019294322444463004,
+     "trades_per_year": 30.1721048138518,
+     "break_even_fee": 0.014344730094638339,
+     "sharpe_sd": 0.0939101639547129
+    }
+   },
+   "t2_hold2d": {
+    "full": {
+     "total_return": 0.2223809865050216,
+     "sharpe": 0.24435914916491222,
+     "sortino": 0.3422329866375893,
+     "max_drawdown": 0.4668493573441524,
+     "calmar": 0.07393722191051648,
+     "turnover_per_year": 25.140547345414745,
+     "avg_holding_hours": 453.24682971014494,
+     "cost_drag_per_year": 0.05042239860553077,
+     "exposure": 0.5026969269963325,
+     "total_return_gross": 0.6699958667875182,
+     "sharpe_gross": 0.4290273216254086,
+     "fee_per_year": 0.02514054734541474,
+     "funding_per_year": 0.015009887641764872,
+     "trades_per_year": 60.002615917860176,
+     "break_even_fee": 0.0021652963948180694,
+     "sharpe_sd": 0.13308170047628198
+    },
+    "dev": {
+     "total_return": 0.4922027198890793,
+     "sharpe": 0.4104109247854457,
+     "sortino": 0.5751759913278208,
+     "max_drawdown": 0.45390475192030094,
+     "calmar": 0.18127498371541914,
+     "turnover_per_year": 25.645179721690226,
+     "avg_holding_hours": 429.64167547302736,
+     "cost_drag_per_year": 0.05359417987705723,
+     "exposure": 0.5358213563054216,
+     "total_return_gross": 0.9666829444010357,
+     "sharpe_gross": 0.5986803332953325,
+     "fee_per_year": 0.025645179721690226,
+     "funding_per_year": 0.01728861913343867,
+     "trades_per_year": 58.25888056929483,
+     "break_even_fee": 0.003985016024082279,
+     "sharpe_sd": 0.08812511845416313
+    }
+   },
+   "t3_tilt": {
+    "full": {
+     "total_return": 6.62505218638809,
+     "sharpe": 0.8319242500622782,
+     "sortino": 1.1784857939242448,
+     "max_drawdown": 0.7995144512075428,
+     "calmar": 0.49258724941627435,
+     "turnover_per_year": 23.887901354516355,
+     "avg_holding_hours": 53579.25,
+     "cost_drag_per_year": 0.04922726541991588,
+     "exposure": 0.9999953340363387,
+     "total_return_gross": 9.325010594769317,
+     "sharpe_gross": 0.9059988010969574,
+     "fee_per_year": 0.023887901354516353,
+     "funding_per_year": 0.012969600605645363,
+     "trades_per_year": 109.868550127526,
+     "break_even_fee": 0.015048330823599158,
+     "sharpe_sd": 0.01873443166611273
+    },
+    "dev": {
+     "total_return": 11.399627890833749,
+     "sharpe": 1.0564625508437884,
+     "sortino": 1.4977569902331478,
+     "max_drawdown": 0.7995144512075428,
+     "calmar": 0.7945597546733548,
+     "turnover_per_year": 26.266543783142865,
+     "avg_holding_hours": 44807.75,
+     "cost_drag_per_year": 0.05528354984298305,
+     "exposure": 0.9999944206391715,
+     "total_return_gross": 15.49022916203387,
+     "sharpe_gross": 1.1363438967771782,
+     "fee_per_year": 0.02626654378314287,
+     "funding_per_year": 0.015074580220214998,
+     "trades_per_year": 118.01659139932097,
+     "break_even_fee": 0.0198902090801471,
+     "sharpe_sd": 0.03611394829214126
+    }
+   },
+   "a_p3_only": {
+    "full": {
+     "total_return": -0.012748721787814424,
+     "sharpe": 0.128793962179532,
+     "sortino": 0.17854753406834453,
+     "max_drawdown": 0.5044565725870853,
+     "calmar": -0.003842898521784252,
+     "turnover_per_year": 37.369048758010315,
+     "avg_holding_hours": 192.6521014631043,
+     "cost_drag_per_year": 0.08002832870750486,
+     "exposure": 0.4929528395499523,
+     "total_return_gross": 0.6123220109456832,
+     "sharpe_gross": 0.4218222164481243,
+     "fee_per_year": 0.037369048758010316,
+     "funding_per_year": 0.021448038268853293,
+     "trades_per_year": 94.0640463889434,
+     "break_even_fee": 0.0009408279869068097,
+     "sharpe_sd": 0.018805407310965066
+    },
+    "dev": {
+     "total_return": 0.0959216282927966,
+     "sharpe": 0.20848785695269978,
+     "sortino": 0.28918627190315654,
+     "max_drawdown": 0.5044565725870853,
+     "calmar": 0.034665316447157736,
+     "turnover_per_year": 42.61770034516494,
+     "avg_holding_hours": 187.89022139667756,
+     "cost_drag_per_year": 0.09209495685536817,
+     "exposure": 0.5648954055823365,
+     "total_return_gross": 0.7545516775187143,
+     "sharpe_gross": 0.5215788724647799,
+     "fee_per_year": 0.042617700345164954,
+     "funding_per_year": 0.024894734823427328,
+     "trades_per_year": 106.87311424344914,
+     "break_even_fee": 0.0014207974770745967,
+     "sharpe_sd": 0.03182027286215893
+    }
+   },
+   "a_readings_only": {
+    "full": {
+     "total_return": 0.6093019006106045,
+     "sharpe": 0.3942533084936281,
+     "sortino": 0.5551250315737696,
+     "max_drawdown": 0.40104409311515976,
+     "calmar": 0.19897178766090787,
+     "turnover_per_year": 19.15197047907935,
+     "avg_holding_hours": 745.7927005012531,
+     "cost_drag_per_year": 0.0673548339583833,
+     "exposure": 0.5056815884184561,
+     "total_return_gross": 1.4343506012806875,
+     "sharpe_gross": 0.6248123091003784,
+     "fee_per_year": 0.01915197047907935,
+     "funding_per_year": 0.039542309342389746,
+     "trades_per_year": 56.460227148867524,
+     "break_even_fee": 0.004675613829925754,
+     "sharpe_sd": 0.1685689492998875
+    },
+    "dev": {
+     "total_return": 1.0996558760954696,
+     "sharpe": 0.6129559070708811,
+     "sortino": 0.8636954500939497,
+     "max_drawdown": 0.39284885422949894,
+     "calmar": 0.39756809502173646,
+     "turnover_per_year": 19.561149536418373,
+     "avg_holding_hours": 724.0567918771044,
+     "cost_drag_per_year": 0.07494236206166745,
+     "exposure": 0.5431749538772839,
+     "total_return_gross": 2.082585690420716,
+     "sharpe_gross": 0.8580255654660717,
+     "fee_per_year": 0.01956114953641838,
+     "funding_per_year": 0.046173183709430195,
+     "trades_per_year": 56.76005030856353,
+     "break_even_fee": 0.008121694752193521,
+     "sharpe_sd": 0.15607105838162452
+    }
+   },
+   "a_no_trend": {
+    "full": {
+     "total_return": 0.8990022732252111,
+     "sharpe": 0.49339484752653767,
+     "sortino": 0.6906455439492906,
+     "max_drawdown": 0.4558873192902458,
+     "calmar": 0.24910937566598043,
+     "turnover_per_year": 47.20585632660479,
+     "avg_holding_hours": 155.74938763188467,
+     "cost_drag_per_year": 0.08517265013785735,
+     "exposure": 0.5710019690366651,
+     "total_return_gross": 2.2296436868237013,
+     "sharpe_gross": 0.7879357897472218,
+     "fee_per_year": 0.04720585632660479,
+     "funding_per_year": 0.01280135666658092,
+     "trades_per_year": 108.99657750746627,
+     "break_even_fee": 0.003105966232564271,
+     "sharpe_sd": 0.12883008612787858
+    },
+    "dev": {
+     "total_return": 1.4432644474543448,
+     "sharpe": 0.6947621664109378,
+     "sortino": 0.9742471530741481,
+     "max_drawdown": 0.4558873192902458,
+     "calmar": 0.4296704864400424,
+     "turnover_per_year": 52.62564852041043,
+     "avg_holding_hours": 144.92752753654443,
+     "cost_drag_per_year": 0.096222748785364,
+     "exposure": 0.6104397280247574,
+     "total_return_gross": 3.0465615254559832,
+     "sharpe_gross": 1.0100938106486834,
+     "fee_per_year": 0.05262564852041043,
+     "funding_per_year": 0.0149141488981631,
+     "trades_per_year": 119.7109212592781,
+     "break_even_fee": 0.004073519208403987,
+     "sharpe_sd": 0.22153294880013544
+    }
+   },
+   "a_no_funding": {
+    "full": {
+     "total_return": 0.8984887220829432,
+     "sharpe": 0.501608081403245,
+     "sortino": 0.7002820736703542,
+     "max_drawdown": 0.4354321889941344,
+     "calmar": 0.25284712402015314,
+     "turnover_per_year": 48.77937403019942,
+     "avg_holding_hours": 122.65613193918715,
+     "cost_drag_per_year": 0.08947130764693369,
+     "exposure": 0.45783990767613236,
+     "total_return_gross": 2.29900557588255,
+     "sharpe_gross": 0.8310936140248395,
+     "fee_per_year": 0.04877937403019942,
+     "funding_per_year": 0.014781538103498684,
+     "trades_per_year": 115.69986702417543,
+     "break_even_fee": 0.003059588917517505,
+     "sharpe_sd": 0.15834324484680223
+    },
+    "dev": {
+     "total_return": 0.7944850267727279,
+     "sharpe": 0.5227761743586695,
+     "sortino": 0.7295390001323844,
+     "max_drawdown": 0.4354321889941344,
+     "calmar": 0.2788608876962809,
+     "turnover_per_year": 56.40508490989859,
+     "avg_holding_hours": 119.35390363721245,
+     "cost_drag_per_year": 0.10405223497630194,
+     "exposure": 0.525955186573826,
+     "total_return_gross": 2.0735018344530296,
+     "sharpe_gross": 0.8788539460558452,
+     "fee_per_year": 0.056405084909898595,
+     "funding_per_year": 0.01735967999240283,
+     "trades_per_year": 134.69922386659107,
+     "break_even_fee": 0.0029444087833742642,
+     "sharpe_sd": 0.13632661999190276
+    }
+   },
+   "a_no_basis": {
+    "full": {
+     "total_return": 0.9271825935703998,
+     "sharpe": 0.5370784486383947,
+     "sortino": 0.7474304737037051,
+     "max_drawdown": 0.36648398143845995,
+     "calmar": 0.3060245456032395,
+     "turnover_per_year": 40.822739301756656,
+     "avg_holding_hours": 155.10294481002447,
+     "cost_drag_per_year": 0.07323063532367617,
+     "exposure": 0.4187577960476177,
+     "total_return_gross": 2.047905166814316,
+     "sharpe_gross": 0.8206882427485289,
+     "fee_per_year": 0.040822739301756665,
+     "funding_per_year": 0.01026636158277179,
+     "trades_per_year": 98.5329060667495,
+     "break_even_fee": 0.003564173026499648,
+     "sharpe_sd": 0.08411552569290166
+    },
+    "dev": {
+     "total_return": 1.1016834581996058,
+     "sharpe": 0.6231411694676247,
+     "sortino": 0.8678523501685005,
+     "max_drawdown": 0.3495627242967141,
+     "calmar": 0.43746862869688624,
+     "turnover_per_year": 46.4447134595135,
+     "avg_holding_hours": 147.65314560167502,
+     "cost_drag_per_year": 0.08375841616262347,
+     "exposure": 0.46784428375885256,
+     "total_return_gross": 2.282089060770135,
+     "sharpe_gross": 0.9291357975553677,
+     "fee_per_year": 0.0464447134595135,
+     "funding_per_year": 0.011717173599367574,
+     "trades_per_year": 111.9561038233205,
+     "break_even_fee": 0.0037976276042837377,
+     "sharpe_sd": 0.27384209622388467
+    }
+   },
+   "a_no_flow": {
+    "full": {
+     "total_return": 0.7964689273583284,
+     "sharpe": 0.4791175732467645,
+     "sortino": 0.6707145983892325,
+     "max_drawdown": 0.4326475103198118,
+     "calmar": 0.2344937085396869,
+     "turnover_per_year": 43.06910173290928,
+     "avg_holding_hours": 153.0654594274986,
+     "cost_drag_per_year": 0.08276020096869703,
+     "exposure": 0.45664542097879474,
+     "total_return_gross": 1.9898968126242262,
+     "sharpe_gross": 0.7838921278233283,
+     "fee_per_year": 0.04306910173290928,
+     "funding_per_year": 0.016139933849662166,
+     "trades_per_year": 107.63412028862295,
+     "break_even_fee": 0.003146443231903138,
+     "sharpe_sd": 0.10797259626202928
+    },
+    "dev": {
+     "total_return": 1.0987082136570436,
+     "sharpe": 0.6285623069241477,
+     "sortino": 0.8801916085868945,
+     "max_drawdown": 0.4326475103198118,
+     "calmar": 0.3626918340240124,
+     "turnover_per_year": 48.923805024666045,
+     "avg_holding_hours": 145.8621246524579,
+     "cost_drag_per_year": 0.09440371650257594,
+     "exposure": 0.5158881598524073,
+     "total_return_gross": 2.406710087303194,
+     "sharpe_gross": 0.9520930740181015,
+     "fee_per_year": 0.048923805024666055,
+     "funding_per_year": 0.018226225237638727,
+     "trades_per_year": 120.36258659003083,
+     "break_even_fee": 0.0038618357189710976,
+     "sharpe_sd": 0.1443716427340675
+    }
+   },
+   "a_no_vol": {
+    "full": {
+     "total_return": 1.4964954031258741,
+     "sharpe": 0.5728795405545091,
+     "sortino": 0.8082259992022213,
+     "max_drawdown": 0.4245069459843049,
+     "calmar": 0.3927442146638435,
+     "turnover_per_year": 54.21794660567866,
+     "avg_holding_hours": 122.87993303377927,
+     "cost_drag_per_year": 0.09646524179319164,
+     "exposure": 0.5098327407559483,
+     "total_return_gross": 3.419437486769486,
+     "sharpe_gross": 0.9142429467776713,
+     "fee_per_year": 0.05421794660567866,
+     "funding_per_year": 0.012873923367507764,
+     "trades_per_year": 126.05454188738474,
+     "break_even_fee": 0.003340764554616378,
+     "sharpe_sd": 0.4908694137746557
+    },
+    "dev": {
+     "total_return": 1.3674684868204519,
+     "sharpe": 0.6295200132553985,
+     "sortino": 0.8874169890100833,
+     "max_drawdown": 0.4245069459843049,
+     "calmar": 0.4611051079596266,
+     "turnover_per_year": 59.70264235651026,
+     "avg_holding_hours": 118.77097606243048,
+     "cost_drag_per_year": 0.10764726444905233,
+     "exposure": 0.5556355263940963,
+     "total_return_gross": 3.0357035558681136,
+     "sharpe_gross": 0.9906540491377146,
+     "fee_per_year": 0.059702642356510266,
+     "funding_per_year": 0.01494843688534084,
+     "trades_per_year": 139.32604771493553,
+     "break_even_fee": 0.0035120619492309177,
+     "sharpe_sd": 0.4848577987549142
+    }
+   },
+   "a_no_levels": {
+    "full": {
+     "total_return": 1.1970628241499168,
+     "sharpe": 0.577865134186916,
+     "sortino": 0.8113205435943319,
+     "max_drawdown": 0.420895243216405,
+     "calmar": 0.322536492789627,
+     "turnover_per_year": 41.04548063039473,
+     "avg_holding_hours": 166.88575128633013,
+     "cost_drag_per_year": 0.07525951590462332,
+     "exposure": 0.4770652332826299,
+     "total_return_gross": 2.4913902556728442,
+     "sharpe_gross": 0.8545229975636807,
+     "fee_per_year": 0.04104548063039473,
+     "funding_per_year": 0.012405943160924804,
+     "trades_per_year": 98.96889237677938,
+     "break_even_fee": 0.004005562520931568,
+     "sharpe_sd": 0.19455871598682864
+    },
+    "dev": {
+     "total_return": 1.1682037371618905,
+     "sharpe": 0.6390094322139303,
+     "sortino": 0.8978916589945888,
+     "max_drawdown": 0.420895243216405,
+     "calmar": 0.3835371523063708,
+     "turnover_per_year": 46.06206254737125,
+     "avg_holding_hours": 158.80616560056856,
+     "cost_drag_per_year": 0.08518877524073999,
+     "exposure": 0.5295315568648455,
+     "total_return_gross": 2.394696950359976,
+     "sharpe_gross": 0.9340766229202426,
+     "fee_per_year": 0.046062062547371246,
+     "funding_per_year": 0.014136702642428327,
+     "trades_per_year": 111.10893889334193,
+     "break_even_fee": 0.004067475954517049,
+     "sharpe_sd": 0.20365824643614305
+    }
+   },
+   "o_no_trend": {
+    "full": {
+     "total_return": 1.8205235069790326,
+     "sharpe": 0.7455267919854842,
+     "sortino": 1.04805806482757,
+     "max_drawdown": 0.4467674096181546,
+     "calmar": 0.4138560352888201,
+     "turnover_per_year": 45.63363569215384,
+     "avg_holding_hours": 137.6444524938706,
+     "cost_drag_per_year": 0.0828682538326245,
+     "exposure": 0.525468384985551,
+     "total_return_gross": 3.6622523413274095,
+     "sharpe_gross": 1.0513519508180795,
+     "fee_per_year": 0.04563363569215384,
+     "funding_per_year": 0.012152023703107218,
+     "trades_per_year": 105.29069387221243,
+     "break_even_fee": 0.0047825724927087485,
+     "sharpe_sd": 0.14606819413513172
+    },
+    "dev": {
+     "total_return": 1.4437990408716619,
+     "sharpe": 0.7478529622450362,
+     "sortino": 1.0494066681421723,
+     "max_drawdown": 0.4386931707572718,
+     "calmar": 0.43749222689976985,
+     "turnover_per_year": 50.438719667812144,
+     "avg_holding_hours": 130.39650616546015,
+     "cost_drag_per_year": 0.09345762506073592,
+     "exposure": 0.5506178212224007,
+     "total_return_gross": 2.9373806674988874,
+     "sharpe_gross": 1.0746217508674443,
+     "fee_per_year": 0.05043871966781215,
+     "funding_per_year": 0.014831891579513208,
+     "trades_per_year": 118.27725753162206,
+     "break_even_fee": 0.004547624182120051,
+     "sharpe_sd": 0.07328051984670021
+    }
+   },
+   "o_no_funding": {
+    "full": {
+     "total_return": 0.4423894928605909,
+     "sharpe": 0.3404956500681829,
+     "sortino": 0.47497618063982094,
+     "max_drawdown": 0.45494871938918074,
+     "calmar": 0.12956271857741233,
+     "turnover_per_year": 47.22248171002256,
+     "avg_holding_hours": 142.55896209018513,
+     "cost_drag_per_year": 0.08650556470597104,
+     "exposure": 0.4886741508723797,
+     "total_return_gross": 1.455828965863981,
+     "sharpe_gross": 0.6531295763826903,
+     "fee_per_year": 0.04722248171002256,
+     "funding_per_year": 0.014521871162162721,
+     "trades_per_year": 110.41353301506335,
+     "break_even_fee": 0.002209281662711431,
+     "sharpe_sd": 0.13366339520400264
+    },
+    "dev": {
+     "total_return": 0.7756089408364634,
+     "sharpe": 0.5267420487953384,
+     "sortino": 0.7364591317160426,
+     "max_drawdown": 0.45494871938918074,
+     "calmar": 0.2561849740554582,
+     "turnover_per_year": 51.89575485124235,
+     "avg_holding_hours": 133.02521265284423,
+     "cost_drag_per_year": 0.09633376051045021,
+     "exposure": 0.5205153097661132,
+     "total_return_gross": 1.9205854276853744,
+     "sharpe_gross": 0.8601235932605905,
+     "fee_per_year": 0.05189575485124237,
+     "funding_per_year": 0.016633108897856106,
+     "trades_per_year": 119.51542166005227,
+     "break_even_fee": 0.003108517238183574,
+     "sharpe_sd": 0.09951250638066864
+    }
+   },
+   "o_no_basis": {
+    "full": {
+     "total_return": 0.21167208127046674,
+     "sharpe": 0.24846496558548078,
+     "sortino": 0.3460551677978653,
+     "max_drawdown": 0.40843030360810156,
+     "calmar": 0.07551796992665873,
+     "turnover_per_year": 44.71706048473808,
+     "avg_holding_hours": 195.36814309494085,
+     "cost_drag_per_year": 0.08061765703084213,
+     "exposure": 0.4767697222507364,
+     "total_return_gross": 0.9956619336018823,
+     "sharpe_gross": 0.5411965210003339,
+     "fee_per_year": 0.044717060484738065,
+     "funding_per_year": 0.012510793779961326,
+     "trades_per_year": 107.19813397859309,
+     "break_even_fee": 0.001658017071702444,
+     "sharpe_sd": 0.06816496868238496
+    },
+    "dev": {
+     "total_return": 0.5385889187458549,
+     "sharpe": 0.4304079831033578,
+     "sortino": 0.6008283053131831,
+     "max_drawdown": 0.3915064476570283,
+     "calmar": 0.22187778755088572,
+     "turnover_per_year": 49.19820147131554,
+     "avg_holding_hours": 179.80939518001097,
+     "cost_drag_per_year": 0.08983124125715697,
+     "exposure": 0.5092003660060703,
+     "total_return_gross": 1.4544755147539103,
+     "sharpe_gross": 0.7418971716085853,
+     "fee_per_year": 0.04919820147131554,
+     "funding_per_year": 0.014245580732080565,
+     "trades_per_year": 115.01893087785838,
+     "break_even_fee": 0.002622784109493089,
+     "sharpe_sd": 0.11846471152959812
+    }
+   },
+   "o_no_flow": {
+    "full": {
+     "total_return": 0.3326474790360479,
+     "sharpe": 0.26896034968047644,
+     "sortino": 0.3759821784615509,
+     "max_drawdown": 0.518992513920731,
+     "calmar": 0.08928743670375265,
+     "turnover_per_year": 50.773727372083194,
+     "avg_holding_hours": 138.56596216288904,
+     "cost_drag_per_year": 0.09000301758307405,
+     "exposure": 0.49759391807189934,
+     "total_return_gross": 1.3522853951295828,
+     "sharpe_gross": 0.5864872293627964,
+     "fee_per_year": 0.050773727372083195,
+     "funding_per_year": 0.013032181841492359,
+     "trades_per_year": 124.52858980228022,
+     "break_even_fee": 0.001663430716416082,
+     "sharpe_sd": 0.2333737639489059
+    },
+    "dev": {
+     "total_return": 0.6821460523788049,
+     "sharpe": 0.4333659415518365,
+     "sortino": 0.605667171053751,
+     "max_drawdown": 0.502660121094688,
+     "calmar": 0.2055315700941098,
+     "turnover_per_year": 53.26167419866926,
+     "avg_holding_hours": 133.33787204329232,
+     "cost_drag_per_year": 0.0959475157790776,
+     "exposure": 0.5285458697851574,
+     "total_return_gross": 1.79805251955049,
+     "sharpe_gross": 0.7582059453241268,
+     "fee_per_year": 0.053261674198669264,
+     "funding_per_year": 0.014051295817270546,
+     "trades_per_year": 128.37807015828952,
+     "break_even_fee": 0.0025361237391324774,
+     "sharpe_sd": 0.30961137403548966
+    }
+   },
+   "o_no_vol": {
+    "full": {
+     "total_return": 0.36747878007522305,
+     "sharpe": 0.32039242444027155,
+     "sortino": 0.4499347663408276,
+     "max_drawdown": 0.4485538659788459,
+     "calmar": 0.11929184361844598,
+     "turnover_per_year": 49.22399749047933,
+     "avg_holding_hours": 162.10098244555658,
+     "cost_drag_per_year": 0.08041017073160146,
+     "exposure": 0.5139698952024562,
+     "total_return_gross": 1.2407321898564883,
+     "sharpe_gross": 0.620677468543991,
+     "fee_per_year": 0.04922399749047932,
+     "funding_per_year": 0.005910735464915166,
+     "trades_per_year": 116.24484991171278,
+     "break_even_fee": 0.0020501815685302436,
+     "sharpe_sd": 0.06462360143903548
+    },
+    "dev": {
+     "total_return": 0.4052349538365383,
+     "sharpe": 0.36855500122132695,
+     "sortino": 0.5174179624246144,
+     "max_drawdown": 0.4485538659788459,
+     "calmar": 0.15654947006631145,
+     "turnover_per_year": 52.55857718491462,
+     "avg_holding_hours": 157.17073733829577,
+     "cost_drag_per_year": 0.0868565014930832,
+     "exposure": 0.551932690590966,
+     "total_return_gross": 1.1929119900223493,
+     "sharpe_gross": 0.6804000514222608,
+     "fee_per_year": 0.052558577184914614,
+     "funding_per_year": 0.006627046835374479,
+     "trades_per_year": 123.55574671071925,
+     "break_even_fee": 0.002268556831174798,
+     "sharpe_sd": 0.10230765749476274
+    }
+   },
+   "o_no_levels": {
+    "full": {
+     "total_return": 0.663904677553489,
+     "sharpe": 0.4195554721852666,
+     "sortino": 0.5883193526039089,
+     "max_drawdown": 0.4726092042530395,
+     "calmar": 0.18336362289293218,
+     "turnover_per_year": 56.31645539120851,
+     "avg_holding_hours": 127.23456920903955,
+     "cost_drag_per_year": 0.0924489499979414,
+     "exposure": 0.4873008022346856,
+     "total_return_gross": 1.959254312338726,
+     "sharpe_gross": 0.7439444508740128,
+     "fee_per_year": 0.05631645539120852,
+     "funding_per_year": 0.008776058254330501,
+     "trades_per_year": 123.54762060471303,
+     "break_even_fee": 0.002382430991636176,
+     "sharpe_sd": 0.13153649162732156
+    },
+    "dev": {
+     "total_return": 1.0565141279968178,
+     "sharpe": 0.6095408204446587,
+     "sortino": 0.8552581147430373,
+     "max_drawdown": 0.46637903165485284,
+     "calmar": 0.32922802728567263,
+     "turnover_per_year": 61.18386032682742,
+     "avg_holding_hours": 121.02240598342831,
+     "cost_drag_per_year": 0.10107346356323633,
+     "exposure": 0.5226466256025709,
+     "total_return_gross": 2.4800988998641276,
+     "sharpe_gross": 0.9484208815766743,
+     "fee_per_year": 0.06118386032682743,
+     "funding_per_year": 0.009453990897110867,
+     "trades_per_year": 132.22289560973067,
+     "break_even_fee": 0.003232683081824025,
+     "sharpe_sd": 0.11519645923268286
+    }
+   }
+  },
+  "ETHUSDT": {
+   "q_pool2_full": {
+    "full": {
+     "total_return": 2.631043639914205,
+     "sharpe": 0.7676922619377103,
+     "sortino": 1.0707738777531695,
+     "max_drawdown": 0.49645218903896743,
+     "calmar": 0.4866365455394073,
+     "turnover_per_year": 62.9643342153968,
+     "avg_holding_hours": 104.31858132190304,
+     "cost_drag_per_year": 0.11622649034221706,
+     "exposure": 0.5111705504518634,
+     "total_return_gross": 6.517738605539923,
+     "sharpe_gross": 1.1146315642092888,
+     "fee_per_year": 0.0629643342153968,
+     "funding_per_year": 0.01721240920980359,
+     "trades_per_year": 158.38744677254908,
+     "break_even_fee": 0.004190919032500586,
+     "sharpe_sd": 0.16434199410346456
+    },
+    "dev": {
+     "total_return": 2.9050803451173812,
+     "sharpe": 0.8597959743939905,
+     "sortino": 1.198932213195764,
+     "max_drawdown": 0.49645218903896743,
+     "calmar": 0.6250932353642528,
+     "turnover_per_year": 70.69248885204449,
+     "avg_holding_hours": 104.67009811834227,
+     "cost_drag_per_year": 0.13215109637567096,
+     "exposure": 0.5764233905331829,
+     "total_return_gross": 6.790260742963169,
+     "sharpe_gross": 1.2276653263532726,
+     "fee_per_year": 0.07069248885204449,
+     "funding_per_year": 0.0204410697904896,
+     "trades_per_year": 178.78100305140444,
+     "break_even_fee": 0.004473400476677658,
+     "sharpe_sd": 0.27241577799032857
+    }
+   },
+   "t1_band2x": {
+    "full": {
+     "total_return": 1.893986190717799,
+     "sharpe": 0.6575775959565011,
+     "sortino": 0.9241553944029824,
+     "max_drawdown": 0.5388259980321188,
+     "calmar": 0.35905391028488487,
+     "turnover_per_year": 15.38407376921215,
+     "avg_holding_hours": 498.54262566137567,
+     "cost_drag_per_year": 0.04205355855755022,
+     "exposure": 0.5056949734856971,
+     "total_return_gross": 2.752972848424838,
+     "sharpe_gross": 0.7859577317904846,
+     "fee_per_year": 0.01538407376921215,
+     "funding_per_year": 0.016973415898540057,
+     "trades_per_year": 48.57941999116738,
+     "break_even_fee": 0.012171207316311399,
+     "sharpe_sd": 0.18739631422340505
+    },
+    "dev": {
+     "total_return": 1.626276445548452,
+     "sharpe": 0.6833234438737751,
+     "sortino": 0.9585412886886329,
+     "max_drawdown": 0.5388259980321188,
+     "calmar": 0.39589402741136287,
+     "turnover_per_year": 17.703593129449036,
+     "avg_holding_hours": 483.4562868124189,
+     "cost_drag_per_year": 0.04947196264557532,
+     "exposure": 0.5617047564819674,
+     "total_return_gross": 2.3889814452509412,
+     "sharpe_gross": 0.8251019003088077,
+     "fee_per_year": 0.01770359312944904,
+     "funding_per_year": 0.020524869698596515,
+     "trades_per_year": 56.594424014813654,
+     "break_even_fee": 0.011744122689179287,
+     "sharpe_sd": 0.20076000017170048
+    }
+   },
+   "t2_hold2d": {
+    "full": {
+     "total_return": 1.9872073348412858,
+     "sharpe": 0.7102530323321617,
+     "sortino": 0.9905893732679644,
+     "max_drawdown": 0.5113003735817033,
+     "calmar": 0.39677656855549004,
+     "turnover_per_year": 30.186806757107416,
+     "avg_holding_hours": 269.6721981721982,
+     "cost_drag_per_year": 0.06409150432792757,
+     "exposure": 0.49519194861453436,
+     "total_return_gross": 3.452416757707427,
+     "sharpe_gross": 0.9158761777739087,
+     "fee_per_year": 0.03018680675710742,
+     "funding_per_year": 0.01972678711863618,
+     "trades_per_year": 76.38582200631369,
+     "break_even_fee": 0.006771121145236023,
+     "sharpe_sd": 0.1473006057313083
+    },
+    "dev": {
+     "total_return": 2.1830943228425697,
+     "sharpe": 0.7933453747492649,
+     "sortino": 1.1064416556330774,
+     "max_drawdown": 0.5113003735817033,
+     "calmar": 0.5103786852742028,
+     "turnover_per_year": 33.21249636152326,
+     "avg_holding_hours": 279.82110007818466,
+     "cost_drag_per_year": 0.07233182558589873,
+     "exposure": 0.5605250328424641,
+     "total_return_gross": 3.643744066517364,
+     "sharpe_gross": 1.0102420640405798,
+     "fee_per_year": 0.03321249636152327,
+     "funding_per_year": 0.02340255151635012,
+     "trades_per_year": 83.91362178233315,
+     "break_even_fee": 0.007475465703906264,
+     "sharpe_sd": 0.27611284965634714
+    }
+   },
+   "t3_tilt": {
+    "full": {
+     "total_return": 6.967188640551631,
+     "sharpe": 0.8235928379909826,
+     "sortino": 1.1617029551249602,
+     "max_drawdown": 0.8497129551390393,
+     "calmar": 0.4739491157804508,
+     "turnover_per_year": 31.645734215025314,
+     "avg_holding_hours": 53555.75,
+     "cost_drag_per_year": 0.06581955666127938,
+     "exposure": 0.9999953319889462,
+     "total_return_gross": 10.955106548456632,
+     "sharpe_gross": 0.9001439259309295,
+     "fee_per_year": 0.03164573421502531,
+     "funding_per_year": 0.016108881894904645,
+     "trades_per_year": 158.55101384322643,
+     "break_even_fee": 0.011670010481553398,
+     "sharpe_sd": 0.027891929359808408
+    },
+    "dev": {
+     "total_return": 13.291366006506967,
+     "sharpe": 1.0243460450145572,
+     "sortino": 1.4438039306545456,
+     "max_drawdown": 0.8497129551390393,
+     "calmar": 0.7966510444847689,
+     "turnover_per_year": 35.54184781558783,
+     "avg_holding_hours": 44784.25,
+     "cost_drag_per_year": 0.07518613007674234,
+     "exposure": 0.999994417711485,
+     "total_return_gross": 20.06045289467535,
+     "sharpe_gross": 1.1079741324343584,
+     "fee_per_year": 0.03554184781558783,
+     "funding_per_year": 0.01908759875393593,
+     "trades_per_year": 178.9766058993819,
+     "break_even_fee": 0.015514226271066614,
+     "sharpe_sd": 0.05084376087648976
+    }
+   },
+   "a_p3_only": {
+    "full": {
+     "total_return": 0.22386548773216822,
+     "sharpe": 0.2408275409215401,
+     "sortino": 0.3326426374449856,
+     "max_drawdown": 0.7462061108828205,
+     "calmar": 0.040462838052381836,
+     "turnover_per_year": 45.95229787676897,
+     "avg_holding_hours": 122.73555192545562,
+     "cost_drag_per_year": 0.10090804887339973,
+     "exposure": 0.4658239350710782,
+     "total_return_gross": 1.2574091382042172,
+     "sharpe_gross": 0.5611700394407021,
+     "fee_per_year": 0.045952297876768966,
+     "funding_per_year": 0.02539448924769626,
+     "trades_per_year": 137.39633936895825,
+     "break_even_fee": 0.0016009327117807162,
+     "sharpe_sd": 0.18028594141716503
+    },
+    "dev": {
+     "total_return": 0.266011070387899,
+     "sharpe": 0.2872691126300016,
+     "sortino": 0.3967398236870084,
+     "max_drawdown": 0.7367373830520317,
+     "calmar": 0.060218053171538076,
+     "turnover_per_year": 54.393453837447765,
+     "avg_holding_hours": 122.28287795690738,
+     "cost_drag_per_year": 0.11974379835257147,
+     "exposure": 0.548629176017,
+     "total_return_gross": 1.3275331748147476,
+     "sharpe_gross": 0.6360950273765471,
+     "fee_per_year": 0.05439345383744778,
+     "funding_per_year": 0.03024175163690378,
+     "trades_per_year": 162.61116761860055,
+     "break_even_fee": 0.0017514783823736318,
+     "sharpe_sd": 0.1735665787512037
+    }
+   },
+   "a_readings_only": {
+    "full": {
+     "total_return": 1.7082050618066142,
+     "sharpe": 0.628045830531695,
+     "sortino": 0.8802547326931531,
+     "max_drawdown": 0.5165552118716848,
+     "calmar": 0.3524703347597609,
+     "turnover_per_year": 23.738095836360838,
+     "avg_holding_hours": 685.4794443038686,
+     "cost_drag_per_year": 0.08928459804807591,
+     "exposure": 0.5709802200811611,
+     "total_return_gross": 3.6699050680047534,
+     "sharpe_gross": 0.8769501795912727,
+     "fee_per_year": 0.02373809583636084,
+     "funding_per_year": 0.05414018680185503,
+     "trades_per_year": 68.5346026138018,
+     "break_even_fee": 0.007973674082969404,
+     "sharpe_sd": 0.10301556228799527
+    },
+    "dev": {
+     "total_return": 2.838815219073599,
+     "sharpe": 0.8759252757423103,
+     "sortino": 1.2287661674932455,
+     "max_drawdown": 0.5060824253749924,
+     "calmar": 0.6109272189305742,
+     "turnover_per_year": 24.74917321932807,
+     "avg_holding_hours": 700.6748592955701,
+     "cost_drag_per_year": 0.1013427837408608,
+     "exposure": 0.6147476619514937,
+     "total_return_gross": 5.430947587410436,
+     "sharpe_gross": 1.1425328651681688,
+     "fee_per_year": 0.024749173219328072,
+     "funding_per_year": 0.06454156786043418,
+     "trades_per_year": 70.28662337323631,
+     "break_even_fee": 0.01184110769276997,
+     "sharpe_sd": 0.12406879462061912
+    }
+   },
+   "a_no_trend": {
+    "full": {
+     "total_return": 2.040325752410521,
+     "sharpe": 0.6533853218868482,
+     "sortino": 0.9126014869379425,
+     "max_drawdown": 0.5137538662315615,
+     "calmar": 0.3831290757822225,
+     "turnover_per_year": 58.235602621148566,
+     "avg_holding_hours": 113.26510941509207,
+     "cost_drag_per_year": 0.1128132221886271,
+     "exposure": 0.531093621629696,
+     "total_return_gross": 5.100665633903858,
+     "sharpe_gross": 0.9804465622396314,
+     "fee_per_year": 0.05823560262114857,
+     "funding_per_year": 0.021431932077756788,
+     "trades_per_year": 152.2809428005954,
+     "break_even_fee": 0.0038624554086891054,
+     "sharpe_sd": 0.23721051301902887
+    },
+    "dev": {
+     "total_return": 2.256662748930485,
+     "sharpe": 0.73448835394098,
+     "sortino": 1.0267126366735895,
+     "max_drawdown": 0.5137538662315615,
+     "calmar": 0.48908454910318816,
+     "turnover_per_year": 67.44917615739486,
+     "avg_holding_hours": 113.99322114283844,
+     "cost_drag_per_year": 0.13177455365303767,
+     "exposure": 0.6154770809841202,
+     "total_return_gross": 5.415369504849761,
+     "sharpe_gross": 1.0875452493796558,
+     "fee_per_year": 0.06744917615739487,
+     "funding_per_year": 0.025649267931845757,
+     "trades_per_year": 178.25939545679785,
+     "break_even_fee": 0.004061919167958591,
+     "sharpe_sd": 0.3168620611696848
+    }
+   },
+   "a_no_funding": {
+    "full": {
+     "total_return": 1.2387539241791596,
+     "sharpe": 0.5388496031680655,
+     "sortino": 0.7466378224170521,
+     "max_drawdown": 0.6117762544493267,
+     "calmar": 0.2265024531304689,
+     "turnover_per_year": 67.33681821652205,
+     "avg_holding_hours": 86.01821788770836,
+     "cost_drag_per_year": 0.1292924927482816,
+     "exposure": 0.5090512734334155,
+     "total_return_gross": 3.9012053614049678,
+     "sharpe_gross": 0.9208905221820672,
+     "fee_per_year": 0.06733681821652206,
+     "funding_per_year": 0.02129952353030558,
+     "trades_per_year": 172.01803599566003,
+     "break_even_fee": 0.002895881644076568,
+     "sharpe_sd": 0.15392588586399064
+    },
+    "dev": {
+     "total_return": 1.2337820100638075,
+     "sharpe": 0.5992216392201486,
+     "sortino": 0.8295915614157175,
+     "max_drawdown": 0.6117762544493267,
+     "calmar": 0.27896796964234644,
+     "turnover_per_year": 76.07481657664803,
+     "avg_holding_hours": 85.11467169285257,
+     "cost_drag_per_year": 0.14791043350614533,
+     "exposure": 0.5743709691225014,
+     "total_return_gross": 3.7291672615577958,
+     "sharpe_gross": 1.0075910139036204,
+     "fee_per_year": 0.07607481657664804,
+     "funding_per_year": 0.025271932418925485,
+     "trades_per_year": 195.60284797746655,
+     "break_even_fee": 0.003022018933177849,
+     "sharpe_sd": 0.15805705900663455
+    }
+   },
+   "a_no_basis": {
+    "full": {
+     "total_return": 1.9872540843456508,
+     "sharpe": 0.6705059166022816,
+     "sortino": 0.9309988420878333,
+     "max_drawdown": 0.5016869808935017,
+     "calmar": 0.3705579336474087,
+     "turnover_per_year": 56.41316573384495,
+     "avg_holding_hours": 136.01428517512076,
+     "cost_drag_per_year": 0.10704803450124406,
+     "exposure": 0.5147804790001742,
+     "total_return_gross": 4.917426180592677,
+     "sharpe_gross": 0.9896110564647035,
+     "fee_per_year": 0.05641316573384494,
+     "funding_per_year": 0.01984722035828286,
+     "trades_per_year": 149.99100381111273,
+     "break_even_fee": 0.0040055011575548,
+     "sharpe_sd": 0.1814967918477411
+    },
+    "dev": {
+     "total_return": 2.8103464793068533,
+     "sharpe": 0.8945264931183524,
+     "sortino": 1.2422874118207152,
+     "max_drawdown": 0.5000680342362555,
+     "calmar": 0.5842601378095997,
+     "turnover_per_year": 62.834436067403935,
+     "avg_holding_hours": 133.53330536250772,
+     "cost_drag_per_year": 0.12119158060033375,
+     "exposure": 0.5691868838549051,
+     "total_return_gross": 6.175381185260985,
+     "sharpe_gross": 1.2352384213871506,
+     "fee_per_year": 0.06283443606740394,
+     "funding_per_year": 0.023628574732608414,
+     "trades_per_year": 163.84998565579113,
+     "break_even_fee": 0.005123613237353263,
+     "sharpe_sd": 0.147239113698662
+    }
+   },
+   "a_no_flow": {
+    "full": {
+     "total_return": 0.3708619704161143,
+     "sharpe": 0.2881748002013998,
+     "sortino": 0.4020708801519773,
+     "max_drawdown": 0.7266433591962435,
+     "calmar": 0.0613461321657986,
+     "turnover_per_year": 53.07041824008351,
+     "avg_holding_hours": 109.72034287617326,
+     "cost_drag_per_year": 0.10513633450385075,
+     "exposure": 0.47955411158413624,
+     "total_return_gross": 1.6774370324930226,
+     "sharpe_gross": 0.6114990016422063,
+     "fee_per_year": 0.05307041824008351,
+     "funding_per_year": 0.019925973423034503,
+     "trades_per_year": 150.31813795246742,
+     "break_even_fee": 0.0017005813706549343,
+     "sharpe_sd": 0.20070106762477616
+    },
+    "dev": {
+     "total_return": 0.5301110890417114,
+     "sharpe": 0.40092412961710583,
+     "sortino": 0.5593321344502399,
+     "max_drawdown": 0.6909661943874216,
+     "calmar": 0.12152091601468777,
+     "turnover_per_year": 60.10618284853854,
+     "avg_holding_hours": 107.7216288447529,
+     "cost_drag_per_year": 0.12039416102217348,
+     "exposure": 0.5372915480430357,
+     "total_return_gross": 1.868791266195662,
+     "sharpe_gross": 0.7480481095152465,
+     "fee_per_year": 0.06010618284853853,
+     "funding_per_year": 0.023256652556235356,
+     "trades_per_year": 171.47849672691234,
+     "break_even_fee": 0.0023246471314457952,
+     "sharpe_sd": 0.13718515363834266
+    }
+   },
+   "a_no_vol": {
+    "full": {
+     "total_return": 1.8299897802901868,
+     "sharpe": 0.6347842869891356,
+     "sortino": 0.8842076115337333,
+     "max_drawdown": 0.49611106312783404,
+     "calmar": 0.38079993549899843,
+     "turnover_per_year": 61.085204721186585,
+     "avg_holding_hours": 102.2895360773121,
+     "cost_drag_per_year": 0.11595366789631485,
+     "exposure": 0.49853268852540644,
+     "total_return_gross": 4.94800124257775,
+     "sharpe_gross": 0.9857215034047085,
+     "fee_per_year": 0.06108520472118659,
+     "funding_per_year": 0.01984532871500196,
+     "trades_per_year": 157.46056670537754,
+     "break_even_fee": 0.0035023237561509733,
+     "sharpe_sd": 0.2180802057067854
+    },
+    "dev": {
+     "total_return": 1.7555936633576816,
+     "sharpe": 0.7115984575505542,
+     "sortino": 0.9904679186878771,
+     "max_drawdown": 0.4625587227342705,
+     "calmar": 0.47357859251005024,
+     "turnover_per_year": 68.7684552529933,
+     "avg_holding_hours": 101.54488189173439,
+     "cost_drag_per_year": 0.13248438516945707,
+     "exposure": 0.5592373849583375,
+     "total_return_gross": 4.56578937277778,
+     "sharpe_gross": 1.087720000292799,
+     "fee_per_year": 0.06876845525299331,
+     "funding_per_year": 0.023844618818972724,
+     "trades_per_year": 179.04180684870775,
+     "break_even_fee": 0.003735857315893118,
+     "sharpe_sd": 0.16100810349752445
+    }
+   },
+   "a_no_levels": {
+    "full": {
+     "total_return": 2.2117238820297325,
+     "sharpe": 0.7187892064556552,
+     "sortino": 1.0038170715494892,
+     "max_drawdown": 0.49566957136435724,
+     "calmar": 0.4156039640220551,
+     "turnover_per_year": 64.11612006197245,
+     "avg_holding_hours": 113.38554139191604,
+     "cost_drag_per_year": 0.12075501156615316,
+     "exposure": 0.5413928100181741,
+     "total_return_gross": 5.738561140208044,
+     "sharpe_gross": 1.0692080564234223,
+     "fee_per_year": 0.06411612006197247,
+     "funding_per_year": 0.019931818630726683,
+     "trades_per_year": 165.31178609788947,
+     "break_even_fee": 0.003914527937095339,
+     "sharpe_sd": 0.11487541322247233
+    },
+    "dev": {
+     "total_return": 2.7257304906579556,
+     "sharpe": 0.8789703152933613,
+     "sortino": 1.227137169131401,
+     "max_drawdown": 0.49566957136435724,
+     "calmar": 0.5934026323860733,
+     "turnover_per_year": 70.30597945488178,
+     "avg_holding_hours": 114.72920055496007,
+     "cost_drag_per_year": 0.13507291121695245,
+     "exposure": 0.6017558158142512,
+     "total_return_gross": 6.451942601105144,
+     "sharpe_gross": 1.2472651350285242,
+     "fee_per_year": 0.07030597945488179,
+     "funding_per_year": 0.02363809612260385,
+     "trades_per_year": 180.9978353284824,
+     "break_even_fee": 0.004629814547291962,
+     "sharpe_sd": 0.07555145127586183
+    }
+   },
+   "o_no_trend": {
+    "full": {
+     "total_return": 3.207969601850701,
+     "sharpe": 0.8573100602817622,
+     "sortino": 1.202934881436977,
+     "max_drawdown": 0.42231894644815854,
+     "calmar": 0.6177302853036196,
+     "turnover_per_year": 58.14694169583034,
+     "avg_holding_hours": 86.70723707272127,
+     "cost_drag_per_year": 0.1099217088830398,
+     "exposure": 0.49795074314735976,
+     "total_return_gross": 7.349432689317719,
+     "sharpe_gross": 1.1994281950438939,
+     "fee_per_year": 0.058146941695830345,
+     "funding_per_year": 0.01567724984126043,
+     "trades_per_year": 148.62794488880164,
+     "break_even_fee": 0.00485602617388827,
+     "sharpe_sd": 0.19221187504752005
+    },
+    "dev": {
+     "total_return": 3.250064405911887,
+     "sharpe": 0.9476013034389957,
+     "sortino": 1.3284271364598832,
+     "max_drawdown": 0.4075259682703731,
+     "calmar": 0.7968871332009226,
+     "turnover_per_year": 65.55162872105781,
+     "avg_holding_hours": 85.48488915886993,
+     "cost_drag_per_year": 0.12604471940741943,
+     "exposure": 0.5557912521817444,
+     "total_return_gross": 7.2124086906436125,
+     "sharpe_gross": 1.3125455330097624,
+     "fee_per_year": 0.06555162872105781,
+     "funding_per_year": 0.019080933486330293,
+     "trades_per_year": 169.13126255118274,
+     "break_even_fee": 0.005101041423549446,
+     "sharpe_sd": 0.2240751648169064
+    }
+   },
+   "o_no_funding": {
+    "full": {
+     "total_return": 2.118624388237053,
+     "sharpe": 0.6750756729373989,
+     "sortino": 0.9387511068505563,
+     "max_drawdown": 0.562172781022311,
+     "calmar": 0.3812684661218834,
+     "turnover_per_year": 64.8265044413018,
+     "avg_holding_hours": 94.01429817684316,
+     "cost_drag_per_year": 0.12695323228967276,
+     "exposure": 0.513649264321458,
+     "total_return_gross": 5.906943692827835,
+     "sharpe_gross": 1.052549661786314,
+     "fee_per_year": 0.0648265044413018,
+     "funding_per_year": 0.02343236438011202,
+     "trades_per_year": 160.84095283270906,
+     "break_even_fee": 0.003640864934376757,
+     "sharpe_sd": 0.23120763733227834
+    },
+    "dev": {
+     "total_return": 2.312837271229296,
+     "sharpe": 0.7672357501260997,
+     "sortino": 1.0668615133070862,
+     "max_drawdown": 0.562172781022311,
+     "calmar": 0.5044520972091296,
+     "turnover_per_year": 73.0936485002631,
+     "avg_holding_hours": 93.527473595635,
+     "cost_drag_per_year": 0.14517338501333152,
+     "exposure": 0.5792554715731262,
+     "total_return_gross": 6.0680763184383535,
+     "sharpe_gross": 1.1703043288332335,
+     "fee_per_year": 0.07309364850026309,
+     "funding_per_year": 0.02778304905298481,
+     "trades_per_year": 181.78024672039226,
+     "break_even_fee": 0.003937206604446433,
+     "sharpe_sd": 0.29648879412941603
+    }
+   },
+   "o_no_basis": {
+    "full": {
+     "total_return": 1.9420141506047983,
+     "sharpe": 0.6959954579847442,
+     "sortino": 0.9699483814403126,
+     "max_drawdown": 0.42475940288322794,
+     "calmar": 0.4463040591584253,
+     "turnover_per_year": 55.80184372025491,
+     "avg_holding_hours": 108.17703619909503,
+     "cost_drag_per_year": 0.10171809297410504,
+     "exposure": 0.48584036646998774,
+     "total_return_gross": 4.539594657179908,
+     "sharpe_gross": 1.0084995354586768,
+     "fee_per_year": 0.05580184372025491,
+     "funding_per_year": 0.013502844012732287,
+     "trades_per_year": 136.1968475173245,
+     "break_even_fee": 0.004098410646565667,
+     "sharpe_sd": 0.08888626407256509
+    },
+    "dev": {
+     "total_return": 2.2954091191606216,
+     "sharpe": 0.8238913700438523,
+     "sortino": 1.1484435397815043,
+     "max_drawdown": 0.40245864929723457,
+     "calmar": 0.642368413102817,
+     "turnover_per_year": 62.79577109701796,
+     "avg_holding_hours": 108.13584402427257,
+     "cost_drag_per_year": 0.1158300158065011,
+     "exposure": 0.54984611491327,
+     "total_return_gross": 5.021931037750112,
+     "sharpe_gross": 1.1556284653290014,
+     "fee_per_year": 0.06279577109701798,
+     "funding_per_year": 0.01605046218794826,
+     "trades_per_year": 152.896226169053,
+     "break_even_fee": 0.00464392403508494,
+     "sharpe_sd": 0.1557534329667533
+    }
+   },
+   "o_no_flow": {
+    "full": {
+     "total_return": 0.37539617125161634,
+     "sharpe": 0.32380345866899135,
+     "sortino": 0.44922266587224535,
+     "max_drawdown": 0.6350429732176406,
+     "calmar": 0.08462493906167412,
+     "turnover_per_year": 62.940844014399225,
+     "avg_holding_hours": 91.96343371557175,
+     "cost_drag_per_year": 0.11667722930035755,
+     "exposure": 0.5103863245948167,
+     "total_return_gross": 1.8098852292619665,
+     "sharpe_gross": 0.6738352376585399,
+     "fee_per_year": 0.06294084401439921,
+     "funding_per_year": 0.017785169026930156,
+     "trades_per_year": 170.1097535044245,
+     "break_even_fee": 0.001830906101563945,
+     "sharpe_sd": 0.0032939181860555007
+    },
+    "dev": {
+     "total_return": 0.5955444521666259,
+     "sharpe": 0.42992280837797775,
+     "sortino": 0.5968312762710731,
+     "max_drawdown": 0.5959409046339013,
+     "calmar": 0.15915573068868294,
+     "turnover_per_year": 69.36661304180122,
+     "avg_holding_hours": 92.04306151293316,
+     "cost_drag_per_year": 0.13080304688253627,
+     "exposure": 0.5705712914066251,
+     "total_return_gross": 2.103740084531482,
+     "sharpe_gross": 0.7962426292632588,
+     "fee_per_year": 0.06936661304180124,
+     "funding_per_year": 0.020872959003318554,
+     "trades_per_year": 185.23589703466078,
+     "break_even_fee": 0.0023502278285288214,
+     "sharpe_sd": 0.08510666664358288
+    }
+   },
+   "o_no_vol": {
+    "full": {
+     "total_return": 0.7802411489069808,
+     "sharpe": 0.43581391909543515,
+     "sortino": 0.6066016095535095,
+     "max_drawdown": 0.5816644199521167,
+     "calmar": 0.18015409440386362,
+     "turnover_per_year": 57.94870005840536,
+     "avg_holding_hours": 101.50241417146464,
+     "cost_drag_per_year": 0.10798860724988713,
+     "exposure": 0.5038153210346802,
+     "total_return_gross": 2.481322495425829,
+     "sharpe_gross": 0.7758112720156688,
+     "fee_per_year": 0.05794870005840536,
+     "funding_per_year": 0.0160294251535795,
+     "trades_per_year": 149.82743674043545,
+     "break_even_fee": 0.0025422894602257474,
+     "sharpe_sd": 0.15444685155147705
+    },
+    "dev": {
+     "total_return": 0.8332908153833843,
+     "sharpe": 0.4765391201392797,
+     "sortino": 0.663391671827147,
+     "max_drawdown": 0.5750951732609116,
+     "calmar": 0.23586755546460117,
+     "turnover_per_year": 65.12917769259701,
+     "avg_holding_hours": 102.14900940780267,
+     "cost_drag_per_year": 0.12282144098254272,
+     "exposure": 0.566516689181897,
+     "total_return_gross": 2.4568145444257374,
+     "sharpe_gross": 0.8385777175808936,
+     "fee_per_year": 0.065129177692597,
+     "funding_per_year": 0.019032061980439625,
+     "trades_per_year": 169.45726729781185,
+     "break_even_fee": 0.002662836521056386,
+     "sharpe_sd": 0.2511412388138696
+    }
+   },
+   "o_no_levels": {
+    "full": {
+     "total_return": 0.23509442775280065,
+     "sharpe": 0.26340272994737984,
+     "sortino": 0.36370762464584744,
+     "max_drawdown": 0.6376957168558887,
+     "calmar": 0.057754698290925506,
+     "turnover_per_year": 76.33273524218077,
+     "avg_holding_hours": 84.97571962690266,
+     "cost_drag_per_year": 0.12937324051829305,
+     "exposure": 0.5086373764533073,
+     "total_return_gross": 1.7272240199806188,
+     "sharpe_gross": 0.6480577379701783,
+     "fee_per_year": 0.07633273524218077,
+     "funding_per_year": 0.012765866328944844,
+     "trades_per_year": 189.0835337029949,
+     "break_even_fee": 0.001438514732776568,
+     "sharpe_sd": 0.09041812175678404
+    },
+    "dev": {
+     "total_return": 0.3903790086920216,
+     "sharpe": 0.32917038003389926,
+     "sortino": 0.4548398929529194,
+     "max_drawdown": 0.6095688924107596,
+     "calmar": 0.12038807977680732,
+     "turnover_per_year": 85.12236742320289,
+     "avg_holding_hours": 86.38463973428384,
+     "cost_drag_per_year": 0.14576279731848882,
+     "exposure": 0.5703182276606117,
+     "total_return_gross": 1.9200939342975423,
+     "sharpe_gross": 0.7339544264499471,
+     "fee_per_year": 0.0851223674232029,
+     "funding_per_year": 0.015043155060322609,
+     "trades_per_year": 211.7074824609446,
+     "break_even_fee": 0.0016891957012429258,
+     "sharpe_sd": 0.19876844498609936
+    }
+   }
+  }
+ }
+}

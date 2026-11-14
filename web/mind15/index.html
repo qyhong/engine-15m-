@@ -1,0 +1,3379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Mind 15</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+/* The same visual world as the other /aitrading/ pages: a dark, glass-and-neon trading console. */
+:root {
+  color-scheme: dark;
+  --void: #04060c;
+  --deep: #070b16;
+  --glass: rgba(14, 22, 42, 0.62);
+  --glass-hi: rgba(22, 34, 64, 0.72);
+  --edge: rgba(120, 160, 255, 0.16);
+  --edge-hi: rgba(34, 211, 238, 0.45);
+  --ink: #e6ecff;
+  --soft: #9aa7c7;
+  --faint: #818eaf;
+  --grid: rgba(56, 189, 248, 0.055);
+  --cyan: #22d3ee;
+  --cyan-fill: rgba(34, 211, 238, 0.22);
+  --violet: #a78bfa;
+  --violet-line: rgba(167, 139, 250, 0.38);
+  --up: #34d399;
+  --down: #fb7185;
+  --amber: #fbbf24;
+  --danger: #f43f5e;
+  --display: "Chakra Petch", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
+}
+/* Mind 15 only: lighter inks for coloured text on the dark panels (7 to 1 or better) */
+:root {
+  --up-ink: #6ee7b7;
+  --down-ink: #fda4af;
+  --amber-ink: #fcd34d;
+  --cyan-ink: #67e8f9;
+  --violet-ink: #c4b5fd;
+}
+/* Chinese: the system CJK fonts after the page's own families (no font file is loaded for them); digits stay in the mono family */
+:root:lang(zh-Hant-TW) {
+  --display: "Chakra Petch", "Segoe UI", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", system-ui, -apple-system, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Menlo, Consolas, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", monospace;
+}
+:root:lang(zh-Hans-CN) {
+  --display: "Chakra Petch", "Segoe UI", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Menlo, Consolas, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background-color: var(--void);
+  background-image:
+    radial-gradient(1200px 600px at 85% -10%, rgba(34, 211, 238, 0.12), transparent 60%),
+    radial-gradient(900px 500px at -10% 20%, rgba(167, 139, 250, 0.12), transparent 60%),
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: auto, auto, 44px 44px, 44px 44px;
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 15px;
+  line-height: 1.45;
+  overflow-x: hidden;
+}
+.wrap { max-width: 1120px; margin: 0 auto; padding-block: 18px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+[hidden] { display: none !important; }
+.vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+button { font: inherit; cursor: pointer; }
+button:focus-visible, a:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+h2, h3, p { margin: 0; }
+
+/* glass panels */
+.panel {
+  position: relative;
+  background: var(--glass);
+  border: 1px solid var(--edge);
+  border-radius: 16px;
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.02) inset, 0 20px 50px -30px rgba(0, 0, 0, 0.9);
+  min-width: 0;
+}
+.panel.glow::before {
+  content: ""; position: absolute; inset: -1px; border-radius: 16px; pointer-events: none;
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.55), transparent 35%, transparent 65%, rgba(167, 139, 250, 0.55));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+  padding: 1px;
+}
+.panel.glow.violet::before { background: linear-gradient(135deg, rgba(167, 139, 250, 0.7), transparent 40%, transparent 60%, rgba(34, 211, 238, 0.6)); }
+
+/* top navigation, shared with the other pages */
+.nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px 8px 14px; }
+.nav .mark { font: 700 14px var(--mono); letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink); display: flex; align-items: center; gap: 10px; }
+.nav .mark i { width: 10px; height: 10px; border-radius: 3px; background: linear-gradient(135deg, #67e8f9, #a78bfa); box-shadow: 0 0 12px rgba(34,211,238,0.6); }
+.nav .links { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 999px; background: rgba(8,12,24,0.75); border: 1px solid var(--edge); }
+.nav a { font: 600 13px var(--mono); letter-spacing: 0.04em; color: var(--soft); text-decoration: none; padding: 7px 14px; border-radius: 999px; }
+.nav a:hover { color: var(--ink); }
+.nav a[aria-current="page"] { color: #031018; background: linear-gradient(135deg, #67e8f9, #22d3ee); box-shadow: 0 0 18px rgba(34,211,238,0.45); }
+.nav a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+/* the links look as they do on the other pages; the tap area alone is taller (44px) */
+.nav a { position: relative; }
+.nav a::after { content: ""; position: absolute; left: 0; right: 0; top: -6px; bottom: -6px; }
+/* language switch EN · 繁中 · 简中 at the right end of the nav, the same on every /aitrading/ page; 44px tap height */
+.nav .navr { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; min-width: 0; }
+.nav .langs { display: inline-flex; align-items: center; padding: 0 4px; border-radius: 999px; background: rgba(8,12,24,0.75); border: 1px solid var(--edge); }
+.nav .langs button { position: relative; z-index: 0; min-height: 44px; padding: 0 11px; border: 0; border-radius: 999px; background: transparent; color: var(--soft); font: 600 13px var(--mono); letter-spacing: 0.04em; }
+.nav .langs button:hover { color: var(--ink); }
+.nav .langs button[aria-pressed="true"] { color: #031018; }
+.nav .langs button[aria-pressed="true"]::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: 6px; bottom: 6px; border-radius: 999px; background: linear-gradient(135deg, #67e8f9, #22d3ee); box-shadow: 0 0 18px rgba(34,211,238,0.45); }
+.nav .langs .sep { color: var(--faint); font: 500 11px var(--mono); }
+
+/* banner */
+.banner { display: flex; gap: 10px; align-items: center; padding: 10px 14px; border-radius: 12px; font-size: 13px; font-weight: 600;
+  background: linear-gradient(90deg, rgba(244, 63, 94, 0.22), rgba(244, 63, 94, 0.08)); border: 1px solid rgba(244, 63, 94, 0.55); color: #ffd7de; }
+.banner::before { content: "!"; display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--danger); color: #fff; font-family: var(--mono); flex: none; }
+.banner[hidden] { display: none; }
+
+/* header */
+.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px; padding: 6px 2px 0; }
+.brand { display: grid; gap: 6px; min-width: 0; }
+.kicker { font: 600 11px var(--mono); letter-spacing: 0.22em; text-transform: uppercase; color: var(--cyan); display: flex; align-items: center; gap: 8px; }
+.pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.7); animation: pulse 2.4s infinite; flex: none; }
+.pulse.stale { background: var(--amber); animation: none; box-shadow: 0 0 10px rgba(251, 191, 36, 0.6); }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.6); } 70% { box-shadow: 0 0 0 10px rgba(34, 211, 238, 0); } 100% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0); } }
+h1 { font-size: clamp(32px, 5vw, 44px); line-height: 1.02; margin: 0; font-weight: 700; letter-spacing: -0.02em; text-wrap: balance;
+  background: linear-gradient(92deg, #ffffff 10%, #a5f3fc 55%, #c4b5fd 95%); -webkit-background-clip: text; background-clip: text; color: transparent; justify-self: start; }
+.lede { margin: 0; font-size: 14px; color: var(--soft); max-width: 60ch; }
+.side { display: grid; gap: 8px; min-width: 0; justify-items: start; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 11px var(--mono); color: var(--soft); padding: 5px 10px; border-radius: 999px; border: 1px solid var(--edge); background: rgba(10, 16, 32, 0.6); white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.chip b { color: var(--ink); font-weight: 600; }
+.fine { margin: 0; padding: 0 2px; font: 500 11px var(--mono); color: var(--soft); }
+
+/* segmented switch */
+.seg { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 999px; background: rgba(8, 12, 24, 0.75); border: 1px solid var(--edge); }
+.seg button { font: 600 13px var(--mono); letter-spacing: 0.04em; color: var(--soft); background: transparent; border: 0; min-width: 84px; min-height: 44px; padding: 7px 14px; border-radius: 999px; transition: color .15s, background .15s, box-shadow .15s; }
+.seg button:hover { color: var(--ink); }
+@media (max-width: 560px) { .seg { border-radius: 22px; } .seg button { min-width: 0; padding: 7px 12px; } }
+/* phone layout (owner, 11 Nov 2026: "a lot of cards, it took very long to scroll down") */
+.stack { display: contents; }
+[data-tab][hidden] { display: none !important; }
+.tabs { display: flex; gap: 6px; position: sticky; top: 0; z-index: 30; padding: 8px 2px; overflow-x: auto; scrollbar-width: none;
+        background: rgba(5, 8, 18, 0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs button { flex: 1 0 auto; min-height: 40px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--edge); color: var(--soft);
+               font: 600 13px var(--mono); background: rgba(8, 12, 24, 0.75); cursor: pointer; }
+.tabs button[aria-pressed="true"] { color: #031018; border-color: transparent; background: linear-gradient(135deg, #67e8f9, #22d3ee); }
+#chartbox, h2[id] { scroll-margin-top: 62px; }
+.mkts { display: grid; gap: 6px; }
+.mrow { display: grid; grid-template-columns: minmax(84px, 1.1fr) 70px minmax(90px, 1fr) minmax(80px, 1fr) 64px; align-items: center; gap: 8px;
+        width: 100%; text-align: left; padding: 9px 12px; border-radius: 12px; border: 1px solid var(--edge); background: rgba(8, 12, 24, 0.55);
+        color: var(--ink); font: 500 13px var(--mono); cursor: pointer; }
+.mrow:hover, .mrow.on { border-color: var(--cyan); }
+.mrow .nm b { display: block; font-weight: 700; } .mrow .nm small, .mrow small { color: var(--faint); font-size: 11px; }
+.mrow .r { text-align: right; }
+.mrow.total { cursor: default; background: transparent; border-style: dashed; }
+@media (max-width: 560px) { .mrow { grid-template-columns: minmax(70px, 1fr) 58px minmax(70px, 1fr) 54px; } .mrow .px { display: none; } }
+.bk { padding: 10px 12px; border-radius: 12px; border: 1px solid var(--edge); background: rgba(8, 12, 24, 0.45); display: grid; gap: 6px; }
+.bk h3 { margin: 0; font: 700 14px var(--sans, inherit); } .bk .meta { color: var(--faint); font: 500 11px var(--mono); }
+.bk .ln { font: 500 12px var(--mono); color: var(--soft); } .bk details summary { cursor: pointer; color: var(--soft); font: 500 12px var(--mono); }
+.bkgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+/* loop books (strategy-loop rules that did NOT pass): a badge and one state block per coin */
+.bk .badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag.np { background: transparent; color: var(--amber-ink); border: 1px solid rgba(251, 191, 36, 0.55); white-space: normal; }
+.bk .coinrow { display: grid; gap: 2px; padding-top: 6px; border-top: 1px solid rgba(120, 160, 255, 0.1); font: 500 12px var(--mono); color: var(--soft); overflow-wrap: anywhere; }
+.bk .coinrow b { color: var(--ink); font-weight: 700; }
+.bk .coinrow small { color: var(--faint); font-size: 11px; }
+.morecards { grid-column: 1 / -1; display: block; width: 100%; min-height: 44px; margin-top: 2px; font: 600 13px var(--mono); color: var(--ink); background: var(--glass); border: 1px dashed var(--edge); border-radius: 14px; cursor: pointer; }
+.card details.data > summary { cursor: pointer; font: 500 12px var(--mono); color: var(--soft); list-style: none; padding: 6px 0 2px; }
+.card details.data > summary::-webkit-details-marker { display: none; }
+.card details.data > summary::before { content: "\25B8  "; }
+.card details.data[open] > summary::before { content: "\25BE  "; }
+.seg.mini { margin-top: 6px; } .seg.mini button { min-width: 0; min-height: 34px; padding: 4px 12px; font-size: 12px; }
+.seg button[aria-pressed="true"] { color: #031018; background: linear-gradient(135deg, #67e8f9, #22d3ee); box-shadow: 0 0 18px rgba(34, 211, 238, 0.45); }
+
+/* shared bits */
+.up { color: var(--up-ink); } .down { color: var(--down-ink); } .flat { color: var(--soft); } .warn { color: var(--amber-ink); }
+.head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; }
+.head h2 { font-size: 18px; font-weight: 600; letter-spacing: 0.01em; }
+.head.big h2 { font-size: 20px; }
+.head .sub, .sub { font: 500 11px var(--mono); color: var(--faint); }
+.box { padding: 16px 18px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; align-content: start; }
+.cap { font: 600 10px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
+.rule { border-top: 1px solid var(--edge); padding-top: 12px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.note { font-size: 12.5px; color: var(--soft); }
+.empty { font-size: 13px; color: var(--soft); padding: 10px 12px; border-radius: 12px; border: 1px dashed rgba(120, 160, 255, 0.28); background: rgba(8, 12, 24, 0.4); }
+.tag { font: 600 10px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; white-space: nowrap; color: #031018; background: var(--soft); }
+.tag.long { background: var(--up); } .tag.short { background: var(--down); } .tag.wait { background: var(--amber); }
+.tag.line { background: transparent; color: var(--soft); border: 1px solid rgba(120, 160, 255, 0.3); }
+.tag.line.on { color: var(--cyan-ink); border-color: rgba(34, 211, 238, 0.5); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.tiles.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.tiles.five { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+.tile { padding: 10px 12px; border-radius: 12px; background: var(--glass-hi); border: 1px solid var(--edge); min-width: 0; }
+.tile .k { font: 600 10px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); }
+.tile .v { font: 600 16px var(--mono); font-variant-numeric: tabular-nums; margin-top: 2px; overflow-wrap: anywhere; }
+.tile .x { font-size: 11.5px; color: var(--soft); margin-top: 2px; }
+.tile .meter { height: 4px; border-radius: 2px; margin-top: 6px; background: rgba(120, 160, 255, 0.14); overflow: hidden; }
+.tile .meter i { display: block; height: 100%; border-radius: 2px; }
+.cols { display: flex; flex-wrap: wrap; gap: 14px; align-items: stretch; }
+.cols > * { min-width: 0; }
+.pair { display: grid; grid-template-columns: minmax(0, 310px) minmax(0, 1fr); gap: 14px; align-items: stretch; }
+.scroll { overflow-x: auto; border-radius: 12px; border: 1px solid rgba(120, 160, 255, 0.1); background: rgba(3, 6, 14, 0.45); scrollbar-width: thin; }
+table.t { width: 100%; border-collapse: collapse; font: 500 12.5px var(--mono); font-variant-numeric: tabular-nums; }
+.t th { font: 600 10px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); text-align: left; vertical-align: bottom; padding: 9px 10px; border-bottom: 1px solid var(--edge); white-space: nowrap; }
+.t td { padding: 8px 10px; text-align: left; vertical-align: top; border-bottom: 1px solid rgba(120, 160, 255, 0.08); white-space: nowrap; }
+.t tr:last-child td { border-bottom: 0; }
+.t td.wrap2 { white-space: normal; min-width: 150px; color: var(--soft); font-family: var(--display); font-size: 12.5px; }
+.t small { display: block; font-size: 11px; color: var(--soft); }
+
+/* hero: chart and decision */
+.hero { display: flex; flex-wrap: wrap; gap: 14px; align-items: stretch; }
+.chartpanel { flex: 2.2 1 560px; padding: 16px 18px 14px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; align-content: start; }
+.chartbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; }
+.chartbar .pair { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.chartbar .pair b { font-size: 20px; font-weight: 600; }
+.chartbar .pair span { font: 600 22px var(--mono); font-variant-numeric: tabular-nums; }
+.chartbar .pair small { font: 600 12px var(--mono); }
+.chartbar .sub { letter-spacing: 0.14em; text-transform: uppercase; }
+.chartread { font: 500 11px var(--mono); color: var(--soft); min-height: 17px; font-variant-numeric: tabular-nums; }
+.chartbox { position: relative; width: 100%; height: 360px; border-radius: 12px; overflow: hidden;
+  background: radial-gradient(800px 300px at 80% 0%, rgba(34, 211, 238, 0.06), transparent 70%), rgba(3, 6, 14, 0.55); border: 1px solid rgba(120, 160, 255, 0.08); }
+.chartbox canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; }
+.state { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 24px; color: var(--soft); font-size: 15px; background: rgba(4, 6, 12, 0.6); }
+.legend { display: flex; flex-wrap: wrap; gap: 5px 14px; font: 500 11px var(--mono); color: var(--soft); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { display: inline-block; width: 14px; height: 8px; border-radius: 2px; flex: none; }
+.sw.dash { height: 0; border-top: 2px dashed; border-radius: 0; background: none; }
+.sw.solid { height: 0; border-top: 2px solid; border-radius: 0; background: none; }
+
+.decision { flex: 1 1 320px; padding: 18px 18px 16px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.decision.long { border-color: rgba(52, 211, 153, 0.45); box-shadow: 0 0 40px -18px rgba(52, 211, 153, 0.55), 0 20px 50px -30px rgba(0, 0, 0, 0.9); }
+.decision.short { border-color: rgba(251, 113, 133, 0.45); box-shadow: 0 0 40px -18px rgba(251, 113, 133, 0.55), 0 20px 50px -30px rgba(0, 0, 0, 0.9); }
+.decision.wait { border-color: rgba(251, 191, 36, 0.45); box-shadow: 0 0 40px -18px rgba(251, 191, 36, 0.5), 0 20px 50px -30px rgba(0, 0, 0, 0.9); }
+.decision .row { align-self: stretch; display: flex; justify-content: space-between; gap: 10px; font: 500 11px var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--faint); }
+.gauge { position: relative; width: 240px; max-width: 100%; height: 120px; overflow: hidden; flex: none; }
+.gauge .arc { position: absolute; left: 0; top: 0; width: 240px; height: 240px; border-radius: 50%; }
+.gauge .hole { position: absolute; left: 20px; top: 20px; width: 200px; height: 200px; border-radius: 50%; background: #0a1020; }
+.gauge .word { position: absolute; left: 0; right: 0; bottom: 0; font-size: 44px; line-height: 1; font-weight: 700; letter-spacing: 0.04em; }
+.decision.long .word { color: var(--up); text-shadow: 0 0 24px rgba(52, 211, 153, 0.55); }
+.decision.short .word { color: var(--down); text-shadow: 0 0 24px rgba(251, 113, 133, 0.55); }
+.decision.wait .word { color: var(--amber); text-shadow: 0 0 24px rgba(251, 191, 36, 0.5); }
+.odds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-self: stretch; max-width: 280px; width: 100%; margin: -4px auto 0; font: 500 12px var(--mono); font-variant-numeric: tabular-nums; }
+.odds span:first-child { text-align: left; color: var(--down-ink); } .odds span:nth-child(2) { color: var(--soft); } .odds span:last-child { text-align: right; color: var(--up-ink); }
+.edgeline { font: 600 13px var(--mono); font-variant-numeric: tabular-nums; }
+.sentence { font-size: 15px; line-height: 1.4; overflow-wrap: anywhere; }
+.mini { align-self: stretch; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.mini .tile { padding: 8px 6px; }
+.mini .tile .v { font-size: 15px; }
+.mini .tile .v.word { font-size: 12px; line-height: 1.9; }
+.trendbox { align-self: stretch; display: grid; gap: 6px; text-align: left; }
+.trend { display: grid; grid-template-columns: repeat(auto-fit, minmax(48px, 1fr)); gap: 6px; }
+.trend div { display: grid; gap: 1px; padding: 6px 4px; border-radius: 10px; background: rgba(8, 12, 24, 0.5); border: 1px solid var(--edge); text-align: center; min-width: 0; }
+.trend span { font: 600 10px var(--mono); letter-spacing: 0.08em; color: var(--faint); }
+.trend b { font: 600 11px var(--mono); white-space: nowrap; }
+.idle { align-self: stretch; margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 10px; border-top: 1px solid var(--edge); font: 500 11px var(--mono); color: var(--soft); text-align: left; }
+.dots { display: flex; gap: 5px; flex: none; }
+.dots i { width: 18px; height: 6px; border-radius: 3px; background: rgba(120, 160, 255, 0.25); }
+.dots i.on { background: var(--amber); }
+
+/* execution */
+.tradeline { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; font-size: 15px; }
+
+/* decision cards */
+.cardgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(232px, 1fr)); gap: 10px; }
+.card { min-width: 0; padding: 12px 14px; border-radius: 14px; background: var(--glass); border: 1px solid var(--edge); backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: 0 20px 50px -34px rgba(0, 0, 0, 0.9); display: flex; flex-direction: column; gap: 8px; }
+.card.long { box-shadow: inset 0 2px 0 rgba(52, 211, 153, 0.55), 0 20px 50px -34px rgba(0, 0, 0, 0.9); }
+.card.short { box-shadow: inset 0 2px 0 rgba(251, 113, 133, 0.55), 0 20px 50px -34px rgba(0, 0, 0, 0.9); }
+.card.quiet { background: rgba(10, 16, 32, 0.5); }
+.card .toprow { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 8px; font: 600 10px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); }
+.card h3 { font-size: 15px; font-weight: 600; line-height: 1.2; }
+.card .lean { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-family: var(--mono); }
+.card .lean span { font-size: 11px; font-weight: 500; } .card .lean b { font-size: 18px; line-height: 1; font-weight: 600; font-variant-numeric: tabular-nums; }
+.diverge { position: relative; height: 6px; border-radius: 3px; background: rgba(120, 160, 255, 0.14); }
+.diverge::before { content: ""; position: absolute; top: -2px; left: 50%; width: 1px; height: 10px; background: var(--faint); }
+.diverge i { position: absolute; top: 0; height: 6px; border-radius: 3px; }
+.diverge i.long { background: var(--up); box-shadow: 0 0 8px var(--up); } .diverge i.short { background: var(--down); box-shadow: 0 0 8px var(--down); }
+.facts { margin: 0; flex: 1 1 auto; display: flex; flex-direction: column; gap: 6px; }
+.facts div { display: flex; flex-direction: column; min-width: 0; }
+.facts dt { font: 500 10px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); }
+.facts dd { margin: 0; font: 500 13px var(--mono); color: var(--ink); overflow-wrap: anywhere; }
+.facts dd.prose { font: 400 13px/1.4 var(--display); }
+.rankrow { font: 600 10px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); padding-top: 6px; border-top: 1px solid rgba(120, 160, 255, 0.1); }
+.trustrow { display: flex; align-items: center; gap: 8px; font: 600 10px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+.trustrow .bar { flex: 1 1 auto; height: 3px; border-radius: 2px; background: rgba(120, 160, 255, 0.14); overflow: hidden; }
+.trustrow .bar i { display: block; height: 100%; border-radius: 2px; background: var(--violet); }
+.trustrow b { color: var(--violet-ink); font-weight: 600; }
+
+/* journal */
+.pulls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.pullbox { padding: 10px 12px; border-radius: 12px; background: var(--glass-hi); border: 1px solid var(--edge); min-width: 0; display: grid; gap: 6px; align-content: start; }
+.pullbox ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 13px; }
+.pullbox li { display: flex; justify-content: space-between; gap: 8px; }
+.pullbox li b { font: 500 12px var(--mono); font-variant-numeric: tabular-nums; flex: none; }
+.voices { display: grid; gap: 0; border-radius: 12px; border: 1px solid var(--edge); background: rgba(8, 12, 24, 0.4); padding: 2px 12px; }
+.vrow { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 4px 14px; align-items: baseline; padding: 7px 0; border-bottom: 1px solid rgba(120, 160, 255, 0.08); font-size: 13px; }
+.vrow:last-child { border-bottom: 0; }
+.vrow small { font: 500 11px var(--mono); color: var(--soft); white-space: nowrap; }
+.vrow b { font: 500 12px var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; min-width: 92px; text-align: right; }
+.timeline { display: grid; grid-template-columns: minmax(0, 1fr); }
+.jrow { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 0 12px; }
+.jrow .rail { display: flex; flex-direction: column; align-items: center; }
+.jrow .rail i { width: 10px; height: 10px; margin-top: 5px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 10px var(--amber); flex: none; }
+.jrow .rail i.long { background: var(--up); box-shadow: 0 0 10px var(--up); } .jrow .rail i.short { background: var(--down); box-shadow: 0 0 10px var(--down); }
+.jrow .rail::after { content: ""; flex: 1 1 auto; width: 1px; margin-top: 4px; background: rgba(120, 160, 255, 0.25); }
+.jrow:last-child .rail::after { background: linear-gradient(rgba(120, 160, 255, 0.25), transparent); }
+.jrow .body { display: grid; gap: 4px; padding-bottom: 14px; min-width: 0; }
+.jrow .when { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.jrow .when time { font: 500 12px var(--mono); color: var(--cyan-ink); }
+.jrow .say { font-size: 14.5px; overflow-wrap: anywhere; }
+.jrow .more { font: 500 12px var(--mono); color: var(--soft); font-variant-numeric: tabular-nums; }
+.linkbtn { justify-self: start; font: 600 12px var(--mono); color: var(--cyan-ink); background: transparent; border: 1px solid var(--edge-hi); border-radius: 999px; min-height: 44px; padding: 6px 16px; }
+.linkbtn:hover { color: #a5f3fc; }
+
+/* learning */
+.rings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.ringbox { display: grid; justify-items: center; gap: 6px; padding: 12px 8px; border-radius: 12px; background: var(--glass-hi); border: 1px solid var(--edge); text-align: center; min-width: 0; }
+.ring { position: relative; width: 104px; height: 104px; border-radius: 50%; }
+.ring .in { position: absolute; inset: 12px; border-radius: 50%; background: #0a1020; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.ring .in b { font: 600 19px var(--mono); color: var(--amber); font-variant-numeric: tabular-nums; }
+.ring .in span { font: 500 9px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); }
+.ring .coin { position: absolute; left: 50%; bottom: -3px; width: 2px; height: 16px; margin-left: -1px; background: var(--ink); border-radius: 1px; }
+.ringbox .x { font-size: 12px; color: var(--soft); }
+.ringbox .x b { color: var(--ink); font: 600 12px var(--mono); }
+.trustlist { display: grid; gap: 8px; }
+.trow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 10px; align-items: center; font-size: 13px; }
+.trow b { font: 500 12px var(--mono); color: var(--violet-ink); text-align: right; font-variant-numeric: tabular-nums; }
+.trow .bar { grid-column: 1 / -1; height: 5px; border-radius: 3px; background: rgba(120, 160, 255, 0.14); overflow: hidden; }
+.trow .bar i { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, #a78bfa, #67e8f9); }
+
+/* liquidity */
+.liq { display: grid; gap: 2px; }
+.lrow { display: grid; grid-template-columns: 50px minmax(0, 1fr) 64px; gap: 8px; align-items: center; font: 500 11px var(--mono); font-variant-numeric: tabular-nums; }
+.lrow .b { color: var(--faint); } .lrow .s { text-align: right; color: var(--soft); }
+.lrow .bar { display: block; height: 11px; border-radius: 2px; }
+.lrow.ask .bar { background: rgba(251, 113, 133, 0.07); } .lrow.bid .bar { background: rgba(52, 211, 153, 0.07); }
+.lrow .bar i { display: block; height: 11px; border-radius: 2px; }
+.lrow.ask .bar i { background: var(--down); } .lrow.bid .bar i { background: var(--up); }
+.midrow { display: flex; align-items: center; gap: 10px; padding: 5px 0; font: 500 12px var(--mono); color: var(--cyan-ink); }
+.midrow::before, .midrow::after { content: ""; flex: 1 1 auto; height: 1px; background: rgba(34, 211, 238, 0.45); }
+.sidecap { font: 500 10px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* the engine asks you */
+.askgrid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.askcol { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; min-width: 0; }
+.qbox { display: flex; gap: 12px; padding: 14px 16px; border-radius: 14px; background: rgba(22, 34, 64, 0.6); border: 1px solid var(--edge); }
+.qbox > i { flex: none; width: 26px; height: 26px; border-radius: 8px; background: linear-gradient(135deg, #67e8f9, #a78bfa); box-shadow: 0 0 14px rgba(167, 139, 250, 0.6); }
+.qbox div { display: grid; gap: 4px; min-width: 0; }
+.qbox .at { font: 500 11px var(--mono); color: var(--cyan-ink); }
+.qbox p { font-size: 15px; line-height: 1.45; overflow-wrap: anywhere; }
+form { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin: 0; }
+.choice3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.choice3 button, .sure button { min-height: 44px; border-radius: 12px; border: 1px solid rgba(120, 160, 255, 0.3); background: transparent; color: #cfd8f5; font-weight: 700; letter-spacing: 0.04em; }
+.choice3 button[aria-pressed="true"] { color: #fff; }
+.choice3 button[data-side="long"][aria-pressed="true"] { border-color: rgba(52, 211, 153, 0.9); background: rgba(52, 211, 153, 0.22); }
+.choice3 button[data-side="short"][aria-pressed="true"] { border-color: rgba(251, 113, 133, 0.9); background: rgba(251, 113, 133, 0.22); }
+.choice3 button[data-side="none"][aria-pressed="true"] { border-color: rgba(154, 167, 199, 0.9); background: rgba(154, 167, 199, 0.22); }
+.sure { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.sure .lab { font: 500 11px var(--mono); color: var(--faint); margin-right: 4px; }
+.sure button { padding: 0 16px; border-radius: 999px; font-size: 13px; font-weight: 600; letter-spacing: 0; }
+.sure button[aria-pressed="true"] { color: #fff; border-color: rgba(167, 139, 250, 0.9); background: rgba(167, 139, 250, 0.22); }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field label { font: 500 11px var(--mono); color: var(--faint); }
+.field input { min-height: 44px; min-width: 0; width: 100%; padding: 0 14px; border-radius: 12px; border: 1px solid rgba(120, 160, 255, 0.3); background: rgba(4, 6, 12, 0.8); color: var(--ink); font: inherit; font-size: 14px; }
+.field input::placeholder { color: var(--faint); }
+.sendrow { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto; gap: 8px; align-items: end; }
+.send { min-height: 44px; padding: 0 20px; border: 0; border-radius: 12px; background: linear-gradient(135deg, #c4b5fd, #a78bfa); color: #120a2e; font-weight: 700; box-shadow: 0 0 16px rgba(167, 139, 250, 0.45); }
+.send:disabled { background: rgba(120, 160, 255, 0.16); color: var(--soft); box-shadow: none; cursor: not-allowed; }
+.formmsg { font-size: 13px; padding: 9px 12px; border-radius: 12px; border: 1px solid var(--edge); background: rgba(8, 12, 24, 0.5); color: var(--ink); overflow-wrap: anywhere; }
+.formmsg.ok { border-color: rgba(52, 211, 153, 0.5); } .formmsg.bad { border-color: rgba(251, 113, 133, 0.55); } .formmsg.hold { border-color: rgba(251, 191, 36, 0.45); }
+.audit { display: grid; gap: 8px; }
+.arow { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 10px; font-size: 12.5px; }
+.arow .t1 { font: 500 11px var(--mono); color: var(--cyan-ink); } .arow.ans .t1 { color: var(--violet-ink); }
+.arow .t1 small { display: block; color: var(--faint); font-size: 10px; }
+.arow .t2 { color: #cfd8f5; overflow-wrap: anywhere; }
+.arow .t2 q { quotes: "\201C" "\201D"; }
+
+footer { font: 500 11px var(--mono); color: var(--faint); padding: 2px 2px 0; display: grid; gap: 4px; }
+footer p { margin: 0; max-width: 100ch; }
+
+@media (max-width: 900px) {
+  .askgrid { grid-template-columns: minmax(0, 1fr); }
+  .pair { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .box { padding: 14px 14px; }
+  .chartpanel { padding: 14px 12px 12px; }
+  .chartbox { height: 300px; }
+  .chartread { min-height: 34px; }
+  .tiles, .tiles.five, .tiles.three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tiles.three > :last-child { grid-column: 1 / -1; }
+  .pulls { grid-template-columns: minmax(0, 1fr); }
+  .vrow { grid-template-columns: minmax(0, 1fr) auto; }
+  .vrow span { grid-column: 1 / -1; }
+  .vrow b { min-width: 0; }
+  .tile .v { font-size: 14px; }
+  .mini .tile .v { font-size: 14px; }
+  .sendrow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sendrow .send { grid-column: 1 / -1; }
+  .arow { grid-template-columns: 78px minmax(0, 1fr); }
+  .cardgrid { grid-template-columns: minmax(0, 1fr); }
+  .chartbar .pair span { font-size: 19px; }
+}
+@media (prefers-reduced-motion: reduce) { .pulse { animation: none; } .seg button { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="panel nav" aria-label="Pages" data-i18n-aria="nav_aria">
+    <div class="mark"><i></i><span data-i18n="nav_mark">AI Trading</span></div>
+    <div class="navr">
+      <div class="links"><a href="../" data-i18n="nav_forecast">Forecast</a><a href="../books/" data-i18n="nav_books">Engine &amp; books</a><a href="../congress/" data-i18n="nav_congress">Congress trades</a><a href="./" aria-current="page">Mind 15</a></div>
+      <div class="langs" id="langs" role="group" aria-label="Language" data-i18n-aria="langs_aria"><button type="button" data-lang="en" lang="en" aria-pressed="true">EN</button><span class="sep" aria-hidden="true">&middot;</span><button type="button" data-lang="zh-TW" lang="zh-Hant-TW" aria-pressed="false">繁中</button><span class="sep" aria-hidden="true">&middot;</span><button type="button" data-lang="zh-CN" lang="zh-Hans-CN" aria-pressed="false">简中</button></div>
+    </div>
+  </nav>
+  <div class="banner" id="banner" role="status" hidden></div>
+
+  <header class="top">
+    <div class="brand">
+      <div class="kicker"><i class="pulse" id="pulse"></i><span id="kickerText">Thinking every 15 minutes</span></div>
+      <h1>Mind 15</h1>
+      <p class="lede" id="lede" data-i18n="lede_init">Reads more than twenty sources, weighs the odds, takes a side, writes down why, then grades itself.</p>
+    </div>
+    <div class="side">
+      <div class="seg" role="group" aria-label="Market" data-i18n-aria="market_aria" id="coinSeg">
+        <button type="button" data-coin="BTCUSDT" aria-pressed="true">BTC</button>
+        <button type="button" data-coin="ETHUSDT" aria-pressed="false">ETH</button>
+      </div>
+      <div class="meta">
+        <span class="chip" id="chipTime">Last decision <b>&ndash;</b></span>
+        <span class="chip" data-i18n="chip_paper">Paper only. Not advice.</span>
+      </div>
+      <p class="fine" id="ageLine">Data age: loading&hellip;</p>
+    </div>
+  </header>
+
+  <main id="app" style="display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px;">
+    <nav class="tabs" aria-label="Page sections" data-i18n-aria="tabs_aria" id="tabs">
+      <button type="button" data-tab="overview" aria-pressed="true" data-i18n="tab_overview">Overview</button>
+      <button type="button" data-tab="cards" aria-pressed="false" data-i18n="tab_cards">Cards</button>
+      <button type="button" data-tab="books" aria-pressed="false" data-i18n="tab_books">Books</button>
+      <button type="button" data-tab="journal" aria-pressed="false" data-i18n="tab_journal">Journal</button>
+    </nav>
+    <p class="fine" id="engineNote" data-i18n="engine_note" hidden></p>
+    <section class="panel box" data-tab="overview" aria-labelledby="mH">
+      <div class="head"><h2 id="mH" data-i18n="m_h">All markets</h2><span class="sub" id="mSub" data-i18n="m_sub_init">Tap a market to open it</span></div>
+      <div id="mBody" style="display: contents"><p class="empty">Loading&hellip;</p></div>
+    </section>
+    <section class="hero" data-tab="overview" aria-label="Chart and decision" data-i18n-aria="hero_aria">
+      <div class="panel glow chartpanel">
+        <div class="chartbar">
+          <div class="pair"><b id="pairName">BTC/USDT</b><span id="pairPrice">&ndash;</span><small id="pairMove"></small></div>
+          <span class="sub" data-i18n="chart_sub">15m candles &middot; last 24h</span>
+        </div>
+        <div class="chartread" id="chartRead" aria-hidden="true">&nbsp;</div>
+        <div class="chartbox" id="chartbox">
+          <canvas id="chart" role="img" aria-label="Price chart"></canvas>
+          <div class="state" id="chartState">Loading&hellip;</div>
+        </div>
+        <div class="legend" aria-hidden="true">
+          <span><i class="sw dash" style="border-color: var(--down)"></i><span data-i18n="lg_res">Resistance</span></span>
+          <span><i class="sw dash" style="border-color: var(--up)"></i><span data-i18n="lg_sup">Support</span></span>
+          <span><i class="sw solid" style="border-color: var(--cyan)"></i><span data-i18n="lg_entry">Trade entry</span></span>
+          <span><i class="sw dash" style="border-color: var(--amber)"></i><span data-i18n="lg_stop">Stop</span></span>
+          <span><i class="sw dash" style="border-color: #a78bfa"></i><span data-i18n="lg_targets">Targets</span></span>
+          <span style="flex-basis: 100%; height: 0"></span>
+          <span data-i18n="lg_side">Engine's side under each candle:</span>
+          <span><i class="sw" style="background: var(--up)"></i><span data-i18n="long">long</span></span>
+          <span><i class="sw" style="background: var(--down)"></i><span data-i18n="short">short</span></span>
+          <span><i class="sw" style="background: var(--faint)"></i><span data-i18n="flat">flat</span></span>
+          <span data-i18n="lg_empty">empty = no live record</span>
+        </div>
+        <p class="vh" id="stanceText"></p>
+      </div>
+
+      <div class="panel decision wait" id="decision">
+        <div class="row"><span data-i18n="dec_h">Decision</span><span id="decTime">&ndash;</span></div>
+        <div id="decBody" style="display: contents"><p class="empty" style="align-self: stretch">Loading&hellip;</p></div>
+      </div>
+    </section>
+
+    <section class="panel box" data-tab="overview" aria-labelledby="exH">
+      <div class="head big"><h2 id="exH">Execution</h2><span class="sub" id="exSub"></span></div>
+      <div id="exBody" style="display: contents"><p class="empty">Loading&hellip;</p></div>
+    </section>
+
+    <section data-tab="cards" aria-labelledby="cardsH" style="display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px;">
+      <div class="head big" style="padding: 6px 2px 0"><h2 id="cardsH">Decision cards</h2><span class="sub" id="cardsSub" data-i18n="cards_sub_init">Each card: the data it reads, which way it leans and how much the engine trusts it</span></div>
+      <div class="cardgrid" id="cards"><p class="empty">Loading&hellip;</p></div>
+    </section>
+
+    <section class="panel box" data-tab="journal" aria-labelledby="kH">
+      <div class="head"><h2 id="kH" data-i18n="k_h">Which clock is right</h2><span class="sub" id="kSub" data-i18n="k_sub">How often each horizon called the direction right, by market</span></div>
+      <div id="kBody" style="display: contents"><p class="empty">Loading&hellip;</p></div>
+    </section>
+    <div class="cols" data-tab="journal">
+      <section class="panel box" style="flex: 1.4 1 480px" aria-labelledby="jH">
+        <div class="head"><h2 id="jH" data-i18n="j_h">Thought journal</h2><span class="sub" id="jSub">A new entry every 15 minutes</span></div>
+        <div id="jBody" style="display: contents"><p class="empty">Loading&hellip;</p></div>
+      </section>
+      <section class="panel box" style="flex: 1 1 320px" aria-labelledby="lH">
+        <div class="head"><h2 id="lH" data-i18n="l_h">Learning</h2><span class="sub" data-i18n="l_sub">Both coins &middot; graded calls</span></div>
+        <div id="lBody" style="display: contents"><p class="empty">Loading&hellip;</p></div>
+      </section>
+    </div>
+
+    <div class="stack">
+      <section class="panel box" data-tab="cards" aria-labelledby="qH">
+        <div class="head"><h2 id="qH" data-i18n="q_h">Liquidity map</h2><span class="sub" id="qSub"></span>
+          <div class="seg mini" role="group" aria-label="Liquidity map range" data-i18n-aria="q_view_aria" id="qView">
+            <button type="button" data-v="near" aria-pressed="true" data-i18n="q_near">Close-up &plusmn;2%</button>
+            <button type="button" data-v="eagle" aria-pressed="false" data-i18n="q_eagle">Eagle view &plusmn;10%</button>
+          </div></div>
+        <div id="qBody" style="display: contents"><p class="empty">Loading&hellip;</p></div>
+      </section>
+      <section class="panel box" data-tab="books" aria-labelledby="bH">
+        <div class="head"><h2 id="bH" data-i18n="b_h">Strategy and shadow books</h2><span class="sub" id="bSub" data-i18n="b_sub">Rules traded on paper beside the main books, graded on what happens next</span></div>
+        <div id="bBody" style="display: contents"><p class="empty">Loading&hellip;</p></div>
+      </section>
+      <section class="panel box" data-tab="books" aria-labelledby="sH">
+        <div class="head"><h2 id="sH" data-i18n="s_h">Shadow book</h2><span class="sub" data-i18n="s_sub">A written rule, traded on paper beside the main book</span></div>
+        <div id="sBody" style="display: contents"><p class="empty">Loading&hellip;</p></div>
+      </section>
+    </div>
+
+    <section class="panel glow violet box" data-tab="journal" aria-labelledby="aH">
+      <div class="head"><h2 id="aH" data-i18n="a_h">The engine asks you</h2><span class="sub" data-i18n="a_sub">Your answer is a data source, graded like every card</span></div>
+      <div class="askgrid">
+        <div class="askcol">
+          <div class="qbox"><i aria-hidden="true"></i><div><span class="at" id="askAt">&nbsp;</span><p id="askQ">Loading&hellip;</p></div></div>
+          <p class="note" id="standing" hidden></p>
+          <form id="ansForm" novalidate autocomplete="off" aria-label="Answer the engine" data-i18n-aria="form_aria">
+            <div class="choice3" role="group" aria-label="Your side" data-i18n-aria="side_aria">
+              <button type="button" data-side="long" aria-pressed="false" data-i18n="f_long">Long</button>
+              <button type="button" data-side="short" aria-pressed="false" data-i18n="f_short">Short</button>
+              <button type="button" data-side="none" aria-pressed="false" data-i18n="f_none">No view</button>
+            </div>
+            <div class="sure" role="group" aria-label="How sure you are" data-i18n-aria="sure_aria">
+              <span class="lab" data-i18n="sure_lab">How sure</span>
+              <button type="button" data-sure="30" aria-pressed="false" data-i18n="sure_b30">A little</button>
+              <button type="button" data-sure="60" aria-pressed="true" data-i18n="sure_b60">Fairly</button>
+              <button type="button" data-sure="90" aria-pressed="false" data-i18n="sure_b90">Very</button>
+            </div>
+            <div class="field"><label for="ansNote" data-i18n="note_lab">Why (optional, up to 500 characters)</label><input id="ansNote" type="text" maxlength="500" placeholder="A headline, a flow, a level" data-i18n-ph="note_ph"></div>
+            <div class="sendrow">
+              <div class="field"><label for="ansWho" data-i18n="who_lab">Your name</label><input id="ansWho" type="text" maxlength="40" placeholder="Name" autocomplete="off" data-i18n-ph="who_ph"></div>
+              <div class="field"><label for="ansPin" data-i18n="pin_lab">PIN</label><input id="ansPin" type="password" maxlength="128" placeholder="PIN" autocomplete="off" data-i18n-ph="pin_ph"></div>
+              <button type="submit" class="send" id="ansSend" data-i18n="send">Send</button>
+            </div>
+            <p class="formmsg" id="ansMsg" role="status" aria-live="polite" hidden></p>
+          </form>
+          <p class="note" id="answerNote" data-i18n="answer_note">Only people who know the PIN can answer. The server checks the PIN; this page never keeps it. The engine reads new answers at its next 15-minute step, then they appear on the trail.</p>
+        </div>
+        <div class="askcol">
+          <div class="cap" data-i18n="audit_cap">Audit trail &middot; every question and answer is kept</div>
+          <div class="audit" id="audit"><p class="empty">Loading&hellip;</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p id="footNote" data-i18n="foot_init">Experimental model &middot; paper only &middot; not advice. Readings are data points, not signals.</p>
+    <p id="footMeta"></p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // the forecast model has one public name; an older file that still carries its working name is read with the public one
+  const MODEL_NAME = "AlphaPrediction AI", OLD_NAME = new RegExp("kro" + "nos", "gi");
+  const REFRESH_MS = 60000;
+  const STALE_MS = 45 * 60000;
+  const STORE_KEY = "mind15.coin";
+  let COINS = ["BTCUSDT", "ETHUSDT"];   // replaced by whatever markets page.json holds
+  const PAIRS = { BTCUSDT: "BTC/USDT", ETHUSDT: "ETH/USDT", XAUUSD: "Gold · XAU/USD", XAGUSD: "Silver · XAG/USD", USDJPY: "USD/JPY", SPX: "S&P 500", WTI: "WTI crude oil", BRENT: "Brent crude oil" };
+  const MINUS = "\u2212", DASH = "\u2013", DOT = " \u00b7 ";
+  const C = { up: "#34d399", down: "#fb7185", amber: "#fbbf24", cyan: "#22d3ee", faint: "#818eaf", soft: "#9aa7c7", ink: "#e6ecff",
+    upInk: "#6ee7b7", downInk: "#fda4af", amberInk: "#fcd34d", cyanInk: "#67e8f9", violet: "#a78bfa", violetInk: "#c4b5fd" };
+  const MONO_BASE = "\"JetBrains Mono\", ui-monospace, \"Cascadia Mono\", Menlo, Consolas, ";
+  let MONO = MONO_BASE + "monospace";   // canvas labels; Chinese puts its system fonts before the generic family
+
+  /* ---------- languages: EN, 繁中 (Taiwan), 简中 (China), the same design on every /aitrading/ page ---------- */
+  // ?lang= first (and saved), then localStorage "aitrading.lang" (shared by the four pages), then the browser, then English.
+  // Text written by the engine (journal sentences, questions, card titles and readings) stays in English for now.
+  const LANG_KEY = "aitrading.lang", LANGS = ["en", "zh-TW", "zh-CN"];
+  const HTML_LANG = { en: "en", "zh-TW": "zh-Hant-TW", "zh-CN": "zh-Hans-CN" };
+  const CJK = { "zh-TW": "\"PingFang TC\", \"Noto Sans TC\", \"Microsoft JhengHei\", ", "zh-CN": "\"PingFang SC\", \"Noto Sans SC\", \"Microsoft YaHei\", " };
+  const I18N = {
+    "en": {
+      "title": "Mind 15",
+      "nav_aria": "Pages",
+      "nav_mark": "AI Trading",
+      "nav_forecast": "Forecast",
+      "nav_books": "Engine & books",
+      "nav_congress": "Congress trades",
+      "langs_aria": "Language",
+      "lede_init": "Reads more than twenty sources, weighs the odds, takes a side, writes down why, then grades itself.",
+      "lede_n": "Reads {n} sources, weighs the odds, takes a side, writes down why, then grades itself.",
+      "market_aria": "Market",
+      "chip_last": "Last decision ",
+      "chip_paper": "Paper only. Not advice.",
+      "tabs_aria": "Page sections",
+      "tab_overview": "Overview",
+      "tab_cards": "Cards",
+      "tab_books": "Books",
+      "tab_journal": "Journal",
+      "engine_note": "(Engine text in this block is shown in English for now.)",
+      "m_h": "All markets",
+      "m_sub_init": "Tap a market to open it",
+      "hero_aria": "Chart and decision",
+      "chart_sub": "15m candles · last 24h",
+      "loading": "Loading…",
+      "lg_res": "Resistance",
+      "lg_sup": "Support",
+      "lg_entry": "Trade entry",
+      "lg_stop": "Stop",
+      "lg_targets": "Targets",
+      "lg_side": "Engine's side under each candle:",
+      "long": "long",
+      "short": "short",
+      "flat": "flat",
+      "lg_empty": "empty = no live record",
+      "dec_h": "Decision",
+      "cards_sub_init": "Each card: the data it reads, which way it leans and how much the engine trusts it",
+      "k_h": "Which clock is right",
+      "k_sub": "How often each horizon called the direction right, by market",
+      "j_h": "Thought journal",
+      "l_h": "Learning",
+      "l_sub": "Both coins · graded calls",
+      "q_h": "Liquidity map",
+      "q_view_aria": "Liquidity map range",
+      "q_near": "Close-up ±2%",
+      "q_eagle": "Eagle view ±10%",
+      "b_h": "Strategy and shadow books",
+      "b_sub": "Rules traded on paper beside the main books, graded on what happens next",
+      "s_h": "Shadow book",
+      "s_sub": "A written rule, traded on paper beside the main book",
+      "a_h": "The engine asks you",
+      "a_sub": "Your answer is a data source, graded like every card",
+      "form_aria": "Answer the engine",
+      "side_aria": "Your side",
+      "f_long": "Long",
+      "f_short": "Short",
+      "f_none": "No view",
+      "sure_aria": "How sure you are",
+      "sure_lab": "How sure",
+      "sure_b30": "A little",
+      "sure_b60": "Fairly",
+      "sure_b90": "Very",
+      "note_lab": "Why (optional, up to 500 characters)",
+      "note_ph": "A headline, a flow, a level",
+      "who_lab": "Your name",
+      "who_ph": "Name",
+      "pin_lab": "PIN",
+      "pin_ph": "PIN",
+      "send": "Send",
+      "answer_note": "Only people who know the PIN can answer. The server checks the PIN; this page never keeps it. The engine reads new answers at its next 15-minute step, then they appear on the trail.",
+      "audit_cap": "Audit trail · every question and answer is kept",
+      "foot_init": "Experimental model · paper only · not advice. Readings are data points, not signals.",
+      "no_data": "No data",
+      "last_update": "Last update {a}",
+      "update_unknown": "Update time unknown",
+      "live_every": "Live · thinking every {n} minutes",
+      "age_none": "Data age: nothing loaded yet",
+      "age_unknown": "Data age is unknown: the file has no time stamp",
+      "age_one": "Data is {n} minute old",
+      "age_many": "Data is {n} minutes old",
+      "ban_failed": "The latest file could not be loaded just now, so this is the last one read. ",
+      "ban_behind": "This page is behind. ",
+      "ban_wrote": "The engine wrote it {a} ({w} UTC); it normally writes every {n} minutes. The figures below may be out of date.",
+      "ban_nostamp": "The file carries no time stamp, so its age is unknown. The figures below may be out of date.",
+      "note_default": "Experimental model. Paper only. Not advice.",
+      "foot_tail": "Readings are data points, not signals. Nothing here places an order.",
+      "foot_written": "File written {w} UTC",
+      "foot_unknown": "File time unknown",
+      "foot_version": "engine version {v}",
+      "foot_check": "this page checks for a new file every minute.",
+      "err_nofile": "The engine's data file (page.json) could not be loaded, so there is nothing to show yet. This page tries again every minute.",
+      "panel_nodata": "No data yet for this panel.",
+      "no_data_for": "No data yet for {c}.",
+      "no_data_yet": "No data yet.",
+      "sp": " ",
+      "end": ".",
+      "colon": ": ",
+      "ago_lt1": "less than a minute ago",
+      "ago_m_one": "{n} minute ago",
+      "ago_m_many": "{n} minutes ago",
+      "ago_h_one": "{n} hour ago",
+      "ago_h_many": "{n} hours ago",
+      "ago_d_one": "{n} day ago",
+      "ago_d_many": "{n} days ago",
+      "span_m_one": "{n} minute",
+      "span_m_many": "{n} minutes",
+      "span_hm": "{h} h {m} min",
+      "span_h_one": "{n} hour",
+      "span_h_many": "{n} hours",
+      "side_LONG": "Long",
+      "side_SHORT": "Short",
+      "side_FLAT": "Flat",
+      "no_view": "no view",
+      "u_pts": " pts",
+      "u_oz": "oz",
+      "u_bbl": "bbl",
+      "u_units": "units",
+      "pair_XAUUSD": "Gold · XAU/USD",
+      "pair_XAGUSD": "Silver · XAG/USD",
+      "pair_WTI": "WTI crude oil",
+      "pair_BRENT": "Brent crude oil",
+      "short_GOLD": "GOLD",
+      "short_SILVER": "SILVER",
+      "ch_aria_none": "{c} price chart: no candles in the file yet.",
+      "ch_aria": "{c} 15-minute candles, {a} to {b} UTC. Opened at {o}, high {h}, low {l}, last close {cl} ({chg}).",
+      "ch_aria_res": " Resistance {v}.",
+      "ch_aria_sup": " Support {v}.",
+      "ch_aria_run": " Running {s} trade from {v}",
+      "ch_aria_stop": ", stop {v}",
+      "ch_aria_t1": ", target 1 {v}",
+      "ch_aria_t2": ", target 2 {v}",
+      "st_text": "The engine's side during these {n} sessions: long in {l}, short in {s}, flat in {f}",
+      "st_nolive": ", and no live record for {n} (before it went live).",
+      "line_entry": "Entry",
+      "line_t": "Target {k}",
+      "line_t_ref": "Target {k} · reference",
+      "x_tgt_passed": "passed, still held",
+      "tgt_note": "Targets are reference levels only: this book lets profit run and does not exit there. It exits at its stop (set at entry, never moved) or when the odds turn 10 points against the position (a flip). Exit rules that do take profit run as shadow books on the Books tab.",
+      "ch_nocandles": "No candles in the file yet. The chart appears with the engine's next step.",
+      "ro_point": "Point at a candle to read its prices.",
+      "ro_line": "{w} UTC · open {o} · high {h} · low {l} · close {c} · engine {s}",
+      "ro_notlive": "not live yet",
+      "ch_move": "{v} in 24h",
+      "dec_aria": "Odds for the next 24 hours: down first {d}, neither {m}, up first {u}. The engine is {p}.",
+      "dec_aria_none": "No odds yet. The engine is {p}.",
+      "odds_down": "down {v}",
+      "odds_neither": "neither {v}",
+      "odds_up": "up {v}",
+      "dec_noodds": "No odds yet: the engine is still learning.",
+      "edge_even": "even",
+      "edge_up": "up side leads",
+      "edge_down": "down side leads",
+      "edge_line": "Edge {v} · {l}",
+      "dec_nosentence": "No decision sentence in the file.",
+      "t_enter": "Enter at",
+      "t_flip": "Flip at",
+      "x_risk_is_high": "risk is high",
+      "x_edge_needed": "edge needed",
+      "t_regime": "Regime",
+      "x_risk_high": "risk high",
+      "x_risk_normal": "risk normal",
+      "rg_TREND_UP": "Trend up",
+      "rg_TREND_DOWN": "Trend down",
+      "rg_MOMENTUM_UP": "Momentum up",
+      "rg_MOMENTUM_DOWN": "Momentum down",
+      "rg_RANGE": "Range",
+      "rg_TRANSITION": "Transition",
+      "tr_UP": "Up",
+      "tr_DOWN": "Down",
+      "tr_MIXED": "Mixed",
+      "tr_FLAT": "Flat",
+      "cap_trend": "Trend by timeframe",
+      "idle_aria": "{i} of {m} idle sessions used",
+      "idle_line": "Idle allowance: {i} of {m} sessions used",
+      "idle_row": "Idle sessions in a row: {i}",
+      "why_in_ENTER": "its own call",
+      "why_in_FORCED": "the mandate (it had sat out the limit)",
+      "why_in_FLIP": "a flip from the other side",
+      "whys_ENTER": "Own call",
+      "whys_FORCED": "Mandate",
+      "whys_FLIP": "Flip",
+      "whyo_STEP_ASIDE": "Stepped aside: risk was high and the edge had left",
+      "whyo_STOP": "Stop hit",
+      "whyo_FLIP": "Flipped to the other side",
+      "whyo_OPEN": "Still open",
+      "ex_h": "Execution · {c} paper account",
+      "ex_started": "Started with {v}",
+      "ex_fee": "{v}% fee a side",
+      "ex_paper": "paper money",
+      "closed_shown_one": "{n} closed trade shown below",
+      "closed_shown_many": "{n} closed trades shown below",
+      "closed_none_yet": "no closed trades yet",
+      "ex_since": " since {w}",
+      "ex_openedby": ", opened by {w}",
+      "running": "running",
+      "t_size": "Size",
+      "x_at_entry": "{v} at entry",
+      "t_entry": "Entry",
+      "x_opened": "opened {w}",
+      "t_mark": "Mark",
+      "x_last_close": "the last close",
+      "t_unreal": "Unrealised",
+      "x_in_profit": " in profit",
+      "x_in_loss": " in loss",
+      "x_from_entry": "{v}% from entry",
+      "x_at_risk": "{v} at risk",
+      "t_fees": "Fees",
+      "x_paid": "{v} paid",
+      "x_to_close": "about {v} to close",
+      "t_ifclosed": "If closed now",
+      "x_both_fees": "after both fees",
+      "t_time_in": "Time in trade",
+      "sess_one": "{n} session",
+      "sess_many": "{n} sessions",
+      "t_account": "Account",
+      "x_with_trade": "with this trade at its mark",
+      "t_realised_sofar": "Realised so far",
+      "t_position": "Position",
+      "x_marked_last": "marked at the last close",
+      "ex_flat_opens": "Flat now. It opens a {s} at the next open{at}.",
+      "ex_at_paren": " ({w})",
+      "next_open_v": "Open {s}",
+      "next_at": "at {w}",
+      "next_at_open": "at the next open",
+      "ex_flat_dot": "Flat. ",
+      "ex_may_one": "It may sit out {n} more session, then it must take a side.",
+      "ex_may_many": "It may sit out {n} more sessions, then it must take a side.",
+      "ex_used": "It has used its idle allowance: it must take a side at the next close.",
+      "nv_wait": "Wait or enter",
+      "nv_must": "Must take a side",
+      "idle_left_one": "{n} idle session left",
+      "idle_left_many": "{n} idle sessions left",
+      "nx_mandate": "the mandate decides",
+      "ex_flat": "Flat.",
+      "no_open_trade": "No open trade",
+      "x_idle": "idle {i} of {m} sessions",
+      "x_started_at": "started at {v}",
+      "t_realised": "Realised",
+      "t_next": "Next action",
+      "x_no_open": "no open trade",
+      "t_fees_paid": "Fees paid",
+      "x_so_far": "so far",
+      "cap_closed": "Closed trades",
+      "newest_first": "newest first",
+      "closed_empty": "No closed trades yet. The first one appears here when a trade closes.",
+      "th_side": "Side",
+      "th_opened": "Opened (UTC)",
+      "th_closed": "Closed (UTC)",
+      "th_entry": "Entry",
+      "th_exit": "Exit",
+      "th_result": "Result",
+      "th_fees": "Fees",
+      "th_after": "Account after",
+      "th_how": "How it opened",
+      "th_why": "Why it closed",
+      "x_gain": " gain",
+      "x_loss": " loss",
+      "not_recorded": "not recorded",
+      "cap_closed_tbl": "Closed {c} paper trades, newest first",
+      "aria_closed_tbl": "Closed trades table, scrolls sideways",
+      "show_last3": "Show the last 3",
+      "show_all_closed": "Show all {n} closed trades",
+      "sc_cap": "Trade scorecard · how well trades are taken, 0 to 100",
+      "sc_base": "Baseline from the history replay",
+      "sc_base_n": ", {n} trades, both coins",
+      "sc_none": "No scorecard yet. It appears once the history replay has been scored.",
+      "sc_none_short": "No scorecard yet.",
+      "sc_score": "Trade score",
+      "sc_score_x": "all five parts, weighted",
+      "sc_direction": "Direction",
+      "sc_direction_x": "was the side right",
+      "sc_entry": "Entry",
+      "sc_entry_x": "fill against the next 2 hours",
+      "sc_speed": "Speed",
+      "sc_speed_x": "how soon it worked",
+      "sc_exit": "Exit",
+      "sc_exit_x": "share of the best profit kept",
+      "sc_risk": "Risk",
+      "sc_risk_x": "heat taken before it worked",
+      "sc_weight": "{w}% of the score",
+      "sc_note": "This is the replay over past years, kept as the mark to beat. It is not the live trades above and not a profit figure.",
+      "cards_h": "Decision cards",
+      "cards_h_n": "{n} decision cards",
+      "cards_none": "No cards in the file yet.",
+      "card_n": "Card {n}",
+      "votes": "Votes",
+      "reading_only": "Reading only",
+      "cards_sub": "{v} vote on the side · {r} are read and shown only · lean bar runs to 10 pts each way",
+      "lean_none_yet": "No lean yet",
+      "lean_none": "No lean",
+      "lean_long": "Leans long",
+      "lean_short": "Leans short",
+      "lean_by": " by {v} points",
+      "reading": "Reading",
+      "show_data": "Show the data ({n})",
+      "rated": "Rated {r} for steadiness",
+      "rated_of": "Rated {r} of {n} for steadiness",
+      "trust": "Trust",
+      "cards_only_vote": "Show only the cards that vote",
+      "cards_more": "Show {n} more reading-only cards",
+      "j_sub": "A new entry every {n} minutes",
+      "act_HOLD": "Hold",
+      "act_ENTER": "Enter",
+      "act_FORCED": "Enter",
+      "act_FLIP": "Flip to",
+      "act_IDLE": "Sit out",
+      "act_STEP_ASIDE": "Step aside",
+      "act_WAIT": "Learning",
+      "act_fallback": "Entry",
+      "chip_side": "{a} {s}",
+      "by_mandate": " by mandate",
+      "nothing_notable": "Nothing notable",
+      "cap_moved": "What moved the latest decision",
+      "pull_long": "Pulling long",
+      "pull_short": "Pulling short",
+      "a_voice": "A voice",
+      "trust_pct": "trust {v}%",
+      "v_long": " long",
+      "v_short": " short",
+      "cap_voices": "Voices pulling the odds hardest now",
+      "cap_entries": "Entries",
+      "j_none": "No journal entries in the file yet.",
+      "b_price": "Price {v}",
+      "b_edge": "edge {v}",
+      "b_position": "position {s}",
+      "no_sentence": "No sentence recorded.",
+      "show_fewer": "Show fewer",
+      "show_all_entries": "Show all {n} entries",
+      "j_one": "The file carries the entries of the engine's latest step. Earlier entries are in its own journal.",
+      "l_none": "No data yet. Grading appears once calls have been graded.",
+      "l_nograded": "No graded calls yet",
+      "l_ring_aria": "{x}: direction right on {v} percent of graded calls. A coin flip is 50 percent.",
+      "l_right_ring": "right",
+      "l_coin_title": "50%: a coin flip",
+      "l_level": "Level with a coin flip",
+      "l_above": "{v} pts above a coin flip",
+      "l_below": "{v} pts below a coin flip",
+      "l_right": " right · ",
+      "l_wrong": " wrong",
+      "l_neither": "{n} went neither way",
+      "l_7": "Last 7 days",
+      "l_30": "Last 30 days",
+      "l_note": "How often the side it favoured was the side the price took first. A coin flip is 50%: the white mark at the bottom of each ring. A figure near or below 50% is no skill.",
+      "l_trust_cap": "Whom it trusts now",
+      "l_trust_none": "No voice has earned trust yet.",
+      "l_rest_one": "The other {v}% of its trust is spread over {n} more voice.",
+      "l_rest_many": "The other {v}% of its trust is spread over {n} more voices.",
+      "l_trust_note": "Trust is earned on each voice's graded record and moves every session.",
+      "q_none": "No snapshot for this session. The order book is read live, once a session, so a missed read leaves this empty until the next one.",
+      "q_sub": "{c} waiting per {b}% band · out to {r}%",
+      "q_row_ask": "Sellers {a} to {b} percent above: {s} {c}",
+      "q_row_bid": "Buyers {a} to {b} percent below: {s} {c}",
+      "q_aria": "{c} resting orders by distance from the mid price",
+      "q_sellers": "Sellers waiting above · {q} {c}",
+      "q_mid": "Mid price ${v}",
+      "q_buyers": "Buyers waiting below · {q} {c}",
+      "q_far": " Biggest piles beyond 1%: buyers near {bp} ({bs}), sellers near {ap} ({as}).",
+      "q_eagle_note": "Eagle view: {ex}'s full order book, every price level, out to 10% either side.",
+      "q_near_note": "Close-up: {ex}'s order book within 2%. ",
+      "q_note": "Orders resting in the book, by how far they sit from the mid price. One snapshot is kept every session",
+      "q_note_from": "; this one is from the {w} close.",
+      "sh_none": "No data yet. The shadow book appears with the engine's next step.",
+      "sh_name_default": "CPI follow-through",
+      "sh_name_end": ". ",
+      "sh_desc": "A hypothesis under test, not a finding: after a US inflation (CPI) release, take the side the release candle closed on, with a stop behind that candle, and leave after 4 hours. It trades on paper only and never touches the main book.",
+      "sh_norows": "No rows yet. The first appears at the next CPI release.",
+      "sh_left": "{s} left",
+      "sh_closed": "Closed",
+      "sh_by_stop": " by its stop",
+      "sh_by_limit": " by the {r} limit",
+      "sh_at": ", {w}",
+      "stat_RUNNING": "Running",
+      "stat_CLOSED": "Closed",
+      "stat_WAITING": "Waiting",
+      "cpi_at": "CPI {w}",
+      "sh_release": "release {v}",
+      "sh_away": "{v}% away",
+      "sh_exit": "exit",
+      "sh_mark": "mark",
+      "sh_net": "{v} net",
+      "sh_caption": "Shadow book rows for the {n} hypothesis",
+      "th_coin": "Coin",
+      "th_status": "Status",
+      "th_markexit": "Mark / exit",
+      "sh_tbl_aria": "Shadow book table, scrolls sideways",
+      "sh_closed_x": "rows finished",
+      "sh_won_k": "Won",
+      "sh_won_of": "of {n} closed",
+      "sh_won_none": "none closed yet",
+      "sh_total_k": "Total",
+      "sh_total_x": "closed rows, after fees",
+      "sh_verdict": "Verdict rule, set before the first trade: ",
+      "sure_30": "a little sure",
+      "sure_60": "fairly sure",
+      "sure_90": "very sure",
+      "ask_at": "Asked at {w} · about {c}",
+      "ask_none": "The engine has no question this session.",
+      "st_in_force": "An answer is in force: ",
+      "st_sure": ", {s}",
+      "st_given": ", given {w}",
+      "st_hours": ", standing for {h} more hours",
+      "au_none": "Nothing on the trail for {c} yet.",
+      "au_answered_at": "{h} answered",
+      "au_asked_at": "{h} asked",
+      "au_answered": "Answered",
+      "au_asked": "Asked",
+      "someone": "Someone",
+      "au_answered_mid": " answered ",
+      "au_stand": ", to stand {h} hours",
+      "au_toq": "To the question of {w}",
+      "au_noq": "A question with no text.",
+      "show_all_rows": "Show all {n} rows",
+      "au_nobody": "Nobody has answered these yet. Answers appear here with the name of who gave them.",
+      "au_no_refused": "No answer has been refused.",
+      "au_refused_one": "{n} attempt refused.",
+      "au_refused_many": "{n} attempts refused.",
+      "sum_none": "No markets in the file yet.",
+      "th_market": "Market",
+      "th_price": "Price",
+      "th_pnl": "P&L",
+      "th_edge": "Edge",
+      "sum_aria": "{p}: {s}, {pnl}, edge {e}",
+      "no_pnl": "no P&L",
+      "none": "none",
+      "pts_word": "{v} points",
+      "sum_all": "All {n}",
+      "sum_sub": "Each market has its own $10,000 paper account · tap one to open it",
+      "pf_main": "All books together: {nl} long ({lu}), {ns} short ({su})",
+      "pf_gross": "{x}x the equity in play",
+      "pf_stops": "if every stop were hit at once: {v}",
+      "pf_pct": " ({p}%)",
+      "bk_sh_cap": "Shadow books: the main rule against its challengers, on the same odds",
+      "bk_since": "since {s} UTC",
+      "bk_sh_aria": "Shadow book scoreboard",
+      "th_book": "Book",
+      "th_return": "Return",
+      "th_vsmain": "vs main",
+      "th_trades": "Trades",
+      "th_won": "Won",
+      "th_net": "Net",
+      "th_range": "Per trade, 90% range",
+      "th_verdict": "Verdict",
+      "range_to": "{a} to {b}",
+      "bk_sa_cap": "Scoreboard: every book, live trades only, with a 90% range for the result per trade",
+      "bk_sa_aria": "Forward scoreboard of every book",
+      "bk_trades_one": "{n} trade",
+      "bk_trades_many": "{n} trades",
+      "bk_won": "won {v}",
+      "bk_avg": "avg {v}",
+      "bk_net": "net {v}",
+      "bk_waiting": "Waiting: ",
+      "bk_open": "Open: ",
+      "bk_from": " from {v}",
+      "bk_stop": ", stop {v}",
+      "bk_t1": ", T1 {v}",
+      "bk_t2": ", T2 {v}",
+      "bk_last_closed": "Last {n} closed",
+      "bk_notrade": "No trade since it was registered ({d}).",
+      "bk_rule": "The rule",
+      "bk_pb_cap": "Strategy books: standalone 15-minute rules, each its own $10,000 per trade",
+      "bk_pb_note": "History tests found none of these rules clearly profitable after fees; they run forward on paper so live results can confirm or reject them.",
+      "bk_none": "No books in the file yet.",
+      "k_aria": "Direction hit rate by horizon and market",
+      "k_note": "Share of graded calls whose side was the side price took first. 50% is a coin flip; green is 55% or better.",
+      "k_updated": " Updated {u} UTC.",
+      "k_ideas": "Idea queue · {n} leads from the daily surprise mining",
+      "k_none": "No clock report yet. It fills once the engine has graded calls on every horizon.",
+      "fm_side": "Pick a side first: long, short or no view. Nothing was sent.",
+      "fm_who": "Write your name: 1 to 40 letters, numbers, spaces or . _ ' - . Nothing was sent.",
+      "fm_note": "The note is longer than 500 characters. Nothing was sent.",
+      "fm_pin": "Type the PIN. Nothing was sent.",
+      "fm_sending": "Sending…",
+      "fm_ok": "Thank you, {who}. Your answer on {c} ({s}) is in the engine's inbox{id}. The engine reads it at its next 15-minute step; then it shows on the trail.",
+      "fm_ok_id": " as {id}",
+      "fm_said_sep": ", ",
+      "fm_400": "The server could not take this answer. Check your name (letters, numbers, spaces and . _ ' - only, up to 40) and the note (up to 500 characters), then send again. Nothing was recorded.",
+      "fm_403": "That PIN was not accepted. Nothing was recorded. After five wrong PINs this connection has to wait 15 minutes.",
+      "fm_413": "The answer is too long. Shorten the note and send again. Nothing was recorded.",
+      "fm_429": "Too many attempts for now. Wait a few minutes (15 after five wrong PINs) and send again. Nothing was recorded.",
+      "fm_503": "Answers are not open yet: no PIN has been set on the server. Nothing was recorded.",
+      "fm_other": "The answer service is not reachable right now (HTTP {s}). Nothing was recorded; try again later.",
+      "fm_net": "Could not reach the server. Nothing was recorded; check the connection and try again.",
+      "p4_badge": "NOT passed · forward paper",
+      "p4_pos_long": "long {x} since {w}",
+      "p4_pos_short": "short {x} since {w}",
+      "p4_equity": "equity {v} ({r})",
+      "p4_mom": "30-day momentum {v} ({d}) → {s}",
+      "p4_up": "up",
+      "p4_down": "down",
+      "p4_unknown": "unknown",
+      "p4_st_wait": "waiting",
+      "p4_st_pull": "waiting for a pullback entry",
+      "p4_st_out": "out until the next 00:00 UTC decision",
+      "p4_st_warm": "waiting for the rule's next entry (warm-up)",
+      "p4_hold": "spot buy-and-hold since go-live {v} · worst fall {dd} (hold {h})",
+      "bk_loop_cap": "Loop books: rules from the strategy loop that did NOT pass, BTC and ETH, each coin its own $10,000 paper book",
+      "bk_loop_note": "These rules made money in history tests but failed the strategy loop's strict tests (fold share and significance), so they are NOT passed. They run forward on paper only, to collect evidence they have not seen."
+    },
+    "zh-TW": {
+      "title": "Mind 15",
+      "nav_aria": "頁面",
+      "nav_mark": "AI 交易",
+      "nav_forecast": "預測",
+      "nav_books": "引擎與帳本",
+      "nav_congress": "國會議員交易",
+      "langs_aria": "語言",
+      "lede_init": "讀取二十多個資料來源，權衡機率，選定方向，寫下理由，再為自己評分。",
+      "lede_n": "讀取 {n} 個資料來源，權衡機率，選定方向，寫下理由，再為自己評分。",
+      "market_aria": "市場",
+      "chip_last": "最新決策 ",
+      "chip_paper": "僅為模擬，非投資建議。",
+      "tabs_aria": "頁面分區",
+      "tab_overview": "總覽",
+      "tab_cards": "卡片",
+      "tab_books": "帳本",
+      "tab_journal": "日誌",
+      "engine_note": "（此區內容來自引擎，暫以英文顯示）",
+      "m_h": "所有市場",
+      "m_sub_init": "點選市場即可開啟",
+      "hero_aria": "圖表與決策",
+      "chart_sub": "15 分鐘 K 線 · 最近 24 小時",
+      "loading": "載入中…",
+      "lg_res": "壓力",
+      "lg_sup": "支撐",
+      "lg_entry": "進場價",
+      "lg_stop": "停損",
+      "lg_targets": "目標價",
+      "lg_side": "每根 K 線下方是引擎當時的方向：",
+      "long": "做多",
+      "short": "做空",
+      "flat": "空手",
+      "lg_empty": "空白 = 沒有即時紀錄",
+      "dec_h": "決策",
+      "cards_sub_init": "每張卡：讀取的資料、偏向哪一方，以及引擎對它的信任度",
+      "k_h": "哪個時間尺度最準",
+      "k_sub": "各時間尺度判對方向的比例，依市場列出",
+      "j_h": "思考日誌",
+      "l_h": "學習",
+      "l_sub": "兩個幣種 · 已評分的判斷",
+      "q_h": "流動性地圖",
+      "q_view_aria": "流動性地圖範圍",
+      "q_near": "近看 ±2%",
+      "q_eagle": "鷹眼視角 ±10%",
+      "b_h": "策略與影子帳本",
+      "b_sub": "與主帳本並行模擬交易的規則，依後續走勢評分",
+      "s_h": "影子帳本",
+      "s_sub": "一條事先寫定的規則，在主帳本旁模擬交易",
+      "a_h": "引擎想問你",
+      "a_sub": "你的回答也是一個資料來源，和每張卡一樣接受評分",
+      "form_aria": "回答引擎",
+      "side_aria": "你的方向",
+      "f_long": "做多",
+      "f_short": "做空",
+      "f_none": "沒有看法",
+      "sure_aria": "你有多確定",
+      "sure_lab": "確定程度",
+      "sure_b30": "有點",
+      "sure_b60": "相當",
+      "sure_b90": "非常",
+      "note_lab": "理由（選填，最多 500 字）",
+      "note_ph": "一則新聞、一筆資金流、一個價位",
+      "who_lab": "你的名字",
+      "who_ph": "名字",
+      "pin_lab": "PIN 碼",
+      "pin_ph": "PIN 碼",
+      "send": "送出",
+      "answer_note": "只有知道 PIN 碼的人才能回答。PIN 碼由伺服器檢查，本頁從不保存。引擎會在下一個 15 分鐘步驟讀取新回答，之後顯示在紀錄中。",
+      "audit_cap": "稽核紀錄 · 每個問題與回答都會保留",
+      "foot_init": "實驗模型 · 僅為模擬 · 非投資建議。讀數是資料點，不是訊號。",
+      "no_data": "沒有資料",
+      "last_update": "最後更新：{a}",
+      "update_unknown": "更新時間不明",
+      "live_every": "運作中 · 每 {n} 分鐘思考一次",
+      "age_none": "資料時間：尚未載入任何資料",
+      "age_unknown": "資料時間不明：檔案沒有時間戳記",
+      "age_one": "資料為 {n} 分鐘前",
+      "age_many": "資料為 {n} 分鐘前",
+      "ban_failed": "剛才無法載入最新檔案，目前顯示的是上一次讀到的版本。",
+      "ban_behind": "此頁資料已落後。",
+      "ban_wrote": "引擎在 {a}寫入此檔（{w} UTC），通常每 {n} 分鐘寫入一次。以下數字可能已過時。",
+      "ban_nostamp": "檔案沒有時間戳記，無法得知資料時間。以下數字可能已過時。",
+      "note_default": "實驗模型。僅為模擬，非投資建議。",
+      "foot_tail": "讀數是資料點，不是訊號。這裡不會下任何單。",
+      "foot_written": "檔案寫入於 {w} UTC",
+      "foot_unknown": "檔案時間不明",
+      "foot_version": "引擎版本 {v}",
+      "foot_check": "本頁每分鐘檢查一次新檔案。",
+      "err_nofile": "無法載入引擎的資料檔（page.json），目前沒有內容可顯示。本頁每分鐘會重試一次。",
+      "panel_nodata": "此面板暫無資料。",
+      "no_data_for": "{c} 暫無資料。",
+      "no_data_yet": "暫無資料。",
+      "sp": "",
+      "end": "。",
+      "colon": "：",
+      "ago_lt1": "不到 1 分鐘前",
+      "ago_m_one": "{n} 分鐘前",
+      "ago_m_many": "{n} 分鐘前",
+      "ago_h_one": "{n} 小時前",
+      "ago_h_many": "{n} 小時前",
+      "ago_d_one": "{n} 天前",
+      "ago_d_many": "{n} 天前",
+      "span_m_one": "{n} 分鐘",
+      "span_m_many": "{n} 分鐘",
+      "span_hm": "{h} 小時 {m} 分",
+      "span_h_one": "{n} 小時",
+      "span_h_many": "{n} 小時",
+      "side_LONG": "做多",
+      "side_SHORT": "做空",
+      "side_FLAT": "空手",
+      "no_view": "沒有看法",
+      "u_pts": " 點",
+      "u_oz": "盎司",
+      "u_bbl": "桶",
+      "u_units": "單位",
+      "pair_XAUUSD": "黃金 · XAU/USD",
+      "pair_XAGUSD": "白銀 · XAG/USD",
+      "pair_WTI": "WTI 原油",
+      "pair_BRENT": "布蘭特原油",
+      "short_GOLD": "黃金",
+      "short_SILVER": "白銀",
+      "ch_aria_none": "{c} 價格圖：檔案中還沒有 K 線。",
+      "ch_aria": "{c} 15 分鐘 K 線，{a} 至 {b} UTC。開盤 {o}，最高 {h}，最低 {l}，最新收盤 {cl}（{chg}）。",
+      "ch_aria_res": "壓力 {v}。",
+      "ch_aria_sup": "支撐 {v}。",
+      "ch_aria_run": "持倉中的{s}交易，進場 {v}",
+      "ch_aria_stop": "，停損 {v}",
+      "ch_aria_t1": "，目標價 1 {v}",
+      "ch_aria_t2": "，目標價 2 {v}",
+      "st_text": "這 {n} 個時段中引擎的方向：做多 {l} 個、做空 {s} 個、空手 {f} 個",
+      "st_nolive": "，另有 {n} 個沒有即時紀錄（上線之前）。",
+      "line_entry": "進場",
+      "line_t": "目標價 {k}",
+      "line_t_ref": "參考目標價 {k}",
+      "x_tgt_passed": "已越過，仍持有",
+      "tgt_note": "目標價僅供參考：本帳本讓利潤奔跑，不會在目標價出場。它只在停損價（進場時設定、不會移動）或勝率反轉達 10 個百分點時（反手）出場。會止盈的出場規則在「帳本」分頁以影子帳本測試。",
+      "ch_nocandles": "檔案中還沒有 K 線。引擎下一步執行後就會顯示圖表。",
+      "ro_point": "指向一根 K 線即可查看價格。",
+      "ro_line": "{w} UTC · 開 {o} · 高 {h} · 低 {l} · 收 {c} · 引擎 {s}",
+      "ro_notlive": "尚未上線",
+      "ch_move": "24 小時 {v}",
+      "dec_aria": "未來 24 小時機率：先跌 {d}，持平 {m}，先漲 {u}。引擎目前{p}。",
+      "dec_aria_none": "尚無機率。引擎目前{p}。",
+      "odds_down": "先跌 {v}",
+      "odds_neither": "持平 {v}",
+      "odds_up": "先漲 {v}",
+      "dec_noodds": "尚無機率：引擎仍在學習。",
+      "edge_even": "均勢",
+      "edge_up": "上漲方占優",
+      "edge_down": "下跌方占優",
+      "edge_line": "優勢 {v} · {l}",
+      "dec_nosentence": "檔案中沒有決策說明。",
+      "t_enter": "進場門檻",
+      "t_flip": "翻轉門檻",
+      "x_risk_is_high": "風險偏高",
+      "x_edge_needed": "所需優勢",
+      "t_regime": "市場狀態",
+      "x_risk_high": "風險高",
+      "x_risk_normal": "風險正常",
+      "rg_TREND_UP": "上升趨勢",
+      "rg_TREND_DOWN": "下降趨勢",
+      "rg_MOMENTUM_UP": "向上動能",
+      "rg_MOMENTUM_DOWN": "向下動能",
+      "rg_RANGE": "區間盤整",
+      "rg_TRANSITION": "轉換期",
+      "tr_UP": "上漲",
+      "tr_DOWN": "下跌",
+      "tr_MIXED": "混合",
+      "tr_FLAT": "持平",
+      "cap_trend": "各時間尺度趨勢",
+      "idle_aria": "已用 {i}/{m} 個空手時段",
+      "idle_line": "空手額度：已用 {i}/{m} 個時段",
+      "idle_row": "連續空手時段：{i}",
+      "why_in_ENTER": "自己的判斷",
+      "why_in_FORCED": "強制規則（空手已達上限）",
+      "why_in_FLIP": "從反方向翻轉",
+      "whys_ENTER": "自行判斷",
+      "whys_FORCED": "強制規則",
+      "whys_FLIP": "翻轉",
+      "whyo_STEP_ASIDE": "退場觀望：風險偏高且優勢已消失",
+      "whyo_STOP": "觸及停損",
+      "whyo_FLIP": "翻轉到反方向",
+      "whyo_OPEN": "仍持倉中",
+      "ex_h": "執行 · {c} 模擬帳本",
+      "ex_started": "初始資金 {v}",
+      "ex_fee": "單邊手續費 {v}%",
+      "ex_paper": "模擬資金",
+      "closed_shown_one": "下方列出 {n} 筆已平倉交易",
+      "closed_shown_many": "下方列出 {n} 筆已平倉交易",
+      "closed_none_yet": "尚無已平倉交易",
+      "ex_since": "，自 {w} 起",
+      "ex_openedby": "，開倉原因：{w}",
+      "running": "持倉中",
+      "t_size": "數量",
+      "x_at_entry": "進場時 {v}",
+      "t_entry": "進場價",
+      "x_opened": "開倉於 {w}",
+      "t_mark": "標記價",
+      "x_last_close": "最新收盤價",
+      "t_unreal": "未實現損益",
+      "x_in_profit": " 獲利",
+      "x_in_loss": " 虧損",
+      "x_from_entry": "距進場價 {v}%",
+      "x_at_risk": "風險 {v}",
+      "t_fees": "手續費",
+      "x_paid": "已付 {v}",
+      "x_to_close": "平倉約 {v}",
+      "t_ifclosed": "若現在平倉",
+      "x_both_fees": "扣除雙邊手續費後",
+      "t_time_in": "持倉時間",
+      "sess_one": "{n} 個時段",
+      "sess_many": "{n} 個時段",
+      "t_account": "帳戶",
+      "x_with_trade": "此交易按標記價計算",
+      "t_realised_sofar": "至今已實現",
+      "t_position": "部位",
+      "x_marked_last": "按最新收盤價計算",
+      "ex_flat_opens": "目前空手。下一根開盤時將{s}{at}。",
+      "ex_at_paren": "（{w}）",
+      "next_open_v": "開倉{s}",
+      "next_at": "於 {w}",
+      "next_at_open": "於下一根開盤",
+      "ex_flat_dot": "空手。",
+      "ex_may_one": "還可再空手 {n} 個時段，之後必須選定方向。",
+      "ex_may_many": "還可再空手 {n} 個時段，之後必須選定方向。",
+      "ex_used": "空手額度已用完：下一根收盤時必須選定方向。",
+      "nv_wait": "等待或進場",
+      "nv_must": "必須選定方向",
+      "idle_left_one": "剩 {n} 個空手時段",
+      "idle_left_many": "剩 {n} 個空手時段",
+      "nx_mandate": "由強制規則決定",
+      "ex_flat": "空手。",
+      "no_open_trade": "無持倉",
+      "x_idle": "空手 {i}/{m} 個時段",
+      "x_started_at": "初始 {v}",
+      "t_realised": "已實現",
+      "t_next": "下一步",
+      "x_no_open": "無持倉",
+      "t_fees_paid": "已付手續費",
+      "x_so_far": "至今",
+      "cap_closed": "已平倉交易",
+      "newest_first": "最新在前",
+      "closed_empty": "尚無已平倉交易。第一筆交易平倉後會顯示在這裡。",
+      "th_side": "方向",
+      "th_opened": "開倉（UTC）",
+      "th_closed": "平倉（UTC）",
+      "th_entry": "進場價",
+      "th_exit": "出場價",
+      "th_result": "結果",
+      "th_fees": "手續費",
+      "th_after": "平倉後帳戶",
+      "th_how": "開倉原因",
+      "th_why": "平倉原因",
+      "x_gain": " 獲利",
+      "x_loss": " 虧損",
+      "not_recorded": "未記錄",
+      "cap_closed_tbl": "{c} 已平倉模擬交易，最新在前",
+      "aria_closed_tbl": "已平倉交易表，可左右捲動",
+      "show_last3": "只顯示最近 3 筆",
+      "show_all_closed": "顯示全部 {n} 筆已平倉交易",
+      "sc_cap": "交易評分卡 · 交易執行品質，0 到 100",
+      "sc_base": "歷史回放的基準",
+      "sc_base_n": "，{n} 筆交易，兩個幣種",
+      "sc_none": "尚無評分卡。歷史回放完成評分後就會顯示。",
+      "sc_none_short": "尚無評分卡。",
+      "sc_score": "交易分數",
+      "sc_score_x": "五個部分加權",
+      "sc_direction": "方向",
+      "sc_direction_x": "方向是否正確",
+      "sc_entry": "進場",
+      "sc_entry_x": "成交價對比之後 2 小時",
+      "sc_speed": "速度",
+      "sc_speed_x": "多快見效",
+      "sc_exit": "出場",
+      "sc_exit_x": "保住最佳獲利的比例",
+      "sc_risk": "風險",
+      "sc_risk_x": "見效前承受的回落",
+      "sc_weight": "占分數 {w}%",
+      "sc_note": "這是過去數年的回放結果，作為要超越的基準。它不是上方的即時交易，也不是獲利數字。",
+      "cards_h": "決策卡",
+      "cards_h_n": "{n} 張決策卡",
+      "cards_none": "檔案中還沒有卡片。",
+      "card_n": "卡片 {n}",
+      "votes": "參與投票",
+      "reading_only": "僅供參考",
+      "cards_sub": "{v} 張參與方向投票 · {r} 張僅讀取並顯示 · 偏向條每邊最多 10 點",
+      "lean_none_yet": "尚無偏向",
+      "lean_none": "無偏向",
+      "lean_long": "偏多",
+      "lean_short": "偏空",
+      "lean_by": " {v} 點",
+      "reading": "讀數",
+      "show_data": "顯示資料（{n}）",
+      "rated": "穩定度排名第 {r}",
+      "rated_of": "穩定度排名第 {r}（共 {n}）",
+      "trust": "信任度",
+      "cards_only_vote": "只顯示參與投票的卡片",
+      "cards_more": "再顯示 {n} 張僅供參考的卡片",
+      "j_sub": "每 {n} 分鐘一則新紀錄",
+      "act_HOLD": "維持",
+      "act_ENTER": "進場",
+      "act_FORCED": "進場",
+      "act_FLIP": "翻轉為",
+      "act_IDLE": "觀望",
+      "act_STEP_ASIDE": "退場觀望",
+      "act_WAIT": "學習中",
+      "act_fallback": "紀錄",
+      "chip_side": "{a}{s}",
+      "by_mandate": "（強制）",
+      "nothing_notable": "沒有明顯因素",
+      "cap_moved": "影響最新決策的因素",
+      "pull_long": "拉向做多",
+      "pull_short": "拉向做空",
+      "a_voice": "某個意見來源",
+      "trust_pct": "信任度 {v}%",
+      "v_long": " 做多",
+      "v_short": " 做空",
+      "cap_voices": "目前對機率影響最大的意見來源",
+      "cap_entries": "紀錄",
+      "j_none": "檔案中還沒有日誌紀錄。",
+      "b_price": "價格 {v}",
+      "b_edge": "優勢 {v}",
+      "b_position": "持倉 {s}",
+      "no_sentence": "沒有記錄說明。",
+      "show_fewer": "顯示較少",
+      "show_all_entries": "顯示全部 {n} 則紀錄",
+      "j_one": "檔案只包含引擎最新一步的紀錄。較早的紀錄保存在引擎自己的日誌中。",
+      "l_none": "暫無資料。判斷完成評分後就會顯示。",
+      "l_nograded": "尚無已評分的判斷",
+      "l_ring_aria": "{x}：已評分的判斷中有 {v}% 方向正確。擲硬幣是 50%。",
+      "l_right_ring": "正確",
+      "l_coin_title": "50%：擲硬幣",
+      "l_level": "與擲硬幣持平",
+      "l_above": "比擲硬幣高 {v} 點",
+      "l_below": "比擲硬幣低 {v} 點",
+      "l_right": " 對 · ",
+      "l_wrong": " 錯",
+      "l_neither": "{n} 次未分方向",
+      "l_7": "最近 7 天",
+      "l_30": "最近 30 天",
+      "l_note": "它看好的方向有多常是價格先走的方向。擲硬幣是 50%，即每個圓環底部的白色刻度。接近或低於 50% 代表沒有判斷力。",
+      "l_trust_cap": "目前最信任的來源",
+      "l_trust_none": "還沒有任何意見來源贏得信任。",
+      "l_rest_one": "其餘 {v}% 的信任分散在另外 {n} 個來源。",
+      "l_rest_many": "其餘 {v}% 的信任分散在另外 {n} 個來源。",
+      "l_trust_note": "信任度依每個來源的評分紀錄累積，每個時段都會變動。",
+      "q_none": "此時段沒有快照。委託簿每個時段即時讀取一次，若漏讀，這裡會空白到下一次讀取。",
+      "q_sub": "{c} 每 {b}% 區間的掛單量 · 延伸至 {r}%",
+      "q_row_ask": "賣方，上方 {a}% 至 {b}%：{s} {c}",
+      "q_row_bid": "買方，下方 {a}% 至 {b}%：{s} {c}",
+      "q_aria": "{c} 掛單，依距中間價的距離排列",
+      "q_sellers": "上方賣方掛單 · {q} {c}",
+      "q_mid": "中間價 ${v}",
+      "q_buyers": "下方買方掛單 · {q} {c}",
+      "q_far": "1% 以外最大的掛單：買方在 {bp} 附近（{bs}），賣方在 {ap} 附近（{as}）。",
+      "q_eagle_note": "鷹眼視角：{ex} 完整委託簿，涵蓋每個價位，上下各 10%。",
+      "q_near_note": "近看：{ex} 委託簿 2% 以內。",
+      "q_note": "委託簿中的掛單，依距中間價的遠近排列。每個時段保留一張快照",
+      "q_note_from": "；這張來自 {w} 收盤。",
+      "sh_none": "暫無資料。影子帳本會在引擎下一步執行後出現。",
+      "sh_name_default": "CPI 順勢延續",
+      "sh_name_end": "。",
+      "sh_desc": "這是測試中的假設，不是結論：美國通膨（CPI）公布後，順著公布當根 K 線的收盤方向進場，停損設在該 K 線之外，4 小時後出場。僅做模擬交易，從不影響主帳本。",
+      "sh_norows": "尚無紀錄。第一筆會在下次 CPI 公布時出現。",
+      "sh_left": "剩 {s}",
+      "sh_closed": "已平倉",
+      "sh_by_stop": "（觸及停損）",
+      "sh_by_limit": "（{r} 上限）",
+      "sh_at": "，{w}",
+      "stat_RUNNING": "進行中",
+      "stat_CLOSED": "已平倉",
+      "stat_WAITING": "等待中",
+      "cpi_at": "CPI {w}",
+      "sh_release": "公布時 {v}",
+      "sh_away": "距離 {v}%",
+      "sh_exit": "出場",
+      "sh_mark": "標記",
+      "sh_net": "淨 {v}",
+      "sh_caption": "{n} 假設的影子帳本紀錄",
+      "th_coin": "幣種",
+      "th_status": "狀態",
+      "th_markexit": "標記 / 出場",
+      "sh_tbl_aria": "影子帳本表，可左右捲動",
+      "sh_closed_x": "已結束的紀錄",
+      "sh_won_k": "獲利",
+      "sh_won_of": "共 {n} 筆已平倉",
+      "sh_won_none": "尚無平倉",
+      "sh_total_k": "合計",
+      "sh_total_x": "已平倉紀錄，扣除手續費後",
+      "sh_verdict": "判定規則（第一筆交易前已定）：",
+      "sure_30": "有點把握",
+      "sure_60": "相當有把握",
+      "sure_90": "非常有把握",
+      "ask_at": "提問於 {w} · 關於 {c}",
+      "ask_none": "引擎這個時段沒有問題。",
+      "st_in_force": "目前有一個有效回答：",
+      "st_sure": "，{s}",
+      "st_given": "，提出於 {w}",
+      "st_hours": "，還會有效 {h} 小時",
+      "au_none": "{c} 的紀錄中還沒有內容。",
+      "au_answered_at": "{h} 回答",
+      "au_asked_at": "{h} 提問",
+      "au_answered": "回答",
+      "au_asked": "提問",
+      "someone": "某人",
+      "au_answered_mid": " 回答：",
+      "au_stand": "，有效 {h} 小時",
+      "au_toq": "回答 {w} 的問題",
+      "au_noq": "沒有文字的問題。",
+      "show_all_rows": "顯示全部 {n} 列",
+      "au_nobody": "目前還沒有人回答。回答會連同回答者的名字顯示在這裡。",
+      "au_no_refused": "沒有回答被拒絕。",
+      "au_refused_one": "{n} 次嘗試被拒絕。",
+      "au_refused_many": "{n} 次嘗試被拒絕。",
+      "sum_none": "檔案中還沒有市場。",
+      "th_market": "市場",
+      "th_price": "價格",
+      "th_pnl": "損益",
+      "th_edge": "優勢",
+      "sum_aria": "{p}：{s}，{pnl}，優勢 {e}",
+      "no_pnl": "無損益",
+      "none": "無",
+      "pts_word": "{v} 點",
+      "sum_all": "全部 {n}",
+      "sum_sub": "每個市場各有一個 $10,000 模擬帳本 · 點選即可開啟",
+      "pf_main": "所有帳本合計：做多 {nl} 筆（{lu}），做空 {ns} 筆（{su}）",
+      "pf_gross": "總部位為權益的 {x} 倍",
+      "pf_stops": "若所有停損同時觸發：{v}",
+      "pf_pct": "（{p}%）",
+      "bk_sh_cap": "影子帳本：主規則與挑戰者在相同機率下對比",
+      "bk_since": "自 {s} UTC 起",
+      "bk_sh_aria": "影子帳本記分板",
+      "th_book": "帳本",
+      "th_return": "報酬",
+      "th_vsmain": "對比主帳本",
+      "th_trades": "交易次數",
+      "th_won": "勝率",
+      "th_net": "淨損益",
+      "th_range": "每筆交易 90% 區間",
+      "th_verdict": "判定",
+      "range_to": "{a} 至 {b}",
+      "bk_sa_cap": "記分板：所有帳本，只計即時交易，並附每筆交易結果的 90% 區間",
+      "bk_sa_aria": "所有帳本的前瞻記分板",
+      "bk_trades_one": "{n} 筆交易",
+      "bk_trades_many": "{n} 筆交易",
+      "bk_won": "勝率 {v}",
+      "bk_avg": "平均 {v}",
+      "bk_net": "淨 {v}",
+      "bk_waiting": "等待中：",
+      "bk_open": "持倉中：",
+      "bk_from": "，進場 {v}",
+      "bk_stop": "，停損 {v}",
+      "bk_t1": "，T1 {v}",
+      "bk_t2": "，T2 {v}",
+      "bk_last_closed": "最近 {n} 筆已平倉",
+      "bk_notrade": "登記（{d}）以來尚無交易。",
+      "bk_rule": "規則",
+      "bk_pb_cap": "策略帳本：獨立的 15 分鐘規則，每筆交易各用 $10,000",
+      "bk_pb_note": "歷史測試發現，扣除手續費後這些規則都沒有明顯獲利；它們以模擬交易持續前瞻運行，讓即時結果來證實或否定。",
+      "bk_none": "檔案中還沒有帳本。",
+      "k_aria": "依時間尺度與市場的方向命中率",
+      "k_note": "已評分的判斷中，方向與價格先走方向一致的比例。50% 等同擲硬幣；綠色代表 55% 以上。",
+      "k_updated": "更新於 {u} UTC。",
+      "k_ideas": "點子佇列 · 每日異常挖掘得到的 {n} 條線索",
+      "k_none": "尚無時間尺度報告。引擎在每個時間尺度都有已評分的判斷後就會顯示。",
+      "fm_side": "請先選擇方向：做多、做空或沒有看法。未送出任何內容。",
+      "fm_who": "請填寫名字：1 到 40 個字母、數字、空格或 . _ ' - 。未送出任何內容。",
+      "fm_note": "理由超過 500 字。未送出任何內容。",
+      "fm_pin": "請輸入 PIN 碼。未送出任何內容。",
+      "fm_sending": "送出中…",
+      "fm_ok": "謝謝你，{who}。你對 {c} 的回答（{s}）已進入引擎收件匣{id}。引擎會在下一個 15 分鐘步驟讀取，之後顯示在紀錄中。",
+      "fm_ok_id": "，編號 {id}",
+      "fm_said_sep": "，",
+      "fm_400": "伺服器無法接受這個回答。請檢查名字（只限字母、數字、空格及 . _ ' -，最多 40 個）與理由（最多 500 字），再送出一次。未記錄任何內容。",
+      "fm_403": "PIN 碼未被接受。未記錄任何內容。輸錯五次 PIN 碼後，此連線須等待 15 分鐘。",
+      "fm_413": "回答太長。請縮短理由後再送出。未記錄任何內容。",
+      "fm_429": "嘗試次數過多。請等幾分鐘（輸錯五次 PIN 碼後須等 15 分鐘）再送出。未記錄任何內容。",
+      "fm_503": "尚未開放回答：伺服器還沒設定 PIN 碼。未記錄任何內容。",
+      "fm_other": "目前無法連上回答服務（HTTP {s}）。未記錄任何內容，請稍後再試。",
+      "fm_net": "無法連上伺服器。未記錄任何內容，請檢查連線後再試。",
+      "p4_badge": "未通過 · 前瞻模擬",
+      "p4_pos_long": "做多 {x}，自 {w} 起",
+      "p4_pos_short": "做空 {x}，自 {w} 起",
+      "p4_equity": "權益 {v}（{r}）",
+      "p4_mom": "30 日動能 {v}（{d}）→ {s}",
+      "p4_up": "向上",
+      "p4_down": "向下",
+      "p4_unknown": "不明",
+      "p4_st_wait": "等待中",
+      "p4_st_pull": "等待回檔進場",
+      "p4_st_out": "出場，等待下一次 00:00 UTC 決策",
+      "p4_st_warm": "等待規則下一次進場（暖身期）",
+      "p4_hold": "上線以來現貨買進持有 {v} · 最大回落 {dd}（持有 {h}）",
+      "bk_loop_cap": "循環帳本：未通過策略循環的規則，BTC 與 ETH 各有一個 $10,000 模擬帳本",
+      "bk_loop_note": "這些規則在歷史測試中有獲利，但未通過策略循環的嚴格檢驗（分段占比與顯著性），因此列為未通過。它們只以模擬交易前瞻運行，以收集未見過的證據。"
+    },
+    "zh-CN": {
+      "title": "Mind 15",
+      "nav_aria": "页面",
+      "nav_mark": "AI 交易",
+      "nav_forecast": "预测",
+      "nav_books": "引擎与账本",
+      "nav_congress": "国会议员交易",
+      "langs_aria": "语言",
+      "lede_init": "读取二十多个数据来源，权衡概率，选定方向，写下理由，再给自己打分。",
+      "lede_n": "读取 {n} 个数据来源，权衡概率，选定方向，写下理由，再给自己打分。",
+      "market_aria": "市场",
+      "chip_last": "最新决策 ",
+      "chip_paper": "仅为模拟，非投资建议。",
+      "tabs_aria": "页面分区",
+      "tab_overview": "总览",
+      "tab_cards": "卡片",
+      "tab_books": "账本",
+      "tab_journal": "日志",
+      "engine_note": "（此区内容来自引擎，暂以英文显示）",
+      "m_h": "所有市场",
+      "m_sub_init": "点击市场即可打开",
+      "hero_aria": "图表与决策",
+      "chart_sub": "15 分钟 K 线 · 最近 24 小时",
+      "loading": "加载中…",
+      "lg_res": "阻力",
+      "lg_sup": "支撑",
+      "lg_entry": "入场价",
+      "lg_stop": "止损",
+      "lg_targets": "目标价",
+      "lg_side": "每根 K 线下方是引擎当时的方向：",
+      "long": "做多",
+      "short": "做空",
+      "flat": "空仓",
+      "lg_empty": "空白 = 没有实时记录",
+      "dec_h": "决策",
+      "cards_sub_init": "每张卡：读取的数据、偏向哪一方，以及引擎对它的信任度",
+      "k_h": "哪个时间尺度最准",
+      "k_sub": "各时间尺度判对方向的比例，按市场列出",
+      "j_h": "思考日志",
+      "l_h": "学习",
+      "l_sub": "两个币种 · 已评分的判断",
+      "q_h": "流动性地图",
+      "q_view_aria": "流动性地图范围",
+      "q_near": "近景 ±2%",
+      "q_eagle": "鹰眼视角 ±10%",
+      "b_h": "策略与影子账本",
+      "b_sub": "与主账本并行模拟交易的规则，按后续走势评分",
+      "s_h": "影子账本",
+      "s_sub": "一条事先写定的规则，在主账本旁模拟交易",
+      "a_h": "引擎想问你",
+      "a_sub": "你的回答也是一个数据来源，和每张卡一样接受评分",
+      "form_aria": "回答引擎",
+      "side_aria": "你的方向",
+      "f_long": "做多",
+      "f_short": "做空",
+      "f_none": "没有看法",
+      "sure_aria": "你有多确定",
+      "sure_lab": "确定程度",
+      "sure_b30": "有点",
+      "sure_b60": "比较",
+      "sure_b90": "非常",
+      "note_lab": "理由（选填，最多 500 字）",
+      "note_ph": "一条新闻、一笔资金流、一个价位",
+      "who_lab": "你的名字",
+      "who_ph": "名字",
+      "pin_lab": "PIN 码",
+      "pin_ph": "PIN 码",
+      "send": "发送",
+      "answer_note": "只有知道 PIN 码的人才能回答。PIN 码由服务器校验，本页从不保存。引擎会在下一个 15 分钟步骤读取新回答，之后显示在记录中。",
+      "audit_cap": "审计记录 · 每个问题和回答都会保留",
+      "foot_init": "实验模型 · 仅为模拟 · 非投资建议。读数是数据点，不是信号。",
+      "no_data": "没有数据",
+      "last_update": "最后更新：{a}",
+      "update_unknown": "更新时间不明",
+      "live_every": "运行中 · 每 {n} 分钟思考一次",
+      "age_none": "数据时间：尚未加载任何数据",
+      "age_unknown": "数据时间不明：文件没有时间戳",
+      "age_one": "数据为 {n} 分钟前",
+      "age_many": "数据为 {n} 分钟前",
+      "ban_failed": "刚才无法加载最新文件，当前显示的是上一次读到的版本。",
+      "ban_behind": "此页数据已落后。",
+      "ban_wrote": "引擎在 {a}写入此文件（{w} UTC），通常每 {n} 分钟写入一次。以下数字可能已过时。",
+      "ban_nostamp": "文件没有时间戳，无法得知数据时间。以下数字可能已过时。",
+      "note_default": "实验模型。仅为模拟，非投资建议。",
+      "foot_tail": "读数是数据点，不是信号。这里不会下任何单。",
+      "foot_written": "文件写入于 {w} UTC",
+      "foot_unknown": "文件时间不明",
+      "foot_version": "引擎版本 {v}",
+      "foot_check": "本页每分钟检查一次新文件。",
+      "err_nofile": "无法加载引擎的数据文件（page.json），目前没有内容可显示。本页每分钟会重试一次。",
+      "panel_nodata": "此面板暂无数据。",
+      "no_data_for": "{c} 暂无数据。",
+      "no_data_yet": "暂无数据。",
+      "sp": "",
+      "end": "。",
+      "colon": "：",
+      "ago_lt1": "不到 1 分钟前",
+      "ago_m_one": "{n} 分钟前",
+      "ago_m_many": "{n} 分钟前",
+      "ago_h_one": "{n} 小时前",
+      "ago_h_many": "{n} 小时前",
+      "ago_d_one": "{n} 天前",
+      "ago_d_many": "{n} 天前",
+      "span_m_one": "{n} 分钟",
+      "span_m_many": "{n} 分钟",
+      "span_hm": "{h} 小时 {m} 分",
+      "span_h_one": "{n} 小时",
+      "span_h_many": "{n} 小时",
+      "side_LONG": "做多",
+      "side_SHORT": "做空",
+      "side_FLAT": "空仓",
+      "no_view": "没有看法",
+      "u_pts": " 点",
+      "u_oz": "盎司",
+      "u_bbl": "桶",
+      "u_units": "单位",
+      "pair_XAUUSD": "黄金 · XAU/USD",
+      "pair_XAGUSD": "白银 · XAG/USD",
+      "pair_WTI": "WTI 原油",
+      "pair_BRENT": "布伦特原油",
+      "short_GOLD": "黄金",
+      "short_SILVER": "白银",
+      "ch_aria_none": "{c} 价格图：文件中还没有 K 线。",
+      "ch_aria": "{c} 15 分钟 K 线，{a} 至 {b} UTC。开盘 {o}，最高 {h}，最低 {l}，最新收盘 {cl}（{chg}）。",
+      "ch_aria_res": "阻力 {v}。",
+      "ch_aria_sup": "支撑 {v}。",
+      "ch_aria_run": "持仓中的{s}交易，入场 {v}",
+      "ch_aria_stop": "，止损 {v}",
+      "ch_aria_t1": "，目标价 1 {v}",
+      "ch_aria_t2": "，目标价 2 {v}",
+      "st_text": "这 {n} 个时段中引擎的方向：做多 {l} 个、做空 {s} 个、空仓 {f} 个",
+      "st_nolive": "，另有 {n} 个没有实时记录（上线之前）。",
+      "line_entry": "入场",
+      "line_t": "目标价 {k}",
+      "line_t_ref": "参考目标价 {k}",
+      "x_tgt_passed": "已越过，仍持有",
+      "tgt_note": "目标价仅供参考：本账本让利润奔跑，不会在目标价出场。它只在止损价（进场时设定、不会移动）或胜率反转达 10 个百分点时（反手）出场。会止盈的出场规则在“账本”页面以影子账本测试。",
+      "ch_nocandles": "文件中还没有 K 线。引擎下一步运行后就会显示图表。",
+      "ro_point": "指向一根 K 线即可查看价格。",
+      "ro_line": "{w} UTC · 开 {o} · 高 {h} · 低 {l} · 收 {c} · 引擎 {s}",
+      "ro_notlive": "尚未上线",
+      "ch_move": "24 小时 {v}",
+      "dec_aria": "未来 24 小时概率：先跌 {d}，持平 {m}，先涨 {u}。引擎目前{p}。",
+      "dec_aria_none": "尚无概率。引擎目前{p}。",
+      "odds_down": "先跌 {v}",
+      "odds_neither": "持平 {v}",
+      "odds_up": "先涨 {v}",
+      "dec_noodds": "尚无概率：引擎仍在学习。",
+      "edge_even": "均势",
+      "edge_up": "上涨方占优",
+      "edge_down": "下跌方占优",
+      "edge_line": "优势 {v} · {l}",
+      "dec_nosentence": "文件中没有决策说明。",
+      "t_enter": "入场门槛",
+      "t_flip": "翻转门槛",
+      "x_risk_is_high": "风险偏高",
+      "x_edge_needed": "所需优势",
+      "t_regime": "市场状态",
+      "x_risk_high": "风险高",
+      "x_risk_normal": "风险正常",
+      "rg_TREND_UP": "上升趋势",
+      "rg_TREND_DOWN": "下降趋势",
+      "rg_MOMENTUM_UP": "向上动能",
+      "rg_MOMENTUM_DOWN": "向下动能",
+      "rg_RANGE": "区间震荡",
+      "rg_TRANSITION": "转换期",
+      "tr_UP": "上涨",
+      "tr_DOWN": "下跌",
+      "tr_MIXED": "混合",
+      "tr_FLAT": "持平",
+      "cap_trend": "各时间尺度趋势",
+      "idle_aria": "已用 {i}/{m} 个空仓时段",
+      "idle_line": "空仓额度：已用 {i}/{m} 个时段",
+      "idle_row": "连续空仓时段：{i}",
+      "why_in_ENTER": "自己的判断",
+      "why_in_FORCED": "强制规则（空仓已达上限）",
+      "why_in_FLIP": "从反方向翻转",
+      "whys_ENTER": "自行判断",
+      "whys_FORCED": "强制规则",
+      "whys_FLIP": "翻转",
+      "whyo_STEP_ASIDE": "离场观望：风险偏高且优势已消失",
+      "whyo_STOP": "触及止损",
+      "whyo_FLIP": "翻转到反方向",
+      "whyo_OPEN": "仍在持仓",
+      "ex_h": "执行 · {c} 模拟账本",
+      "ex_started": "初始资金 {v}",
+      "ex_fee": "单边手续费 {v}%",
+      "ex_paper": "模拟资金",
+      "closed_shown_one": "下方列出 {n} 笔已平仓交易",
+      "closed_shown_many": "下方列出 {n} 笔已平仓交易",
+      "closed_none_yet": "尚无已平仓交易",
+      "ex_since": "，自 {w} 起",
+      "ex_openedby": "，开仓原因：{w}",
+      "running": "持仓中",
+      "t_size": "数量",
+      "x_at_entry": "入场时 {v}",
+      "t_entry": "入场价",
+      "x_opened": "开仓于 {w}",
+      "t_mark": "标记价",
+      "x_last_close": "最新收盘价",
+      "t_unreal": "未实现盈亏",
+      "x_in_profit": " 盈利",
+      "x_in_loss": " 亏损",
+      "x_from_entry": "距入场价 {v}%",
+      "x_at_risk": "风险 {v}",
+      "t_fees": "手续费",
+      "x_paid": "已付 {v}",
+      "x_to_close": "平仓约 {v}",
+      "t_ifclosed": "若现在平仓",
+      "x_both_fees": "扣除双边手续费后",
+      "t_time_in": "持仓时间",
+      "sess_one": "{n} 个时段",
+      "sess_many": "{n} 个时段",
+      "t_account": "账户",
+      "x_with_trade": "此交易按标记价计算",
+      "t_realised_sofar": "至今已实现",
+      "t_position": "持仓",
+      "x_marked_last": "按最新收盘价计算",
+      "ex_flat_opens": "目前空仓。下一根开盘时将{s}{at}。",
+      "ex_at_paren": "（{w}）",
+      "next_open_v": "开仓{s}",
+      "next_at": "于 {w}",
+      "next_at_open": "于下一根开盘",
+      "ex_flat_dot": "空仓。",
+      "ex_may_one": "还可再空仓 {n} 个时段，之后必须选定方向。",
+      "ex_may_many": "还可再空仓 {n} 个时段，之后必须选定方向。",
+      "ex_used": "空仓额度已用完：下一根收盘时必须选定方向。",
+      "nv_wait": "等待或入场",
+      "nv_must": "必须选定方向",
+      "idle_left_one": "剩 {n} 个空仓时段",
+      "idle_left_many": "剩 {n} 个空仓时段",
+      "nx_mandate": "由强制规则决定",
+      "ex_flat": "空仓。",
+      "no_open_trade": "无持仓",
+      "x_idle": "空仓 {i}/{m} 个时段",
+      "x_started_at": "初始 {v}",
+      "t_realised": "已实现",
+      "t_next": "下一步",
+      "x_no_open": "无持仓",
+      "t_fees_paid": "已付手续费",
+      "x_so_far": "至今",
+      "cap_closed": "已平仓交易",
+      "newest_first": "最新在前",
+      "closed_empty": "尚无已平仓交易。第一笔交易平仓后会显示在这里。",
+      "th_side": "方向",
+      "th_opened": "开仓（UTC）",
+      "th_closed": "平仓（UTC）",
+      "th_entry": "入场价",
+      "th_exit": "出场价",
+      "th_result": "结果",
+      "th_fees": "手续费",
+      "th_after": "平仓后账户",
+      "th_how": "开仓原因",
+      "th_why": "平仓原因",
+      "x_gain": " 盈利",
+      "x_loss": " 亏损",
+      "not_recorded": "未记录",
+      "cap_closed_tbl": "{c} 已平仓模拟交易，最新在前",
+      "aria_closed_tbl": "已平仓交易表，可左右滚动",
+      "show_last3": "只显示最近 3 笔",
+      "show_all_closed": "显示全部 {n} 笔已平仓交易",
+      "sc_cap": "交易评分卡 · 交易执行质量，0 到 100",
+      "sc_base": "历史回放的基准",
+      "sc_base_n": "，{n} 笔交易，两个币种",
+      "sc_none": "尚无评分卡。历史回放完成评分后就会显示。",
+      "sc_none_short": "尚无评分卡。",
+      "sc_score": "交易分数",
+      "sc_score_x": "五个部分加权",
+      "sc_direction": "方向",
+      "sc_direction_x": "方向是否正确",
+      "sc_entry": "入场",
+      "sc_entry_x": "成交价对比之后 2 小时",
+      "sc_speed": "速度",
+      "sc_speed_x": "多快见效",
+      "sc_exit": "出场",
+      "sc_exit_x": "保住最佳盈利的比例",
+      "sc_risk": "风险",
+      "sc_risk_x": "见效前承受的回撤",
+      "sc_weight": "占分数 {w}%",
+      "sc_note": "这是过去数年的回放结果，作为要超越的基准。它不是上方的实时交易，也不是盈利数字。",
+      "cards_h": "决策卡",
+      "cards_h_n": "{n} 张决策卡",
+      "cards_none": "文件中还没有卡片。",
+      "card_n": "卡片 {n}",
+      "votes": "参与投票",
+      "reading_only": "仅供参考",
+      "cards_sub": "{v} 张参与方向投票 · {r} 张仅读取并显示 · 偏向条每边最多 10 点",
+      "lean_none_yet": "尚无偏向",
+      "lean_none": "无偏向",
+      "lean_long": "偏多",
+      "lean_short": "偏空",
+      "lean_by": " {v} 点",
+      "reading": "读数",
+      "show_data": "显示数据（{n}）",
+      "rated": "稳定度排名第 {r}",
+      "rated_of": "稳定度排名第 {r}（共 {n}）",
+      "trust": "信任度",
+      "cards_only_vote": "只显示参与投票的卡片",
+      "cards_more": "再显示 {n} 张仅供参考的卡片",
+      "j_sub": "每 {n} 分钟一条新记录",
+      "act_HOLD": "维持",
+      "act_ENTER": "入场",
+      "act_FORCED": "入场",
+      "act_FLIP": "翻转为",
+      "act_IDLE": "观望",
+      "act_STEP_ASIDE": "离场观望",
+      "act_WAIT": "学习中",
+      "act_fallback": "记录",
+      "chip_side": "{a}{s}",
+      "by_mandate": "（强制）",
+      "nothing_notable": "没有明显因素",
+      "cap_moved": "影响最新决策的因素",
+      "pull_long": "拉向做多",
+      "pull_short": "拉向做空",
+      "a_voice": "某个意见来源",
+      "trust_pct": "信任度 {v}%",
+      "v_long": " 做多",
+      "v_short": " 做空",
+      "cap_voices": "目前对概率影响最大的意见来源",
+      "cap_entries": "记录",
+      "j_none": "文件中还没有日志记录。",
+      "b_price": "价格 {v}",
+      "b_edge": "优势 {v}",
+      "b_position": "持仓 {s}",
+      "no_sentence": "没有记录说明。",
+      "show_fewer": "显示较少",
+      "show_all_entries": "显示全部 {n} 条记录",
+      "j_one": "文件只包含引擎最新一步的记录。较早的记录保存在引擎自己的日志中。",
+      "l_none": "暂无数据。判断完成评分后就会显示。",
+      "l_nograded": "尚无已评分的判断",
+      "l_ring_aria": "{x}：已评分的判断中有 {v}% 方向正确。抛硬币是 50%。",
+      "l_right_ring": "正确",
+      "l_coin_title": "50%：抛硬币",
+      "l_level": "与抛硬币持平",
+      "l_above": "比抛硬币高 {v} 点",
+      "l_below": "比抛硬币低 {v} 点",
+      "l_right": " 对 · ",
+      "l_wrong": " 错",
+      "l_neither": "{n} 次未分方向",
+      "l_7": "最近 7 天",
+      "l_30": "最近 30 天",
+      "l_note": "它看好的方向有多常是价格先走的方向。抛硬币是 50%，即每个圆环底部的白色刻度。接近或低于 50% 说明没有判断力。",
+      "l_trust_cap": "目前最信任的来源",
+      "l_trust_none": "还没有任何意见来源赢得信任。",
+      "l_rest_one": "其余 {v}% 的信任分散在另外 {n} 个来源。",
+      "l_rest_many": "其余 {v}% 的信任分散在另外 {n} 个来源。",
+      "l_trust_note": "信任度按每个来源的评分记录累积，每个时段都会变动。",
+      "q_none": "此时段没有快照。订单簿每个时段实时读取一次，若漏读，这里会空白到下一次读取。",
+      "q_sub": "{c} 每 {b}% 区间的挂单量 · 延伸至 {r}%",
+      "q_row_ask": "卖方，上方 {a}% 至 {b}%：{s} {c}",
+      "q_row_bid": "买方，下方 {a}% 至 {b}%：{s} {c}",
+      "q_aria": "{c} 挂单，按距中间价的距离排列",
+      "q_sellers": "上方卖方挂单 · {q} {c}",
+      "q_mid": "中间价 ${v}",
+      "q_buyers": "下方买方挂单 · {q} {c}",
+      "q_far": "1% 以外最大的挂单：买方在 {bp} 附近（{bs}），卖方在 {ap} 附近（{as}）。",
+      "q_eagle_note": "鹰眼视角：{ex} 完整订单簿，涵盖每个价位，上下各 10%。",
+      "q_near_note": "近景：{ex} 订单簿 2% 以内。",
+      "q_note": "订单簿中的挂单，按距中间价的远近排列。每个时段保留一张快照",
+      "q_note_from": "；这张来自 {w} 收盘。",
+      "sh_none": "暂无数据。影子账本会在引擎下一步运行后出现。",
+      "sh_name_default": "CPI 顺势延续",
+      "sh_name_end": "。",
+      "sh_desc": "这是测试中的假设，不是结论：美国通胀（CPI）公布后，顺着公布当根 K 线的收盘方向入场，止损设在该 K 线之外，4 小时后出场。仅做模拟交易，从不影响主账本。",
+      "sh_norows": "尚无记录。第一笔会在下次 CPI 公布时出现。",
+      "sh_left": "剩 {s}",
+      "sh_closed": "已平仓",
+      "sh_by_stop": "（触及止损）",
+      "sh_by_limit": "（{r} 上限）",
+      "sh_at": "，{w}",
+      "stat_RUNNING": "进行中",
+      "stat_CLOSED": "已平仓",
+      "stat_WAITING": "等待中",
+      "cpi_at": "CPI {w}",
+      "sh_release": "公布时 {v}",
+      "sh_away": "距离 {v}%",
+      "sh_exit": "出场",
+      "sh_mark": "标记",
+      "sh_net": "净 {v}",
+      "sh_caption": "{n} 假设的影子账本记录",
+      "th_coin": "币种",
+      "th_status": "状态",
+      "th_markexit": "标记 / 出场",
+      "sh_tbl_aria": "影子账本表，可左右滚动",
+      "sh_closed_x": "已结束的记录",
+      "sh_won_k": "盈利",
+      "sh_won_of": "共 {n} 笔已平仓",
+      "sh_won_none": "尚无平仓",
+      "sh_total_k": "合计",
+      "sh_total_x": "已平仓记录，扣除手续费后",
+      "sh_verdict": "判定规则（第一笔交易前已定）：",
+      "sure_30": "有点把握",
+      "sure_60": "比较有把握",
+      "sure_90": "非常有把握",
+      "ask_at": "提问于 {w} · 关于 {c}",
+      "ask_none": "引擎这个时段没有问题。",
+      "st_in_force": "目前有一个有效回答：",
+      "st_sure": "，{s}",
+      "st_given": "，提出于 {w}",
+      "st_hours": "，还会有效 {h} 小时",
+      "au_none": "{c} 的记录中还没有内容。",
+      "au_answered_at": "{h} 回答",
+      "au_asked_at": "{h} 提问",
+      "au_answered": "回答",
+      "au_asked": "提问",
+      "someone": "某人",
+      "au_answered_mid": " 回答：",
+      "au_stand": "，有效 {h} 小时",
+      "au_toq": "回答 {w} 的问题",
+      "au_noq": "没有文字的问题。",
+      "show_all_rows": "显示全部 {n} 行",
+      "au_nobody": "目前还没有人回答。回答会连同回答者的名字显示在这里。",
+      "au_no_refused": "没有回答被拒绝。",
+      "au_refused_one": "{n} 次尝试被拒绝。",
+      "au_refused_many": "{n} 次尝试被拒绝。",
+      "sum_none": "文件中还没有市场。",
+      "th_market": "市场",
+      "th_price": "价格",
+      "th_pnl": "盈亏",
+      "th_edge": "优势",
+      "sum_aria": "{p}：{s}，{pnl}，优势 {e}",
+      "no_pnl": "无盈亏",
+      "none": "无",
+      "pts_word": "{v} 点",
+      "sum_all": "全部 {n}",
+      "sum_sub": "每个市场各有一个 $10,000 模拟账本 · 点击即可打开",
+      "pf_main": "所有账本合计：做多 {nl} 笔（{lu}），做空 {ns} 笔（{su}）",
+      "pf_gross": "总仓位为权益的 {x} 倍",
+      "pf_stops": "若所有止损同时触发：{v}",
+      "pf_pct": "（{p}%）",
+      "bk_sh_cap": "影子账本：主规则与挑战者在相同概率下对比",
+      "bk_since": "自 {s} UTC 起",
+      "bk_sh_aria": "影子账本记分板",
+      "th_book": "账本",
+      "th_return": "收益",
+      "th_vsmain": "对比主账本",
+      "th_trades": "交易次数",
+      "th_won": "胜率",
+      "th_net": "净盈亏",
+      "th_range": "每笔交易 90% 区间",
+      "th_verdict": "判定",
+      "range_to": "{a} 至 {b}",
+      "bk_sa_cap": "记分板：所有账本，只计实时交易，并附每笔交易结果的 90% 区间",
+      "bk_sa_aria": "所有账本的前瞻记分板",
+      "bk_trades_one": "{n} 笔交易",
+      "bk_trades_many": "{n} 笔交易",
+      "bk_won": "胜率 {v}",
+      "bk_avg": "平均 {v}",
+      "bk_net": "净 {v}",
+      "bk_waiting": "等待中：",
+      "bk_open": "持仓中：",
+      "bk_from": "，入场 {v}",
+      "bk_stop": "，止损 {v}",
+      "bk_t1": "，T1 {v}",
+      "bk_t2": "，T2 {v}",
+      "bk_last_closed": "最近 {n} 笔已平仓",
+      "bk_notrade": "登记（{d}）以来尚无交易。",
+      "bk_rule": "规则",
+      "bk_pb_cap": "策略账本：独立的 15 分钟规则，每笔交易各用 $10,000",
+      "bk_pb_note": "历史测试发现，扣除手续费后这些规则都没有明显盈利；它们以模拟交易持续前瞻运行，让实时结果来证实或否定。",
+      "bk_none": "文件中还没有账本。",
+      "k_aria": "按时间尺度和市场的方向命中率",
+      "k_note": "已评分的判断中，方向与价格先走方向一致的比例。50% 等同抛硬币；绿色代表 55% 以上。",
+      "k_updated": "更新于 {u} UTC。",
+      "k_ideas": "想法队列 · 每日异常挖掘得到的 {n} 条线索",
+      "k_none": "尚无时间尺度报告。引擎在每个时间尺度都有已评分的判断后就会显示。",
+      "fm_side": "请先选择方向：做多、做空或没有看法。未发送任何内容。",
+      "fm_who": "请填写名字：1 到 40 个字母、数字、空格或 . _ ' - 。未发送任何内容。",
+      "fm_note": "理由超过 500 字。未发送任何内容。",
+      "fm_pin": "请输入 PIN 码。未发送任何内容。",
+      "fm_sending": "发送中…",
+      "fm_ok": "谢谢你，{who}。你对 {c} 的回答（{s}）已进入引擎收件箱{id}。引擎会在下一个 15 分钟步骤读取，之后显示在记录中。",
+      "fm_ok_id": "，编号 {id}",
+      "fm_said_sep": "，",
+      "fm_400": "服务器无法接受这个回答。请检查名字（只限字母、数字、空格及 . _ ' -，最多 40 个）和理由（最多 500 字），再发送一次。未记录任何内容。",
+      "fm_403": "PIN 码未被接受。未记录任何内容。输错五次 PIN 码后，此连接须等待 15 分钟。",
+      "fm_413": "回答太长。请缩短理由后再发送。未记录任何内容。",
+      "fm_429": "尝试次数过多。请等几分钟（输错五次 PIN 码后须等 15 分钟）再发送。未记录任何内容。",
+      "fm_503": "尚未开放回答：服务器还没设置 PIN 码。未记录任何内容。",
+      "fm_other": "目前无法连上回答服务（HTTP {s}）。未记录任何内容，请稍后再试。",
+      "fm_net": "无法连上服务器。未记录任何内容，请检查网络后再试。",
+      "p4_badge": "未通过 · 前瞻模拟",
+      "p4_pos_long": "做多 {x}，自 {w} 起",
+      "p4_pos_short": "做空 {x}，自 {w} 起",
+      "p4_equity": "权益 {v}（{r}）",
+      "p4_mom": "30 日动能 {v}（{d}）→ {s}",
+      "p4_up": "向上",
+      "p4_down": "向下",
+      "p4_unknown": "不明",
+      "p4_st_wait": "等待中",
+      "p4_st_pull": "等待回调入场",
+      "p4_st_out": "离场，等待下一次 00:00 UTC 决策",
+      "p4_st_warm": "等待规则下一次入场（预热期）",
+      "p4_hold": "上线以来现货买入持有 {v} · 最大回撤 {dd}（持有 {h}）",
+      "bk_loop_cap": "循环账本：未通过策略循环的规则，BTC 和 ETH 各有一个 $10,000 模拟账本",
+      "bk_loop_note": "这些规则在历史测试中有盈利，但未通过策略循环的严格检验（分段占比与显著性），因此列为未通过。它们只以模拟交易前瞻运行，以收集未见过的证据。"
+    }
+  };
+  function langOf(tag) {
+    const s = String(tag || "").toLowerCase();
+    if (s === "en" || s.indexOf("en-") === 0) return "en";
+    if (/^zh-(tw|hk|mo)(-|$)/.test(s) || s.indexOf("zh-hant") === 0) return "zh-TW";
+    if (s === "zh" || /^zh-(cn|sg)(-|$)/.test(s) || s.indexOf("zh-hans") === 0) return "zh-CN";
+    return "";
+  }
+  function pickLang() {
+    let q = null;
+    try { q = new URLSearchParams(window.location.search).get("lang"); } catch (e) { /* no URLSearchParams */ }
+    if (LANGS.indexOf(q) >= 0) { try { window.localStorage.setItem(LANG_KEY, q); } catch (e) { /* storage blocked */ } return q; }
+    try { const s = window.localStorage.getItem(LANG_KEY); if (LANGS.indexOf(s) >= 0) return s; } catch (e) { /* storage blocked */ }
+    const list = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+    for (let i = 0; i < list.length; i++) { const l = langOf(list[i]); if (l) return l; }
+    return "en";
+  }
+  let lang = pickLang(), segLang = "en";
+  function has(key) { return Object.prototype.hasOwnProperty.call(I18N.en, key); }
+  // t("key", { name: value }) fills {name}; a key missing from a Chinese table falls back to English
+  function t(key, vars) {
+    const T = I18N[lang] || I18N.en;
+    let s = Object.prototype.hasOwnProperty.call(T, key) ? T[key] : has(key) ? I18N.en[key] : key;
+    if (vars) s = s.replace(/\{(\w+)\}/g, function (m, k) { return vars[k] != null ? String(vars[k]) : m; });
+    return s;
+  }
+  function tn(key, n, vars) { return t(key + (n === 1 ? "_one" : "_many"), Object.assign({ n: n }, vars || {})); }
+  function isZh() { return lang !== "en"; }
+  // like t(), but a slot may hold a DOM node (an exchange name marked translate="no", a piece of engine text); returns a
+  // list for el() / fill()
+  function tx(key, vars) {
+    const s = t(key), out = [], re = /\{(\w+)\}/g;
+    let m, last = 0;
+    while ((m = re.exec(s))) {
+      const v = vars ? vars[m[1]] : null;
+      if (v == null) continue;
+      out.push(s.slice(last, m.index), v);
+      last = m.index + m[0].length;
+    }
+    out.push(s.slice(last));
+    return out.filter(function (x) { return x !== ""; });
+  }
+
+  let data = null, lastStamp = null, coin = "BTCUSDT", busy = false, failed = false, journalOpen = false, auditOpen = false;
+  let wanted = null;   // the market remembered from a last visit; chosen once page.json lists it
+  let liqView = "near";   // liquidity map range: "near" (+-2%) or "eagle" (+-10%)
+  let cardsAll = false;   // decision cards: only the voting ones until "show more"
+  let closedOpen = false; // closed trades: the last 3 until "show more"
+  const TABS = ["overview", "cards", "books", "journal"];
+  let tab = "overview";
+  try { const t = window.localStorage.getItem("mind15.tab"); if (TABS.indexOf(t) >= 0) tab = t; } catch (e) { /* storage blocked */ }
+  try { const s = window.localStorage.getItem(STORE_KEY); if (s) wanted = /^(BTC|ETH)$/.test(s) ? s + "USDT" : s; } catch (e) { /* storage blocked: BTC */ }
+  if (COINS.indexOf(wanted) >= 0) coin = wanted;
+
+  /* ---------- small helpers ---------- */
+  function $(id) { return document.getElementById(id); }
+  // every string from the file reaches the page as a text node (never as markup)
+  function add(node, kid) {
+    if (kid == null || kid === false) return;
+    if (Array.isArray(kid)) { kid.forEach(function (k) { add(node, k); }); return; }
+    node.appendChild(kid.nodeType ? kid : document.createTextNode(String(kid)));
+  }
+  function el(tag, attrs) {
+    const n = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      const v = attrs[k];
+      if (v == null || v === false) return;
+      if (k === "class") n.className = v; else n.setAttribute(k, v === true ? "" : String(v));
+    });
+    for (let i = 2; i < arguments.length; i++) add(n, arguments[i]);
+    return n;
+  }
+  function fill(box, kids) { box.replaceChildren(); add(box, kids); }
+  // text written by the engine (page.json), shown as it is: English in every language, under the note line in Chinese
+  function dataSpan(s) { return el("span", { "data-i18n-data": true }, s); }
+  function empty(msg) { return el("p", { class: "empty" }, msg); }
+  function num(x) { return typeof x === "number" && isFinite(x) ? x : null; }
+  function str(x) { return typeof x === "string" ? x : x == null ? "" : String(x); }
+  function arr(x) { return Array.isArray(x) ? x : []; }
+  function obj(x) { return x && typeof x === "object" && !Array.isArray(x) ? x : null; }
+  function clamp(x, a, b) { return Math.min(b, Math.max(a, x)); }
+
+  function fmt(x, dp) {
+    x = num(x);
+    if (x == null) return DASH;
+    return x.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+  function isZero(x, dp) { return Math.abs(x) < 0.5 * Math.pow(10, -dp); }
+  function sgn(x, dp) { return isZero(x, dp) ? "" : x > 0 ? "+" : MINUS; }
+  function signed(x, dp, unit) { x = num(x); return x == null ? DASH : sgn(x, dp) + fmt(Math.abs(x), dp) + (unit || ""); }
+  function usd(x) { x = num(x); return x == null ? DASH : (x < 0 && !isZero(x, 2) ? MINUS : "") + "$" + fmt(Math.abs(x), 2); }
+  function usdSigned(x) { x = num(x); return x == null ? DASH : sgn(x, 2) + "$" + fmt(Math.abs(x), 2); }
+  function tone(x, dp) { x = num(x); return x == null || isZero(x, dp == null ? 2 : dp) ? "flat" : x > 0 ? "up" : "down"; }
+  function qty(x) { x = num(x); if (x == null) return DASH; const a = Math.abs(x); return fmt(x, a >= 100 ? 0 : a >= 10 ? 1 : a >= 1 ? 3 : 4); }
+  function pctOf(x) { x = num(x); return x == null ? DASH : fmt(x * 100, 1) + "%"; }
+  function plural(n, one, many) { return n + " " + (n === 1 ? one : (many || one + "s")); }
+
+  function parseUtc(s) {
+    if (typeof s === "number" && isFinite(s)) return new Date(s * 1000);
+    if (typeof s !== "string" || !s) return null;
+    let t = s.trim();
+    if (/^\d{4}-\d\d-\d\d \d\d:\d\d/.test(t)) {
+      t = t.replace(" ", "T");
+      if (/T\d\d:\d\d$/.test(t)) t += ":00";
+      if (!/(Z|[+-]\d\d:?\d\d)$/.test(t)) t += "Z";
+    }
+    const d = new Date(t);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  const F = function (o) { return new Intl.DateTimeFormat("en-GB", Object.assign({ timeZone: "UTC", hour12: false }, o)); };
+  const fHm = F({ hour: "2-digit", minute: "2-digit" }), fDay = F({ day: "numeric", month: "short" });
+  function hm(d) { return d ? fHm.format(d) : DASH; }
+  // "9 Nov" in English, "11月9日" in Chinese; the clock is UTC in every language
+  function dayFmt(d) { return isZh() ? (d.getUTCMonth() + 1) + "月" + d.getUTCDate() + "日" : fDay.format(d); }
+  function dayHm(d) { return d ? dayFmt(d) + " " + fHm.format(d) : DASH; }
+  function sameDay(a, b) { return a && b && a.toISOString().slice(0, 10) === b.toISOString().slice(0, 10); }
+  // "15:00 UTC" for today, "9 Nov 15:00 UTC" for another day
+  function when(d) { return !d ? DASH : (sameDay(d, new Date()) ? hm(d) : dayHm(d)) + " UTC"; }
+  function ago(ms) {
+    const m = Math.max(0, Math.round(ms / 60000));
+    if (m < 1) return t("ago_lt1");
+    if (m < 90) return tn("ago_m", m);
+    const h = Math.round(m / 60);
+    if (h < 48) return tn("ago_h", h);
+    return tn("ago_d", Math.round(h / 24));
+  }
+  function span(sessions, minutes) {
+    const m = sessions * minutes;
+    if (m < 60) return tn("span_m", m);
+    const h = Math.floor(m / 60), r = Math.round(m - h * 60);
+    return r ? t("span_hm", { h: h, m: r }) : tn("span_h", h);
+  }
+  function sideOf(v) {
+    if (typeof v === "number") return v > 0 ? "LONG" : v < 0 ? "SHORT" : "FLAT";
+    const s = str(v).toUpperCase();
+    return s === "LONG" || s === "SHORT" || s === "FLAT" ? s : "";
+  }
+  function sideClass(s) { return s === "LONG" ? "long" : s === "SHORT" ? "short" : "wait"; }
+  function sideWord(s) { return s === "LONG" || s === "SHORT" || s === "FLAT" ? t("side_" + s) : DASH; }
+  function sideLow(s) { const w = sideWord(s); return isZh() ? w : w.toLowerCase(); }   // "long" inside a sentence
+  function sideUp(s) { return isZh() ? sideWord(s) : s; }                                // "LONG" on a tag
+  function tile(k, v, x, cls) {
+    return el("div", { class: "tile" }, el("div", { class: "k" }, k), el("div", { class: "v" + (cls ? " " + cls : "") }, v), x ? el("div", { class: "x" }, x) : null);
+  }
+  function asset() { const a = data && obj(data.assets); return a ? obj(a[coin]) : null; }
+  function pairLabel(id) { const A = data && obj(data.assets) && obj(data.assets[id]); return (isZh() && has("pair_" + id) ? t("pair_" + id) : PAIRS[id]) || (A && str(A.name)) || str(id); }
+  function unitLabel(id) { if (id === "USDJPY") return "USD"; const k = ({ XAUUSD: "u_oz", XAGUSD: "u_oz", SPX: "u_units", WTI: "u_bbl", BRENT: "u_bbl" })[id]; return k ? t(k) : shortLabel(id); }
+  function shortLabel(id) { const A = data && obj(data.assets) && obj(data.assets[id]); const s = (A && str(A.short)) || str(id).replace(/USDT$/, ""); return has("short_" + s) ? t("short_" + s) : s; }
+  // one button per market in page.json, in the file's order (crypto first)
+  function syncMarkets() {
+    const a = data && obj(data.assets);
+    const ids = a ? Object.keys(a).filter(function (k) { return obj(a[k]); }) : [];
+    if (!ids.length) return;
+    if (ids.join() !== COINS.join() || segLang !== lang) {   // also rebuilt in a new language (GOLD, SILVER have names)
+      COINS = ids; segLang = lang;
+      fill($("coinSeg"), ids.map(function (id) { return el("button", { type: "button", "data-coin": id, "aria-pressed": "false" }, shortLabel(id)); }));
+    }
+    if (COINS.indexOf(wanted) >= 0) { coin = wanted; wanted = null; }
+    if (COINS.indexOf(coin) < 0) coin = COINS[0];
+  }
+  function mandate() { return (data && obj(data.mandate)) || {}; }
+  function sessionMin() { return num(mandate().session_minutes) || 15; }
+  // one panel failing must never blank the rest
+  function safe(boxId, fn) {
+    try { fn(); } catch (e) {
+      if (window.console) console.warn("Mind 15: panel " + boxId + " could not be drawn", e);
+      const b = $(boxId); if (b) fill(b, empty(t("panel_nodata")));
+    }
+  }
+
+  /* ---------- header, banner, footer ---------- */
+  function renderHeader() {
+    const A = asset(), banner = $("banner");
+    const g = data ? parseUtc(data.generated_utc) : null, age = g ? Date.now() - g.getTime() : null;
+    const stale = age == null || age > STALE_MS;
+    const dt = A ? parseUtc(A.time) : null;
+    fill($("chipTime"), [t("chip_last"), el("b", null, dt ? when(dt) : DASH)]);
+    $("pulse").className = "pulse" + (stale ? " stale" : "");
+    $("kickerText").textContent = !data ? t("no_data") : stale ? (g ? t("last_update", { a: ago(age) }) : t("update_unknown"))
+      : t("live_every", { n: sessionMin() });
+    const mins = age == null ? null : Math.max(0, Math.round(age / 60000));
+    $("ageLine").textContent = !data ? t("age_none") : mins == null ? t("age_unknown") : tn("age", mins);
+    if (data && (stale || failed)) {
+      banner.hidden = false;
+      banner.textContent = (failed ? t("ban_failed") : t("ban_behind")) + (g
+        ? t("ban_wrote", { a: ago(age), w: dayHm(g), n: sessionMin() })
+        : t("ban_nostamp"));
+    } else if (data) { banner.hidden = true; }
+    const own = asset(), titles = own && arr(own.cards).length ? arr(own.cards) : data ? arr(data.cards) : [];   // this market's own cards
+    if (titles.length) $("lede").textContent = t("lede_n", { n: isZh() ? titles.length : numberWord(titles.length).toLowerCase() });
+    if (data) {
+      const note = str(data.note).replace(/\s+$/, ""), said = isZh() && note === I18N.en.note_default ? t("note_default") : note;
+      fill($("footNote"), [said ? (said === note ? dataSpan(said) : said) : null, said ? t("sp") : "", t("foot_tail")]);
+      $("footMeta").textContent = (g ? t("foot_written", { w: dayHm(g) }) : t("foot_unknown")) + (data.version ? DOT + t("foot_version", { v: str(data.version) }) : "") + DOT + t("foot_check");
+    }
+  }
+  function numberWord(n) {
+    const w = { 1: "One", 2: "Two", 3: "Three", 4: "Four", 5: "Five", 6: "Six", 7: "Seven", 8: "Eight", 9: "Nine", 10: "Ten", 11: "Eleven", 12: "Twelve", 13: "Thirteen",
+      14: "Fourteen", 15: "Fifteen", 16: "Sixteen", 17: "Seventeen", 18: "Eighteen", 19: "Nineteen", 20: "Twenty" };
+    return w[n] || String(n);
+  }
+
+  /* ---------- the candle chart (canvas) ---------- */
+  const chart = { rows: [], lines: [], hover: -1, geo: null, raf: 0 };
+  function levelOf(A, key) { const lv = A && obj(A.level_reads); return lv ? num(lv[key]) : null; }
+  function tradeOf(A) {
+    // the running trade: from "trade" when the file has it, else from the coin's own position / entry / stop
+    const t = A && obj(A.trade), pos = sideOf(t ? t.status : A && A.position);
+    if (pos !== "LONG" && pos !== "SHORT") return null;
+    return { side: pos, entry: num(t && t.entry_price) != null ? t.entry_price : num(A.entry), stop: num(t && t.stop_price) != null ? t.stop_price : num(A.stop),
+      opened: parseUtc(t && t.opened_utc), t1: num(t && t.target_1_price), t2: num(t && t.target_2_price) };
+  }
+  function prepChart() {
+    const A = asset(), K = A ? arr(A.candles_24h) : [], S = A ? arr(A.stance_24h) : [];
+    chart.rows = [];
+    K.forEach(function (k, i) {
+      if (!Array.isArray(k) || k.length < 5) return;
+      const t = num(k[0]), o = num(k[1]), h = num(k[2]), l = num(k[3]), c = num(k[4]);
+      if (t == null || o == null || h == null || l == null || c == null) return;
+      const s = S[i];
+      chart.rows.push({ t: t, o: o, h: Math.max(h, o, c), l: Math.min(l, o, c), c: c, s: s === 1 || s === -1 || s === 0 ? s : null });
+    });
+    chart.lines = [];
+    const res = levelOf(A, "res_px"), sup = levelOf(A, "sup_px"), tr = tradeOf(A);
+    if (res != null) chart.lines.push({ v: res, name: t("lg_res"), color: C.down, ink: C.downInk, dash: true, side: "L", above: true });
+    if (sup != null) chart.lines.push({ v: sup, name: t("lg_sup"), color: C.up, ink: C.upInk, dash: true, side: "L", above: false });
+    if (tr && tr.entry != null) chart.lines.push({ v: tr.entry, name: t("line_entry"), color: C.cyan, ink: C.cyanInk, dash: false, side: "R", above: true, from: tr.opened, glow: true });
+    if (tr && tr.stop != null) chart.lines.push({ v: tr.stop, name: t("lg_stop"), color: C.amber, ink: C.amberInk, dash: true, side: "R", above: tr.entry != null ? tr.stop >= tr.entry : false });
+    if (tr && tr.t1 != null) chart.lines.push({ v: tr.t1, name: t("line_t", { k: 1 }), color: C.violet, ink: C.violetInk, dash: true, side: "R", above: tr.entry != null ? tr.t1 >= tr.entry : true, from: tr.opened });
+    if (tr && tr.t2 != null) chart.lines.push({ v: tr.t2, name: t("line_t", { k: 2 }), color: C.violet, ink: C.violetInk, dash: true, side: "R", above: tr.entry != null ? tr.t2 >= tr.entry : true, from: tr.opened });
+    chart.hover = -1;
+    describeChart(A, tr, res, sup);
+  }
+  function describeChart(A, tr, res, sup) {
+    const R = chart.rows, cv = $("chart"), st = $("stanceText");
+    if (!R.length) { cv.setAttribute("aria-label", t("ch_aria_none", { c: shortLabel(coin) })); st.textContent = ""; return; }
+    const first = R[0], last = R[R.length - 1];
+    let hi = -Infinity, lo = Infinity, nl = 0, ns = 0, nf = 0, nn = 0;
+    R.forEach(function (r) { hi = Math.max(hi, r.h); lo = Math.min(lo, r.l); if (r.s === 1) nl++; else if (r.s === -1) ns++; else if (r.s === 0) nf++; else nn++; });
+    const chg = (last.c / first.o - 1) * 100;
+    let s = t("ch_aria", { c: shortLabel(coin), a: dayHm(new Date(first.t * 1000)), b: dayHm(new Date((last.t + 900) * 1000)), o: fmt(first.o, 2),
+      h: fmt(hi, 2), l: fmt(lo, 2), cl: fmt(last.c, 2), chg: signed(chg, 2, "%") });
+    if (res != null) s += t("ch_aria_res", { v: fmt(res, 2) });
+    if (sup != null) s += t("ch_aria_sup", { v: fmt(sup, 2) });
+    if (tr && tr.entry != null) s += t("ch_aria_run", { s: sideLow(tr.side), v: fmt(tr.entry, 2) }) + (tr.stop != null ? t("ch_aria_stop", { v: fmt(tr.stop, 2) }) : "") +
+      (tr.t1 != null ? t("ch_aria_t1", { v: fmt(tr.t1, 2) }) : "") + (tr.t2 != null ? t("ch_aria_t2", { v: fmt(tr.t2, 2) }) : "") + t("end");
+    cv.setAttribute("aria-label", s);
+    st.textContent = t("st_text", { n: R.length, l: nl, s: ns, f: nf }) + (nn ? t("st_nolive", { n: nn }) : t("end"));
+  }
+  function niceStep(raw) {
+    if (!(raw > 0)) return 1;
+    const p = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / p;
+    return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * p;
+  }
+  function pill(ctx, text, x, y, align, stroke, ink) {
+    ctx.font = "500 11px " + MONO;
+    const w = Math.ceil(ctx.measureText(text).width) + 14, h = 18;
+    const left = align === "R" ? x - w : x, top = Math.round(y - h / 2);
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(left + 0.5, top + 0.5, w - 1, h - 1, 9); else ctx.rect(left + 0.5, top + 0.5, w - 1, h - 1);
+    ctx.fillStyle = "rgba(4,6,12,0.92)"; ctx.fill();
+    ctx.lineWidth = 1; ctx.strokeStyle = stroke; ctx.globalAlpha = 0.6; ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.fillStyle = ink; ctx.textAlign = "left"; ctx.textBaseline = "middle";
+    ctx.fillText(text, left + 7, top + h / 2 + 0.5);
+  }
+  function drawChart() {
+    const box = $("chartbox"), cv = $("chart"), st = $("chartState"), R = chart.rows;
+    chart.geo = null;
+    if (!R.length) {
+      st.hidden = false;
+      st.textContent = !data ? t("loading") : asset() ? t("ch_nocandles") : t("no_data_for", { c: shortLabel(coin) });
+      cv.width = cv.height = 0;
+      return;
+    }
+    st.hidden = true;
+    const W = Math.max(200, box.clientWidth), H = Math.max(160, box.clientHeight);
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+    const ctx = cv.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    const snap = function (v) { return Math.round(v * dpr) / dpr; };
+    const hair = 1 / dpr >= 0.5 ? Math.max(1, Math.round(dpr)) / dpr : 1;   // one whole device pixel or more
+
+    // price range: the candles, widened to take in a level or trade line that sits close to them
+    let lo = Infinity, hi = -Infinity;
+    R.forEach(function (r) { lo = Math.min(lo, r.l); hi = Math.max(hi, r.h); });
+    let spanP = hi - lo; if (!(spanP > 0)) spanP = Math.abs(hi) * 0.002 || 1;
+    let lo2 = lo, hi2 = hi;
+    chart.lines.forEach(function (L) {
+      if (L.v > hi && L.v - hi <= spanP * 0.6) hi2 = Math.max(hi2, L.v);
+      if (L.v < lo && lo - L.v <= spanP * 0.6) lo2 = Math.min(lo2, L.v);
+    });
+    const pad = (hi2 - lo2 || spanP) * 0.08, pMin = lo2 - pad, pMax = hi2 + pad;
+
+    // layout
+    const step = niceStep((pMax - pMin) / (H < 320 ? 4 : 5)), dp = Math.max(0, Math.min(6, -Math.floor(Math.log10(step) + 1e-9)));
+    ctx.font = "500 11px " + MONO;
+    let axisW = 0;
+    for (let v = Math.ceil(pMin / step) * step; v <= pMax; v += step) axisW = Math.max(axisW, ctx.measureText(fmt(v, dp)).width);
+    axisW = Math.max(axisW, ctx.measureText(fmt(R[R.length - 1].c, 2)).width) + 16;
+    const padL = 8, top = 10, stripH = 7, bottom = H - 36, right = W - axisW;
+    const plotW = right - padL, plotH = bottom - top, n = R.length, cw = plotW / n;
+    const X = function (i) { return padL + (i + 0.5) * cw; };
+    const Y = function (p) { return top + (pMax - p) / (pMax - pMin) * plotH; };
+    chart.geo = { padL: padL, cw: cw, n: n };
+    const yLast = clamp(Y(R[n - 1].c), top + 9, bottom - 9);
+
+    // grid, price scale
+    ctx.textBaseline = "middle"; ctx.textAlign = "left";
+    for (let v = Math.ceil(pMin / step) * step; v <= pMax; v += step) {
+      const y = snap(Y(v));
+      if (y < top + 6 || y > bottom - 4) continue;
+      ctx.fillStyle = "rgba(56,189,248,0.09)"; ctx.fillRect(padL, y, plotW, hair);
+      if (Math.abs(y - yLast) < 16) continue;   // the last close has its own tag there
+      ctx.fillStyle = C.soft; ctx.fillText(fmt(v, dp), right + 8, y + 0.5);
+    }
+    ctx.fillStyle = "rgba(120,160,255,0.14)"; ctx.fillRect(snap(right), top, hair, bottom - top + stripH + 6);
+
+    // time marks: every 6 hours, on the UTC clock
+    const marks = [];
+    R.forEach(function (r, i) { if (r.t % 21600 === 0) marks.push(i); });
+    ctx.textBaseline = "alphabetic";
+    marks.forEach(function (i) {
+      const x = snap(padL + i * cw), d = new Date(R[i].t * 1000);
+      ctx.fillStyle = "rgba(56,189,248,0.09)"; ctx.fillRect(x, top, hair, plotH);
+      const label = d.getUTCHours() === 0 ? dayFmt(d) : hm(d), tw = ctx.measureText(label).width;
+      ctx.fillStyle = C.faint; ctx.textAlign = "left";
+      ctx.fillText(label, clamp(x - tw / 2, padL, right - tw), H - 8);
+    });
+
+    // candles
+    const bodyW = Math.max(hair, snap(cw * 0.68));
+    R.forEach(function (r, i) {
+      const upc = r.c >= r.o, x = X(i);
+      ctx.fillStyle = upc ? C.up : C.down;
+      const yH = snap(Y(r.h)), yL = snap(Y(r.l));
+      ctx.fillRect(snap(x - hair / 2), yH, hair, Math.max(hair, yL - yH));
+      const yT = snap(Y(Math.max(r.o, r.c))), yB = snap(Y(Math.min(r.o, r.c)));
+      ctx.fillRect(snap(x - bodyW / 2), yT, bodyW, Math.max(hair, yB - yT));
+    });
+
+    // level and trade lines
+    const labels = { L: [], R: [] }, narrow = plotW < 430;
+    chart.lines.forEach(function (L) {
+      const y = Y(L.v), off = y < top ? -1 : y > bottom ? 1 : 0;
+      if (!off) {
+        let x0 = padL;
+        L.x0 = null;
+        if (L.from) { for (let i = 0; i < n; i++) { if (R[i].t * 1000 >= L.from.getTime()) { x0 = padL + i * cw; break; } } if (L.from.getTime() > (R[n - 1].t + 900) * 1000) x0 = right - cw; }
+        ctx.save();
+        ctx.strokeStyle = L.color; ctx.lineWidth = L.glow ? 1.5 : 1; ctx.globalAlpha = L.glow ? 1 : 0.85;
+        if (L.dash) ctx.setLineDash([5, 4]);
+        if (L.glow) { ctx.shadowColor = L.color; ctx.shadowBlur = 8; }
+        const yy = snap(y) + (L.glow ? 0 : hair / 2);
+        ctx.beginPath(); ctx.moveTo(x0, yy); ctx.lineTo(right, yy); ctx.stroke();
+        ctx.restore();
+        if (L.from && x0 > padL) L.x0 = x0;
+      }
+      const text = (off < 0 ? "\u2191 " : off > 0 ? "\u2193 " : "") + L.name + " " + fmt(L.v, 2);
+      if (!off && !narrow && L.x0 != null && L.x0 - padL > 240) { pill(ctx, text, L.x0 - 6, clamp(y, top + 11, bottom - 11), "R", L.color, L.ink); return; }
+      labels[narrow ? "L" : L.side].push({ L: L, text: text, y: off < 0 ? top + 11 : off > 0 ? bottom - 11 : y + (L.above ? -12 : 12) });
+    });
+    ["L", "R"].forEach(function (side) {
+      const list = labels[side].sort(function (a, b) { return a.y - b.y; });
+      for (let i = 0; i < list.length; i++) list[i].y = clamp(list[i].y, top + 11, bottom - 11);
+      for (let i = 1; i < list.length; i++) if (list[i].y - list[i - 1].y < 20) list[i].y = list[i - 1].y + 20;
+      for (let i = list.length - 1; i >= 0; i--) {
+        const cap = i === list.length - 1 ? bottom - 11 : list[i + 1].y - 20;
+        if (list[i].y > cap) list[i].y = cap;
+      }
+      list.forEach(function (b) { pill(ctx, b.text, side === "L" ? padL + 4 : right - 6, b.y, side, b.L.color, b.L.ink); });
+    });
+
+    // the last close, on the price scale
+    const last = R[n - 1], yl = yLast;
+    ctx.font = "600 11px " + MONO;
+    ctx.fillStyle = last.c >= last.o ? "rgba(52,211,153,0.2)" : "rgba(251,113,133,0.22)";
+    ctx.fillRect(snap(right + hair), Math.round(yl - 9), axisW - hair, 18);
+    ctx.fillStyle = C.ink; ctx.textAlign = "left"; ctx.textBaseline = "middle";
+    ctx.fillText(fmt(last.c, 2), right + 8, Math.round(yl) + 0.5);
+
+    // the engine's side under each candle
+    const sy = bottom + 6;
+    ctx.fillStyle = "rgba(120,160,255,0.08)"; ctx.fillRect(padL, sy, plotW, stripH);
+    R.forEach(function (r, i) {
+      if (r.s == null) return;
+      ctx.fillStyle = r.s > 0 ? C.up : r.s < 0 ? C.down : C.faint;
+      const x0 = snap(padL + i * cw), x1 = snap(padL + (i + 1) * cw);
+      ctx.fillRect(x0, sy, Math.max(hair, x1 - x0 - (cw > 3 ? hair : 0)), stripH);
+    });
+
+    // the candle under the pointer
+    if (chart.hover >= 0 && chart.hover < n) {
+      const x = snap(X(chart.hover) - hair / 2);
+      ctx.fillStyle = "rgba(34,211,238,0.55)"; ctx.fillRect(x, top, hair, bottom - top + stripH + 6);
+    }
+  }
+  function readout() {
+    const box = $("chartRead"), R = chart.rows, i = chart.hover;
+    if (!R.length) { box.textContent = "\u00a0"; return; }
+    if (i < 0 || i >= R.length) { box.textContent = t("ro_point"); return; }
+    const r = R[i];
+    box.textContent = t("ro_line", { w: dayHm(new Date(r.t * 1000)), o: fmt(r.o, 2), h: fmt(r.h, 2), l: fmt(r.l, 2), c: fmt(r.c, 2),
+      s: r.s === 1 ? t("long") : r.s === -1 ? t("short") : r.s === 0 ? t("flat") : t("ro_notlive") });
+  }
+  function queueDraw() {
+    if (chart.raf) return;
+    chart.raf = window.requestAnimationFrame(function () { chart.raf = 0; try { drawChart(); } catch (e) { if (window.console) console.warn("Mind 15: chart", e); } });
+  }
+  function hoverAt(ev) {
+    const g = chart.geo; if (!g) return;
+    const rect = $("chart").getBoundingClientRect(), i = Math.floor((ev.clientX - rect.left - g.padL) / g.cw);
+    const h = i >= 0 && i < g.n ? i : -1;
+    if (h !== chart.hover) { chart.hover = h; readout(); queueDraw(); }
+  }
+  function renderChart() {
+    const A = asset();
+    $("pairName").textContent = pairLabel(coin);
+    const p = A ? num(A.price) : null;
+    $("pairPrice").textContent = p == null ? DASH : (coin === "USDJPY" ? "¥" + fmt(p, 3) : coin === "SPX" ? fmt(p, 2) : "$" + fmt(p, p < 100 ? 3 : 2));
+    const mv = $("pairMove"); mv.textContent = ""; mv.className = "";
+    prepChart();
+    if (p != null && chart.rows.length) {
+      const chg = (p / chart.rows[0].o - 1) * 100;
+      mv.textContent = t("ch_move", { v: signed(chg, 2, "%") }); mv.className = tone(chg, 2);
+    }
+    readout();
+    drawChart();
+  }
+
+  /* ---------- decision panel ---------- */
+  function renderDecision() {
+    const A = asset(), panel = $("decision"), body = $("decBody"), M = mandate();
+    const dt = A ? parseUtc(A.time) : null;
+    $("decTime").textContent = dt ? when(dt) : DASH;
+    if (!A) { panel.className = "panel decision wait"; fill(body, el("p", { class: "empty", style: "align-self: stretch" }, data ? t("no_data_for", { c: shortLabel(coin) }) : t("loading"))); return; }
+    const pos = sideOf(A.position) || "FLAT";
+    panel.className = "panel decision " + sideClass(pos);
+    const O = obj(A.odds), up = O ? num(O.up) : null, down = O ? num(O.down) : null, mid = O ? num(O.neither) : null;
+    const kids = [];
+    const gauge = el("div", { class: "gauge", role: "img" });
+    const arc = el("div", { class: "arc" });
+    if (up != null && down != null) {
+      const tot = up + down + (mid || 0) || 1, a = clamp(down / tot, 0, 1) * 180, b = clamp((down + (mid || 0)) / tot, 0, 1) * 180;
+      arc.style.background = "conic-gradient(from 270deg, #fb7185 0deg " + a.toFixed(1) + "deg, rgba(154,167,199,0.35) " + a.toFixed(1) + "deg " + b.toFixed(1) +
+        "deg, #34d399 " + b.toFixed(1) + "deg 180deg, transparent 180deg 360deg)";
+      gauge.setAttribute("aria-label", t("dec_aria", { d: pctOf(down), m: pctOf(mid), u: pctOf(up), p: sideLow(pos) }));
+    } else {
+      arc.style.background = "conic-gradient(from 270deg, rgba(154,167,199,0.25) 0deg 180deg, transparent 180deg 360deg)";
+      gauge.setAttribute("aria-label", t("dec_aria_none", { p: sideLow(pos) }));
+    }
+    add(gauge, [arc, el("div", { class: "hole" }), el("div", { class: "word" }, sideUp(pos))]);
+    kids.push(gauge);
+    if (up != null && down != null) {
+      kids.push(el("div", { class: "odds" }, el("span", null, t("odds_down", { v: pctOf(down) })), el("span", null, t("odds_neither", { v: pctOf(mid) })), el("span", null, t("odds_up", { v: pctOf(up) }))));
+    } else kids.push(el("p", { class: "note" }, t("dec_noodds")));
+    const edge = num(A.edge_pts);
+    if (edge != null) {
+      const lead = isZero(edge, 1) ? t("edge_even") : edge > 0 ? t("edge_up") : t("edge_down");
+      kids.push(el("div", { class: "edgeline " + tone(edge, 1) }, t("edge_line", { v: signed(edge, 1, t("u_pts")), l: lead })));
+    }
+    kids.push(el("p", { class: "sentence", "data-i18n-data": !!str(A.decision) }, str(A.decision) || t("dec_nosentence")));
+    const high = A.risk_high === true, enter = num(high ? M.enter_bar_high_risk_pts : M.enter_bar_pts), flip = num(M.flip_bar_pts);
+    kids.push(el("div", { class: "mini" },
+      tile(t("t_enter"), enter == null ? DASH : fmt(enter, enter % 1 ? 1 : 0) + t("u_pts"), high ? t("x_risk_is_high") : t("x_edge_needed")),
+      tile(t("t_flip"), flip == null ? DASH : fmt(flip, flip % 1 ? 1 : 0) + t("u_pts"), t("x_edge_needed")),
+      tile(t("t_regime"), regimeWord(str(A.regime)) || DASH, high ? t("x_risk_high") : A.risk_high === false ? t("x_risk_normal") : "", "word")));
+    const TR = obj(A.trend), tfs = TR ? Object.keys(TR).slice(0, 6) : [];
+    if (tfs.length) {
+      const row = el("div", { class: "trend" });
+      tfs.forEach(function (tf) {
+        const v = TR[tf], word = str(Array.isArray(v) ? v[1] : v).toUpperCase();
+        const cls = word === "UP" ? "up" : word === "DOWN" ? "down" : "flat", mark = word === "UP" ? "↑ " : word === "DOWN" ? "↓ " : "";
+        row.appendChild(el("div", null, el("span", null, tf), el("b", { class: cls }, mark + (trendWord(word) || DASH))));
+      });
+      kids.push(el("div", { class: "trendbox" }, el("div", { class: "cap" }, t("cap_trend")), row));
+    }
+    const idle = num(A.idle_sessions), max = num(M.idle_max_sessions);
+    if (idle != null && max != null && max > 0 && max <= 12) {
+      const dots = el("span", { class: "dots", role: "img", "aria-label": t("idle_aria", { i: idle, m: max }) });
+      for (let i = 0; i < max; i++) dots.appendChild(el("i", { class: i < idle ? "on" : "" }));
+      kids.push(el("div", { class: "idle" }, el("span", null, t("idle_line", { i: idle, m: max })), dots));
+    } else if (idle != null) kids.push(el("div", { class: "idle" }, el("span", null, t("idle_row", { i: idle }))));
+    fill(body, kids);
+  }
+  function titleCase(s) { s = s.replace(/_/g, " ").toLowerCase(); return s ? s.charAt(0).toUpperCase() + s.slice(1) : ""; }
+  function regimeWord(s) { const k = "rg_" + s.toUpperCase(); return has(k) ? t(k) : titleCase(s); }
+  function trendWord(w) { return has("tr_" + w) ? t("tr_" + w) : titleCase(w); }
+
+  /* ---------- execution ---------- */
+  // how a trade opened and why it closed: why_in_* (sentence), whys_* (table), whyo_* in I18N
+  function whyIn(k) { return has("why_in_" + k) ? t("why_in_" + k) : ""; }
+  function whyInShort(k) { return has("whys_" + k) ? t("whys_" + k) : ""; }
+  function whyOut(k) { return has("whyo_" + k) ? t("whyo_" + k) : ""; }
+  function renderExecution() {
+    const A = asset(), body = $("exBody"), kids = [];
+    $("exH").textContent = t("ex_h", { c: shortLabel(coin) });
+    $("exSub").textContent = "";
+    if (!A) { fill(body, empty(data ? t("no_data_for", { c: shortLabel(coin) }) : t("loading"))); return; }
+    const T = obj(A.trade), M = mandate(), pos = sideOf(T ? T.status : A.position) || "FLAT";
+    const closed = arr(A.closed_trades);
+    let start = null;
+    if (T && num(T.equity_realized) != null && num(T.realized_usd) != null) start = T.equity_realized - T.realized_usd;
+    const subBits = [];
+    if (start != null) subBits.push(t("ex_started", { v: usd(start) }));
+    if (T && num(T.entry_fee_usd) != null && num(T.notional_usd)) subBits.push(t("ex_fee", { v: fmt(T.entry_fee_usd / T.notional_usd * 100, 2) }));
+    subBits.push(t("ex_paper"));
+    $("exSub").textContent = subBits.join(DOT);
+
+    const tiles = [], closedWords = closed.length ? tn("closed_shown", closed.length) : t("closed_none_yet");
+    if (pos === "LONG" || pos === "SHORT") {
+      const opened = T ? parseUtc(T.opened_utc) : null, q = T ? num(T.quantity) : null;
+      let line = sideWord(pos) + (q != null ? " " + fmt(q, 4) + " " + unitLabel(coin) : "") + (opened ? t("ex_since", { w: when(opened) }) : "");
+      const why = T && whyIn(str(T.opened_by));
+      if (why) line += t("ex_openedby", { w: why });
+      kids.push(el("div", { class: "tradeline" }, el("span", { class: "tag " + sideClass(pos) }, sideUp(pos) + DOT + t("running")), el("span", null, line + t("end"))));
+      if (T) {
+        const sm = sessionMin(), held = num(T.sessions_held);
+        tiles.push(tile(t("t_size"), q == null ? DASH : fmt(q, 4) + " " + unitLabel(coin), num(T.notional_usd) != null ? t("x_at_entry", { v: usd(T.notional_usd) }) : ""));
+        tiles.push(tile(t("t_entry"), fmt(T.entry_price, 2), opened ? t("x_opened", { w: when(opened) }) : ""));
+        tiles.push(tile(t("t_mark"), fmt(T.mark_price, 2), t("x_last_close")));
+        tiles.push(tile(t("t_unreal"), usdSigned(T.unrealized_usd), num(T.unrealized_pct) != null ? signed(T.unrealized_pct, 2, "%") + (tone(T.unrealized_usd) === "up" ? t("x_in_profit") : tone(T.unrealized_usd) === "down" ? t("x_in_loss") : "") : "", tone(T.unrealized_usd)));
+        tiles.push(tile(t("lg_stop"), fmt(T.stop_price, 2), (num(T.stop_distance_pct) != null ? t("x_from_entry", { v: fmt(T.stop_distance_pct, 2) }) : "") + (num(T.risk_to_stop_usd) != null ? DOT + t("x_at_risk", { v: usd(T.risk_to_stop_usd) }) : "")));
+        [1, 2].forEach(function (k) {   // planned profit targets, set at entry (shown, not yet traded at)
+          const p = num(T["target_" + k + "_price"]);
+          if (p == null) return;
+          const pc = num(T["target_" + k + "_pct"]), u = num(T["target_" + k + "_usd"]), r = num(T["target_" + k + "_r"]);
+          const mk = num(T.mark_price), past = mk != null && (pos === "LONG" ? mk >= p : mk <= p);
+          tiles.push(tile(t("line_t_ref", { k: k }), fmt(p, 2), [(pc != null ? signed(pc, 2, "%") : "") + (u != null ? DOT + usdSigned(u) : "") + (r != null ? DOT + fmt(r, 1) + "R" : "") + (past ? DOT + t("x_tgt_passed") : ""),
+            T["target_" + k + "_basis"] ? [DOT, dataSpan(str(T["target_" + k + "_basis"]))] : null], "up"));
+        });
+        tiles.push(tile(t("t_fees"), num(T.entry_fee_usd) != null ? t("x_paid", { v: usd(T.entry_fee_usd) }) : DASH, num(T.exit_fee_est_usd) != null ? t("x_to_close", { v: usd(T.exit_fee_est_usd) }) : ""));
+        tiles.push(tile(t("t_ifclosed"), usdSigned(T.net_if_closed_now_usd), t("x_both_fees"), tone(T.net_if_closed_now_usd)));
+        tiles.push(tile(t("t_time_in"), held == null ? DASH : span(held, sm), held == null ? "" : tn("sess", held)));
+        tiles.push(tile(t("t_account"), usd(T.equity_marked), t("x_with_trade")));
+        tiles.push(tile(t("t_realised_sofar"), usdSigned(T.realized_usd), closedWords, tone(T.realized_usd)));
+      } else {
+        tiles.push(tile(t("t_position"), sideWord(pos), t("running")));
+        tiles.push(tile(t("t_entry"), fmt(A.entry, 2), ""));
+        tiles.push(tile(t("lg_stop"), fmt(A.stop, 2), ""));
+        tiles.push(tile(t("t_account"), usd(A.equity), t("x_marked_last")));
+      }
+    } else {
+      const idle = num(T && T.idle_sessions != null ? T.idle_sessions : A.idle_sessions), max = num(T && T.idle_max != null ? T.idle_max : M.idle_max_sessions);
+      const nx = T ? str(T.next_open) : "", m = /^(.*?)\s*->\s*(LONG|SHORT|FLAT)\s*$/.exec(nx);
+      let line, nextV, nextX;
+      if (m && m[2] !== "FLAT") {
+        const nd = parseUtc(m[1].trim());
+        line = t("ex_flat_opens", { s: sideLow(m[2]), at: nd ? t("ex_at_paren", { w: when(nd) }) : "" });
+        nextV = t("next_open_v", { s: sideLow(m[2]) }); nextX = nd ? t("next_at", { w: when(nd) }) : t("next_at_open");
+      } else if (idle != null && max != null) {
+        const left = Math.max(0, max - idle);
+        line = t("ex_flat_dot") + (left > 0 ? tn("ex_may", left) : t("ex_used"));
+        nextV = left > 0 ? t("nv_wait") : t("nv_must"); nextX = left > 0 ? tn("idle_left", left) : t("nx_mandate");
+      } else { line = t("ex_flat"); nextV = DASH; nextX = ""; }
+      kids.push(el("div", { class: "tradeline" }, el("span", { class: "tag wait" }, t("no_open_trade")), el("span", null, line)));
+      tiles.push(tile(t("t_position"), sideWord("FLAT"), idle != null && max != null ? t("x_idle", { i: idle, m: max }) : ""));
+      tiles.push(tile(t("t_account"), usd(T && num(T.equity_marked) != null ? T.equity_marked : A.equity), start != null ? t("x_started_at", { v: usd(start) }) : ""));
+      if (T) tiles.push(tile(t("t_realised"), usdSigned(T.realized_usd), closedWords, tone(T.realized_usd)));
+      tiles.push(tile(t("t_next"), nextV, nextX));
+      tiles.push(tile(t("t_unreal"), usd(0), t("x_no_open")));
+      if (T && num(T.fees_paid_usd) > 0) tiles.push(tile(t("t_fees_paid"), usd(T.fees_paid_usd), t("x_so_far")));
+    }
+    kids.push(el("div", { class: "tiles five" }, tiles));
+    if ((pos === "LONG" || pos === "SHORT") && T && num(T.target_1_price) != null) kids.push(el("p", { class: "note" }, t("tgt_note")));
+
+    // closed trades
+    const sec = el("div", { class: "rule" }, el("div", { class: "cap" }, t("cap_closed") + (closed.length ? DOT + t("newest_first") : "")));
+    if (!closed.length) sec.appendChild(empty(Array.isArray(A.closed_trades) ? t("closed_empty") : t("no_data_yet")));
+    else {
+      const hasUsd = closed.some(function (r) { return num(r && r.pnl_usd) != null; }), hasFee = closed.some(function (r) { return num(r && r.fees_usd) != null; });
+      const head = [t("th_side"), t("th_opened"), t("th_closed"), t("th_entry"), t("th_exit"), t("th_result")]; if (hasFee) head.push(t("th_fees")); head.push(t("th_after"), t("th_how"), t("th_why"));
+      const tb = el("tbody");
+      (closedOpen ? closed : closed.slice(0, 3)).forEach(function (r) {
+        r = obj(r) || {};
+        const s = sideOf(r.side), ti = parseUtc(r.time_in), to = parseUtc(r.time_out), p = num(r.pnl_pct);
+        const tr = el("tr", null,
+          el("td", { class: s === "LONG" ? "up" : s === "SHORT" ? "down" : "" }, sideWord(s)),
+          el("td", null, ti ? dayHm(ti) : DASH), el("td", null, to ? dayHm(to) : DASH),
+          el("td", null, fmt(r.p_in, 2)), el("td", null, fmt(r.p_out, 2)),
+          el("td", { class: tone(p) }, signed(p, 2, "%") + (p == null ? "" : tone(p) === "up" ? t("x_gain") : tone(p) === "down" ? t("x_loss") : ""), hasUsd && num(r.pnl_usd) != null ? el("small", null, usdSigned(r.pnl_usd)) : null));
+        if (hasFee) tr.appendChild(el("td", null, num(r.fees_usd) != null ? usd(r.fees_usd) : t("not_recorded")));
+        add(tr, [el("td", null, usd(r.equity)), el("td", null, whyInShort(str(r.why_in)) || titleCase(str(r.why_in)) || DASH),
+          el("td", { class: "wrap2" }, whyOut(str(r.why_out)) || titleCase(str(r.why_out)) || DASH)]);
+        tb.appendChild(tr);
+      });
+      const table = el("table", { class: "t", style: "min-width: 760px" }, el("caption", { class: "vh" }, t("cap_closed_tbl", { c: shortLabel(coin) })),
+        el("thead", null, el("tr", null, head.map(function (h) { return el("th", { scope: "col" }, h); }))), tb);
+      sec.appendChild(el("div", { class: "scroll", tabindex: "0", role: "group", "aria-label": t("aria_closed_tbl") }, table));
+      if (closed.length > 3) {
+        const mb = el("button", { type: "button", class: "linkbtn", "aria-expanded": closedOpen ? "true" : "false" }, closedOpen ? t("show_last3") : t("show_all_closed", { n: closed.length }));
+        mb.addEventListener("click", function () { closedOpen = !closedOpen; safe("exBody", renderExecution); });
+        sec.appendChild(mb);
+      }
+    }
+    kids.push(sec);
+
+    // trade scorecard: the replay baseline
+    const SC = data ? obj(data.scorecard_replay) : null, parts = SC ? obj(SC.parts) : null;
+    const sc = el("div", { class: "rule" });
+    const nTr = SC ? num(SC.trades) : null;
+    sc.appendChild(el("div", { class: "head" }, el("span", { class: "cap" }, t("sc_cap")),
+      el("span", { class: "sub" }, t("sc_base") + (nTr != null ? t("sc_base_n", { n: fmt(nTr, 0) }) : ""))));
+    if (!parts) sc.appendChild(empty(t("sc_none")));
+    else {
+      const W = obj(SC.weights) || {};
+      const defs = [["score", "sc_score"], ["direction", "sc_direction"], ["entry", "sc_entry"], ["speed", "sc_speed"], ["exit", "sc_exit"], ["risk", "sc_risk"]];
+      const ts = [];
+      defs.forEach(function (d) {
+        const v = num(parts[d[0]]); if (v == null) return;
+        const ink = v >= 50 ? C.upInk : v >= 30 ? C.amberInk : C.downInk;
+        const w = num(W[d[0]]);
+        const box = el("div", { class: "tile" }, el("div", { class: "k" }, t(d[1])),
+          el("div", { style: "display: flex; align-items: baseline; gap: 6px; white-space: nowrap" }, el("span", { class: "v", style: "color: " + ink }, fmt(v, 0)), el("span", { class: "sub" }, "/ 100")));
+        const meter = el("div", { class: "meter" }), bar = el("i"); bar.style.width = clamp(v, 0, 100) + "%"; bar.style.background = ink; meter.appendChild(bar); box.appendChild(meter);
+        box.appendChild(el("div", { class: "x" }, t(d[1] + "_x") + (w != null ? DOT + t("sc_weight", { w: fmt(w * 100, 0) }) : "")));
+        ts.push(box);
+      });
+      sc.appendChild(ts.length ? el("div", { class: "tiles" }, ts) : empty(t("sc_none_short")));
+      sc.appendChild(el("p", { class: "note" }, t("sc_note")));
+    }
+    kids.push(sc);
+    fill(body, kids);
+  }
+
+  /* ---------- decision cards ---------- */
+  function renderCards() {
+    const A = asset(), box = $("cards"), list = A ? arr(A.cards) : [];
+    $("cardsH").textContent = list.length ? t("cards_h_n", { n: isZh() ? list.length : numberWord(list.length) }) : t("cards_h");
+    if (!list.length) { $("cardsSub").textContent = ""; fill(box, empty(!data ? t("loading") : A ? t("cards_none") : t("no_data_for", { c: shortLabel(coin) }))); return; }
+    const rating = data ? arr(data.card_rating) : [], rank = {};
+    rating.forEach(function (r, i) { if (Array.isArray(r) && typeof r[0] === "string" && !(r[0] in rank)) rank[r[0]] = i + 1; });
+    const rows = list.map(function (c, i) {
+      c = obj(c) || {};
+      const title = str(c.card) || t("card_n", { n: i + 1 }), trust = num(c.trust);
+      return { c: c, title: title, no: i + 1, votes: trust != null && trust > 0, trust: trust, rank: rank[title] || null, i: i };
+    });
+    rows.sort(function (a, b) { return (a.votes === b.votes ? 0 : a.votes ? -1 : 1) || ((a.rank || 999) - (b.rank || 999)) || (a.i - b.i); });
+    const nVote = rows.filter(function (r) { return r.votes; }).length;
+    let maxTrust = 0; rows.forEach(function (r) { if (r.trust > maxTrust) maxTrust = r.trust; });
+    $("cardsSub").textContent = t("cards_sub", { v: nVote, r: rows.length - nVote });
+    const narrow = window.matchMedia && window.matchMedia("(max-width: 760px)").matches;
+    const hidden = cardsAll ? 0 : rows.filter(function (r) { return !r.votes; }).length;
+    const shown = cardsAll ? rows : rows.filter(function (r) { return r.votes; });
+    const cards = shown.map(function (r) {
+      const c = r.c, lean = num(c.lean), dir = lean == null || isZero(lean, 1) ? "" : lean > 0 ? "long" : "short";
+      const art = el("article", { class: "card " + dir + (r.votes ? "" : " quiet") });
+      art.appendChild(el("div", { class: "toprow" }, el("span", null, t("card_n", { n: (r.no < 10 ? "0" : "") + r.no })),
+        el("span", { class: "tag line" + (r.votes ? " on" : "") }, r.votes ? t("votes") : t("reading_only"))));
+      art.appendChild(el("h3", { "data-i18n-data": !!str(c.card) }, r.title));
+      const leanWord = lean == null ? t("lean_none_yet") : !dir ? t("lean_none") : dir === "long" ? t("lean_long") : t("lean_short");
+      art.appendChild(el("div", { class: "lean " + (dir === "long" ? "up" : dir === "short" ? "down" : "flat") }, el("span", null, leanWord), el("b", null, lean == null ? DASH : signed(lean, 1, t("u_pts")))));
+      const bar = el("div", { class: "diverge", role: "img", "aria-label": lean == null ? t("lean_none_yet") : leanWord + (dir ? t("lean_by", { v: fmt(Math.abs(lean), 1) }) : "") });
+      if (dir) { const w = Math.max(clamp(Math.abs(lean) / 10, 0, 1) * 50, 1.5), b = el("i", { class: dir }); b.style.width = w + "%"; b.style.left = (dir === "long" ? 50 : 50 - w) + "%"; bar.appendChild(b); }
+      art.appendChild(bar);
+      const facts = arr(c.facts).filter(function (f) { return Array.isArray(f) && f.length >= 2; });
+      const dl = el("dl", { class: "facts" });
+      if (facts.length) facts.forEach(function (f) { const v = str(f[1]); dl.appendChild(el("div", null, el("dt", { "data-i18n-data": true }, str(f[0])), el("dd", { class: v.length > 64 ? "prose" : "", "data-i18n-data": true }, v))); });
+      else dl.appendChild(el("div", null, el("dt", null, t("reading")), el("dd", { class: "prose", "data-i18n-data": !!str(c.reading) }, str(c.reading) || t("no_data_yet"))));
+      if (narrow) {                                   // phones: the data rows fold away; tap to open
+        const det = el("details", { class: "data" }, el("summary", null, t("show_data", { n: Math.max(facts.length, 1) })));
+        det.appendChild(dl);
+        art.appendChild(det);
+      } else art.appendChild(dl);
+      const tb = el("i"); tb.style.width = (r.trust > 0 && maxTrust > 0 ? Math.max(r.trust / maxTrust * 100, 3) : 0) + "%";
+      if (r.rank) art.appendChild(el("div", { class: "rankrow" }, rating.length ? t("rated_of", { r: r.rank, n: rating.length }) : t("rated", { r: r.rank })));
+      art.appendChild(el("div", { class: "trustrow" }, el("span", null, t("trust")), el("span", { class: "bar", "aria-hidden": "true" }, tb), el("b", null, r.trust == null ? DASH : fmt(r.trust * 100, 1) + "%")));
+      return art;
+    });
+    const kids = cards.slice();
+    if (hidden || cardsAll) {                         // the reading-only cards wait behind one button
+      const btn = el("button", { type: "button", class: "morecards", "aria-expanded": cardsAll ? "true" : "false" },
+        cardsAll ? t("cards_only_vote") : t("cards_more", { n: hidden }));
+      btn.addEventListener("click", function () { cardsAll = !cardsAll; safe("cards", renderCards); if (!cardsAll) $("cardsH").scrollIntoView(); });
+      kids.push(btn);
+    }
+    fill(box, kids);
+  }
+
+  /* ---------- thought journal ---------- */
+  function actWord(a) { return has("act_" + a) ? t("act_" + a) : ""; }
+  function renderJournal() {
+    const A = asset(), body = $("jBody"), kids = [];
+    $("jSub").textContent = t("j_sub", { n: sessionMin() });
+    if (!A) { fill(body, empty(data ? t("no_data_for", { c: shortLabel(coin) }) : t("loading"))); return; }
+    const pull = function (title, list, cls) {
+      const rows = arr(list).filter(function (r) { return Array.isArray(r) && r.length; });
+      const ul = el("ul");
+      if (rows.length) rows.forEach(function (r) { const v = num(r[1]); ul.appendChild(el("li", null, el("span", { "data-i18n-data": true }, str(r[0])), v == null ? null : el("b", { class: cls }, signed(v, 2)))); });
+      else ul.appendChild(el("li", { class: "flat" }, t("nothing_notable")));
+      return el("div", { class: "pullbox" }, el("div", { class: "cap " + cls }, title), ul);
+    };
+    if (A.for_long != null || A.for_short != null) {
+      kids.push(el("div", { class: "cap" }, t("cap_moved")));
+      kids.push(el("div", { class: "pulls" }, pull(t("pull_long"), A.for_long, "up"), pull(t("pull_short"), A.for_short, "down")));
+    }
+    const V = arr(A.voices).filter(function (v) { return obj(v) && num(v.pull_pts) != null && !isZero(v.pull_pts, 1); })
+      .sort(function (a, b) { return Math.abs(b.pull_pts) - Math.abs(a.pull_pts); }).slice(0, 6);
+    if (V.length) {
+      const vl = el("div", { class: "voices" });
+      V.forEach(function (v) {
+        vl.appendChild(el("div", { class: "vrow" }, el("span", { "data-i18n-data": !!(str(v.title) || str(v.voice)) }, str(v.title) || str(v.voice) || t("a_voice")),
+          el("small", null, num(v.trust) != null ? t("trust_pct", { v: fmt(v.trust * 100, 1) }) : ""),
+          el("b", { class: tone(v.pull_pts, 1) }, signed(v.pull_pts, 1, t("u_pts")) + (v.pull_pts > 0 ? t("v_long") : t("v_short")))));
+      });
+      kids.push(el("div", { class: "cap" }, t("cap_voices")));
+      kids.push(vl);
+    }
+    const J = arr(A.journal).filter(obj);
+    if (J.length) kids.push(el("div", { class: "cap" }, t("cap_entries") + DOT + t("newest_first")));
+    if (!J.length) { kids.push(empty(t("j_none"))); fill(body, kids); return; }
+    const LIMIT = 3, shown = journalOpen ? J : J.slice(0, LIMIT);
+    const tl = el("div", { class: "timeline" });
+    shown.forEach(function (j) {
+      const d = parseUtc(j.time), act = str(j.action), pos = sideOf(j.position), sentence = str(j.decision);
+      let side = pos === "LONG" || pos === "SHORT" ? pos : "";
+      if (act === "ENTER" || act === "FORCED" || act === "FLIP") { const m = /\b(LONG|SHORT)\b/.exec(sentence.split(":")[0]); if (m) side = m[1]; }
+      if (act === "IDLE" || act === "WAIT") side = "";
+      const aw = actWord(act) || titleCase(act) || t("act_fallback");
+      const chip = (side && act !== "STEP_ASIDE" ? t("chip_side", { a: aw, s: sideLow(side) }) : aw) + (act === "FORCED" ? t("by_mandate") : "");
+      const bits = [];
+      if (num(j.price) != null) bits.push(t("b_price", { v: fmt(j.price, 2) }));
+      if (num(j.edge_pts) != null) bits.push(t("b_edge", { v: signed(j.edge_pts, 1, t("u_pts")) }));
+      if (pos) bits.push(t("b_position", { s: sideLow(pos) }));
+      tl.appendChild(el("div", { class: "jrow" }, el("div", { class: "rail" }, el("i", { class: side ? sideClass(side) : "" })),
+        el("div", { class: "body" },
+          el("div", { class: "when" }, el("time", d ? { datetime: d.toISOString() } : null, d ? when(d) : str(j.time)), el("span", { class: "tag " + (side ? sideClass(side) : "wait") }, chip)),
+          el("div", { class: "say", "data-i18n-data": !!sentence }, sentence || t("no_sentence")),
+          bits.length ? el("div", { class: "more" }, bits.join(DOT)) : null)));
+    });
+    kids.push(tl);
+    if (J.length > LIMIT) {
+      const b = el("button", { type: "button", class: "linkbtn", "aria-expanded": journalOpen ? "true" : "false" }, journalOpen ? t("show_fewer") : t("show_all_entries", { n: J.length }));
+      b.addEventListener("click", function () { journalOpen = !journalOpen; safe("jBody", renderJournal); });
+      kids.push(b);
+    }
+    if (J.length === 1) kids.push(el("p", { class: "note" }, t("j_one")));
+    fill(body, kids);
+  }
+
+  /* ---------- learning ---------- */
+  function renderLearning() {
+    const L = data ? obj(data.learning) : null, body = $("lBody"), kids = [];
+    if (!L) { fill(body, empty(data ? t("l_none") : t("loading"))); return; }
+    const ring = function (title, d) {
+      d = obj(d);
+      const hit = d ? num(d.hit_pct) : null, right = d ? num(d.right) : null, wrong = d ? num(d.wrong) : null, neither = d ? num(d.neither) : null;
+      const box = el("div", { class: "ringbox" }, el("div", { class: "cap" }, title));
+      if (hit == null || !((right || 0) + (wrong || 0) > 0)) { box.appendChild(el("div", { class: "x" }, t("l_nograded"))); return box; }
+      const r = el("div", { class: "ring", role: "img", "aria-label": t("l_ring_aria", { x: title, v: fmt(hit, 1) }) });
+      const p = clamp(hit, 0, 100);
+      r.style.background = "conic-gradient(#fbbf24 0 " + p.toFixed(1) + "%, rgba(120,160,255,0.16) " + p.toFixed(1) + "% 100%)";
+      add(r, [el("div", { class: "in" }, el("b", null, fmt(hit, 1) + "%"), el("span", null, t("l_right_ring"))), el("i", { class: "coin", title: t("l_coin_title") })]);
+      box.appendChild(r);
+      const gap = hit - 50;
+      box.appendChild(el("div", { class: "x " + (isZero(gap, 1) ? "flat" : gap > 0 ? "up" : "down") }, isZero(gap, 1) ? t("l_level") : t(gap > 0 ? "l_above" : "l_below", { v: fmt(Math.abs(gap), 1) })));
+      box.appendChild(el("div", { class: "x" }, el("b", null, fmt(right, 0)), t("l_right"), el("b", null, fmt(wrong, 0)), t("l_wrong")));
+      if (neither != null) box.appendChild(el("div", { class: "x" }, t("l_neither", { n: fmt(neither, 0) })));
+      return box;
+    };
+    kids.push(el("div", { class: "rings" }, ring(t("l_7"), L.last_7_days), ring(t("l_30"), L.last_30_days)));
+    kids.push(el("p", { class: "note" }, t("l_note")));
+    const T = obj(L.trust), names = (data && obj(data.voices)) || {};
+    const sec = el("div", { class: "rule" }, el("div", { class: "cap" }, t("l_trust_cap")));
+    const rows = T ? Object.keys(T).map(function (k) { return [k, num(T[k])]; }).filter(function (r) { return r[1] != null && r[1] > 0; }).sort(function (a, b) { return b[1] - a[1]; }) : [];
+    if (!rows.length) sec.appendChild(empty(T ? t("l_trust_none") : t("no_data_yet")));
+    else {
+      const top = rows.slice(0, 8), maxT = top[0][1];
+      let sumTop = 0, sumAll = 0; rows.forEach(function (r) { sumAll += r[1]; }); top.forEach(function (r) { sumTop += r[1]; });
+      const list = el("div", { class: "trustlist" });
+      top.forEach(function (r) {
+        const name = str(names[r[0]]) || r[0], bar = el("i"); bar.style.width = Math.max(r[1] / maxT * 100, 2) + "%";
+        list.appendChild(el("div", { class: "trow" }, el("span", { "data-i18n-data": true }, name), el("b", null, fmt(r[1] * 100, 1) + "%"), el("span", { class: "bar", "aria-hidden": "true" }, bar)));
+      });
+      sec.appendChild(list);
+      const rest = (sumAll - sumTop) * 100;
+      sec.appendChild(el("p", { class: "note" }, rows.length > top.length ? tn("l_rest", rows.length - top.length, { v: fmt(rest, 1) }) : t("l_trust_note")));
+    }
+    kids.push(sec);
+    fill(body, kids);
+  }
+
+  /* ---------- liquidity map ---------- */
+  function renderLiquidity() {
+    const eagle = liqView === "eagle";
+    Array.prototype.forEach.call($("qView").querySelectorAll("button"), function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-v") === liqView ? "true" : "false"); });
+    const A = asset(), body = $("qBody"), raw = A ? obj(A.raw) : null, B = raw ? obj(eagle ? raw.book_eagle : raw.book) : null;
+    $("qSub").textContent = "";
+    const bidsIn = B ? arr(B.bids) : [], asksIn = B ? arr(B.asks) : [], mid = B ? num(B.mid) : null;
+    if (!B || mid == null || (!bidsIn.length && !asksIn.length)) {
+      fill(body, empty(!data ? t("loading") : !A ? t("no_data_for", { c: shortLabel(coin) }) : t("q_none")));
+      return;
+    }
+    const bin = num(B.bin_pct) > 0 ? B.bin_pct : 0.1, per = Math.max(1, Math.round((eagle ? 1.0 : 0.2) / bin)), bandPct = per * bin, MAXB = 10;
+    const merge = function (a) {
+      const out = [];
+      for (let i = 0; i < a.length && out.length < MAXB; i += per) { let s = 0; for (let j = i; j < Math.min(i + per, a.length); j++) s += num(a[j]) || 0; out.push(s); }
+      return out;
+    };
+    const asks = merge(asksIn), bids = merge(bidsIn);
+    let max = 0, sumA = 0, sumB = 0;
+    asks.forEach(function (v) { max = Math.max(max, v); sumA += v; }); bids.forEach(function (v) { max = Math.max(max, v); sumB += v; });
+    const reach = Math.max(asks.length, bids.length) * bandPct, qdp = max >= 100 ? 0 : max >= 10 ? 1 : 2;
+    const size = function (v) { return fmt(v, qdp); };
+    $("qSub").textContent = t("q_sub", { c: shortLabel(coin), b: fmt(bandPct, 1), r: fmt(reach, 1) });
+    const row = function (v, k, sign, cls) {
+      const bar = el("i"); bar.style.width = (max > 0 ? Math.max(v / max * 100, v > 0 ? 1 : 0) : 0) + "%"; bar.style.opacity = (0.4 + 0.6 * (max > 0 ? v / max : 0)).toFixed(2);
+      return el("div", { class: "lrow " + cls, role: "listitem", "aria-label": t(cls === "ask" ? "q_row_ask" : "q_row_bid", { a: fmt((k) * bandPct, 1), b: fmt((k + 1) * bandPct, 1), s: size(v), c: shortLabel(coin) }) },
+        el("span", { class: "b" }, sign + fmt((k + 1) * bandPct, 1) + "%"), el("span", { class: "bar" }, bar), el("span", { class: "s" }, size(v)));
+    };
+    const liq = el("div", { class: "liq", role: "list", "aria-label": t("q_aria", { c: shortLabel(coin) }) });
+    liq.appendChild(el("div", { class: "sidecap down" }, t("q_sellers", { q: qty(sumA), c: shortLabel(coin) })));
+    asks.map(function (v, k) { return row(v, k, "+", "ask"); }).reverse().forEach(function (r) { liq.appendChild(r); });
+    liq.appendChild(el("div", { class: "midrow" }, t("q_mid", { v: fmt(mid, 2) })));
+    bids.forEach(function (v, k) { liq.appendChild(row(v, k, MINUS, "bid")); });
+    liq.appendChild(el("div", { class: "sidecap up", style: "margin-top: 4px" }, t("q_buyers", { q: qty(sumB), c: shortLabel(coin) })));
+    const dt = parseUtc(A.time);
+    const far = eagle && num(B.bid_far_wall_px) != null ? t("q_far", { bp: fmt(B.bid_far_wall_px, 2), bs: qty(B.bid_far_wall_size), ap: fmt(B.ask_far_wall_px, 2), as: qty(B.ask_far_wall_size) }) : "";
+    const ex = el("span", { translate: "no" }, eagle ? "Coinbase" : "Binance");
+    fill(body, [liq, el("p", { class: "note" }, eagle ? [tx("q_eagle_note", { ex: ex }), far + t("sp")] : tx("q_near_note", { ex: ex }),
+      t("q_note") + (dt ? t("q_note_from", { w: when(dt) }) : t("end")))]);
+  }
+
+  /* ---------- shadow book ---------- */
+  function renderShadow() {
+    const S = data ? obj(data.shadow) : null, body = $("sBody"), kids = [];
+    if (!S) { fill(body, empty(data ? t("sh_none") : t("loading"))); return; }
+    const rows = arr(S.rows).filter(obj);
+    const name = rows.length && str(rows[0].hypothesis) ? str(rows[0].hypothesis) : t("sh_name_default");
+    const named = !!(rows.length && str(rows[0].hypothesis));   // the hypothesis' name comes from the file
+    kids.push(el("p", { class: "note" }, el("b", { style: "color: var(--ink); font-weight: 600" }, named ? dataSpan(name) : name, t("sh_name_end")), t("sh_desc")));
+    if (!rows.length) kids.push(empty(t("sh_norows")));
+    else {
+      const tb = el("tbody");
+      rows.forEach(function (r) {
+        const st = str(r.status).toUpperCase(), s = sideOf(r.side), rel = parseUtc(r.release_utc), ent = parseUtc(r.entry_utc), ex = parseUtc(r.exit_utc);
+        const c = str(r.asset).replace(/USDT$/, "");
+        const stCls = st === "RUNNING" ? "tag line on" : st === "CLOSED" ? "tag" : "tag line";
+        const out = st === "CLOSED" ? num(r.exit) : num(r.mark);
+        const pu = num(r.pnl_usd), pp = num(r.pnl_pct);
+        let extra = str(r.note) ? dataSpan(str(r.note)) : "";
+        if (st === "RUNNING" && num(r.sessions_left) != null) extra = t("sh_left", { s: span(Math.max(0, r.sessions_left), sessionMin()) });
+        if (st === "CLOSED") extra = [t("sh_closed"), str(r.exit_reason) ? (str(r.exit_reason) === "stop" ? t("sh_by_stop") : tx("sh_by_limit", { r: dataSpan(str(r.exit_reason)) })) : "", ex ? t("sh_at", { w: dayHm(ex) }) : ""];
+        tb.appendChild(el("tr", { class: c === coin ? "" : "" },
+          el("td", null, c || DASH, el("small", null, rel ? t("cpi_at", { w: dayHm(rel) }) : "")),
+          el("td", { class: "wrap2", style: "min-width: 124px" }, el("span", { class: stCls }, (has("stat_" + st) ? t("stat_" + st) : titleCase(st)) || DASH), extra ? el("small", { style: "margin-top: 4px" }, extra) : null),
+          el("td", { class: s === "LONG" ? "up" : s === "SHORT" ? "down" : "flat" }, s ? sideWord(s) : DASH, num(r.release_move_pct) != null ? el("small", null, t("sh_release", { v: signed(r.release_move_pct, 2, "%") })) : null),
+          el("td", null, fmt(r.entry, 2), ent ? el("small", null, hm(ent) + " UTC") : null),
+          el("td", null, fmt(r.stop, 2), num(r.stop_distance_pct) != null ? el("small", null, t("sh_away", { v: fmt(r.stop_distance_pct, 2) })) : null),
+          el("td", null, fmt(out, 2), out != null ? el("small", null, st === "CLOSED" ? t("sh_exit") : t("sh_mark")) : null),
+          el("td", { class: tone(pu) }, usdSigned(pu), pp != null ? el("small", { class: tone(pp) }, t("sh_net", { v: signed(pp, 2, "%") })) : null)));
+      });
+      const table = el("table", { class: "t", style: "min-width: 680px" }, el("caption", { class: "vh" }, tx("sh_caption", { n: named ? dataSpan(name) : name })),
+        el("thead", null, el("tr", null, [t("th_coin"), t("th_status"), t("th_side"), t("th_entry"), t("lg_stop"), t("th_markexit"), t("th_result")].map(function (h) { return el("th", { scope: "col" }, h); }))), tb);
+      kids.push(el("div", { class: "scroll", tabindex: "0", role: "group", "aria-label": t("sh_tbl_aria") }, table));
+    }
+    const closed = num(S.closed), won = num(S.won), total = num(S.total_usd);
+    const sum = el("div", { class: "tiles" },
+      tile(t("sh_closed"), closed == null ? DASH : fmt(closed, 0), t("sh_closed_x")),
+      tile(t("sh_won_k"), won == null ? DASH : fmt(won, 0), closed ? t("sh_won_of", { n: fmt(closed, 0) }) : t("sh_won_none")),
+      tile(t("sh_total_k"), closed ? usdSigned(total) : usd(total), t("sh_total_x"), closed ? tone(total) : ""));
+    sum.className = "tiles three";
+    kids.push(sum);
+    if (str(S.verdict_rule)) kids.push(el("p", { class: "note" }, el("b", { style: "color: var(--ink); font-weight: 600" }, t("sh_verdict")), dataSpan(str(S.verdict_rule)), t("end")));
+    fill(body, kids);
+  }
+
+  /* ---------- the engine asks you ---------- */
+  const SURE = [[0.3, "sure_30"], [0.6, "sure_60"], [0.9, "sure_90"]];
+  function sureWord(c) { c = num(c); if (c == null) return ""; let best = SURE[0]; SURE.forEach(function (s) { if (Math.abs(s[0] - c) < Math.abs(best[0] - c)) best = s; }); return t(best[1]); }
+  function renderAsk() {
+    const A = asset(), QA = data ? obj(data.questions_and_answers) : null;
+    const dt = A ? parseUtc(A.time) : null, q = A ? str(A.question) : "";
+    $("askAt").textContent = q && dt ? t("ask_at", { w: when(dt), c: shortLabel(coin) }) : shortLabel(coin);
+    $("askQ").textContent = q || (!data ? t("loading") : A ? t("ask_none") : t("no_data_for", { c: shortLabel(coin) }));
+    if (q) $("askQ").setAttribute("data-i18n-data", ""); else $("askQ").removeAttribute("data-i18n-data");
+    const st = $("standing"), O = A ? obj(A.owner) : null;
+    if (O && sideOf(O.side)) {
+      const g = parseUtc(O.given_utc);
+      st.hidden = false;
+      fill(st, [t("st_in_force"), el("b", { class: sideOf(O.side) === "LONG" ? "up" : "down" }, sideLow(sideOf(O.side))), sureWord(O.conviction) ? t("st_sure", { s: sureWord(O.conviction) }) : "",
+        g ? t("st_given", { w: when(g) }) : "", num(O.hours_left) != null ? t("st_hours", { h: fmt(O.hours_left, 1) }) : "", str(O.note) ? t("colon") : t("end"), str(O.note) ? el("q", { "data-i18n-data": true }, str(O.note)) : null]);
+    } else { st.hidden = true; st.textContent = ""; }
+
+    const box = $("audit"), kids = [];
+    if (!QA) { fill(box, empty(data ? t("no_data_yet") : t("loading"))); return; }
+    const all = arr(QA.rows).filter(obj), mine = all.filter(function (r) { return str(r.asset) === coin; });
+    const answers = mine.filter(function (r) { return r.kind === "answer"; }).length;
+    if (!mine.length) kids.push(empty(t("au_none", { c: shortLabel(coin) })));
+    else {
+      const LIMIT = 6, shown = auditOpen ? mine : mine.slice(0, LIMIT);
+      shown.forEach(function (r) {
+        const d = parseUtc(r.t_utc), isAns = r.kind === "answer";
+        const t1 = el("span", { class: "t1" }, d ? t(isAns ? "au_answered_at" : "au_asked_at", { h: hm(d) }) : t(isAns ? "au_answered" : "au_asked"), d && !sameDay(d, new Date()) ? el("small", null, dayFmt(d)) : null);
+        let t2;
+        if (isAns) {
+          const s = str(r.side).toLowerCase(), sw = s === "long" || s === "up" || s === "buy" ? "long" : s === "short" || s === "down" || s === "sell" ? "short" : "no view";
+          t2 = el("span", { class: "t2" }, el("b", { style: "color: var(--ink); font-weight: 600", "data-i18n-data": !!str(r.who) }, str(r.who) || t("someone")), t("au_answered_mid"),
+            el("b", { class: sw === "long" ? "up" : sw === "short" ? "down" : "flat" }, sw === "no view" ? t("no_view") : t(sw)), sw !== "no view" && sureWord(r.conviction) ? t("st_sure", { s: sureWord(r.conviction) }) : "",
+            num(r.hours) != null ? t("au_stand", { h: fmt(r.hours, r.hours % 1 ? 1 : 0) }) : "", str(r.note) ? t("colon") : t("end"), str(r.note) ? el("q", { "data-i18n-data": true }, str(r.note)) : null,
+            str(r.question_session) ? el("small", { style: "display: block; color: var(--faint)" }, t("au_toq", { w: parseUtc(r.question_session) ? when(parseUtc(r.question_session)) : str(r.question_session) })) : null);
+        } else t2 = el("span", { class: "t2", "data-i18n-data": !!str(r.question) }, str(r.question) || t("au_noq"));
+        kids.push(el("div", { class: "arow" + (isAns ? " ans" : "") }, t1, t2));
+      });
+      if (mine.length > LIMIT) {
+        const b = el("button", { type: "button", class: "linkbtn", "aria-expanded": auditOpen ? "true" : "false" }, auditOpen ? t("show_fewer") : t("show_all_rows", { n: mine.length }));
+        b.addEventListener("click", function () { auditOpen = !auditOpen; safe("audit", renderAsk); });
+        kids.push(b);
+      }
+    }
+    const tail = [];
+    if (mine.length && !answers) tail.push(t("au_nobody"));
+    const refused = num(QA.refused_attempts);
+    if (refused != null) tail.push(refused === 0 ? t("au_no_refused") : tn("au_refused", refused));
+    if (tail.length) kids.push(el("p", { class: "note" }, tail.join(t("sp"))));
+    fill(box, kids);
+  }
+
+  /* ---------- tabs ---------- */
+  function applyTab() {
+    Array.prototype.forEach.call(document.querySelectorAll("#app [data-tab]"), function (n) {
+      if (n.closest("#tabs")) return;
+      n.hidden = n.getAttribute("data-tab") !== tab;
+    });
+    Array.prototype.forEach.call($("tabs").querySelectorAll("button"), function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-tab") === tab ? "true" : "false"); });
+    if (tab === "overview") queueDraw();          // the chart's canvas needs a size once it is visible again
+  }
+  function setTab(t) {
+    tab = t;
+    try { window.localStorage.setItem("mind15.tab", t); } catch (e) { /* storage blocked */ }
+    applyTab();
+  }
+
+  /* ---------- all markets at a glance ---------- */
+  function renderSummary() {
+    const box = $("mBody"), a = data && obj(data.assets);
+    if (!a || !COINS.length) { fill(box, empty(data ? t("sum_none") : t("loading"))); return; }
+    let eqT = 0, n = 0;
+    const head = el("div", { class: "mrow total", "aria-hidden": "true", style: "border: 0; padding-top: 0; padding-bottom: 0" },
+      el("small", null, t("th_market")), el("small", null, t("th_side")), el("small", { class: "px" }, t("th_price")), el("small", { class: "r" }, t("th_pnl")), el("small", { class: "r" }, t("th_edge")));
+    const rows = COINS.map(function (id) {
+      const A = obj(a[id]) || {}, T = obj(A.trade) || {};
+      const pos = sideOf(T.status || A.position) || "FLAT";
+      const eq = num(T.equity_marked) != null ? T.equity_marked : num(A.equity);
+      if (eq != null) { eqT += eq; n++; }
+      const pnl = eq != null ? eq - 10000 : null, edge = num(A.edge_pts), px = num(A.price);
+      const b = el("button", { type: "button", class: "mrow" + (id === coin ? " on" : ""), role: "listitem",
+          "aria-label": t("sum_aria", { p: pairLabel(id), s: pos === "LONG" || pos === "SHORT" ? sideLow(pos) : t("flat"), pnl: pnl == null ? t("no_pnl") : usdSigned(pnl), e: edge == null ? t("none") : t("pts_word", { v: fmt(edge, 1) }) }) },
+        el("span", { class: "nm" }, el("b", null, shortLabel(id)), el("small", null, str(A.time).slice(11) ? str(A.time).slice(11) + " UTC" : "")),
+        el("span", { class: "tag " + sideClass(pos) }, pos === "LONG" || pos === "SHORT" ? sideUp(pos) : sideWord("FLAT")),
+        el("span", { class: "px" }, px == null ? DASH : fmt(px, px < 100 ? 3 : 2)),
+        el("span", { class: "r " + (pnl == null ? "" : tone(pnl)) }, pnl == null ? DASH : usdSigned(pnl)),
+        el("span", { class: "r" }, edge == null ? DASH : signed(edge, 1, ""), el("small", null, t("u_pts"))));
+      b.addEventListener("click", function () {
+        coin = id; wanted = null; journalOpen = false; auditOpen = false; closedOpen = false;
+        try { window.localStorage.setItem(STORE_KEY, coin); } catch (e) { /* storage blocked */ }
+        setTab("overview"); render();
+        $("chartbox").scrollIntoView();
+      });
+      return b;
+    });
+    const tot = n ? eqT - 10000 * n : null;
+    rows.push(el("div", { class: "mrow total", role: "listitem" }, el("span", { class: "nm" }, el("b", null, t("sum_all", { n: n }))), el("span", null, ""),
+      el("span", { class: "px" }, ""), el("span", { class: "r " + (tot == null ? "" : tone(tot)) }, tot == null ? DASH : usdSigned(tot)),
+      el("span", { class: "r" }, el("small", null, n ? usd(eqT) : ""))));
+    $("mSub").textContent = t("sum_sub");
+    const P = data ? obj(data.portfolio) : null, extra = [];
+    if (P) extra.push(el("p", { class: "note" }, t("pf_main", { nl: fmt(num(P.n_long) || 0, 0), lu: usd(P.long_usd), ns: fmt(num(P.n_short) || 0, 0), su: usd(P.short_usd) }) +
+      (num(P.gross_x_equity) != null ? DOT + t("pf_gross", { x: fmt(P.gross_x_equity, 2) }) : "") +
+      (num(P.risk_to_all_stops_usd) != null ? DOT + t("pf_stops", { v: usd(-P.risk_to_all_stops_usd) }) + (num(P.risk_to_all_stops_pct) != null ? t("pf_pct", { p: fmt(P.risk_to_all_stops_pct, 1) }) : "") : "") + t("end")));
+    fill(box, [el("div", { class: "mkts", role: "list" }, [head].concat(rows))].concat(extra));
+  }
+
+  /* ---------- strategy and shadow books ---------- */
+  // a loop book's state per coin (BTC, ETH first): position, equity, the trend rule's state and spot buy-and-hold since go-live
+  function pctAbs(x) { x = num(x); return x == null ? DASH : fmt(Math.abs(x), 2) + "%"; }
+  function bookStates(b) {
+    const S = obj(b.books) || {}, order = ["BTCUSDT", "ETHUSDT"];
+    const rank = function (k) { const i = order.indexOf(k); return i < 0 ? 9 : i; };
+    return Object.keys(S).filter(function (k) { return obj(S[k]); }).sort(function (x, y) { return rank(x) - rank(y); }).map(function (id) {
+      const s = S[id], bp = str(s.book_position), d = num(s.daily_direction), x = num(s.rule_exposure);
+      const m = /^(long|short)\s+(\S+)\s+since\s+(.+?)(?:\s+UTC)?$/.exec(bp), sd = /^(long|short)\b/.exec(bp), inBook = !!sd;
+      const warm = !inBook && x != null && x !== 0, pull = !inBook && /waiting for an E2/.test(bp);
+      let pos = t("flat");
+      if (m) { const w = parseUtc(m[3]); pos = t(m[1] === "short" ? "p4_pos_short" : "p4_pos_long", { x: m[2], w: w ? when(w) : m[3] + " UTC" }); }
+      else if (inBook) pos = dataSpan(bp);
+      const state = inBook ? t(sd[1]) : warm ? t("p4_st_warm") : pull ? t("p4_st_pull") : d > 0 ? t("p4_st_out") : t("p4_st_wait");
+      const mom = num(s.momentum_30d_pct), dir = d > 0 ? t("p4_up") : d < 0 ? t("p4_down") : t("p4_unknown");
+      return el("div", { class: "coinrow" },
+        el("div", null, el("b", null, shortLabel(id)), DOT, pos, DOT, t("p4_equity", { v: usd(s.equity_usd), r: signed(s.return_pct, 2, "%") })),
+        el("div", null, t("p4_mom", { v: mom == null ? DASH : signed(mom, 2, "%"), d: dir, s: state })),
+        el("small", null, t("p4_hold", { v: signed(s.bh_spot_return_pct, 2, "%"), dd: pctAbs(s.max_dd_pct), h: pctAbs(s.bh_max_dd_pct) })));
+    });
+  }
+  function renderBooks() {
+    const box = $("bBody"), kids = [];
+    const SH = data ? obj(data.shadows) : null, SB = SH ? obj(SH.scoreboard) : null;
+    if (SB && arr(SB.rows).length) {
+      const tb = el("tbody");
+      arr(SB.rows).forEach(function (r) {
+        r = obj(r) || {};
+        tb.appendChild(el("tr", null, el("td", { class: "wrap2", "data-i18n-data": true }, str(r.title) || str(r.book)),
+          el("td", { class: tone(num(r.return_pct)) }, num(r.return_pct) == null ? DASH : signed(r.return_pct, 2, "%")),
+          el("td", { class: tone(num(r.vs_main_usd)) }, num(r.vs_main_usd) == null ? DASH : usdSigned(r.vs_main_usd)),
+          el("td", null, num(r.trades) == null ? DASH : fmt(r.trades, 0)),
+          el("td", null, num(r.win_rate_pct) == null ? DASH : fmt(r.win_rate_pct, 0) + "%"),
+          el("td", null, num(r.fees_usd) == null ? DASH : usd(r.fees_usd))));
+      });
+      kids.push(el("div", { class: "cap" }, t("bk_sh_cap") + (SB.since_utc ? DOT + t("bk_since", { s: str(SB.since_utc) }) : "")));
+      kids.push(el("div", { class: "scroll", tabindex: "0", role: "group", "aria-label": t("bk_sh_aria") },
+        el("table", { class: "t" }, el("thead", null, el("tr", null, [t("th_book"), t("th_return"), t("th_vsmain"), t("th_trades"), t("th_won"), t("th_fees")].map(function (h) { return el("th", { scope: "col" }, h); }))), tb)));
+    }
+    const SA = data ? obj(data.scoreboard_all) : null;
+    if (SA && arr(SA.rows).length) {                  // charter L4: every book, forward only, with a 90% range per trade
+      const tb2 = el("tbody");
+      arr(SA.rows).forEach(function (r) {
+        r = obj(r) || {};
+        const rg = arr(r.range90_usd);
+        tb2.appendChild(el("tr", null, el("td", { class: "wrap2", "data-i18n-data": true }, str(r.title) || str(r.book)),
+          el("td", null, fmt(num(r.trades) || 0, 0)),
+          el("td", { class: tone(num(r.net_usd)) }, num(r.net_usd) == null ? DASH : usdSigned(r.net_usd)),
+          el("td", null, rg.length === 2 ? t("range_to", { a: usdSigned(rg[0]), b: usdSigned(rg[1]) }) : DASH),
+          el("td", { class: "wrap2", "data-i18n-data": true }, str(r.verdict))));
+      });
+      kids.push(el("div", { class: "cap", style: "margin-top: 8px" }, t("bk_sa_cap")));
+      kids.push(el("div", { class: "scroll", tabindex: "0", role: "group", "aria-label": t("bk_sa_aria") },
+        el("table", { class: "t" }, el("thead", null, el("tr", null, [t("th_book"), t("th_trades"), t("th_net"), t("th_range"), t("th_verdict")].map(function (h) { return el("th", { scope: "col" }, h); }))), tb2)));
+      if (SA.note) kids.push(el("p", { class: "note", "data-i18n-data": true }, str(SA.note)));
+    }
+    const PB = data ? obj(data.playbook) : null, cards = [], loops = [];
+    if (PB) Object.keys(PB).forEach(function (m) {
+      const mod = obj(PB[m]) || {};
+      Object.keys(mod).forEach(function (id) {
+        const b = obj(mod[id]);
+        if (!b || !b.title) return;
+        const loop = b.not_passed === true;   // a strategy-loop rule that did NOT pass the loop's strict tests, run forward on paper
+        const T = obj(b.totals) || {}, tr = num(T.trades) || 0;
+        const art = el("article", { class: "bk" }, el("h3", { "data-i18n-data": true }, str(b.title) + (b.hypothesis ? DOT + str(b.hypothesis) : "")),
+          loop ? el("div", { class: "badges" }, el("span", { class: "tag np" }, t("p4_badge"))) : null,
+          el("div", { class: "meta" }, tn("bk_trades", tr, { n: fmt(tr, 0) }) + DOT + t("bk_won", { v: num(T.win_rate_pct) == null ? DASH : fmt(T.win_rate_pct, 0) + "%" }) +
+            DOT + t("bk_avg", { v: num(T.avg_r) == null ? DASH : signed(T.avg_r, 2, "R") }) + DOT + t("bk_net", { v: num(T.net_usd) == null ? DASH : usdSigned(T.net_usd) })));
+        if (loop) add(art, bookStates(b));
+        arr(b.open).slice(0, 4).forEach(function (o) {
+          o = obj(o) || {};
+          const s = num(o.side) > 0 ? "LONG" : num(o.side) < 0 ? "SHORT" : sideOf(o.side);
+          const p = function (v) { v = num(v); return v == null ? DASH : fmt(v, v < 100 ? 3 : 2); };
+          art.appendChild(el("div", { class: "ln" }, (str(o.status) === "WAITING" ? t("bk_waiting") : t("bk_open")) + shortLabel(str(o.asset)) + " " + sideLow(s) +
+            (num(o.entry) != null ? t("bk_from", { v: p(o.entry) }) : "") + (num(o.stop) != null ? t("bk_stop", { v: p(o.stop) }) : "") +
+            (num(o.target_1) != null ? t("bk_t1", { v: p(o.target_1) }) : "") + (num(o.target_2) != null ? t("bk_t2", { v: p(o.target_2) }) : "")));
+        });
+        const rec = arr(b.recent).slice(0, 3);
+        if (rec.length) {
+          const d = el("details", null, el("summary", null, t("bk_last_closed", { n: rec.length })));
+          rec.forEach(function (r) { r = obj(r) || {}; d.appendChild(el("p", { class: "note", "data-i18n-data": !!str(r.text) }, str(r.text) || (shortLabel(str(r.asset)) + " " + (num(r.r) == null ? "" : signed(r.r, 2, "R"))))); });
+          art.appendChild(d);
+        } else if (!arr(b.open).length) art.appendChild(el("div", { class: "ln" }, t("bk_notrade", { d: str(b.registered) })));
+        if (loop && b.note) art.appendChild(el("p", { class: "note", "data-i18n-data": true }, str(b.note)));
+        if (b.rule) art.appendChild(el("details", null, el("summary", null, t("bk_rule")), el("p", { class: "note", "data-i18n-data": true }, str(b.rule))));
+        (loop ? loops : cards).push(art);
+      });
+    });
+    if (cards.length) {
+      kids.push(el("div", { class: "cap", style: "margin-top: 8px" }, t("bk_pb_cap")));
+      kids.push(el("div", { class: "bkgrid" }, cards));
+      kids.push(el("p", { class: "note" }, t("bk_pb_note")));
+    }
+    if (loops.length) {                               // they made money in history tests but failed the loop's strict tests
+      kids.push(el("div", { class: "cap", style: "margin-top: 8px" }, t("bk_loop_cap")));
+      kids.push(el("div", { class: "bkgrid" }, loops));
+      kids.push(el("p", { class: "note" }, t("bk_loop_note")));
+    }
+    fill(box, kids.length ? kids : empty(data ? t("bk_none") : t("loading")));
+  }
+
+  /* ---------- the answer form ---------- */
+  // POSTs JSON {pin, who, asset, side, conviction, note, decision_time} to the answer inbox on this site. Every
+  // refusal has the same body, so the status code alone says what happened. The PIN field is emptied on every
+  // attempt, before the request leaves; the PIN is never stored, logged or shown.
+  const WHO_OK = /^[\p{L}\p{N} _.'-]{1,40}$/u;
+  let ansSide = "", ansSure = 60, sending = false;
+  function pressOne(groupSel, attr, value) {
+    Array.prototype.forEach.call(document.querySelectorAll(groupSel + " button"), function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute(attr) === String(value) ? "true" : "false");
+    });
+  }
+  let ansLast = null;   // the form's last message as { key, vars, cls }: drawn again after a language switch; it never holds the PIN
+  const SIDE_KEY = { long: "long", short: "short", none: "no_view" };
+  function msgText(m) {
+    const v = m.vars ? Object.assign({}, m.vars) : null;
+    if (v && v.coin) v.c = shortLabel(v.coin);
+    if (v && v.side) v.s = t(SIDE_KEY[v.side]) + (v.side === "none" ? "" : t("fm_said_sep") + t("sure_" + v.sure));
+    if (v && v.id != null) v.id = v.id ? t("fm_ok_id", { id: v.id }) : "";
+    if (v && v.who != null) v.who = el("span", { translate: "no" }, v.who);
+    return tx(m.key, v);
+  }
+  function ansMsg(key, vars, cls) {
+    const m = $("ansMsg");
+    ansLast = key ? { key: key, vars: vars || null, cls: cls } : null;
+    m.hidden = !key;
+    m.className = "formmsg" + (cls ? " " + cls : "");
+    fill(m, ansLast ? msgText(ansLast) : null);
+  }
+  function redrawAnsMsg() { if (ansLast) fill($("ansMsg"), msgText(ansLast)); }
+  function refusedKey(status) { return [400, 403, 413, 429, 503].indexOf(status) >= 0 ? "fm_" + status : "fm_other"; }
+  function sendAnswer() {
+    if (sending) return;
+    const pinEl = $("ansPin"), pin = pinEl.value;
+    $("ansPin").value = "";                                    // cleared on every attempt, whatever happens next
+    const who = $("ansWho").value.trim(), note = $("ansNote").value.trim(), A = asset();
+    if (!ansSide) { ansMsg("fm_side", null, "hold"); return; }
+    if (!WHO_OK.test(who)) { ansMsg("fm_who", null, "hold"); return; }
+    if (note.length > 500) { ansMsg("fm_note", null, "hold"); return; }
+    if (!pin) { ansMsg("fm_pin", null, "hold"); return; }
+    const body = { pin: pin, who: who, asset: coin, side: ansSide, conviction: ansSure, note: note };
+    if (A && str(A.time)) body.decision_time = str(A.time);
+    const said = { who: who, coin: coin, side: ansSide, sure: ansSure };   // for the thank-you line: no PIN in it
+    let payload = JSON.stringify(body);
+    body.pin = "";
+    sending = true;
+    $("ansSend").disabled = true;
+    ansMsg("fm_sending", null, "hold");
+    fetch("/aitrading/api/mind15/answer", { method: "POST", headers: { "Content-Type": "application/json" }, body: payload, cache: "no-store", credentials: "same-origin", redirect: "error" })
+      .then(function (r) {
+        return r.text().then(function (txt) {
+          if (r.status === 200) {
+            let id = "";
+            try { const j = JSON.parse(txt); id = j && typeof j.id === "string" ? j.id : ""; } catch (e) { /* the status says enough */ }
+            ansMsg("fm_ok", Object.assign({ id: id }, said), "ok");
+            $("ansNote").value = "";
+          } else ansMsg(refusedKey(r.status), { s: r.status }, "bad");
+        });
+      })
+      .catch(function () { ansMsg("fm_net", null, "bad"); })
+      .then(function () { payload = ""; sending = false; $("ansSend").disabled = false; });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll("#ansForm .choice3 button"), function (b) {
+    b.addEventListener("click", function () { ansSide = b.getAttribute("data-side"); pressOne("#ansForm .choice3", "data-side", ansSide); });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("#ansForm .sure button"), function (b) {
+    b.addEventListener("click", function () { ansSure = Number(b.getAttribute("data-sure")); pressOne("#ansForm .sure", "data-sure", ansSure); });
+  });
+  $("ansForm").addEventListener("submit", function (ev) { ev.preventDefault(); sendAnswer(); });
+
+  /* ---------- which clock is right (1h / 4h / 24h) and the idea queue ---------- */
+  function renderClocks() {
+    const box = $("kBody"), H = data ? obj(data.horizon_skill) : null, M = H ? obj(H.markets) : null, kids = [];
+    if (M && Object.keys(M).length) {
+      const tb = el("tbody");
+      const cell = function (v) {
+        const a = arr(v), hit = num(a[0]);
+        return el("td", { class: hit == null ? "" : hit >= 55 ? "up" : hit < 50 ? "down" : "" }, hit == null ? DASH : fmt(hit, 1) + "%");
+      };
+      (COINS.length ? COINS : Object.keys(M)).forEach(function (id) {
+        const r = obj(M[id]);
+        if (!r) return;
+        const h1 = obj(r["1h"]) || {}, h4 = obj(r["4h"]) || {}, h24 = obj(r["24h"]) || {};
+        tb.appendChild(el("tr", null, el("td", null, shortLabel(id)), cell(h1.d30), cell(h4.d30), cell(h24.d30), cell(h1.d7), cell(h4.d7), cell(h24.d7)));
+      });
+      kids.push(el("div", { class: "scroll", tabindex: "0", role: "group", "aria-label": t("k_aria") },
+        el("table", { class: "t" }, el("thead", null, el("tr", null, [t("th_market"), "1h · 30d", "4h · 30d", "24h · 30d", "1h · 7d", "4h · 7d", "24h · 7d"].map(function (h) { return el("th", { scope: "col" }, h); }))), tb)));
+      kids.push(el("p", { class: "note" }, t("k_note") +
+        (H.updated_utc ? t("k_updated", { u: str(H.updated_utc).slice(0, 16).replace("T", " ") }) : "")));
+    }
+    const I = data ? obj(data.ideas) : null;
+    if (I && arr(I.items).length) {
+      kids.push(el("div", { class: "cap", style: "margin-top: 8px" }, t("k_ideas", { n: fmt(num(I.count) || 0, 0) })));
+      const ul = el("ul", { class: "note", style: "margin: 4px 0 0; padding-left: 18px" });
+      arr(I.items).slice(0, 6).forEach(function (x) { ul.appendChild(el("li", { "data-i18n-data": true }, str(x))); });
+      kids.push(ul);
+      if (I.note) kids.push(el("p", { class: "note", "data-i18n-data": true }, str(I.note)));
+    }
+    fill(box, kids.length ? kids : empty(data ? t("k_none") : t("loading")));
+  }
+
+  /* ---------- draw everything ---------- */
+  function render() {
+    syncMarkets();
+    Array.prototype.forEach.call($("coinSeg").querySelectorAll("button"), function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-coin") === coin ? "true" : "false"); });
+    safe("banner", renderHeader);
+    try { renderChart(); } catch (e) { if (window.console) console.warn("Mind 15: chart", e); chart.rows = []; try { drawChart(); } catch (e2) { /* nothing more to try */ } }
+    safe("decBody", renderDecision);
+    safe("exBody", renderExecution);
+    safe("cards", renderCards);
+    safe("jBody", renderJournal);
+    safe("lBody", renderLearning);
+    safe("qBody", renderLiquidity);
+    safe("sBody", renderShadow);
+    safe("audit", renderAsk);
+    safe("mBody", renderSummary);
+    safe("bBody", renderBooks);
+    safe("kBody", renderClocks);
+    applyTab();
+  }
+  function showError() {
+    // a brief outage keeps the last good file on screen; the banner says how old it is
+    failed = true;
+    if (data) { safe("banner", renderHeader); return; }
+    const b = $("banner");
+    b.hidden = false;
+    b.textContent = t("err_nofile");
+    $("pulse").className = "pulse stale"; $("kickerText").textContent = t("no_data");
+    $("ageLine").textContent = t("age_none");
+    $("app").hidden = true;
+  }
+  function load() {
+    if (busy) return;
+    busy = true;
+    fetch("./page.json", { cache: "no-cache" })   // "ask the server first": an unchanged file is answered 304 from its ETag
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.text(); })
+      .then(function (t) {
+        const j = JSON.parse(t.replace(OLD_NAME, MODEL_NAME));
+        if (!obj(j)) throw new Error("not a page file");
+        failed = false;
+        const fresh = !data || str(j.generated_utc) !== lastStamp || !lastStamp;
+        data = j; lastStamp = str(j.generated_utc);
+        $("app").hidden = false;
+        if (fresh) render(); else safe("banner", renderHeader);   // same file: only its age moves
+      })
+      .catch(function () { showError(); })
+      .then(function () { busy = false; });
+  }
+
+  $("tabs").addEventListener("click", function (ev) {
+    const b = ev.target && ev.target.closest ? ev.target.closest("button[data-tab]") : null;
+    if (!b) return;
+    setTab(b.getAttribute("data-tab"));
+    if ($("tabs").getBoundingClientRect().top < 0 || window.scrollY > $("tabs").offsetTop) $("tabs").scrollIntoView();
+  });
+  $("qView").addEventListener("click", function (ev) {     // liquidity map: close-up (+-2%) or eagle view (+-10%)
+    const b = ev.target && ev.target.closest ? ev.target.closest("button[data-v]") : null;
+    if (!b || b.getAttribute("data-v") === liqView) return;
+    liqView = b.getAttribute("data-v");
+    safe("liquidity", renderLiquidity);
+  });
+  $("coinSeg").addEventListener("click", function (ev) {   // one listener: the buttons are rebuilt from page.json
+    const b = ev.target && ev.target.closest ? ev.target.closest("button[data-coin]") : null;
+    if (!b) return;
+    const c = b.getAttribute("data-coin");
+    if (COINS.indexOf(c) < 0 || c === coin) return;
+    coin = c; wanted = null; journalOpen = false; auditOpen = false;
+    try { window.localStorage.setItem(STORE_KEY, coin); } catch (e) { /* storage blocked */ }
+    render();
+  });
+  const cv = $("chart");
+  cv.addEventListener("pointermove", hoverAt);
+  cv.addEventListener("pointerdown", hoverAt);
+  cv.addEventListener("pointerleave", function () { if (chart.hover !== -1) { chart.hover = -1; readout(); queueDraw(); } });
+  if (window.ResizeObserver) new ResizeObserver(queueDraw).observe($("chartbox")); else window.addEventListener("resize", queueDraw);
+  window.addEventListener("resize", queueDraw);   // also catches a zoom or a move to a screen with another pixel density
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(queueDraw);
+
+  /* ---------- the language switch: save, set <html lang>, draw the file already read again (no new fetch) ---------- */
+  function applyStatic() {
+    document.documentElement.lang = HTML_LANG[lang];
+    document.title = t("title");
+    MONO = MONO_BASE + (CJK[lang] || "") + "monospace";
+    Array.prototype.forEach.call(document.querySelectorAll("[data-i18n]"), function (n) { n.textContent = t(n.getAttribute("data-i18n")); });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-i18n-aria]"), function (n) { n.setAttribute("aria-label", t(n.getAttribute("data-i18n-aria"))); });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-i18n-ph]"), function (n) { n.setAttribute("placeholder", t(n.getAttribute("data-i18n-ph"))); });
+    Array.prototype.forEach.call($("langs").querySelectorAll("button"), function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-lang") === lang ? "true" : "false"); });
+    $("engineNote").hidden = !isZh();
+    redrawAnsMsg();
+  }
+  function setLang(l) {
+    if (LANGS.indexOf(l) < 0) return;
+    try { window.localStorage.setItem(LANG_KEY, l); } catch (e) { /* storage blocked */ }
+    if (l === lang) return;
+    lang = l;
+    try {
+      const u = new URL(window.location.href);
+      if (u.searchParams.has("lang")) { u.searchParams.set("lang", l); window.history.replaceState(window.history.state, "", u.href); }
+    } catch (e) { /* no URL API */ }
+    applyStatic();
+    if (!data && failed) showError(); else render();
+  }
+  $("langs").addEventListener("click", function (ev) {
+    const b = ev.target && ev.target.closest ? ev.target.closest("button[data-lang]") : null;
+    if (b) setLang(b.getAttribute("data-lang"));
+  });
+
+  applyStatic();
+  render();
+  load();
+  setInterval(function () { if (!document.hidden) load(); }, REFRESH_MS);
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) load(); });
+})();
+</script>
+</body>
+</html>

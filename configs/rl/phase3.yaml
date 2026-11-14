@@ -1,0 +1,205 @@
+# Mind 15 RL module, Phase 3: a continuously learning 15m agent that learns when NOT to trade. Paper only.
+# Loaded on top of configs/rl/phase1.yaml (data, costs, walk-forward, benchmarks come from there).
+#
+# STATUS: FROZEN 11 Nov 2026 at 14:39 UTC, before any walk-forward test result existed (no agent had been trained or
+# evaluated on any real test window). Changing any value after this is a new experiment and must be reported as such.
+# What was decided when: see the freeze block at the end of this file.
+
+seeds: [0, 1, 2]                  # agent seeds; trained one after another, never in parallel
+data_end: "2026-11-11 11:30"      # both assets cut here: the same span as Phases 1-2 (BTC's stored data end)
+
+assets:
+  BTCUSDT: {walkforward_start: "2019-10-01", source: rl_store}      # headline (Binance USD-M perp, data/rl)
+  ETHUSDT: {walkforward_start: "2019-10-01", source: engine_file}   # robustness: the engine's ETH 15m file, read only
+                                                                     # (the loop's loader); base family only (budget)
+
+features:                         # Phase 2's point-in-time set + Phase 3 context (features3.py); all closed bars
+  return_windows: [1, 4, 16, 96, 672, 2880]
+  vol_windows: [16, 96, 672]
+  momentum_windows: [16, 96, 672, 2880]
+  volume_z_window: 672
+  daily_closed: true
+  phase3: {htf: true, momentum_signal: true, time: true}
+
+policy:
+  min_hold_bars: 4                # a change is refused until 4 bars (1 h) after the last one (forced moves excepted)
+
+qagent:                           # the Phase 3 agent (qagent.py): afterstate Q-learning, linear W, cost-aware
+  net_arch: []                    # LINEAR in the features (an MLP memorised noise on synthetic data: train Sharpe 13)
+  activation: relu
+  learning_rate: 0.0005
+  weight_decay: 0.3               # AdamW (decoupled, x lr per step)
+  batch_size: 256
+  gamma: 0.99                     # ~100 bars (a day) of horizon, enough to amortise a round trip at 15m
+  n_step: 16                      # hold-for-4h targets: value propagates 16x faster than one-step
+  target_every: 100
+  reward_scale: 100.0
+  cost_mult: 2.0                  # the reward charges a FULL ROUND TRIP (2 x one side) on every change
+  risk_aversion: 1.0              # log-utility-style variance charge: flat beats a no-edge position
+  vol_scale: true                 # rewards in vol-target units (vol_ref / max(rv_96, rv_672)), like the risk manager
+  vol_ref_annual: 0.60
+  vol_scale_cap: 3.0
+  obs_clip: 5.0
+  huber_beta: 1.0
+  max_grad_norm: 1.0
+  input_noise: 0.0
+  evals: 6                        # full train: 6 x 1,000 steps, validation check after each
+  eval_every: 1000
+  patience: 3
+  chunk_steps: 500                # memory check every 500 steps
+  select_on: val_loss             # keep the checkpoint with the lowest validation Bellman loss (less noisy than val Sharpe)
+  fallback_val_sharpe: 0.5        # 'do no harm': kept checkpoint's validation Sharpe < 0.5 -> neutral policy for the fold
+  bc_steps: 2000                  # imitation warm start: behaviour-cloning steps before RL (warm-start families only)
+  replay_days: 365                # continual updates: replay buffer = trailing 12 months ...
+  half_life_days: 60              # ... sampled half uniformly, half with a 60-day recency half-life
+  recency_mix: 0.5
+  finetune_steps: 200             # per weekly update (a daily cadence gets the same budget a week: see cadence_choice)
+  torch_threads: 2
+
+continual:
+  cadence_days: 7                 # weekly (Mondays 00:00 UTC): chosen by phase3-cadence at 14:38 UTC (phase3_cadence.json)
+
+train:
+  validation_months: 3            # last 3 months of each 12-month train window: early stopping / fallback only
+
+families:                         # agent families; modes: a static, b continual, c continual + periodic full retrain
+  base:  {actions: [-1.0, -0.5, 0.0, 0.5, 1.0], modes: [a, b, c], neutral: 0.0, start_position: 0.0, funding: perp,
+          eval: risk3, span: full, assets: [BTCUSDT, ETHUSDT]}
+  meta:  {actions: [-1.0, -0.5, 0.0, 0.5, 1.0], mask: momentum_direction, modes: [c], neutral: 0.0, start_position: 0.0,
+          funding: perp, eval: risk3, span: full, assets: [BTCUSDT]}
+  core:  {actions: [0.0, 0.5, 1.0, 1.5], modes: [c], neutral: 1.0, start_position: 1.0, max_abs: 1.5, funding: perp,
+          eval: risk3, span: full, assets: [BTCUSDT]}
+  # Owner's addendum (11 Nov 2026, received before this file was frozen): the strategy loop's two best rules as
+  # baselines (baselines3.py; A = H29 H30 1.5x/0x spot, B = H29 H31 trail 4 ATR spot). These families see the
+  # baseline's current target as an extra input, are scored with the loop's spot backtester (no Phase 3 risk
+  # manager: the baseline is the risk policy) and ONLY on folds ending by 2025-11-11 (span: dev): the loop's sealed
+  # holdout 2025-11-11 .. 2026-11-11 is never scored for anything built on A or B.
+  res_A: {actions: [-0.5, 0.0, 0.5], baseline: A, residual: true, modes: [c], neutral: 0.0, start_position: 0.0,
+          funding: residual, eval: spot, span: dev, assets: [BTCUSDT]}      # residual RL: A + an adjustment in +-0.5x
+  res_B: {actions: [-0.5, 0.0, 0.5], baseline: B, residual: true, modes: [c], neutral: 0.0, start_position: 0.0,
+          funding: residual, eval: spot, span: dev, assets: [BTCUSDT]}
+  ws_A:  {actions: [0.0, 0.5, 1.0, 1.5, 2.0], baseline: A, warm_start: true, modes: [c], neutral: 0.0, start_position: 0.0,
+          funding: spot, eval: spot, span: dev, assets: [BTCUSDT]}         # imitation warm start on A, then RL
+  ws_B:  {actions: [0.0, 0.5, 1.0, 1.5, 2.0], baseline: B, warm_start: true, modes: [c], neutral: 0.0, start_position: 0.0,
+          funding: spot, eval: spot, span: dev, assets: [BTCUSDT]}
+  scr_A: {actions: [0.0, 0.5, 1.0, 1.5, 2.0], baseline: A, modes: [c], neutral: 0.0, start_position: 0.0,
+          funding: spot, eval: spot, span: dev, assets: [BTCUSDT]}         # the same agent from scratch (no cloning)
+  scr_B: {actions: [0.0, 0.5, 1.0, 1.5, 2.0], baseline: B, modes: [c], neutral: 0.0, start_position: 0.0,
+          funding: spot, eval: spot, span: dev, assets: [BTCUSDT]}
+
+variants:                         # the owner's six filter / harness questions, on the base family's mode below
+  mode: c
+  consensus: {k: all}             # v1: change only when every seed wants to leave and they agree on the side; else hold
+  confidence_gate:                # v2: advantage must beat value x round trip; value chosen per fold (rule below)
+    grid: [0.0, 0.5, 1.0, 2.0, 4.0]
+  htf_alignment: {rule: "long only if trend_4h > 0 and mom_signal > 0; short only if both < 0; else flat"}   # v3
+  vol_gate:                       # v4: trade only when vol_bar x sqrt(hold_bars) >= value x round trip; value per fold
+    hold_bars: 16
+    grid: [2.0, 4.0, 6.0, 8.0]
+  threshold_rule: "for fold f, the grid value with the best net Sharpe (0.10%, no risk manager) over the 3 months before
+    f, as the variant actually ran them (fold 0: the fold-0 model on its validation slice); ties -> fewer trades, then
+    the larger value"
+  # v5 meta-labeling = family meta (direction = frozen momentum; the agent picks 0 / 0.5 / 1 and timing within the day)
+  # v6 core-satellite = family core (buy-and-hold core at 1x; the agent tilts within 0 .. 1.5x; fees on every tilt)
+
+risk3:                            # the Phase 3 risk manager (risk3.py); judged on buy-and-hold and momentum first
+  # REVISION 1 (the one revision the check allows), 11 Nov 2026 ~14:35 UTC, before any agent result: the draft
+  # (vol_target 0.50, vol_short rv_96) failed on buy-and-hold (BTC Sharpe 0.64 -> 0.49, ETH 0.60 -> 0.36): the fast
+  # rv_96 estimate cut size right after vol spikes. Revised to the slow estimate only (rv_672, one week) and a 60%
+  # target (the loop's H31 target and the agent's vol_ref). Five versions were looked at on the benchmarks (no agent),
+  # all listed in the report; this choice therefore used benchmark numbers from the test span.
+  enabled: true
+  vol_target: 0.60
+  max_position: 1.0
+  vol_short: rv_672
+  vol_long: rv_672
+  rebalance_band: 0.20
+  dd_window_bars: 8640            # rolling 90-day peak
+  dd_levels: [0.20, 0.30]
+  dd_factors: [0.75, 0.50]
+
+risk_check:
+  assets: [BTCUSDT, ETHUSDT]
+  min_sharpe_ratio: 0.9
+  pass_rule: "out of sample at 0.10%: Sharpe through the risk manager >= 0.9 x the raw Sharpe AND a smaller max drawdown,
+    for buy-and-hold AND momentum. One revision allowed if it fails, reported as such."
+
+learnability:
+  seed_base: 2000                 # fresh synthetic series (the exploration used 1000+)
+  seeds: [0, 1, 2, 3, 4]
+  scenarios: {edge: 0.02, edge_small: 0.01, none: 0.0}
+  criteria:
+    edge_scenario: edge
+    none_scenario: none
+    edge_min_test_sharpe: 0.5
+    edge_min_oracle_share: 0.25
+    min_train_sharpe: 0.5
+    none_min_test_sharpe: -0.5
+    none_max_turnover: 50
+    none_max_exposure: 0.6
+  ppo: {scenarios: [edge, none], seeds: 3, timesteps: 200000}
+
+ppo_reference:                    # Phase 2's PPO hyperparameters, used only in the learnability check
+  net_arch: [64, 64]
+  learning_rate: 0.0003
+  n_envs: 4
+  n_steps: 512
+  batch_size: 256
+  n_epochs: 5
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.2
+  ent_coef: 0.01
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  torch_threads: 2
+
+cadence_choice:
+  candidates: [7, 1]              # weekly (Mondays) or daily, at the close of the bar ending 00:00 UTC
+  steps_per_update: {"7": 200, "1": 30}       # the same gradient budget a week
+  synthetic_kappa: 0.02
+  synthetic_flip_days: 60
+  synthetic_seeds: [0, 1, 2, 3, 4]
+  seed_base: 3000
+  btc_end: "2020-10-01"           # nothing at or after the first test window
+  btc_train: ["2019-10-01", "2020-04-01"]     # initial train (early stopping on 2020-04-01 .. 2020-07-01)
+  btc_val: ["2020-07-01", "2020-10-01"]       # each cadence fine-tunes through this and is scored on it
+  btc_seeds: [0, 1, 2]
+  rule: "score = mean of (BTC pre-OOS validation Sharpe, synthetic drifting-edge test Sharpe); highest wins; ties ->
+    the longer cadence"
+
+diag2:                            # DIAGNOSTIC ONLY: the filters on the Phase 2 agent's (seen) trades; fixed, not tuned
+  prob_min: 0.6                   # confidence: accept a new PPO target only if its action probability >= 0.6
+  vol_gate_mult: 4.0              # vol gate: middle of the Phase 3 grid
+  vol_gate_hold_bars: 16
+
+flags:                            # thresholds fixed with everything else
+  train_test_sharpe_gap: 1.0
+  seed_sharpe_sd: 0.5
+  min_fold_win_share: 0.5
+  max_turnover_per_year: 100
+
+memory: {start_mb: 700, floor_mb: 350, poll_s: 20}
+
+report:
+  models_dir: research/out/rl/models3
+
+freeze:                           # the record the report prints
+  "11 Nov 2026, ~13:45-14:20 UTC (synthetic data only)": "agent setup chosen on synthetic series (exploration seeds
+    1000+; no real data): afterstate Q-learning, linear W, zero-initialised output, 16-step targets, weight decay 0.3,
+    risk aversion 1.0, vol-scaled reward, round-trip cost charge, validation-loss early stopping, neutral fallback at a
+    validation Sharpe of 0.5"
+  "11 Nov 2026, ~14:20 UTC": "this file drafted with every value (features, actions, min hold, agent, families incl. the
+    owner's two addenda: the six filter / harness variants and the loop-rule baselines A / B with residual RL and
+    imitation warm starts on the dev span only), the risk manager draft and the learnability / risk-check / cadence
+    rules, before those checks ran"
+  "11 Nov 2026, 14:24 UTC": "risk check of the draft risk manager on buy-and-hold and momentum (no agent): failed on
+    buy-and-hold; revision 1 (slow vol rv_672, 60 pct target) chosen after looking at five versions on benchmark numbers;
+    the revised check passed at 14:31 UTC"
+  "11 Nov 2026, 14:28 UTC": "learnability check on fresh synthetic series: FAIL on the frozen criteria (planted edge
+    not found reliably; near-flat without an edge: yes; fits its training slice: yes). No agent setting was changed
+    afterwards. One design change was made after it: the neutral fallback became a per-fold flag instead of overwriting
+    the weights, because continual fine-tuning was seen to erode an overwritten neutral model (cadence run, synthetic);
+    static decisions are identical either way"
+  "11 Nov 2026, 14:38 UTC": "update cadence: weekly (score 0.10 vs daily -0.01; BTC data before 2020-10-01 only)"
+  "11 Nov 2026, 14:39 UTC": "everything frozen; then the walk-forward runs (BTC, then ETH), once"

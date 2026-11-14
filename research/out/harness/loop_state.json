@@ -1,0 +1,164 @@
+{
+ "round": 3,
+ "updated_utc": "2026-11-11 14:15:18",
+ "target": {
+  "cagr": 0.25,
+  "milestone_cagr": 0.1,
+  "history": [
+   "10% CAGR (owner, 11 Nov 2026)",
+   "raised to 25% CAGR before any holdout look (owner, 11 Nov 2026)",
+   "from round 2: strict outperformance of buy-and-hold added (owner, 11 Nov 2026, before round 2)"
+  ]
+ },
+ "sealed_holdout": {
+  "start": "2025-11-11",
+  "end": "2026-11-11"
+ },
+ "variants_tried": {
+  "round_1": {
+   "per_asset": 919,
+   "assets": [
+    "BTCUSDT",
+    "ETHUSDT"
+   ]
+  },
+  "total": 1910,
+  "round_2": {
+   "per_coin": 31,
+   "books": 2,
+   "total": 64
+  },
+  "round_3": {
+   "per_coin": 4,
+   "coins": 2,
+   "total": 8,
+   "other_markets_report_only": "4 rules x 6 markets, not counted"
+  }
+ },
+ "development_passes": [],
+ "holdout_looks": [],
+ "holdout_looks_used": 0,
+ "historical_passes": [],
+ "confirmed": [],
+ "best_so_far": {
+  "id": "R2-H29 H30 2x/0x spot longs",
+  "name": "H29 H30 2x/0x spot longs",
+  "dev_cagr": 0.8860809533294884,
+  "dev_sharpe": 1.1545533892528377,
+  "dev_max_drawdown": 0.7764564703512361,
+  "trades_per_year": 29.716122121049814,
+  "note": "BTC, 0.10%, by development CAGR; not a pass unless listed in development_passes"
+ },
+ "closest_to_pass": {
+  "id": "R2-H29 H30 1.5x/0.5x spot longs",
+  "rules_met_btc": 6,
+  "rules_met_eth": 6,
+  "of": 8,
+  "failing_btc": [
+   "4_fold_share_ge_half",
+   "5_significant"
+  ],
+  "failing_eth": [
+   "4_fold_share_ge_half",
+   "5_significant"
+  ]
+ },
+ "pass_rules_from_round_2": {
+  "set_utc": "2026-11-11 14:05:00",
+  "set_before_round_2_results": true,
+  "owner": "I want a strict outperforming buy and hold. Achieve yearly min 25% CAGR.",
+  "per_coin": "BTC headline and ETH under the same frozen rule must both pass (two-coin books: one book vs the two-coin buy-and-hold book)",
+  "rules": [
+   "CAGR >= 25% net of 0.10% a side and funding",
+   "CAGR > buy-and-hold CAGR",
+   "Sharpe > buy-and-hold Sharpe and max DD <= buy-and-hold max DD",
+   "Sharpe > buy-and-hold in >= half the folds",
+   "bootstrap p <= 0.05 / cumulative variants tried in the loop; DSR reported",
+   "no fee_only_at_0.05, no high_turnover",
+   "> half the folds net positive; 15m decision clock"
+  ],
+  "benchmark": "spot buy-and-hold (no funding); perp buy-and-hold shown too"
+ },
+ "significance_edge_needed_round3": {
+  "BTCUSDT H32": 0.6884013336559988,
+  "BTCUSDT H33": 1.309160312974792,
+  "BTCUSDT H34": 1.465460193005489,
+  "BTCUSDT H35": 2.8745498659723348,
+  "ETHUSDT H32": 0.7103525831801197,
+  "ETHUSDT H33": 1.3808056897251466,
+  "ETHUSDT H34": 1.3477555763083797,
+  "ETHUSDT H35": 2.322269177166859
+ },
+ "round3_closest": {
+  "id": "R3-H34",
+  "rules_met_btc": 5,
+  "rules_met_eth": 5,
+  "of": 8
+ },
+ "status": "paused by owner, resume on request",
+ "paused_utc": "2026-11-11 14:16:00",
+ "rounds_done": [
+  1,
+  2,
+  3
+ ],
+ "next_round": {
+  "round": 4,
+  "registered": false,
+  "proposals": [
+   {
+    "id": "H36",
+    "rule": "H34 with the funding check read only at the 00:00 UTC decision; 1.5x only when latest funding <= 270-settlement median else 1x; 0 when daily momentum < 0; spot long legs; E2 pullback on increases",
+    "why": "H34 had a smaller drawdown than H30 but 110-118 trades a year"
+   },
+   {
+    "id": "H37",
+    "rule": "spot 1x always; 0 when daily momentum < 0 AND 7-day vol > its trailing one-year 80th percentile; E2 pullback on re-entry",
+    "why": "small tracking error lowers the edge significance demands; aims at the crash folds"
+   },
+   {
+    "id": "H38",
+    "rule": "BTC/ETH relative momentum book: hold (spot, 1x) the coin with the higher 30-day return at each 00:00 UTC decision, flat if both negative; E2 pullback on a switch; graded vs the 50/50 spot buy-and-hold book",
+    "why": "a different return source; may raise Sharpe in up folds"
+   }
+  ],
+  "expected_variants": 6
+ },
+ "round_in_progress": null,
+ "forward_paper_books": {
+  "label": "forward paper books (not passed, owner-approved 12 Nov 2026)",
+  "owner_approval": "12 Nov 2026 (local): \"Yes, add both\" to running them forward as paper shadow books in Mind 15",
+  "go_live_utc": "2026-11-11 20:00",
+  "module": "engine15/playbook4.py",
+  "books": [
+   {
+    "book": "p4_h30spot",
+    "loop_id": "R2-H29 H30 1.5x/0x spot longs",
+    "passed": false,
+    "failed": [
+     "4_fold_share_ge_half",
+     "5_significant"
+    ]
+   },
+   {
+    "book": "p4_h31trail",
+    "loop_id": "R2-H29 H31 trail 4 ATR spot longs",
+    "passed": false,
+    "failed": [
+     "4_fold_share_ge_half",
+     "5_significant"
+    ]
+   }
+  ],
+  "assets": [
+   "BTCUSDT",
+   "ETHUSDT"
+  ],
+  "stake_usd_per_asset": 10000,
+  "fee_side": 0.001,
+  "accounting": "as round 2: longs up to 1x spot (no funding), perp funding above 1x; live Mind 15 uses perps",
+  "forward_pass_criteria": "research/HYPOTHESES.md, 'Forward paper books from round 2': the round-2 strict rules applied to the forward span vs spot buy-and-hold, per coin, read at 30 closed forward trades per book",
+  "is_loop_pass": false,
+  "note": "Not rule 4's forward confirmation (no development or historical pass; no holdout look used). Adds no variants; changes no loop rule; loop stays paused."
+ }
+}

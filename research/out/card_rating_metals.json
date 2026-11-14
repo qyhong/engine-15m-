@@ -1,0 +1,1149 @@
+[
+ [
+  "Volatility gauges",
+  "vx_gold",
+  52.2,
+  53.0,
+  2.2,
+  "with",
+  {
+   "voices": [
+    "volx"
+   ],
+   "worse_half": 52.2,
+   "reading_key": "vx_gold",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      51.5,
+      53.4,
+      1.5,
+      "with"
+     ],
+     "own_best": [
+      "vx_front",
+      48.5,
+      46.5,
+      1.5,
+      "against"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      52.9,
+      52.6,
+      2.6,
+      "with"
+     ],
+     "own_best": [
+      "vx_gold",
+      52.9,
+      52.6,
+      2.6,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Ichimoku cloud",
+  "ich_lag_1h",
+  51.9,
+  52.9,
+  1.9,
+  "with",
+  {
+   "voices": [
+    "ichimoku"
+   ],
+   "worse_half": 51.9,
+   "reading_key": "ich_lag_1h",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      51.1,
+      54.4,
+      1.1,
+      "with"
+     ],
+     "own_best": [
+      "ich_tk_1h",
+      51.7,
+      52.5,
+      1.7,
+      "with"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      52.9,
+      51.2,
+      1.2,
+      "with"
+     ],
+     "own_best": [
+      "ich_tk_4h",
+      51.9,
+      52.2,
+      1.9,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Momentum and stretch",
+  "last 24 hours' move",
+  51.7,
+  53.0,
+  1.7,
+  "with",
+  {
+   "voices": [
+    "momentum",
+    "meanrev",
+    "pullback"
+   ],
+   "worse_half": 51.7,
+   "reading_key": "mom_24h",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      51.5,
+      53.9,
+      1.5,
+      "with"
+     ],
+     "own_best": [
+      "daily trend",
+      51.8,
+      54.3,
+      1.8,
+      "with"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      51.9,
+      51.9,
+      1.9,
+      "with"
+     ],
+     "own_best": [
+      "daily trend",
+      46.9,
+      46.9,
+      3.1,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Gold and silver ETF holdings",
+  "ge_gld_5d",
+  53.7,
+  51.6,
+  1.6,
+  "with",
+  {
+   "voices": [
+    "goldetf"
+   ],
+   "worse_half": 51.6,
+   "reading_key": "ge_gld_5d",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      53.3,
+      54.6,
+      3.3,
+      "with"
+     ],
+     "own_best": [
+      "ge_gld_5d",
+      53.3,
+      54.6,
+      3.3,
+      "with"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      54.0,
+      48.5,
+      0.0,
+      "with"
+     ],
+     "own_best": [
+      "ge_slv_dvol",
+      48.1,
+      49.5,
+      0.5,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Market structure",
+  "ms_pos_4h",
+  52.3,
+  51.6,
+  1.6,
+  "with",
+  {
+   "voices": [
+    "structure"
+   ],
+   "worse_half": 51.6,
+   "reading_key": "ms_pos_4h",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      51.7,
+      53.2,
+      1.7,
+      "with"
+     ],
+     "own_best": [
+      "ms_pos_4h",
+      51.7,
+      53.2,
+      1.7,
+      "with"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      53.0,
+      49.9,
+      0.0,
+      "with"
+     ],
+     "own_best": [
+      "ms_pos_1h",
+      51.0,
+      51.3,
+      1.0,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Timeframe strength",
+  "4h trend",
+  54.2,
+  51.5,
+  1.5,
+  "with",
+  {
+   "voices": [
+    "trend"
+   ],
+   "worse_half": 51.5,
+   "reading_key": "tr_4h",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      53.1,
+      54.2,
+      3.1,
+      "with"
+     ],
+     "own_best": [
+      "4h trend",
+      53.1,
+      54.2,
+      3.1,
+      "with"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      55.3,
+      48.6,
+      0.0,
+      "with"
+     ],
+     "own_best": [
+      "daily trend",
+      46.9,
+      46.9,
+      3.1,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Regime",
+  "regime MOMENTUM_DOWN",
+  53.6,
+  51.3,
+  1.3,
+  "with",
+  {
+   "voices": [
+    "regime"
+   ],
+   "worse_half": 51.3,
+   "reading_key": "rg_MOMENTUM_DOWN",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      null,
+      null,
+      0.0,
+      "too little history"
+     ],
+     "own_best": [
+      "regime TREND_DOWN",
+      53.0,
+      61.4,
+      3.0,
+      "with"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      54.7,
+      53.6,
+      3.6,
+      "with"
+     ],
+     "own_best": [
+      "regime MOMENTUM_DOWN",
+      54.7,
+      53.6,
+      3.6,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Kaufman adaptive average (KAMA)",
+  "kama_pos_4h",
+  51.3,
+  53.2,
+  1.3,
+  "with",
+  {
+   "voices": [
+    "kama"
+   ],
+   "worse_half": 51.3,
+   "reading_key": "kama_pos_4h",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      51.0,
+      55.2,
+      1.0,
+      "with"
+     ],
+     "own_best": [
+      "kama_er_1h",
+      51.2,
+      53.7,
+      1.2,
+      "with"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      51.7,
+      51.0,
+      1.0,
+      "with"
+     ],
+     "own_best": [
+      "kama_pos_4h",
+      51.7,
+      51.0,
+      1.0,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "News and economic events",
+  "a US release just printed",
+  47.9,
+  48.7,
+  1.3,
+  "against",
+  {
+   "voices": [
+    "news",
+    "macro"
+   ],
+   "worse_half": 51.3,
+   "reading_key": "ec_prev",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      48.6,
+      49.3,
+      0.7,
+      "against"
+     ],
+     "own_best": [
+      "VIX level",
+      48.5,
+      48.7,
+      1.3,
+      "against"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      47.2,
+      48.1,
+      1.9,
+      "against"
+     ],
+     "own_best": [
+      "a US release just printed",
+      47.2,
+      48.1,
+      1.9,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Moving averages (SMA and EMA 5-200)",
+  "ma_share_4h",
+  51.8,
+  51.3,
+  1.3,
+  "with",
+  {
+   "voices": [
+    "mavg"
+   ],
+   "worse_half": 51.3,
+   "reading_key": "ma_share_4h",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      51.3,
+      52.8,
+      1.3,
+      "with"
+     ],
+     "own_best": [
+      "ma_stack_4h",
+      52.4,
+      53.2,
+      2.4,
+      "with"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      52.4,
+      49.7,
+      0.0,
+      "with"
+     ],
+     "own_best": [
+      "ma_d200_4h",
+      51.4,
+      51.0,
+      1.0,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Moving-average ribbon",
+  "rb_gmma_1h",
+  51.2,
+  52.4,
+  1.2,
+  "with",
+  {
+   "voices": [
+    "ribbon"
+   ],
+   "worse_half": 51.2,
+   "reading_key": "rb_gmma_1h",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      50.9,
+      53.3,
+      0.9,
+      "with"
+     ],
+     "own_best": [
+      "rb_expand_1h",
+      52.0,
+      52.4,
+      2.0,
+      "with"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      51.6,
+      51.3,
+      1.3,
+      "with"
+     ],
+     "own_best": [
+      "rb_gmma_1h",
+      51.6,
+      51.3,
+      1.3,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Moving averages as support and resistance",
+  "mas_room_4h",
+  52.4,
+  51.1,
+  1.1,
+  "with",
+  {
+   "voices": [
+    "mavg_sr"
+   ],
+   "worse_half": 51.1,
+   "reading_key": "mas_room_4h",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      52.8,
+      53.1,
+      2.8,
+      "with"
+     ],
+     "own_best": [
+      "mas_room_4h",
+      52.8,
+      53.1,
+      2.8,
+      "with"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      52.1,
+      49.1,
+      0.0,
+      "with"
+     ],
+     "own_best": [
+      "mas_room_1h",
+      48.4,
+      47.7,
+      1.6,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Time and session",
+  "ck_weekend",
+  48.9,
+  48.6,
+  1.1,
+  "against",
+  {
+   "voices": [
+    "clock"
+   ],
+   "worse_half": 51.1,
+   "reading_key": "ck_weekend",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      47.5,
+      45.0,
+      2.5,
+      "against"
+     ],
+     "own_best": [
+      "ck_weekend",
+      47.5,
+      45.0,
+      2.5,
+      "against"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      50.2,
+      52.4,
+      0.2,
+      "with"
+     ],
+     "own_best": [
+      "ck_europe",
+      49.5,
+      49.5,
+      0.5,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Futures positioning (CFTC)",
+  "cot_level",
+  51.0,
+  53.5,
+  1.0,
+  "with",
+  {
+   "voices": [
+    "cot"
+   ],
+   "worse_half": 51.0,
+   "reading_key": "cot_level",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      56.3,
+      54.3,
+      4.3,
+      "with"
+     ],
+     "own_best": [
+      "cot_level",
+      56.3,
+      54.3,
+      4.3,
+      "with"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      43.7,
+      45.7,
+      4.3,
+      "against"
+     ],
+     "own_best": [
+      "cot_level",
+      43.7,
+      45.7,
+      4.3,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Trade setups",
+  "su_pullback",
+  48.0,
+  49.1,
+  0.9,
+  "against",
+  {
+   "voices": [
+    "setups"
+   ],
+   "worse_half": 50.9,
+   "reading_key": "su_pullback",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      47.7,
+      49.8,
+      0.2,
+      "against"
+     ],
+     "own_best": [
+      "su_failure",
+      51.8,
+      51.6,
+      1.6,
+      "with"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      48.3,
+      48.2,
+      1.7,
+      "against"
+     ],
+     "own_best": [
+      "su_trap",
+      51.8,
+      52.4,
+      1.8,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Fibonacci retracement",
+  "fib_gz_4h",
+  46.4,
+  49.2,
+  0.8,
+  "against",
+  {
+   "voices": [
+    "fib"
+   ],
+   "worse_half": 50.8,
+   "reading_key": "fib_gz_4h",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      45.9,
+      51.9,
+      0.0,
+      "against"
+     ],
+     "own_best": [
+      "fib_room_1h",
+      47.7,
+      47.5,
+      2.3,
+      "against"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      46.7,
+      46.5,
+      3.3,
+      "against"
+     ],
+     "own_best": [
+      "fib_gz_4h",
+      46.7,
+      46.5,
+      3.3,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Metals ratios",
+  "mt_lead_24h",
+  50.8,
+  53.0,
+  0.8,
+  "with",
+  {
+   "voices": [
+    "metals"
+   ],
+   "worse_half": 50.8,
+   "reading_key": "mt_lead_24h",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      51.0,
+      53.1,
+      1.0,
+      "with"
+     ],
+     "own_best": [
+      "mt_gsr_level",
+      49.0,
+      45.6,
+      1.0,
+      "against"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      50.6,
+      52.9,
+      0.6,
+      "with"
+     ],
+     "own_best": [
+      "mt_lead_24h",
+      50.6,
+      52.9,
+      0.6,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Support and resistance",
+  "strength of the resistance above",
+  50.8,
+  51.8,
+  0.8,
+  "with",
+  {
+   "voices": [
+    "levels"
+   ],
+   "worse_half": 50.8,
+   "reading_key": "sr_res_str",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      52.4,
+      55.2,
+      2.4,
+      "with"
+     ],
+     "own_best": [
+      "strength of the resistance above",
+      52.4,
+      55.2,
+      2.4,
+      "with"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      49.3,
+      48.9,
+      0.7,
+      "against"
+     ],
+     "own_best": [
+      "near yesterday's high",
+      49.1,
+      42.2,
+      0.9,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Intraday levels (VWAP and opening range)",
+  "id_vwap_d",
+  50.8,
+  51.1,
+  0.8,
+  "with",
+  {
+   "voices": [
+    "intraday"
+   ],
+   "worse_half": 50.8,
+   "reading_key": "id_vwap_d",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      51.2,
+      50.8,
+      0.8,
+      "with"
+     ],
+     "own_best": [
+      "id_vwap_d",
+      51.2,
+      50.8,
+      0.8,
+      "with"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      50.4,
+      51.3,
+      0.4,
+      "with"
+     ],
+     "own_best": [
+      "id_or",
+      49.0,
+      49.5,
+      0.5,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Working strategies",
+  "30-day momentum strategy",
+  50.9,
+  50.8,
+  0.8,
+  "with",
+  {
+   "voices": [
+    "strategies"
+   ],
+   "worse_half": 50.8,
+   "reading_key": "st_tsmom",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      51.0,
+      53.1,
+      1.0,
+      "with"
+     ],
+     "own_best": [
+      "BTC 120-day trend",
+      51.3,
+      52.6,
+      1.3,
+      "with"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      50.7,
+      48.1,
+      0.0,
+      "with"
+     ],
+     "own_best": [
+      "weekly regime (EMA20/50)",
+      47.5,
+      45.7,
+      2.5,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Candle size and realistic targets",
+  "cs_reach_rel",
+  50.7,
+  53.5,
+  0.7,
+  "with",
+  {
+   "voices": [
+    "candles"
+   ],
+   "worse_half": 50.7,
+   "reading_key": "cs_reach_rel",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      51.1,
+      53.5,
+      1.1,
+      "with"
+     ],
+     "own_best": [
+      "cs_reach_rel",
+      51.1,
+      53.5,
+      1.1,
+      "with"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      50.2,
+      53.4,
+      0.2,
+      "with"
+     ],
+     "own_best": [
+      "cs_body_share",
+      50.8,
+      51.1,
+      0.8,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Hull moving average",
+  "hull_pos_1h",
+  50.5,
+  51.6,
+  0.5,
+  "with",
+  {
+   "voices": [
+    "hull"
+   ],
+   "worse_half": 50.5,
+   "reading_key": "hull_pos_1h",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      51.3,
+      52.4,
+      1.3,
+      "with"
+     ],
+     "own_best": [
+      "hull_pos_1h",
+      51.3,
+      52.4,
+      1.3,
+      "with"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      49.7,
+      50.7,
+      0.0,
+      "against"
+     ],
+     "own_best": [
+      "hull_dir_15m",
+      48.5,
+      49.3,
+      0.7,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Trend quality and squeeze",
+  "tq_macd_1h",
+  50.5,
+  51.2,
+  0.5,
+  "with",
+  {
+   "voices": [
+    "trendq"
+   ],
+   "worse_half": 50.5,
+   "reading_key": "tq_macd_1h",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      51.4,
+      51.9,
+      1.4,
+      "with"
+     ],
+     "own_best": [
+      "tq_squeeze",
+      51.6,
+      52.4,
+      1.6,
+      "with"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      49.6,
+      50.5,
+      0.0,
+      "against"
+     ],
+     "own_best": [
+      "tq_st_15m",
+      47.7,
+      48.9,
+      1.1,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Rates and the dollar",
+  "rt_y2_5d",
+  48.1,
+  50.2,
+  0.0,
+  "against",
+  {
+   "voices": [
+    "rates"
+   ],
+   "worse_half": 50.0,
+   "reading_key": "rt_y2_5d",
+   "per_asset": {
+    "XAUUSD": {
+     "same_reading": [
+      48.8,
+      48.6,
+      1.2,
+      "against"
+     ],
+     "own_best": [
+      "rt_y2_5d",
+      48.8,
+      48.6,
+      1.2,
+      "against"
+     ]
+    },
+    "XAGUSD": {
+     "same_reading": [
+      47.5,
+      51.8,
+      0.0,
+      "against"
+     ],
+     "own_best": [
+      "rt_y2_5d",
+      47.5,
+      51.8,
+      0.0,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Kronos forecast",
+  null,
+  null,
+  null,
+  0.0,
+  "no history yet",
+  {
+   "voices": [
+    "kronos"
+   ],
+   "worse_half": null,
+   "reading_key": null,
+   "per_asset": {}
+  }
+ ]
+]

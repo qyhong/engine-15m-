@@ -1,0 +1,65 @@
+{
+ "rule": "score = mean of (BTC pre-OOS validation Sharpe, synthetic drifting-edge test Sharpe); highest wins; ties -> the longer cadence",
+ "candidates": [
+  7,
+  1
+ ],
+ "synthetic": {
+  "7": {
+   "continual": -0.3639,
+   "static": -0.47856000000000004,
+   "by_seed": [
+    -0.3196,
+    -1.2219,
+    0.0,
+    0.0,
+    -0.278
+   ]
+  },
+  "1": {
+   "continual": -0.34469999999999995,
+   "static": -0.47856000000000004,
+   "by_seed": [
+    -0.4298,
+    -1.3251,
+    0.0,
+    0.0,
+    0.0314
+   ]
+  }
+ },
+ "btc_pre_oos": {
+  "0": {
+   "static": 1.0103931522267449,
+   "fallback": false,
+   "7": 0.9689173765063034,
+   "1": -0.04505603050435723
+  },
+  "1": {
+   "static": 1.6751297818140318,
+   "fallback": false,
+   "7": 0.4931193981734286,
+   "1": 0.3954150224266329
+  },
+  "2": {
+   "static": 1.040587940161504,
+   "fallback": false,
+   "7": 0.2561338749439991,
+   "1": 0.5955610442970649
+  }
+ },
+ "score": {
+  "7": {
+   "btc_val_sharpe": 0.572723549874577,
+   "synthetic_test_sharpe": -0.3639,
+   "score": 0.10441177493728848
+  },
+  "1": {
+   "btc_val_sharpe": 0.3153066787397802,
+   "synthetic_test_sharpe": -0.34469999999999995,
+   "score": -0.014696660630109881
+  }
+ },
+ "chosen_cadence_days": 7,
+ "minutes": 6.3
+}

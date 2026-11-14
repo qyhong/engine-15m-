@@ -1,0 +1,1416 @@
+[
+ [
+  "Regime",
+  "regime MOMENTUM_DOWN",
+  44.9,
+  45.4,
+  4.6,
+  "against",
+  {
+   "voices": [
+    "regime"
+   ],
+   "worse_half": 54.6,
+   "reading_key": "rg_MOMENTUM_DOWN",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      40.8,
+      44.6,
+      5.4,
+      "against"
+     ],
+     "own_best": [
+      "regime MOMENTUM_DOWN",
+      40.8,
+      44.6,
+      5.4,
+      "against"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      48.4,
+      45.9,
+      1.6,
+      "against"
+     ],
+     "own_best": [
+      "regime MOMENTUM_UP",
+      52.3,
+      53.8,
+      2.3,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Moving-average ribbon",
+  "rb_gmma_1h",
+  54.6,
+  53.9,
+  3.9,
+  "with",
+  {
+   "voices": [
+    "ribbon"
+   ],
+   "worse_half": 53.9,
+   "reading_key": "rb_gmma_1h",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      55.3,
+      53.9,
+      3.9,
+      "with"
+     ],
+     "own_best": [
+      "rb_width_1h",
+      54.7,
+      54.0,
+      4.0,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      54.0,
+      53.9,
+      3.9,
+      "with"
+     ],
+     "own_best": [
+      "rb_gmma_1h",
+      54.0,
+      53.9,
+      3.9,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Trend quality and squeeze",
+  "tq_rsi_1h",
+  55.2,
+  53.6,
+  3.6,
+  "with",
+  {
+   "voices": [
+    "trendq"
+   ],
+   "worse_half": 53.6,
+   "reading_key": "tq_rsi_1h",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      55.6,
+      52.5,
+      2.5,
+      "with"
+     ],
+     "own_best": [
+      "tq_rsi_1h",
+      55.6,
+      52.5,
+      2.5,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      54.9,
+      54.5,
+      4.5,
+      "with"
+     ],
+     "own_best": [
+      "tq_rsi_1h",
+      54.9,
+      54.5,
+      4.5,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Momentum and stretch",
+  "stretch from the 1h average",
+  55.7,
+  53.2,
+  3.2,
+  "with",
+  {
+   "voices": [
+    "momentum",
+    "meanrev",
+    "pullback"
+   ],
+   "worse_half": 53.2,
+   "reading_key": "stretch_1h",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      55.7,
+      52.4,
+      2.4,
+      "with"
+     ],
+     "own_best": [
+      "stretch from the 1h average",
+      55.7,
+      52.4,
+      2.4,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      55.6,
+      54.0,
+      4.0,
+      "with"
+     ],
+     "own_best": [
+      "stretch from the 1h average",
+      55.6,
+      54.0,
+      4.0,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Support and resistance",
+  "place in yesterday's range",
+  55.3,
+  52.8,
+  2.8,
+  "with",
+  {
+   "voices": [
+    "levels"
+   ],
+   "worse_half": 52.8,
+   "reading_key": "sr_pd_pos",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      54.6,
+      53.0,
+      3.0,
+      "with"
+     ],
+     "own_best": [
+      "place in yesterday's range",
+      54.6,
+      53.0,
+      3.0,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      56.0,
+      52.7,
+      2.7,
+      "with"
+     ],
+     "own_best": [
+      "place in yesterday's range",
+      56.0,
+      52.7,
+      2.7,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Coinbase premium",
+  "cbp_z",
+  55.4,
+  52.7,
+  2.7,
+  "with",
+  {
+   "voices": [
+    "cbprem"
+   ],
+   "worse_half": 52.7,
+   "reading_key": "cbp_z",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      56.1,
+      52.1,
+      2.1,
+      "with"
+     ],
+     "own_best": [
+      "cbp_z",
+      56.1,
+      52.1,
+      2.1,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      54.8,
+      53.4,
+      3.4,
+      "with"
+     ],
+     "own_best": [
+      "cbp_z",
+      54.8,
+      53.4,
+      3.4,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Kaufman adaptive average (KAMA)",
+  "kama_er_1h",
+  54.4,
+  52.7,
+  2.7,
+  "with",
+  {
+   "voices": [
+    "kama"
+   ],
+   "worse_half": 52.7,
+   "reading_key": "kama_er_1h",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      54.8,
+      52.4,
+      2.4,
+      "with"
+     ],
+     "own_best": [
+      "kama_pos_4h",
+      53.4,
+      52.7,
+      2.7,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      54.0,
+      53.0,
+      3.0,
+      "with"
+     ],
+     "own_best": [
+      "kama_er_1h",
+      54.0,
+      53.0,
+      3.0,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Intraday levels (VWAP and opening range)",
+  "id_vwap_w",
+  52.7,
+  53.4,
+  2.7,
+  "with",
+  {
+   "voices": [
+    "intraday"
+   ],
+   "worse_half": 52.7,
+   "reading_key": "id_vwap_w",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      53.0,
+      53.7,
+      3.0,
+      "with"
+     ],
+     "own_best": [
+      "id_vwap_w",
+      53.0,
+      53.7,
+      3.0,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      52.3,
+      53.0,
+      2.3,
+      "with"
+     ],
+     "own_best": [
+      "id_vwap_w",
+      52.3,
+      53.0,
+      2.3,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Moving averages (SMA and EMA 5-200)",
+  "ma_cross_4h",
+  55.1,
+  52.6,
+  2.6,
+  "with",
+  {
+   "voices": [
+    "mavg"
+   ],
+   "worse_half": 52.6,
+   "reading_key": "ma_cross_4h",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      53.2,
+      53.5,
+      3.2,
+      "with"
+     ],
+     "own_best": [
+      "ma_cross_4h",
+      53.2,
+      53.5,
+      3.2,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      57.2,
+      51.7,
+      1.7,
+      "with"
+     ],
+     "own_best": [
+      "ma_stack_1h",
+      52.4,
+      52.2,
+      2.2,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Ichimoku cloud",
+  "ich_lag_1h",
+  54.8,
+  52.6,
+  2.6,
+  "with",
+  {
+   "voices": [
+    "ichimoku"
+   ],
+   "worse_half": 52.6,
+   "reading_key": "ich_lag_1h",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      55.6,
+      51.7,
+      1.7,
+      "with"
+     ],
+     "own_best": [
+      "ich_lag_4h",
+      53.7,
+      54.1,
+      3.7,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      54.1,
+      53.5,
+      3.5,
+      "with"
+     ],
+     "own_best": [
+      "ich_lag_1h",
+      54.1,
+      53.5,
+      3.5,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "News and economic events",
+  "a US release is near",
+  54.2,
+  52.6,
+  2.6,
+  "with",
+  {
+   "voices": [
+    "news",
+    "macro"
+   ],
+   "worse_half": 52.6,
+   "reading_key": "ec_next",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      52.3,
+      54.4,
+      2.3,
+      "with"
+     ],
+     "own_best": [
+      "a US release is near",
+      52.3,
+      54.4,
+      2.3,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      56.0,
+      50.8,
+      0.8,
+      "with"
+     ],
+     "own_best": [
+      "US 10-year yield, 5-day change",
+      47.3,
+      49.0,
+      1.0,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Market structure",
+  "ms_pos_4h",
+  54.5,
+  52.4,
+  2.4,
+  "with",
+  {
+   "voices": [
+    "structure"
+   ],
+   "worse_half": 52.4,
+   "reading_key": "ms_pos_4h",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      53.4,
+      52.7,
+      2.7,
+      "with"
+     ],
+     "own_best": [
+      "ms_pos_4h",
+      53.4,
+      52.7,
+      2.7,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      55.6,
+      52.1,
+      2.1,
+      "with"
+     ],
+     "own_best": [
+      "ms_pos_4h",
+      55.6,
+      52.1,
+      2.1,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Order flow (CVD)",
+  "4h order flow (CVD)",
+  52.6,
+  52.4,
+  2.4,
+  "with",
+  {
+   "voices": [
+    "flow"
+   ],
+   "worse_half": 52.4,
+   "reading_key": "cvd_4h",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      52.3,
+      52.3,
+      2.3,
+      "with"
+     ],
+     "own_best": [
+      "4h order flow (CVD)",
+      52.3,
+      52.3,
+      2.3,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      52.9,
+      52.4,
+      2.4,
+      "with"
+     ],
+     "own_best": [
+      "4h order flow (CVD)",
+      52.9,
+      52.4,
+      2.4,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Market breadth and ETH/BTC",
+  "brd_ethbtc_7d",
+  47.4,
+  47.8,
+  2.2,
+  "against",
+  {
+   "voices": [
+    "breadth"
+   ],
+   "worse_half": 52.2,
+   "reading_key": "brd_ethbtc_7d",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      46.0,
+      46.5,
+      3.5,
+      "against"
+     ],
+     "own_best": [
+      "brd_ethbtc_7d",
+      46.0,
+      46.5,
+      3.5,
+      "against"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      48.7,
+      49.0,
+      1.0,
+      "against"
+     ],
+     "own_best": [
+      "brd_above_24h",
+      52.6,
+      52.8,
+      2.6,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Timeframe strength",
+  "15m trend",
+  52.2,
+  52.3,
+  2.2,
+  "with",
+  {
+   "voices": [
+    "trend"
+   ],
+   "worse_half": 52.2,
+   "reading_key": "tr_15m",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      51.8,
+      51.9,
+      1.8,
+      "with"
+     ],
+     "own_best": [
+      "15m trend",
+      51.8,
+      51.9,
+      1.8,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      52.7,
+      52.7,
+      2.7,
+      "with"
+     ],
+     "own_best": [
+      "15m trend",
+      52.7,
+      52.7,
+      2.7,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Working strategies",
+  "StochRSI core zone",
+  48.1,
+  47.2,
+  1.9,
+  "against",
+  {
+   "voices": [
+    "strategies"
+   ],
+   "worse_half": 51.9,
+   "reading_key": "st_core",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      49.2,
+      46.8,
+      0.8,
+      "against"
+     ],
+     "own_best": [
+      "StochRSI core zone",
+      49.2,
+      46.8,
+      0.8,
+      "against"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      47.0,
+      47.6,
+      2.4,
+      "against"
+     ],
+     "own_best": [
+      "StochRSI core zone",
+      47.0,
+      47.6,
+      2.4,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Stablecoin supply",
+  "stb_7d",
+  51.8,
+  51.7,
+  1.7,
+  "with",
+  {
+   "voices": [
+    "stable"
+   ],
+   "worse_half": 51.7,
+   "reading_key": "stb_7d",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      50.6,
+      52.5,
+      0.6,
+      "with"
+     ],
+     "own_best": [
+      "stb_7d",
+      50.6,
+      52.5,
+      0.6,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      53.0,
+      50.8,
+      0.8,
+      "with"
+     ],
+     "own_best": [
+      "stb_7d",
+      53.0,
+      50.8,
+      0.8,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Trade setups",
+  "su_trap",
+  52.4,
+  51.2,
+  1.2,
+  "with",
+  {
+   "voices": [
+    "setups"
+   ],
+   "worse_half": 51.2,
+   "reading_key": "su_trap",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      51.8,
+      52.5,
+      1.8,
+      "with"
+     ],
+     "own_best": [
+      "su_trap",
+      51.8,
+      52.5,
+      1.8,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      52.9,
+      49.9,
+      0.0,
+      "with"
+     ],
+     "own_best": [
+      "su_breakout",
+      50.8,
+      50.9,
+      0.8,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Fibonacci retracement",
+  "fib_gz_4h",
+  51.2,
+  51.5,
+  1.2,
+  "with",
+  {
+   "voices": [
+    "fib"
+   ],
+   "worse_half": 51.2,
+   "reading_key": "fib_gz_4h",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      51.2,
+      52.8,
+      1.2,
+      "with"
+     ],
+     "own_best": [
+      "fib_depth_4h",
+      47.4,
+      48.7,
+      1.3,
+      "against"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      51.2,
+      50.7,
+      0.7,
+      "with"
+     ],
+     "own_best": [
+      "fib_gz_4h",
+      51.2,
+      50.7,
+      0.7,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Perp basis and premium",
+  "pb_level",
+  48.6,
+  49.0,
+  1.0,
+  "against",
+  {
+   "voices": [
+    "basis"
+   ],
+   "worse_half": 51.0,
+   "reading_key": "pb_level",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      46.6,
+      50.0,
+      0.0,
+      "against"
+     ],
+     "own_best": [
+      "pb_chg_4h",
+      48.3,
+      48.5,
+      1.5,
+      "against"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      50.2,
+      48.2,
+      0.0,
+      "with"
+     ],
+     "own_best": [
+      "pb_z",
+      50.9,
+      50.4,
+      0.4,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Moving averages as support and resistance",
+  "mas_hold_1h",
+  48.1,
+  49.1,
+  0.9,
+  "against",
+  {
+   "voices": [
+    "mavg_sr"
+   ],
+   "worse_half": 50.9,
+   "reading_key": "mas_hold_1h",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      48.2,
+      47.7,
+      1.8,
+      "against"
+     ],
+     "own_best": [
+      "mas_hold_1h",
+      48.2,
+      47.7,
+      1.8,
+      "against"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      48.1,
+      50.2,
+      0.0,
+      "against"
+     ],
+     "own_best": [
+      "mas_hold_15m",
+      50.8,
+      51.2,
+      0.8,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Hull moving average",
+  "hull_dir_1h",
+  50.8,
+  50.9,
+  0.8,
+  "with",
+  {
+   "voices": [
+    "hull"
+   ],
+   "worse_half": 50.8,
+   "reading_key": "hull_dir_1h",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      50.3,
+      50.6,
+      0.3,
+      "with"
+     ],
+     "own_best": [
+      "hull_pos_15m",
+      49.1,
+      49.3,
+      0.7,
+      "against"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      51.2,
+      51.3,
+      1.2,
+      "with"
+     ],
+     "own_best": [
+      "hull_dir_1h",
+      51.2,
+      51.3,
+      1.2,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Time and session",
+  "ck_dow_cos",
+  50.6,
+  51.6,
+  0.6,
+  "with",
+  {
+   "voices": [
+    "clock"
+   ],
+   "worse_half": 50.6,
+   "reading_key": "ck_dow_cos",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      51.3,
+      51.1,
+      1.1,
+      "with"
+     ],
+     "own_best": [
+      "ck_dow_cos",
+      51.3,
+      51.1,
+      1.1,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      49.9,
+      52.1,
+      0.0,
+      "against"
+     ],
+     "own_best": [
+      "ck_us_open_in",
+      51.2,
+      53.0,
+      1.2,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Options: implied volatility and skew",
+  "op_dvol_rank",
+  51.8,
+  50.4,
+  0.4,
+  "with",
+  {
+   "voices": [
+    "options"
+   ],
+   "worse_half": 50.4,
+   "reading_key": "op_dvol_rank",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      53.3,
+      49.9,
+      0.0,
+      "with"
+     ],
+     "own_best": [
+      "op_dvol_24h",
+      50.6,
+      50.8,
+      0.6,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      50.8,
+      51.1,
+      0.8,
+      "with"
+     ],
+     "own_best": [
+      "op_iv_rv",
+      51.0,
+      53.2,
+      1.0,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Funding and positioning",
+  "funding rate",
+  50.2,
+  50.2,
+  0.2,
+  "with",
+  {
+   "voices": [
+    "funding"
+   ],
+   "worse_half": 50.2,
+   "reading_key": "fund_rate",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      48.7,
+      50.5,
+      0.0,
+      "against"
+     ],
+     "own_best": [
+      "funding rate",
+      48.7,
+      50.5,
+      0.0,
+      "against"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      51.5,
+      49.9,
+      0.0,
+      "with"
+     ],
+     "own_best": [
+      "funding rate",
+      51.5,
+      49.9,
+      0.0,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Candle size and realistic targets",
+  "cs_expand",
+  49.9,
+  49.2,
+  0.1,
+  "against",
+  {
+   "voices": [
+    "candles"
+   ],
+   "worse_half": 50.1,
+   "reading_key": "cs_expand",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      50.8,
+      48.4,
+      0.0,
+      "with"
+     ],
+     "own_best": [
+      "cs_used",
+      52.1,
+      46.7,
+      0.0,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      49.0,
+      50.2,
+      0.0,
+      "against"
+     ],
+     "own_best": [
+      "cs_reach_rel",
+      49.4,
+      48.1,
+      0.6,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Fear and Greed",
+  "fng_level",
+  50.6,
+  48.5,
+  0.0,
+  "with",
+  {
+   "voices": [
+    "sentiment"
+   ],
+   "worse_half": 50.0,
+   "reading_key": "fng_level",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      50.4,
+      49.4,
+      0.0,
+      "with"
+     ],
+     "own_best": [
+      "fng_level",
+      50.4,
+      49.4,
+      0.0,
+      "with"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      50.8,
+      47.6,
+      0.0,
+      "with"
+     ],
+     "own_best": [
+      "fng_level",
+      50.8,
+      47.6,
+      0.0,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Liquidity (order book)",
+  null,
+  null,
+  null,
+  0.0,
+  "no history yet",
+  {
+   "voices": [
+    "book"
+   ],
+   "worse_half": null,
+   "reading_key": null,
+   "per_asset": {}
+  }
+ ],
+ [
+  "Kronos forecast",
+  null,
+  null,
+  null,
+  0.0,
+  "no history yet",
+  {
+   "voices": [
+    "kronos"
+   ],
+   "worse_half": null,
+   "reading_key": null,
+   "per_asset": {}
+  }
+ ],
+ [
+  "Long/short positioning",
+  "ls_global",
+  null,
+  null,
+  0.0,
+  "too little history",
+  {
+   "voices": [
+    "lsratio"
+   ],
+   "worse_half": null,
+   "reading_key": "ls_global",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      null,
+      null,
+      0.0,
+      "too little history"
+     ],
+     "own_best": [
+      "ls_global",
+      null,
+      null,
+      0.0,
+      "too little history"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      null,
+      null,
+      0.0,
+      "too little history"
+     ],
+     "own_best": [
+      "ls_global",
+      null,
+      null,
+      0.0,
+      "too little history"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Liquidation pressure (proxy)",
+  null,
+  null,
+  null,
+  0.0,
+  "no history yet",
+  {
+   "voices": [
+    "liq"
+   ],
+   "worse_half": null,
+   "reading_key": null,
+   "per_asset": {}
+  }
+ ],
+ [
+  "Spot ETF flows",
+  "etf_1d",
+  null,
+  null,
+  0.0,
+  "too little history",
+  {
+   "voices": [
+    "etf"
+   ],
+   "worse_half": null,
+   "reading_key": "etf_1d",
+   "per_asset": {
+    "BTCUSDT": {
+     "same_reading": [
+      null,
+      null,
+      0.0,
+      "too little history"
+     ],
+     "own_best": [
+      "etf_1d",
+      null,
+      null,
+      0.0,
+      "too little history"
+     ]
+    },
+    "ETHUSDT": {
+     "same_reading": [
+      null,
+      null,
+      0.0,
+      "too little history"
+     ],
+     "own_best": [
+      "etf_1d",
+      null,
+      null,
+      0.0,
+      "too little history"
+     ]
+    }
+   }
+  }
+ ]
+]

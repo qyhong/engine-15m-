@@ -1,0 +1,72 @@
+# Mind 15 RL module, Phase 2: trading environment, risk manager, PPO agent, walk-forward training.
+# Paper only. Loaded on top of configs/rl/phase1.yaml (data, costs, walk-forward, benchmarks come from there).
+#
+# FROZEN 11 Nov 2026 (about 12:55 UTC), before any agent had been trained or evaluated on any window:
+# every value below. The only thing measured before freezing was speed and memory (one 8,192-step
+# smoke run: ~2,300 steps/s, ~370 MB peak working set) to size the budget; the smoke run's numbers
+# were not looked at. Changing any value after this is a new experiment and must be reported as such.
+
+seeds: [0, 1, 2, 3, 4]            # PPO seeds; run one after another, never in parallel
+
+env:
+  features:                       # Phase 1 features + the 30-day horizon (closed bars only, same builder)
+    return_windows: [1, 4, 16, 96, 672, 2880]
+    vol_windows: [16, 96, 672]
+    momentum_windows: [16, 96, 672, 2880]
+    volume_z_window: 672
+    daily_closed: true
+  normalise: train_slice          # z-score with mean/std of the fold's TRAINING slice only; clip, NaN -> 0
+  obs_clip: 5.0
+  actions: [-1.0, 0.0, 1.0]       # target position: short / flat / long (fraction of equity, 1x)
+  decision_every_bars: 4          # decide at the close of the bar ending on each UTC hour; fill at next open
+  min_hold_bars: 48               # a new target is refused until 12 hours after the last change (risk exits excepted)
+  turnover_penalty: 0.0005        # reward -= 0.05% x |target change|, on top of the real costs already in the return
+  reward_scale: 100.0             # reward = 100 x (sum of per-bar log(1 + net return) - penalty)
+  episode_decisions: 720          # training episodes: 30 days of hourly decisions from a random start
+  random_start_position: true     # training episodes start in a random position (eval starts flat, then carries)
+
+risk:                             # the risk manager is on in training AND in evaluation
+  enabled: true
+  max_position: 1.0
+  max_daily_loss: 0.05            # 5% down on the UTC day -> flat for the rest of the day
+  kill_drawdown: 0.30             # 30% below the equity peak -> flat for kill_cooldown_bars, then peak reset
+  kill_cooldown_bars: 672         # 7 days
+  vol_breaker_mult: 3.0           # rv_16 > 3 x rv_672 -> |position| capped at 0.5
+  vol_breaker_max_position: 0.5
+  vol_breaker_short: rv_16
+  vol_breaker_long: rv_672
+
+agent:                            # Stable-Baselines3 PPO, small and lean
+  net_arch: [64, 64]
+  learning_rate: 0.0003
+  n_envs: 4
+  n_steps: 512                    # per env -> 2,048 steps per update
+  batch_size: 256
+  n_epochs: 5
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.2
+  ent_coef: 0.01
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  torch_threads: 2
+
+train:
+  timesteps: 100000               # PPO steps (hourly decisions) per fold and seed (~15 passes over 9 months)
+  validation_months: 3            # the last 3 months of each 12-month train window: model choice only
+  evals: 5                        # validation checks during training; the best checkpoint is kept
+  patience: 2                     # stop early after 2 checks without a better validation Sharpe
+  select_on: sharpe               # validation Sharpe, net of 0.10% costs (ties -> fewer trades)
+  memory_start_mb: 700            # start a fold only with this much free memory
+  memory_floor_mb: 350            # stop our own process cleanly below this
+  memory_wait_s: 900              # wait up to this long for memory before each attempt
+  memory_retries: 8               # then try again (a fold the guard stopped restarts); finished folds are always kept
+
+flags:                            # overfitting flags (thresholds fixed with everything else)
+  train_test_sharpe_gap: 1.0      # mean (train Sharpe - test Sharpe) over folds and seeds
+  seed_sharpe_sd: 0.5             # sd of stitched Sharpe across seeds, or seeds disagree on the sign
+  min_fold_win_share: 0.5         # agent (seed mean) must beat a benchmark in at least half the folds
+  max_turnover_per_year: 100      # 100 full sides a year ~ 13% a year in costs at 0.10%
+
+report:
+  models_dir: research/out/rl/models

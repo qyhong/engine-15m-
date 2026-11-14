@@ -1,0 +1,55 @@
+{
+ "model": "model_phase4_f24.json",
+ "fold": 24,
+ "assets": {
+  "BTCUSDT": {
+   "start": "2026-10-20 00:00",
+   "end": "2026-11-11 11:30",
+   "bars": 2158,
+   "decisions_equal": true,
+   "exec_max_diff": 0.0,
+   "equity_max_rel_diff": 0.0,
+   "w_max_diff": 0.0,
+   "fallback": {
+    "0": false,
+    "1": true,
+    "2": false
+   },
+   "changes": {
+    "0": 1,
+    "1": 0,
+    "2": 2
+   },
+   "book_return_pct": 0.8678778708149704
+  },
+  "ETHUSDT": {
+   "start": "2026-10-20 00:00",
+   "end": "2026-11-11 11:30",
+   "bars": 2158,
+   "decisions_equal": true,
+   "exec_max_diff": 0.0,
+   "equity_max_rel_diff": 1.8197918478183001e-16,
+   "w_max_diff": 0.0,
+   "fallback": {
+    "0": true,
+    "1": true,
+    "2": false
+   },
+   "changes": {
+    "0": 0,
+    "1": 0,
+    "2": 5
+   },
+   "book_return_pct": 1.3980397648969412
+  }
+ },
+ "steps": 5,
+ "decisions_equal": true,
+ "exec_max_diff": 0.0,
+ "equity_max_diff": 1.8197918478183001e-16,
+ "w_max_diff": 0.0,
+ "bars": 4316,
+ "start": "2026-10-20 00:00",
+ "end": "2026-11-11 11:30",
+ "seconds": 1.8
+}

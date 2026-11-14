@@ -1,0 +1,98 @@
+# Mind 15 RL module, Phase 6: "LEARN TO PROFIT FROM DOWNTRENDS; FLAT SCORES WEAKLY". Paper only.
+# Owner, 12 Nov 2026: "i think the RL need to learn to profit from downtrend also. stay flat should have a weak scoring so
+# the RL will have more motivation to take long or short." (Mind 15's mandate: long or short almost all the time.)
+# Loaded on top of configs/rl/phase1.yaml + phase4.yaml (+ phase5.yaml for paths): data, folds, inputs, the Q learner,
+# risk manager, costs, benchmarks and flags are Phase 4's unless a key below says otherwise.
+#
+# STATUS: FROZEN 12 Nov 2026 ~08:45 UTC, before any Phase 6 code ran on any data (no Phase 6 model trained, no number).
+status: frozen
+
+# ------------------------------------------------------------------------------------------------ 1. the reward
+# Training only: every decision and every reported number uses the real net P&L and the full round-trip cost.
+#
+# The literal form "agent net return - beta x reference return" is NOT trained: the reference's return does not depend
+# on the agent's action, so it shifts every action's value equally and cannot change a single decision (flat scores
+# negative in a trend, but long scores lower by exactly the same amount). learn6.py's docstring has the algebra. The two
+# registered forms charge the IDLE part of the book (1 - |a|), so being flat really scores worse:
+reference: mom_signal             # the trend reference: the frozen daily 30-day momentum rule, long AND short (+1 / -1),
+                                  # decided at the same close as the agent (features3's mom_signal). The 4h/1d trend sign
+                                  # was the owner's alternative; not run (compute), stated in the report.
+variants_train:
+  r_missed:                       # opportunity-relative, action-dependent: r(a) = k (a g - beta (1 - |a|) ref g) - ra a^2 v
+    kind: missed
+    values: [0.25, 0.5, 1.0]      # beta, chosen per fold on the validation slice (real net Sharpe, mean of BTC and ETH)
+  r_flat:                         # the owner's literal idea: r(a) = k (a g - (1 - |a|) lam 2 c1 / 96) - ra a^2 v
+    kind: flat                    # (a fully flat day costs lam x one round trip of the agent's own cost model)
+    values: [0.25, 0.5, 1.0]      # lam, chosen per fold on the validation slice
+selection: "per value of beta / lam: half-life by the validation Bellman loss (Phase 4's rule); then the value with the
+  best validation NET Sharpe (greedy policy from flat, 0.10% costs, mean over BTC and ETH); ties -> the smaller value;
+  refit on everything up to the fold with the chosen value, half-life and steps"
+model_family: q_pool2_full        # everything else exactly the Phase 4 primary's: Q learner, BTC+ETH pooled, expanding
+                                  # window from 2019, Phase 3 features + 18 readings + 7 flags, seeds 0, 1, 2
+
+# ------------------------------------------------------------------------------------------------ 2. symmetric actions
+symmetry:
+  actions: [-1.0, -0.5, 0.0, 0.5, 1.0]   # Phase 4's, already symmetric: same sizes, same costs each way
+  funding: "perp funding on the whole position, both sides (a short receives a positive rate, pays a negative one):
+    the reward's g = next-bar return - funding, so a x g is honest for shorts"
+  features: "Phase 3 features and the readings are signed (returns, momentum, HTF trend, funding, basis z, CVD): a
+    downtrend reads as the mirror of an uptrend; nothing is clipped at zero"
+  report: [share of time long / short / flat, net and gross P&L from long bars vs short bars, per asset and span]
+
+# ------------------------------------------------------------------------------------------------ 3. 'do no harm'
+fallback_modes:                   # evaluated on the SAME trained models (no retraining): what a fold whose validation
+  rule: flat                      # net Sharpe is under 0.5 does: Phase 4's rule (flat) ...
+  none: model                     # ... no fallback (the model trades anyway) ...
+  trend: reference                # ... or it holds the trend reference position (daily momentum, long / short)
+
+# ------------------------------------------------------------------------------------------------ the evaluated variants
+variants:                         # model x fallback; all registered here, before any result
+  p4_rule:   {train: phase4_primary, fallback: rule}    # the Phase 4 primary as it is (reference)
+  p4_none:   {train: phase4_primary, fallback: none}
+  p4_trend:  {train: phase4_primary, fallback: trend}
+  m_rule:    {train: r_missed, fallback: rule}
+  m_none:    {train: r_missed, fallback: none}
+  m_trend:   {train: r_missed, fallback: trend}         # Phase 6 PRIMARY (chosen a priori: the owner's main idea, and
+                                                        # the fallback that keeps the book long or short)
+  f_rule:    {train: r_flat, fallback: rule}
+  f_none:    {train: r_flat, fallback: none}
+  f_trend:   {train: r_flat, fallback: trend}
+primary: m_trend
+
+# ------------------------------------------------------------------------------------------------ 4. evaluation
+evaluation: "unchanged from Phase 4: walk-forward out of sample (25 folds, 2020-10-01 .. 2026-11-11), 3 seeds, Phase 3
+  risk manager, shared backtester, 0.10% a side headline, 0.05% comparison, break-even fee, gross Sharpe; benchmarks
+  buy-and-hold perp and spot, daily momentum (long/short), random, the Phase 4 primary (p4_rule) and Phase 5's trade-less
+  variants (from phase5_summary.json); Phase 4's flags; both spans (full, to 2025-11-11); the loop's rules A/B only to
+  2025-11-11. No historical span is unseen for RL any more (Phase 4 scored every window): stated in the report; the forward
+  paper run is the real test"
+turnover_check: "flag 'turnover exploded' if a variant's turnover per year > 100 (Phase 4's threshold) or its trades per
+  year > 2 x the Phase 4 primary's (the Phase 2 lesson: ~600 a year)"
+downtrends:
+  periods:
+    "2022": ["2022-01-01", "2023-01-01"]
+    current_decline: ["btc_2025_high", "2026-11-11 11:30"]   # from the day of BTC's highest daily close in 2025 to the
+                                                              # data end (computed on BTC's bars; ETH uses the same dates)
+  monthly: "every calendar month of the out-of-sample span split by the coin's own monthly return (down / up): the
+    agent's mean monthly net return and the share of down months it made money in"
+clearly_beats_rule: "a variant clearly beats the Phase 4 primary if, after 0.10% fees, on BTC AND on ETH over the full span:
+  seed-mean net Sharpe >= the primary's + 0.10, every seed's net Sharpe above the primary's seed mean, and seed-mean Calmar
+  above the primary's; and on the span to 2025-11-11 its seed-mean net Sharpe is above the primary's on both coins"
+forward_proposal: "if any variant clearly beats it (the Phase 6 primary first; otherwise the one with the highest BTC
+  seed-mean net Sharpe, with the number of variants tried stated), propose (do not wire in) a second forward paper book in
+  playbook5's style"
+
+flags:                            # Phase 4's, unchanged
+  train_test_sharpe_gap: 1.0
+  seed_sharpe_sd: 0.5
+  min_fold_win_share: 0.5
+  max_turnover_per_year: 100
+
+memory: {start_mb: 1000, floor_mb: 400, poll_s: 20}
+report:
+  models_dir6: research/out/rl/models6
+
+freeze:
+  "12 Nov 2026, ~08:45 UTC": "written and frozen while Phase 5's ablation was still training; no Phase 6 model or number
+    existed. The literal 'net return - beta x reference return' was dropped before any run because it cannot change a
+    decision (see the reward section); replaced by its action-dependent form (r_missed)"

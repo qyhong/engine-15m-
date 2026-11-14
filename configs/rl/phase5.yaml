@@ -1,0 +1,128 @@
+# Mind 15 RL module, Phase 5: "TRADE-LESS VARIANT + PAPER" (the owner's choice after the Phase 4 review). Paper only.
+# Loaded on top of configs/rl/phase1.yaml and configs/rl/phase4.yaml (data, costs, folds, benchmarks, the Q agent, the
+# risk manager, flags: all Phase 4's, unchanged unless a key below says otherwise).
+#
+# Phase 4's primary (Q agent, BTC+ETH pooled, expanding window, Phase 3 features + Mind 15 readings) has an edge before
+# costs (BTC gross Sharpe 0.78, break-even fee ~0.30%) but after 0.10% fees trails buy-and-hold (Sharpe 0.48 vs 0.64).
+# Three parts, in this order:
+#   1. forward paper run of the Phase 4 primary inside Mind 15 (engine15/playbook5.py): the only unseen evidence left
+#   2. at most 3 pre-registered trade-less variants of the same agent (historical, every span already seen)
+#   3. a small registered ablation: which reading groups carry the pre-cost edge
+#
+# HOLDOUT HONESTY. Phase 4 already scored every test window through 2026-11-11, so NO historical span is unseen for RL any
+# more. Parts 2 and 3 report the full span (2020-10-01 .. 2026-11-11) and the span up to 2025-11-11, and say so. The
+# forward paper run (part 1) is the real test. Anything compared with the strategy loop's rules A / B is reported only up
+# to 2025-11-11 (the loop's sealed year stays unlooked-at for the loop).
+#
+# STATUS: FROZEN 12 Nov 2026 ~04:12 UTC, after the Phase 4 report was reviewed and BEFORE any Phase 5 number (no Part 2
+# variant and no Part 3 ablation had been evaluated or trained). What was decided when: the freeze block at the end.
+status: frozen
+primary: q_pool2_full             # the Phase 4 primary (configs/rl/phase4.yaml), unchanged
+
+# ------------------------------------------------------------------------------------------------ part 1: forward paper
+forward:
+  book_module: engine15/playbook5.py     # REGISTERED (the go-live time) lives there, like playbook4's
+  assets: [BTCUSDT, ETHUSDT]             # each its own $10,000 paper book
+  stake_usd: 10000.0
+  fee_side: 0.0010                       # perp accounting as Phase 4: 0.10% a side, half spread 0.5 bp, slippage
+                                         # 0.10 x 96-bar vol, funding on the whole position (Phase 1 cost model)
+  seeds: [0, 1, 2]                       # three seed agents, each through the Phase 3 risk manager ...
+  book: mean_of_seeds                    # ... and the book holds the MEAN of their executed positions (Phase 4's headline
+                                         # is the seed mean; one book per coin; per-seed decisions are recorded too)
+  fold_seed_offset: 500                  # each seed's learner seed = seed x 1000 + 500 (Phase 4: seed x 1000 + fold)
+  data:                                  # live decisions read the engine's own files (what Mind 15 sees), read only:
+    BTCUSDT: {source: engine_file, start: "2019-09-08 19:00"}   # Binance spot 15m; from the perp's first bar, so the
+                                                                # training span equals Phase 4's (Phase 4 used the USD-M
+                                                                # perp bars for BTC; disclosed in the report)
+    ETHUSDT: {source: engine_file, start: null}                 # as Phase 4 (the engine's ETH file from 2019-01-01)
+  readings: evcache                      # Mind 15's readings: data/evcache/crypto/<asset> (read only, tail rows per step)
+  feature_window_bars: 4300              # bars of history used to build one step's features (longest input: 2,880 bars
+                                         # + 31 closed days); the test proves window features == full-history features
+  validation_months: 6                   # as Phase 4: half-life and 'do no harm' judged on the last 6 months ...
+  refit: all_rows_to_data_end            # ... then refit on every row up to the model's data end
+  update:
+    cadence: weekly                      # a model with data through the latest Monday 00:00 UTC is wanted; else due
+    min_free_mb: 1500                    # start the update subprocess only with >= 1,500 MB free; retry later if not
+    retry_minutes: 30
+    priority: below_normal               # py -3 -m engine15.rl phase5-update, a separate process; never two at once (lock)
+    floor_mb: 400                        # the update pauses (never fails) under 400 MB free
+    stale_lock_hours: 6
+  model_use_rule: "a model decides a bar only if its data end is at or before that bar's close (the newest such model);
+    the decision at bar t's close fills at bar t+1's open; nothing is retrained inside the live step"
+  live_budget: {seconds: 5, added_mb: 300}
+  pass_rule: "no forward verdict before 30 closed forward trades per coin; then, after fees, by Phase 4's rule against
+    spot and perp buy-and-hold since go-live (Sharpe and Calmar), stated with its uncertainty. Not a pass in history."
+
+# ------------------------------------------------------------------------------------------------ part 2: trade-less
+# Each variant keeps the Phase 4 primary's trained models EXACTLY (models4/<work hash>/q_pool2_full, 25 folds x 3 seeds,
+# no retraining) and changes only how its values become positions; so the pre-cost edge is the same signal, traded less.
+# Values chosen a priori from the Phase 4 design (not from any result of these variants).
+trade_less:
+  t1_band2x:                             # wider no-trade band tied to the round-trip cost
+    decision_cost_mult: 4.0              # a change needs W(a) - W(p) > TWO round trips (Phase 4: one, cost_mult 2.0);
+                                         # the learner's values are unchanged (trained with one round trip)
+  t2_hold2d:                             # minimum hold
+    min_hold_bars: 192                   # 2 days (the middle of the owner's 1-3 days; Phase 4: 4 bars = 1 h)
+  t3_tilt:                               # the agent as a bounded tilt around a buy-and-hold core
+    core: 1.0                            # 1x spot buy-and-hold core
+    tilt: 0.5                            # exposure = 1 + 0.5 x the agent's executed position (risk-managed, in [-1, 1])
+                                         # -> between 0.5x and 1.5x; long legs up to 1x are spot (no funding), exposure
+                                         # above 1x pays perp funding (the strategy loop's 'spot long legs' accounting)
+    benchmark: buy_hold_spot             # judged against spot buy-and-hold (its core) and momentum
+  same_as_phase4: [data, inputs, folds, risk3, seeds, fees_0.10_and_0.05, break_even_fee, benchmarks, flags]
+  keeps_edge_rule: "seed-mean gross Sharpe (BTC, full span) >= 0.8 x the primary's"
+  trades_less_rule: "seed-mean turnover per year (BTC, full span) <= 0.6 x the primary's"
+  verdict_rules: "Phase 4's: edge before costs on every seed (gross Sharpe and break-even fee > 0), and after 0.10% fees
+    seed-mean Sharpe and Calmar above the benchmark with every seed's Sharpe above it; buy-and-hold (perp) and momentum
+    (t3_tilt: buy-and-hold spot and momentum)"
+
+# ------------------------------------------------------------------------------------------------ part 3: ablation
+# The Phase 4 primary setup retrained once per variant (same folds, seeds, data, Q learner, selection, refit, 'do no
+# harm', risk manager); only the inputs change. Groups as features4.py's docstring (the Coinbase premium is part of flow).
+ablation:
+  groups:
+    trend: [tr_1h, tr_4h, tr_1d, tr_1w, avail_trend]
+    funding: [fund_z, fund_3d, avail_funding]
+    basis: [pb_z, pb_chg_4h, avail_basis]
+    flow: [cvd_4h, cvd_24h, cvd_div, cbp_z, avail_flow, avail_cbprem]
+    vol: [vol_rank, shock_ratio, rg_er, avail_vol]
+    levels: [sr_room, sr_lean, sr_pd_pos, avail_levels]
+  variants:                              # run in this order (the owner's question first)
+    a_p3_only: {inputs: p3}              # Phase 3 inputs only (31 columns: returns, vol, momentum, funding, HTF trend...)
+    a_readings_only: {inputs: readings}  # the 18 readings + 7 availability flags only
+    a_no_trend: {drop: trend}
+    a_no_funding: {drop: funding}
+    a_no_basis: {drop: basis}
+    a_no_flow: {drop: flow}
+    a_no_vol: {drop: vol}
+    a_no_levels: {drop: levels}
+  occlusion: "supplementary, no retraining: each group's inputs set to 0 (= 'unavailable / nothing to add') in the
+    trained primary's stored values (W - x_group . coef_group); shows what the trained agent leans on, not what a
+    retrained agent could do without the group"
+  carries_value_rule: "a group carries independent value if dropping it (retrained) lowers the seed-mean gross Sharpe by
+    >= 0.20 on BTC AND on ETH (full span); about twice the standard error of a 3-seed mean difference in Phase 4"
+  trend_rule: "the edge is called mostly trend-following if the agent's executed position correlates >= 0.5 with the
+    daily 30-day momentum rule's position, or dropping the trend readings is the only drop that clears the 0.20 bar"
+  correlations: "per-bar executed position (mean of seeds) and daily net returns of the primary vs the daily momentum
+    rule (both spans) and vs the loop's rule A (to 2025-11-11 only)"
+
+memory: {start_mb: 1000, floor_mb: 400, poll_s: 20}
+
+report:
+  models_dir5: research/out/rl/models5
+  cache_dir5: research/out/rl/phase5_cache
+  forward_dir: research/out/rl/forward5
+
+freeze:
+  "12 Nov 2026, ~04:10 UTC (before this file)": "Phase 4's fold-24 model rebuilt with the Phase 5 export hook
+    (models4.q_fold(export=...)): the stored test values match Phase 4's file bit for bit (max difference 0.0), so a
+    model the forward run trains is the Phase 4 primary's model, exactly. No Phase 5 result existed."
+  "12 Nov 2026, ~04:12 UTC": "this file written with every value of parts 1-3 and frozen before any Phase 5 number"
+  "12 Nov 2026, 04:16-04:19 UTC": "the fold-24 rebuild for seeds 1 and 2 (also exact) and the first live model
+    (models5/live/model_20261112T041605Z.json, data end 2026-11-12 04:00 UTC; 'do no harm' keeps seed 0 flat on both
+    coins, seeds 1 and 2 trade) trained by forward5.train_model; no Part 2 / Part 3 number existed"
+  "12 Nov 2026, ~04:20 UTC": "part 3 ablation training started (phase5-ablate, frozen variants in the frozen order)"
+  "12 Nov 2026, ~04:25 UTC": "forward == batch check on Phase 4's fold 24 (2026-10-20 .. 2026-11-11, BTC and ETH, 4,316
+    bars, 5 cut calls): decisions identical, executed positions and values identical (difference 0.0)
+    (research/out/rl/phase5_forward_check.json); go-live set: engine15/playbook5.py REGISTERED = 2026-11-12 04:30 UTC
+    (a first fix before go-live: the bar-file tail reader built its index from a Series; no decision was recorded before)"

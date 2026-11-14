@@ -1,0 +1,598 @@
+{
+ "loop": "RL strategy loop (Phase 6 core strategy vs BTC spot buy-and-hold)",
+ "rules": "research/rl_loop/LOOP_RL.md (frozen 2026-11-13 04:10 UTC)",
+ "phase6_variants_counted": 8,
+ "cumulative_variants": 23,
+ "status": "round 3 run 2026-11-13 10:13 UTC: no pass (R3-b 19/21 fails S1 and S4; R3-c 18/21 passes S1, fails sub-span return and S4); round 4 proposed, not registered",
+ "rounds": [
+  {
+   "round": 1,
+   "registered_utc": "2026-11-13 04:10",
+   "variants": {
+    "V1_spot": "request a; min hold 4; band 0.20; spot longs",
+    "V2_spot_lean": "request sign(a); min hold 16; band 0.40; spot longs",
+    "V3_spot_lean_agree": "V2, request 1.5 s when s == m else s",
+    "V4_spot_lean_agree_veto": "V3, request 0 when s != m",
+    "V5_spot_lean_blend": "V2, request clip(s + 0.5 m, -1.5, 1.5)"
+   },
+   "results": {
+    "V1_spot": {
+     "pass": false,
+     "rules_met": "16/21",
+     "failed": [
+      "T4_dev_return_gt_bh",
+      "T4_dev_mean_cagr_gt_bh",
+      "S1_fold_share_ge_half",
+      "S3_trades_le_100_every_seed",
+      "S4_significant"
+     ],
+     "btc_full": {
+      "total_return": 6.6414,
+      "cagr": 0.3803,
+      "sharpe": 0.9866,
+      "max_drawdown": 0.4572,
+      "trades_per_year": 177.2829
+     },
+     "btc_dev": {
+      "total_return": 7.7108,
+      "sharpe": 1.1873
+     },
+     "eth_full": {
+      "total_return": 10.5976,
+      "sharpe": 1.0853,
+      "max_drawdown": 0.6059
+     },
+     "fold_share": 0.44,
+     "book_p": 0.2011,
+     "edge_needed": 1.159
+    },
+    "V2_spot_lean": {
+     "pass": false,
+     "rules_met": "18/21",
+     "failed": [
+      "T4_dev_return_gt_bh",
+      "T4_dev_mean_cagr_gt_bh",
+      "S4_significant"
+     ],
+     "btc_full": {
+      "total_return": 6.4199,
+      "cagr": 0.3863,
+      "sharpe": 0.9596,
+      "max_drawdown": 0.4444,
+      "trades_per_year": 61.4741
+     },
+     "btc_dev": {
+      "total_return": 7.1122,
+      "sharpe": 1.123
+     },
+     "eth_full": {
+      "total_return": 22.1394,
+      "sharpe": 1.2409,
+      "max_drawdown": 0.5536
+     },
+     "fold_share": 0.52,
+     "book_p": 0.2137,
+     "edge_needed": 1.13
+    },
+    "V3_spot_lean_agree": {
+     "pass": false,
+     "rules_met": "19/21",
+     "failed": [
+      "S1_fold_share_ge_half",
+      "S4_significant"
+     ],
+     "btc_full": {
+      "total_return": 9.9323,
+      "cagr": 0.47,
+      "sharpe": 0.9579,
+      "max_drawdown": 0.5992,
+      "trades_per_year": 85.3443
+     },
+     "btc_dev": {
+      "total_return": 12.6155,
+      "sharpe": 1.1407
+     },
+     "eth_full": {
+      "total_return": 55.9371,
+      "sharpe": 1.2955,
+      "max_drawdown": 0.6654
+     },
+     "fold_share": 0.36,
+     "book_p": 0.2913,
+     "edge_needed": 1.168
+    },
+    "V4_spot_lean_agree_veto": {
+     "pass": false,
+     "rules_met": "19/21",
+     "failed": [
+      "S1_fold_share_ge_half",
+      "S4_significant"
+     ],
+     "btc_full": {
+      "total_return": 7.5191,
+      "cagr": 0.4186,
+      "sharpe": 0.9366,
+      "max_drawdown": 0.5583,
+      "trades_per_year": 62.128
+     },
+     "btc_dev": {
+      "total_return": 10.2446,
+      "sharpe": 1.1464
+     },
+     "eth_full": {
+      "total_return": 53.6939,
+      "sharpe": 1.3443,
+      "max_drawdown": 0.7393
+     },
+     "fold_share": 0.4,
+     "book_p": 0.3465,
+     "edge_needed": 1.249
+    },
+    "V5_spot_lean_blend": {
+     "pass": false,
+     "rules_met": "19/21",
+     "failed": [
+      "S1_fold_share_ge_half",
+      "S4_significant"
+     ],
+     "btc_full": {
+      "total_return": 11.2696,
+      "cagr": 0.5046,
+      "sharpe": 1.027,
+      "max_drawdown": 0.5386,
+      "trades_per_year": 87.9057
+     },
+     "btc_dev": {
+      "total_return": 13.2807,
+      "sharpe": 1.2017
+     },
+     "eth_full": {
+      "total_return": 68.08,
+      "sharpe": 1.3996,
+      "max_drawdown": 0.677
+     },
+     "fold_share": 0.36,
+     "book_p": 0.2603,
+     "edge_needed": 1.225
+    }
+   },
+   "run_utc": "2026-11-13 04:24",
+   "compute_min": 1.0,
+   "report": "research/out/rl_loop/round1_report.md"
+  },
+  {
+   "round": 2,
+   "registered_utc": "2026-11-13 04:31",
+   "variants": {
+    "R2a_blend_fundcap": "V5; |request| above 1 only when funding cheap for that side (long: latest rate <= trailing 270-settlement median; short: >=), else capped at 1",
+    "R2b_blend_125": "V2 execution, request clip(s + 0.25 m, -1.25, 1.25)",
+    "R2c_lean_longlever": "V2 execution, request 1.5 when s = m = +1 else s",
+    "R2d_retrain_spot_lean": "r_missed retrained with spot-long accounting in reward (incl. reference term) and validation score; V2 execution",
+    "R2e_retrain_spot_blend": "R2-d models, V5 execution",
+    "R2f_retrain_spot_longlever": "R2-d models, R2-c execution"
+   },
+   "results": {
+    "R2a_blend_fundcap": {
+     "pass": false,
+     "rules_met": "17/21",
+     "failed": [
+      "S1_fold_share_ge_half",
+      "S3_trades_le_100_every_seed",
+      "S3_turnover_le_100_every_seed",
+      "S4_significant"
+     ],
+     "btc_full": {
+      "total_return": 8.4396,
+      "cagr": 0.4407,
+      "sharpe": 0.9976,
+      "max_drawdown": 0.5255,
+      "trades_per_year": 218.3201
+     },
+     "btc_full_seed_sharpe": [
+      1.054,
+      0.936,
+      1.003
+     ],
+     "btc_dev": {
+      "total_return": 10.463,
+      "sharpe": 1.2005
+     },
+     "eth_full": {
+      "total_return": 46.3235,
+      "sharpe": 1.4034,
+      "max_drawdown": 0.5879
+     },
+     "fold_share": 0.4,
+     "book_p": 0.2734,
+     "sharpe_edge": 0.284,
+     "edge_needed": 1.314
+    },
+    "R2b_blend_125": {
+     "pass": false,
+     "rules_met": "19/21",
+     "failed": [
+      "S1_fold_share_ge_half",
+      "S4_significant"
+     ],
+     "btc_full": {
+      "total_return": 10.7304,
+      "cagr": 0.4924,
+      "sharpe": 1.0596,
+      "max_drawdown": 0.484,
+      "trades_per_year": 85.5078
+     },
+     "btc_full_seed_sharpe": [
+      1.126,
+      1.003,
+      1.05
+     ],
+     "btc_dev": {
+      "total_return": 11.7684,
+      "sharpe": 1.2262
+     },
+     "eth_full": {
+      "total_return": 44.2621,
+      "sharpe": 1.3585,
+      "max_drawdown": 0.5735
+     },
+     "fold_share": 0.44,
+     "book_p": 0.1909,
+     "sharpe_edge": 0.387,
+     "edge_needed": 1.235
+    },
+    "R2c_lean_longlever": {
+     "pass": false,
+     "rules_met": "19/21",
+     "failed": [
+      "S1_fold_share_ge_half",
+      "S4_significant"
+     ],
+     "btc_full": {
+      "total_return": 11.1401,
+      "cagr": 0.4941,
+      "sharpe": 1.0087,
+      "max_drawdown": 0.5786,
+      "trades_per_year": 80.6575
+     },
+     "btc_full_seed_sharpe": [
+      1.123,
+      0.909,
+      0.994
+     ],
+     "btc_dev": {
+      "total_return": 13.6674,
+      "sharpe": 1.1927
+     },
+     "eth_full": {
+      "total_return": 40.6038,
+      "sharpe": 1.2455,
+      "max_drawdown": 0.6063
+     },
+     "fold_share": 0.4,
+     "book_p": 0.2227,
+     "sharpe_edge": 0.304,
+     "edge_needed": 1.11
+    },
+    "R2d_retrain_spot_lean": {
+     "pass": false,
+     "rules_met": "15/21",
+     "failed": [
+      "T_every_seed_sharpe_gt_bh",
+      "T4_dev_return_gt_bh",
+      "T4_dev_mean_cagr_gt_bh",
+      "T4_dev_every_seed_sharpe_gt_bh",
+      "S1_fold_share_ge_half",
+      "S4_significant"
+     ],
+     "btc_full": {
+      "total_return": 8.6656,
+      "cagr": 0.4298,
+      "sharpe": 1.0281,
+      "max_drawdown": 0.4245,
+      "trades_per_year": 58.1497
+     },
+     "btc_full_seed_sharpe": [
+      1.027,
+      1.234,
+      0.823
+     ],
+     "btc_dev": {
+      "total_return": 8.3115,
+      "sharpe": 1.1755
+     },
+     "eth_full": {
+      "total_return": 11.7444,
+      "sharpe": 1.0658,
+      "max_drawdown": 0.6006
+     },
+     "fold_share": 0.48,
+     "book_p": 0.151,
+     "sharpe_edge": 0.412,
+     "edge_needed": 1.114
+    },
+    "R2e_retrain_spot_blend": {
+     "pass": false,
+     "rules_met": "19/21",
+     "failed": [
+      "S1_fold_share_ge_half",
+      "S4_significant"
+     ],
+     "btc_full": {
+      "total_return": 12.7339,
+      "cagr": 0.5294,
+      "sharpe": 1.0426,
+      "max_drawdown": 0.55,
+      "trades_per_year": 82.6739
+     },
+     "btc_full_seed_sharpe": [
+      1.071,
+      1.12,
+      0.937
+     ],
+     "btc_dev": {
+      "total_return": 13.9437,
+      "sharpe": 1.2012
+     },
+     "eth_full": {
+      "total_return": 33.8,
+      "sharpe": 1.2363,
+      "max_drawdown": 0.731
+     },
+     "fold_share": 0.32,
+     "book_p": 0.2496,
+     "sharpe_edge": 0.298,
+     "edge_needed": 1.229
+    },
+    "R2f_retrain_spot_longlever": {
+     "pass": false,
+     "rules_met": "19/21",
+     "failed": [
+      "S1_fold_share_ge_half",
+      "S4_significant"
+     ],
+     "btc_full": {
+      "total_return": 15.7425,
+      "cagr": 0.5725,
+      "sharpe": 1.0946,
+      "max_drawdown": 0.5441,
+      "trades_per_year": 76.5156
+     },
+     "btc_full_seed_sharpe": [
+      1.105,
+      1.213,
+      0.966
+     ],
+     "btc_dev": {
+      "total_return": 16.8237,
+      "sharpe": 1.265
+     },
+     "eth_full": {
+      "total_return": 23.4648,
+      "sharpe": 1.1327,
+      "max_drawdown": 0.6335
+     },
+     "fold_share": 0.36,
+     "book_p": 0.1542,
+     "sharpe_edge": 0.379,
+     "edge_needed": 1.037
+    }
+   },
+   "run_utc": "2026-11-13 07:52",
+   "compute_min": {
+    "retrain": 197,
+    "evaluation": 1.4
+   },
+   "retrain_models": "research/out/rl_loop/models_r2/r_missed_spot",
+   "report": "research/out/rl_loop/round2_report.md",
+   "notes": [
+    "R2-a: the funding cap flips the request at each 8-h settlement and the risk manager executes every new request at once: 218 trades/yr; implemented as registered, a design flaw, not re-run",
+    "R2-d/e/f: the spot-trained agent falls back to momentum more often on BTC (fallback share 33/26/41% vs Phase 6's 33/14/33%); most of R2-d's BTC gain over V2 comes from fallback folds (seed 2: agent folds +22%, fallback folds +311%); ETH Sharpe fell (1.07 vs V2's 1.24)"
+   ]
+  },
+  {
+   "round": 3,
+   "registered_utc": "2026-11-13 08:02",
+   "deviation": "round 2's five proposals (R3-a..e in the old next_proposals) replaced, not run; the letters R3-a..d are new variants",
+   "variants": {
+    "R3a_core_riskoff": "request 0 when s<=0 and m=-1 else 1 (no shorts); Phase 6 models; V2 execution",
+    "R3b_core_riskoff_125": "R3-a with 1.25 instead of 1",
+    "R3c_committee_riskoff": "request 0 when >=2 of {p6 s<=0, r2 s<=0, m=-1} (same seed) else 1",
+    "R3d_retrain_longflat_riskoff": "r_missed retrained long/flat (actions 0/0.5/1, spot, missed reference max(ref,0)); R3-a rule"
+   },
+   "results": {
+    "R3a_core_riskoff": {
+     "pass": false,
+     "rules_met": "17/21",
+     "failed": [
+      "T4_dev_return_gt_bh",
+      "T4_dev_mean_cagr_gt_bh",
+      "S1_fold_share_ge_half",
+      "S4_significant"
+     ],
+     "btc_full": {
+      "total_return": 7.7157,
+      "cagr": 0.4225,
+      "sharpe": 1.0789,
+      "max_drawdown": 0.4908,
+      "trades_per_year": 41.3642
+     },
+     "btc_full_seed_sharpe": [
+      1.157,
+      1.081,
+      0.999
+     ],
+     "btc_dev": {
+      "total_return": 8.5725,
+      "sharpe": 1.2664
+     },
+     "eth_full": {
+      "total_return": 12.2192,
+      "sharpe": 1.1339,
+      "max_drawdown": 0.4869
+     },
+     "fold_share": 0.44,
+     "book_p": 0.0334,
+     "sharpe_edge": 0.409,
+     "se": 0.223,
+     "edge_needed": 0.636,
+     "corr_bh_daily": 0.86
+    },
+    "R3b_core_riskoff_125": {
+     "pass": false,
+     "rules_met": "19/21",
+     "failed": [
+      "S1_fold_share_ge_half",
+      "S4_significant"
+     ],
+     "btc_full": {
+      "total_return": 14.2786,
+      "cagr": 0.5528,
+      "sharpe": 1.1385,
+      "max_drawdown": 0.5728,
+      "trades_per_year": 44.3071
+     },
+     "btc_full_seed_sharpe": [
+      1.226,
+      1.193,
+      0.997
+     ],
+     "btc_dev": {
+      "total_return": 16.2217,
+      "sharpe": 1.3305
+     },
+     "eth_full": {
+      "total_return": 16.4432,
+      "sharpe": 1.1292,
+      "max_drawdown": 0.5478
+     },
+     "fold_share": 0.4,
+     "book_p": 0.0438,
+     "sharpe_edge": 0.4,
+     "se": 0.234,
+     "edge_needed": 0.668,
+     "corr_bh_daily": 0.842
+    },
+    "R3c_committee_riskoff": {
+     "pass": false,
+     "rules_met": "18/21",
+     "failed": [
+      "T4_dev_return_gt_bh",
+      "T4_dev_mean_cagr_gt_bh",
+      "S4_significant"
+     ],
+     "btc_full": {
+      "total_return": 7.1001,
+      "cagr": 0.4027,
+      "sharpe": 1.0863,
+      "max_drawdown": 0.5201,
+      "trades_per_year": 54.4983
+     },
+     "btc_full_seed_sharpe": [
+      1.146,
+      1.169,
+      0.944
+     ],
+     "btc_dev": {
+      "total_return": 7.4556,
+      "sharpe": 1.2601
+     },
+     "eth_full": {
+      "total_return": 7.7344,
+      "sharpe": 1.0341,
+      "max_drawdown": 0.4716
+     },
+     "fold_share": 0.52,
+     "book_p": 0.0427,
+     "sharpe_edge": 0.425,
+     "se": 0.247,
+     "edge_needed": 0.705,
+     "corr_bh_daily": 0.806
+    },
+    "R3d_retrain_longflat_riskoff": {
+     "pass": false,
+     "rules_met": "18/21",
+     "failed": [
+      "S1_fold_share_ge_half",
+      "S4_significant",
+      "E1_eth_sharpe_ge_floor"
+     ],
+     "btc_full": {
+      "total_return": 8.508,
+      "cagr": 0.441,
+      "sharpe": 1.1111,
+      "max_drawdown": 0.4659,
+      "trades_per_year": 46.705
+     },
+     "btc_full_seed_sharpe": [
+      1.014,
+      1.156,
+      1.163
+     ],
+     "btc_dev": {
+      "total_return": 9.6887,
+      "sharpe": 1.3135
+     },
+     "eth_full": {
+      "total_return": 6.6989,
+      "sharpe": 0.9294,
+      "max_drawdown": 0.5623
+     },
+     "fold_share": 0.4,
+     "book_p": 0.0437,
+     "sharpe_edge": 0.44,
+     "se": 0.257,
+     "edge_needed": 0.734,
+     "corr_bh_daily": 0.823
+    }
+   },
+   "run_utc": "2026-11-13 10:13",
+   "compute_min": {
+    "retrain": 128,
+    "evaluation": 1.2
+   },
+   "retrain_models": "research/out/rl_loop/models_r3/r_missed_longflat",
+   "report": "research/out/rl_loop/round3_report.md",
+   "notes": [
+    "long core: bootstrap SE of the Sharpe gap fell to 0.22-0.26 (from 0.37-0.44), edge needed 0.64-0.73 (from 1.0-1.3); observed gap +0.40..+0.44, p 0.033-0.044 vs 0.00217",
+    "R3-a/R3-d: folds 12 and 13 are exact ties with buy-and-hold (book 1x all fold); a tie is not 'above'",
+    "bear-fold wins fell to 4-6 of 10 (no shorts); bull-fold wins up to 4 of 9 (R3-c); fold 23 -1.96 -> +1.69",
+    "R3-d: long/flat agent not better; ETH Sharpe 0.93 < 0.962 floor (E1)"
+   ]
+  }
+ ],
+ "next_proposals": [
+  {
+   "id": "R4-a committee_riskoff_125",
+   "rule": "R3-c's committee (flat on >=2 of 3 bearish votes) with long request 1.25; targets R3-c's only non-S4 failure (sub-span return); risk: R3-c is at exactly 13/25 folds and 1.25 cost R3-a one fold",
+   "retrain": false
+  },
+  {
+   "id": "R4-b committee4_riskoff",
+   "rule": "votes: Phase 6 agent s<=0, r2 agent s<=0, r3 long/flat agent s=0 (same seed), m=-1; flat when >=3 of 4 bearish, else 1",
+   "retrain": false
+  },
+  {
+   "id": "R4-c retrain_longflat_bhselect",
+   "rule": "R3-d's long/flat training with beta and the 0.5 fallback bar chosen on the validation slice by the executed long-core book's Sharpe gap over buy-and-hold",
+   "retrain": true,
+   "est_hours": 2.2
+  }
+ ],
+ "yardstick": {
+  "btc_spot_bh_full": {
+   "total_return": 5.839,
+   "cagr": 0.369,
+   "sharpe": 0.825,
+   "max_drawdown": 0.773
+  },
+  "btc_spot_bh_dev": {
+   "total_return": 8.797,
+   "sharpe": 1.03
+  },
+  "eth_spot_bh_full": {
+   "total_return": 4.706,
+   "sharpe": 0.755
+  }
+ },
+ "next_note": "cumulative would be 26 (threshold 0.05/26 = 0.00192, z 2.89). With the long core S4 needs a Sharpe gap of ~0.65-0.75 over spot buy-and-hold (an overlay information ratio ~1.15 over 6.1 years); the best of 23 RL variants shows +0.44 (p 0.033). Not expected to be reached by execution or combination variants of the same signals; whether to continue for S1 and the sub-span return alone is the owner's call. Rules unchanged."
+}

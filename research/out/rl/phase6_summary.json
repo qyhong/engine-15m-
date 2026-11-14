@@ -1,0 +1,2162 @@
+{
+ "phase": 6,
+ "paper_only": true,
+ "run_id": "phase6_20261112T141341Z_30a4dd4f",
+ "generated_utc": "2026-11-12 14:15 UTC",
+ "verdict": "YES. The Phase 6 primary (missed-opportunity reward, fallback = trend reference), BTC full span after 0.10% fees: net Sharpe 0.87 (seeds 1.04, 0.73, 0.82) vs the Phase 4 primary's 0.48; ETH 0.96 vs 0.77. Time long / short / flat (BTC): 70% / 22% / 8% (Phase 4 primary 42% / 8% / 50%). Variants that clearly beat the Phase 4 primary by the frozen rule: missed-opportunity reward, fallback = trend reference (of 8 tried).",
+ "clearly_beats": {
+  "p4_none": {
+   "yes": false,
+   "why": "BTCUSDT: Sharpe 0.54 vs 0.48 (+0.10 needed), seeds 0.49, 0.30, 0.83, Calmar 0.23 vs 0.24, to 2025-11-11 0.80 vs 0.67; ETHUSDT: Sharpe 0.81 vs 0.77 (+0.10 needed), seeds 0.91, 0.67, 0.86, Calmar 0.53 vs 0.49, to 2025-11-11 0.97 vs 0.86"
+  },
+  "p4_trend": {
+   "yes": false,
+   "why": "BTCUSDT: Sharpe 0.98 vs 0.48, seeds 0.95, 1.12, 0.88, Calmar 0.89 vs 0.24, to 2025-11-11 1.20 vs 0.67; ETHUSDT: Sharpe 0.82 vs 0.77 (+0.10 needed), seeds 1.18, 0.69, 0.59, Calmar 0.59 vs 0.49, to 2025-11-11 0.79 vs 0.86"
+  },
+  "m_rule": {
+   "yes": false,
+   "why": "BTCUSDT: Sharpe 0.68 vs 0.48, seeds 0.61, 0.71, 0.73, Calmar 0.43 vs 0.24, to 2025-11-11 0.85 vs 0.67; ETHUSDT: Sharpe 0.74 vs 0.77 (+0.10 needed), seeds 0.75, 0.84, 0.62, Calmar 0.45 vs 0.49, to 2025-11-11 0.89 vs 0.86"
+  },
+  "m_none": {
+   "yes": false,
+   "why": "BTCUSDT: Sharpe 0.66 vs 0.48, seeds 0.66, 0.57, 0.74, Calmar 0.33 vs 0.24, to 2025-11-11 0.92 vs 0.67; ETHUSDT: Sharpe 0.76 vs 0.77 (+0.10 needed), seeds 0.80, 0.96, 0.52, Calmar 0.52 vs 0.49, to 2025-11-11 0.93 vs 0.86"
+  },
+  "m_trend": {
+   "yes": true,
+   "why": "BTCUSDT: Sharpe 0.87 vs 0.48, seeds 1.04, 0.73, 0.82, Calmar 0.68 vs 0.24, to 2025-11-11 1.05 vs 0.67; ETHUSDT: Sharpe 0.96 vs 0.77, seeds 1.03, 0.90, 0.95, Calmar 0.66 vs 0.49, to 2025-11-11 0.99 vs 0.86"
+  },
+  "f_rule": {
+   "yes": false,
+   "why": "BTCUSDT: Sharpe 0.62 vs 0.48, seeds 0.43, 0.58, 0.84, Calmar 0.33 vs 0.24, to 2025-11-11 0.78 vs 0.67; ETHUSDT: Sharpe 0.76 vs 0.77 (+0.10 needed), seeds 0.57, 0.92, 0.78, Calmar 0.56 vs 0.49, to 2025-11-11 0.90 vs 0.86"
+  },
+  "f_none": {
+   "yes": false,
+   "why": "BTCUSDT: Sharpe 0.47 vs 0.48 (+0.10 needed), seeds 0.46, 0.36, 0.58, Calmar 0.18 vs 0.24, to 2025-11-11 0.81 vs 0.67; ETHUSDT: Sharpe 0.64 vs 0.77 (+0.10 needed), seeds 0.71, 0.60, 0.60, Calmar 0.33 vs 0.49, to 2025-11-11 0.89 vs 0.86"
+  },
+  "f_trend": {
+   "yes": false,
+   "why": "BTCUSDT: Sharpe 0.91 vs 0.48, seeds 0.93, 0.63, 1.17, Calmar 0.75 vs 0.24, to 2025-11-11 1.14 vs 0.67; ETHUSDT: Sharpe 0.76 vs 0.77 (+0.10 needed), seeds 0.57, 0.94, 0.78, Calmar 0.49 vs 0.49, to 2025-11-11 0.78 vs 0.86"
+  }
+ },
+ "proposal": [
+  "m_trend"
+ ],
+ "turnover": {
+  "p4_rule": {
+   "BTCUSDT": {
+    "turnover": 47.44881197563654,
+    "trades": 109.7050552612648,
+    "exploded": false
+   },
+   "ETHUSDT": {
+    "turnover": 62.9643342153968,
+    "trades": 158.38744677254908,
+    "exploded": false
+   }
+  },
+  "p4_none": {
+   "BTCUSDT": {
+    "turnover": 73.35422918991773,
+    "trades": 173.25005994811764,
+    "exploded": false
+   },
+   "ETHUSDT": {
+    "turnover": 92.40570936494593,
+    "trades": 238.0446101924094,
+    "exploded": false
+   }
+  },
+  "p4_trend": {
+   "BTCUSDT": {
+    "turnover": 73.83258408580687,
+    "trades": 157.44555620953503,
+    "exploded": false
+   },
+   "ETHUSDT": {
+    "turnover": 89.34981886323583,
+    "trades": 214.32738494419638,
+    "exploded": false
+   }
+  },
+  "m_rule": {
+   "BTCUSDT": {
+    "turnover": 62.81723689202452,
+    "trades": 139.4611209208031,
+    "exploded": false
+   },
+   "ETHUSDT": {
+    "turnover": 68.57722663578335,
+    "trades": 166.89293444777033,
+    "exploded": false
+   }
+  },
+  "m_none": {
+   "BTCUSDT": {
+    "turnover": 77.04455414389626,
+    "trades": 173.57704968064004,
+    "exploded": false
+   },
+   "ETHUSDT": {
+    "turnover": 93.62820018063162,
+    "trades": 234.00995578236856,
+    "exploded": false
+   }
+  },
+  "m_trend": {
+   "BTCUSDT": {
+    "turnover": 83.587724968588,
+    "trades": 178.37289909096853,
+    "exploded": false
+   },
+   "ETHUSDT": {
+    "turnover": 86.27356758404346,
+    "trades": 205.49476312762047,
+    "exploded": false
+   }
+  },
+  "f_rule": {
+   "BTCUSDT": {
+    "turnover": 60.51671109032128,
+    "trades": 130.74139472020582,
+    "exploded": false
+   },
+   "ETHUSDT": {
+    "turnover": 66.93032487839426,
+    "trades": 155.77037364171179,
+    "exploded": false
+   }
+  },
+  "f_none": {
+   "BTCUSDT": {
+    "turnover": 80.8325358763364,
+    "trades": 186.5476424040285,
+    "exploded": false
+   },
+   "ETHUSDT": {
+    "turnover": 93.8774464815806,
+    "trades": 222.1786043367083,
+    "exploded": false
+   }
+  },
+  "f_trend": {
+   "BTCUSDT": {
+    "turnover": 87.1204501652797,
+    "trades": 180.98881695114775,
+    "exploded": false
+   },
+   "ETHUSDT": {
+    "turnover": 90.78323908033416,
+    "trades": 208.16635861535022,
+    "exploded": false
+   }
+  }
+ },
+ "analytics": {
+  "BTCUSDT": {
+   "buy_hold": {
+    "periods": {
+     "2022": -0.656733637911831,
+     "current_decline": -0.42358118005947176
+    },
+    "monthly": {
+     "down_months": 33,
+     "up_months": 41,
+     "mean_down_month_pct": -11.73557368524978,
+     "mean_up_month_pct": 15.123089983917426,
+     "share_down_months_profitable": 0.0
+    },
+    "full": {
+     "long_share": 0.9999953340363386,
+     "short_share": 0.0,
+     "flat_share": 4.665963661475004e-06,
+     "net_long_per_year": 0.38308195211078605,
+     "net_short_per_year": 0.0,
+     "gross_long_per_year": 0.4930926282807768,
+     "gross_short_per_year": 0.0,
+     "net_flat_bars_per_year": 0.0
+    },
+    "dev": {
+     "long_share": 0.9999944206391715,
+     "short_share": 0.0,
+     "flat_share": 5.579360828423495e-06,
+     "net_long_per_year": 0.5162845101959291,
+     "net_short_per_year": 0.0,
+     "gross_long_per_year": 0.6409018581393773,
+     "gross_short_per_year": 0.0,
+     "net_flat_bars_per_year": 0.0
+    }
+   },
+   "momentum": {
+    "periods": {
+     "2022": -0.2892431264397435,
+     "current_decline": -0.021869873555087516
+    },
+    "monthly": {
+     "down_months": 33,
+     "up_months": 41,
+     "mean_down_month_pct": 2.0134391069204227,
+     "mean_up_month_pct": 3.729916181181636,
+     "share_down_months_profitable": 0.5757575757575758
+    },
+    "full": {
+     "long_share": 0.5549883817504829,
+     "short_share": 0.4450069522858556,
+     "flat_share": 4.665963661475004e-06,
+     "net_long_per_year": 0.38090271787068297,
+     "net_short_per_year": -0.0032446783949532814,
+     "gross_long_per_year": 0.5068207626785,
+     "gross_short_per_year": 0.013728134397723187,
+     "net_flat_bars_per_year": 0.0
+    },
+    "dev": {
+     "long_share": 0.5656132833422604,
+     "short_share": 0.43438113729691125,
+     "flat_share": 5.579360828423495e-06,
+     "net_long_per_year": 0.46939544796970434,
+     "net_short_per_year": -0.04820935657981365,
+     "gross_long_per_year": 0.6072698489075717,
+     "gross_short_per_year": -0.03363200923180551,
+     "net_flat_bars_per_year": 0.0
+    }
+   },
+   "p4_rule": {
+    "periods": {
+     "2022": -0.07420866622661926,
+     "current_decline": -0.270409187445199
+    },
+    "monthly": {
+     "down_months": 33.0,
+     "up_months": 41.0,
+     "mean_down_month_pct": -2.9091896756337605,
+     "mean_up_month_pct": 4.440960118934474,
+     "share_down_months_profitable": 0.2222222222222222
+    },
+    "full": {
+     "long_share": 0.42158692534769204,
+     "short_share": 0.08029812397154384,
+     "flat_share": 0.49811495068076406,
+     "net_long_per_year": 0.13225283787481454,
+     "net_short_per_year": 0.010633706694086842,
+     "gross_long_per_year": 0.19879351544088833,
+     "gross_short_per_year": 0.019653907116215407,
+     "net_flat_bars_per_year": -0.008698470096887033
+    },
+    "dev": {
+     "long_share": 0.4493301047432006,
+     "short_share": 0.08473561268821043,
+     "flat_share": 0.465934282568589,
+     "net_long_per_year": 0.2096720510870745,
+     "net_short_per_year": -0.0021640322768257934,
+     "gross_long_per_year": 0.2830639085285988,
+     "gross_short_per_year": 0.008508326256210421,
+     "net_flat_bars_per_year": -0.009811746719721438
+    },
+    "by_seed_periods": [
+     {
+      "2022": -0.11857181435632747,
+      "current_decline": -0.2813359054067148
+     },
+     {
+      "2022": -0.0430067258115685,
+      "current_decline": -0.20986003620330262
+     },
+     {
+      "2022": -0.061047458511961805,
+      "current_decline": -0.32003162072557945
+     }
+    ]
+   },
+   "p4_none": {
+    "periods": {
+     "2022": -0.4391303554335379,
+     "current_decline": -0.37608991881441467
+    },
+    "monthly": {
+     "down_months": 33.0,
+     "up_months": 41.0,
+     "mean_down_month_pct": -4.661992547219858,
+     "mean_up_month_pct": 6.796957927201549,
+     "share_down_months_profitable": 0.292929292929293
+    },
+    "full": {
+     "long_share": 0.6617191898642827,
+     "short_share": 0.17862864217346808,
+     "flat_share": 0.15965216796224924,
+     "net_long_per_year": 0.2291877223940344,
+     "net_short_per_year": -0.028691585957757112,
+     "gross_long_per_year": 0.3331338779341258,
+     "gross_short_per_year": -0.01265060277259738,
+     "net_flat_bars_per_year": -0.013624063141167724
+    },
+    "dev": {
+     "long_share": 0.6770740343986192,
+     "short_share": 0.16513234243885022,
+     "flat_share": 0.1577936231625305,
+     "net_long_per_year": 0.3184717774825802,
+     "net_short_per_year": -0.014609823447565484,
+     "gross_long_per_year": 0.43263711274354155,
+     "gross_short_per_year": 0.00493980387380611,
+     "net_flat_bars_per_year": -0.01513434139058082
+    },
+    "by_seed_periods": [
+     {
+      "2022": -0.5217533710282145,
+      "current_decline": -0.44360517584783987
+     },
+     {
+      "2022": -0.46055071350832266,
+      "current_decline": -0.34243513766854505
+     },
+     {
+      "2022": -0.33508698176407636,
+      "current_decline": -0.3422294429268592
+     }
+    ]
+   },
+   "p4_trend": {
+    "periods": {
+     "2022": 0.06898800867743937,
+     "current_decline": -0.24534116114594973
+    },
+    "monthly": {
+     "down_months": 33.0,
+     "up_months": 41.0,
+     "mean_down_month_pct": -1.4800518440179673,
+     "mean_up_month_pct": 7.4428417443213855,
+     "share_down_months_profitable": 0.4343434343434343
+    },
+    "full": {
+     "long_share": 0.6655530566727946,
+     "short_share": 0.23832498125837928,
+     "flat_share": 0.09612196206882608,
+     "net_long_per_year": 0.3302750258738264,
+     "net_short_per_year": 0.078255185058702,
+     "gross_long_per_year": 0.4399307940746549,
+     "gross_short_per_year": 0.09519253610896992,
+     "net_flat_bars_per_year": -0.008321302389478515
+    },
+    "dev": {
+     "long_share": 0.6642136076891031,
+     "short_share": 0.2362970898053919,
+     "flat_share": 0.09948930250550496,
+     "net_long_per_year": 0.4377685392164654,
+     "net_short_per_year": 0.07536845652194947,
+     "gross_long_per_year": 0.5509141880976643,
+     "gross_short_per_year": 0.09372218093960781,
+     "net_flat_bars_per_year": -0.009376217856839451
+    },
+    "by_seed_periods": [
+     {
+      "2022": -0.04445333911629368,
+      "current_decline": -0.30428304367118486
+     },
+     {
+      "2022": -0.020046631663836134,
+      "current_decline": -0.11073623675497668
+     },
+     {
+      "2022": 0.2714639968124479,
+      "current_decline": -0.32100420301168764
+     }
+    ]
+   },
+   "m_rule": {
+    "periods": {
+     "2022": -0.11598640690092359,
+     "current_decline": -0.2321347354789344
+    },
+    "monthly": {
+     "down_months": 33.0,
+     "up_months": 41.0,
+     "mean_down_month_pct": -3.6353240991959983,
+     "mean_up_month_pct": 6.441784785047333,
+     "share_down_months_profitable": 0.20202020202020202
+    },
+    "full": {
+     "long_share": 0.5416577235696488,
+     "short_share": 0.1111821374468469,
+     "flat_share": 0.34716013898350423,
+     "net_long_per_year": 0.23285635735090926,
+     "net_short_per_year": 0.009690755557517423,
+     "gross_long_per_year": 0.33085537096092626,
+     "gross_short_per_year": 0.01647557529799209,
+     "net_flat_bars_per_year": -0.014924735159850764
+    },
+    "dev": {
+     "long_share": 0.5837536451824078,
+     "short_share": 0.1251190263643397,
+     "flat_share": 0.2911273284532524,
+     "net_long_per_year": 0.3090748505442125,
+     "net_short_per_year": 0.007739231337847465,
+     "gross_long_per_year": 0.4206690173150069,
+     "gross_short_per_year": 0.014943559054164404,
+     "net_flat_bars_per_year": -0.016494965352368548
+    },
+    "by_seed_periods": [
+     {
+      "2022": -0.04470132690523543,
+      "current_decline": -0.12938075478176092
+     },
+     {
+      "2022": -0.28851554863301687,
+      "current_decline": -0.3211501589459619
+     },
+     {
+      "2022": -0.014742345164518444,
+      "current_decline": -0.24587329270908043
+     }
+    ]
+   },
+   "m_none": {
+    "periods": {
+     "2022": -0.34992820700411736,
+     "current_decline": -0.3832852724043671
+    },
+    "monthly": {
+     "down_months": 33.0,
+     "up_months": 41.0,
+     "mean_down_month_pct": -4.443237005896509,
+     "mean_up_month_pct": 7.441836656424136,
+     "share_down_months_profitable": 0.25252525252525254
+    },
+    "full": {
+     "long_share": 0.6980779340357164,
+     "short_share": 0.20080441213523828,
+     "flat_share": 0.1011176538290453,
+     "net_long_per_year": 0.2970374069147326,
+     "net_short_per_year": -0.03477380641062692,
+     "gross_long_per_year": 0.41438488786085564,
+     "gross_short_per_year": -0.025563529290367915,
+     "net_flat_bars_per_year": -0.017994233312539312
+    },
+    "dev": {
+     "long_share": 0.7129456049514967,
+     "short_share": 0.19873869249538775,
+     "flat_share": 0.08831570255311551,
+     "net_long_per_year": 0.37787619972206316,
+     "net_short_per_year": 0.002232732362181654,
+     "gross_long_per_year": 0.5090288561673818,
+     "gross_short_per_year": 0.012995181171693073,
+     "net_flat_bars_per_year": -0.019986777860720884
+    },
+    "by_seed_periods": [
+     {
+      "2022": -0.4578578473147127,
+      "current_decline": -0.30292280981815967
+     },
+     {
+      "2022": -0.37870960295598777,
+      "current_decline": -0.44907269289074114
+     },
+     {
+      "2022": -0.21321717074165147,
+      "current_decline": -0.39786031450420034
+     }
+    ]
+   },
+   "m_trend": {
+    "periods": {
+     "2022": -0.07599540875157244,
+     "current_decline": -0.22991332160947708
+    },
+    "monthly": {
+     "down_months": 33.0,
+     "up_months": 41.0,
+     "mean_down_month_pct": -2.651488522240756,
+     "mean_up_month_pct": 7.596994040419905,
+     "share_down_months_profitable": 0.35353535353535354
+    },
+    "full": {
+     "long_share": 0.7040379249526404,
+     "short_share": 0.22073118761217755,
+     "flat_share": 0.07523088743518198,
+     "net_long_per_year": 0.3194971334301972,
+     "net_short_per_year": 0.04820102466980017,
+     "gross_long_per_year": 0.44436676214544796,
+     "gross_short_per_year": 0.06228918758820586,
+     "net_flat_bars_per_year": -0.014565475852383778
+    },
+    "dev": {
+     "long_share": 0.7094380467773612,
+     "short_share": 0.21871280426114384,
+     "flat_share": 0.07184914896149497,
+     "net_long_per_year": 0.40606766155984153,
+     "net_short_per_year": 0.052127437687643996,
+     "gross_long_per_year": 0.5373956529288171,
+     "gross_short_per_year": 0.06598610861108385,
+     "net_flat_bars_per_year": -0.016144269968782654
+    },
+    "by_seed_periods": [
+     {
+      "2022": 0.014500518161236986,
+      "current_decline": -0.1858134680810828
+     },
+     {
+      "2022": -0.28394442380632146,
+      "current_decline": -0.24330156311916085
+     },
+     {
+      "2022": 0.04145767939036715,
+      "current_decline": -0.2606249336281876
+     }
+    ]
+   },
+   "f_rule": {
+    "periods": {
+     "2022": -0.12239633872411156,
+     "current_decline": -0.28148009592349404
+    },
+    "monthly": {
+     "down_months": 33.0,
+     "up_months": 41.0,
+     "mean_down_month_pct": -3.6674351374438903,
+     "mean_up_month_pct": 6.239509181473142,
+     "share_down_months_profitable": 0.21212121212121215
+    },
+    "full": {
+     "long_share": 0.49738083906469205,
+     "short_share": 0.14090899193410414,
+     "flat_share": 0.36171016900120384,
+     "net_long_per_year": 0.21711954009934042,
+     "net_short_per_year": -0.006520632496808329,
+     "gross_long_per_year": 0.30515989000856375,
+     "gross_short_per_year": 0.012631208731482796,
+     "net_flat_bars_per_year": -0.0018743279938506004
+    },
+    "dev": {
+     "long_share": 0.546414702731655,
+     "short_share": 0.15359980360649883,
+     "flat_share": 0.29998549366184607,
+     "net_long_per_year": 0.30462628289421423,
+     "net_short_per_year": -0.022416838892702285,
+     "gross_long_per_year": 0.4029282201406812,
+     "gross_short_per_year": -0.0002346844069808137,
+     "net_flat_bars_per_year": -0.002127223192434009
+    },
+    "by_seed_periods": [
+     {
+      "2022": -0.03096200930013493,
+      "current_decline": -0.2822978874994556
+     },
+     {
+      "2022": -0.1893293778115066,
+      "current_decline": -0.24436308137635288
+     },
+     {
+      "2022": -0.14689762906069315,
+      "current_decline": -0.3177793188946736
+     }
+    ]
+   },
+   "f_none": {
+    "periods": {
+     "2022": -0.42063140375606545,
+     "current_decline": -0.5582335150868735
+    },
+    "monthly": {
+     "down_months": 33.0,
+     "up_months": 41.0,
+     "mean_down_month_pct": -5.880199805426986,
+     "mean_up_month_pct": 7.864453217167319,
+     "share_down_months_profitable": 0.25252525252525254
+    },
+    "full": {
+     "long_share": 0.7610217838290142,
+     "short_share": 0.23572137353527622,
+     "flat_share": 0.0032568426357095534,
+     "net_long_per_year": 0.23721870705324952,
+     "net_short_per_year": -0.04477899072580177,
+     "gross_long_per_year": 0.35619230355494286,
+     "gross_short_per_year": -0.01602536559939984,
+     "net_flat_bars_per_year": -0.0013102565152408093
+    },
+    "dev": {
+     "long_share": 0.7716032851276559,
+     "short_share": 0.22467900077367134,
+     "flat_share": 0.0037177140986728563,
+     "net_long_per_year": 0.37133350353296707,
+     "net_short_per_year": -0.02255219405643961,
+     "gross_long_per_year": 0.49988430074922485,
+     "gross_short_per_year": 0.007249997404720755,
+     "net_flat_bars_per_year": -0.001482117862451244
+    },
+    "by_seed_periods": [
+     {
+      "2022": -0.5013915592224459,
+      "current_decline": -0.4936382068473475
+     },
+     {
+      "2022": -0.4317677159510809,
+      "current_decline": -0.5887355189619474
+     },
+     {
+      "2022": -0.3287349360946695,
+      "current_decline": -0.5923268194513253
+     }
+    ]
+   },
+   "f_trend": {
+    "periods": {
+     "2022": 0.028657205122326352,
+     "current_decline": -0.348751847603521
+    },
+    "monthly": {
+     "down_months": 33.0,
+     "up_months": 41.0,
+     "mean_down_month_pct": -1.6599745329020645,
+     "mean_up_month_pct": 7.476213688268385,
+     "share_down_months_profitable": 0.41414141414141414
+    },
+    "full": {
+     "long_share": 0.7087661014629352,
+     "short_share": 0.28829278610911513,
+     "flat_share": 0.0029411124279497443,
+     "net_long_per_year": 0.326724816997195,
+     "net_short_per_year": 0.06875328361953391,
+     "gross_long_per_year": 0.45235615239744237,
+     "gross_short_per_year": 0.09637072056672576,
+     "net_flat_bars_per_year": -0.001203527155138612
+    },
+    "dev": {
+     "long_share": 0.7137267154674761,
+     "short_share": 0.2827731655061596,
+     "flat_share": 0.0035001190263643394,
+     "net_long_per_year": 0.4485443076794334,
+     "net_short_per_year": 0.06524726755477529,
+     "gross_long_per_year": 0.5761125987831938,
+     "gross_short_per_year": 0.09390977779867787,
+     "net_flat_bars_per_year": -0.0013952572494387212
+    },
+    "by_seed_periods": [
+     {
+      "2022": 0.019978227954224215,
+      "current_decline": -0.24446907880826763
+     },
+     {
+      "2022": -0.16851037789070944,
+      "current_decline": -0.39773685874615616
+     },
+     {
+      "2022": 0.23450376530346428,
+      "current_decline": -0.4040496052561393
+     }
+    ]
+   }
+  },
+  "ETHUSDT": {
+   "buy_hold": {
+    "periods": {
+     "2022": -0.6771870978704949,
+     "current_decline": -0.556918830115542
+    },
+    "monthly": {
+     "down_months": 36,
+     "up_months": 38,
+     "mean_down_month_pct": -13.809674584465926,
+     "mean_up_month_pct": 20.25071725694989,
+     "share_down_months_profitable": 0.0
+    },
+    "full": {
+     "long_share": 0.9999953319889462,
+     "short_share": 0.0,
+     "flat_share": 4.668011053850176e-06,
+     "net_long_per_year": 0.4644107559056911,
+     "net_short_per_year": 0.0,
+     "gross_long_per_year": 0.5856070616048508,
+     "gross_short_per_year": 0.0,
+     "net_flat_bars_per_year": 0.0
+    },
+    "dev": {
+     "long_share": 0.999994417711485,
+     "short_share": 0.0,
+     "flat_share": 5.582288514999609e-06,
+     "net_long_per_year": 0.6333360704869565,
+     "net_short_per_year": 0.0,
+     "gross_long_per_year": 0.7734432415578447,
+     "gross_short_per_year": 0.0,
+     "net_flat_bars_per_year": 0.0
+    }
+   },
+   "momentum": {
+    "periods": {
+     "2022": -0.002328133517208064,
+     "current_decline": 0.3272624370373882
+    },
+    "monthly": {
+     "down_months": 36,
+     "up_months": 38,
+     "mean_down_month_pct": 0.00253764778799237,
+     "mean_up_month_pct": 9.919602867451438,
+     "share_down_months_profitable": 0.4444444444444444
+    },
+    "full": {
+     "long_share": 0.5261782059899918,
+     "short_share": 0.47381712599895437,
+     "flat_share": 4.668011053850176e-06,
+     "net_long_per_year": 0.5561464373981241,
+     "net_short_per_year": 0.09020873016209445,
+     "gross_long_per_year": 0.6957244605095324,
+     "gross_short_per_year": 0.11011739890468161,
+     "net_flat_bars_per_year": 0.0
+    },
+    "dev": {
+     "long_share": 0.5322377161741227,
+     "short_share": 0.46775670153736226,
+     "flat_share": 5.582288514999609e-06,
+     "net_long_per_year": 0.6463495048863002,
+     "net_short_per_year": 0.011372673898753047,
+     "gross_long_per_year": 0.8026554461628675,
+     "gross_short_per_year": 0.029212204605022943,
+     "net_flat_bars_per_year": 0.0
+    }
+   },
+   "p4_rule": {
+    "periods": {
+     "2022": -0.07710531664309568,
+     "current_decline": -0.08137786920207024
+    },
+    "monthly": {
+     "down_months": 36.0,
+     "up_months": 38.0,
+     "mean_down_month_pct": -1.8945139001214677,
+     "mean_up_month_pct": 6.134798480993239,
+     "share_down_months_profitable": 0.19444444444444445
+    },
+    "full": {
+     "long_share": 0.4106542684293077,
+     "short_share": 0.10051628202255584,
+     "flat_share": 0.4888294495481365,
+     "net_long_per_year": 0.24759467251008918,
+     "net_short_per_year": 0.024678099639222694,
+     "gross_long_per_year": 0.3354169628748767,
+     "gross_short_per_year": 0.040009723398871454,
+     "net_flat_bars_per_year": -0.01307257627290319
+    },
+    "dev": {
+     "long_share": 0.46699937106216066,
+     "short_share": 0.10942401947102236,
+     "flat_share": 0.423576609466817,
+     "net_long_per_year": 0.3037176284238132,
+     "net_short_per_year": 0.022157383598313627,
+     "gross_long_per_year": 0.4044672916388787,
+     "gross_short_per_year": 0.03911393102811315,
+     "net_flat_bars_per_year": -0.014444885778663805
+    },
+    "by_seed_periods": [
+     {
+      "2022": -0.1265319153461416,
+      "current_decline": -0.26437523137739916
+     },
+     {
+      "2022": -0.09961234206254921,
+      "current_decline": 0.10988767903472185
+     },
+     {
+      "2022": -0.005171692520596238,
+      "current_decline": -0.08964605526353342
+     }
+    ]
+   },
+   "p4_none": {
+    "periods": {
+     "2022": -0.3847571790308912,
+     "current_decline": -0.17200011938791657
+    },
+    "monthly": {
+     "down_months": 36.0,
+     "up_months": 38.0,
+     "mean_down_month_pct": -3.0759388277227497,
+     "mean_up_month_pct": 8.488205239312515,
+     "share_down_months_profitable": 0.3055555555555555
+    },
+    "full": {
+     "long_share": 0.653093646525755,
+     "short_share": 0.20507972962879975,
+     "flat_share": 0.14182662384544528,
+     "net_long_per_year": 0.30638292327898853,
+     "net_short_per_year": 0.04852211672817349,
+     "gross_long_per_year": 0.43229658603274695,
+     "gross_short_per_year": 0.07104320731532894,
+     "net_flat_bars_per_year": -0.01882646230610206
+    },
+    "dev": {
+     "long_share": 0.6775558507965925,
+     "short_share": 0.204977912745109,
+     "flat_share": 0.11746623645829846,
+     "net_long_per_year": 0.3787410684341002,
+     "net_short_per_year": 0.05783178148038731,
+     "gross_long_per_year": 0.5180634153513991,
+     "gross_short_per_year": 0.08160822978280032,
+     "net_flat_bars_per_year": -0.019367105621046796
+    },
+    "by_seed_periods": [
+     {
+      "2022": -0.40296794423832905,
+      "current_decline": -0.26597928562615647
+     },
+     {
+      "2022": -0.42442770334242597,
+      "current_decline": -0.1459573149805078
+     },
+     {
+      "2022": -0.32687588951191837,
+      "current_decline": -0.10406375755708541
+     }
+    ]
+   },
+   "p4_trend": {
+    "periods": {
+     "2022": 0.014627029926431057,
+     "current_decline": 0.3094972840058276
+    },
+    "monthly": {
+     "down_months": 36.0,
+     "up_months": 38.0,
+     "mean_down_month_pct": -1.6936127932160927,
+     "mean_up_month_pct": 8.13829997483119,
+     "share_down_months_profitable": 0.3333333333333333
+    },
+    "full": {
+     "long_share": 0.6533270470784475,
+     "short_share": 0.27243290512111934,
+     "flat_share": 0.0742400478004332,
+     "net_long_per_year": 0.3254255863604015,
+     "net_short_per_year": 0.06402514652761436,
+     "gross_long_per_year": 0.45194134590733936,
+     "gross_short_per_year": 0.09380175069259102,
+     "net_flat_bars_per_year": -0.012507095777827713
+    },
+    "dev": {
+     "long_share": 0.6686186068840781,
+     "short_share": 0.25589210552758207,
+     "flat_share": 0.07548928758833971,
+     "net_long_per_year": 0.35171266786653227,
+     "net_short_per_year": 0.029547812580141438,
+     "gross_long_per_year": 0.49021943108316374,
+     "gross_short_per_year": 0.05782795436563967,
+     "net_flat_bars_per_year": -0.013671535375340544
+    },
+    "by_seed_periods": [
+     {
+      "2022": -0.051406533948893496,
+      "current_decline": 0.2503222279016992
+     },
+     {
+      "2022": -0.01053868952685233,
+      "current_decline": 0.42732098047499534
+     },
+     {
+      "2022": 0.105826313255039,
+      "current_decline": 0.2508486436407882
+     }
+    ]
+   },
+   "m_rule": {
+    "periods": {
+     "2022": -0.130944061023646,
+     "current_decline": -0.1458309679521095
+    },
+    "monthly": {
+     "down_months": 36.0,
+     "up_months": 38.0,
+     "mean_down_month_pct": -2.310239782810212,
+     "mean_up_month_pct": 6.757022590475747,
+     "share_down_months_profitable": 0.2222222222222222
+    },
+    "full": {
+     "long_share": 0.4884606766748824,
+     "short_share": 0.12327439191376005,
+     "flat_share": 0.38826493141135754,
+     "net_long_per_year": 0.26143540436787993,
+     "net_short_per_year": 0.034488752487441966,
+     "gross_long_per_year": 0.3705677888891832,
+     "gross_short_per_year": 0.0443798816482629,
+     "net_flat_bars_per_year": -0.017898264333660475
+    },
+    "dev": {
+     "long_share": 0.5209614933738235,
+     "short_share": 0.12796838191785104,
+     "flat_share": 0.35107012470832544,
+     "net_long_per_year": 0.33373505139046383,
+     "net_short_per_year": 0.03668438036228931,
+     "gross_long_per_year": 0.4563930164805216,
+     "gross_short_per_year": 0.04593907005745342,
+     "net_flat_bars_per_year": -0.019916443296192018
+    },
+    "by_seed_periods": [
+     {
+      "2022": -0.08023977811930894,
+      "current_decline": -0.39736839434725224
+     },
+     {
+      "2022": -0.14452200625007372,
+      "current_decline": -0.0036640417500019007
+     },
+     {
+      "2022": -0.16807039870155538,
+      "current_decline": -0.03646046775907441
+     }
+    ]
+   },
+   "m_none": {
+    "periods": {
+     "2022": -0.36516854629344747,
+     "current_decline": -0.14723990498467923
+    },
+    "monthly": {
+     "down_months": 36.0,
+     "up_months": 38.0,
+     "mean_down_month_pct": -2.7176377764201565,
+     "mean_up_month_pct": 8.000456702420497,
+     "share_down_months_profitable": 0.3240740740740741
+    },
+    "full": {
+     "long_share": 0.6733917145915802,
+     "short_share": 0.21435662359648466,
+     "flat_share": 0.11225166181193517,
+     "net_long_per_year": 0.3130169249740275,
+     "net_short_per_year": 0.04064931239328098,
+     "gross_long_per_year": 0.4499468554400099,
+     "gross_short_per_year": 0.05640227814601496,
+     "net_flat_bars_per_year": -0.02294157632798406
+    },
+    "dev": {
+     "long_share": 0.6845262683889888,
+     "short_share": 0.21476738603757997,
+     "flat_share": 0.10070634557343128,
+     "net_long_per_year": 0.394742040215956,
+     "net_short_per_year": 0.04706775088092426,
+     "gross_long_per_year": 0.5457426739484407,
+     "gross_short_per_year": 0.061622770303446595,
+     "net_flat_bars_per_year": -0.024733650416613493
+    },
+    "by_seed_periods": [
+     {
+      "2022": -0.4230057117240592,
+      "current_decline": -0.33325776844853405
+     },
+     {
+      "2022": -0.2939216373872472,
+      "current_decline": 0.27132338310993687
+     },
+     {
+      "2022": -0.37857828976903596,
+      "current_decline": -0.37978532961544054
+     }
+    ]
+   },
+   "m_trend": {
+    "periods": {
+     "2022": 0.04820660094889687,
+     "current_decline": 0.2683215768300989
+    },
+    "monthly": {
+     "down_months": 36.0,
+     "up_months": 38.0,
+     "mean_down_month_pct": -0.9892938675450899,
+     "mean_up_month_pct": 8.532976793430679,
+     "share_down_months_profitable": 0.34259259259259256
+    },
+    "full": {
+     "long_share": 0.6704570916423931,
+     "short_share": 0.2538448851046879,
+     "flat_share": 0.07569802325291906,
+     "net_long_per_year": 0.36214715068497433,
+     "net_short_per_year": 0.10470552894395797,
+     "gross_long_per_year": 0.4956389809645488,
+     "gross_short_per_year": 0.125211173852269,
+     "net_flat_bars_per_year": -0.01697335973580857
+    },
+    "dev": {
+     "long_share": 0.6766980391281209,
+     "short_share": 0.24061710338770484,
+     "flat_share": 0.0826848574841742,
+     "net_long_per_year": 0.4166108755177074,
+     "net_short_per_year": 0.07350115318477374,
+     "gross_long_per_year": 0.5624228860842849,
+     "gross_short_per_year": 0.09220962808521528,
+     "net_flat_bars_per_year": -0.01892866866044363
+    },
+    "by_seed_periods": [
+     {
+      "2022": 0.004092665122488848,
+      "current_decline": -0.1671296284384628
+     },
+     {
+      "2022": -0.0626359768935908,
+      "current_decline": 0.5922230616990936
+     },
+     {
+      "2022": 0.20316311461779257,
+      "current_decline": 0.37987129722966584
+     }
+    ]
+   },
+   "f_rule": {
+    "periods": {
+     "2022": -0.07414635343219649,
+     "current_decline": -0.18658329199496101
+    },
+    "monthly": {
+     "down_months": 36.0,
+     "up_months": 38.0,
+     "mean_down_month_pct": -3.0644926970744018,
+     "mean_up_month_pct": 7.970765804660125,
+     "share_down_months_profitable": 0.1851851851851852
+    },
+    "full": {
+     "long_share": 0.5048251674259965,
+     "short_share": 0.14994585107177535,
+     "flat_share": 0.3452289815022282,
+     "net_long_per_year": 0.2792091538039623,
+     "net_short_per_year": 0.025743748550394584,
+     "gross_long_per_year": 0.3837887800550089,
+     "gross_short_per_year": 0.05137554124870489,
+     "net_flat_bars_per_year": -0.002806004237562307
+    },
+    "dev": {
+     "long_share": 0.5701228475625868,
+     "short_share": 0.16421790277142018,
+     "flat_share": 0.2656592496659931,
+     "net_long_per_year": 0.36651776267138336,
+     "net_short_per_year": 0.021502795779788777,
+     "gross_long_per_year": 0.48648653222961175,
+     "gross_short_per_year": 0.05009586999171275,
+     "net_flat_bars_per_year": -0.0029613979209764715
+    },
+    "by_seed_periods": [
+     {
+      "2022": -0.08276480660886931,
+      "current_decline": -0.30481418772758007
+     },
+     {
+      "2022": -0.171290939017262,
+      "current_decline": -0.06941514891394707
+     },
+     {
+      "2022": 0.03161668532954187,
+      "current_decline": -0.18552053934335588
+     }
+    ]
+   },
+   "f_none": {
+    "periods": {
+     "2022": -0.40919941168387913,
+     "current_decline": -0.40556793396498686
+    },
+    "monthly": {
+     "down_months": 36.0,
+     "up_months": 38.0,
+     "mean_down_month_pct": -4.576028943612087,
+     "mean_up_month_pct": 9.43902585645163,
+     "share_down_months_profitable": 0.3148148148148148
+    },
+    "full": {
+     "long_share": 0.743581484800956,
+     "short_share": 0.250239624567431,
+     "flat_share": 0.006178890631613016,
+     "net_long_per_year": 0.2605185958357774,
+     "net_short_per_year": 0.042307422194286994,
+     "gross_long_per_year": 0.3965078375282372,
+     "gross_short_per_year": 0.07939600518035475,
+     "net_flat_bars_per_year": -0.0026278382760585146
+    },
+    "dev": {
+     "long_share": 0.7563368278459436,
+     "short_share": 0.2395676331468849,
+     "flat_share": 0.00409553900717138,
+     "net_long_per_year": 0.38792066878294995,
+     "net_short_per_year": 0.04808996164491238,
+     "gross_long_per_year": 0.536356984405206,
+     "gross_short_per_year": 0.0859882936038165,
+     "net_flat_bars_per_year": -0.0027105984919806626
+    },
+    "by_seed_periods": [
+     {
+      "2022": -0.3292345815537966,
+      "current_decline": -0.37071614728291025
+     },
+     {
+      "2022": -0.4681373453219835,
+      "current_decline": -0.47779769255715665
+     },
+     {
+      "2022": -0.4302263081758574,
+      "current_decline": -0.3681899620548935
+     }
+    ]
+   },
+   "f_trend": {
+    "periods": {
+     "2022": 0.02057070120046271,
+     "current_decline": 0.1592021903079306
+    },
+    "monthly": {
+     "down_months": 36.0,
+     "up_months": 38.0,
+     "mean_down_month_pct": -2.3337649667983356,
+     "mean_up_month_pct": 8.670248797539335,
+     "share_down_months_profitable": 0.34259259259259256
+    },
+    "full": {
+     "long_share": 0.695351594592576,
+     "short_share": 0.30022468693205867,
+     "flat_share": 0.0044237184753653505,
+     "net_long_per_year": 0.29367638640346444,
+     "net_short_per_year": 0.08103756334071943,
+     "gross_long_per_year": 0.4275041034182448,
+     "gross_short_per_year": 0.12050465508824892,
+     "net_flat_bars_per_year": -0.0023316134724164573
+    },
+    "dev": {
+     "long_share": 0.7114235952170952,
+     "short_share": 0.2848102207981184,
+     "flat_share": 0.0037661839847864032,
+     "net_long_per_year": 0.3369126255995512,
+     "net_short_per_year": 0.04771460443716604,
+     "gross_long_per_year": 0.482878491060497,
+     "gross_short_per_year": 0.0867252065749438,
+     "net_flat_bars_per_year": -0.002465248638793978
+    },
+    "by_seed_periods": [
+     {
+      "2022": 0.007975540828575323,
+      "current_decline": 0.09044086793083084
+     },
+     {
+      "2022": -0.09298279297284862,
+      "current_decline": 0.22039673990700903
+     },
+     {
+      "2022": 0.14671935574566142,
+      "current_decline": 0.1667689630859519
+     }
+    ]
+   }
+  }
+ },
+ "periods": {
+  "2022": [
+   "2022-01-01",
+   "2023-01-01 00:00:00+00:00"
+  ],
+  "current_decline": [
+   "2025-10-06",
+   "2026-11-11 11:30:00+00:00"
+  ]
+ },
+ "headline": {
+  "BTCUSDT": {
+   "p4_rule": {
+    "full": {
+     "total_return": 0.788094267849672,
+     "sharpe": 0.4768549779866467,
+     "sortino": 0.667338063665262,
+     "max_drawdown": 0.4123416288105992,
+     "calmar": 0.2435847281136149,
+     "turnover_per_year": 47.44881197563654,
+     "avg_holding_hours": 161.99016846399405,
+     "cost_drag_per_year": 0.08425934819579994,
+     "exposure": 0.5018850493192359,
+     "total_return_gross": 2.0142774159172987,
+     "sharpe_gross": 0.7768478498296038,
+     "fee_per_year": 0.04744881197563653,
+     "funding_per_year": 0.012135017790843666,
+     "trades_per_year": 109.7050552612648,
+     "break_even_fee": 0.002979301475874442,
+     "sharpe_sd": 0.0635496032570493
+    },
+    "dev": {
+     "total_return": 1.221086977111826,
+     "sharpe": 0.6732665736512149,
+     "sortino": 0.9434930483057542,
+     "max_drawdown": 0.41214849089490063,
+     "calmar": 0.4122961922805961,
+     "turnover_per_year": 52.142085959429814,
+     "avg_holding_hours": 148.98169199713152,
+     "cost_drag_per_year": 0.09387596285491133,
+     "exposure": 0.5340657174314111,
+     "total_return_gross": 2.6186125845511348,
+     "sharpe_gross": 0.9927218284710976,
+     "fee_per_year": 0.05214208595942982,
+     "funding_per_year": 0.013925563845495086,
+     "trades_per_year": 117.82109180009515,
+     "break_even_fee": 0.003930362718163613,
+     "sharpe_sd": 0.13208150176882788
+    },
+    "full_005": {
+     "total_return": 1.058975232808117,
+     "sharpe": 0.5593267680123186,
+     "sortino": 0.7827886372379341,
+     "max_drawdown": 0.4053404509522913,
+     "calmar": 0.3112977095826797,
+     "turnover_per_year": 46.82550492981367,
+     "avg_holding_hours": 161.99016846399405,
+     "cost_drag_per_year": 0.05998685283678817,
+     "exposure": 0.5018850493192359,
+     "total_return_gross": 1.9814289246441994,
+     "sharpe_gross": 0.7726306074879637,
+     "fee_per_year": 0.02341275246490684,
+     "funding_per_year": 0.01211755868628195,
+     "trades_per_year": 107.41612713360801,
+     "break_even_fee": 0.003017475500374727,
+     "sharpe_sd": 0.05199088562239701
+    }
+   },
+   "p4_none": {
+    "full": {
+     "total_return": 1.4012590583872797,
+     "sharpe": 0.540046720032166,
+     "sortino": 0.7611494287557737,
+     "max_drawdown": 0.6225659300646953,
+     "calmar": 0.22565062804808156,
+     "turnover_per_year": 73.35422918991773,
+     "avg_holding_hours": 152.4028064420304,
+     "cost_drag_per_year": 0.13361120204064936,
+     "exposure": 0.8403478320377508,
+     "total_return_gross": 4.449907933848626,
+     "sharpe_gross": 0.9237028390407233,
+     "fee_per_year": 0.07335422918991774,
+     "funding_per_year": 0.02245654620023695,
+     "trades_per_year": 173.25005994811764,
+     "break_even_fee": 0.002713585966786007,
+     "sharpe_sd": 0.26924330940474583
+    },
+    "dev": {
+     "total_return": 2.4715086557220065,
+     "sharpe": 0.7995798398876809,
+     "sortino": 1.1281417492619816,
+     "max_drawdown": 0.6225659300646953,
+     "calmar": 0.41456341277143255,
+     "turnover_per_year": 79.85441081611852,
+     "avg_holding_hours": 132.6715482746251,
+     "cost_drag_per_year": 0.14884930420846362,
+     "exposure": 0.8422063768374694,
+     "total_return_gross": 6.422571530816431,
+     "sharpe_gross": 1.2097583654341644,
+     "fee_per_year": 0.0798544108161185,
+     "funding_per_year": 0.026571130195583686,
+     "trades_per_year": 184.87745433455197,
+     "break_even_fee": 0.003800844274584806,
+     "sharpe_sd": 0.31939513698620586
+    },
+    "full_005": {
+     "total_return": 1.9623371403972667,
+     "sharpe": 0.638930839213168,
+     "sortino": 0.9002914838691431,
+     "max_drawdown": 0.6070419326828548,
+     "calmar": 0.3009195597739741,
+     "turnover_per_year": 72.96740931982579,
+     "avg_holding_hours": 152.4028064420304,
+     "cost_drag_per_year": 0.09673671497718361,
+     "exposure": 0.8403478320377508,
+     "total_return_gross": 4.360609975298849,
+     "sharpe_gross": 0.9158173522287812,
+     "fee_per_year": 0.0364837046599129,
+     "funding_per_year": 0.02255877431147273,
+     "trades_per_year": 171.45161641924446,
+     "break_even_fee": 0.002697085905517288,
+     "sharpe_sd": 0.26465575589060564
+    }
+   },
+   "p4_trend": {
+    "full": {
+     "total_return": 6.2457521544293995,
+     "sharpe": 0.9818888681054588,
+     "sortino": 1.390799171136288,
+     "max_drawdown": 0.4252618774162434,
+     "calmar": 0.8903267900553254,
+     "turnover_per_year": 73.83258408580687,
+     "avg_holding_hours": 207.9790037044551,
+     "cost_drag_per_year": 0.13491442177855575,
+     "exposure": 0.9038780379311739,
+     "total_return_gross": 15.331333537563891,
+     "sharpe_gross": 1.3142626823656356,
+     "fee_per_year": 0.07383258408580688,
+     "funding_per_year": 0.02865026599471113,
+     "trades_per_year": 157.44555620953503,
+     "break_even_fee": 0.0053620892109411955,
+     "sharpe_sd": 0.12597960015516982
+    },
+    "dev": {
+     "total_return": 7.4559560167775585,
+     "sharpe": 1.1958550360204265,
+     "sortino": 1.6962391520606455,
+     "max_drawdown": 0.4252618774162434,
+     "calmar": 1.2192524802885853,
+     "turnover_per_year": 73.32913554380919,
+     "avg_holding_hours": 192.5975469775359,
+     "cost_drag_per_year": 0.14087559134893474,
+     "exposure": 0.9005106974944951,
+     "total_return_gross": 16.28808064278098,
+     "sharpe_gross": 1.5314755219539513,
+     "fee_per_year": 0.0733291355438092,
+     "funding_per_year": 0.03298186078887834,
+     "trades_per_year": 152.7503535284419,
+     "break_even_fee": 0.006720878831146138,
+     "sharpe_sd": 0.07346340941807065
+    },
+    "full_005": {
+     "total_return": 7.461647923409921,
+     "sharpe": 1.0464238412505151,
+     "sortino": 1.4816156955542041,
+     "max_drawdown": 0.41601059299472604,
+     "calmar": 0.9981778355108487,
+     "turnover_per_year": 75.47596828785896,
+     "avg_holding_hours": 207.9790037044551,
+     "cost_drag_per_year": 0.09928883733198467,
+     "exposure": 0.9038780379311739,
+     "total_return_gross": 14.420040385600586,
+     "sharpe_gross": 1.2906764962903055,
+     "fee_per_year": 0.03773798414392949,
+     "funding_per_year": 0.02873521290290602,
+     "trades_per_year": 164.1488457262442,
+     "break_even_fee": 0.005107152654826284,
+     "sharpe_sd": 0.11360036948627446
+    }
+   },
+   "m_rule": {
+    "full": {
+     "total_return": 1.888793944085723,
+     "sharpe": 0.6830402949177942,
+     "sortino": 0.9656470461305009,
+     "max_drawdown": 0.4460881585661112,
+     "calmar": 0.4273225846814008,
+     "turnover_per_year": 62.81723689202452,
+     "avg_holding_hours": 139.26113105022853,
+     "cost_drag_per_year": 0.11970856874221807,
+     "exposure": 0.6528398610164957,
+     "total_return_gross": 5.110318170157634,
+     "sharpe_gross": 1.0417687590615818,
+     "fee_per_year": 0.06281723689202452,
+     "funding_per_year": 0.0236064401605912,
+     "trades_per_year": 139.4611209208031,
+     "break_even_fee": 0.003750232309184478,
+     "sharpe_sd": 0.0668499504893945
+    },
+    "dev": {
+     "total_return": 2.4693623910011877,
+     "sharpe": 0.8483871215487411,
+     "sortino": 1.200032620497509,
+     "max_drawdown": 0.4460881585661112,
+     "calmar": 0.6124437165132138,
+     "turnover_per_year": 70.13965497312097,
+     "avg_holding_hours": 132.5357050852489,
+     "cost_drag_per_year": 0.13529346013511498,
+     "exposure": 0.7088726715467476,
+     "total_return_gross": 6.116354263988421,
+     "sharpe_gross": 1.2302838015051838,
+     "fee_per_year": 0.07013965497312095,
+     "funding_per_year": 0.02731538841091244,
+     "trades_per_year": 156.0738467152809,
+     "break_even_fee": 0.004392744514628721,
+     "sharpe_sd": 0.1473286123430153
+    },
+    "full_005": {
+     "total_return": 2.5121538448790814,
+     "sharpe": 0.7754807712233242,
+     "sortino": 1.096561513891425,
+     "max_drawdown": 0.4268773359258932,
+     "calmar": 0.5323640447233057,
+     "turnover_per_year": 64.27406418095077,
+     "avg_holding_hours": 139.26113105022853,
+     "cost_drag_per_year": 0.0895165763130835,
+     "exposure": 0.6528398610164957,
+     "total_return_gross": 5.159909271858086,
+     "sharpe_gross": 1.0422506476555975,
+     "fee_per_year": 0.03213703209047539,
+     "funding_per_year": 0.023505320045322433,
+     "trades_per_year": 142.51302509101214,
+     "break_even_fee": 0.0036863837846464816,
+     "sharpe_sd": 0.06187257976321888
+    }
+   },
+   "m_none": {
+    "full": {
+     "total_return": 1.9514917460007808,
+     "sharpe": 0.6573476093376591,
+     "sortino": 0.9307353360010819,
+     "max_drawdown": 0.5830476251395139,
+     "calmar": 0.33175749760110373,
+     "turnover_per_year": 77.04455414389626,
+     "avg_holding_hours": 156.8869271216802,
+     "cost_drag_per_year": 0.1445519916577778,
+     "exposure": 0.8988823461709546,
+     "total_return_gross": 6.130397679137567,
+     "sharpe_gross": 1.0462197123099979,
+     "fee_per_year": 0.07704455414389627,
+     "funding_per_year": 0.027071529898506697,
+     "trades_per_year": 173.57704968064004,
+     "break_even_fee": 0.00328437526128348,
+     "sharpe_sd": 0.08753517474597634
+    },
+    "dev": {
+     "total_return": 3.3489674815992316,
+     "sharpe": 0.924804903109456,
+     "sortino": 1.311373239307848,
+     "max_drawdown": 0.5830476251395139,
+     "calmar": 0.5731791305492294,
+     "turnover_per_year": 84.60944478447281,
+     "avg_holding_hours": 140.04656634559777,
+     "cost_drag_per_year": 0.1619018834648206,
+     "exposure": 0.9116842974468845,
+     "total_return_gross": 8.95934381435218,
+     "sharpe_gross": 1.3405204994029603,
+     "fee_per_year": 0.08460944478447281,
+     "funding_per_year": 0.03168814884836719,
+     "trades_per_year": 189.43911164982114,
+     "break_even_fee": 0.004369105589394335,
+     "sharpe_sd": 0.12025558841993292
+    },
+    "full_005": {
+     "total_return": 2.8168862784437123,
+     "sharpe": 0.7694409534755549,
+     "sortino": 1.0899705844753382,
+     "max_drawdown": 0.5562909834631835,
+     "calmar": 0.44092886206253107,
+     "turnover_per_year": 78.10650967329843,
+     "avg_holding_hours": 156.8869271216802,
+     "cost_drag_per_year": 0.10687804925238804,
+     "exposure": 0.8988823461709546,
+     "total_return_gross": 6.329313302012056,
+     "sharpe_gross": 1.0552977886098835,
+     "fee_per_year": 0.03905325483664922,
+     "funding_per_year": 0.02693436813666636,
+     "trades_per_year": 174.1765308569311,
+     "break_even_fee": 0.00330170400568539,
+     "sharpe_sd": 0.07932939205106039
+    }
+   },
+   "m_trend": {
+    "full": {
+     "total_return": 4.586076154579318,
+     "sharpe": 0.8655270217925448,
+     "sortino": 1.230490693989542,
+     "max_drawdown": 0.4694601437101951,
+     "calmar": 0.684150166605855,
+     "turnover_per_year": 83.587724968588,
+     "avg_holding_hours": 167.10084921580156,
+     "cost_drag_per_year": 0.15352326767696886,
+     "exposure": 0.924769112564818,
+     "total_return_gross": 13.116183095149607,
+     "sharpe_gross": 1.2443487683573249,
+     "fee_per_year": 0.083587724968588,
+     "funding_per_year": 0.030868029499378485,
+     "trades_per_year": 178.37289909096853,
+     "break_even_fee": 0.004284876131055383,
+     "sharpe_sd": 0.1616842967535654
+    },
+    "dev": {
+     "total_return": 5.432815071947453,
+     "sharpe": 1.0505215509206092,
+     "sortino": 1.4953986920592504,
+     "max_drawdown": 0.4694601437101951,
+     "calmar": 0.9331143429329595,
+     "turnover_per_year": 83.96290898798956,
+     "avg_holding_hours": 155.3383249721992,
+     "cost_drag_per_year": 0.1613309325078705,
+     "exposure": 0.928150851038505,
+     "total_return_gross": 13.510355183333067,
+     "sharpe_gross": 1.436467531970388,
+     "fee_per_year": 0.08396290898798957,
+     "funding_per_year": 0.035304774243298476,
+     "trades_per_year": 178.29563449394928,
+     "break_even_fee": 0.005288313564147359,
+     "sharpe_sd": 0.16333857160966117
+    },
+    "full_005": {
+     "total_return": 6.384869553733438,
+     "sharpe": 0.976984310611455,
+     "sortino": 1.3894104494251913,
+     "max_drawdown": 0.4356764449580918,
+     "calmar": 0.8678861046412747,
+     "turnover_per_year": 83.9695281356894,
+     "avg_holding_hours": 167.10084921580156,
+     "cost_drag_per_year": 0.11200831852395811,
+     "exposure": 0.924769112564818,
+     "total_return_gross": 13.546722192202745,
+     "sharpe_gross": 1.2515979117957667,
+     "fee_per_year": 0.0419847640678447,
+     "funding_per_year": 0.030837481803626176,
+     "trades_per_year": 176.68345213960285,
+     "break_even_fee": 0.004326761050033466,
+     "sharpe_sd": 0.15221184117054343
+    }
+   },
+   "f_rule": {
+    "full": {
+     "total_return": 1.6731377375095138,
+     "sharpe": 0.6199305371003326,
+     "sortino": 0.8730118839247222,
+     "max_drawdown": 0.48852427674606097,
+     "calmar": 0.33342710423343674,
+     "turnover_per_year": 60.51671109032128,
+     "avg_holding_hours": 155.516140184016,
+     "cost_drag_per_year": 0.10906651942187,
+     "exposure": 0.6382898309987962,
+     "total_return_gross": 4.213573645520699,
+     "sharpe_gross": 0.9439772408671784,
+     "fee_per_year": 0.06051671109032127,
+     "funding_per_year": 0.018577645751480142,
+     "trades_per_year": 130.74139472020582,
+     "break_even_fee": 0.003499155072794515,
+     "sharpe_sd": 0.20883884437202174
+    },
+    "dev": {
+     "total_return": 2.193755519010761,
+     "sharpe": 0.7847271040072719,
+     "sortino": 1.1061691775183,
+     "max_drawdown": 0.48852427674606097,
+     "calmar": 0.4914563700748957,
+     "turnover_per_year": 67.18736866955025,
+     "avg_holding_hours": 146.25475439545036,
+     "cost_drag_per_year": 0.12261131525879432,
+     "exposure": 0.700014506338154,
+     "total_return_gross": 4.964486280857854,
+     "sharpe_gross": 1.126736473374031,
+     "fee_per_year": 0.06718736866955023,
+     "funding_per_year": 0.02140023783764372,
+     "trades_per_year": 141.5417098394948,
+     "break_even_fee": 0.0042252348060211895,
+     "sharpe_sd": 0.2475439372854557
+    },
+    "full_005": {
+     "total_return": 2.1244370450857457,
+     "sharpe": 0.6969644983863819,
+     "sortino": 0.9816656769085422,
+     "max_drawdown": 0.46856516428152056,
+     "calmar": 0.4125791028077388,
+     "turnover_per_year": 61.87134614001085,
+     "avg_holding_hours": 155.516140184016,
+     "cost_drag_per_year": 0.08006790234214345,
+     "exposure": 0.6382898309987962,
+     "total_return_gross": 4.101920464488123,
+     "sharpe_gross": 0.9338839229703435,
+     "fee_per_year": 0.03093567307000543,
+     "funding_per_year": 0.018637531739374606,
+     "trades_per_year": 135.10125782050443,
+     "break_even_fee": 0.0033660746469127856,
+     "sharpe_sd": 0.20230361956386117
+    }
+   },
+   "f_none": {
+    "full": {
+     "total_return": 0.9824775180635726,
+     "sharpe": 0.4668509362672489,
+     "sortino": 0.6599106836158761,
+     "max_drawdown": 0.6657753255389499,
+     "calmar": 0.17564548255264403,
+     "turnover_per_year": 80.8325358763364,
+     "avg_holding_hours": 189.83669268018312,
+     "cost_drag_per_year": 0.14903747839223147,
+     "exposure": 0.9967431573642905,
+     "total_return_gross": 3.9417972599403566,
+     "sharpe_gross": 0.8314793815337155,
+     "fee_per_year": 0.0808325358763364,
+     "funding_per_year": 0.029679919133342364,
+     "trades_per_year": 186.5476424040285,
+     "break_even_fee": 0.0023244142285954636,
+     "sharpe_sd": 0.11396169236067677
+    },
+    "dev": {
+     "total_return": 2.835802604568876,
+     "sharpe": 0.8139216937270776,
+     "sortino": 1.1524035012074902,
+     "max_drawdown": 0.635363412744329,
+     "calmar": 0.4680430252238663,
+     "turnover_per_year": 84.31602640184798,
+     "avg_holding_hours": 165.75882244925214,
+     "cost_drag_per_year": 0.1598351068398609,
+     "exposure": 0.9962822859013271,
+     "total_return_gross": 7.682072621619009,
+     "sharpe_gross": 1.1893098619112146,
+     "fee_per_year": 0.08431602640184797,
+     "funding_per_year": 0.03343325075165385,
+     "trades_per_year": 184.48645513610032,
+     "break_even_fee": 0.004044152143194746,
+     "sharpe_sd": 0.13824371246598624
+    },
+    "full_005": {
+     "total_return": 1.56974898305423,
+     "sharpe": 0.5620766859180262,
+     "sortino": 0.7951024566080589,
+     "max_drawdown": 0.6589361858495528,
+     "calmar": 0.24836596145795387,
+     "turnover_per_year": 83.38765641026221,
+     "avg_holding_hours": 189.83669268018312,
+     "cost_drag_per_year": 0.11092895425323017,
+     "exposure": 0.9967431573642905,
+     "total_return_gross": 4.06913917032941,
+     "sharpe_gross": 0.8317192686439902,
+     "fee_per_year": 0.0416938282051311,
+     "funding_per_year": 0.029857035641462998,
+     "trades_per_year": 194.5588908508273,
+     "break_even_fee": 0.0022639480028772614,
+     "sharpe_sd": 0.14385281754645973
+    }
+   },
+   "f_trend": {
+    "full": {
+     "total_return": 6.459071867764044,
+     "sharpe": 0.9111891862454767,
+     "sortino": 1.2924581261534869,
+     "max_drawdown": 0.5062498160753165,
+     "calmar": 0.7543266150963269,
+     "turnover_per_year": 87.1204501652797,
+     "avg_holding_hours": 191.25906216402402,
+     "cost_drag_per_year": 0.1544522997729705,
+     "exposure": 0.9970588875720502,
+     "total_return_gross": 18.01871133778422,
+     "sharpe_gross": 1.2697855861091745,
+     "fee_per_year": 0.0871204501652797,
+     "funding_per_year": 0.029769501454286085,
+     "trades_per_year": 180.98881695114775,
+     "break_even_fee": 0.004489868683647807,
+     "sharpe_sd": 0.27051818644670633
+    },
+    "dev": {
+     "total_return": 8.858158547725706,
+     "sharpe": 1.1443573021272375,
+     "sortino": 1.6258357035690805,
+     "max_drawdown": 0.4523507154887441,
+     "calmar": 1.161764324660826,
+     "turnover_per_year": 84.48193239953706,
+     "avg_holding_hours": 178.47088529660581,
+     "cost_drag_per_year": 0.15762605890515144,
+     "exposure": 0.9964998809736357,
+     "total_return_gross": 20.85760819773651,
+     "sharpe_gross": 1.4984325953794848,
+     "fee_per_year": 0.08448193239953705,
+     "funding_per_year": 0.03378744006622166,
+     "trades_per_year": 167.3476569373033,
+     "break_even_fee": 0.005922997899005993,
+     "sharpe_sd": 0.30329813220200297
+    },
+    "full_005": {
+     "total_return": 8.199152867633359,
+     "sharpe": 0.9985021368787343,
+     "sortino": 1.4160883617169386,
+     "max_drawdown": 0.484955597938818,
+     "calmar": 0.8942545303024586,
+     "turnover_per_year": 88.95178495716164,
+     "avg_holding_hours": 191.25906216402402,
+     "cost_drag_per_year": 0.11236606234114625,
+     "exposure": 0.9970588875720502,
+     "total_return_gross": 17.232206175337883,
+     "sharpe_gross": 1.2581539190933684,
+     "fee_per_year": 0.044475892478580824,
+     "funding_per_year": 0.02986432730582279,
+     "trades_per_year": 186.7111372702897,
+     "break_even_fee": 0.004344863682158026,
+     "sharpe_sd": 0.24985367472294087
+    }
+   }
+  },
+  "ETHUSDT": {
+   "p4_rule": {
+    "full": {
+     "total_return": 2.631043639914205,
+     "sharpe": 0.7676922619377103,
+     "sortino": 1.0707738777531695,
+     "max_drawdown": 0.49645218903896743,
+     "calmar": 0.4866365455394073,
+     "turnover_per_year": 62.9643342153968,
+     "avg_holding_hours": 104.31858132190304,
+     "cost_drag_per_year": 0.11622649034221706,
+     "exposure": 0.5111705504518634,
+     "total_return_gross": 6.517738605539923,
+     "sharpe_gross": 1.1146315642092888,
+     "fee_per_year": 0.0629643342153968,
+     "funding_per_year": 0.01721240920980359,
+     "trades_per_year": 158.38744677254908,
+     "break_even_fee": 0.004190919032500586,
+     "sharpe_sd": 0.16434199410346456
+    },
+    "dev": {
+     "total_return": 2.9050803451173812,
+     "sharpe": 0.8597959743939905,
+     "sortino": 1.198932213195764,
+     "max_drawdown": 0.49645218903896743,
+     "calmar": 0.6250932353642528,
+     "turnover_per_year": 70.69248885204449,
+     "avg_holding_hours": 104.67009811834227,
+     "cost_drag_per_year": 0.13215109637567096,
+     "exposure": 0.5764233905331829,
+     "total_return_gross": 6.790260742963169,
+     "sharpe_gross": 1.2276653263532726,
+     "fee_per_year": 0.07069248885204449,
+     "funding_per_year": 0.0204410697904896,
+     "trades_per_year": 178.78100305140444,
+     "break_even_fee": 0.004473400476677658,
+     "sharpe_sd": 0.27241577799032857
+    },
+    "full_005": {
+     "total_return": 3.410508432508864,
+     "sharpe": 0.8557706391758848,
+     "sortino": 1.1944776940722235,
+     "max_drawdown": 0.4949180926113286,
+     "calmar": 0.5608459174748689,
+     "turnover_per_year": 63.09496336136863,
+     "avg_holding_hours": 104.31858132190304,
+     "cost_drag_per_year": 0.08484143610081757,
+     "exposure": 0.5111705504518634,
+     "total_return_gross": 6.504213651397284,
+     "sharpe_gross": 1.1080825175766396,
+     "fee_per_year": 0.03154748168068431,
+     "funding_per_year": 0.017224648648861075,
+     "trades_per_year": 157.18795492091533,
+     "break_even_fee": 0.004179439597335815,
+     "sharpe_sd": 0.17437189181353507
+    }
+   },
+   "p4_none": {
+    "full": {
+     "total_return": 3.7907749330120972,
+     "sharpe": 0.8144333129188409,
+     "sortino": 1.1419792286136827,
+     "max_drawdown": 0.5494469146092844,
+     "calmar": 0.5263530034045711,
+     "turnover_per_year": 92.40570936494593,
+     "avg_holding_hours": 115.64283679103316,
+     "cost_drag_per_year": 0.16726121555249876,
+     "exposure": 0.8581733761545548,
+     "total_return_gross": 12.323349705480041,
+     "sharpe_gross": 1.2205499421409607,
+     "fee_per_year": 0.09240570936494595,
+     "funding_per_year": 0.023528970335594545,
+     "trades_per_year": 238.0446101924094,
+     "break_even_fee": 0.0037173278608506883,
+     "sharpe_sd": 0.12610563896410695
+    },
+    "dev": {
+     "total_return": 4.513513500045452,
+     "sharpe": 0.9707266770186301,
+     "sortino": 1.360938153216079,
+     "max_drawdown": 0.5494469146092844,
+     "calmar": 0.7064400643054581,
+     "turnover_per_year": 98.31170077929131,
+     "avg_holding_hours": 109.63496415435748,
+     "cost_drag_per_year": 0.18246590073056,
+     "exposure": 0.8825337635417015,
+     "total_return_gross": 12.991388454203978,
+     "sharpe_gross": 1.39637529678462,
+     "fee_per_year": 0.09831170077929131,
+     "funding_per_year": 0.028025850685219286,
+     "trades_per_year": 255.1313147119422,
+     "break_even_fee": 0.004307513894758055,
+     "sharpe_sd": 0.16417600388269618
+    },
+    "full_005": {
+     "total_return": 5.106460347194228,
+     "sharpe": 0.9098150161967956,
+     "sortino": 1.276030454192818,
+     "max_drawdown": 0.537853534996039,
+     "calmar": 0.6378099510676839,
+     "turnover_per_year": 93.48477912835654,
+     "avg_holding_hours": 115.64283679103316,
+     "cost_drag_per_year": 0.12211682424507818,
+     "exposure": 0.8581733761545548,
+     "total_return_gross": 11.900941367836255,
+     "sharpe_gross": 1.205335229088768,
+     "fee_per_year": 0.046742389564178276,
+     "funding_per_year": 0.023540930389455008,
+     "trades_per_year": 240.44359389567694,
+     "break_even_fee": 0.003611835508948539,
+     "sharpe_sd": 0.12429388972308496
+    }
+   },
+   "p4_trend": {
+    "full": {
+     "total_return": 6.070213943769402,
+     "sharpe": 0.8188625508216435,
+     "sortino": 1.152851149691031,
+     "max_drawdown": 0.6599303069593878,
+     "calmar": 0.5916888729203703,
+     "turnover_per_year": 89.34981886323583,
+     "avg_holding_hours": 150.80909968792722,
+     "cost_drag_per_year": 0.16879945955896578,
+     "exposure": 0.9257599521995669,
+     "total_return_gross": 18.544898408222917,
+     "sharpe_gross": 1.187680919041525,
+     "fee_per_year": 0.08934981886323583,
+     "funding_per_year": 0.0346259315087726,
+     "trades_per_year": 214.32738494419638,
+     "break_even_fee": 0.0040645402307347145,
+     "sharpe_sd": 0.3164908095027573
+    },
+    "dev": {
+     "total_return": 4.324464481111908,
+     "sharpe": 0.7901947441257757,
+     "sortino": 1.1087632839750932,
+     "max_drawdown": 0.654343261606681,
+     "calmar": 0.6009575620479415,
+     "turnover_per_year": 92.07438757348041,
+     "avg_holding_hours": 142.4130460810873,
+     "cost_drag_per_year": 0.18045844046556217,
+     "exposure": 0.9245107124116604,
+     "total_return_gross": 12.137306636972248,
+     "sharpe_gross": 1.1820269918150457,
+     "fee_per_year": 0.09207438757348041,
+     "funding_per_year": 0.039961679247972844,
+     "trades_per_year": 229.05093498161332,
+     "break_even_fee": 0.0038836883353769304,
+     "sharpe_sd": 0.4004583419952884
+    },
+    "full_005": {
+     "total_return": 7.481325002376457,
+     "sharpe": 0.8879273975126435,
+     "sortino": 1.2497769273021007,
+     "max_drawdown": 0.6461455816568901,
+     "calmar": 0.6706562625867738,
+     "turnover_per_year": 91.48516008700066,
+     "avg_holding_hours": 150.80909968792722,
+     "cost_drag_per_year": 0.12598608290669555,
+     "exposure": 0.9257599521995669,
+     "total_return_gross": 17.120240872995442,
+     "sharpe_gross": 1.162380092597097,
+     "fee_per_year": 0.045742580043500326,
+     "funding_per_year": 0.03467849868046697,
+     "trades_per_year": 221.19720191264432,
+     "break_even_fee": 0.0038415657323427194,
+     "sharpe_sd": 0.3080334603923091
+    }
+   },
+   "m_rule": {
+    "full": {
+     "total_return": 2.6435850595120773,
+     "sharpe": 0.737155164764958,
+     "sortino": 1.0315600444095983,
+     "max_drawdown": 0.5176537908765614,
+     "calmar": 0.44645352008336564,
+     "turnover_per_year": 68.57722663578335,
+     "avg_holding_hours": 107.635613400232,
+     "cost_drag_per_year": 0.1369217778846523,
+     "exposure": 0.6117350685886424,
+     "total_return_gross": 7.406453293350861,
+     "sharpe_gross": 1.1021268641781745,
+     "fee_per_year": 0.06857722663578335,
+     "funding_per_year": 0.02847655660479985,
+     "trades_per_year": 166.89293444777033,
+     "break_even_fee": 0.004031494251779219,
+     "sharpe_sd": 0.11208258118136522
+    },
+    "dev": {
+     "total_return": 3.198484944755673,
+     "sharpe": 0.8863392545370892,
+     "sortino": 1.2398550185942072,
+     "max_drawdown": 0.5014242840188476,
+     "calmar": 0.6482838662842809,
+     "turnover_per_year": 74.27951565774332,
+     "avg_holding_hours": 103.72188570901478,
+     "cost_drag_per_year": 0.15182909796198607,
+     "exposure": 0.6489298752916746,
+     "total_return_gross": 8.05715708246534,
+     "sharpe_gross": 1.270848872811109,
+     "fee_per_year": 0.07427951565774332,
+     "funding_per_year": 0.03344083644865395,
+     "trades_per_year": 183.34506950421198,
+     "break_even_fee": 0.004699142118716018,
+     "sharpe_sd": 0.18955154579273314
+    },
+    "full_005": {
+     "total_return": 3.406673903594665,
+     "sharpe": 0.8204686934142394,
+     "sortino": 1.148746579547504,
+     "max_drawdown": 0.5005513659397143,
+     "calmar": 0.5384799520180764,
+     "turnover_per_year": 69.64643559667623,
+     "avg_holding_hours": 107.635613400232,
+     "cost_drag_per_year": 0.10361087227883371,
+     "exposure": 0.6117350685886424,
+     "total_return_gross": 7.298205367815277,
+     "sharpe_gross": 1.0961845763926947,
+     "fee_per_year": 0.03482321779833812,
+     "funding_per_year": 0.02844151664704239,
+     "trades_per_year": 170.6004547164565,
+     "break_even_fee": 0.003939355929057892,
+     "sharpe_sd": 0.10348675759281087
+    }
+   },
+   "m_none": {
+    "full": {
+     "total_return": 3.789740893810594,
+     "sharpe": 0.762641414734898,
+     "sortino": 1.0714013880885604,
+     "max_drawdown": 0.5452194477151288,
+     "calmar": 0.5200629139155368,
+     "turnover_per_year": 93.62820018063162,
+     "avg_holding_hours": 113.42149281816505,
+     "cost_drag_per_year": 0.17562447235808987,
+     "exposure": 0.8877483381880648,
+     "total_return_gross": 13.072640917353356,
+     "sharpe_gross": 1.1703494667220857,
+     "fee_per_year": 0.09362820018063163,
+     "funding_per_year": 0.028455198749082356,
+     "trades_per_year": 234.00995578236856,
+     "break_even_fee": 0.0035397310694699155,
+     "sharpe_sd": 0.223345461514178
+    },
+    "dev": {
+     "total_return": 4.236259877018658,
+     "sharpe": 0.9300807790106859,
+     "sortino": 1.3061875732552002,
+     "max_drawdown": 0.5391322739267242,
+     "calmar": 0.7037696603838688,
+     "turnover_per_year": 98.8487095754682,
+     "avg_holding_hours": 105.80797671495094,
+     "cost_drag_per_year": 0.1902893034047277,
+     "exposure": 0.8992936544265687,
+     "total_return_gross": 12.812333855556794,
+     "sharpe_gross": 1.3559879606100385,
+     "fee_per_year": 0.09884870957546821,
+     "funding_per_year": 0.03331379804398574,
+     "trades_per_year": 249.1980283232924,
+     "break_even_fee": 0.00421561532835845,
+     "sharpe_sd": 0.1420672901667105
+    },
+    "full_005": {
+     "total_return": 5.124129407120247,
+     "sharpe": 0.8536094170068175,
+     "sortino": 1.1994792026393062,
+     "max_drawdown": 0.5299926994984697,
+     "calmar": 0.6283313841932369,
+     "turnover_per_year": 94.62916839907065,
+     "avg_holding_hours": 113.42149281816505,
+     "cost_drag_per_year": 0.1298386058101597,
+     "exposure": 0.8877483381880648,
+     "total_return_gross": 12.561720142749776,
+     "sharpe_gross": 1.1544872475592056,
+     "fee_per_year": 0.047314584199535326,
+     "funding_per_year": 0.028386659892153332,
+     "trades_per_year": 237.008685411453,
+     "break_even_fee": 0.0034372391279762597,
+     "sharpe_sd": 0.22404090046461955
+    }
+   },
+   "m_trend": {
+    "full": {
+     "total_return": 7.091417894612884,
+     "sharpe": 0.9619259727196611,
+     "sortino": 1.3552837251170458,
+     "max_drawdown": 0.6204007967035917,
+     "calmar": 0.6601625397181873,
+     "turnover_per_year": 86.27356758404346,
+     "avg_holding_hours": 142.93487110140774,
+     "cost_drag_per_year": 0.17097083481318165,
+     "exposure": 0.9243019767470809,
+     "total_return_gross": 21.971273451143574,
+     "sharpe_gross": 1.3279157651933282,
+     "fee_per_year": 0.08627356758404346,
+     "funding_per_year": 0.03919934227624943,
+     "trades_per_year": 205.49476312762047,
+     "break_even_fee": 0.004940231192364401,
+     "sharpe_sd": 0.06503188143691008
+    },
+    "dev": {
+     "total_return": 5.774670586037197,
+     "sharpe": 0.9930285997392457,
+     "sortino": 1.3958991046548386,
+     "max_drawdown": 0.6204007967035917,
+     "calmar": 0.715736048925863,
+     "turnover_per_year": 88.75984512384844,
+     "avg_holding_hours": 132.54374869266397,
+     "cost_drag_per_year": 0.18344915402917564,
+     "exposure": 0.9173151425158258,
+     "total_return_gross": 16.19448719550755,
+     "sharpe_gross": 1.3803054964019434,
+     "fee_per_year": 0.08875984512384845,
+     "funding_per_year": 0.045796539537805936,
+     "trades_per_year": 216.5975536603813,
+     "break_even_fee": 0.005034353177095723,
+     "sharpe_sd": 0.19763818911356812
+    },
+    "full_005": {
+     "total_return": 9.089678176811429,
+     "sharpe": 1.0358669209628133,
+     "sortino": 1.4597940915431131,
+     "max_drawdown": 0.6063221042195258,
+     "calmar": 0.7636932471529012,
+     "turnover_per_year": 88.22279038272414,
+     "avg_holding_hours": 142.93487110140774,
+     "cost_drag_per_year": 0.12974084023217547,
+     "exposure": 0.9243019767470809,
+     "total_return_gross": 21.248598490166454,
+     "sharpe_gross": 1.3128008184616327,
+     "fee_per_year": 0.04411139519136207,
+     "funding_per_year": 0.03933656008706906,
+     "trades_per_year": 212.69171423742307,
+     "break_even_fee": 0.004756996900759334,
+     "sharpe_sd": 0.08019547317255808
+    }
+   },
+   "f_rule": {
+    "full": {
+     "total_return": 3.1492460756051006,
+     "sharpe": 0.7587649385520451,
+     "sortino": 1.0609376672834852,
+     "max_drawdown": 0.46045132016820833,
+     "calmar": 0.5576092051441277,
+     "turnover_per_year": 66.93032487839426,
+     "avg_holding_hours": 125.38925444865534,
+     "cost_drag_per_year": 0.13301742326475977,
+     "exposure": 0.6547710184977719,
+     "total_return_gross": 8.384289296129175,
+     "sharpe_gross": 1.0940064306246005,
+     "fee_per_year": 0.06693032487839427,
+     "funding_per_year": 0.02891822380244601,
+     "trades_per_year": 155.77037364171179,
+     "break_even_fee": 0.004362744378672429,
+     "sharpe_sd": 0.17515580476239903
+    },
+    "dev": {
+     "total_return": 3.639891736760377,
+     "sharpe": 0.9018306324709316,
+     "sortino": 1.261273288214907,
+     "max_drawdown": 0.448633379165394,
+     "calmar": 0.770369666030994,
+     "turnover_per_year": 75.05611147692422,
+     "avg_holding_hours": 125.51594434026792,
+     "cost_drag_per_year": 0.1515232418405749,
+     "exposure": 0.7343407503340069,
+     "total_return_gross": 9.097559193134243,
+     "sharpe_gross": 1.2580255572607897,
+     "fee_per_year": 0.0750561114769242,
+     "funding_per_year": 0.03418740454536345,
+     "trades_per_year": 174.73854419320344,
+     "break_even_fee": 0.004943276880651191,
+     "sharpe_sd": 0.13490460045949432
+    },
+    "full_005": {
+     "total_return": 3.942573875948426,
+     "sharpe": 0.8321954285909211,
+     "sortino": 1.163394867011287,
+     "max_drawdown": 0.4425079117227793,
+     "calmar": 0.669074636019109,
+     "turnover_per_year": 66.17966222144867,
+     "avg_holding_hours": 125.38925444865534,
+     "cost_drag_per_year": 0.09922945278261959,
+     "exposure": 0.6547710184977719,
+     "total_return_gross": 8.081190029001398,
+     "sharpe_gross": 1.0810914186369946,
+     "fee_per_year": 0.03308983111072434,
+     "funding_per_year": 0.029093298671399,
+     "trades_per_year": 151.57215216099362,
+     "break_even_fee": 0.004365240918522046,
+     "sharpe_sd": 0.15865512997884912
+    }
+   },
+   "f_none": {
+    "full": {
+     "total_return": 2.2181151837332593,
+     "sharpe": 0.6371547842372252,
+     "sortino": 0.892211462917123,
+     "max_drawdown": 0.6249205715545666,
+     "calmar": 0.3349298026127407,
+     "turnover_per_year": 93.8774464815806,
+     "avg_holding_hours": 138.82865095510684,
+     "cost_drag_per_year": 0.17570566285957093,
+     "exposure": 0.993821109368387,
+     "total_return_gross": 8.424428761165016,
+     "sharpe_gross": 1.01102709109808,
+     "fee_per_year": 0.09387744648158063,
+     "funding_per_year": 0.03183940257099145,
+     "trades_per_year": 222.1786043367083,
+     "break_even_fee": 0.003020162425803013,
+     "sharpe_sd": 0.062260962850409246
+    },
+    "dev": {
+     "total_return": 4.060582542454681,
+     "sharpe": 0.8888869338635974,
+     "sortino": 1.245511963037272,
+     "max_drawdown": 0.6169974040451799,
+     "calmar": 0.6008181300020966,
+     "turnover_per_year": 98.08940282989475,
+     "avg_holding_hours": 128.89271416165607,
+     "cost_drag_per_year": 0.18904524602982095,
+     "exposure": 0.9959044609928286,
+     "total_return_gross": 12.239866787022274,
+     "sharpe_gross": 1.277793326192126,
+     "fee_per_year": 0.09808940282989474,
+     "funding_per_year": 0.03693050837489149,
+     "trades_per_year": 229.4421406775683,
+     "break_even_fee": 0.0042235252878165515,
+     "sharpe_sd": 0.0803857343742704
+    },
+    "full_005": {
+     "total_return": 3.0280271016078717,
+     "sharpe": 0.7104358469045865,
+     "sortino": 0.9946874789153815,
+     "max_drawdown": 0.6142714755258867,
+     "calmar": 0.4108550177341492,
+     "turnover_per_year": 94.36408702798214,
+     "avg_holding_hours": 138.82865095510684,
+     "cost_drag_per_year": 0.12951696044404637,
+     "exposure": 0.993821109368387,
+     "total_return_gross": 7.8811869055407415,
+     "sharpe_gross": 0.9851879512050002,
+     "fee_per_year": 0.04718204351399108,
+     "funding_per_year": 0.03211189510283008,
+     "trades_per_year": 224.03236447105135,
+     "break_even_fee": 0.0028841613163047932,
+     "sharpe_sd": 0.08535778620150777
+    }
+   },
+   "f_trend": {
+    "full": {
+     "total_return": 4.214344486219838,
+     "sharpe": 0.7649621551967679,
+     "sortino": 1.0733343705280995,
+     "max_drawdown": 0.6319568901908086,
+     "calmar": 0.48786343235626606,
+     "turnover_per_year": 90.78323908033416,
+     "avg_holding_hours": 158.94190547748462,
+     "cost_drag_per_year": 0.175626422349867,
+     "exposure": 0.9955762815246346,
+     "total_return_gross": 14.083354723175058,
+     "sharpe_gross": 1.127010219317749,
+     "fee_per_year": 0.09078323908033414,
+     "funding_per_year": 0.03986196641549404,
+     "trades_per_year": 208.16635861535022,
+     "break_even_fee": 0.0038343156154601907,
+     "sharpe_sd": 0.18325781552168044
+    },
+    "dev": {
+     "total_return": 3.1485530175805416,
+     "sharpe": 0.7759106398718357,
+     "sortino": 1.0853299370523868,
+     "max_drawdown": 0.6115969637015505,
+     "calmar": 0.522270415279435,
+     "turnover_per_year": 93.07276513748612,
+     "avg_holding_hours": 150.82983880831026,
+     "cost_drag_per_year": 0.18744171641272703,
+     "exposure": 0.9962338160152137,
+     "total_return_gross": 9.666773107317177,
+     "sharpe_gross": 1.1574589454095112,
+     "fee_per_year": 0.09307276513748612,
+     "funding_per_year": 0.04594360959956283,
+     "trades_per_year": 219.0099887854367,
+     "break_even_fee": 0.003862854953312384,
+     "sharpe_sd": 0.2046939351185472
+    },
+    "full_005": {
+     "total_return": 5.352897689064218,
+     "sharpe": 0.8355124409112199,
+     "sortino": 1.1721626911276022,
+     "max_drawdown": 0.610582371463117,
+     "calmar": 0.5758070259162478,
+     "turnover_per_year": 92.73667561395905,
+     "avg_holding_hours": 158.94190547748462,
+     "cost_drag_per_year": 0.1321882528981804,
+     "exposure": 0.9955762815246346,
+     "total_return_gross": 13.138490378804335,
+     "sharpe_gross": 1.1066863522965695,
+     "fee_per_year": 0.04636833780697953,
+     "funding_per_year": 0.04003936619583019,
+     "trades_per_year": 214.9816532269057,
+     "break_even_fee": 0.0036520906659104923,
+     "sharpe_sd": 0.1631821348627111
+    }
+   }
+  }
+ }
+}

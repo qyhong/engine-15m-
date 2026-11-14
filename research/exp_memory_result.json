@@ -1,0 +1,312 @@
+{
+ "cards": [
+  [
+   "Momentum and stretch",
+   "stretch from the 1h average",
+   55.7,
+   53.2,
+   3.2,
+   "with"
+  ],
+  [
+   "Support and resistance",
+   "place in yesterday's range",
+   55.3,
+   52.9,
+   2.9,
+   "with"
+  ],
+  [
+   "Order flow (CVD)",
+   "4h order flow (CVD)",
+   52.6,
+   52.4,
+   2.4,
+   "with"
+  ],
+  [
+   "Timeframe strength",
+   "15m trend",
+   52.2,
+   52.3,
+   2.2,
+   "with"
+  ],
+  [
+   "Working strategies",
+   "StochRSI core zone",
+   48.1,
+   47.2,
+   1.9,
+   "against"
+  ],
+  [
+   "News and economic events",
+   "US 10-year yield, 5-day change",
+   46.3,
+   49.6,
+   0.4,
+   "against"
+  ],
+  [
+   "Funding and positioning",
+   "funding rate",
+   50.2,
+   50.2,
+   0.2,
+   "with"
+  ],
+  [
+   "Regime",
+   null,
+   null,
+   null,
+   0.0,
+   "no history yet (live only)"
+  ],
+  [
+   "Liquidity (order book)",
+   null,
+   null,
+   null,
+   0.0,
+   "no history yet (live only)"
+  ],
+  [
+   "Kronos forecast",
+   null,
+   null,
+   null,
+   0.0,
+   "no history yet (live only)"
+  ]
+ ],
+ "V0 180 days": {
+  "2020-2023": {
+   "calls": 264250,
+   "trust mix": [
+    49.6,
+    48.5,
+    47.9
+   ],
+   "plain average": [
+    49.5,
+    49.5,
+    48.5
+   ],
+   "all-evidence voice": [
+    49.6,
+    49.7,
+    49.7
+   ],
+   "voices_top20": {
+    "trend": 48.1,
+    "regime": 50.8,
+    "levels": 51.6,
+    "momentum": 49.3,
+    "meanrev": 52.9,
+    "pullback": 50.7,
+    "flow": 49.9,
+    "funding": 49.5,
+    "book": 50.1,
+    "kronos": 50.1,
+    "strategies": 47.2,
+    "news": 50.1,
+    "macro": 49.6,
+    "risk": 47.3,
+    "cross": 49.0,
+    "all": 49.7,
+    "base": 50.1
+   }
+  },
+  "2024 on": {
+   "calls": 189566,
+   "trust mix": [
+    50.0,
+    49.0,
+    52.9
+   ],
+   "plain average": [
+    49.9,
+    47.3,
+    45.6
+   ],
+   "all-evidence voice": [
+    49.8,
+    49.8,
+    49.8
+   ],
+   "voices_top20": {
+    "trend": 49.5,
+    "regime": 48.1,
+    "levels": 52.6,
+    "momentum": 51.2,
+    "meanrev": 50.6,
+    "pullback": 48.7,
+    "flow": 50.0,
+    "funding": 47.9,
+    "book": 46.1,
+    "kronos": 46.1,
+    "strategies": 48.7,
+    "news": 46.1,
+    "macro": 49.8,
+    "risk": 51.1,
+    "cross": 49.9,
+    "all": 49.8,
+    "base": 46.1
+   }
+  }
+ },
+ "V1 all history": {
+  "2020-2023": {
+   "calls": 260404,
+   "trust mix": [
+    50.7,
+    51.3,
+    54.6
+   ],
+   "plain average": [
+    50.0,
+    52.0,
+    55.2
+   ],
+   "all-evidence voice": [
+    51.4,
+    53.2,
+    52.9
+   ],
+   "voices_top20": {
+    "trend": 50.1,
+    "regime": 50.5,
+    "levels": 53.4,
+    "momentum": 51.9,
+    "meanrev": 55.3,
+    "pullback": 52.1,
+    "flow": 51.8,
+    "funding": 49.7,
+    "book": 48.5,
+    "kronos": 48.5,
+    "strategies": 47.5,
+    "news": 48.5,
+    "macro": 48.9,
+    "risk": 47.4,
+    "cross": 48.7,
+    "all": 53.2,
+    "base": 48.5
+   }
+  },
+  "2024 on": {
+   "calls": 189566,
+   "trust mix": [
+    50.8,
+    51.8,
+    54.1
+   ],
+   "plain average": [
+    51.1,
+    52.8,
+    54.9
+   ],
+   "all-evidence voice": [
+    51.5,
+    53.7,
+    55.7
+   ],
+   "voices_top20": {
+    "trend": 52.2,
+    "regime": 49.9,
+    "levels": 52.8,
+    "momentum": 52.3,
+    "meanrev": 52.9,
+    "pullback": 51.4,
+    "flow": 52.5,
+    "funding": 48.8,
+    "book": 46.9,
+    "kronos": 46.9,
+    "strategies": 51.3,
+    "news": 46.9,
+    "macro": 48.9,
+    "risk": 50.7,
+    "cross": 49.8,
+    "all": 53.7,
+    "base": 46.9
+   }
+  }
+ },
+ "V2 all history, ridge x10": {
+  "2020-2023": {
+   "calls": 260404,
+   "trust mix": [
+    50.7,
+    51.6,
+    55.3
+   ],
+   "plain average": [
+    50.0,
+    51.2,
+    55.6
+   ],
+   "all-evidence voice": [
+    51.2,
+    52.9,
+    53.5
+   ],
+   "voices_top20": {
+    "trend": 50.7,
+    "regime": 50.4,
+    "levels": 53.4,
+    "momentum": 52.1,
+    "meanrev": 54.2,
+    "pullback": 52.2,
+    "flow": 51.7,
+    "funding": 49.5,
+    "book": 48.5,
+    "kronos": 48.5,
+    "strategies": 47.2,
+    "news": 48.5,
+    "macro": 48.9,
+    "risk": 47.1,
+    "cross": 49.5,
+    "all": 52.9,
+    "base": 48.5
+   }
+  },
+  "2024 on": {
+   "calls": 189566,
+   "trust mix": [
+    50.7,
+    51.7,
+    54.5
+   ],
+   "plain average": [
+    51.1,
+    52.7,
+    55.1
+   ],
+   "all-evidence voice": [
+    51.4,
+    53.8,
+    56.2
+   ],
+   "voices_top20": {
+    "trend": 52.4,
+    "regime": 50.4,
+    "levels": 52.9,
+    "momentum": 52.3,
+    "meanrev": 52.8,
+    "pullback": 51.3,
+    "flow": 52.5,
+    "funding": 48.7,
+    "book": 46.9,
+    "kronos": 46.9,
+    "strategies": 51.3,
+    "news": 46.9,
+    "macro": 49.4,
+    "risk": 50.7,
+    "cross": 49.8,
+    "all": 53.8,
+    "base": 46.9
+   }
+  }
+ }
+}

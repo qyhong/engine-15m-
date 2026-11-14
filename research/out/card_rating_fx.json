@@ -1,0 +1,757 @@
+[
+ [
+  "Trade setups",
+  "su_rangefade",
+  42.6,
+  37.7,
+  7.4,
+  "against",
+  {
+   "voices": [
+    "setups"
+   ],
+   "worse_half": 57.4,
+   "reading_key": "su_rangefade",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      42.6,
+      37.7,
+      7.4,
+      "against"
+     ],
+     "own_best": [
+      "su_rangefade",
+      42.6,
+      37.7,
+      7.4,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Regime",
+  "regime TREND_DOWN",
+  55.0,
+  53.8,
+  3.8,
+  "with",
+  {
+   "voices": [
+    "regime"
+   ],
+   "worse_half": 53.8,
+   "reading_key": "rg_TREND_DOWN",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      55.0,
+      53.8,
+      3.8,
+      "with"
+     ],
+     "own_best": [
+      "regime TREND_DOWN",
+      55.0,
+      53.8,
+      3.8,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Working strategies",
+  "StochRSI core zone",
+  53.8,
+  53.3,
+  3.3,
+  "with",
+  {
+   "voices": [
+    "strategies"
+   ],
+   "worse_half": 53.3,
+   "reading_key": "st_core",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      53.8,
+      53.3,
+      3.3,
+      "with"
+     ],
+     "own_best": [
+      "StochRSI core zone",
+      53.8,
+      53.3,
+      3.3,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Time and session",
+  "ck_dow_cos",
+  53.9,
+  52.7,
+  2.7,
+  "with",
+  {
+   "voices": [
+    "clock"
+   ],
+   "worse_half": 52.7,
+   "reading_key": "ck_dow_cos",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      53.9,
+      52.7,
+      2.7,
+      "with"
+     ],
+     "own_best": [
+      "ck_dow_cos",
+      53.9,
+      52.7,
+      2.7,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Moving averages (SMA and EMA 5-200)",
+  "ma_cross_1d",
+  46.7,
+  47.5,
+  2.5,
+  "against",
+  {
+   "voices": [
+    "mavg"
+   ],
+   "worse_half": 52.5,
+   "reading_key": "ma_cross_1d",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      46.7,
+      47.5,
+      2.5,
+      "against"
+     ],
+     "own_best": [
+      "ma_cross_1d",
+      46.7,
+      47.5,
+      2.5,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Rates and the dollar",
+  "rt_gap_5d",
+  53.6,
+  52.3,
+  2.3,
+  "with",
+  {
+   "voices": [
+    "rates"
+   ],
+   "worse_half": 52.3,
+   "reading_key": "rt_gap_5d",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      53.6,
+      52.3,
+      2.3,
+      "with"
+     ],
+     "own_best": [
+      "rt_gap_5d",
+      53.6,
+      52.3,
+      2.3,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Trend quality and squeeze",
+  "tq_adx_1h",
+  48.0,
+  44.9,
+  2.0,
+  "against",
+  {
+   "voices": [
+    "trendq"
+   ],
+   "worse_half": 52.0,
+   "reading_key": "tq_adx_1h",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      48.0,
+      44.9,
+      2.0,
+      "against"
+     ],
+     "own_best": [
+      "tq_adx_1h",
+      48.0,
+      44.9,
+      2.0,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Momentum and stretch",
+  "1h StochRSI",
+  52.6,
+  52.0,
+  2.0,
+  "with",
+  {
+   "voices": [
+    "momentum",
+    "meanrev",
+    "pullback"
+   ],
+   "worse_half": 52.0,
+   "reading_key": "k_1h",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      52.6,
+      52.0,
+      2.0,
+      "with"
+     ],
+     "own_best": [
+      "1h StochRSI",
+      52.6,
+      52.0,
+      2.0,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Support and resistance",
+  "resistance is close",
+  51.8,
+  52.5,
+  1.8,
+  "with",
+  {
+   "voices": [
+    "levels"
+   ],
+   "worse_half": 51.8,
+   "reading_key": "sr_res_near",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      51.8,
+      52.5,
+      1.8,
+      "with"
+     ],
+     "own_best": [
+      "resistance is close",
+      51.8,
+      52.5,
+      1.8,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Timeframe strength",
+  "weekly trend",
+  51.7,
+  55.7,
+  1.7,
+  "with",
+  {
+   "voices": [
+    "trend"
+   ],
+   "worse_half": 51.7,
+   "reading_key": "tr_1w",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      51.7,
+      55.7,
+      1.7,
+      "with"
+     ],
+     "own_best": [
+      "weekly trend",
+      51.7,
+      55.7,
+      1.7,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Futures positioning (CFTC)",
+  "cot_pctile",
+  53.9,
+  51.7,
+  1.7,
+  "with",
+  {
+   "voices": [
+    "cot"
+   ],
+   "worse_half": 51.7,
+   "reading_key": "cot_pctile",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      53.9,
+      51.7,
+      1.7,
+      "with"
+     ],
+     "own_best": [
+      "cot_pctile",
+      53.9,
+      51.7,
+      1.7,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Intraday levels (VWAP and opening range)",
+  "id_band",
+  53.2,
+  51.7,
+  1.7,
+  "with",
+  {
+   "voices": [
+    "intraday"
+   ],
+   "worse_half": 51.7,
+   "reading_key": "id_band",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      53.2,
+      51.7,
+      1.7,
+      "with"
+     ],
+     "own_best": [
+      "id_band",
+      53.2,
+      51.7,
+      1.7,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Japan watch",
+  "jp_boj_next",
+  53.0,
+  51.7,
+  1.7,
+  "with",
+  {
+   "voices": [
+    "japan"
+   ],
+   "worse_half": 51.7,
+   "reading_key": "jp_boj_next",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      53.0,
+      51.7,
+      1.7,
+      "with"
+     ],
+     "own_best": [
+      "jp_boj_next",
+      53.0,
+      51.7,
+      1.7,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Candle size and realistic targets",
+  "cs_reach_rel",
+  48.6,
+  48.6,
+  1.4,
+  "against",
+  {
+   "voices": [
+    "candles"
+   ],
+   "worse_half": 51.4,
+   "reading_key": "cs_reach_rel",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      48.6,
+      48.6,
+      1.4,
+      "against"
+     ],
+     "own_best": [
+      "cs_reach_rel",
+      48.6,
+      48.6,
+      1.4,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Volatility gauges",
+  "vx_front",
+  47.6,
+  49.0,
+  1.0,
+  "against",
+  {
+   "voices": [
+    "volx"
+   ],
+   "worse_half": 51.0,
+   "reading_key": "vx_front",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      47.6,
+      49.0,
+      1.0,
+      "against"
+     ],
+     "own_best": [
+      "vx_front",
+      47.6,
+      49.0,
+      1.0,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Market structure",
+  "ms_pos_1h",
+  53.8,
+  50.9,
+  0.9,
+  "with",
+  {
+   "voices": [
+    "structure"
+   ],
+   "worse_half": 50.9,
+   "reading_key": "ms_pos_1h",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      53.8,
+      50.9,
+      0.9,
+      "with"
+     ],
+     "own_best": [
+      "ms_pos_1h",
+      53.8,
+      50.9,
+      0.9,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "News and economic events",
+  "a US release just printed",
+  50.9,
+  51.4,
+  0.9,
+  "with",
+  {
+   "voices": [
+    "news",
+    "macro"
+   ],
+   "worse_half": 50.9,
+   "reading_key": "ec_prev",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      50.9,
+      51.4,
+      0.9,
+      "with"
+     ],
+     "own_best": [
+      "a US release just printed",
+      50.9,
+      51.4,
+      0.9,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Kaufman adaptive average (KAMA)",
+  "kama_slope_4h",
+  47.8,
+  49.2,
+  0.8,
+  "against",
+  {
+   "voices": [
+    "kama"
+   ],
+   "worse_half": 50.8,
+   "reading_key": "kama_slope_4h",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      47.8,
+      49.2,
+      0.8,
+      "against"
+     ],
+     "own_best": [
+      "kama_slope_4h",
+      47.8,
+      49.2,
+      0.8,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Fibonacci retracement",
+  "fib_depth_1h",
+  48.2,
+  49.4,
+  0.6,
+  "against",
+  {
+   "voices": [
+    "fib"
+   ],
+   "worse_half": 50.6,
+   "reading_key": "fib_depth_1h",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      48.2,
+      49.4,
+      0.6,
+      "against"
+     ],
+     "own_best": [
+      "fib_depth_1h",
+      48.2,
+      49.4,
+      0.6,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Hull moving average",
+  "hull_pos_1h",
+  51.5,
+  50.6,
+  0.6,
+  "with",
+  {
+   "voices": [
+    "hull"
+   ],
+   "worse_half": 50.6,
+   "reading_key": "hull_pos_1h",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      51.5,
+      50.6,
+      0.6,
+      "with"
+     ],
+     "own_best": [
+      "hull_pos_1h",
+      51.5,
+      50.6,
+      0.6,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Ichimoku cloud",
+  "ich_cloud_4h",
+  50.5,
+  52.7,
+  0.5,
+  "with",
+  {
+   "voices": [
+    "ichimoku"
+   ],
+   "worse_half": 50.5,
+   "reading_key": "ich_cloud_4h",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      50.5,
+      52.7,
+      0.5,
+      "with"
+     ],
+     "own_best": [
+      "ich_cloud_4h",
+      50.5,
+      52.7,
+      0.5,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Moving averages as support and resistance",
+  "mas_test_1h",
+  49.4,
+  49.5,
+  0.5,
+  "against",
+  {
+   "voices": [
+    "mavg_sr"
+   ],
+   "worse_half": 50.5,
+   "reading_key": "mas_test_1h",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      49.4,
+      49.5,
+      0.5,
+      "against"
+     ],
+     "own_best": [
+      "mas_test_1h",
+      49.4,
+      49.5,
+      0.5,
+      "against"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Moving-average ribbon",
+  "rb_order_15m",
+  51.3,
+  50.3,
+  0.3,
+  "with",
+  {
+   "voices": [
+    "ribbon"
+   ],
+   "worse_half": 50.3,
+   "reading_key": "rb_order_15m",
+   "per_asset": {
+    "USDJPY": {
+     "same_reading": [
+      51.3,
+      50.3,
+      0.3,
+      "with"
+     ],
+     "own_best": [
+      "rb_order_15m",
+      51.3,
+      50.3,
+      0.3,
+      "with"
+     ]
+    }
+   }
+  }
+ ],
+ [
+  "Kronos forecast",
+  null,
+  null,
+  null,
+  0.0,
+  "no history yet",
+  {
+   "voices": [
+    "kronos"
+   ],
+   "worse_half": null,
+   "reading_key": null,
+   "per_asset": {}
+  }
+ ]
+]

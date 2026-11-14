@@ -1,0 +1,16 @@
+{
+ "asset": "BTCUSDT",
+ "span": [
+  "2026-10-28 00:00:00+00:00",
+  "2026-11-10 23:45:00+00:00"
+ ],
+ "bars": 1344,
+ "updates": 2,
+ "decisions_equal_to_batch": 1344,
+ "executed_max_abs_diff_vs_batch": 0.0,
+ "changes": 0,
+ "seconds": 38.4,
+ "bootstrap_fallback": true,
+ "state_dir": "C:\\Ai Dataset\\engine-15m\\research/out/rl\\paper_dryrun\\BTCUSDT",
+ "text": "Dry run BTCUSDT, 2026-10-28 00:00:00+00:00 to 2026-11-10 23:45:00+00:00 (1344 bars as if live, data cut at each bar, 2 scheduled update(s), 38 s): 1344 of 1344 decisions equal the batch walk-forward simulation from the same start model; executed targets after the risk manager differ by at most 0.0e+00. 0 target change(s). Log: C:\\Ai Dataset\\engine-15m\\research/out/rl\\paper_dryrun\\BTCUSDT/decisions.jsonl. Nothing is wired into the live engine or the page."
+}

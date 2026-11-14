@@ -1,0 +1,95 @@
+{
+ "label": "DIAGNOSTIC ONLY - uses Phase 2 test windows that were already seen; not a result",
+ "thresholds": {
+  "prob_min": 0.6,
+  "vol_gate_mult": 4.0,
+  "vol_gate_hold_bars": 16
+ },
+ "rows": {
+  "unfiltered": {
+   "return": -0.9969443122916675,
+   "sharpe": -1.7283425866145634,
+   "max_drawdown": 0.9977239995799494,
+   "trades_per_year": 515.3358184553006,
+   "avg_holding_hours": 17.754309423566667,
+   "turnover_per_year": 639.4957773028863,
+   "break_even_fee": -0.0004969859070115242,
+   "return_005": -0.9785918103159421,
+   "sharpe_005": -1.0725897900346866,
+   "series": 5
+  },
+  "confidence": {
+   "return": -0.6328381332044108,
+   "sharpe": -0.18645330905683816,
+   "max_drawdown": 0.870233118724874,
+   "trades_per_year": 110.98031521810215,
+   "avg_holding_hours": 94.93135760775891,
+   "turnover_per_year": 140.67141350703162,
+   "break_even_fee": -0.0004726585672514152,
+   "return_005": -0.4585549474688523,
+   "sharpe_005": -0.0404687037427294,
+   "series": 5
+  },
+  "htf": {
+   "return": -0.8703252706746387,
+   "sharpe": -1.0060646794187793,
+   "max_drawdown": 0.929272921771483,
+   "trades_per_year": 279.1511346543719,
+   "avg_holding_hours": 14.986552872190078,
+   "turnover_per_year": 279.15198910030887,
+   "break_even_fee": -0.00025765616723093064,
+   "return_005": -0.6959671049737525,
+   "sharpe_005": -0.5460289133477203,
+   "series": 5
+  },
+  "vol_gate": {
+   "return": -0.9513436454550602,
+   "sharpe": -0.8009780749491029,
+   "max_drawdown": 0.9704756375212081,
+   "trades_per_year": 247.95631417173504,
+   "avg_holding_hours": 37.83488716317457,
+   "turnover_per_year": 312.8320346401142,
+   "break_even_fee": -0.0006378873736797655,
+   "return_005": -0.8724562829217332,
+   "sharpe_005": -0.48117547005261335,
+   "series": 5
+  },
+  "meta_label": {
+   "return": -0.8967876748163821,
+   "sharpe": -0.9461792784634862,
+   "max_drawdown": 0.9465469194035083,
+   "trades_per_year": 348.7672487083906,
+   "avg_holding_hours": 17.24153461997296,
+   "turnover_per_year": 349.1934041937681,
+   "break_even_fee": -0.00012730178049574688,
+   "return_005": -0.7002205854262447,
+   "sharpe_005": -0.4475179159636065,
+   "series": 5
+  },
+  "core_sat": {
+   "return": -0.7822749835875631,
+   "sharpe": -0.05658642564102575,
+   "max_drawdown": 0.9544914670570582,
+   "trades_per_year": 515.4993133215618,
+   "avg_holding_hours": 53579.25,
+   "turnover_per_year": 319.91138401814123,
+   "break_even_fee": 0.00021441009416115392,
+   "return_005": -0.4222023595820407,
+   "sharpe_005": 0.18761892621722395,
+   "series": 5
+  },
+  "consensus": {
+   "return": 1.640128998365367,
+   "sharpe": 0.5648307313866507,
+   "max_drawdown": 0.8559991194370145,
+   "trades_per_year": 13.079589300895952,
+   "avg_holding_hours": 693.877358490566,
+   "turnover_per_year": 17.167013503298836,
+   "break_even_fee": 0.010156881892545853,
+   "return_005": 1.7828020410695768,
+   "sharpe_005": 0.5812694367931205,
+   "series": 1
+  }
+ },
+ "note": "Unfiltered = the Phase 2 PPO's own targets without Phase 2's risk manager. Thresholds fixed in phase3.yaml (diag2), not tuned here."
+}

@@ -1,0 +1,485 @@
+{
+ "written_utc": "2026-11-11 08:59 UTC",
+ "days": 120,
+ "history_days": 700,
+ "groups": {
+  "index": {
+   "window": [
+    "2026-07-14 13:30",
+    "2026-11-10 20:45"
+   ],
+   "split": "2026-09-11 16:45",
+   "assets": {
+    "SPX": {
+     "buy_hold": {
+      "return_pct": -0.22,
+      "max_dd_pct": -6.19
+     },
+     "books": {
+      "main": {
+       "all": {
+        "return_pct": 4.08,
+        "max_dd_pct": -4.72,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "first_half": {
+        "return_pct": 0.0,
+        "max_dd_pct": 0.0,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "second_half": {
+        "return_pct": 4.08,
+        "max_dd_pct": -4.72,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "open_at_end": "SHORT"
+      },
+      "v4": {
+       "all": {
+        "return_pct": 4.08,
+        "max_dd_pct": -4.72,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "first_half": {
+        "return_pct": 0.0,
+        "max_dd_pct": 0.0,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "second_half": {
+        "return_pct": 4.08,
+        "max_dd_pct": -4.72,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "open_at_end": "SHORT"
+      },
+      "h3_flip_limit": {
+       "all": {
+        "return_pct": 4.08,
+        "max_dd_pct": -4.72,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "first_half": {
+        "return_pct": 0.0,
+        "max_dd_pct": 0.0,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "second_half": {
+        "return_pct": 4.08,
+        "max_dd_pct": -4.72,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "open_at_end": "SHORT"
+      },
+      "b_targets": {
+       "all": {
+        "return_pct": 4.84,
+        "max_dd_pct": -2.73,
+        "trades": 3,
+        "win_rate_pct": 66.7,
+        "avg_r": 0.739,
+        "profit_factor": 2.88,
+        "fees_usd": 17.18,
+        "pnl_usd": 427.67
+       },
+       "first_half": {
+        "return_pct": 0.0,
+        "max_dd_pct": 0.0,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "second_half": {
+        "return_pct": 4.84,
+        "max_dd_pct": -2.73,
+        "trades": 3,
+        "win_rate_pct": 66.7,
+        "avg_r": 0.739,
+        "profit_factor": 2.88,
+        "fees_usd": 17.18,
+        "pnl_usd": 427.67
+       },
+       "open_at_end": "SHORT"
+      },
+      "b_trail": {
+       "all": {
+        "return_pct": 6.14,
+        "max_dd_pct": -3.25,
+        "trades": 4,
+        "win_rate_pct": 75.0,
+        "avg_r": 0.938,
+        "profit_factor": 4.51,
+        "fees_usd": 25.95,
+        "pnl_usd": 758.39
+       },
+       "first_half": {
+        "return_pct": 0.0,
+        "max_dd_pct": 0.0,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "second_half": {
+        "return_pct": 6.14,
+        "max_dd_pct": -3.25,
+        "trades": 4,
+        "win_rate_pct": 75.0,
+        "avg_r": 0.938,
+        "profit_factor": 4.51,
+        "fees_usd": 25.95,
+        "pnl_usd": 758.39
+       },
+       "open_at_end": "SHORT"
+      },
+      "a_pullback": {
+       "all": {
+        "return_pct": 4.08,
+        "max_dd_pct": -4.72,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "first_half": {
+        "return_pct": 0.0,
+        "max_dd_pct": 0.0,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "second_half": {
+        "return_pct": 4.08,
+        "max_dd_pct": -4.72,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "open_at_end": "SHORT"
+      },
+      "y_4h": {
+       "all": {
+        "return_pct": -6.7,
+        "max_dd_pct": -7.64,
+        "trades": 2,
+        "win_rate_pct": 0.0,
+        "avg_r": -1.374,
+        "profit_factor": 0.0,
+        "fees_usd": 15.59,
+        "pnl_usd": -542.69
+       },
+       "first_half": {
+        "return_pct": 0.0,
+        "max_dd_pct": 0.0,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "second_half": {
+        "return_pct": -6.7,
+        "max_dd_pct": -7.64,
+        "trades": 2,
+        "win_rate_pct": 0.0,
+        "avg_r": -1.374,
+        "profit_factor": 0.0,
+        "fees_usd": 15.59,
+        "pnl_usd": -542.69
+       },
+       "open_at_end": "SHORT"
+      },
+      "y_1d": {
+       "all": {
+        "return_pct": -2.07,
+        "max_dd_pct": -4.15,
+        "trades": 1,
+        "win_rate_pct": 0.0,
+        "avg_r": -1.033,
+        "profit_factor": 0.0,
+        "fees_usd": 6.51,
+        "pnl_usd": -206.51
+       },
+       "first_half": {
+        "return_pct": 0.0,
+        "max_dd_pct": 0.0,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "second_half": {
+        "return_pct": -2.07,
+        "max_dd_pct": -4.15,
+        "trades": 1,
+        "win_rate_pct": 0.0,
+        "avg_r": -1.033,
+        "profit_factor": 0.0,
+        "fees_usd": 6.51,
+        "pnl_usd": -206.51
+       },
+       "open_at_end": "FLAT"
+      },
+      "h5_damp": {
+       "all": {
+        "return_pct": 4.08,
+        "max_dd_pct": -4.72,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "first_half": {
+        "return_pct": 0.0,
+        "max_dd_pct": 0.0,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "second_half": {
+        "return_pct": 4.08,
+        "max_dd_pct": -4.72,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "open_at_end": "SHORT"
+      },
+      "m_swing_1h": {
+       "all": {
+        "return_pct": 0.0,
+        "max_dd_pct": 0.0,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "first_half": {
+        "return_pct": 0.0,
+        "max_dd_pct": 0.0,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "second_half": {
+        "return_pct": 0.0,
+        "max_dd_pct": 0.0,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "open_at_end": "FLAT"
+      },
+      "m_swing_4h": {
+       "all": {
+        "return_pct": 0.0,
+        "max_dd_pct": 0.0,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "first_half": {
+        "return_pct": 0.0,
+        "max_dd_pct": 0.0,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "second_half": {
+        "return_pct": 0.0,
+        "max_dd_pct": 0.0,
+        "trades": 0,
+        "win_rate_pct": null,
+        "avg_r": null,
+        "profit_factor": null,
+        "fees_usd": 0.0,
+        "pnl_usd": 0.0
+       },
+       "open_at_end": "FLAT"
+      }
+     }
+    }
+   }
+  }
+ },
+ "totals": {
+  "main": {
+   "assets": 1,
+   "pnl_usd": 407.77,
+   "return_pct": 4.08,
+   "max_dd_pct": -4.72,
+   "first_half_pct": 0.0,
+   "second_half_pct": 4.08
+  },
+  "v4": {
+   "assets": 1,
+   "pnl_usd": 407.77,
+   "return_pct": 4.08,
+   "max_dd_pct": -4.72,
+   "first_half_pct": 0.0,
+   "second_half_pct": 4.08
+  },
+  "h3_flip_limit": {
+   "assets": 1,
+   "pnl_usd": 407.77,
+   "return_pct": 4.08,
+   "max_dd_pct": -4.72,
+   "first_half_pct": 0.0,
+   "second_half_pct": 4.08
+  },
+  "b_targets": {
+   "assets": 1,
+   "pnl_usd": 483.76,
+   "return_pct": 4.84,
+   "max_dd_pct": -2.73,
+   "first_half_pct": 0.0,
+   "second_half_pct": 4.84
+  },
+  "b_trail": {
+   "assets": 1,
+   "pnl_usd": 613.84,
+   "return_pct": 6.14,
+   "max_dd_pct": -3.25,
+   "first_half_pct": 0.0,
+   "second_half_pct": 6.14
+  },
+  "a_pullback": {
+   "assets": 1,
+   "pnl_usd": 408.5,
+   "return_pct": 4.08,
+   "max_dd_pct": -4.72,
+   "first_half_pct": 0.0,
+   "second_half_pct": 4.08
+  },
+  "y_4h": {
+   "assets": 1,
+   "pnl_usd": -669.76,
+   "return_pct": -6.7,
+   "max_dd_pct": -7.64,
+   "first_half_pct": 0.0,
+   "second_half_pct": -6.7
+  },
+  "y_1d": {
+   "assets": 1,
+   "pnl_usd": -206.51,
+   "return_pct": -2.07,
+   "max_dd_pct": -4.15,
+   "first_half_pct": 0.0,
+   "second_half_pct": -2.07
+  },
+  "h5_damp": {
+   "assets": 1,
+   "pnl_usd": 407.77,
+   "return_pct": 4.08,
+   "max_dd_pct": -4.72,
+   "first_half_pct": 0.0,
+   "second_half_pct": 4.08
+  },
+  "m_swing_1h": {
+   "assets": 1,
+   "pnl_usd": 0.0,
+   "return_pct": 0.0,
+   "max_dd_pct": 0.0,
+   "first_half_pct": 0.0,
+   "second_half_pct": 0.0
+  },
+  "m_swing_4h": {
+   "assets": 1,
+   "pnl_usd": 0.0,
+   "return_pct": 0.0,
+   "max_dd_pct": 0.0,
+   "first_half_pct": 0.0,
+   "second_half_pct": 0.0
+  },
+  "buy_hold": {
+   "assets": 1,
+   "pnl_usd": -21.51,
+   "return_pct": -0.22,
+   "max_dd_pct": -6.19,
+   "first_half_pct": 1.74,
+   "second_half_pct": -1.92
+  }
+ }
+}
