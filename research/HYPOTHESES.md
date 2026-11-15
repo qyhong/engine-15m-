@@ -1344,3 +1344,96 @@ next-day drawdown tests of the 7-day put/call ratio (ETH +0.151, BTC +0.129): si
 H39, not direction. Risk-off tail calls hit 36-48% (r7 < 0) against base rates of 46-48%, below momentum's own 49-51%.
 The skew level correlates -0.48 with the 30-day momentum sign. Holdout not touched. Prior confirmed: options flow from
 free Deribit trade history does not give the independent risk-off IC of ~0.12-0.17 that S4 needs.
+
+---
+
+## H41. Liquidity hunt v2: the P1 sweep fade with a trend filter, wider stops, confirmation entries and no round-number pools (registered 15 Nov 2026, 05:45 UTC, before any H41 code existed or any H41 number was computed)
+
+**Prompted by:** the owner, 15 Nov 2026: "dissect do post morterm and improve rather test the same setup". The
+post-mortem (`research/out/p1_postmortem.md`, 65 live P1 trades, 11-15 Nov 2026, small sample, one falling regime):
+long fades lost badly (19% won) because the rule fades sweeps against the trend; the stop at the extreme + 0.1 ATR is
+re-swept (20 of 53 stops within 2 bars; 22 of 53 stopped trades later reached 1R); costs 0.26R median (0.5R on BTC)
+on 0.2-0.4% stops; round-number pools were the worst; mean -0.38R even before costs.
+
+**Common to every variant (fixed now).** The P1 sweep detection exactly as registered for H6 (`playbook.p1_signals`,
+k = 0.25 ATR, reclaim on the sweep bar or within m = 2 bars, swept-side wick >= 50% of the sweep candle, funding
+confirmation on BTC/ETH), the same frame (closed bars, decision at a close, fill at the next open, a stop and a
+target in one bar = stop first, a gap through the stop fills at the open, a fill that gaps beyond the stop is not
+taken, one trade per asset at a time), $10,000 a trade at the asset's own fee a side (`playbook.fee_side`: crypto
+0.10%, gold 0.02%, silver 0.03%, USDJPY 0.01%, S&P 0.02%). Hold limit 24 bars (6 hours) for every v2 variant, then
+out at the next open. Levers:
+- **T (trend filter):** fade a sweep of a HIGH (short) only when the v5 higher-timeframe bias (`playbook.htf_bias`)
+  at the decision bar is down or neutral; a sweep of a LOW (long) only when it is up or neutral.
+- **R (no round numbers):** the round-number pool is removed from the pool list (24h, 7-day, prior-day and confirmed
+  15m swing pools stay).
+- **Stop pad:** the stop sits at the sweep's extreme + pad x ATR(14, 15m) at the decision bar, pad 0.1 / 0.5 / 1.0.
+- **Entry:** "open" = the next open after the reclaim (as P1); "confirm" = the bar after the reclaim must also CLOSE
+  on the reclaimed side of the pool (below it after a sweep of a high), decision at that close, fill at the next
+  open, the extreme (and so the stop) taken over the sweep bar through the confirmation bar; "retest" = a limit
+  order at the reclaimed pool level, live for the 4 bars after the reclaim, filled only if a bar trades THROUGH the
+  level (strictly beyond it; at the open if the bar opens beyond the level but not beyond the stop; a bar that opens
+  beyond the stop cancels it); on the fill bar only the stop is checked (stop first), targets from the next bar.
+- **Exit:** "E1" = half at 1R, the rest at 2R, the stop to entry from the bar after 1R fills (P1's "fixed");
+  "E2" = everything at 1.5R.
+
+**The variants (8, all counted):**
+
+| id | T | R | pad | entry | exit |
+|---|---|---|---|---|---|
+| V1 | yes | yes | 0.1 | open | E1 |
+| V2 | yes | yes | 0.5 | open | E1 |
+| V3 | yes | yes | 1.0 | open | E1 |
+| V4 | yes | yes | 0.5 | confirm | E1 |
+| V5 | yes | yes | 0.5 | retest (4 bars) | E1 |
+| V6 | yes | yes | 0.5 | open | E2 |
+| V7 | yes | yes | 0.5 | confirm | E2 |
+| V8 | no | yes | 0.5 | open | E1 (measures lever T against V2) |
+
+The original P1 (H6 registered rule: round numbers in, pad 0.1, no trend filter, next open, E1, hold 16) is re-run
+through the same code as the control; it is not a new variant.
+
+**Data:** the six P1 markets (BTCUSDT, ETHUSDT, XAUUSD, XAGUSD, USDJPY, SPX), bars before the sealed holdout
+2025-11-11 00:00 UTC only (later bars and funding rows are dropped right after loading; the holdout is not looked at).
+Trades count from 2020-01-01 by entry time. First half: entries before 2023-06-07 (the H6 split). Second half:
+2023-06-07 to the seal.
+
+**Selection (first half only):** the variant with the highest score = the mean over the markets (each with at least
+20 first-half trades) of the first-half expectancy after costs (% of stake per trade), among variants with at least
+100 first-half trades in all (H6's rule). Ties: fewer levers. Nothing from the second half is used to choose.
+
+**Confirmation (second half, the chosen variant only, untouched).** **Pass bar, fixed now:** all of
+(1) pooled six-market second-half net result after costs > 0 (sum of net $; at least 100 second-half trades in all);
+(2) net $ after costs > 0 in at least 4 of the 6 markets in the second half;
+(3) pooled second-half expectancy after costs per trade (% of stake) higher than the original P1's re-run through the
+same code on the same bars.
+Pass -> a forward paper book (`engine15/playbook8.py`, book `p13_lh2`) is written for the owner to approve; no pass ->
+reported as such, nothing goes forward. A pass is not proof of an edge: it is a history check before forward grading.
+
+**Variants tried overall:** H6/H7's 29 + these 8 = 37. The other 7 variants' second halves are reported for
+reference only and do not change the choice.
+
+**Prior, stated now:** the H6 base was about zero before costs on 2020-2026 history in both halves; the levers cut
+cost share (wider stops) and trade against weak sides (trend), but nothing is expected to clear the bar with ease.
+
+### H41 results (15 Nov 2026, ~06:00 UTC; development data to 2025-11-11; `research/out/liqhunt2/study.md`)
+
+**NO PASS.** Code: `engine15/liqhunt2.py` (reuses `playbook.prepare`, `p1_signals`, `htf_bias`, `_money` unchanged),
+`research/liqhunt2_study.py`. The original P1 re-run through the new simulator equals `playbook.simulate` trade for trade
+on every market; every variant passes a truncation (no look-ahead) test (0 mismatches in 72,021 closed trades checked).
+Variants tried overall: 37 (H6/H7 29 + H41 8). Holdout not touched.
+
+Chosen on the first half (registered score, mean over markets of expectancy after costs): **V8** (no trend filter, no
+round numbers, stop 0.5 ATR, next open, half 1R / rest 2R, hold 24), score -0.095% a trade (the eight scores ran from
+-0.115% to -0.095%; the original P1 scored -0.092%, so by the registered metric no v2 variant beat it even in the first
+half). First half pooled: 13,531 trades, 47.8% won, -0.02R before / -0.22R after costs, net -$93,299. **Second half
+pooled: 9,815 trades, 46.9% won, -0.02R before / -0.25R after costs, -0.066% a trade, net -$65,164, PF 0.67**; negative
+on all six markets (BTC -0.136%, ETH -0.217%, gold -0.049%, silver -0.058%, USDJPY -0.019%, S&P -0.060% a trade). Original
+P1 second half: 14,401 trades, -0.37R after costs, -0.076% a trade, net -$109,797. Bar: pooled positive NO; >= 4 of 6
+markets positive NO (0); better per trade than P1 YES.
+
+Why: every variant averages -0.03R to +0.01R BEFORE costs in both halves. The levers moved the cost share (wider stops
+cut the median cost from ~0.25R to 0.13-0.19R) but no lever created a gross edge. The trend filter made no difference
+on history (V2 vs V8 about equal; long and short fades lose alike on 2020-2025), so the live four-day long/short gap
+looks like one regime. Confirmation entries (V4, V7) cut trades ~65% and raised the cost share to ~0.3R; the limit
+retest (V5) was in between. No `engine15/playbook8.py` was written; nothing goes forward from H41. The original P1 keeps
+running under its own H6 verdict rule.
