@@ -33,7 +33,8 @@ pipeline, a batch of up to five at a time. Nothing in it changes a trade until a
 |---|---|---|
 | 0 | Binance positioning, Bitfinex margin, CME positioning, on-chain activity (`sources/flows.py`) | live 13 Nov 2026 (v5.1.1), reading-only |
 | 1 | Supertrend 15m-daily, StochRSI 15m-daily (`sources/osc.py`) | built and tested 15 Nov 2026; goes live as v5.1.2 after H42 finishes |
-| 2 | next five from the queue | waiting for the owner's go |
+| 2 | Parabolic SAR, Money Flow Index, Volume profile, Heikin-Ashi trend, Aroon/Vortex (`sources/osc2.py`) | owner "Ok" 15 Nov 2026; built and tested; goes live with batch 1 as v5.1.2 after H42 |
+| 3 | next five from the queue | waiting for the owner's go |
 
 ## Queue (proposed by Claude, 15 Nov 2026; the owner edits freely)
 

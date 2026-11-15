@@ -1444,3 +1444,75 @@ Owner: "Retire it", after the post-mortem of its first 65 live trades (`research
 -$1,421, -0.38R a trade before costs; no code bug) and H41 (8 improved versions, none with an edge before costs on
 2020-2025). `engine15/playbook.py` RETIRED: no trade entered from 2026-11-15 06:15 UTC counts; the live record before
 it is kept as is. The verdict rule (200 trades or 30 days) was not reached; retired early on the owner's word.
+
+## H42. A more balanced trust blend for the voices (registered 15 Nov 2026, 09:30 UTC, before any H42 code existed or any H42 number was computed)
+
+**Prompted by:** the owner, 15 Nov 2026: "yes" to testing a more balanced trust blend. Live, the crypto group's trust
+(`model.trust_path`: Hedge weights `exp(-trust_eta x (S - S.min()))` on a decayed sum S of graded directional log-losses,
+half-life 960 sessions, floored at `trust_floor`, renormalised, then restricted to the group's voting cards) gives one
+voice ("levels", support and resistance) about 79% of the say, and the other 12 voters sit at about 1.8% each.
+Question: does a blend where 3-5 voices share the say predict and trade better?
+
+**A mechanical fact, stated before any number:** the floor is applied across ALL 59 voices before the voting cards are
+picked out (`backtest.prepare`, `leanprep.prepare_live`). With 59 x 0.02 = 1.18 > 1, the floor already binds for most
+voices, and once a leader saturates its raw weight a floor f leaves it about 1 / (1 + 12 f) of a 13-card vote
+(f 0.02: ~0.8; 0.05: ~0.63; 0.08: ~0.51). The floor variants therefore mostly shift say from the leader to ALL voters
+equally; the eta variants change how fast the leader saturates. The engine's mechanics are kept exactly; only the two
+constants change (a cfg copy; `engine15/config.py` is not edited).
+
+**The frozen grid: 6 variants (1 baseline + 5 challengers), all counted; half-life unchanged at 960 sessions.**
+
+| # | Name | trust_eta | trust_floor |
+|---|---|---|---|
+| 0 | `base` (live v5.1.1) | 0.2 | 0.02 |
+| 1 | `f05` | 0.2 | 0.05 |
+| 2 | `f08` | 0.2 | 0.08 |
+| 3 | `e10` | 0.1 | 0.02 |
+| 4 | `e05` | 0.05 | 0.02 |
+| 5 | `e10f05` | 0.1 | 0.05 |
+
+**Data and method** (`research/trust_study.py`; report `research/out/trust/study.md` + `.json`). Development data only:
+every row before 2025-11-11 00:00 UTC; bars, readings and the feature matrix are truncated there BEFORE the grades are
+computed, so no later row is touched. Readings and X from the evidence store `data/evcache/<group>` (read-only); the voices
+walked forward weekly from the engine's birth (2020-01-01) by `leanprep.walk_forward_cached` (the replay's code), its
+refits kept in `research/out/trust/fits/` (never the live fits directory). Per-voice odds and grades are computed once
+per group; each variant then re-runs only the trust path, the voting restriction, the silent-voice mask and the mix (as
+`leanprep.prepare_live`), and the main book (`backtest.run_book` with the asset's fee, leverage cap and fill delay, as
+live; the live-only total-risk cap across books is not applied). Group voting cards and the index's 26-session grading
+horizon as live. Halves split at the calendar midpoint of 2020-01-01 .. 2025-11-11: **2022-12-06 00:00 UTC** (first
+half = selection, second half = confirmation). Each half's books start flat at $10,000 per market (trust carries on
+continuously).
+
+**Metrics, per variant x group x half:** (a) the mixed odds' 3-class log-loss on every graded session (assets pooled
+in the group) and the direction hit rate (on calls graded up or down: all, and where |edge| >= 5 pts); (b) the
+effective number of voices 1 / sum(w^2) of the voting trust over time (mean, median, 10th / 90th percentile), the
+leader's mean share, the share of time one voice holds > 50%, and which voice leads; (c) the main book per market and
+pooled per group and over all 8 markets: net return, Sharpe (daily marked equity, sqrt(365)), max drawdown, trades.
+
+**Selection (first half only):** among the 5 challengers, the one with log-loss below `base` in the most groups;
+ties broken by the lower mean over the 5 groups of (variant - base) log-loss.
+
+**Fixed pass bar (second half only):** the chosen variant has lower log-loss than `base` in at least 4 of the 5 groups
+(crypto, metals, fx, index, energy) AND its pooled (8-market) second-half book Sharpe is not lower than `base`'s AND its
+pooled second-half max drawdown is no worse than `base`'s by more than 2 percentage points. Variants tried: 6 (5
+challengers). In-sample history; a pass would be a reason to ask the owner, not proof. If no pass, nothing changes.
+
+### H42 results (15 Nov 2026, ~09:58 UTC; development data to 2025-11-11; `research/out/trust/study.md`)
+
+**NO PASS.** Code: `research/trust_study.py` (per-voice odds once per group via `leanprep.walk_forward_cached`, refits in
+`research/out/trust/fits/`; the baseline trust equals `leanprep.trust_tail` exactly in every group; only `trust_eta` /
+`trust_floor` change through a cfg copy). Variants tried: 6 (5 challengers). Holdout not touched.
+
+Chosen on the first half: **`f08`** (eta 0.2, floor 0.08): log-loss below base in 4 of 5 groups (all challengers tied at
+4/5, fx the exception; `f08` had the lowest mean gap, -0.00043). Second half: log-loss below base in **5 of 5** groups
+(crypto 0.86660 vs 0.86688, metals 0.79073 vs 0.79080, fx 0.80166 vs 0.80199, S&P 1.07598 vs 1.07610, oil 0.73548 vs
+0.73646): YES. Pooled 8-market main-book Sharpe **0.95 vs 1.06**: NO. Pooled max drawdown -17.2% vs -16.9%: YES (within
+2 points). Effective number of voices (crypto, second half) 11.5 vs 8.4 of 13; one voice above 50% 0.2% vs 19% of the time.
+
+Reading: every challenger beats the live setting on log-loss in all 5 groups in the second half, but by 0.005% to 0.15%;
+hit rates stay at 50-52%. The main book is insensitive (gold, silver, S&P identical under all 6 variants) or noisy
+(crypto: BTC better and ETH +124% -> -6% to -17% under every challenger; pooled Sharpe 0.89-1.10 across challengers, only
+`e10` above base and not chosen). Historically crypto's trust had one voice > 50% for 17-19% of the time (oil 23-32%,
+metals 21% then 4%, fx and S&P ~0%); the live ~79% "levels" concentration is later than the development cut. The floor acts
+across all 59 voices before the voting cards are picked; the overall lowest-loss voice is a non-voting one 45-72% of the
+time, so voters often sit at the floor together. Nothing changes in the live engine.
