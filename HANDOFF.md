@@ -66,3 +66,6 @@ crypto replay).
 
 ## Open items
 See the task tables and the dated status notes at the end of `docs/CHARTER.md`.
+- **Bars note (15 Nov 2026):** `data.load("BTCUSDT"/"ETHUSDT")` returns Binance SPOT 15m bars (the stored bar matches the
+  spot kline exactly); funding comes from the USD-M perpetual. The perpetual's own klines are fetched by
+  `sources/cryptox.py` for the spot-vs-perp card.

@@ -6,6 +6,7 @@
 import os
 import re
 import sys
+import time
 
 import numpy as np
 import pandas as pd
@@ -238,14 +239,53 @@ def test_describe(tmp_path, monkeypatch):
 
 
 def test_not_wired_into_the_live_engine():
-    """H40 is research only: wiring is a separate, versioned, owner-approved step."""
+    """H40 is research only: wiring is a separate, versioned, owner-approved step. The batch-3 card module cryptox.py
+    (built 15 Nov 2026, itself not wired yet) is the one other module allowed to use it."""
     from engine15 import sources
     assert "options_hist" not in sources.MODULES
+    assert "cryptox" in sources.MODULES                                 # wired as think15-v5.2.2; it reads options_hist
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     for dirpath, _dirs, files in os.walk(os.path.join(root, "engine15")):
         for name in files:
-            if name.endswith(".py") and name != "options_hist.py":
+            if name.endswith(".py") and name not in ("options_hist.py", "cryptox.py"):
                 with open(os.path.join(dirpath, name), encoding="utf-8") as fh:
                     assert "options_hist" not in fh.read(), "%s mentions options_hist" % name
     from engine15 import evidence
     assert oh not in getattr(evidence, "SOURCES", [])
+
+
+# ------------------------------------------------------------------ live mode (the batch-3 "Options flow (Deribit)" card)
+def test_live_mode_extends_hour_by_hour_and_resumes_mid_day(tmp_path, monkeypatch):
+    backfill(tmp_path, monkeypatch, n_days=3, assets=(A,))
+    f = oh.load_source("hourly", A, str(tmp_path))
+    end = T0 + 4 * DAY + 7 * HOUR + 3 * 60000                                    # 07:03 on day 4
+    oh.update(log=lambda *_: None, src_dir=str(tmp_path), assets=(A,), end_ms=end, live=True)
+    g = oh.load_source("hourly", A, str(tmp_path))
+    assert g.ts_ms.iloc[-1] == T0 + 4 * DAY + 5 * HOUR                           # 06:00 ended 07:00 < 5 min ago: not yet
+    assert (np.diff(g.ts_ms.values) == HOUR).all() and g.iloc[:len(f)].equals(f)
+    net = FakeNet()
+    monkeypatch.setattr(oh, "_get", net)
+    oh.update(log=lambda *_: None, src_dir=str(tmp_path), assets=(A,), end_ms=end + 2 * HOUR, live=True)
+    h = oh.load_source("hourly", A, str(tmp_path))
+    assert h.ts_ms.iloc[-1] == T0 + 4 * DAY + 7 * HOUR and h.iloc[:len(g)].equals(g)
+    assert min(c["start_timestamp"] for c in net.calls) == T0 + 4 * DAY + 6 * HOUR   # resumed at the next hour
+    whole = oh.aggregate_hours(fake_trades(A, T0 + 4 * DAY, T0 + 4 * DAY + 8 * HOUR), T0 + 4 * DAY, 8)
+    assert np.allclose(h.iloc[-8:][oh.SUM_COLS].values, whole[oh.SUM_COLS].values)   # same sums as one fetch
+    oh.update(log=lambda *_: None, src_dir=str(tmp_path), assets=(A,), end_ms=T0 + 6 * DAY)   # back to whole days
+    k = oh.load_source("hourly", A, str(tmp_path))
+    assert len(k) == 6 * 24 and (np.diff(k.ts_ms.values) == HOUR).all()
+
+
+def test_live_mode_cap_and_known_at_fetch_time(tmp_path, monkeypatch):
+    monkeypatch.setattr(oh, "_get", FakeNet())
+    now = int(time.time() * 1000)
+    start = pd.Timestamp(now - 2 * DAY, unit="ms").strftime("%Y-%m-%d")
+    out = oh.update(log=lambda *_: None, src_dir=str(tmp_path), assets=(A,), start=start, live=True, max_hours=5)
+    assert out["hourly_BTCUSDT"] == 5                                           # the cap: five hours a call
+    oh.update(log=lambda *_: None, src_dir=str(tmp_path), assets=(A,), live=True)
+    g = oh.load_source("hourly", A, str(tmp_path))
+    assert g.ts_ms.iloc[-1] + HOUR + oh.LIVE_LAG_MS <= now + 120000
+    recent = g[g.ts_ms + HOUR > now - oh.LIVE_WINDOW_MS + 600000]
+    assert len(recent) and (recent.known_ms >= now - 60000).all()               # a live fetch: known when fetched
+    old = g[g.ts_ms + HOUR < now - oh.LIVE_WINDOW_MS - 600000]
+    assert len(old) and (old.known_ms == old.ts_ms + HOUR).all()                # a backfilled hour: its end

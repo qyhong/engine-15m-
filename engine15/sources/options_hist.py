@@ -9,15 +9,19 @@
 
 NOT WIRED INTO THE LIVE ENGINE: not listed in sources.MODULES, nothing in the live loop imports it
 (tests/test_sources_options_hist.py::test_not_wired_into_the_live_engine). Wiring is a separate, versioned,
-owner-approved step. Data source of research/options_study.py (H40).
+owner-approved step. Data source of research/options_study.py (H40) and, from batch 3 (15 Nov 2026, built not wired),
+of the "Options flow (Deribit)" card in sources/cryptox.py, which calls update(live=True).
 
 Storage: data/sources/options_hourly_<asset>.csv, written to a .tmp file and swapped in, ONLY EVER EXTENDED (a stored
-hour is never changed). update() works one whole UTC day at a time and stores all 24 hours of a day (an hour without
-trades is a row of zeros), so the file's last row is the resume point: an interrupted fetch repeats at most the days
-not yet flushed (FLUSH_DAYS).
+hour is never changed). update() resumes at the hour after the file's last row and works at most one UTC day per
+request series; it stores every hour of what it fetched (an hour without trades is a row of zeros), so the file's last
+row is the resume point: an interrupted fetch repeats at most the chunks not yet flushed (FLUSH_DAYS). By default it
+stops at the last whole UTC day (the H40 backfill); live=True stops at the last whole hour that ended LIVE_LAG_MS ago.
+The H40 seal (2025-11-11) is applied by the study (cutoff_ms), not by the file: rows after it exist for the live card.
 
 THE ONE RULE: a row may use only what was known at its decision instant. Trades are public the moment they print, so
-the hour [T, T + 1 h) is known at known_ms = T + 1 h (KNOWN_LAG_MS = 0). Readings are computed on the gapless hourly grid
+the hour [T, T + 1 h) is known at known_ms = T + 1 h (KNOWN_LAG_MS = 0); an hour first fetched within LIVE_WINDOW_MS of
+its end (a live fetch) is known at the later of T + 1 h and the fetch time. Readings are computed on the gapless hourly grid
 with backward windows only, then joined as of known_ms (flows._asof). inputs(..., cutoff_ms=...) drops every stored row
 known at or after cutoff_ms before anything is computed.
 
@@ -54,6 +58,8 @@ COIN = {"BTCUSDT": "BTC", "ETHUSDT": "ETH"}
 EARLIEST_SERVED = {"BTCUSDT": "2016-11-29", "ETHUSDT": "2019-03-21"}   # first option trade served (probed 14 Nov 2026)
 FETCH_START = {"BTCUSDT": "2019-01-01", "ETHUSDT": "2019-03-21"}       # dev bars start 2019-09-08; earlier is not needed
 KNOWN_LAG_MS = 0
+LIVE_LAG_MS = 5 * 60000                                 # live=True: an hour is fetched once it ended 5 minutes ago
+LIVE_WINDOW_MS = 6 * 3600000                            # an hour first fetched within 6 h of its end: known at the fetch
 
 # ---- the buckets (registered in research/HYPOTHESES.md H40 before any history was fetched)
 TENOR_MIN_D, TENOR_MAX_D = 7.0, 60.0
@@ -196,21 +202,35 @@ def add_trade(acc, t, cache=None):
     return True
 
 
-def aggregate_day(trades, day_ms):
-    """All trades of one UTC day -> 24 hourly rows (zeros for an hour without trades), with known_ms = hour end."""
-    hours = [_empty_hour() for _ in range(24)]
+def aggregate_hours(trades, start_ms, n_hours):
+    """All trades of [start_ms, start_ms + n_hours h) -> n_hours hourly rows (zeros for an hour without trades), with
+    known_ms = hour end. start_ms must be on the hour."""
+    hours = [_empty_hour() for _ in range(n_hours)]
     cache = {}
     for t in trades:
         try:
-            h = (int(t["timestamp"]) - day_ms) // HOUR_MS
+            h = (int(t["timestamp"]) - start_ms) // HOUR_MS
         except (KeyError, TypeError, ValueError):
             continue
-        if 0 <= h < 24:
+        if 0 <= h < n_hours:
             add_trade(hours[h], t, cache)
-    f = pd.DataFrame(hours)
-    f.insert(0, "ts_ms", day_ms + np.arange(24, dtype="int64") * HOUR_MS)
+    f = pd.DataFrame(hours, columns=SUM_COLS)
+    f.insert(0, "ts_ms", start_ms + np.arange(n_hours, dtype="int64") * HOUR_MS)
     f["known_ms"] = f["ts_ms"] + HOUR_MS + KNOWN_LAG_MS
     return f[HOURLY_COLS]
+
+
+def aggregate_day(trades, day_ms):
+    """All trades of one UTC day -> 24 hourly rows (zeros for an hour without trades), with known_ms = hour end."""
+    return aggregate_hours(trades, day_ms, 24)
+
+
+def live_known(known_ms, seen_ms):
+    """An hour first fetched within LIVE_WINDOW_MS of its end is known at the later of its end and the fetch time, so a
+    replay never knows more than a live run did. A backfilled hour keeps its end."""
+    known_ms = np.asarray(known_ms, dtype="int64")
+    live = int(seen_ms) - known_ms < LIVE_WINDOW_MS
+    return np.where(live, np.maximum(known_ms, int(seen_ms)), known_ms).astype("int64")
 
 
 # ------------------------------------------------------------------ network (update only)
@@ -248,11 +268,16 @@ def _get(url, params=None):
 
 
 def fetch_day(asset, day_ms, stats=None):
-    """Every option trade of one UTC day, paging forward in time; trades sharing the page-boundary millisecond are
-    asked for again and de-duplicated by trade_id. -> list of trade dicts."""
+    """Every option trade of one UTC day. -> list of trade dicts."""
+    return fetch_range(asset, day_ms, day_ms + DAY_MS, stats)
+
+
+def fetch_range(asset, start_ms, end_ms, stats=None):
+    """Every option trade in [start_ms, end_ms), paging forward in time; trades sharing the page-boundary millisecond
+    are asked for again and de-duplicated by trade_id. -> list of trade dicts."""
     stats = {} if stats is None else stats
-    end = day_ms + DAY_MS - 1
-    cursor, seen, out = day_ms, set(), []
+    end = end_ms - 1
+    cursor, seen, out = start_ms, set(), []
     while cursor <= end:
         res = _get(HIST, {"currency": COIN[asset], "kind": "option", "start_timestamp": cursor, "end_timestamp": end,
                           "count": PAGE, "sorting": "asc"})
@@ -273,13 +298,16 @@ def fetch_day(asset, day_ms, stats=None):
     return out
 
 
-def update(log=print, src_dir=None, assets=None, end_ms=None, start=None, max_days=None):
-    """Fetch / extend the hourly file of each coin, one whole UTC day at a time, from the day after the file's last row
-    (or FETCH_START / start) up to the last whole day before end_ms (default: now). -> {"hourly_<ASSET>": rows on disk,
-    or "failed: <reason> (file has N rows)"}. Never raises; what was flushed before a failure stays."""
+def update(log=print, src_dir=None, assets=None, end_ms=None, start=None, max_days=None, live=False, max_hours=None):
+    """Fetch / extend the hourly file of each coin from the hour after the file's last row (or FETCH_START / start), at
+    most one UTC day per chunk, up to the last whole day before end_ms (default: now), or with live=True up to the last
+    whole hour that ended LIVE_LAG_MS before it. max_days caps the chunks, max_hours the hours fetched (the live card
+    caps each call so the live loop is never held long). -> {"hourly_<ASSET>": rows on disk, or "failed: <reason>
+    (file has N rows)"}. Never raises; what was flushed before a failure stays."""
     out = OrderedDict()
     now = int(time.time() * 1000)
-    stop = (min(end_ms, now) if end_ms is not None else now) // DAY_MS * DAY_MS     # first day NOT fetched
+    end = min(end_ms, now) if end_ms is not None else now
+    stop = (end - LIVE_LAG_MS) // HOUR_MS * HOUR_MS if live else end // DAY_MS * DAY_MS   # first hour NOT fetched
     for asset in assets or list(COIN):
         key = "hourly_%s" % asset
         stats, n = {}, 0
@@ -287,20 +315,27 @@ def update(log=print, src_dir=None, assets=None, end_ms=None, start=None, max_da
             old = load_source("hourly", asset, src_dir)
             n = len(old)
             if len(old):
-                day = (int(old["ts_ms"].iloc[-1]) // DAY_MS + 1) * DAY_MS
+                cur = int(old["ts_ms"].iloc[-1]) // HOUR_MS * HOUR_MS + HOUR_MS
             else:
-                day = int(pd.Timestamp(start or FETCH_START[asset], tz="UTC").value // 10 ** 6)
-            buf, done, t0 = [], 0, time.time()
-            while day < stop and (max_days is None or done < max_days):
-                buf.append(aggregate_day(fetch_day(asset, day, stats), day))
-                day += DAY_MS
+                cur = int(pd.Timestamp(start or FETCH_START[asset], tz="UTC").value // 10 ** 6) // HOUR_MS * HOUR_MS
+            buf, done, hours, t0 = [], 0, 0, time.time()
+            while cur < stop and (max_days is None or done < max_days) and (max_hours is None or hours < max_hours):
+                nxt = min((cur // DAY_MS + 1) * DAY_MS, stop)
+                if max_hours is not None:
+                    nxt = min(nxt, cur + (max_hours - hours) * HOUR_MS)
+                rows = aggregate_hours(fetch_range(asset, cur, nxt, stats), cur, (nxt - cur) // HOUR_MS)
+                rows["known_ms"] = live_known(rows["known_ms"].values, int(time.time() * 1000))
+                buf.append(rows)
+                hours += (nxt - cur) // HOUR_MS
+                cur = nxt
                 done += 1
-                if len(buf) >= FLUSH_DAYS or day >= stop or (max_days is not None and done >= max_days):
+                if (len(buf) >= FLUSH_DAYS or cur >= stop or (max_days is not None and done >= max_days)
+                        or (max_hours is not None and hours >= max_hours)):
                     n = _extend("hourly", asset, src_dir, old, pd.concat(buf, ignore_index=True))
                     old, buf = load_source("hourly", asset, src_dir), []
                     try:
                         log("sources.options_hist %s: through %s, %d rows, %d requests, %.0f s" % (
-                            asset, pd.Timestamp(day - DAY_MS, unit="ms").strftime("%Y-%m-%d"), n,
+                            asset, pd.Timestamp(cur - HOUR_MS, unit="ms").strftime("%Y-%m-%d %H:00"), n,
                             stats.get("requests", 0), time.time() - t0))
                     except Exception:
                         pass
@@ -431,7 +466,8 @@ def describe(row, asset):
 
 def main(argv=None):
     """py -3 -m engine15.sources.options_hist BTCUSDT [--start YYYY-MM-DD] [--end YYYY-MM-DD] [--max-days N] [--src DIR]
-    (--start applies only to an empty file; --src writes to another folder, e.g. a second date range to merge later)"""
+    [--live] (--start applies only to an empty file; --src writes to another folder, e.g. a second date range to merge
+    later; --live fetches up to the last whole hour instead of the last whole day)"""
     argv = list(sys.argv[1:] if argv is None else argv)
     assets = [a for a in argv if a in COIN] or list(COIN)
     end = argv[argv.index("--end") + 1] if "--end" in argv else None
@@ -440,7 +476,7 @@ def main(argv=None):
     src = argv[argv.index("--src") + 1] if "--src" in argv else None
     end_ms = int(pd.Timestamp(end, tz="UTC").value // 10 ** 6) if end else None
     res = update(log=lambda s: print(time.strftime("%H:%M:%S"), s, flush=True), src_dir=src, assets=assets,
-                 end_ms=end_ms, start=start, max_days=maxd)
+                 end_ms=end_ms, start=start, max_days=maxd, live="--live" in argv)
     print(json.dumps(res), flush=True)
 
 

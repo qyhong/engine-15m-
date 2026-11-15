@@ -5,8 +5,15 @@ Nothing here is claimed to predict anything; the H40 study (`research/out/option
 on development data.
 
 **NOT wired into the live engine.** `options_hist` is not in `sources.MODULES`, and no other file under `engine15/`
-names it (`tests/test_sources_options_hist.py::test_not_wired_into_the_live_engine`). Wiring it in would be a separate,
-versioned, owner-approved step (see the end of this page). Not an RL input.
+names it except `sources/cryptox.py` (`tests/test_sources_options_hist.py::test_not_wired_into_the_live_engine`). Wiring it
+in would be a separate, versioned, owner-approved step (see the end of this page). Not an RL input.
+
+**Batch 3 (15 Nov 2026): live-capable, still not wired.** The owner's batch-3 card "Options flow (Deribit)" lives in
+`sources/cryptox.py` (built, not wired; `docs/SOURCES_cryptox.md`), which calls `update(live=True)`: it resumes at the hour
+after the file's last row and fetches up to the last whole hour that ended 5 minutes ago (`LIVE_LAG_MS`); an hour first
+fetched within 6 hours of its end (`LIVE_WINDOW_MS`) is known at the fetch time. The file therefore extends past the
+2025-11-11 seal; the H40 study still drops every row known at or after the seal (`cutoff_ms` in
+`research/options_study.py`), so the holdout stays closed to it.
 
 ## Source
 
@@ -95,7 +102,8 @@ source modules; `describe()` gives one plain sentence.
 ## Running it
 
 `py -3 -m engine15.sources.options_hist BTCUSDT [--start YYYY-MM-DD] [--end YYYY-MM-DD] [--max-days N] [--src DIR]`,
-or `options_hist.update(assets=[...], end_ms=...)`. Nothing schedules it: no live process calls it.
+or `options_hist.update(assets=[...], end_ms=...)`; add `--live` (`live=True`, optional `max_hours`) to fetch to the last
+whole hour. Nothing schedules it yet: no live process calls it until `cryptox` is wired.
 
 ## Wiring it in (NOT done; needs the owner's approval)
 

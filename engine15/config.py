@@ -17,11 +17,15 @@ ESTATE = os.environ.get("ENGINE15_ESTATE", os.path.join(os.path.dirname(ROOT), "
 LIBRARY_JSON = os.path.join(ESTATE, "research", "local", "library", "strategy_library.json")
 
 # Said once in the journal (each market group's next entry) after "version" changes (live.step_group).
-VERSION_NOTE = ("think15-v5.2.1: a new reading-only CCI card (Commodity Channel Index, 15m to daily) for every market. "
-                "It is recorded and graded; it does not vote. The 40% trust cap of v5.2 stays.")
+VERSION_NOTE = ("think15-v5.2.2: six new reading-only crypto cards (Deribit options flow, Korea premium, CME gap from spot "
+                "prices, BTC dominance of a tracked basket, spot vs perp leadership, funding and open interest across "
+                "Binance, Bybit and OKX). They are recorded and graded; they do not vote, so the rules are unchanged.")
 
 CFG = {
-    "version": "think15-v5.2.1",      # v5.2.1 (15 Nov 2026): CCI card, 15m to daily, all markets, reading-only (sources/osc3.py);
+    "version": "think15-v5.2.2",      # v5.2.2 (15 Nov 2026): six crypto reading-only cards (sources/cryptox.py: Deribit options flow,
+                                      #   Korea premium, CME gap (spot proxy), BTC dominance, spot vs perp, cross-exchange funding/OI);
+                                      #   owner "Yes". Rules and votes unchanged.
+                                      # v5.2.1 (15 Nov 2026): CCI card, 15m to daily, all markets, reading-only (sources/osc3.py);
                                       #   owner: "For commodities like metal. Should include CCI". Rules and votes unchanged.
                                       # v5.2 (15 Nov 2026): trust cap - no voting card holds more than 40% of the say (trust_cap);
                                       #   owner: "set it as 40%" (chosen by the owner, not by a test; H43 records the history comparison).
