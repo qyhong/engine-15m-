@@ -60,6 +60,7 @@ def prepare(end=None, cfg=CFG, bars=None, funding=None, live=None, log=None):
         votes = np.array([1.0 if v in cfg["voting"] else 0.0 for v in model.VOICE_NAMES])
         trust = trust * votes
         trust = trust / trust.sum(axis=1, keepdims=True)
+    trust = model.cap_shares(trust, cfg.get("trust_cap"))             # v5.2: no card above the cap
     odds = {}
     for a in assets:                                               # a voice with no reading this session has no vote
         speaks = np.stack([(np.abs(X[a][:, model._COLS[v]]).sum(axis=1) > 0) if model._COLS[v] else np.zeros(len(times), bool)
@@ -67,6 +68,7 @@ def prepare(end=None, cfg=CFG, bars=None, funding=None, live=None, log=None):
         w = trust * speaks
         tot = w.sum(axis=1, keepdims=True)
         w = np.where(tot > 0, w / np.where(tot > 0, tot, 1.0), trust)
+        w = model.cap_shares(w, cfg.get("trust_cap"))
         odds[a] = model.mix(probs[a], w)
     say("trust and odds done (%.0fs)" % (time.time() - t0))
     return {"cfg": dict(cfg), "assets": assets, "times": times, "ev": ev, "px": px, "X": X, "ready": ready,

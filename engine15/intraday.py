@@ -207,6 +207,7 @@ def mix_odds(probs, X, y, res, cols, voices, cfg, lo, hi):
     votes = np.array([0.0 if v == "base" else 1.0 for v in voices])
     trust = trust * votes
     trust = trust / np.where(trust.sum(axis=1, keepdims=True) > 0, trust.sum(axis=1, keepdims=True), 1.0)
+    trust = model.cap_shares(trust, cfg.get("trust_cap"))             # v5.2: no card above the cap
     odds = {}
     for a in probs:
         Xa = np.asarray(X[a][lo:hi], dtype=float)
@@ -215,6 +216,7 @@ def mix_odds(probs, X, y, res, cols, voices, cfg, lo, hi):
         w = trust * speaks
         tot = w.sum(axis=1, keepdims=True)
         w = np.where(tot > 0, w / np.where(tot > 0, tot, 1.0), trust)
+        w = model.cap_shares(w, cfg.get("trust_cap"))
         odds[a] = model.mix(np.nan_to_num(probs[a], nan=0.0), w)
         odds[a][~np.isfinite(probs[a][:, 0, 0])] = np.nan
     return odds, trust

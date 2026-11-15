@@ -238,6 +238,7 @@ def prepare_live(cfg, bars, funding, live, group, log=None, root=None):
         votes = np.array([1.0 if v in cfg["voting"] else 0.0 for v in model.VOICE_NAMES])
         trust = trust * votes
         trust = trust / trust.sum(axis=1, keepdims=True)
+    trust = model.cap_shares(trust, cfg.get("trust_cap"))             # v5.2: no card above the cap
     odds = {}
     for a in assets:
         Xa = np.asarray(X[a][lo:n])
@@ -246,6 +247,7 @@ def prepare_live(cfg, bars, funding, live, group, log=None, root=None):
         w = trust * speaks
         tot = w.sum(axis=1, keepdims=True)
         w = np.where(tot > 0, w / np.where(tot > 0, tot, 1.0), trust)
+        w = model.cap_shares(w, cfg.get("trust_cap"))
         o = np.full((n, 3), np.nan)
         o[lo:] = model.mix(probs[a].arr, w)
         odds[a] = o

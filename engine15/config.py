@@ -17,12 +17,14 @@ ESTATE = os.environ.get("ENGINE15_ESTATE", os.path.join(os.path.dirname(ROOT), "
 LIBRARY_JSON = os.path.join(ESTATE, "research", "local", "library", "strategy_library.json")
 
 # Said once in the journal (each market group's next entry) after "version" changes (live.step_group).
-VERSION_NOTE = ("think15-v5.1.2: seven new reading-only cards (Supertrend, StochRSI, Parabolic SAR, Money Flow Index, "
-                "volume profile, Heikin-Ashi trend, Aroon/Vortex), on 15m to daily timeframes. They are recorded and graded; they do "
-                "not vote, so the trading rules are unchanged.")
+VERSION_NOTE = ("think15-v5.2: no voting card may hold more than 40% of the engine's trust (owner's choice, 15 Nov 2026). "
+                "Above 40%, the excess goes to the other voting cards in proportion to their scores. This changes how the "
+                "odds are mixed, so decisions can differ from v5.1.2.")
 
 CFG = {
-    "version": "think15-v5.1.2",      # v5.1.2 (15 Nov 2026): seven reading-only cards, card pipeline batches 1-2 (sources/osc.py:
+    "version": "think15-v5.2",        # v5.2 (15 Nov 2026): trust cap - no voting card holds more than 40% of the say (trust_cap);
+                                      #   owner: "set it as 40%" (chosen by the owner, not by a test; H43 records the history comparison).
+                                      # v5.1.2 (15 Nov 2026): seven reading-only cards, card pipeline batches 1-2 (sources/osc.py:
                                       #   Supertrend, StochRSI; sources/osc2.py: Parabolic SAR, Money Flow Index, volume profile,
                                       #   Heikin-Ashi, Aroon/Vortex); owner "ok". Rules and votes unchanged.
                                       # v5.1.1 (13 Nov 2026): four more crypto cards from sources/flows.py (Binance archive positioning,
@@ -117,6 +119,7 @@ CFG = {
     "train_floor": "2020-01-01",      # the first call a voice may learn from
     "trust_eta": 0.2,                 # Hedge learning rate on graded log-loss
     "trust_halflife": 960,            # trust forgets with a 10-day half-life (in sessions)
+    "trust_cap": 0.40,                # v5.2 (owner, 15 Nov 2026: "set it as 40%"): no voting card above 40% of the say
     "trust_floor": 0.02,              # no voice is ever fully ignored
 }
 

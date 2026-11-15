@@ -1516,3 +1516,12 @@ hit rates stay at 50-52%. The main book is insensitive (gold, silver, S&P identi
 metals 21% then 4%, fx and S&P ~0%); the live ~79% "levels" concentration is later than the development cut. The floor acts
 across all 59 voices before the voting cards are picked; the overall lowest-loss voice is a non-voting one 45-72% of the
 time, so voters often sit at the floor together. Nothing changes in the live engine.
+
+## H43. Trust cap 40% (owner's choice; engine think15-v5.2, 15 Nov 2026)
+
+**Owner, 15 Nov 2026:** "Should we set max weightage for each card" ... "Ok lets set it as 40%". Live from the next
+restart (15 Nov 2026): `config.trust_cap = 0.40`, `model.cap_shares` applied to the voting cards' shares and again after
+silent voices drop out, in `backtest.prepare`, `leanprep.prepare_live` and `intraday.mix_odds`. Chosen by the owner,
+not selected by a test: I advised testing 30/40/50% first (H42 had found more balanced blends predicted marginally
+better but traded worse). The history comparison below is recorded for the review, not as a gate. Forward grading: the
+main books' live record from v5.2 on, compared at the 10 Dec review with v5.1.2's record before it.

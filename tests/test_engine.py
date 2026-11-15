@@ -261,3 +261,21 @@ def test_risk_budget_reads_other_books():
     st = {"books": {"BTCUSDT": {"pos": -1, "qty": 0.1, "entry": 70000.0, "stop": 72000.0, "eq": 10000.0}}}
     b = live.risk_budget("ETHUSDT", st)
     assert abs(b - (0.10 * 10000.0 * len([a for _, x in live.universes() for a in x]) - 200.0)) < 1e-6
+
+
+def test_trust_cap_keeps_every_card_at_or_below_it():
+    """v5.2: no voice above trust_cap; rows still sum to 1; order kept; a row that cannot meet it shares equally."""
+    rng = np.random.RandomState(7)
+    w = rng.dirichlet(np.full(13, 0.3), size=500)
+    w[0] = 0.0
+    w[0, :13] = [0.787] + [0.213 / 12] * 12                     # today's crypto: one card at ~79%
+    c = model.cap_shares(w, 0.40)
+    assert np.allclose(c.sum(axis=1), 1.0) and c.max() <= 0.40 + 1e-9
+    assert abs(c[0, 0] - 0.40) < 1e-9 and np.allclose(c[0, 1:], 0.60 / 12)
+    order_ok = [np.all(np.argsort(-w[i], kind="stable")[:1] == np.argsort(-c[i], kind="stable")[:1]) or np.isclose(c[i].max(), 0.40)
+                for i in range(len(w))]
+    assert all(order_ok)
+    two = np.array([[0.9, 0.1, 0.0]])                           # only two voices speak: 1/cap > 2, so equal shares
+    assert np.allclose(model.cap_shares(two, 0.40), [[0.5, 0.5, 0.0]])
+    assert model.cap_shares(w, None) is w and model.cap_shares(w, 1.0) is w
+    assert CFG["trust_cap"] == 0.40

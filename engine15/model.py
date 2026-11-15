@@ -158,6 +158,31 @@ def trust_path(probs, y, res, cfg):
     return out
 
 
+def cap_shares(w, cap):
+    """v5.2 (owner, 15 Nov 2026: "set it as 40%"): no voice holds more than `cap` of the say. Row by row, a share
+    above the cap is cut to it and the excess is handed to the other voices with a say, in proportion to their
+    shares (repeated until none is above). A row where fewer than 1/cap voices have a say cannot meet the cap:
+    those voices share equally. cap None or >= 1: unchanged. -> same shape, rows sum to 1 where they did."""
+    if cap is None or cap >= 1.0:
+        return w
+    w = np.array(w, dtype=float, copy=True)
+    for _ in range(64):
+        over = w > cap + 1e-12
+        if not over.any():
+            break
+        excess = np.where(over, w - cap, 0.0).sum(axis=1, keepdims=True)
+        w = np.where(over, cap, w)
+        room = (w > 0) & (w < cap - 1e-12)
+        base = np.where(room, w, 0.0)
+        tot = base.sum(axis=1, keepdims=True)
+        w = w + np.where(tot > 0, excess * base / np.where(tot > 0, tot, 1.0), 0.0)
+        stuck = (tot[:, 0] <= 0) & (excess[:, 0] > 1e-12)            # nobody left with room: share equally
+        if stuck.any():
+            k = (w[stuck] > 0).sum(axis=1, keepdims=True)
+            w[stuck] = np.where(w[stuck] > 0, 1.0 / np.maximum(k, 1), 0.0)
+    return w
+
+
 def mix(probs, trust):
     """The engine's own odds: the trust-weighted mix of the voices. (n, 3)."""
     return np.einsum("nv,nvc->nc", trust, probs)
