@@ -242,3 +242,15 @@ def test_step_rows_and_page_block():
     assert set(blk) == set(pb.BOOKS)
     for b in blk.values():
         assert {"title", "hypothesis", "open", "recent", "totals"} <= set(b) and len(b["recent"]) <= 5
+
+
+def test_retired_book_takes_nothing_from_the_stamp_on():
+    """A retired book (owner's word) keeps only trades entered before its stamp; no WAITING or later entry."""
+    import pandas as pd
+    from engine15 import playbook as pbk
+    for book, stamp in pbk.RETIRED.items():
+        cut = pd.Timestamp(stamp, tz="UTC")
+        rows = [r for r in pbk.step() if r["book"] == book]
+        assert all(r["entry_utc"] is not None for r in rows)
+        assert all(pd.Timestamp(r["entry_utc"], tz="UTC") < cut for r in rows)
+        assert "retired" in pbk.page_block(rows)[book]

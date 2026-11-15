@@ -1437,3 +1437,10 @@ on history (V2 vs V8 about equal; long and short fades lose alike on 2020-2025),
 looks like one regime. Confirmation entries (V4, V7) cut trades ~65% and raised the cost share to ~0.3R; the limit
 retest (V5) was in between. No `engine15/playbook8.py` was written; nothing goes forward from H41. The original P1 keeps
 running under its own H6 verdict rule.
+
+### H6 retired (owner, 15 Nov 2026, 06:15 UTC)
+
+Owner: "Retire it", after the post-mortem of its first 65 live trades (`research/out/p1_postmortem.md`: 32% won,
+-$1,421, -0.38R a trade before costs; no code bug) and H41 (8 improved versions, none with an edge before costs on
+2020-2025). `engine15/playbook.py` RETIRED: no trade entered from 2026-11-15 06:15 UTC counts; the live record before
+it is kept as is. The verdict rule (200 trades or 30 days) was not reached; retired early on the owner's word.

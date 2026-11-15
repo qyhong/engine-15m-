@@ -252,3 +252,5 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   Only next-day drawdown (size) tests survive Bonferroni. `engine15/sources/options_hist.py` is built, NOT wired.
   Paid survey (`research/out/paid_data/survey.md`): liquidations via CryptoQuant $39-109/month (owner signs up; unverified
   which tier has the hourly liquidation API), whale flows $109, order-book depth history has no cheap route to 2021.
+- **P1 liquidation hunt retired** (owner: "Retire it", 15 Nov 2026 06:15 UTC) after its post-mortem and H41 (no edge
+  before costs in 37 variants). `playbook.RETIRED`; the record of 65 live trades (-$1,421) stays on the page, frozen.

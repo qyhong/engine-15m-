@@ -31,6 +31,8 @@ at 2R. Whatever is still open after the hold limit is closed at the next open.
 The books are recomputed from the bars at every step from a FIXED warm-up anchor (registration
 minus WARMUP_DAYS), so they hold no state and the same bars always give the same rows.
 """
+import time
+
 import numpy as np
 import pandas as pd
 
@@ -74,8 +76,13 @@ RULES = {
     "p2_trap": {"level": "pday", "j": 2, "exit": "fixed", "filter": "with_bias"},
 }
 
+# Retired books (owner's word): no trade entered at or after the stamp counts; the record before it is kept as is.
+# p1_liqhunt: owner "Retire it" (15 Nov 2026) after the post-mortem (research/out/p1_postmortem.md) and H41
+# (research/out/liqhunt2/study.md): 37 variants, no edge before costs on 2020-2025 history; 65 live trades, -$1,421.
+RETIRED = {"p1_liqhunt": "2026-11-15 06:15"}
+
 BOOKS = {
-    "p1_liqhunt": {"title": "Liquidation hunt", "hypothesis": "H6", "registered": REGISTERED, "assets": ASSETS},
+    "p1_liqhunt": {"title": "Liquidation hunt (retired 15 Nov 2026)", "hypothesis": "H6", "registered": REGISTERED, "assets": ASSETS},
     "p2_trap": {"title": "Breakout trap", "hypothesis": "H7", "registered": REGISTERED, "assets": ASSETS},
 }
 
@@ -532,7 +539,15 @@ def step(bars=None, now_ms=None):
                 continue
             rule = RULES[book]
             sigs = [s for s in signals(book, P, rule) if int(P["ms"][s["i_dec"]]) + BAR_MS > reg_ms]
+            ret = RETIRED.get(book)
+            ret_ms = int(pd.Timestamp(ret, tz="UTC").value // 10**6) if ret else None
             for t in simulate(P, sigs, rule["exit"], HOLD[book], fee_side(asset)):
+                fill_ms = t.get("entry_ms")
+                if fill_ms is None:                                   # WAITING: it cannot fill before the next bar opens,
+                    now_eff = int(now_ms) if now_ms is not None else int(time.time() * 1000)   # nor before now
+                    fill_ms = max(int(P["ms"][-1]) + BAR_MS, now_eff)
+                if ret_ms is not None and int(fill_ms) >= ret_ms:
+                    continue                                          # retired: nothing entered from the stamp on
                 rows.append(_row(book, asset, t, P))
     return rows
 
@@ -580,7 +595,12 @@ def page_block(rows):
                      "recent": [dict((k, r[k]) for k in ("asset", "side", "entry_utc", "entry", "exit_utc", "exit", "why_out", "r", "pnl_usd", "text"))
                                 for r in closed[-5:]],
                      "totals": _totals(closed), "by_asset": per,
-                     "note": "Paper only. Registered rule graded forward from %s; history does not prove it." % facts["registered"]}
+                     "note": ("Paper only. Registered rule graded forward from %s; history does not prove it." % facts["registered"])
+                     if book not in RETIRED else
+                     ("Retired %s UTC (owner): the post-mortem and a test of 8 improved versions (H41) found no edge before "
+                      "costs on 2020-2025 history. No new trades; the live record is kept." % RETIRED[book])}
+        if book in RETIRED:
+            out[book]["retired"] = RETIRED[book]
     return out
 
 
