@@ -106,7 +106,7 @@ def test_crypto_voting_unchanged():
     assert tuple(CFG["voting"]) == CRYPTO_V3
     assert tuple(CFG["voting_by_group"]["crypto"]) == CRYPTO_V3
     assert voting_for("crypto") == CRYPTO_V3
-    assert CFG["version"] == "think15-v5.1.1"                      # v5.1.1 added cards (flows), not voters
+    assert CFG["version"] == "think15-v5.1.2"                      # v5.1.1 / v5.1.2 added cards, not voters
 
 
 def test_group_voting_lists_follow_the_ratings():

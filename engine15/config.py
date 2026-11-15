@@ -17,12 +17,15 @@ ESTATE = os.environ.get("ENGINE15_ESTATE", os.path.join(os.path.dirname(ROOT), "
 LIBRARY_JSON = os.path.join(ESTATE, "research", "local", "library", "strategy_library.json")
 
 # Said once in the journal (each market group's next entry) after "version" changes (live.step_group).
-VERSION_NOTE = ("think15-v5.1.1: four new crypto cards (Binance archive positioning, Bitfinex margin, CME futures "
-                "positioning from the CFTC, on-chain activity). They are new readings the voices learn from; the "
-                "trading rules are unchanged. None is claimed to predict anything (H39 found no direction edge).")
+VERSION_NOTE = ("think15-v5.1.2: seven new reading-only cards (Supertrend, StochRSI, Parabolic SAR, Money Flow Index, "
+                "volume profile, Heikin-Ashi trend, Aroon/Vortex), on 15m to daily timeframes. They are recorded and graded; they do "
+                "not vote, so the trading rules are unchanged.")
 
 CFG = {
-    "version": "think15-v5.1.1",      # v5.1.1 (13 Nov 2026): four more crypto cards from sources/flows.py (Binance archive positioning,
+    "version": "think15-v5.1.2",      # v5.1.2 (15 Nov 2026): seven reading-only cards, card pipeline batches 1-2 (sources/osc.py:
+                                      #   Supertrend, StochRSI; sources/osc2.py: Parabolic SAR, Money Flow Index, volume profile,
+                                      #   Heikin-Ashi, Aroon/Vortex); owner "ok". Rules and votes unchanged.
+                                      # v5.1.1 (13 Nov 2026): four more crypto cards from sources/flows.py (Binance archive positioning,
                                       #   Bitfinex margin, CME positioning, on-chain); owner: "Yes" to wiring them in. Rules unchanged.
                                       # v5.1 (11 Nov 2026): each market group votes with its own best-rated cards (voting_by_group, below)
                                       # v5 (11 Nov 2026): higher-timeframe bias and release guard, below        # v2 (10 Nov 2026): the voices learn from ALL graded history, weekly

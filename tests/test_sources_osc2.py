@@ -128,8 +128,8 @@ def test_psar_textbook():
     assert dr[j] == -1 and since[j] == 0 and abs(sar[j] - df["high"].values[:j].max()) < 1e-9
 
 
-def test_not_wired_in_yet():
-    assert "osc2" not in sources.MODULES                                 # the parent session wires it as v5.1.2
+def test_wired_as_v5_1_2():
+    assert "osc2" in sources.MODULES and "osc" in sources.MODULES          # wired as think15-v5.1.2 (15 Nov 2026)
 
 
 def test_index_unit_does_not_matter():
