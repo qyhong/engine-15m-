@@ -17,12 +17,13 @@ ESTATE = os.environ.get("ENGINE15_ESTATE", os.path.join(os.path.dirname(ROOT), "
 LIBRARY_JSON = os.path.join(ESTATE, "research", "local", "library", "strategy_library.json")
 
 # Said once in the journal (each market group's next entry) after "version" changes (live.step_group).
-VERSION_NOTE = ("think15-v5.2: no voting card may hold more than 40% of the engine's trust (owner's choice, 15 Nov 2026). "
-                "Above 40%, the excess goes to the other voting cards in proportion to their scores. This changes how the "
-                "odds are mixed, so decisions can differ from v5.1.2.")
+VERSION_NOTE = ("think15-v5.2.1: a new reading-only CCI card (Commodity Channel Index, 15m to daily) for every market. "
+                "It is recorded and graded; it does not vote. The 40% trust cap of v5.2 stays.")
 
 CFG = {
-    "version": "think15-v5.2",        # v5.2 (15 Nov 2026): trust cap - no voting card holds more than 40% of the say (trust_cap);
+    "version": "think15-v5.2.1",      # v5.2.1 (15 Nov 2026): CCI card, 15m to daily, all markets, reading-only (sources/osc3.py);
+                                      #   owner: "For commodities like metal. Should include CCI". Rules and votes unchanged.
+                                      # v5.2 (15 Nov 2026): trust cap - no voting card holds more than 40% of the say (trust_cap);
                                       #   owner: "set it as 40%" (chosen by the owner, not by a test; H43 records the history comparison).
                                       # v5.1.2 (15 Nov 2026): seven reading-only cards, card pipeline batches 1-2 (sources/osc.py:
                                       #   Supertrend, StochRSI; sources/osc2.py: Parabolic SAR, Money Flow Index, volume profile,

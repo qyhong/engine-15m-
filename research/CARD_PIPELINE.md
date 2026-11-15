@@ -32,19 +32,20 @@ pipeline, a batch of up to five at a time. Nothing in it changes a trade until a
 | Batch | Cards | Status |
 |---|---|---|
 | 0 | Binance positioning, Bitfinex margin, CME positioning, on-chain activity (`sources/flows.py`) | live 13 Nov 2026 (v5.1.1), reading-only |
-| 1 | Supertrend 15m-daily, StochRSI 15m-daily (`sources/osc.py`) | built and tested 15 Nov 2026; goes live as v5.1.2 after H42 finishes |
-| 2 | Parabolic SAR, Money Flow Index, Volume profile, Heikin-Ashi trend, Aroon/Vortex (`sources/osc2.py`) | owner "Ok" 15 Nov 2026; built and tested; goes live with batch 1 as v5.1.2 after H42 |
+| 1 | Supertrend 15m-daily, StochRSI 15m-daily (`sources/osc.py`) | live 15 Nov 2026 10:21 UTC (v5.1.2), reading-only |
+| 2 | Parabolic SAR, Money Flow Index, Volume profile, Heikin-Ashi trend, Aroon/Vortex (`sources/osc2.py`) | live 15 Nov 2026 10:21 UTC (v5.1.2), reading-only |
+| 2b | CCI 15m-daily, all markets (`sources/osc3.py`), owner's request for metals | live 15 Nov 2026 as v5.2.1, reading-only |
 | 3 | next five from the queue | waiting for the owner's go |
 
-## Queue (proposed by Claude, 15 Nov 2026; the owner edits freely)
+## Queue for batch 3 (proposed by Claude, 15 Nov 2026; the owner edits freely)
 
-Not yet read anywhere in the engine (checked with grep, 15 Nov 2026), one per family:
+Not yet read anywhere in the engine (check with grep before building), one per family:
 
-1. **Parabolic SAR** (15m to daily): trend direction and a trailing-stop level, how far price is from it, bars since it flipped.
-2. **Money Flow Index** (15m to daily): a volume-weighted RSI; overbought / oversold with volume behind it.
-3. **Volume profile** (session and 7-day): point of control, value-area high / low, where price sits against them.
-4. **Heikin-Ashi trend** (15m to 4h): smoothed candles' colour run and wick-less candles (trend strength).
-5. **Aroon / Vortex** (1h to daily): how recently the high or low was made (trend age) and the vortex cross.
+1. **Williams %R** (15m to daily): where the close sits in the recent range; overbought / oversold.
+2. **Chaikin Money Flow / OBV divergence** (1h to daily): volume flow and whether it disagrees with price.
+3. **Elder-Ray** (1h to daily): bull and bear power around the 13-period EMA.
+4. **Pivot points** (classic and Camarilla, daily and weekly): the levels and where price sits against them.
+5. **RSI divergence detector** (15m to 4h): price makes a new high/low that RSI does not confirm.
 
-Later candidates: Williams %R, Chaikin Money Flow / OBV divergence, Elder-Ray, pivot points (classic / Camarilla),
-RSI divergence detector, liquidation history (paid, owner said "Not now").
+Later candidates: Keltner position, Donchian breakouts as a card, ADX/DMI as its own card, Ichimoku on daily,
+liquidation history (paid, owner said "Not now").

@@ -8,4 +8,4 @@
 and follows the engine's one rule: a row may use only what was known at that 15m close.
 evidence.py picks up every module listed in MODULES that imports cleanly.
 """
-MODULES = ("derivs", "market", "structure", "ltf", "fib", "overnight", "xmarket", "mavg", "trendtools", "cot", "japan", "equity_events", "oil", "flows", "osc", "osc2")      # a module that is missing or will not import is skipped
+MODULES = ("derivs", "market", "structure", "ltf", "fib", "overnight", "xmarket", "mavg", "trendtools", "cot", "japan", "equity_events", "oil", "flows", "osc", "osc2", "osc3")      # a module that is missing or will not import is skipped
