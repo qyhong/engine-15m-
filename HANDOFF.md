@@ -25,6 +25,11 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   version history and a copy of the data, so it can take over again (its reading cache was deleted: a first laptop step
   would rebuild it). Not yet on the box: the candle-forecast feed (available at
   https://alphaprediction.ai/aitrading/forecasts.json; fetch at most once per step over HTTPS).
+- **Telegram alerts (16 Nov 2026, owner: "Alerts + daily summary"):** `engine15/telegram_notify.py`, systemd service
+  `mind15-telegram` on the box (log `/data/mind15/telegram.log`, state `data/telegram_state.json`). It only reads
+  out/live/page.json, scoreboard.json and the RL refit logs. The bot key is a file the OWNER places at
+  `/data/mind15/secrets/telegram_token` (chmod 600; `secrets/` is git-ignored); never handle or print it. The first chat
+  that sends /start is locked in; /summary sends the summary on demand; the daily summary goes at 00:00 UTC (08:00 SGT).
 - **Sources**: every step calls each source module's `update()` (`engine15/sources/__init__.py` MODULES). `flows`
   (v5.1.1) throttles itself per source (`MIN_GAP_S`; last attempts in `data/sources/flows_state.json`) and keeps the
   Binance archive zips in `data/raw/binance_metrics/`. `cryptox` (v5.2.2) throttles each of its six feeds the same

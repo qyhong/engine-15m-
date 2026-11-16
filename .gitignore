@@ -30,3 +30,6 @@ research/out/rl/forward6/
 # never: secrets
 .env
 *.pem
+
+# never: bot keys
+secrets/
