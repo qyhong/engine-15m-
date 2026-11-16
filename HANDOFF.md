@@ -1,4 +1,4 @@
-# Mind 15: where things stand (updated 14 Nov 2026: think15-v5.1.1, pair book, practice mode)
+# Mind 15: where things stand (updated 16 Nov 2026: think15-v5.2.2, trust cap, card pipeline, breakout studies)
 
 Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisions), then
 `THOUGHT_PROCESS.md` ("Now" section) and `CLAUDE.md`. This file is only the moving parts.
@@ -10,9 +10,12 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   this project pushes only the data). Asks Windows not to idle-sleep; a closed lid still sleeps the laptop.
   After ANY code change: Ctrl-C and start it again (between steps). It naps against the wall clock: after the Mac
   sleeps (the Windows VM pauses) it logs "woke ...s late" and catches up every missed bar.
+- **Loop location (owner, 16 Nov 2026):** it runs in the Claude Code terminal panel, so it STOPS when a Claude
+  session ends. On every session resume: check `out/live/page.json` `generated_utc`, and restart the loop if stale.
 - **Sources**: every step calls each source module's `update()` (`engine15/sources/__init__.py` MODULES). `flows`
   (v5.1.1) throttles itself per source (`MIN_GAP_S`; last attempts in `data/sources/flows_state.json`) and keeps the
-  Binance archive zips in `data/raw/binance_metrics/`.
+  Binance archive zips in `data/raw/binance_metrics/`. `cryptox` (v5.2.2) throttles each of its six feeds the same
+  way and extends `options_hist`'s Deribit aggregates live (`options_hist` itself is not in MODULES).
 - **Version history**: this folder is a local git repository (no remote; nothing is pushed). Large data, caches,
   models and live outputs are ignored (`.gitignore`); commit code and docs after a change.
 - **Web answers**: `inbox.pull()` runs the AI Trading Bot's `pull_answers.py` before each step; answers are

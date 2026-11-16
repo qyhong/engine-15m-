@@ -254,3 +254,22 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   which tier has the hourly liquidation API), whale flows $109, order-book depth history has no cheap route to 2021.
 - **P1 liquidation hunt retired** (owner: "Retire it", 15 Nov 2026 06:15 UTC) after its post-mortem and H41 (no edge
   before costs in 37 variants). `playbook.RETIRED`; the record of 65 live trades (-$1,421) stays on the page, frozen.
+
+### Status notes, 15-16 Nov 2026
+
+- **Engine versions (all reading-only additions except v5.2):** v5.1.2 seven indicator cards (`sources/osc.py`
+  Supertrend, StochRSI; `sources/osc2.py` Parabolic SAR, Money Flow Index, volume profile, Heikin-Ashi, Aroon/Vortex);
+  **v5.2 trust cap: no voting card above 40% of the say** (owner's choice, `config.trust_cap`, `model.cap_shares`; H43
+  records a history comparison: no consistent effect either way); v5.2.1 CCI card for every market (`sources/osc3.py`);
+  v5.2.2 six crypto cards (`sources/cryptox.py`: Deribit options flow, Korea premium, CME gap from spot prices, BTC
+  dominance of a tracked basket, spot vs perp leadership, cross-exchange funding/OI). Card pipeline:
+  `research/CARD_PIPELINE.md` (batches of five, reading-only, rated, 30 days forward, a vote only on the owner's yes).
+- **H42** balanced trust blend: no pass (predicts marginally better, trades worse); trust constants unchanged.
+- **Breakout research for the owner's ">70% continuation" goal, all NO PASS:** H44 15m range break with momentum and
+  daily-ATR room; H45 daily breakout with daily-sized trades; H46 384 confluence buckets; H47 regime split (trend vs
+  range); H48 FX and session timing. A daily-level break continues +0.5 before -0.5 daily ATR about 50% of the time in
+  every market and regime; the best confluence ~51-54%. USDJPY leans ~54% but USDSGD goes the other way.
+  `engine15/sources/adr.py` (daily range budget card) is built, not wired.
+- **Hosting:** a read-only probe from the US web box found Binance futures/api (451) and Bybit (403) blocked. The owner
+  keeps the engine on the laptop for now ("utilise laptop first"); a Singapore EC2 may come later (the owner launches it).
+  The live loop stays in the Claude terminal tab (owner); it stops when a Claude session ends and is restarted on resume.

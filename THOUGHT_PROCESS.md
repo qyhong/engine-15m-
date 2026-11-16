@@ -3,7 +3,7 @@
 A 15-minute thinking engine. Paper only. First written for BTC and ETH (`think15-v1`); now version
 `think15-v5` on eight markets. The sections after "Now" describe the original design, which still holds.
 
-## Now (11 Nov 2026; updated 14 Nov 2026, engine think15-v5.1.1)
+## Now (11 Nov 2026; updated 16 Nov 2026, engine think15-v5.2.2)
 
 - **Markets:** crypto (BTC, ETH), metals (gold, silver), USDJPY, S&P 500 (cash hours), oil (WTI, Brent).
   Each group is thought about separately (its own voices, trust and odds); each market has its own
@@ -16,7 +16,11 @@ A 15-minute thinking engine. Paper only. First written for BTC and ETH (`think15
   the 1h EMA50 and 4h EMA20/50): forced entries take the bias side; an entry against it needs 15 pts; a
   position against it without a 5-pt edge is flipped. No new position or flip in the hour before a
   high-impact US release (the release calendar now covers 2019 to today).
-- **Readings:** about 49 cards (36 for crypto, 20-27 for the others; crypto-only cards are not shown for
+- **Trust cap (v5.2, 15 Nov 2026, owner's choice):** no voting card may hold more than 40% of the say; the excess is
+  handed to the other voting cards in proportion to their scores (`model.cap_shares`).
+- **Readings:** about 70 cards since v5.2.2 (crypto ~60; every market also gets Supertrend, StochRSI, Parabolic SAR,
+  Money Flow, volume profile, Heikin-Ashi, Aroon/Vortex and CCI; crypto adds Deribit options flow, Korea premium,
+  CME gap, BTC dominance, spot vs perp and cross-exchange funding). Before v5.1.2: about 49 cards (36 for crypto, 20-27 for the others; crypto-only cards are not shown for
   the other markets). Only the top rated cards vote; the rest are read, journaled and shown.
   v5.1.1 (13 Nov 2026) added four crypto-only reading cards from `engine15/sources/flows.py`: Binance archive
   positioning, Bitfinex margin, CME positioning (CFTC) and on-chain activity (CoinMetrics). They do not vote; H39
