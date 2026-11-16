@@ -1731,3 +1731,92 @@ similar): forward move in the break direction to the day's close +0.01 dATR, at 
 at the day's close by more than 0.04 dATR (crypto +0.04, energy -0.02). A daily break, on its own, is a coin flip at
 the day's close and over 1-3 days in this history. Nothing goes forward as a book; the live scan
 (`py -3 research/dailybreak_study.py --scan`) is labelled paper / untested.
+
+## H46. Momentum / speed / participation CONFLUENCE at a daily-level break (registered 16 Nov 2026, 05:11 UTC, before any H46 code existed or any H46 outcome was computed)
+
+**Prompted by:** H44 and H45 (a daily-level break on its own is a coin flip: +0.5 before -0.5 daily ATR in ~49.5% of
+resolved events) and the owner, 16 Nov 2026: "Check on any indicators that can measure speed or momentum. I think need
+confluence. Not just price exceed previous day high or low." and "the momentum or how it exceed it and there are higher
+than 70% probability setup that it will continue to trend".
+
+**Question:** does a CONFLUENCE of momentum / speed / participation conditions at the moment of a daily-level break pick
+out setups that continue (+0.5 before -0.5 daily ATR) with >= 70% probability?
+
+**Events (H45's code, `dailybreak_study.daily_breaks`, momentum condition OFF):** every FIRST 15m close beyond the
+level in its UTC day, per direction (s = +1 up, -1 down), at most one up and one down event per level per day, eight
+markets (BTCUSDT, ETHUSDT, XAUUSD, XAGUSD, USDJPY, SPX, WTI, BRENT). Two levels, analysed separately: **pday** = the
+prior UTC day's high / low; **roll24** = the high / low of the previous 96 15m bars. Daily ATR D = Wilder ATR(14) of
+the last CLOSED UTC day, held for the day (`engine15/sources/adr.py` `readings`, as H44/H45). The event bar i is the
+break bar; an event needs D > 0 and its entry bar i+1 in the same UTC day (else excluded, counted).
+
+**Outcome (the primary metric, pre-cost):** entry = open of bar i+1. Hit = price reaches entry + s x 0.5 D (high for up,
+low for down) BEFORE it reaches entry - s x 0.5 D, using bars from i+1 to the last bar opening before entry + 72 h (by
+clock). A bar touching both = a miss (H45's convention, slightly below 50% for a driftless walk). Neither within 72 h =
+unresolved: excluded from hit rates and counted. Hit rate = hits / resolved. Chance ~50%.
+
+**Confluence groups (each a yes/no at the break bar's CLOSE, closed bars only; 1h / 4h / 1d values through
+`data.htf_on_15`, so a 1h bar is used only once it has closed, which can include the break bar itself; "no read" =
+does not confirm):**
+1. **SPEED:** r1h = ln(close_i / close_{i-4}) (the last 4 bars on file); sd1h = the standard deviation of r1h over
+   the last 2,880 bars on file ending at i (min 672). Confirms if s x r1h >= 1.0 x sd1h, OR the break bar's true range
+   >= 1.5 x ATR(14, 15m) of the bar before (H44/H45's momentum bar).
+2. **TREND STRENGTH (1h):** on closed 1h bars, Wilder ADX(14) / +DI / -DI (`engine15/sources/ltf.py` `adx`) and the
+   MACD(12, 26, 9) histogram (`ltf.macd_hist`). Confirms if (ADX >= 20 AND ADX > the previous 1h bar's ADX AND
+   s x (+DI - -DI) > 0) OR (s x hist > 0 AND s x (hist - previous 1h hist) > 0).
+3. **OSCILLATOR:** RSI(14) (`indicators.rsi`, first 14 bars masked) on closed 1h and closed 4h bars. Confirms if
+   s x (RSI1h - 50) > 10 (RSI1h > 60 up, < 40 down) AND NOT s x (RSI4h - 50) > 30 (RSI4h not > 80 up, not < 20 down;
+   a missing 4h RSI = no read).
+4. **PARTICIPATION:** vol_x = the break bar's volume / the median volume of the same 15m clock slot (UTC) over the
+   previous 20 days on file that have that slot (min 10; today excluded). Confirms if vol_x >= 2.0; on crypto also the
+   taker-buy share taker_buy / volume of the break bar > 0.5 for up (< 0.5 for down). A zero / missing median or
+   volume = no read (USDJPY's volume is 0 after its source join; the other non-crypto volumes change source at their
+   join, VOLUME_NOTE, so vol_x is distorted for ~20 days there).
+5. **SQUEEZE RELEASE (15m, ltf.py trendq's definition):** Bollinger(20, 2, population sd) both bands inside Keltner
+   (same 20-bar mean +/- 1.5 x the 20-bar mean true range) = squeeze ON; release = a bar with the squeeze OFF after a
+   bar with it ON. Confirms if the squeeze is OFF at bar i and the last release is at most 8 bars before i (0-8,
+   i.e. ltf's tq_sq_bars_since <= 8). Direction is not required.
+6. **HTF ALIGNMENT:** the engine's trend-map score (`indicators.trend_score`, -1..+1) on closed 4h bars and on closed
+   UTC daily bars. Confirms if s x score4h > 0 AND s x score1d > 0 (both lean the break's way).
+7. **LEVERAGE (crypto only, BTCUSDT from Sep 2020, ETHUSDT from Dec 2021):** Binance archive open interest
+   (`data/sources/flows_metrics_<coin>.csv`, column oi, 15m snapshots read as data, the file is not modified).
+   oi_now = the snapshot stamped at the break bar's OPEN time (15 minutes before its close: conservative), oi_4h = the
+   snapshot 4 h earlier. Confirms if ln(oi_now / oi_4h) > 0 (open interest rising into the break, whichever side).
+   CAVEAT stated now: the archive file of day D is published ~12 h after D ends (flows.py known_ms), so the LIVE engine
+   could NOT read this in real time; it describes what a live open-interest feed (which the engine does not have)
+   would have shown. Non-crypto events and crypto events before the archive = no read.
+
+**COUNT** = the number of confirming groups (0-6; 0-7 on crypto with an OI read).
+
+**The search (fixed now):** per level and per scope, 32 buckets: COUNT >= 3, >= 4, >= 5, = all (every group that has a
+read for that event confirms: 6 of 6, or 7 of 7 on crypto with OI); each of the 7 groups alone; each of the 21 pairs of
+groups (both confirm). Scopes: pooled over the 8 markets + each of the 5 market groups (crypto, metals, fx, index,
+energy) = 6. **Multiple-testing count: 32 x 2 levels x 6 scopes = 384 buckets** (buckets that are empty in a scope,
+e.g. group 7 outside crypto, are still counted: conservative). Bonferroni threshold per half: p < 0.05 / 384 = 1.30e-4.
+Reference row (not a test): every event of the level.
+
+**Data and split (H44/H45's):** rows before the sealed holdout 2025-11-11 00:00 UTC only (dropped right after loading,
+never read); events with entry from 2020-01-01; first half = entry before 2023-06-07, second half = from it to the seal.
+
+**"70% setup" (declared only if ALL hold for a bucket in a scope and level):** in BOTH halves the hit rate >= 70% with
+>= 100 resolved events, AND the two-sided exact binomial p-value against 50% < 1.30e-4 in BOTH halves. Every bucket's
+hit rate, n (resolved), unresolved count and p per half is reported anyway, sorted, with the lift over the level's
+reference row. A pass would be described precisely so it could be registered as a forward PAPER book after asking the
+owner; no live book is built here.
+
+**After costs (descriptive, for the top buckets):** the top buckets = the 10 pooled buckets (either level) with the
+highest LOWER-of-two-halves hit rate among those with >= 100 resolved events in each half, plus any 70% setup. Each is
+traded: entry at the next 15m open (same UTC day only; a fill gapping beyond the stop is not taken), stop entry - s x
+0.5 D, target entry + s x 0.5 D, out at the first open at or after entry + 72 h, stop first inside a bar, gaps fill at
+the open, one position per market at a time, $10,000 a trade, each market's own fee a side (`playbook.fee_side`):
+trades, win %, R before / after costs, % of stake a trade, net $, per half and per market; and events per month.
+
+**Look-ahead guard:** `tests/test_confluence.py` truncates synthetic 24h and cash-hours bars (with volume, taker-buy and
+an OI frame) and checks the event + confluence function gives the same rows and the same group flags on every row
+before the cut; the same truncation check runs on the real bars of every market; the squeeze flag is cross-checked
+against `ltf.features`' tq_sq_bars_since. No feature may use a bar after the break bar.
+
+**Prior, stated now:** every momentum reading here has been near-useless as a single predictor in this project (H44,
+H45, the card ratings). Conditioning on strong momentum usually raises continuation by a few points at most, and
+crowded breaks often mean-revert. The honest expectation is that no bucket reaches 70% in either half, let alone both;
+the best buckets may sit at 52-56%. Code `research/confluence_study.py`, report `research/out/confluence/study.md` +
+`.json`, test `tests/test_confluence.py`.
