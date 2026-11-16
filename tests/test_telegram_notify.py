@@ -29,24 +29,24 @@ def test_alerts_from_changes():
     prev = {"c": c0, "v": v0, "net": n0, "refits": [1, 1], "stale": False}
     c1, v1, n1 = tn.counts(score(23, 5200.0), page())
     ev = tn.events(prev, {"c": c1, "v": v1, "net": n1, "refits": [2, 1]}, page(), NOW)
-    assert any("b_trail closed 1 trade" in e and "+$222" in e for e in ev)
+    assert any("B trail (shadow)" in e and "closed 1 trade" in e and "+$222" in e for e in ev)
     assert any("Phase 5" in e for e in ev)
     c2, v2, n2 = tn.counts(score(30, 6000.0), page())
     ev2 = tn.events({"c": c1, "v": v1, "net": n1, "refits": [2, 1]}, {"c": c2, "v": v2, "net": n2, "refits": [2, 1]}, page(), NOW)
-    assert any("reached 30 trades" in e for e in ev2)
+    assert any("reached" in e and "30 trades" in e and "Verdict due" in e for e in ev2)
 
 
 def test_stale_and_fresh_again():
     old = page("2026-11-16T23:00:00Z")
     ev = tn.events({"c": None}, {"c": {}, "v": {}, "net": {}, "refits": []}, old, NOW)
-    assert any("STALE" in e for e in ev)
+    assert any("Engine quiet" in e for e in ev)
     ev2 = tn.events({"c": None, "stale": True}, {"c": {}, "v": {}, "net": {}, "refits": []}, page(), NOW)
-    assert any("fresh again" in e for e in ev2)
+    assert any("Engine back" in e for e in ev2)
 
 
 def test_summary_text():
     s = tn.summary(page(), score(), NOW)
-    assert "daily summary" in s and "BTC: SHORT" in s and "+$1,200" in s and "b_trail" in s and "+$250" in s
+    assert "daily summary" in s and "BTC" in s and "SHORT" in s and "+$1,200" in s and "B trail" in s and "+$250" in s and "<pre>" in s
 
 
 def test_chat_lock_summary_once_and_key_never_printed(monkeypatch, tmp_path, capsys):

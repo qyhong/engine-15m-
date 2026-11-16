@@ -36,6 +36,7 @@ STALE_MIN = 40
 SUMMARY_UTC = (0, 0)
 QUIET = ("p1_", "p2_", "p3_", "p6_vwap", "p7_session", "p8_", "p9_", "p10_", "p11_", "p12_")
 FORWARD = ("playbook4", "playbook5", "playbook6", "playbook7")
+WON = {}                                                    # book key -> win % (scoreboard)
 
 
 # ------------------------------------------------------------------ small helpers
@@ -77,6 +78,55 @@ def _usd(v):
     return ("+$%s" if v >= 0 else "-$%s") % "{:,.0f}".format(abs(v))
 
 
+NAMES = {"main": "Main engine", "b_trail": "B trail (shadow)", "b_targets": "B targets (shadow)",
+         "b_ema20_1h_t1": "EMA20 trail (shadow)", "b_sma20_1h_t1": "SMA20 trail (shadow)", "b_be_t1": "Break-even trail",
+         "a_pullback": "A pullback (shadow)", "h3_flip_limit": "H3 flip limit", "h5_damp": "H5 damped", "v4": "v4 (old rules)",
+         "y_4h": "4h yardstick", "y_1d": "Daily yardstick", "m_swing_1h": "1h swing mind", "m_swing_4h": "4h swing mind",
+         "p5_rlq": "P5 RL agent", "p6_mtrend": "P6 RL momentum", "p6_p4trend": "P6 control (RL)", "p7_rvbear": "P7 BTC/ETH pair",
+         "p4_h30spot": "P4 rule A", "p4_h31trail": "P4 rule B", "p1_liqhunt": "P1 liquidity hunt (retired)",
+         "p3_orb": "P3 opening range", "p6_vwap": "P6 VWAP", "p7_session": "P7 session", "p8_fvg": "P8 fair-value gap",
+         "p10_round": "P10 round numbers", "p11_release": "P11 release", "p12_orb_us": "P12 US opening range",
+         "p5_squeeze": "P5 squeeze"}
+GREEN, RED, FLAG_END, SCALE, BRAIN, WARN, OK, WAVE, CHART = (u"\U0001f7e2", u"\U0001f534", u"\U0001f3c1", u"\u2696\ufe0f",
+                                                            u"\U0001f9e0", u"\u26a0\ufe0f", u"\u2705", u"\U0001f44b", u"\U0001f4ca")
+
+
+def _esc(t):
+    return str(t).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+TABLE = {"b_trail": "B trail", "b_targets": "B targets", "b_ema20_1h_t1": "EMA20 trail", "b_sma20_1h_t1": "SMA20 trail",
+         "b_be_t1": "BE trail", "p8_fvg": "P8 FVG", "p3_orb": "P3 ORB", "p6_vwap": "P6 VWAP", "p10_round": "P10 round",
+         "p1_liqhunt": "P1 liq hunt", "p5_rlq": "P5 RL", "p6_mtrend": "P6 RL mom", "p6_p4trend": "P6 RL ctrl",
+         "p7_rvbear": "P7 pair", "a_pullback": "A pullback", "main": "Main"}
+MKT = {"BTCUSDT": "BTC", "ETHUSDT": "ETH", "XAUUSD": "Gold", "XAGUSD": "Silver", "USDJPY": "USDJPY", "SPX": "S&P", "WTI": "WTI",
+       "BRENT": "Brent"}
+
+
+def _tname(book):
+    return TABLE.get(book, NAMES.get(book, book))[:12]
+
+
+def _name(key):
+    book = key.split("|")[0]
+    return NAMES.get(book, book)
+
+
+def _bar(n, total=30, width=10):
+    k = max(0, min(width, int(round(width * float(n) / total))))
+    return u"\u2588" * k + u"\u2591" * (width - k)
+
+
+def _send(tok, chat, text):
+    """One message as HTML (bold, fixed-width tables); plain text if Telegram rejects the markup."""
+    r = _call(tok, "sendMessage", {"chat_id": chat, "text": text, "parse_mode": "HTML", "disable_web_page_preview": True})
+    if not r.get("ok"):
+        import re as _re
+        plain = _re.sub(r"<[^>]+>", "", text).replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&")
+        r = _call(tok, "sendMessage", {"chat_id": chat, "text": plain})
+    return r
+
+
 # ------------------------------------------------------------------ what the engine wrote
 def counts(score, page):
     """-> ({book key: closed trades}, {book key: verdict}, {book key: net usd}) from the scoreboard and forward books."""
@@ -84,6 +134,7 @@ def counts(score, page):
     for r in (score or {}).get("rows", []):
         k = "%s|%s" % (r.get("book"), r.get("title"))
         c[k], v[k], net[k] = int(r.get("trades") or 0), str(r.get("verdict") or ""), float(r.get("net_usd") or 0.0)
+        WON[k] = r.get("won_pct")
     for mod in FORWARD:
         for bk, b in ((page or {}).get("playbook", {}).get(mod) or {}).items():
             if isinstance(b, dict) and "totals" in b and not any(k.startswith(bk + "|") for k in c):
@@ -112,8 +163,17 @@ def refit_marks():
     return out
 
 
+def _trade_card(key, added, delta, n, tot):
+    won = WON.get(key)
+    return (u"%s <b>%s</b> \u00b7 closed %d trade%s\n"
+            u"Result <b>%s</b>   Total <b>%s</b>%s\n"
+            u"<code>%s</code> %d / 30 to verdict\n"
+            u"<i>paper only</i>") % (GREEN if delta >= 0 else RED, _esc(_name(key)), added, "" if added == 1 else "s",
+                                     _usd(delta), _usd(tot), "" if won is None else "   Won %.0f%%" % float(won), _bar(n), n)
+
+
 def events(prev, cur, page, now=None):
-    """-> list of alert texts by comparing the previous check (prev) with this one (cur)."""
+    """-> list of alert cards (HTML) by comparing the previous check (prev) with this one (cur)."""
     ev = []
     if prev.get("c") is not None:
         for k, n in cur["c"].items():
@@ -123,44 +183,49 @@ def events(prev, cur, page, now=None):
                 continue
             tot = cur["net"].get(k, 0.0)
             if n >= 30 > old:
-                ev.append("Mind 15: %s reached %d trades - verdict due (net %s)." % (book, n, _usd(tot)))
+                ev.append(u"%s <b>%s</b> reached <b>%d trades</b>\nVerdict due \u00b7 net <b>%s</b>\n<i>paper only</i>"
+                          % (FLAG_END, _esc(_name(k)), n, _usd(tot)))
             elif not book.startswith(QUIET):
-                delta = tot - prev.get("net", {}).get(k, tot)
-                ev.append("Mind 15: %s closed %d trade(s) (%s), now %d of 30, net %s." % (book, n - old, _usd(delta), n, _usd(tot)))
+                ev.append(_trade_card(k, n - old, tot - prev.get("net", {}).get(k, tot), n, tot))
         for k, s in cur["v"].items():
             old = prev.get("v", {}).get(k)
             if old and s != old and not s.startswith("too few trades"):
-                ev.append("Mind 15: %s verdict - %s" % (k.split("|")[0], s))
+                ev.append(u"%s <b>%s</b> verdict\n%s" % (SCALE, _esc(_name(k)), _esc(s)))
         for i, (a, b) in enumerate(zip(prev.get("refits", []), cur["refits"])):
             if b > a:
-                ev.append("Mind 15: weekly RL refit (Phase %d) finished." % (5 + i))
+                ev.append(u"%s <b>Weekly RL refit done</b> (Phase %d)\nThe new model is used from the next step." % (BRAIN, 5 + i))
     age = page_age_min(page, now)
     if age is not None:
         if age > STALE_MIN and not prev.get("stale"):
-            ev.append("Mind 15: page STALE - last update %s (%.0f min ago). The engine may be down." % (page["generated_utc"], age))
+            ev.append(u"%s <b>Engine quiet</b>\nNo page update for %.0f min (last %s UTC).\nIt may be down: check the server."
+                      % (WARN, age, page["generated_utc"][11:16]))
         if age <= STALE_MIN and prev.get("stale"):
-            ev.append("Mind 15: page fresh again (%s)." % page["generated_utc"])
+            ev.append(u"%s <b>Engine back</b>\nPage updated %s UTC." % (OK, page["generated_utc"][11:16]))
     return ev
 
 
 def summary(page, score, now=None):
-    """The daily summary as plain text."""
+    """The daily summary card (HTML: bold headings, fixed-width tables)."""
     now = now or datetime.now(timezone.utc)
-    L = ["Mind 15 daily summary - %s UTC (paper only)" % now.strftime("%a %d %b %H:%M"), ""]
+    head = u"%s <b>Mind 15 \u00b7 daily summary</b>\n%s UTC \u00b7 <i>paper only</i>" % (CHART, now.strftime("%a %d %b, %H:%M"))
     if not page:
-        return "\n".join(L + ["No page available - the engine may be down."])
+        return head + u"\n\n%s No page available: the engine may be down." % WARN
     age = page_age_min(page, now)
-    L.append("Engine %s, page %s (%s min old)." % (page.get("version", "?"), page.get("generated_utc", "?"),
-                                                  "?" if age is None else "%.0f" % age))
-    L += ["", "Positions:"]
-    tot_open = 0.0
+    ok = age is not None and age <= STALE_MIN
+    L = [head, u"%s Engine %s \u00b7 updated %s" % (OK if ok else WARN, _esc(page.get("version", "?")),
+                                                   "?" if age is None else "%.0f min ago" % age), ""]
+    rows, tot_open = [], 0.0
     for a, d in (page.get("assets") or {}).items():
         tr = d.get("trade") or {}
         u = float(tr.get("unrealized_usd") or 0.0)
         tot_open += u
-        L.append("- %s: %s, edge %s pts, open %s" % (d.get("short") or a, d.get("position") or tr.get("status") or "?",
-                                                    d.get("edge_pts"), _usd(u)))
-    L.append("Open P&L across markets: %s" % _usd(tot_open))
+        pos = str(d.get("position") or tr.get("status") or "-")
+        edge = d.get("edge_pts")
+        rows.append("%-6s %-5s %6s %9s" % (MKT.get(a, d.get("short") or a)[:6], pos[:5],
+                                          "" if edge is None else "%+.1f" % float(edge), _usd(u)))
+    table = "\n".join(["%-6s %-5s %6s %9s" % ("Market", "Side", "Edge", "Open"), "-" * 29] + rows +
+                      ["-" * 29, "%-19s %9s" % ("Total open", _usd(tot_open))])
+    L += ["<b>Positions</b>", "<pre>%s</pre>" % _esc(table)]
     since = now.timestamp() - 86400
     closed = []
     for a, d in (page.get("assets") or {}).items():
@@ -170,15 +235,20 @@ def summary(page, score, now=None):
             except Exception:
                 continue
             if ts >= since:
-                closed.append("- %s %s: %s" % (d.get("short") or a, "long" if t.get("side", 0) > 0 else "short",
-                                              _usd(float(t.get("pnl_usd") or 0.0))))
-    L += ["", "Main books, closed in the last 24 h:"] + (closed or ["- none"])
-    rows = sorted((score or {}).get("rows", []), key=lambda r: -int(r.get("trades") or 0))
-    near = [r for r in rows if 15 <= int(r.get("trades") or 0) < 30]
-    lead = sorted((r for r in rows if int(r.get("trades") or 0) >= 5), key=lambda r: -float(r.get("net_usd") or 0))[:3]
-    L += ["", "Leaders (5+ trades):"] + ["- %s: %s over %d trades" % (r["book"], _usd(float(r["net_usd"] or 0)), r["trades"]) for r in lead]
-    L += ["", "Close to a verdict (15-29 trades):"] + (["- %s: %d of 30, %s" % (r["book"], r["trades"], _usd(float(r["net_usd"] or 0)))
-                                                         for r in near] or ["- none"])
+                pnl = float(t.get("pnl_usd") or 0.0)
+                closed.append(u"%s %s %s <b>%s</b>" % (GREEN if pnl >= 0 else RED, _esc(MKT.get(a, d.get("short") or a)),
+                                                      "long" if t.get("side", 0) > 0 else "short", _usd(pnl)))
+    L += ["", u"<b>Main engine \u00b7 closed in 24 h</b>"] + (closed or ["none"])
+    srows = (score or {}).get("rows", [])
+    lead = sorted((r for r in srows if int(r.get("trades") or 0) >= 5), key=lambda r: -float(r.get("net_usd") or 0))[:3]
+    if lead:
+        L += ["", "<b>Leaders</b> (5+ trades)", "<pre>%s</pre>" % _esc("\n".join(
+            "%-12s %8s %3d trades" % (_tname(r["book"]), _usd(float(r["net_usd"] or 0)), int(r["trades"]))
+            for r in lead))]
+    near = sorted((r for r in srows if 15 <= int(r.get("trades") or 0) < 30), key=lambda r: -int(r["trades"]))
+    L += ["", "<b>Close to a verdict</b>"]
+    L += ["<pre>%s</pre>" % _esc("\n".join(u"%-12s %s %2d/30" % (_tname(r["book"]), _bar(int(r["trades"])),
+                                                                int(r["trades"])) for r in near))] if near else ["none"]
     return "\n".join(L)
 
 
@@ -197,10 +267,10 @@ def check(st, tok, send=True, now=None):
                 continue
             if st.get("chat_id") is None and text.startswith("/start"):
                 st["chat_id"] = chat
-                _call(tok, "sendMessage", {"chat_id": chat, "text": "Mind 15 alerts are on for this chat (paper only). "
-                                           "You will get trade closes, verdicts, stale-page warnings and a daily summary at 08:00 SGT."})
+                _send(tok, chat, u"%s <b>Mind 15 alerts are on</b> for this chat.\nTrade closes, verdicts, engine warnings and a "
+                                 u"daily summary at 08:00 SGT. Send /summary any time.\n<i>paper only</i>" % WAVE)
             elif chat == st.get("chat_id") and text.startswith("/summary"):
-                _call(tok, "sendMessage", {"chat_id": chat, "text": summary(_load(PAGE), _load(SCORE), now)})
+                _send(tok, chat, summary(_load(PAGE), _load(SCORE), now))
     page, score = _load(PAGE), _load(SCORE)
     c, v, net = counts(score, page)
     cur = {"c": c, "v": v, "net": net, "refits": refit_marks()}
@@ -211,9 +281,9 @@ def check(st, tok, send=True, now=None):
     due = (now.hour, now.minute) >= SUMMARY_UTC and st.get("summary_day") != day
     if send and tok and st.get("chat_id") is not None:
         for e in ev:
-            _call(tok, "sendMessage", {"chat_id": st["chat_id"], "text": e})
+            _send(tok, st["chat_id"], e)
         if due:
-            _call(tok, "sendMessage", {"chat_id": st["chat_id"], "text": summary(page, score, now)})
+            _send(tok, st["chat_id"], summary(page, score, now))
             st["summary_day"] = day
     elif due and st.get("chat_id") is None:
         pass                                                          # no chat yet: the summary waits
@@ -229,7 +299,17 @@ def main(argv=None):
         if not (tok and st.get("chat_id") is not None):
             print("no key file or no chat yet: send /start to the bot after the key file is in place")
             return 1
-        _call(tok, "sendMessage", {"chat_id": st["chat_id"], "text": summary(_load(PAGE), _load(SCORE))})
+        _send(tok, st["chat_id"], summary(_load(PAGE), _load(SCORE)))
+        return 0
+    if "--sample" in argv:                                            # one example alert card, labelled as a sample
+        tok = token()
+        if not (tok and st.get("chat_id") is not None):
+            print("no key file or no chat yet")
+            return 1
+        c, v, net = counts(_load(SCORE), _load(PAGE))
+        k = next((x for x in c if x.startswith("b_trail|")), None)
+        if k:
+            _send(tok, st["chat_id"], u"<i>Sample of the new alert look:</i>\n" + _trade_card(k, 1, 210.0, c[k], net.get(k, 0.0)))
         return 0
     while True:
         try:
