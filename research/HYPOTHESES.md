@@ -1929,3 +1929,133 @@ Reading: in this history a daily-level break is ~50/50 in every regime these fiv
 not two opposite halves cancelling. Nothing goes forward as a book. The live scan (`py -3
 research/regime_split_study.py --scan`) prints each market's regime readings and today's breaks with their buckets,
 labelled paper / untested.
+
+## H48. FX AND SESSION TIMING: FX daily-break continuation out of family, and session-range breakouts (registered 16 Nov 2026, 05:55 UTC, before any H48 code existed or any H48 outcome was computed)
+
+**Prompted by:** H46/H47. Daily-level breaks continued ~50% in every market group except FX (USDJPY): prior-day
+breaks 53.3% / 53.3% (p 0.058 / 0.115) and rolling-24h 54.9% / 54.2% (p 0.004 / 0.039) on the symmetric +0.5 vs -0.5
+daily ATR outcome, first / second half. That lean was found among 384 + 552 tests, so it may be noise. The owner
+approved H48 (16 Nov 2026): (A) is the FX lean real out of family, steady, and tradeable after costs; (B) do
+SESSION-range breakouts (Asia range into London, pre-New York ranges into New York, the index opening range)
+continue where whole-day breaks do not?
+
+**Related earlier tests (disclosed, same family):** H12 (Asian range broken in the first 4 h after the London open,
+gold and USDJPY, stop at the far side of the range, 3R; history ~+0.03-0.05R before costs, negative after; a forward
+shadow book) and H8 (30-minute opening range breakout, 130 variants in playbook2; nothing positive after costs).
+H48 re-asks those questions on the symmetric daily-ATR outcome, not their trade designs. Range-break family so far:
+H44-H47 (10 selectable rules, 384 + 552 bucket tests) plus H8/H12's variants.
+
+**Data.** Engine files (`data.load`, the H45 loader `rangebreak_study.load_dev`): USDJPY, XAUUSD, XAGUSD, SPX, WTI,
+BRENT. Extra out-of-family markets read READ-ONLY from the Kronos store (`C:\tmp\kronos\data\markets\<ID>\15m.csv.gz`,
+Dukascopy BID 15m built from 1m, UTC open times; read with pandas, nothing written there): **USDSGD** (24h FX) and
+**NDX** (Nasdaq-100 CFD, restricted to the NYSE cash session with `extdata.open_mask("SPX", ...)`, the engine's own
+SPX filter). Pre-check (structure only, no outcome): both files monotonic, no duplicates, all stamps on the 15m grid,
+no OHLC violations, a median 96 (USDSGD) / 89 (NDX CFD) bars per weekday 2020-2025. Rows at or after the seal
+2025-11-11 00:00 UTC are dropped right after loading. Events with entry from 2020-01-01; first half = entry before
+2023-06-07, second half = from it to the seal (H44-H47's split). Fees a side: config's (`playbook.fee_side`; USDJPY
+0.01%, XAU 0.02%, XAG 0.03%, SPX 0.02%, oil 0.04%); USDSGD 0.015% (my choice: wider spread than USDJPY); NDX 0.02%
+(as SPX). No new data is fetched from the internet.
+
+**Daily ATR D** = Wilder ATR(14) of the last CLOSED UTC day, held for the day (`engine15/sources/adr.py` `readings`,
+as H44-H47). An event needs D > 0 and its entry bar (the next bar) in the same UTC day.
+
+**The variants (7 in all, every one counted):**
+
+| id | event | markets | outcome window / trade time exit |
+|---|---|---|---|
+| A1 | H46 pday event: first 15m close beyond the prior UTC day's high/low, per direction per day (`dailybreak_study.daily_breaks`, momentum off) | USDJPY, USDSGD | 72 h |
+| A2 | H46 roll24 event: same with the previous 96 bars' high/low | USDJPY, USDSGD | 72 h |
+| B1 | Asia range = high/low of bars opening 00:00-06:45 UTC that day (needs >= 14 of 28 bars); event = first 15m close above / below it among bars opening 07:00-09:45 UTC (closes 07:15-10:00), per direction | USDJPY, USDSGD, XAUUSD, XAGUSD, WTI, BRENT | rest of the UTC day |
+| B2 | pre-NY range = bars opening 00:00-13:15 UTC (>= 27 of 54); event window bars opening 13:30-15:45 UTC | same 6 | rest of the UTC day |
+| B3 | London range = bars opening 07:00-13:15 UTC (>= 13 of 26); event window bars opening 13:30-15:45 UTC | same 6 | rest of the UTC day |
+| B4 | index opening range, 30 min = the cash session's first 2 bars (the day counts only if its first bar opens at 09:30 New York); event window = session bars 3-10 (closes up to open + 2 h 30) | SPX, NDX | rest of the UTC day (= the session) |
+| B5 | index opening range, 60 min = the first 4 bars; event window = session bars 5-10 | SPX, NDX | rest of the UTC day |
+
+B4/B5 anchor on the real cash open (14:30 UTC in US winter, 13:30 UTC in US summer time), not a fixed 14:30 UTC, which
+would sit an hour into the session for eight months a year; the event window is then 2.5 h from the open, the same
+length as B2/B3's 13:30-16:00 UTC window. Every range is complete (its last bar closed) before the first bar of its
+event window closes; an event is decided at its bar's close.
+
+**Outcome (primary, pre-cost).** Entry = open of the next bar (same UTC day, else no event). Hit = price reaches
+entry + s x X before entry - s x X (s = +1 up, -1 down), X = 0.5 x D; a bar touching both = miss; neither within the
+window = unresolved, excluded and counted. A: bars from entry to the last bar opening before entry + 72 h
+(`confluence_study.outcome`, H46's exactly). B: bars from entry to the last bar of the break's UTC day. Secondary,
+descriptive only, not counted: the same with X = 0.25 x D.
+
+**The trade (after costs).** Entry at the next open, stop entry - s x 0.5 D, target entry + s x 0.5 D, stop first
+inside a bar, an open beyond either fills at that open; time exit A: the first open at or after entry + 72 h
+(H46's `trades_of`); B: the close of the last bar of the break's UTC day. One position per market at a time per
+variant, $10,000 a trade, the market's own fee a side.
+
+**Count and test.** Per half, each variant's pooled cell plus one cell per market is a test: A1 3, A2 3, B1 7, B2 7,
+B3 7, B4 3, B5 3 = **33 tests per half**; Bonferroni threshold p < 0.05 / 33 = 1.52e-3 (exact two-sided binomial
+against 50%, `confluence_study.binom_p`).
+
+**Fixed pass bar (each variant, on its POOLED cell):** (1) hit rate >= 55% in BOTH halves; (2) >= 200 resolved events
+in each half; (3) p < 1.52e-3 in BOTH halves; (4) the trade's net $ after costs > 0 in the second half pooled AND
+net > 0 in a majority (more than half) of its markets in the second half (A, B4, B5: both markets; B1-B3: >= 4 of 6).
+USDJPY is where the FX lean was found, so A's pooled cell is not independent of H46: USDSGD alone is the genuine
+out-of-family check and is reported apart (condition 4 already requires it to be positive after costs). A pass
+would be described precisely enough to register as a forward paper book after asking the owner; nothing is built.
+
+**Descriptive (reported whatever the result, not counted):** A: hit rate by calendar year and by direction (up vs down
+breaks), per market and pooled, per half; B: the X = 0.25 D hit rates; for the passing variant (or, if none passes,
+the best = highest lower-of-two-halves pooled hit rate with >= 200 resolved per half): hit rate by weekday and by
+month of the year, trades a month; DST: B1-B3 recomputed with the same clock windows read in London local time
+(Europe/London), and the UTC results split by London winter (GMT) / summer (BST); B4/B5 split by US winter / summer.
+
+**Look-ahead guard:** `tests/test_session_break.py` truncates synthetic 24h and cash-hours bars and checks the event
+function gives the same events and range values on every row before the cut, checks by hand that each range uses only
+bars of its own window and that the event bar opens inside the event window after the range is complete, and that
+the generic outcome equals `confluence_study.outcome` for the 72 h case. The same truncation check runs on every real
+market. Live scan for today, labelled paper / untested.
+
+**Prior, stated now:** H12's history put Asian-range breakouts at a few hundredths of an R before costs; the USDJPY
+lean in H46 was the best of hundreds of cells. I expect A pooled at 51-54% with USDSGD nearer 50-52%, no B variant
+at 55% in both halves, and no pass. Code `research/session_break_study.py`, report `research/out/session_break/study.md`
++ `.json`.
+
+### H48 results (16 Nov 2026, ~06:00 UTC; development data to 2025-11-11; `research/out/session_break/study.md`)
+
+**NO PASS, and the FX lean did not survive out of family.** Code `research/session_break_study.py` (H45's event code,
+H46's outcome and trade bookkeeping reused; a generic same-day outcome for B); `tests/test_session_break.py`
+(truncation on 24h and DST-spanning cash-hours synthetic bars incl. the London-local windows; the events recomputed
+by hand bar by bar with an assert that every range closed before its event bar opened; the opening range anchored on
+14:30 UTC before and 13:30 UTC after US DST; the 72 h outcome identical to `confluence_study.outcome`; the same-day
+frame). Real bars: 0 mismatched truncation runs on all 8 markets (98,824 events compared). USDSGD and NDX from the
+read-only Kronos store were clean and usable (USDSGD 2016-2025 24h; NDX CFD cut to NYSE cash hours, ~26 bars a
+session). No data fetched. Holdout not touched. 7 variants, 33 tests per half, Bonferroni 1.52e-3. Sanity: USDJPY
+reproduces H46 exactly (pday 53.3% of 875 / 53.3% of 612; roll24 54.9% / 54.2%).
+
+**Pooled hit rates (first / second half, resolved n):** A1 FX prior-day 49.7% (1,803) / 51.6% (1,218); A2 FX
+rolling-24h 50.4% (1,858) / 51.6% (1,272); B1 Asia range into London 49.5% (2,719) / 50.1% (1,944); B2 00:00-13:30
+range into New York 53.5% (1,177, p 0.017) / 52.1% (964, p 0.21); B3 London range into New York 53.2% (1,423,
+p 0.017) / 51.6% (1,138); B4 index 30-min opening range 49.4% (806) / 48.4% (616); B5 60-min 48.7% (495) / 49.6%
+(377). No variant reached 55% in either half; 0 of 33 cells pass Bonferroni in both halves. B2/B3 resolve only
+~40% of events within the day.
+
+**(A) FX steadiness.** USDSGD, the out-of-family check, went the OTHER way: prior-day 46.3% (928) / 50.0% (606),
+rolling-24h 46.4% (983) / 49.0% (637); below 50% in 2021-2024 on both levels (44.5-48.6%), 47.9-50.6% in 2020, 52% in 2025. USDJPY stays
+steady at 50.6-59.2% in every year 2020-2025 on both levels, but its lean is mostly UP breaks on the prior-day level
+(up 56.4% / 55.1%, down 49.4% / 51.1%); on rolling-24h both directions ~54-55%. So the H46 lean is a USDJPY feature
+in this window (a strong-trend dollar-yen period), not an FX one. After costs (stop/target 0.5 daily ATR, 72 h):
+A1 second half pooled -0.011% a trade (977 trades), USDJPY +0.009% (485, +$426), USDSGD -0.031% (-$1,518); A2
+pooled -0.016%, USDJPY +0.011% (+$575), USDSGD -0.042%. USDJPY alone is about break-even after its 0.01% fee.
+
+**(B) Session breaks.** USDJPY again leads (B2 61.1% / 55.5%, B3 60.9% / 55.1%, small n 110-190 a half), silver
+57.8-58.0% / 54.8-56.4%; USDSGD 41-49% (B2/B3), oil 48-55%. After costs every B variant loses in the second half pooled (B1 -0.086%,
+B2 -0.025%, B3 -0.036%, B4 -0.034%, B5 -0.024% a trade); markets positive: B1 USDJPY only, B2 silver only, B3 none,
+B4/B5 none. Gross R is +0.01 to +0.03 at best (B2/B3/B4/B5), eaten by costs. X = 0.25 daily ATR (descriptive):
+48.6-52.1% everywhere pooled.
+
+**Descriptive extras.** Best variant (not passing) B2: weekday 50.2-54.8%, months 44.6-72.0% (May 72% of 132, noise
+level). DST: London-local windows give B1 49.3% / 50.2%, B2 51.1% / 51.5%, B3 51.3% / 51.5% (slightly lower than UTC),
+BST vs GMT within 1-2 points. Index opening range in US winter time continued less (B4 45.9% / 38.5%, B5 46.3% /
+35.2%, p 0.003 in the second half on 108-174 events) than in summer (51.6% / 52.3%): one of ~20 descriptive splits,
+not counted, not significant after any correction; worth noting, not acting on.
+
+Reading: a session-range break, like a daily one, is a coin flip pooled; the only persistent lean in the whole
+H44-H48 family is USDJPY's, and it does not carry to USDSGD, so it should be read as one market's history, not an
+FX rule, and it does not pay its costs. Nothing goes forward as a book. Live scan `py -3
+research/session_break_study.py --scan` (paper / untested; USDSGD and NDX scans are stale because the Kronos store
+ends 5-6 Nov 2026).
