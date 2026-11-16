@@ -1636,3 +1636,98 @@ pieces (room left per direction, the momentum-break flag) carry no history edge 
 As the owner asked for data points, the reading-only card `engine15/sources/adr.py` ("Daily range budget and range
 breaks", voice `adr`, all eight markets) is built and tested but NOT wired into `sources.MODULES`; a live scan
 (`py -3 research/rangebreak_study.py --scan`) lists current breaks with their daily-ATR context, labelled untested.
+
+## H45. Daily range breaks traded with a DAILY-sized trade (registered 16 Nov 2026, 04:58 UTC, before any H45 code existed or any H45 number was computed)
+
+**Prompted by:** H44 (every H44 trade was 15m-sized: stop 1 x ATR15, targets 1R/2R, hold 4 h) and the owner's question
+about breaks of the 24-hour / daily range; the owner agreed ("Yes", 16 Nov 2026) to test a DAILY breakout traded with a
+DAILY-sized trade.
+
+**Definitions (fixed now).** Daily ATR = Wilder ATR(14) on UTC daily bars, the value of the last CLOSED day (through
+`data.htf_on_15`, held for the whole UTC day; `engine15/sources/adr.py` `readings`, the same code as H44). Levels:
+(a) **pday** = the prior UTC day's high / low; (b) **roll24** = the high / low of the previous 96 15m bars, known at the
+previous bar's close. **Daily break** = the FIRST 15m close beyond the level in that UTC day, per direction (a close
+above the level for up, below for down; one up and one down event at most per level per day). **With momentum** = that
+first close is on a bar whose true range is >= 1.5 x ATR(14, 15m) of the bar before (H44's condition); if the first
+close is not a momentum bar there is no momentum event that day (a later close does not count). **used** = (today's
+high - low so far, the break bar included) / daily ATR; buckets room left < 0.65, middle 0.65-1.0, exhausted >= 1.0.
+
+**The trade (common frame).** Decision at the break bar's close; entry at the next 15m open, only if that bar is in the
+same UTC day as the break (else no trade); a fill gapping beyond the stop is not taken. One position per market at a
+time ($10,000 a trade), the market's own fee a side (`playbook.fee_side`). Inside a bar the stop is checked first; an
+open beyond the stop or the target fills at that open. A minimal simulator in the study implements this (a single
+stop, a single target, a per-trade exit bar) because `playbook.simulate` always splits half at T1 with a break-even
+stop and has one hold length for all signals. Exits:
+- **day end**: out at the open of the first bar of a later UTC day than the break (for markets that shut, the next
+  session's first open; Friday -> Monday);
+- **3 days**: out at the open of the first bar at or after entry + 72 hours (= 288 bars on 24h markets; by clock so the
+  cash-hours S&P is not held 11 sessions).
+Stops: **S1** = entry -/+ 0.5 x daily ATR; **S2** = the broken level -/+ 0.25 x daily ATR. Targets: **T1** = entry +/-
+1.0 x daily ATR; **Troom** = the remaining daily room at the break bar (today's low + 1 daily ATR for a long, today's
+high - 1 daily ATR for a short), set to entry +/- 0.25 x daily ATR if it is nearer than that to the entry.
+
+**The variants (8 rule runs in all, every one counted):**
+
+| id | level | momentum | stop | target | exit | daily filter | role |
+|---|---|---|---|---|---|---|---|
+| D1 | pday | yes | S1 | Troom | day end | room left (used < 0.65) | candidate |
+| D2 | roll24 | yes | S1 | Troom | day end | room left | candidate |
+| D3 | pday | NO (every first close) | S1 | Troom | day end | room left | candidate |
+| D4 | pday | yes | S2 | T1 | 3 days | room left | candidate |
+| D1n-D4n | as D1-D4 | | | | | none | the no-eagle twins (controls, not selectable) |
+
+Count, honestly: H44 ran 6 selectable variants, 1 contrast and 6 no-eagle controls; H45 adds 4 selectable and 4
+controls: 10 selectable range-break rules in the H44/H45 family so far.
+
+**Data and split (H44's):** the eight markets, rows before the sealed holdout 2025-11-11 00:00 UTC only (dropped right
+after loading). Trades from 2020-01-01 by entry time. First half: entries before 2023-06-07; second half from it to the
+seal. **Selection (first half only):** among D1-D4, the highest mean over markets (each with >= 20 first-half trades) of
+the first-half expectancy after costs (% of stake a trade), among variants with >= 100 first-half trades pooled; ties
+the lower id. **Fixed pass bar (second half, the chosen variant; H44's):** (1) pooled net $ after costs > 0 with >= 100
+trades; (2) net > 0 in >= 5 of 8 markets; (3) pooled profit factor >= 1.1; (4) pooled expectancy per trade higher than
+its no-eagle twin's. A pass is a reason to ask the owner about a forward paper book, not proof; no live book is built.
+
+**Descriptive (reported whatever the result; pre-cost, events not trades, overlaps allowed):** for every daily break
+(both levels, all first closes and the momentum subset, no daily filter): forward move in the break direction from the
+next open to the close of the break's UTC day, to 24 h and to 72 h after entry, in daily-ATR units; the share reaching
++0.5 and +1.0 daily ATR before -0.5 daily ATR within 72 h (same bar = loss; neither reported apart), and +0.5 before
+-0.5 by the day's end; split by bucket (room left / middle / exhausted), by market group (crypto, metals, fx, index,
+energy) and by half.
+
+**Prior, stated now:** with a stop of half a daily ATR the fee is a small share of 1R (crypto ~0.1-0.15R), so costs
+will not decide it; the gross edge will. H44 found no gross continuation over 4 hours; a day-end or 3-day horizon is a
+different question. I expect a small or no gross edge and no pass. Code `research/dailybreak_study.py`, test
+`tests/test_dailybreak.py`, report `research/out/dailybreak/study.md` + `.json`.
+
+### H45 results (16 Nov 2026, ~05:10 UTC; development data to 2025-11-11; `research/out/dailybreak/study.md`)
+
+**NO PASS.** Code: `research/dailybreak_study.py` (levels and the daily ATR from `engine15/sources/adr.py` `readings`;
+a minimal single-stop / single-target simulator with the playbook frame); `tests/test_dailybreak.py` (truncation test of
+the signal function on 24h and cash-hours synthetic bars, the event checked by hand, the simulator's frame). Truncation
+check on real bars: 0 mismatched runs (119,151 signals compared, 8 markets x 8 rules x 2 cuts). Variants: 4 selectable +
+4 no-eagle controls (family so far: 10 selectable, 1 contrast, 10 controls). Holdout not touched.
+
+All four candidates lost after costs in both halves (first-half scores -0.074% to -0.112% a trade). Chosen on the first
+half: **D4** (first close beyond the prior UTC day's high/low on a momentum bar, day used < 65%, stop at the level -/+
+0.25 daily ATR (median 0.31 dATR), target 1 daily ATR, out after 72 h). First half pooled: 2,764 trades, 28.5% won,
++0.00R before / -0.10R after costs, -0.082% a trade, PF 0.91, net -$22,595. **Second half pooled: 1,874 trades, 25.7%
+won, -0.08R before / -0.20R after costs, -0.210% a trade, PF 0.69, net -$39,333; net > 0 in 0 of 8 markets** (gold
+-$3 and USDJPY -$37 closest). Its twin D4n (no daily filter): 2,756 trades, -0.173% a trade, net -$47,778. Bar: pooled
+positive NO; >= 5 markets NO; PF NO; better than the twin NO.
+
+The day-end variants did not do better: D1 (pday, momentum, stop 0.5 dATR, target the day's remaining room, out at the
+next UTC day's open) second half -0.171% a trade, -0.04R before costs; D2 (rolling 24 h) -0.191%; D3 (no momentum)
+-0.132%. The room-left filter made every candidate WORSE per trade than its twin in the second half (D1 -0.171% vs D1n
+-0.130%, D2 -0.191% vs -0.129%, D3 -0.132% vs -0.108%, D4 -0.210% vs -0.173%). Costs are now small (crypto ~0.1R), so
+the loss is the absence of gross edge (R before costs -0.08 to +0.05 everywhere).
+
+Descriptive (pre-cost events, no filter, 2020-2025 dev, 12,430 prior-day breaks / 8,404 with momentum; rolling-24h
+similar): forward move in the break direction to the day's close +0.01 dATR, at 24 h +0.00-0.02, at 72 h +0.04-0.05
+(up/down events pooled; not separated from the period's drift); share positive at the day's close 49%, at 72 h 50%.
++0.5 before -0.5 dATR within 72 h: 47% of events (49.5% of resolved; a driftless walk gives 50%); +1.0 before -0.5:
+26% (30% of resolved; walk 33%). Room left vs middle vs exhausted (momentum, prior day): to day close -0.00 / +0.02 /
++0.05, at 72 h +0.02 / +0.08 / +0.13, +0.5 before -0.5 46% / 49% / 52%: if anything the REVERSE of the eagle-view idea
+(the same as H44), small, from 1,085 exhausted events, not steady across halves. By group no market group continues
+at the day's close by more than 0.04 dATR (crypto +0.04, energy -0.02). A daily break, on its own, is a coin flip at
+the day's close and over 1-3 days in this history. Nothing goes forward as a book; the live scan
+(`py -3 research/dailybreak_study.py --scan`) is labelled paper / untested.
