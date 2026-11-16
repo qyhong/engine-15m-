@@ -10,8 +10,20 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   this project pushes only the data). Asks Windows not to idle-sleep; a closed lid still sleeps the laptop.
   After ANY code change: Ctrl-C and start it again (between steps). It naps against the wall clock: after the Mac
   sleeps (the Windows VM pauses) it logs "woke ...s late" and catches up every missed bar.
-- **Loop location (owner, 16 Nov 2026):** it runs in the Claude Code terminal panel, so it STOPS when a Claude
-  session ends. On every session resume: check `out/live/page.json` `generated_utc`, and restart the loop if stale.
+- **WHERE IT RUNS (since 16 Nov 2026 10:45 UTC): the Singapore EC2 box, NOT the laptop.** ec2-user@47.129.218.75 (key
+  `~/.ssh/minds15.pem` on the laptop; Amazon Linux 2023, t2.xlarge 4 vCPU / 16 GB; project at `/data/mind15`, Python
+  `/data/venv` with pinned wheels, env `/data/mind15/mind15.env`, launcher `/data/mind15/run_live.sh`). systemd service
+  `mind15` (Restart=always, enabled at boot, ENGINE15_PUSH=1), log `/data/mind15/live.log`. It pushes page.json with its
+  own key `~/.ssh/mind15_web` (in the web box's authorized_keys, from="47.129.218.75", no pty) and pulls web answers with
+  the same key (`/data/mind15/tools/pull_answers.py`, cursor `/data/mind15/data/pull_cursor.json`). Estate files copied to
+  `/data/estate`. NEVER start the laptop loop again while the service runs (two engines would overwrite the page).
+  Status: `ssh -i ~/.ssh/minds15.pem ec2-user@47.129.218.75 "systemctl is-active mind15; tail -5 /data/mind15/live.log"`.
+  Deploying code: commit on the laptop, `git archive HEAD | ssh ... "tar xf - -C /data/mind15"`, then
+  `sudo systemctl restart mind15` between steps (right after a "step done" line). Research runs on the box too
+  (`nice -n 5 /data/venv/bin/python research/<study>.py`; outputs copied back with scp). The laptop keeps the code, the
+  version history and a copy of the data, so it can take over again (its reading cache was deleted: a first laptop step
+  would rebuild it). Not yet on the box: the candle-forecast feed (available at
+  https://alphaprediction.ai/aitrading/forecasts.json; fetch at most once per step over HTTPS).
 - **Sources**: every step calls each source module's `update()` (`engine15/sources/__init__.py` MODULES). `flows`
   (v5.1.1) throttles itself per source (`MIN_GAP_S`; last attempts in `data/sources/flows_state.json`) and keeps the
   Binance archive zips in `data/raw/binance_metrics/`. `cryptox` (v5.2.2) throttles each of its six feeds the same

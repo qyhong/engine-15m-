@@ -273,3 +273,8 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
 - **Hosting:** a read-only probe from the US web box found Binance futures/api (451) and Bybit (403) blocked. The owner
   keeps the engine on the laptop for now ("utilise laptop first"); a Singapore EC2 may come later (the owner launches it).
   The live loop stays in the Claude terminal tab (owner); it stops when a Claude session ends and is restarted on resume.
+- **Moved to the Singapore EC2 (16 Nov 2026):** the owner created a box and said "migrate all minds15 project to there"; the
+  owner chose a new key on the box, pinned wheels only, and an automatic switch after 4 matching shadow steps. 5 shadow
+  sessions (09:30-10:30 UTC) matched the laptop exactly; the box has pushed since 10:50 UTC as systemd service `mind15`;
+  the laptop loop is stopped. Research H50 (news drift), H51 (cross-market confirmation), H52 (size by expected move) ran on
+  the box: all no pass. Laptop cleanup (owner-approved): out/replay, RL caches and data/evcache deleted (20 GB -> 1.5 GB).
