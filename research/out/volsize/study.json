@@ -1,0 +1,5676 @@
+{
+ "hypothesis": "H52",
+ "registered_utc": "2026-11-16 09:50 UTC",
+ "seal": "2025-11-11",
+ "split": "2023-06-07",
+ "start": "2020-01-01",
+ "variants": {
+  "S0": "constant notional, w = 1 (baseline)",
+  "S1": "inverse volatility, w = clip(m / sigma, 0.25, 4)",
+  "S2": "inverse variance, w = clip((m / sigma)^2, 0.25, 4)",
+  "S3": "half-strength inverse volatility, w = clip(sqrt(m / sigma), 0.25, 4)",
+  "S4": "cut only, w = min(1, m / sigma), floor 0.25",
+  "S5": "top-tercile cut, w = 0.5 above the trailing 67th percentile, else 1",
+  "S6": "three regimes, w = 1.5 / 1 / 0.5 by trailing terciles"
+ },
+ "bonferroni": 0.008333333333333333,
+ "tests": 6,
+ "main_meta": {
+  "engine_version": "think15-v5.2.3",
+  "cut": "rows before 2025-11-11 00:00 UTC",
+  "written_utc": "2026-11-16 10:10:32",
+  "rule": "main (hold to stop or flip)"
+ },
+ "markets": {
+  "BTCUSDT": {
+   "B": 96,
+   "fee_side": 0.001,
+   "forecast": {
+    "first_half": {
+     "n": 1253,
+     "spearman": 0.5515,
+     "pearson_log": 0.5955,
+     "mean_ratio_rng_to_f": 1.589
+    },
+    "second_half": {
+     "n": 888,
+     "spearman": 0.3893,
+     "pearson_log": 0.3979,
+     "mean_ratio_rng_to_f": 1.586
+    },
+    "all": {
+     "n": 2141,
+     "spearman": 0.5549,
+     "pearson_log": 0.5771,
+     "mean_ratio_rng_to_f": 1.588
+    }
+   },
+   "first_bar": "2019-01-01 00:00",
+   "last_bar": "2025-11-10 23:45",
+   "main_check": {
+    "mapped": 236,
+    "unmapped": 0,
+    "entry_at_bar_open": 236,
+    "trades_used": 236,
+    "no_reference": 0
+   },
+   "proxy_check": {
+    "decisions": 2142,
+    "no_reference": 0,
+    "long_share": 0.568
+   },
+   "main_w_summary": {
+    "S1": {
+     "mean": 1.004,
+     "p10": 0.605,
+     "p90": 1.398
+    },
+    "S5": {
+     "mean": 0.85,
+     "p10": 0.5,
+     "p90": 1.0
+    }
+   }
+  },
+  "ETHUSDT": {
+   "B": 96,
+   "fee_side": 0.001,
+   "forecast": {
+    "first_half": {
+     "n": 1253,
+     "spearman": 0.5668,
+     "pearson_log": 0.6069,
+     "mean_ratio_rng_to_f": 1.612
+    },
+    "second_half": {
+     "n": 888,
+     "spearman": 0.4488,
+     "pearson_log": 0.4862,
+     "mean_ratio_rng_to_f": 1.635
+    },
+    "all": {
+     "n": 2141,
+     "spearman": 0.5673,
+     "pearson_log": 0.603,
+     "mean_ratio_rng_to_f": 1.622
+    }
+   },
+   "first_bar": "2019-01-01 00:00",
+   "last_bar": "2025-11-10 23:45",
+   "main_check": {
+    "mapped": 203,
+    "unmapped": 0,
+    "entry_at_bar_open": 203,
+    "trades_used": 203,
+    "no_reference": 0
+   },
+   "proxy_check": {
+    "decisions": 2142,
+    "no_reference": 0,
+    "long_share": 0.554
+   },
+   "main_w_summary": {
+    "S1": {
+     "mean": 1.016,
+     "p10": 0.616,
+     "p90": 1.457
+    },
+    "S5": {
+     "mean": 0.815,
+     "p10": 0.5,
+     "p90": 1.0
+    }
+   }
+  },
+  "XAUUSD": {
+   "B": 92,
+   "fee_side": 0.0002,
+   "forecast": {
+    "first_half": {
+     "n": 885,
+     "spearman": 0.351,
+     "pearson_log": 0.4369,
+     "mean_ratio_rng_to_f": 1.54
+    },
+    "second_half": {
+     "n": 628,
+     "spearman": 0.4871,
+     "pearson_log": 0.5512,
+     "mean_ratio_rng_to_f": 1.611
+    },
+    "all": {
+     "n": 1513,
+     "spearman": 0.4099,
+     "pearson_log": 0.4857,
+     "mean_ratio_rng_to_f": 1.57
+    }
+   },
+   "first_bar": "2019-01-01 23:00",
+   "last_bar": "2025-11-10 23:45",
+   "main_check": {
+    "mapped": 111,
+    "unmapped": 0,
+    "entry_at_bar_open": 111,
+    "trades_used": 111,
+    "no_reference": 0
+   },
+   "proxy_check": {
+    "decisions": 1514,
+    "no_reference": 0,
+    "long_share": 0.616
+   },
+   "main_w_summary": {
+    "S1": {
+     "mean": 0.988,
+     "p10": 0.499,
+     "p90": 1.316
+    },
+    "S5": {
+     "mean": 0.847,
+     "p10": 0.5,
+     "p90": 1.0
+    }
+   }
+  },
+  "XAGUSD": {
+   "B": 92,
+   "fee_side": 0.0003,
+   "forecast": {
+    "first_half": {
+     "n": 885,
+     "spearman": 0.4495,
+     "pearson_log": 0.521,
+     "mean_ratio_rng_to_f": 1.519
+    },
+    "second_half": {
+     "n": 628,
+     "spearman": 0.3435,
+     "pearson_log": 0.379,
+     "mean_ratio_rng_to_f": 1.558
+    },
+    "all": {
+     "n": 1513,
+     "spearman": 0.4169,
+     "pearson_log": 0.4845,
+     "mean_ratio_rng_to_f": 1.535
+    }
+   },
+   "first_bar": "2019-01-01 23:00",
+   "last_bar": "2025-11-10 23:45",
+   "main_check": {
+    "mapped": 151,
+    "unmapped": 0,
+    "entry_at_bar_open": 151,
+    "trades_used": 151,
+    "no_reference": 0
+   },
+   "proxy_check": {
+    "decisions": 1514,
+    "no_reference": 0,
+    "long_share": 0.572
+   },
+   "main_w_summary": {
+    "S1": {
+     "mean": 0.986,
+     "p10": 0.672,
+     "p90": 1.307
+    },
+    "S5": {
+     "mean": 0.834,
+     "p10": 0.5,
+     "p90": 1.0
+    }
+   }
+  },
+  "USDJPY": {
+   "B": 96,
+   "fee_side": 0.0001,
+   "forecast": {
+    "first_half": {
+     "n": 892,
+     "spearman": 0.6434,
+     "pearson_log": 0.6517,
+     "mean_ratio_rng_to_f": 1.583
+    },
+    "second_half": {
+     "n": 630,
+     "spearman": 0.4868,
+     "pearson_log": 0.4998,
+     "mean_ratio_rng_to_f": 1.566
+    },
+    "all": {
+     "n": 1522,
+     "spearman": 0.6257,
+     "pearson_log": 0.612,
+     "mean_ratio_rng_to_f": 1.576
+    }
+   },
+   "first_bar": "2019-01-01 22:00",
+   "last_bar": "2025-11-10 23:45",
+   "main_check": {
+    "mapped": 71,
+    "unmapped": 0,
+    "entry_at_bar_open": 71,
+    "trades_used": 71,
+    "no_reference": 0
+   },
+   "proxy_check": {
+    "decisions": 1523,
+    "no_reference": 0,
+    "long_share": 0.584
+   },
+   "main_w_summary": {
+    "S1": {
+     "mean": 1.016,
+     "p10": 0.643,
+     "p90": 1.355
+    },
+    "S5": {
+     "mean": 0.838,
+     "p10": 0.5,
+     "p90": 1.0
+    }
+   }
+  },
+  "SPX": {
+   "B": 26,
+   "fee_side": 0.0002,
+   "forecast": {
+    "first_half": {
+     "n": 863,
+     "spearman": 0.6695,
+     "pearson_log": 0.6979,
+     "mean_ratio_rng_to_f": 1.269
+    },
+    "second_half": {
+     "n": 609,
+     "spearman": 0.4672,
+     "pearson_log": 0.5503,
+     "mean_ratio_rng_to_f": 1.256
+    },
+    "all": {
+     "n": 1472,
+     "spearman": 0.6456,
+     "pearson_log": 0.681,
+     "mean_ratio_rng_to_f": 1.263
+    }
+   },
+   "first_bar": "2019-01-02 14:30",
+   "last_bar": "2025-11-10 20:45",
+   "main_check": {
+    "mapped": 34,
+    "unmapped": 0,
+    "entry_at_bar_open": 34,
+    "trades_used": 34,
+    "no_reference": 0
+   },
+   "proxy_check": {
+    "decisions": 1473,
+    "no_reference": 0,
+    "long_share": 0.692
+   },
+   "main_w_summary": {
+    "S1": {
+     "mean": 1.06,
+     "p10": 0.569,
+     "p90": 1.5
+    },
+    "S5": {
+     "mean": 0.868,
+     "p10": 0.5,
+     "p90": 1.0
+    }
+   }
+  },
+  "WTI": {
+   "B": 92,
+   "fee_side": 0.0004,
+   "forecast": {
+    "first_half": {
+     "n": 885,
+     "spearman": 0.6244,
+     "pearson_log": 0.7263,
+     "mean_ratio_rng_to_f": 1.536
+    },
+    "second_half": {
+     "n": 628,
+     "spearman": 0.4255,
+     "pearson_log": 0.4411,
+     "mean_ratio_rng_to_f": 1.528
+    },
+    "all": {
+     "n": 1513,
+     "spearman": 0.5972,
+     "pearson_log": 0.7069,
+     "mean_ratio_rng_to_f": 1.532
+    }
+   },
+   "first_bar": "2019-01-01 23:00",
+   "last_bar": "2025-11-10 23:45",
+   "main_check": {
+    "mapped": 114,
+    "unmapped": 0,
+    "entry_at_bar_open": 114,
+    "trades_used": 114,
+    "no_reference": 0
+   },
+   "proxy_check": {
+    "decisions": 1514,
+    "no_reference": 0,
+    "long_share": 0.501
+   },
+   "main_w_summary": {
+    "S1": {
+     "mean": 0.862,
+     "p10": 0.25,
+     "p90": 1.248
+    },
+    "S5": {
+     "mean": 0.811,
+     "p10": 0.5,
+     "p90": 1.0
+    }
+   }
+  },
+  "BRENT": {
+   "B": 84,
+   "fee_side": 0.0004,
+   "forecast": {
+    "first_half": {
+     "n": 886,
+     "spearman": 0.6319,
+     "pearson_log": 0.7067,
+     "mean_ratio_rng_to_f": 1.489
+    },
+    "second_half": {
+     "n": 628,
+     "spearman": 0.4343,
+     "pearson_log": 0.4531,
+     "mean_ratio_rng_to_f": 1.492
+    },
+    "all": {
+     "n": 1514,
+     "spearman": 0.6133,
+     "pearson_log": 0.6938,
+     "mean_ratio_rng_to_f": 1.49
+    }
+   },
+   "first_bar": "2019-01-02 01:00",
+   "last_bar": "2025-11-10 21:45",
+   "main_check": {
+    "mapped": 122,
+    "unmapped": 0,
+    "entry_at_bar_open": 122,
+    "trades_used": 122,
+    "no_reference": 0
+   },
+   "proxy_check": {
+    "decisions": 1515,
+    "no_reference": 0,
+    "long_share": 0.512
+   },
+   "main_w_summary": {
+    "S1": {
+     "mean": 0.891,
+     "p10": 0.25,
+     "p90": 1.368
+    },
+    "S5": {
+     "mean": 0.811,
+     "p10": 0.5,
+     "p90": 1.0
+    }
+   }
+  }
+ },
+ "forecast_pooled_spearman": {
+  "first_half": 0.561,
+  "second_half": 0.4353,
+  "all": 0.5538
+ },
+ "results": {
+  "main": {
+   "S0": {
+    "first_half": {
+     "pooled": {
+      "return_pct": 99.31,
+      "sharpe": 1.121,
+      "max_dd_pct": 20.46,
+      "ret_over_dd": 4.852,
+      "avg_exposure": 0.9204,
+      "trades": 699,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.121
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 107.76,
+       "sharpe": 0.446,
+       "max_dd_pct": 104.62,
+       "ret_over_dd": 1.03,
+       "avg_exposure": 0.9689,
+       "trades": 149,
+       "fees_pct": null,
+       "sharpe_raw": 0.446,
+       "match_k": 1.0,
+       "return_raw_pct": 107.76
+      },
+      "ETHUSDT": {
+       "return_pct": 359.76,
+       "sharpe": 1.175,
+       "max_dd_pct": 68.25,
+       "ret_over_dd": 5.271,
+       "avg_exposure": 0.9698,
+       "trades": 132,
+       "fees_pct": null,
+       "sharpe_raw": 1.175,
+       "match_k": 1.0,
+       "return_raw_pct": 359.76
+      },
+      "XAUUSD": {
+       "return_pct": -3.15,
+       "sharpe": -0.055,
+       "max_dd_pct": 43.17,
+       "ret_over_dd": -0.073,
+       "avg_exposure": 0.9539,
+       "trades": 103,
+       "fees_pct": null,
+       "sharpe_raw": -0.055,
+       "match_k": 1.0,
+       "return_raw_pct": -3.15
+      },
+      "XAGUSD": {
+       "return_pct": 6.24,
+       "sharpe": 0.046,
+       "max_dd_pct": 101.59,
+       "ret_over_dd": 0.061,
+       "avg_exposure": 0.9541,
+       "trades": 92,
+       "fees_pct": null,
+       "sharpe_raw": 0.046,
+       "match_k": 1.0,
+       "return_raw_pct": 6.24
+      },
+      "USDJPY": {
+       "return_pct": 23.96,
+       "sharpe": 0.711,
+       "max_dd_pct": 19.76,
+       "ret_over_dd": 1.212,
+       "avg_exposure": 0.9202,
+       "trades": 38,
+       "fees_pct": null,
+       "sharpe_raw": 0.711,
+       "match_k": 1.0,
+       "return_raw_pct": 23.96
+      },
+      "SPX": {
+       "return_pct": 3.01,
+       "sharpe": 0.056,
+       "max_dd_pct": 30.27,
+       "ret_over_dd": 0.099,
+       "avg_exposure": 0.6956,
+       "trades": 26,
+       "fees_pct": null,
+       "sharpe_raw": 0.056,
+       "match_k": 1.0,
+       "return_raw_pct": 3.01
+      },
+      "WTI": {
+       "return_pct": 199.94,
+       "sharpe": 0.881,
+       "max_dd_pct": 66.22,
+       "ret_over_dd": 3.019,
+       "avg_exposure": 0.951,
+       "trades": 76,
+       "fees_pct": null,
+       "sharpe_raw": 0.881,
+       "match_k": 1.0,
+       "return_raw_pct": 199.94
+      },
+      "BRENT": {
+       "return_pct": 96.91,
+       "sharpe": 0.505,
+       "max_dd_pct": 91.03,
+       "ret_over_dd": 1.065,
+       "avg_exposure": 0.9501,
+       "trades": 83,
+       "fees_pct": null,
+       "sharpe_raw": 0.505,
+       "match_k": 1.0,
+       "return_raw_pct": 96.91
+      }
+     }
+    },
+    "second_half": {
+     "pooled": {
+      "return_pct": 41.75,
+      "sharpe": 1.034,
+      "max_dd_pct": 9.96,
+      "ret_over_dd": 4.192,
+      "avg_exposure": 0.9973,
+      "trades": 343,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.034
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 85.22,
+       "sharpe": 0.681,
+       "max_dd_pct": 69.07,
+       "ret_over_dd": 1.234,
+       "avg_exposure": 0.9973,
+       "trades": 87,
+       "fees_pct": null,
+       "sharpe_raw": 0.681,
+       "match_k": 1.0,
+       "return_raw_pct": 85.22
+      },
+      "ETHUSDT": {
+       "return_pct": 125.79,
+       "sharpe": 0.789,
+       "max_dd_pct": 72.79,
+       "ret_over_dd": 1.728,
+       "avg_exposure": 0.9974,
+       "trades": 71,
+       "fees_pct": null,
+       "sharpe_raw": 0.789,
+       "match_k": 1.0,
+       "return_raw_pct": 125.79
+      },
+      "XAUUSD": {
+       "return_pct": 109.74,
+       "sharpe": 1.774,
+       "max_dd_pct": 22.45,
+       "ret_over_dd": 4.887,
+       "avg_exposure": 0.9994,
+       "trades": 8,
+       "fees_pct": null,
+       "sharpe_raw": 1.774,
+       "match_k": 1.0,
+       "return_raw_pct": 109.74
+      },
+      "XAGUSD": {
+       "return_pct": -18.52,
+       "sharpe": -0.231,
+       "max_dd_pct": 75.0,
+       "ret_over_dd": -0.247,
+       "avg_exposure": 0.9946,
+       "trades": 59,
+       "fees_pct": null,
+       "sharpe_raw": -0.231,
+       "match_k": 1.0,
+       "return_raw_pct": -18.52
+      },
+      "USDJPY": {
+       "return_pct": 6.63,
+       "sharpe": 0.269,
+       "max_dd_pct": 10.96,
+       "ret_over_dd": 0.605,
+       "avg_exposure": 0.9981,
+       "trades": 33,
+       "fees_pct": null,
+       "sharpe_raw": 0.269,
+       "match_k": 1.0,
+       "return_raw_pct": 6.63
+      },
+      "SPX": {
+       "return_pct": 35.13,
+       "sharpe": 0.874,
+       "max_dd_pct": 17.47,
+       "ret_over_dd": 2.01,
+       "avg_exposure": 0.9987,
+       "trades": 8,
+       "fees_pct": null,
+       "sharpe_raw": 0.874,
+       "match_k": 1.0,
+       "return_raw_pct": 35.13
+      },
+      "WTI": {
+       "return_pct": -5.28,
+       "sharpe": -0.07,
+       "max_dd_pct": 41.85,
+       "ret_over_dd": -0.126,
+       "avg_exposure": 0.9968,
+       "trades": 38,
+       "fees_pct": null,
+       "sharpe_raw": -0.07,
+       "match_k": 1.0,
+       "return_raw_pct": -5.28
+      },
+      "BRENT": {
+       "return_pct": -4.71,
+       "sharpe": -0.07,
+       "max_dd_pct": 36.17,
+       "ret_over_dd": -0.13,
+       "avg_exposure": 0.9965,
+       "trades": 39,
+       "fees_pct": null,
+       "sharpe_raw": -0.07,
+       "match_k": 1.0,
+       "return_raw_pct": -4.71
+      }
+     }
+    },
+    "all": {
+     "pooled": {
+      "return_pct": 141.05,
+      "sharpe": 1.071,
+      "max_dd_pct": 20.46,
+      "ret_over_dd": 6.892,
+      "avg_exposure": 0.9523,
+      "trades": 1042,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.071
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 192.98,
+       "sharpe": 0.52,
+       "max_dd_pct": 104.62,
+       "ret_over_dd": 1.845,
+       "avg_exposure": 0.9807,
+       "trades": 236,
+       "fees_pct": null,
+       "sharpe_raw": 0.52,
+       "match_k": 1.0,
+       "return_raw_pct": 192.98
+      },
+      "ETHUSDT": {
+       "return_pct": 485.55,
+       "sharpe": 1.032,
+       "max_dd_pct": 72.79,
+       "ret_over_dd": 6.67,
+       "avg_exposure": 0.9812,
+       "trades": 203,
+       "fees_pct": null,
+       "sharpe_raw": 1.032,
+       "match_k": 1.0,
+       "return_raw_pct": 485.55
+      },
+      "XAUUSD": {
+       "return_pct": 106.59,
+       "sharpe": 0.875,
+       "max_dd_pct": 43.17,
+       "ret_over_dd": 2.469,
+       "avg_exposure": 0.9728,
+       "trades": 111,
+       "fees_pct": null,
+       "sharpe_raw": 0.875,
+       "match_k": 1.0,
+       "return_raw_pct": 106.59
+      },
+      "XAGUSD": {
+       "return_pct": -12.27,
+       "sharpe": -0.057,
+       "max_dd_pct": 164.85,
+       "ret_over_dd": -0.074,
+       "avg_exposure": 0.9709,
+       "trades": 151,
+       "fees_pct": null,
+       "sharpe_raw": -0.057,
+       "match_k": 1.0,
+       "return_raw_pct": -12.27
+      },
+      "USDJPY": {
+       "return_pct": 30.59,
+       "sharpe": 0.524,
+       "max_dd_pct": 19.76,
+       "ret_over_dd": 1.548,
+       "avg_exposure": 0.9524,
+       "trades": 71,
+       "fees_pct": null,
+       "sharpe_raw": 0.524,
+       "match_k": 1.0,
+       "return_raw_pct": 30.59
+      },
+      "SPX": {
+       "return_pct": 38.13,
+       "sharpe": 0.406,
+       "max_dd_pct": 30.27,
+       "ret_over_dd": 1.26,
+       "avg_exposure": 0.8209,
+       "trades": 34,
+       "fees_pct": null,
+       "sharpe_raw": 0.406,
+       "match_k": 1.0,
+       "return_raw_pct": 38.13
+      },
+      "WTI": {
+       "return_pct": 194.66,
+       "sharpe": 0.61,
+       "max_dd_pct": 72.21,
+       "ret_over_dd": 2.696,
+       "avg_exposure": 0.97,
+       "trades": 114,
+       "fees_pct": null,
+       "sharpe_raw": 0.61,
+       "match_k": 1.0,
+       "return_raw_pct": 194.66
+      },
+      "BRENT": {
+       "return_pct": 92.21,
+       "sharpe": 0.339,
+       "max_dd_pct": 102.05,
+       "ret_over_dd": 0.904,
+       "avg_exposure": 0.9693,
+       "trades": 122,
+       "fees_pct": null,
+       "sharpe_raw": 0.339,
+       "match_k": 1.0,
+       "return_raw_pct": 92.21
+      }
+     }
+    }
+   },
+   "S1": {
+    "first_half": {
+     "pooled": {
+      "return_pct": 62.81,
+      "sharpe": 0.793,
+      "max_dd_pct": 20.66,
+      "ret_over_dd": 3.04,
+      "avg_exposure": 0.8759,
+      "trades": 699,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.851,
+      "jk_z": -1.603,
+      "jk_p": 0.10903773180929632
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 167.69,
+       "sharpe": 0.68,
+       "max_dd_pct": 85.47,
+       "ret_over_dd": 1.962,
+       "avg_exposure": 0.9496,
+       "trades": 149,
+       "fees_pct": null,
+       "sharpe_raw": 0.68,
+       "match_k": 1.0203,
+       "return_raw_pct": 164.36
+      },
+      "ETHUSDT": {
+       "return_pct": 270.66,
+       "sharpe": 1.007,
+       "max_dd_pct": 60.44,
+       "ret_over_dd": 4.478,
+       "avg_exposure": 1.1069,
+       "trades": 132,
+       "fees_pct": null,
+       "sharpe_raw": 1.007,
+       "match_k": 0.8761,
+       "return_raw_pct": 308.93
+      },
+      "XAUUSD": {
+       "return_pct": -18.89,
+       "sharpe": -0.351,
+       "max_dd_pct": 46.1,
+       "ret_over_dd": -0.41,
+       "avg_exposure": 0.8605,
+       "trades": 103,
+       "fees_pct": null,
+       "sharpe_raw": -0.351,
+       "match_k": 1.1086,
+       "return_raw_pct": -17.04
+      },
+      "XAGUSD": {
+       "return_pct": -12.18,
+       "sharpe": -0.102,
+       "max_dd_pct": 101.95,
+       "ret_over_dd": -0.119,
+       "avg_exposure": 0.8742,
+       "trades": 92,
+       "fees_pct": null,
+       "sharpe_raw": -0.102,
+       "match_k": 1.0914,
+       "return_raw_pct": -11.16
+      },
+      "USDJPY": {
+       "return_pct": 29.4,
+       "sharpe": 0.85,
+       "max_dd_pct": 21.31,
+       "ret_over_dd": 1.379,
+       "avg_exposure": 1.014,
+       "trades": 38,
+       "fees_pct": null,
+       "sharpe_raw": 0.85,
+       "match_k": 0.9074,
+       "return_raw_pct": 32.4
+      },
+      "SPX": {
+       "return_pct": -2.15,
+       "sharpe": -0.04,
+       "max_dd_pct": 33.64,
+       "ret_over_dd": -0.064,
+       "avg_exposure": 0.6446,
+       "trades": 26,
+       "fees_pct": null,
+       "sharpe_raw": -0.04,
+       "match_k": 1.0792,
+       "return_raw_pct": -1.99
+      },
+      "WTI": {
+       "return_pct": 56.8,
+       "sharpe": 0.326,
+       "max_dd_pct": 77.36,
+       "ret_over_dd": 0.734,
+       "avg_exposure": 0.7606,
+       "trades": 76,
+       "fees_pct": null,
+       "sharpe_raw": 0.326,
+       "match_k": 1.2504,
+       "return_raw_pct": 45.43
+      },
+      "BRENT": {
+       "return_pct": 11.18,
+       "sharpe": 0.067,
+       "max_dd_pct": 108.57,
+       "ret_over_dd": 0.103,
+       "avg_exposure": 0.797,
+       "trades": 83,
+       "fees_pct": null,
+       "sharpe_raw": 0.067,
+       "match_k": 1.1921,
+       "return_raw_pct": 9.38
+      }
+     }
+    },
+    "second_half": {
+     "pooled": {
+      "return_pct": 46.67,
+      "sharpe": 1.182,
+      "max_dd_pct": 8.48,
+      "ret_over_dd": 5.501,
+      "avg_exposure": 1.0577,
+      "trades": 343,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.205,
+      "jk_z": 0.899,
+      "jk_p": 0.36840859414377924
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 97.53,
+       "sharpe": 0.797,
+       "max_dd_pct": 59.6,
+       "ret_over_dd": 1.636,
+       "avg_exposure": 1.0895,
+       "trades": 87,
+       "fees_pct": null,
+       "sharpe_raw": 0.797,
+       "match_k": 0.9154,
+       "return_raw_pct": 106.55
+      },
+      "ETHUSDT": {
+       "return_pct": 149.88,
+       "sharpe": 0.963,
+       "max_dd_pct": 61.66,
+       "ret_over_dd": 2.431,
+       "avg_exposure": 1.0553,
+       "trades": 71,
+       "fees_pct": null,
+       "sharpe_raw": 0.963,
+       "match_k": 0.9451,
+       "return_raw_pct": 158.58
+      },
+      "XAUUSD": {
+       "return_pct": 106.9,
+       "sharpe": 1.754,
+       "max_dd_pct": 21.99,
+       "ret_over_dd": 4.861,
+       "avg_exposure": 1.1891,
+       "trades": 8,
+       "fees_pct": null,
+       "sharpe_raw": 1.754,
+       "match_k": 0.8404,
+       "return_raw_pct": 127.2
+      },
+      "XAGUSD": {
+       "return_pct": -8.58,
+       "sharpe": -0.106,
+       "max_dd_pct": 71.42,
+       "ret_over_dd": -0.12,
+       "avg_exposure": 1.0211,
+       "trades": 59,
+       "fees_pct": null,
+       "sharpe_raw": -0.106,
+       "match_k": 0.974,
+       "return_raw_pct": -8.81
+      },
+      "USDJPY": {
+       "return_pct": 7.99,
+       "sharpe": 0.322,
+       "max_dd_pct": 11.13,
+       "ret_over_dd": 0.718,
+       "avg_exposure": 1.0093,
+       "trades": 33,
+       "fees_pct": null,
+       "sharpe_raw": 0.322,
+       "match_k": 0.989,
+       "return_raw_pct": 8.08
+      },
+      "SPX": {
+       "return_pct": 35.47,
+       "sharpe": 0.893,
+       "max_dd_pct": 17.83,
+       "ret_over_dd": 1.989,
+       "avg_exposure": 0.9516,
+       "trades": 8,
+       "fees_pct": null,
+       "sharpe_raw": 0.893,
+       "match_k": 1.0494,
+       "return_raw_pct": 33.8
+      },
+      "WTI": {
+       "return_pct": -9.09,
+       "sharpe": -0.12,
+       "max_dd_pct": 49.78,
+       "ret_over_dd": -0.183,
+       "avg_exposure": 1.053,
+       "trades": 38,
+       "fees_pct": null,
+       "sharpe_raw": -0.12,
+       "match_k": 0.9467,
+       "return_raw_pct": -9.61
+      },
+      "BRENT": {
+       "return_pct": -6.75,
+       "sharpe": -0.101,
+       "max_dd_pct": 39.28,
+       "ret_over_dd": -0.172,
+       "avg_exposure": 1.0931,
+       "trades": 39,
+       "fees_pct": null,
+       "sharpe_raw": -0.101,
+       "match_k": 0.9116,
+       "return_raw_pct": -7.4
+      }
+     }
+    },
+    "all": {
+     "pooled": {
+      "return_pct": 110.81,
+      "sharpe": 0.937,
+      "max_dd_pct": 19.01,
+      "ret_over_dd": 5.828,
+      "avg_exposure": 0.9513,
+      "trades": 1042,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.968,
+      "jk_z": -0.89,
+      "jk_p": 0.37328336695387865
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 263.65,
+       "sharpe": 0.716,
+       "max_dd_pct": 81.53,
+       "ret_over_dd": 3.234,
+       "avg_exposure": 1.0077,
+       "trades": 236,
+       "fees_pct": null,
+       "sharpe_raw": 0.716,
+       "match_k": 0.9732,
+       "return_raw_pct": 270.91
+      },
+      "ETHUSDT": {
+       "return_pct": 422.62,
+       "sharpe": 0.983,
+       "max_dd_pct": 62.36,
+       "ret_over_dd": 6.777,
+       "avg_exposure": 1.0855,
+       "trades": 203,
+       "fees_pct": null,
+       "sharpe_raw": 0.983,
+       "match_k": 0.904,
+       "return_raw_pct": 467.51
+      },
+      "XAUUSD": {
+       "return_pct": 107.49,
+       "sharpe": 0.851,
+       "max_dd_pct": 40.58,
+       "ret_over_dd": 2.649,
+       "avg_exposure": 0.9969,
+       "trades": 111,
+       "fees_pct": null,
+       "sharpe_raw": 0.851,
+       "match_k": 0.9758,
+       "return_raw_pct": 110.16
+      },
+      "XAGUSD": {
+       "return_pct": -20.73,
+       "sharpe": -0.104,
+       "max_dd_pct": 164.98,
+       "ret_over_dd": -0.126,
+       "avg_exposure": 0.9352,
+       "trades": 151,
+       "fees_pct": null,
+       "sharpe_raw": -0.104,
+       "match_k": 1.0382,
+       "return_raw_pct": -19.97
+      },
+      "USDJPY": {
+       "return_pct": 38.09,
+       "sharpe": 0.64,
+       "max_dd_pct": 22.1,
+       "ret_over_dd": 1.723,
+       "avg_exposure": 1.0121,
+       "trades": 71,
+       "fees_pct": null,
+       "sharpe_raw": 0.64,
+       "match_k": 0.9411,
+       "return_raw_pct": 40.48
+      },
+      "SPX": {
+       "return_pct": 33.84,
+       "sharpe": 0.36,
+       "max_dd_pct": 33.17,
+       "ret_over_dd": 1.02,
+       "avg_exposure": 0.7715,
+       "trades": 34,
+       "fees_pct": null,
+       "sharpe_raw": 0.36,
+       "match_k": 1.064,
+       "return_raw_pct": 31.8
+      },
+      "WTI": {
+       "return_pct": 39.4,
+       "sharpe": 0.163,
+       "max_dd_pct": 77.29,
+       "ret_over_dd": 0.51,
+       "avg_exposure": 0.882,
+       "trades": 114,
+       "fees_pct": null,
+       "sharpe_raw": 0.163,
+       "match_k": 1.0998,
+       "return_raw_pct": 35.82
+      },
+      "BRENT": {
+       "return_pct": 2.09,
+       "sharpe": 0.009,
+       "max_dd_pct": 108.46,
+       "ret_over_dd": 0.019,
+       "avg_exposure": 0.9198,
+       "trades": 122,
+       "fees_pct": null,
+       "sharpe_raw": 0.009,
+       "match_k": 1.0538,
+       "return_raw_pct": 1.98
+      }
+     }
+    }
+   },
+   "S2": {
+    "first_half": {
+     "pooled": {
+      "return_pct": 48.2,
+      "sharpe": 0.6,
+      "max_dd_pct": 21.46,
+      "ret_over_dd": 2.246,
+      "avg_exposure": 0.9362,
+      "trades": 699,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.713,
+      "jk_z": -1.643,
+      "jk_p": 0.1004025094350536
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 225.07,
+       "sharpe": 0.794,
+       "max_dd_pct": 76.96,
+       "ret_over_dd": 2.925,
+       "avg_exposure": 1.0559,
+       "trades": 149,
+       "fees_pct": null,
+       "sharpe_raw": 0.794,
+       "match_k": 0.9176,
+       "return_raw_pct": 245.28
+      },
+      "ETHUSDT": {
+       "return_pct": 212.01,
+       "sharpe": 0.807,
+       "max_dd_pct": 59.26,
+       "ret_over_dd": 3.578,
+       "avg_exposure": 1.3765,
+       "trades": 132,
+       "fees_pct": null,
+       "sharpe_raw": 0.807,
+       "match_k": 0.7045,
+       "return_raw_pct": 300.93
+      },
+      "XAUUSD": {
+       "return_pct": -25.94,
+       "sharpe": -0.463,
+       "max_dd_pct": 50.04,
+       "ret_over_dd": -0.518,
+       "avg_exposure": 0.8614,
+       "trades": 103,
+       "fees_pct": null,
+       "sharpe_raw": -0.463,
+       "match_k": 1.1074,
+       "return_raw_pct": -23.42
+      },
+      "XAGUSD": {
+       "return_pct": -37.18,
+       "sharpe": -0.337,
+       "max_dd_pct": 102.85,
+       "ret_over_dd": -0.362,
+       "avg_exposure": 0.8529,
+       "trades": 92,
+       "fees_pct": null,
+       "sharpe_raw": -0.337,
+       "match_k": 1.1187,
+       "return_raw_pct": -33.24
+      },
+      "USDJPY": {
+       "return_pct": 33.06,
+       "sharpe": 0.924,
+       "max_dd_pct": 22.02,
+       "ret_over_dd": 1.502,
+       "avg_exposure": 1.179,
+       "trades": 38,
+       "fees_pct": null,
+       "sharpe_raw": 0.924,
+       "match_k": 0.7805,
+       "return_raw_pct": 42.36
+      },
+      "SPX": {
+       "return_pct": -13.02,
+       "sharpe": -0.217,
+       "max_dd_pct": 39.62,
+       "ret_over_dd": -0.329,
+       "avg_exposure": 0.6392,
+       "trades": 26,
+       "fees_pct": null,
+       "sharpe_raw": -0.217,
+       "match_k": 1.0882,
+       "return_raw_pct": -11.96
+      },
+      "WTI": {
+       "return_pct": 22.11,
+       "sharpe": 0.129,
+       "max_dd_pct": 91.13,
+       "ret_over_dd": 0.243,
+       "avg_exposure": 0.7269,
+       "trades": 76,
+       "fees_pct": null,
+       "sharpe_raw": 0.129,
+       "match_k": 1.3083,
+       "return_raw_pct": 16.9
+      },
+      "BRENT": {
+       "return_pct": -30.49,
+       "sharpe": -0.184,
+       "max_dd_pct": 115.25,
+       "ret_over_dd": -0.265,
+       "avg_exposure": 0.7982,
+       "trades": 83,
+       "fees_pct": null,
+       "sharpe_raw": -0.184,
+       "match_k": 1.1902,
+       "return_raw_pct": -25.62
+      }
+     }
+    },
+    "second_half": {
+     "pooled": {
+      "return_pct": 47.9,
+      "sharpe": 1.183,
+      "max_dd_pct": 9.01,
+      "ret_over_dd": 5.315,
+      "avg_exposure": 1.1751,
+      "trades": 343,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.224,
+      "jk_z": 0.499,
+      "jk_p": 0.6176854962229843
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 99.96,
+       "sharpe": 0.791,
+       "max_dd_pct": 50.44,
+       "ret_over_dd": 1.982,
+       "avg_exposure": 1.288,
+       "trades": 87,
+       "fees_pct": null,
+       "sharpe_raw": 0.791,
+       "match_k": 0.7743,
+       "return_raw_pct": 129.09
+      },
+      "ETHUSDT": {
+       "return_pct": 158.3,
+       "sharpe": 0.993,
+       "max_dd_pct": 58.63,
+       "ret_over_dd": 2.7,
+       "avg_exposure": 1.1901,
+       "trades": 71,
+       "fees_pct": null,
+       "sharpe_raw": 0.993,
+       "match_k": 0.8381,
+       "return_raw_pct": 188.88
+      },
+      "XAUUSD": {
+       "return_pct": 103.05,
+       "sharpe": 1.72,
+       "max_dd_pct": 21.36,
+       "ret_over_dd": 4.825,
+       "avg_exposure": 1.4268,
+       "trades": 8,
+       "fees_pct": null,
+       "sharpe_raw": 1.72,
+       "match_k": 0.7004,
+       "return_raw_pct": 147.12
+      },
+      "XAGUSD": {
+       "return_pct": -1.12,
+       "sharpe": -0.014,
+       "max_dd_pct": 69.74,
+       "ret_over_dd": -0.016,
+       "avg_exposure": 1.0681,
+       "trades": 59,
+       "fees_pct": null,
+       "sharpe_raw": -0.014,
+       "match_k": 0.9311,
+       "return_raw_pct": -1.21
+      },
+      "USDJPY": {
+       "return_pct": 9.73,
+       "sharpe": 0.366,
+       "max_dd_pct": 14.49,
+       "ret_over_dd": 0.671,
+       "avg_exposure": 1.0906,
+       "trades": 33,
+       "fees_pct": null,
+       "sharpe_raw": 0.366,
+       "match_k": 0.9152,
+       "return_raw_pct": 10.63
+      },
+      "SPX": {
+       "return_pct": 36.31,
+       "sharpe": 0.873,
+       "max_dd_pct": 18.2,
+       "ret_over_dd": 1.995,
+       "avg_exposure": 0.9661,
+       "trades": 8,
+       "fees_pct": null,
+       "sharpe_raw": 0.873,
+       "match_k": 1.0337,
+       "return_raw_pct": 35.13
+      },
+      "WTI": {
+       "return_pct": -12.97,
+       "sharpe": -0.168,
+       "max_dd_pct": 57.08,
+       "ret_over_dd": -0.227,
+       "avg_exposure": 1.148,
+       "trades": 38,
+       "fees_pct": null,
+       "sharpe_raw": -0.168,
+       "match_k": 0.8683,
+       "return_raw_pct": -14.94
+      },
+      "BRENT": {
+       "return_pct": -10.01,
+       "sharpe": -0.148,
+       "max_dd_pct": 42.72,
+       "ret_over_dd": -0.234,
+       "avg_exposure": 1.2232,
+       "trades": 39,
+       "fees_pct": null,
+       "sharpe_raw": -0.148,
+       "match_k": 0.8147,
+       "return_raw_pct": -12.29
+      }
+     }
+    },
+    "all": {
+     "pooled": {
+      "return_pct": 99.5,
+      "sharpe": 0.829,
+      "max_dd_pct": 20.36,
+      "ret_over_dd": 4.888,
+      "avg_exposure": 1.0353,
+      "trades": 1042,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.888,
+      "jk_z": -1.022,
+      "jk_p": 0.30674528665403167
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 318.64,
+       "sharpe": 0.785,
+       "max_dd_pct": 71.38,
+       "ret_over_dd": 4.464,
+       "avg_exposure": 1.1522,
+       "trades": 236,
+       "fees_pct": null,
+       "sharpe_raw": 0.785,
+       "match_k": 0.8511,
+       "return_raw_pct": 374.37
+      },
+      "ETHUSDT": {
+       "return_pct": 369.96,
+       "sharpe": 0.86,
+       "max_dd_pct": 72.67,
+       "ret_over_dd": 5.091,
+       "avg_exposure": 1.2991,
+       "trades": 203,
+       "fees_pct": null,
+       "sharpe_raw": 0.86,
+       "match_k": 0.7553,
+       "return_raw_pct": 489.82
+      },
+      "XAUUSD": {
+       "return_pct": 109.78,
+       "sharpe": 0.832,
+       "max_dd_pct": 40.1,
+       "ret_over_dd": 2.738,
+       "avg_exposure": 1.0961,
+       "trades": 111,
+       "fees_pct": null,
+       "sharpe_raw": 0.832,
+       "match_k": 0.8875,
+       "return_raw_pct": 123.7
+      },
+      "XAGUSD": {
+       "return_pct": -35.49,
+       "sharpe": -0.183,
+       "max_dd_pct": 167.36,
+       "ret_over_dd": -0.212,
+       "avg_exposure": 0.9422,
+       "trades": 151,
+       "fees_pct": null,
+       "sharpe_raw": -0.183,
+       "match_k": 1.0304,
+       "return_raw_pct": -34.44
+      },
+      "USDJPY": {
+       "return_pct": 44.18,
+       "sharpe": 0.707,
+       "max_dd_pct": 23.52,
+       "ret_over_dd": 1.878,
+       "avg_exposure": 1.1424,
+       "trades": 71,
+       "fees_pct": null,
+       "sharpe_raw": 0.707,
+       "match_k": 0.8337,
+       "return_raw_pct": 52.99
+      },
+      "SPX": {
+       "return_pct": 24.56,
+       "sharpe": 0.243,
+       "max_dd_pct": 38.6,
+       "ret_over_dd": 0.636,
+       "avg_exposure": 0.7744,
+       "trades": 34,
+       "fees_pct": null,
+       "sharpe_raw": 0.243,
+       "match_k": 1.0601,
+       "return_raw_pct": 23.17
+      },
+      "WTI": {
+       "return_pct": 2.11,
+       "sharpe": 0.009,
+       "max_dd_pct": 87.17,
+       "ret_over_dd": 0.024,
+       "avg_exposure": 0.9017,
+       "trades": 114,
+       "fees_pct": null,
+       "sharpe_raw": 0.009,
+       "match_k": 1.0758,
+       "return_raw_pct": 1.96
+      },
+      "BRENT": {
+       "return_pct": -37.71,
+       "sharpe": -0.17,
+       "max_dd_pct": 109.77,
+       "ret_over_dd": -0.344,
+       "avg_exposure": 0.9745,
+       "trades": 122,
+       "fees_pct": null,
+       "sharpe_raw": -0.17,
+       "match_k": 0.9947,
+       "return_raw_pct": -37.91
+      }
+     }
+    }
+   },
+   "S3": {
+    "first_half": {
+     "pooled": {
+      "return_pct": 75.98,
+      "sharpe": 0.931,
+      "max_dd_pct": 19.8,
+      "ret_over_dd": 3.837,
+      "avg_exposure": 0.8813,
+      "trades": 699,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.955,
+      "jk_z": -1.545,
+      "jk_p": 0.12230139927599852
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 136.92,
+       "sharpe": 0.575,
+       "max_dd_pct": 93.43,
+       "ret_over_dd": 1.466,
+       "avg_exposure": 0.9419,
+       "trades": 149,
+       "fees_pct": null,
+       "sharpe_raw": 0.575,
+       "match_k": 1.0287,
+       "return_raw_pct": 133.11
+      },
+      "ETHUSDT": {
+       "return_pct": 310.8,
+       "sharpe": 1.101,
+       "max_dd_pct": 62.75,
+       "ret_over_dd": 4.953,
+       "avg_exposure": 1.0203,
+       "trades": 132,
+       "fees_pct": null,
+       "sharpe_raw": 1.101,
+       "match_k": 0.9504,
+       "return_raw_pct": 327.01
+      },
+      "XAUUSD": {
+       "return_pct": -12.02,
+       "sharpe": -0.222,
+       "max_dd_pct": 44.4,
+       "ret_over_dd": -0.271,
+       "avg_exposure": 0.8933,
+       "trades": 103,
+       "fees_pct": null,
+       "sharpe_raw": -0.222,
+       "match_k": 1.0678,
+       "return_raw_pct": -11.26
+      },
+      "XAGUSD": {
+       "return_pct": -1.89,
+       "sharpe": -0.015,
+       "max_dd_pct": 101.74,
+       "ret_over_dd": -0.019,
+       "avg_exposure": 0.906,
+       "trades": 92,
+       "fees_pct": null,
+       "sharpe_raw": -0.015,
+       "match_k": 1.0531,
+       "return_raw_pct": -1.8
+      },
+      "USDJPY": {
+       "return_pct": 26.92,
+       "sharpe": 0.792,
+       "max_dd_pct": 20.66,
+       "ret_over_dd": 1.303,
+       "avg_exposure": 0.958,
+       "trades": 38,
+       "fees_pct": null,
+       "sharpe_raw": 0.792,
+       "match_k": 0.9605,
+       "return_raw_pct": 28.03
+      },
+      "SPX": {
+       "return_pct": 1.17,
+       "sharpe": 0.022,
+       "max_dd_pct": 31.61,
+       "ret_over_dd": 0.037,
+       "avg_exposure": 0.6639,
+       "trades": 26,
+       "fees_pct": null,
+       "sharpe_raw": 0.022,
+       "match_k": 1.0478,
+       "return_raw_pct": 1.12
+      },
+      "WTI": {
+       "return_pct": 96.87,
+       "sharpe": 0.531,
+       "max_dd_pct": 73.87,
+       "ret_over_dd": 1.311,
+       "avg_exposure": 0.8188,
+       "trades": 76,
+       "fees_pct": null,
+       "sharpe_raw": 0.531,
+       "match_k": 1.1614,
+       "return_raw_pct": 83.41
+      },
+      "BRENT": {
+       "return_pct": 49.09,
+       "sharpe": 0.282,
+       "max_dd_pct": 101.23,
+       "ret_over_dd": 0.485,
+       "avg_exposure": 0.8483,
+       "trades": 83,
+       "fees_pct": null,
+       "sharpe_raw": 0.282,
+       "match_k": 1.12,
+       "return_raw_pct": 43.83
+      }
+     }
+    },
+    "second_half": {
+     "pooled": {
+      "return_pct": 44.69,
+      "sharpe": 1.125,
+      "max_dd_pct": 8.9,
+      "ret_over_dd": 5.023,
+      "avg_exposure": 1.0191,
+      "trades": 343,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.137,
+      "jk_z": 1.12,
+      "jk_p": 0.2627544219458322
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 92.69,
+       "sharpe": 0.755,
+       "max_dd_pct": 64.4,
+       "ret_over_dd": 1.439,
+       "avg_exposure": 1.0303,
+       "trades": 87,
+       "fees_pct": null,
+       "sharpe_raw": 0.755,
+       "match_k": 0.968,
+       "return_raw_pct": 95.75
+      },
+      "ETHUSDT": {
+       "return_pct": 139.86,
+       "sharpe": 0.89,
+       "max_dd_pct": 64.62,
+       "ret_over_dd": 2.164,
+       "avg_exposure": 1.0065,
+       "trades": 71,
+       "fees_pct": null,
+       "sharpe_raw": 0.89,
+       "match_k": 0.991,
+       "return_raw_pct": 141.13
+      },
+      "XAUUSD": {
+       "return_pct": 108.43,
+       "sharpe": 1.765,
+       "max_dd_pct": 22.24,
+       "ret_over_dd": 4.875,
+       "avg_exposure": 1.0891,
+       "trades": 8,
+       "fees_pct": null,
+       "sharpe_raw": 1.765,
+       "match_k": 0.9176,
+       "return_raw_pct": 118.17
+      },
+      "XAGUSD": {
+       "return_pct": -13.22,
+       "sharpe": -0.165,
+       "max_dd_pct": 72.95,
+       "ret_over_dd": -0.181,
+       "avg_exposure": 1.0053,
+       "trades": 59,
+       "fees_pct": null,
+       "sharpe_raw": -0.165,
+       "match_k": 0.9893,
+       "return_raw_pct": -13.37
+      },
+      "USDJPY": {
+       "return_pct": 7.25,
+       "sharpe": 0.296,
+       "max_dd_pct": 10.74,
+       "ret_over_dd": 0.675,
+       "avg_exposure": 0.9947,
+       "trades": 33,
+       "fees_pct": null,
+       "sharpe_raw": 0.296,
+       "match_k": 1.0035,
+       "return_raw_pct": 7.23
+      },
+      "SPX": {
+       "return_pct": 35.21,
+       "sharpe": 0.892,
+       "max_dd_pct": 17.65,
+       "ret_over_dd": 1.995,
+       "avg_exposure": 0.9658,
+       "trades": 8,
+       "fees_pct": null,
+       "sharpe_raw": 0.892,
+       "match_k": 1.0341,
+       "return_raw_pct": 34.05
+      },
+      "WTI": {
+       "return_pct": -7.19,
+       "sharpe": -0.095,
+       "max_dd_pct": 45.9,
+       "ret_over_dd": -0.157,
+       "avg_exposure": 1.0199,
+       "trades": 38,
+       "fees_pct": null,
+       "sharpe_raw": -0.095,
+       "match_k": 0.9773,
+       "return_raw_pct": -7.36
+      },
+      "BRENT": {
+       "return_pct": -5.54,
+       "sharpe": -0.083,
+       "max_dd_pct": 37.68,
+       "ret_over_dd": -0.147,
+       "avg_exposure": 1.0409,
+       "trades": 39,
+       "fees_pct": null,
+       "sharpe_raw": -0.083,
+       "match_k": 0.9573,
+       "return_raw_pct": -5.79
+      }
+     }
+    },
+    "all": {
+     "pooled": {
+      "return_pct": 120.73,
+      "sharpe": 0.992,
+      "max_dd_pct": 18.89,
+      "ret_over_dd": 6.392,
+      "avg_exposure": 0.9384,
+      "trades": 1042,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.006,
+      "jk_z": -0.881,
+      "jk_p": 0.37838253598012545
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 229.35,
+       "sharpe": 0.634,
+       "max_dd_pct": 91.02,
+       "ret_over_dd": 2.52,
+       "avg_exposure": 0.9786,
+       "trades": 236,
+       "fees_pct": null,
+       "sharpe_raw": 0.634,
+       "match_k": 1.0021,
+       "return_raw_pct": 228.86
+      },
+      "ETHUSDT": {
+       "return_pct": 452.75,
+       "sharpe": 1.018,
+       "max_dd_pct": 63.85,
+       "ret_over_dd": 7.091,
+       "avg_exposure": 1.0146,
+       "trades": 203,
+       "fees_pct": null,
+       "sharpe_raw": 1.018,
+       "match_k": 0.9671,
+       "return_raw_pct": 468.15
+      },
+      "XAUUSD": {
+       "return_pct": 106.71,
+       "sharpe": 0.866,
+       "max_dd_pct": 41.51,
+       "ret_over_dd": 2.571,
+       "avg_exposure": 0.9746,
+       "trades": 111,
+       "fees_pct": null,
+       "sharpe_raw": 0.866,
+       "match_k": 0.9981,
+       "return_raw_pct": 106.91
+      },
+      "XAGUSD": {
+       "return_pct": -15.54,
+       "sharpe": -0.075,
+       "max_dd_pct": 164.65,
+       "ret_over_dd": -0.094,
+       "avg_exposure": 0.9472,
+       "trades": 151,
+       "fees_pct": null,
+       "sharpe_raw": -0.075,
+       "match_k": 1.025,
+       "return_raw_pct": -15.16
+      },
+      "USDJPY": {
+       "return_pct": 34.5,
+       "sharpe": 0.589,
+       "max_dd_pct": 21.05,
+       "ret_over_dd": 1.639,
+       "avg_exposure": 0.9732,
+       "trades": 71,
+       "fees_pct": null,
+       "sharpe_raw": 0.589,
+       "match_k": 0.9787,
+       "return_raw_pct": 35.25
+      },
+      "SPX": {
+       "return_pct": 36.61,
+       "sharpe": 0.395,
+       "max_dd_pct": 31.4,
+       "ret_over_dd": 1.166,
+       "avg_exposure": 0.7887,
+       "trades": 34,
+       "fees_pct": null,
+       "sharpe_raw": 0.395,
+       "match_k": 1.0408,
+       "return_raw_pct": 35.17
+      },
+      "WTI": {
+       "return_pct": 81.76,
+       "sharpe": 0.32,
+       "max_dd_pct": 76.07,
+       "ret_over_dd": 1.075,
+       "avg_exposure": 0.9023,
+       "trades": 114,
+       "fees_pct": null,
+       "sharpe_raw": 0.32,
+       "match_k": 1.075,
+       "return_raw_pct": 76.05
+      },
+      "BRENT": {
+       "return_pct": 39.72,
+       "sharpe": 0.165,
+       "max_dd_pct": 106.22,
+       "ret_over_dd": 0.374,
+       "avg_exposure": 0.9282,
+       "trades": 122,
+       "fees_pct": null,
+       "sharpe_raw": 0.165,
+       "match_k": 1.0443,
+       "return_raw_pct": 38.04
+      }
+     }
+    }
+   },
+   "S4": {
+    "first_half": {
+     "pooled": {
+      "return_pct": 67.23,
+      "sharpe": 0.833,
+      "max_dd_pct": 20.52,
+      "ret_over_dd": 3.276,
+      "avg_exposure": 0.775,
+      "trades": 699,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.859,
+      "jk_z": -1.806,
+      "jk_p": 0.07090205561194968
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 136.57,
+       "sharpe": 0.576,
+       "max_dd_pct": 90.66,
+       "ret_over_dd": 1.506,
+       "avg_exposure": 0.8165,
+       "trades": 149,
+       "fees_pct": null,
+       "sharpe_raw": 0.576,
+       "match_k": 1.1867,
+       "return_raw_pct": 115.09
+      },
+      "ETHUSDT": {
+       "return_pct": 301.12,
+       "sharpe": 1.049,
+       "max_dd_pct": 65.91,
+       "ret_over_dd": 4.569,
+       "avg_exposure": 0.8795,
+       "trades": 132,
+       "fees_pct": null,
+       "sharpe_raw": 1.049,
+       "match_k": 1.1026,
+       "return_raw_pct": 273.1
+      },
+      "XAUUSD": {
+       "return_pct": -17.11,
+       "sharpe": -0.32,
+       "max_dd_pct": 44.86,
+       "ret_over_dd": -0.381,
+       "avg_exposure": 0.793,
+       "trades": 103,
+       "fees_pct": null,
+       "sharpe_raw": -0.32,
+       "match_k": 1.2029,
+       "return_raw_pct": -14.23
+      },
+      "XAGUSD": {
+       "return_pct": -3.64,
+       "sharpe": -0.029,
+       "max_dd_pct": 100.51,
+       "ret_over_dd": -0.036,
+       "avg_exposure": 0.8208,
+       "trades": 92,
+       "fees_pct": null,
+       "sharpe_raw": -0.029,
+       "match_k": 1.1624,
+       "return_raw_pct": -3.13
+      },
+      "USDJPY": {
+       "return_pct": 27.18,
+       "sharpe": 0.793,
+       "max_dd_pct": 21.19,
+       "ret_over_dd": 1.283,
+       "avg_exposure": 0.8455,
+       "trades": 38,
+       "fees_pct": null,
+       "sharpe_raw": 0.793,
+       "match_k": 1.0883,
+       "return_raw_pct": 24.97
+      },
+      "SPX": {
+       "return_pct": 4.6,
+       "sharpe": 0.087,
+       "max_dd_pct": 30.74,
+       "ret_over_dd": 0.15,
+       "avg_exposure": 0.6031,
+       "trades": 26,
+       "fees_pct": null,
+       "sharpe_raw": 0.087,
+       "match_k": 1.1534,
+       "return_raw_pct": 3.99
+      },
+      "WTI": {
+       "return_pct": 65.8,
+       "sharpe": 0.371,
+       "max_dd_pct": 76.34,
+       "ret_over_dd": 0.862,
+       "avg_exposure": 0.7102,
+       "trades": 76,
+       "fees_pct": null,
+       "sharpe_raw": 0.371,
+       "match_k": 1.3391,
+       "return_raw_pct": 49.14
+      },
+      "BRENT": {
+       "return_pct": 23.36,
+       "sharpe": 0.136,
+       "max_dd_pct": 105.52,
+       "ret_over_dd": 0.221,
+       "avg_exposure": 0.7313,
+       "trades": 83,
+       "fees_pct": null,
+       "sharpe_raw": 0.136,
+       "match_k": 1.2992,
+       "return_raw_pct": 17.98
+      }
+     }
+    },
+    "second_half": {
+     "pooled": {
+      "return_pct": 47.45,
+      "sharpe": 1.176,
+      "max_dd_pct": 9.32,
+      "ret_over_dd": 5.088,
+      "avg_exposure": 0.927,
+      "trades": 343,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.177,
+      "jk_z": 1.501,
+      "jk_p": 0.13338112849769668
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 99.39,
+       "sharpe": 0.796,
+       "max_dd_pct": 64.92,
+       "ret_over_dd": 1.531,
+       "avg_exposure": 0.9203,
+       "trades": 87,
+       "fees_pct": null,
+       "sharpe_raw": 0.796,
+       "match_k": 1.0837,
+       "return_raw_pct": 91.71
+      },
+      "ETHUSDT": {
+       "return_pct": 151.6,
+       "sharpe": 0.924,
+       "max_dd_pct": 66.04,
+       "ret_over_dd": 2.295,
+       "avg_exposure": 0.869,
+       "trades": 71,
+       "fees_pct": null,
+       "sharpe_raw": 0.924,
+       "match_k": 1.1478,
+       "return_raw_pct": 132.08
+      },
+      "XAUUSD": {
+       "return_pct": 109.74,
+       "sharpe": 1.774,
+       "max_dd_pct": 22.45,
+       "ret_over_dd": 4.887,
+       "avg_exposure": 0.9994,
+       "trades": 8,
+       "fees_pct": null,
+       "sharpe_raw": 1.774,
+       "match_k": 1.0,
+       "return_raw_pct": 109.74
+      },
+      "XAGUSD": {
+       "return_pct": -12.22,
+       "sharpe": -0.152,
+       "max_dd_pct": 71.55,
+       "ret_over_dd": -0.171,
+       "avg_exposure": 0.9468,
+       "trades": 59,
+       "fees_pct": null,
+       "sharpe_raw": -0.152,
+       "match_k": 1.0505,
+       "return_raw_pct": -11.63
+      },
+      "USDJPY": {
+       "return_pct": 6.78,
+       "sharpe": 0.276,
+       "max_dd_pct": 11.16,
+       "ret_over_dd": 0.607,
+       "avg_exposure": 0.8959,
+       "trades": 33,
+       "fees_pct": null,
+       "sharpe_raw": 0.276,
+       "match_k": 1.1141,
+       "return_raw_pct": 6.08
+      },
+      "SPX": {
+       "return_pct": 34.6,
+       "sharpe": 0.88,
+       "max_dd_pct": 17.58,
+       "ret_over_dd": 1.968,
+       "avg_exposure": 0.8702,
+       "trades": 8,
+       "fees_pct": null,
+       "sharpe_raw": 0.88,
+       "match_k": 1.1476,
+       "return_raw_pct": 30.15
+      },
+      "WTI": {
+       "return_pct": -6.36,
+       "sharpe": -0.084,
+       "max_dd_pct": 44.95,
+       "ret_over_dd": -0.141,
+       "avg_exposure": 0.9445,
+       "trades": 38,
+       "fees_pct": null,
+       "sharpe_raw": -0.084,
+       "match_k": 1.0554,
+       "return_raw_pct": -6.03
+      },
+      "BRENT": {
+       "return_pct": -3.95,
+       "sharpe": -0.059,
+       "max_dd_pct": 36.3,
+       "ret_over_dd": -0.109,
+       "avg_exposure": 0.9697,
+       "trades": 39,
+       "fees_pct": null,
+       "sharpe_raw": -0.059,
+       "match_k": 1.0276,
+       "return_raw_pct": -3.84
+      }
+     }
+    },
+    "all": {
+     "pooled": {
+      "return_pct": 115.16,
+      "sharpe": 0.954,
+      "max_dd_pct": 19.03,
+      "ret_over_dd": 6.053,
+      "avg_exposure": 0.838,
+      "trades": 1042,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.963,
+      "jk_z": -1.013,
+      "jk_p": 0.31084400613635843
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 235.94,
+       "sharpe": 0.653,
+       "max_dd_pct": 87.17,
+       "ret_over_dd": 2.707,
+       "avg_exposure": 0.8596,
+       "trades": 236,
+       "fees_pct": null,
+       "sharpe_raw": 0.653,
+       "match_k": 1.1409,
+       "return_raw_pct": 206.79
+      },
+      "ETHUSDT": {
+       "return_pct": 454.29,
+       "sharpe": 0.997,
+       "max_dd_pct": 67.02,
+       "ret_over_dd": 6.778,
+       "avg_exposure": 0.8751,
+       "trades": 203,
+       "fees_pct": null,
+       "sharpe_raw": 0.997,
+       "match_k": 1.1212,
+       "return_raw_pct": 405.17
+      },
+      "XAUUSD": {
+       "return_pct": 105.74,
+       "sharpe": 0.849,
+       "max_dd_pct": 41.29,
+       "ret_over_dd": 2.561,
+       "avg_exposure": 0.8786,
+       "trades": 111,
+       "fees_pct": null,
+       "sharpe_raw": 0.849,
+       "match_k": 1.1071,
+       "return_raw_pct": 95.51
+      },
+      "XAGUSD": {
+       "return_pct": -16.41,
+       "sharpe": -0.081,
+       "max_dd_pct": 162.38,
+       "ret_over_dd": -0.101,
+       "avg_exposure": 0.8731,
+       "trades": 151,
+       "fees_pct": null,
+       "sharpe_raw": -0.081,
+       "match_k": 1.112,
+       "return_raw_pct": -14.76
+      },
+      "USDJPY": {
+       "return_pct": 34.14,
+       "sharpe": 0.58,
+       "max_dd_pct": 21.4,
+       "ret_over_dd": 1.595,
+       "avg_exposure": 0.8664,
+       "trades": 71,
+       "fees_pct": null,
+       "sharpe_raw": 0.58,
+       "match_k": 1.0994,
+       "return_raw_pct": 31.05
+      },
+      "SPX": {
+       "return_pct": 39.28,
+       "sharpe": 0.426,
+       "max_dd_pct": 30.67,
+       "ret_over_dd": 1.281,
+       "avg_exposure": 0.7135,
+       "trades": 34,
+       "fees_pct": null,
+       "sharpe_raw": 0.426,
+       "match_k": 1.1505,
+       "return_raw_pct": 34.14
+      },
+      "WTI": {
+       "return_pct": 51.79,
+       "sharpe": 0.21,
+       "max_dd_pct": 76.57,
+       "ret_over_dd": 0.676,
+       "avg_exposure": 0.8075,
+       "trades": 114,
+       "fees_pct": null,
+       "sharpe_raw": 0.21,
+       "match_k": 1.2013,
+       "return_raw_pct": 43.11
+      },
+      "BRENT": {
+       "return_pct": 16.5,
+       "sharpe": 0.071,
+       "max_dd_pct": 106.71,
+       "ret_over_dd": 0.155,
+       "avg_exposure": 0.8302,
+       "trades": 122,
+       "fees_pct": null,
+       "sharpe_raw": 0.071,
+       "match_k": 1.1676,
+       "return_raw_pct": 14.14
+      }
+     }
+    }
+   },
+   "S5": {
+    "first_half": {
+     "pooled": {
+      "return_pct": 63.43,
+      "sharpe": 0.8,
+      "max_dd_pct": 20.23,
+      "ret_over_dd": 3.135,
+      "avg_exposure": 0.7266,
+      "trades": 699,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.831,
+      "jk_z": -2.156,
+      "jk_p": 0.03104700739575488
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 161.77,
+       "sharpe": 0.657,
+       "max_dd_pct": 86.32,
+       "ret_over_dd": 1.874,
+       "avg_exposure": 0.7962,
+       "trades": 149,
+       "fees_pct": null,
+       "sharpe_raw": 0.657,
+       "match_k": 1.2169,
+       "return_raw_pct": 132.94
+      },
+      "ETHUSDT": {
+       "return_pct": 245.39,
+       "sharpe": 0.898,
+       "max_dd_pct": 67.28,
+       "ret_over_dd": 3.647,
+       "avg_exposure": 0.8269,
+       "trades": 132,
+       "fees_pct": null,
+       "sharpe_raw": 0.898,
+       "match_k": 1.1727,
+       "return_raw_pct": 209.25
+      },
+      "XAUUSD": {
+       "return_pct": -16.53,
+       "sharpe": -0.298,
+       "max_dd_pct": 49.13,
+       "ret_over_dd": -0.337,
+       "avg_exposure": 0.7395,
+       "trades": 103,
+       "fees_pct": null,
+       "sharpe_raw": -0.298,
+       "match_k": 1.2899,
+       "return_raw_pct": -12.82
+      },
+      "XAGUSD": {
+       "return_pct": -44.04,
+       "sharpe": -0.374,
+       "max_dd_pct": 114.4,
+       "ret_over_dd": -0.385,
+       "avg_exposure": 0.6774,
+       "trades": 92,
+       "fees_pct": null,
+       "sharpe_raw": -0.374,
+       "match_k": 1.4085,
+       "return_raw_pct": -31.27
+      },
+      "USDJPY": {
+       "return_pct": 28.84,
+       "sharpe": 0.821,
+       "max_dd_pct": 22.22,
+       "ret_over_dd": 1.298,
+       "avg_exposure": 0.8054,
+       "trades": 38,
+       "fees_pct": null,
+       "sharpe_raw": 0.821,
+       "match_k": 1.1425,
+       "return_raw_pct": 25.24
+      },
+      "SPX": {
+       "return_pct": 5.6,
+       "sharpe": 0.107,
+       "max_dd_pct": 32.7,
+       "ret_over_dd": 0.171,
+       "avg_exposure": 0.6043,
+       "trades": 26,
+       "fees_pct": null,
+       "sharpe_raw": 0.107,
+       "match_k": 1.1511,
+       "return_raw_pct": 4.86
+      },
+      "WTI": {
+       "return_pct": 98.34,
+       "sharpe": 0.519,
+       "max_dd_pct": 77.58,
+       "ret_over_dd": 1.268,
+       "avg_exposure": 0.6748,
+       "trades": 76,
+       "fees_pct": null,
+       "sharpe_raw": 0.519,
+       "match_k": 1.4093,
+       "return_raw_pct": 69.78
+      },
+      "BRENT": {
+       "return_pct": 28.07,
+       "sharpe": 0.169,
+       "max_dd_pct": 94.16,
+       "ret_over_dd": 0.298,
+       "avg_exposure": 0.688,
+       "trades": 83,
+       "fees_pct": null,
+       "sharpe_raw": 0.169,
+       "match_k": 1.381,
+       "return_raw_pct": 20.33
+      }
+     }
+    },
+    "second_half": {
+     "pooled": {
+      "return_pct": 50.38,
+      "sharpe": 1.229,
+      "max_dd_pct": 9.08,
+      "ret_over_dd": 5.548,
+      "avg_exposure": 0.8912,
+      "trades": 343,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.251,
+      "jk_z": 1.163,
+      "jk_p": 0.24483601491338502
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 107.91,
+       "sharpe": 0.858,
+       "max_dd_pct": 61.81,
+       "ret_over_dd": 1.746,
+       "avg_exposure": 0.8842,
+       "trades": 87,
+       "fees_pct": null,
+       "sharpe_raw": 0.858,
+       "match_k": 1.1279,
+       "return_raw_pct": 95.67
+      },
+      "ETHUSDT": {
+       "return_pct": 163.46,
+       "sharpe": 0.96,
+       "max_dd_pct": 75.6,
+       "ret_over_dd": 2.162,
+       "avg_exposure": 0.7758,
+       "trades": 71,
+       "fees_pct": null,
+       "sharpe_raw": 0.96,
+       "match_k": 1.2856,
+       "return_raw_pct": 127.15
+      },
+      "XAUUSD": {
+       "return_pct": 109.74,
+       "sharpe": 1.774,
+       "max_dd_pct": 22.45,
+       "ret_over_dd": 4.887,
+       "avg_exposure": 0.9994,
+       "trades": 8,
+       "fees_pct": null,
+       "sharpe_raw": 1.774,
+       "match_k": 1.0,
+       "return_raw_pct": 109.74
+      },
+      "XAGUSD": {
+       "return_pct": -5.33,
+       "sharpe": -0.064,
+       "max_dd_pct": 70.05,
+       "ret_over_dd": -0.076,
+       "avg_exposure": 0.868,
+       "trades": 59,
+       "fees_pct": null,
+       "sharpe_raw": -0.064,
+       "match_k": 1.1459,
+       "return_raw_pct": -4.65
+      },
+      "USDJPY": {
+       "return_pct": 8.43,
+       "sharpe": 0.342,
+       "max_dd_pct": 10.85,
+       "ret_over_dd": 0.778,
+       "avg_exposure": 0.9287,
+       "trades": 33,
+       "fees_pct": null,
+       "sharpe_raw": 0.342,
+       "match_k": 1.0747,
+       "return_raw_pct": 7.85
+      },
+      "SPX": {
+       "return_pct": 33.72,
+       "sharpe": 0.857,
+       "max_dd_pct": 17.21,
+       "ret_over_dd": 1.959,
+       "avg_exposure": 0.8593,
+       "trades": 8,
+       "fees_pct": null,
+       "sharpe_raw": 0.857,
+       "match_k": 1.1622,
+       "return_raw_pct": 29.01
+      },
+      "WTI": {
+       "return_pct": -4.95,
+       "sharpe": -0.064,
+       "max_dd_pct": 44.81,
+       "ret_over_dd": -0.11,
+       "avg_exposure": 0.9144,
+       "trades": 38,
+       "fees_pct": null,
+       "sharpe_raw": -0.064,
+       "match_k": 1.0901,
+       "return_raw_pct": -4.54
+      },
+      "BRENT": {
+       "return_pct": -9.92,
+       "sharpe": -0.153,
+       "max_dd_pct": 40.3,
+       "ret_over_dd": -0.246,
+       "avg_exposure": 0.9001,
+       "trades": 39,
+       "fees_pct": null,
+       "sharpe_raw": -0.153,
+       "match_k": 1.1071,
+       "return_raw_pct": -8.96
+      }
+     }
+    },
+    "all": {
+     "pooled": {
+      "return_pct": 114.5,
+      "sharpe": 0.956,
+      "max_dd_pct": 19.02,
+      "ret_over_dd": 6.019,
+      "avg_exposure": 0.7948,
+      "trades": 1042,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.975,
+      "jk_z": -0.946,
+      "jk_p": 0.3442908211838783
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 269.23,
+       "sharpe": 0.723,
+       "max_dd_pct": 83.53,
+       "ret_over_dd": 3.223,
+       "avg_exposure": 0.8327,
+       "trades": 236,
+       "fees_pct": null,
+       "sharpe_raw": 0.723,
+       "match_k": 1.1777,
+       "return_raw_pct": 228.61
+      },
+      "ETHUSDT": {
+       "return_pct": 409.68,
+       "sharpe": 0.915,
+       "max_dd_pct": 71.62,
+       "ret_over_dd": 5.72,
+       "avg_exposure": 0.8057,
+       "trades": 203,
+       "fees_pct": null,
+       "sharpe_raw": 0.915,
+       "match_k": 1.2178,
+       "return_raw_pct": 336.41
+      },
+      "XAUUSD": {
+       "return_pct": 111.27,
+       "sharpe": 0.869,
+       "max_dd_pct": 43.72,
+       "ret_over_dd": 2.545,
+       "avg_exposure": 0.8474,
+       "trades": 111,
+       "fees_pct": null,
+       "sharpe_raw": 0.869,
+       "match_k": 1.148,
+       "return_raw_pct": 96.92
+      },
+      "XAGUSD": {
+       "return_pct": -46.1,
+       "sharpe": -0.229,
+       "max_dd_pct": 179.06,
+       "ret_over_dd": -0.257,
+       "avg_exposure": 0.7565,
+       "trades": 151,
+       "fees_pct": null,
+       "sharpe_raw": -0.229,
+       "match_k": 1.2834,
+       "return_raw_pct": -35.92
+      },
+      "USDJPY": {
+       "return_pct": 36.8,
+       "sharpe": 0.616,
+       "max_dd_pct": 21.63,
+       "ret_over_dd": 1.701,
+       "avg_exposure": 0.8565,
+       "trades": 71,
+       "fees_pct": null,
+       "sharpe_raw": 0.616,
+       "match_k": 1.1121,
+       "return_raw_pct": 33.09
+      },
+      "SPX": {
+       "return_pct": 39.18,
+       "sharpe": 0.427,
+       "max_dd_pct": 32.86,
+       "ret_over_dd": 1.192,
+       "avg_exposure": 0.7097,
+       "trades": 34,
+       "fees_pct": null,
+       "sharpe_raw": 0.427,
+       "match_k": 1.1567,
+       "return_raw_pct": 33.88
+      },
+      "WTI": {
+       "return_pct": 81.74,
+       "sharpe": 0.315,
+       "max_dd_pct": 75.53,
+       "ret_over_dd": 1.082,
+       "avg_exposure": 0.7743,
+       "trades": 114,
+       "fees_pct": null,
+       "sharpe_raw": 0.315,
+       "match_k": 1.2528,
+       "return_raw_pct": 65.24
+      },
+      "BRENT": {
+       "return_pct": 14.19,
+       "sharpe": 0.063,
+       "max_dd_pct": 99.22,
+       "ret_over_dd": 0.143,
+       "avg_exposure": 0.7759,
+       "trades": 122,
+       "fees_pct": null,
+       "sharpe_raw": 0.063,
+       "match_k": 1.2492,
+       "return_raw_pct": 11.36
+      }
+     }
+    }
+   },
+   "S6": {
+    "first_half": {
+     "pooled": {
+      "return_pct": 55.92,
+      "sharpe": 0.725,
+      "max_dd_pct": 22.98,
+      "ret_over_dd": 2.433,
+      "avg_exposure": 0.8862,
+      "trades": 699,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.786,
+      "jk_z": -1.891,
+      "jk_p": 0.05860277009085016
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 171.84,
+       "sharpe": 0.674,
+       "max_dd_pct": 84.01,
+       "ret_over_dd": 2.045,
+       "avg_exposure": 0.9587,
+       "trades": 149,
+       "fees_pct": null,
+       "sharpe_raw": 0.674,
+       "match_k": 1.0107,
+       "return_raw_pct": 170.02
+      },
+      "ETHUSDT": {
+       "return_pct": 228.5,
+       "sharpe": 0.865,
+       "max_dd_pct": 72.53,
+       "ret_over_dd": 3.151,
+       "avg_exposure": 1.0497,
+       "trades": 132,
+       "fees_pct": null,
+       "sharpe_raw": 0.865,
+       "match_k": 0.9239,
+       "return_raw_pct": 247.33
+      },
+      "XAUUSD": {
+       "return_pct": -13.39,
+       "sharpe": -0.233,
+       "max_dd_pct": 46.21,
+       "ret_over_dd": -0.29,
+       "avg_exposure": 0.9197,
+       "trades": 103,
+       "fees_pct": null,
+       "sharpe_raw": -0.233,
+       "match_k": 1.0372,
+       "return_raw_pct": -12.91
+      },
+      "XAGUSD": {
+       "return_pct": -54.99,
+       "sharpe": -0.483,
+       "max_dd_pct": 116.84,
+       "ret_over_dd": -0.471,
+       "avg_exposure": 0.7707,
+       "trades": 92,
+       "fees_pct": null,
+       "sharpe_raw": -0.483,
+       "match_k": 1.2381,
+       "return_raw_pct": -44.42
+      },
+      "USDJPY": {
+       "return_pct": 32.25,
+       "sharpe": 0.891,
+       "max_dd_pct": 22.59,
+       "ret_over_dd": 1.428,
+       "avg_exposure": 1.1398,
+       "trades": 38,
+       "fees_pct": null,
+       "sharpe_raw": 0.891,
+       "match_k": 0.8073,
+       "return_raw_pct": 39.95
+      },
+      "SPX": {
+       "return_pct": -2.5,
+       "sharpe": -0.047,
+       "max_dd_pct": 36.81,
+       "ret_over_dd": -0.068,
+       "avg_exposure": 0.6487,
+       "trades": 26,
+       "fees_pct": null,
+       "sharpe_raw": -0.047,
+       "match_k": 1.0723,
+       "return_raw_pct": -2.33
+      },
+      "WTI": {
+       "return_pct": 71.05,
+       "sharpe": 0.393,
+       "max_dd_pct": 93.11,
+       "ret_over_dd": 0.763,
+       "avg_exposure": 0.8059,
+       "trades": 76,
+       "fees_pct": null,
+       "sharpe_raw": 0.393,
+       "match_k": 1.18,
+       "return_raw_pct": 60.21
+      },
+      "BRENT": {
+       "return_pct": 14.61,
+       "sharpe": 0.092,
+       "max_dd_pct": 103.93,
+       "ret_over_dd": 0.141,
+       "avg_exposure": 0.7966,
+       "trades": 83,
+       "fees_pct": null,
+       "sharpe_raw": 0.092,
+       "match_k": 1.1927,
+       "return_raw_pct": 12.25
+      }
+     }
+    },
+    "second_half": {
+     "pooled": {
+      "return_pct": 51.0,
+      "sharpe": 1.23,
+      "max_dd_pct": 8.35,
+      "ret_over_dd": 6.111,
+      "avg_exposure": 1.1154,
+      "trades": 343,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.271,
+      "jk_z": 0.856,
+      "jk_p": 0.39214185635011634
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 108.89,
+       "sharpe": 0.867,
+       "max_dd_pct": 62.99,
+       "ret_over_dd": 1.729,
+       "avg_exposure": 1.0454,
+       "trades": 87,
+       "fees_pct": null,
+       "sharpe_raw": 0.867,
+       "match_k": 0.9541,
+       "return_raw_pct": 114.13
+      },
+      "ETHUSDT": {
+       "return_pct": 149.37,
+       "sharpe": 0.872,
+       "max_dd_pct": 77.11,
+       "ret_over_dd": 1.937,
+       "avg_exposure": 0.913,
+       "trades": 71,
+       "fees_pct": null,
+       "sharpe_raw": 0.872,
+       "match_k": 1.0925,
+       "return_raw_pct": 136.73
+      },
+      "XAUUSD": {
+       "return_pct": 109.74,
+       "sharpe": 1.774,
+       "max_dd_pct": 22.45,
+       "ret_over_dd": 4.887,
+       "avg_exposure": 1.499,
+       "trades": 8,
+       "fees_pct": null,
+       "sharpe_raw": 1.774,
+       "match_k": 0.6667,
+       "return_raw_pct": 164.61
+      },
+      "XAGUSD": {
+       "return_pct": 13.46,
+       "sharpe": 0.15,
+       "max_dd_pct": 61.93,
+       "ret_over_dd": 0.217,
+       "avg_exposure": 1.1178,
+       "trades": 59,
+       "fees_pct": null,
+       "sharpe_raw": 0.15,
+       "match_k": 0.8898,
+       "return_raw_pct": 15.13
+      },
+      "USDJPY": {
+       "return_pct": 8.9,
+       "sharpe": 0.355,
+       "max_dd_pct": 11.17,
+       "ret_over_dd": 0.797,
+       "avg_exposure": 1.0972,
+       "trades": 33,
+       "fees_pct": null,
+       "sharpe_raw": 0.355,
+       "match_k": 0.9097,
+       "return_raw_pct": 9.78
+      },
+      "SPX": {
+       "return_pct": 33.72,
+       "sharpe": 0.857,
+       "max_dd_pct": 17.21,
+       "ret_over_dd": 1.959,
+       "avg_exposure": 0.8593,
+       "trades": 8,
+       "fees_pct": null,
+       "sharpe_raw": 0.857,
+       "match_k": 1.1622,
+       "return_raw_pct": 29.01
+      },
+      "WTI": {
+       "return_pct": -6.9,
+       "sharpe": -0.089,
+       "max_dd_pct": 48.23,
+       "ret_over_dd": -0.143,
+       "avg_exposure": 1.2089,
+       "trades": 38,
+       "fees_pct": null,
+       "sharpe_raw": -0.089,
+       "match_k": 0.8246,
+       "return_raw_pct": -8.37
+      },
+      "BRENT": {
+       "return_pct": -9.18,
+       "sharpe": -0.135,
+       "max_dd_pct": 40.7,
+       "ret_over_dd": -0.225,
+       "avg_exposure": 1.1827,
+       "trades": 39,
+       "fees_pct": null,
+       "sharpe_raw": -0.135,
+       "match_k": 0.8426,
+       "return_raw_pct": -10.89
+      }
+     }
+    },
+    "all": {
+     "pooled": {
+      "return_pct": 110.1,
+      "sharpe": 0.931,
+      "max_dd_pct": 20.79,
+      "ret_over_dd": 5.296,
+      "avg_exposure": 0.9813,
+      "trades": 1042,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.963,
+      "jk_z": -0.821,
+      "jk_p": 0.41187319988679627
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 280.17,
+       "sharpe": 0.732,
+       "max_dd_pct": 81.96,
+       "ret_over_dd": 3.418,
+       "avg_exposure": 0.9946,
+       "trades": 236,
+       "fees_pct": null,
+       "sharpe_raw": 0.732,
+       "match_k": 0.986,
+       "return_raw_pct": 284.16
+      },
+      "ETHUSDT": {
+       "return_pct": 379.53,
+       "sharpe": 0.861,
+       "max_dd_pct": 77.58,
+       "ret_over_dd": 4.892,
+       "avg_exposure": 0.9929,
+       "trades": 203,
+       "fees_pct": null,
+       "sharpe_raw": 0.861,
+       "match_k": 0.9882,
+       "return_raw_pct": 384.06
+      },
+      "XAUUSD": {
+       "return_pct": 127.19,
+       "sharpe": 0.939,
+       "max_dd_pct": 37.36,
+       "ret_over_dd": 3.405,
+       "avg_exposure": 1.1602,
+       "trades": 111,
+       "fees_pct": null,
+       "sharpe_raw": 0.939,
+       "match_k": 0.8384,
+       "return_raw_pct": 151.7
+      },
+      "XAGUSD": {
+       "return_pct": -31.08,
+       "sharpe": -0.149,
+       "max_dd_pct": 169.52,
+       "ret_over_dd": -0.183,
+       "avg_exposure": 0.9148,
+       "trades": 151,
+       "fees_pct": null,
+       "sharpe_raw": -0.149,
+       "match_k": 1.0614,
+       "return_raw_pct": -29.28
+      },
+      "USDJPY": {
+       "return_pct": 42.21,
+       "sharpe": 0.685,
+       "max_dd_pct": 23.75,
+       "ret_over_dd": 1.777,
+       "avg_exposure": 1.1222,
+       "trades": 71,
+       "fees_pct": null,
+       "sharpe_raw": 0.685,
+       "match_k": 0.8488,
+       "return_raw_pct": 49.74
+      },
+      "SPX": {
+       "return_pct": 29.77,
+       "sharpe": 0.318,
+       "max_dd_pct": 38.3,
+       "ret_over_dd": 0.777,
+       "avg_exposure": 0.7358,
+       "trades": 34,
+       "fees_pct": null,
+       "sharpe_raw": 0.318,
+       "match_k": 1.1157,
+       "return_raw_pct": 26.68
+      },
+      "WTI": {
+       "return_pct": 51.67,
+       "sharpe": 0.209,
+       "max_dd_pct": 83.33,
+       "ret_over_dd": 0.62,
+       "avg_exposure": 0.9732,
+       "trades": 114,
+       "fees_pct": null,
+       "sharpe_raw": 0.209,
+       "match_k": 0.9967,
+       "return_raw_pct": 51.84
+      },
+      "BRENT": {
+       "return_pct": 1.37,
+       "sharpe": 0.006,
+       "max_dd_pct": 99.01,
+       "ret_over_dd": 0.014,
+       "avg_exposure": 0.9567,
+       "trades": 122,
+       "fees_pct": null,
+       "sharpe_raw": 0.006,
+       "match_k": 1.0132,
+       "return_raw_pct": 1.36
+      }
+     }
+    }
+   }
+  },
+  "proxy": {
+   "S0": {
+    "first_half": {
+     "pooled": {
+      "return_pct": 107.44,
+      "sharpe": 1.208,
+      "max_dd_pct": 21.17,
+      "ret_over_dd": 5.076,
+      "avg_exposure": 1.0002,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.208
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 262.61,
+       "sharpe": 1.072,
+       "max_dd_pct": 76.5,
+       "ret_over_dd": 3.433,
+       "avg_exposure": 1.0004,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 1.072,
+       "match_k": 1.0,
+       "return_raw_pct": 262.61
+      },
+      "ETHUSDT": {
+       "return_pct": 373.56,
+       "sharpe": 1.157,
+       "max_dd_pct": 96.15,
+       "ret_over_dd": 3.885,
+       "avg_exposure": 1.0009,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 1.157,
+       "match_k": 1.0,
+       "return_raw_pct": 373.56
+      },
+      "XAUUSD": {
+       "return_pct": -22.32,
+       "sharpe": -0.395,
+       "max_dd_pct": 40.11,
+       "ret_over_dd": -0.557,
+       "avg_exposure": 1.0,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.395,
+       "match_k": 1.0,
+       "return_raw_pct": -22.32
+      },
+      "XAGUSD": {
+       "return_pct": 32.76,
+       "sharpe": 0.276,
+       "max_dd_pct": 54.16,
+       "ret_over_dd": 0.605,
+       "avg_exposure": 0.9999,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.276,
+       "match_k": 1.0,
+       "return_raw_pct": 32.76
+      },
+      "USDJPY": {
+       "return_pct": -9.54,
+       "sharpe": -0.297,
+       "max_dd_pct": 23.95,
+       "ret_over_dd": -0.399,
+       "avg_exposure": 1.0003,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.297,
+       "match_k": 1.0,
+       "return_raw_pct": -9.54
+      },
+      "SPX": {
+       "return_pct": 18.32,
+       "sharpe": 0.219,
+       "max_dd_pct": 37.23,
+       "ret_over_dd": 0.492,
+       "avg_exposure": 1.0003,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.219,
+       "match_k": 1.0,
+       "return_raw_pct": 18.32
+      },
+      "WTI": {
+       "return_pct": 127.27,
+       "sharpe": 0.596,
+       "max_dd_pct": 82.31,
+       "ret_over_dd": 1.546,
+       "avg_exposure": 0.9997,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.596,
+       "match_k": 1.0,
+       "return_raw_pct": 127.27
+      },
+      "BRENT": {
+       "return_pct": 76.85,
+       "sharpe": 0.443,
+       "max_dd_pct": 64.1,
+       "ret_over_dd": 1.199,
+       "avg_exposure": 1.0002,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.443,
+       "match_k": 1.0,
+       "return_raw_pct": 76.85
+      }
+     }
+    },
+    "second_half": {
+     "pooled": {
+      "return_pct": 17.72,
+      "sharpe": 0.453,
+      "max_dd_pct": 24.57,
+      "ret_over_dd": 0.721,
+      "avg_exposure": 1.0002,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.453
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 35.39,
+       "sharpe": 0.314,
+       "max_dd_pct": 84.2,
+       "ret_over_dd": 0.42,
+       "avg_exposure": 1.0007,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.314,
+       "match_k": 1.0,
+       "return_raw_pct": 35.39
+      },
+      "ETHUSDT": {
+       "return_pct": 124.96,
+       "sharpe": 0.786,
+       "max_dd_pct": 64.48,
+       "ret_over_dd": 1.938,
+       "avg_exposure": 1.0005,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.786,
+       "match_k": 1.0,
+       "return_raw_pct": 124.96
+      },
+      "XAUUSD": {
+       "return_pct": -2.09,
+       "sharpe": -0.053,
+       "max_dd_pct": 28.99,
+       "ret_over_dd": -0.072,
+       "avg_exposure": 1.0006,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.053,
+       "match_k": 1.0,
+       "return_raw_pct": -2.09
+      },
+      "XAGUSD": {
+       "return_pct": -29.84,
+       "sharpe": -0.428,
+       "max_dd_pct": 50.59,
+       "ret_over_dd": -0.59,
+       "avg_exposure": 1.0008,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.428,
+       "match_k": 1.0,
+       "return_raw_pct": -29.84
+      },
+      "USDJPY": {
+       "return_pct": -7.2,
+       "sharpe": -0.293,
+       "max_dd_pct": 20.82,
+       "ret_over_dd": -0.346,
+       "avg_exposure": 1.0003,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.293,
+       "match_k": 1.0,
+       "return_raw_pct": -7.2
+      },
+      "SPX": {
+       "return_pct": 23.41,
+       "sharpe": 0.634,
+       "max_dd_pct": 17.59,
+       "ret_over_dd": 1.331,
+       "avg_exposure": 1.0001,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.634,
+       "match_k": 1.0,
+       "return_raw_pct": 23.41
+      },
+      "WTI": {
+       "return_pct": 6.3,
+       "sharpe": 0.083,
+       "max_dd_pct": 37.67,
+       "ret_over_dd": 0.167,
+       "avg_exposure": 1.0,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.083,
+       "match_k": 1.0,
+       "return_raw_pct": 6.3
+      },
+      "BRENT": {
+       "return_pct": -9.15,
+       "sharpe": -0.136,
+       "max_dd_pct": 29.93,
+       "ret_over_dd": -0.306,
+       "avg_exposure": 0.9986,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.136,
+       "match_k": 1.0,
+       "return_raw_pct": -9.15
+      }
+     }
+    },
+    "all": {
+     "pooled": {
+      "return_pct": 125.16,
+      "sharpe": 0.954,
+      "max_dd_pct": 24.57,
+      "ret_over_dd": 5.095,
+      "avg_exposure": 1.0002,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.954
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 298.0,
+       "sharpe": 0.816,
+       "max_dd_pct": 84.2,
+       "ret_over_dd": 3.539,
+       "avg_exposure": 1.0006,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.816,
+       "match_k": 1.0,
+       "return_raw_pct": 298.0
+      },
+      "ETHUSDT": {
+       "return_pct": 498.52,
+       "sharpe": 1.02,
+       "max_dd_pct": 100.66,
+       "ret_over_dd": 4.953,
+       "avg_exposure": 1.0007,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 1.02,
+       "match_k": 1.0,
+       "return_raw_pct": 498.52
+      },
+      "XAUUSD": {
+       "return_pct": -24.41,
+       "sharpe": -0.254,
+       "max_dd_pct": 49.56,
+       "ret_over_dd": -0.492,
+       "avg_exposure": 1.0003,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.254,
+       "match_k": 1.0,
+       "return_raw_pct": -24.41
+      },
+      "XAGUSD": {
+       "return_pct": 2.93,
+       "sharpe": 0.015,
+       "max_dd_pct": 71.92,
+       "ret_over_dd": 0.041,
+       "avg_exposure": 1.0002,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.015,
+       "match_k": 1.0,
+       "return_raw_pct": 2.93
+      },
+      "USDJPY": {
+       "return_pct": -16.75,
+       "sharpe": -0.295,
+       "max_dd_pct": 23.95,
+       "ret_over_dd": -0.699,
+       "avg_exposure": 1.0003,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.295,
+       "match_k": 1.0,
+       "return_raw_pct": -16.75
+      },
+      "SPX": {
+       "return_pct": 41.73,
+       "sharpe": 0.338,
+       "max_dd_pct": 37.23,
+       "ret_over_dd": 1.121,
+       "avg_exposure": 1.0002,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.338,
+       "match_k": 1.0,
+       "return_raw_pct": 41.73
+      },
+      "WTI": {
+       "return_pct": 133.57,
+       "sharpe": 0.441,
+       "max_dd_pct": 82.31,
+       "ret_over_dd": 1.623,
+       "avg_exposure": 0.9998,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.441,
+       "match_k": 1.0,
+       "return_raw_pct": 133.57
+      },
+      "BRENT": {
+       "return_pct": 67.7,
+       "sharpe": 0.271,
+       "max_dd_pct": 88.41,
+       "ret_over_dd": 0.766,
+       "avg_exposure": 0.9996,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.271,
+       "match_k": 1.0,
+       "return_raw_pct": 67.7
+      }
+     }
+    }
+   },
+   "S1": {
+    "first_half": {
+     "pooled": {
+      "return_pct": 99.96,
+      "sharpe": 1.407,
+      "max_dd_pct": 21.34,
+      "ret_over_dd": 4.684,
+      "avg_exposure": 1.0031,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.414,
+      "jk_z": 0.789,
+      "jk_p": 0.4300922217685048
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 230.9,
+       "sharpe": 1.051,
+       "max_dd_pct": 78.14,
+       "ret_over_dd": 2.955,
+       "avg_exposure": 1.1065,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 1.051,
+       "match_k": 0.9041,
+       "return_raw_pct": 255.38
+      },
+      "ETHUSDT": {
+       "return_pct": 341.5,
+       "sharpe": 1.237,
+       "max_dd_pct": 91.87,
+       "ret_over_dd": 3.717,
+       "avg_exposure": 1.0876,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 1.237,
+       "match_k": 0.9203,
+       "return_raw_pct": 371.08
+      },
+      "XAUUSD": {
+       "return_pct": -10.12,
+       "sharpe": -0.198,
+       "max_dd_pct": 32.79,
+       "ret_over_dd": -0.309,
+       "avg_exposure": 0.9738,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.198,
+       "match_k": 1.0269,
+       "return_raw_pct": -9.86
+      },
+      "XAGUSD": {
+       "return_pct": 29.02,
+       "sharpe": 0.286,
+       "max_dd_pct": 44.86,
+       "ret_over_dd": 0.647,
+       "avg_exposure": 0.9675,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.286,
+       "match_k": 1.0335,
+       "return_raw_pct": 28.08
+      },
+      "USDJPY": {
+       "return_pct": -4.13,
+       "sharpe": -0.147,
+       "max_dd_pct": 18.33,
+       "ret_over_dd": -0.225,
+       "avg_exposure": 0.9084,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.147,
+       "match_k": 1.1011,
+       "return_raw_pct": -3.75
+      },
+      "SPX": {
+       "return_pct": 19.58,
+       "sharpe": 0.333,
+       "max_dd_pct": 24.8,
+       "ret_over_dd": 0.79,
+       "avg_exposure": 1.0421,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.333,
+       "match_k": 0.9598,
+       "return_raw_pct": 20.4
+      },
+      "WTI": {
+       "return_pct": 117.44,
+       "sharpe": 0.851,
+       "max_dd_pct": 53.41,
+       "ret_over_dd": 2.199,
+       "avg_exposure": 0.9651,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.851,
+       "match_k": 1.0359,
+       "return_raw_pct": 113.37
+      },
+      "BRENT": {
+       "return_pct": 75.52,
+       "sharpe": 0.591,
+       "max_dd_pct": 47.84,
+       "ret_over_dd": 1.578,
+       "avg_exposure": 0.9736,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.591,
+       "match_k": 1.0274,
+       "return_raw_pct": 73.51
+      }
+     }
+    },
+    "second_half": {
+     "pooled": {
+      "return_pct": 25.66,
+      "sharpe": 0.72,
+      "max_dd_pct": 20.82,
+      "ret_over_dd": 1.233,
+      "avg_exposure": 1.0546,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.716,
+      "jk_z": 1.252,
+      "jk_p": 0.21059278407339074
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 64.44,
+       "sharpe": 0.614,
+       "max_dd_pct": 65.27,
+       "ret_over_dd": 0.987,
+       "avg_exposure": 1.0771,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.614,
+       "match_k": 0.9291,
+       "return_raw_pct": 69.36
+      },
+      "ETHUSDT": {
+       "return_pct": 130.66,
+       "sharpe": 0.848,
+       "max_dd_pct": 60.69,
+       "ret_over_dd": 2.153,
+       "avg_exposure": 1.0037,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.848,
+       "match_k": 0.9969,
+       "return_raw_pct": 131.07
+      },
+      "XAUUSD": {
+       "return_pct": 5.9,
+       "sharpe": 0.166,
+       "max_dd_pct": 26.02,
+       "ret_over_dd": 0.227,
+       "avg_exposure": 0.993,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.166,
+       "match_k": 1.0077,
+       "return_raw_pct": 5.85
+      },
+      "XAGUSD": {
+       "return_pct": -32.15,
+       "sharpe": -0.494,
+       "max_dd_pct": 56.85,
+       "ret_over_dd": -0.565,
+       "avg_exposure": 1.029,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.494,
+       "match_k": 0.9726,
+       "return_raw_pct": -33.05
+      },
+      "USDJPY": {
+       "return_pct": -5.2,
+       "sharpe": -0.228,
+       "max_dd_pct": 19.88,
+       "ret_over_dd": -0.261,
+       "avg_exposure": 1.1024,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.228,
+       "match_k": 0.9074,
+       "return_raw_pct": -5.73
+      },
+      "SPX": {
+       "return_pct": 25.22,
+       "sharpe": 0.835,
+       "max_dd_pct": 16.08,
+       "ret_over_dd": 1.568,
+       "avg_exposure": 1.0903,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.835,
+       "match_k": 0.9173,
+       "return_raw_pct": 27.49
+      },
+      "WTI": {
+       "return_pct": 16.79,
+       "sharpe": 0.24,
+       "max_dd_pct": 33.48,
+       "ret_over_dd": 0.502,
+       "avg_exposure": 1.0718,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.24,
+       "match_k": 0.933,
+       "return_raw_pct": 18.0
+      },
+      "BRENT": {
+       "return_pct": -0.35,
+       "sharpe": -0.006,
+       "max_dd_pct": 22.22,
+       "ret_over_dd": -0.016,
+       "avg_exposure": 1.07,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.006,
+       "match_k": 0.9333,
+       "return_raw_pct": -0.37
+      }
+     }
+    },
+    "all": {
+     "pooled": {
+      "return_pct": 125.37,
+      "sharpe": 1.157,
+      "max_dd_pct": 21.7,
+      "ret_over_dd": 5.777,
+      "avg_exposure": 1.0244,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.166,
+      "jk_z": 1.11,
+      "jk_p": 0.26709727119928417
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 296.92,
+       "sharpe": 0.895,
+       "max_dd_pct": 79.02,
+       "ret_over_dd": 3.758,
+       "avg_exposure": 1.0943,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.895,
+       "match_k": 0.9143,
+       "return_raw_pct": 324.74
+      },
+      "ETHUSDT": {
+       "return_pct": 477.34,
+       "sharpe": 1.092,
+       "max_dd_pct": 110.54,
+       "ret_over_dd": 4.318,
+       "avg_exposure": 1.0527,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 1.092,
+       "match_k": 0.9506,
+       "return_raw_pct": 502.15
+      },
+      "XAUUSD": {
+       "return_pct": -4.08,
+       "sharpe": -0.047,
+       "max_dd_pct": 38.21,
+       "ret_over_dd": -0.107,
+       "avg_exposure": 0.9817,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.047,
+       "match_k": 1.0189,
+       "return_raw_pct": -4.0
+      },
+      "XAGUSD": {
+       "return_pct": -5.01,
+       "sharpe": -0.03,
+       "max_dd_pct": 70.09,
+       "ret_over_dd": -0.071,
+       "avg_exposure": 0.993,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.03,
+       "match_k": 1.0073,
+       "return_raw_pct": -4.97
+      },
+      "USDJPY": {
+       "return_pct": -9.59,
+       "sharpe": -0.185,
+       "max_dd_pct": 22.17,
+       "ret_over_dd": -0.433,
+       "avg_exposure": 0.9888,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.185,
+       "match_k": 1.0116,
+       "return_raw_pct": -9.48
+      },
+      "SPX": {
+       "return_pct": 45.1,
+       "sharpe": 0.504,
+       "max_dd_pct": 24.33,
+       "ret_over_dd": 1.854,
+       "avg_exposure": 1.062,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.504,
+       "match_k": 0.9418,
+       "return_raw_pct": 47.89
+      },
+      "WTI": {
+       "return_pct": 130.13,
+       "sharpe": 0.627,
+       "max_dd_pct": 51.07,
+       "ret_over_dd": 2.548,
+       "avg_exposure": 1.0094,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.627,
+       "match_k": 0.9905,
+       "return_raw_pct": 131.37
+      },
+      "BRENT": {
+       "return_pct": 72.13,
+       "sharpe": 0.379,
+       "max_dd_pct": 62.6,
+       "ret_over_dd": 1.152,
+       "avg_exposure": 1.0136,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.379,
+       "match_k": 0.9862,
+       "return_raw_pct": 73.14
+      }
+     }
+    }
+   },
+   "S2": {
+    "first_half": {
+     "pooled": {
+      "return_pct": 89.67,
+      "sharpe": 1.266,
+      "max_dd_pct": 22.58,
+      "ret_over_dd": 3.971,
+      "avg_exposure": 1.127,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.26,
+      "jk_z": 0.166,
+      "jk_p": 0.8681246301805816
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 193.5,
+       "sharpe": 0.855,
+       "max_dd_pct": 97.65,
+       "ret_over_dd": 1.982,
+       "avg_exposure": 1.3287,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.855,
+       "match_k": 0.753,
+       "return_raw_pct": 256.99
+      },
+      "ETHUSDT": {
+       "return_pct": 270.3,
+       "sharpe": 0.982,
+       "max_dd_pct": 96.22,
+       "ret_over_dd": 2.809,
+       "avg_exposure": 1.306,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.982,
+       "match_k": 0.7664,
+       "return_raw_pct": 352.69
+      },
+      "XAUUSD": {
+       "return_pct": -4.73,
+       "sharpe": -0.093,
+       "max_dd_pct": 33.73,
+       "ret_over_dd": -0.14,
+       "avg_exposure": 1.007,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.093,
+       "match_k": 0.993,
+       "return_raw_pct": -4.76
+      },
+      "XAGUSD": {
+       "return_pct": 27.78,
+       "sharpe": 0.273,
+       "max_dd_pct": 39.87,
+       "ret_over_dd": 0.697,
+       "avg_exposure": 1.0344,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.273,
+       "match_k": 0.9666,
+       "return_raw_pct": 28.74
+      },
+      "USDJPY": {
+       "return_pct": -1.85,
+       "sharpe": -0.067,
+       "max_dd_pct": 16.55,
+       "ret_over_dd": -0.111,
+       "avg_exposure": 0.9035,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.067,
+       "match_k": 1.107,
+       "return_raw_pct": -1.67
+      },
+      "SPX": {
+       "return_pct": 26.15,
+       "sharpe": 0.446,
+       "max_dd_pct": 17.38,
+       "ret_over_dd": 1.505,
+       "avg_exposure": 1.3072,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.446,
+       "match_k": 0.7652,
+       "return_raw_pct": 34.17
+      },
+      "WTI": {
+       "return_pct": 128.24,
+       "sharpe": 0.94,
+       "max_dd_pct": 51.45,
+       "ret_over_dd": 2.492,
+       "avg_exposure": 1.0553,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.94,
+       "match_k": 0.9473,
+       "return_raw_pct": 135.36
+      },
+      "BRENT": {
+       "return_pct": 77.98,
+       "sharpe": 0.621,
+       "max_dd_pct": 48.62,
+       "ret_over_dd": 1.604,
+       "avg_exposure": 1.0737,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.621,
+       "match_k": 0.9315,
+       "return_raw_pct": 83.71
+      }
+     }
+    },
+    "second_half": {
+     "pooled": {
+      "return_pct": 32.29,
+      "sharpe": 0.886,
+      "max_dd_pct": 18.51,
+      "ret_over_dd": 1.744,
+      "avg_exposure": 1.2017,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.896,
+      "jk_z": 1.174,
+      "jk_p": 0.24040495772623732
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 93.56,
+       "sharpe": 0.863,
+       "max_dd_pct": 51.86,
+       "ret_over_dd": 1.804,
+       "avg_exposure": 1.264,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.863,
+       "match_k": 0.7917,
+       "return_raw_pct": 118.17
+      },
+      "ETHUSDT": {
+       "return_pct": 141.74,
+       "sharpe": 0.88,
+       "max_dd_pct": 61.97,
+       "ret_over_dd": 2.287,
+       "avg_exposure": 1.0981,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.88,
+       "match_k": 0.9112,
+       "return_raw_pct": 155.55
+      },
+      "XAUUSD": {
+       "return_pct": 11.83,
+       "sharpe": 0.345,
+       "max_dd_pct": 25.24,
+       "ret_over_dd": 0.469,
+       "avg_exposure": 1.0574,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.345,
+       "match_k": 0.9463,
+       "return_raw_pct": 12.5
+      },
+      "XAGUSD": {
+       "return_pct": -37.21,
+       "sharpe": -0.577,
+       "max_dd_pct": 65.54,
+       "ret_over_dd": -0.568,
+       "avg_exposure": 1.1063,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.577,
+       "match_k": 0.9046,
+       "return_raw_pct": -41.13
+      },
+      "USDJPY": {
+       "return_pct": -4.87,
+       "sharpe": -0.209,
+       "max_dd_pct": 19.1,
+       "ret_over_dd": -0.255,
+       "avg_exposure": 1.3234,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.209,
+       "match_k": 0.7558,
+       "return_raw_pct": -6.44
+      },
+      "SPX": {
+       "return_pct": 20.8,
+       "sharpe": 0.658,
+       "max_dd_pct": 19.4,
+       "ret_over_dd": 1.072,
+       "avg_exposure": 1.3352,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.658,
+       "match_k": 0.7491,
+       "return_raw_pct": 27.77
+      },
+      "WTI": {
+       "return_pct": 25.11,
+       "sharpe": 0.36,
+       "max_dd_pct": 29.91,
+       "ret_over_dd": 0.839,
+       "avg_exposure": 1.2135,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.36,
+       "match_k": 0.8241,
+       "return_raw_pct": 30.47
+      },
+      "BRENT": {
+       "return_pct": 7.35,
+       "sharpe": 0.117,
+       "max_dd_pct": 23.76,
+       "ret_over_dd": 0.309,
+       "avg_exposure": 1.2159,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.117,
+       "match_k": 0.8213,
+       "return_raw_pct": 8.95
+      }
+     }
+    },
+    "all": {
+     "pooled": {
+      "return_pct": 121.3,
+      "sharpe": 1.11,
+      "max_dd_pct": 23.58,
+      "ret_over_dd": 5.143,
+      "avg_exposure": 1.1579,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.123,
+      "jk_z": 0.593,
+      "jk_p": 0.5530875004988217
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 288.35,
+       "sharpe": 0.84,
+       "max_dd_pct": 99.68,
+       "ret_over_dd": 2.893,
+       "avg_exposure": 1.3018,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.84,
+       "match_k": 0.7686,
+       "return_raw_pct": 375.16
+      },
+      "ETHUSDT": {
+       "return_pct": 417.01,
+       "sharpe": 0.935,
+       "max_dd_pct": 122.95,
+       "ret_over_dd": 3.392,
+       "avg_exposure": 1.2197,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.935,
+       "match_k": 0.8205,
+       "return_raw_pct": 508.24
+      },
+      "XAUUSD": {
+       "return_pct": 7.53,
+       "sharpe": 0.088,
+       "max_dd_pct": 35.32,
+       "ret_over_dd": 0.213,
+       "avg_exposure": 1.0279,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.088,
+       "match_k": 0.9731,
+       "return_raw_pct": 7.73
+      },
+      "XAGUSD": {
+       "return_pct": -11.65,
+       "sharpe": -0.07,
+       "max_dd_pct": 76.82,
+       "ret_over_dd": -0.152,
+       "avg_exposure": 1.0643,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.07,
+       "match_k": 0.9398,
+       "return_raw_pct": -12.39
+      },
+      "USDJPY": {
+       "return_pct": -7.53,
+       "sharpe": -0.14,
+       "max_dd_pct": 23.46,
+       "ret_over_dd": -0.321,
+       "avg_exposure": 1.0774,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.14,
+       "match_k": 0.9284,
+       "return_raw_pct": -8.11
+      },
+      "SPX": {
+       "return_pct": 46.98,
+       "sharpe": 0.518,
+       "max_dd_pct": 19.64,
+       "ret_over_dd": 2.391,
+       "avg_exposure": 1.3188,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.518,
+       "match_k": 0.7584,
+       "return_raw_pct": 61.94
+      },
+      "WTI": {
+       "return_pct": 147.91,
+       "sharpe": 0.722,
+       "max_dd_pct": 48.44,
+       "ret_over_dd": 3.053,
+       "avg_exposure": 1.121,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.722,
+       "match_k": 0.8919,
+       "return_raw_pct": 165.83
+      },
+      "BRENT": {
+       "return_pct": 81.77,
+       "sharpe": 0.436,
+       "max_dd_pct": 61.3,
+       "ret_over_dd": 1.334,
+       "avg_exposure": 1.1327,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.436,
+       "match_k": 0.8825,
+       "return_raw_pct": 92.66
+      }
+     }
+    }
+   },
+   "S3": {
+    "first_half": {
+     "pooled": {
+      "return_pct": 106.87,
+      "sharpe": 1.413,
+      "max_dd_pct": 19.35,
+      "ret_over_dd": 5.524,
+      "avg_exposure": 0.9826,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.419,
+      "jk_z": 1.301,
+      "jk_p": 0.1932008516028959
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 253.22,
+       "sharpe": 1.114,
+       "max_dd_pct": 78.41,
+       "ret_over_dd": 3.229,
+       "avg_exposure": 1.0312,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 1.114,
+       "match_k": 0.9701,
+       "return_raw_pct": 261.01
+      },
+      "ETHUSDT": {
+       "return_pct": 369.58,
+       "sharpe": 1.27,
+       "max_dd_pct": 82.7,
+       "ret_over_dd": 4.469,
+       "avg_exposure": 1.0245,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 1.27,
+       "match_k": 0.977,
+       "return_raw_pct": 378.3
+      },
+      "XAUUSD": {
+       "return_pct": -15.18,
+       "sharpe": -0.289,
+       "max_dd_pct": 33.22,
+       "ret_over_dd": -0.457,
+       "avg_exposure": 0.9784,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.289,
+       "match_k": 1.022,
+       "return_raw_pct": -14.85
+      },
+      "XAGUSD": {
+       "return_pct": 30.73,
+       "sharpe": 0.288,
+       "max_dd_pct": 49.73,
+       "ret_over_dd": 0.618,
+       "avg_exposure": 0.9701,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.288,
+       "match_k": 1.0307,
+       "return_raw_pct": 29.81
+      },
+      "USDJPY": {
+       "return_pct": -6.18,
+       "sharpe": -0.211,
+       "max_dd_pct": 20.45,
+       "ret_over_dd": -0.302,
+       "avg_exposure": 0.9413,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.211,
+       "match_k": 1.0626,
+       "return_raw_pct": -5.82
+      },
+      "SPX": {
+       "return_pct": 17.51,
+       "sharpe": 0.276,
+       "max_dd_pct": 30.98,
+       "ret_over_dd": 0.565,
+       "avg_exposure": 0.9882,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.276,
+       "match_k": 1.0122,
+       "return_raw_pct": 17.3
+      },
+      "WTI": {
+       "return_pct": 125.28,
+       "sharpe": 0.826,
+       "max_dd_pct": 52.91,
+       "ret_over_dd": 2.368,
+       "avg_exposure": 0.9599,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.826,
+       "match_k": 1.0414,
+       "return_raw_pct": 120.29
+      },
+      "BRENT": {
+       "return_pct": 80.03,
+       "sharpe": 0.575,
+       "max_dd_pct": 55.05,
+       "ret_over_dd": 1.454,
+       "avg_exposure": 0.9669,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.575,
+       "match_k": 1.0344,
+       "return_raw_pct": 77.36
+      }
+     }
+    },
+    "second_half": {
+     "pooled": {
+      "return_pct": 21.94,
+      "sharpe": 0.598,
+      "max_dd_pct": 22.5,
+      "ret_over_dd": 0.975,
+      "avg_exposure": 1.0156,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.594,
+      "jk_z": 1.286,
+      "jk_p": 0.19847341953845538
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 49.97,
+       "sharpe": 0.466,
+       "max_dd_pct": 73.97,
+       "ret_over_dd": 0.676,
+       "avg_exposure": 1.0255,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.466,
+       "match_k": 0.9758,
+       "return_raw_pct": 51.21
+      },
+      "ETHUSDT": {
+       "return_pct": 126.95,
+       "sharpe": 0.82,
+       "max_dd_pct": 61.34,
+       "ret_over_dd": 2.07,
+       "avg_exposure": 0.9881,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.82,
+       "match_k": 1.0125,
+       "return_raw_pct": 125.38
+      },
+      "XAUUSD": {
+       "return_pct": 2.23,
+       "sharpe": 0.06,
+       "max_dd_pct": 26.35,
+       "ret_over_dd": 0.085,
+       "avg_exposure": 0.9875,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.06,
+       "match_k": 1.0133,
+       "return_raw_pct": 2.2
+      },
+      "XAGUSD": {
+       "return_pct": -30.54,
+       "sharpe": -0.458,
+       "max_dd_pct": 53.3,
+       "ret_over_dd": -0.573,
+       "avg_exposure": 1.0085,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.458,
+       "match_k": 0.9923,
+       "return_raw_pct": -30.78
+      },
+      "USDJPY": {
+       "return_pct": -6.0,
+       "sharpe": -0.257,
+       "max_dd_pct": 20.36,
+       "ret_over_dd": -0.295,
+       "avg_exposure": 1.036,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.257,
+       "match_k": 0.9655,
+       "return_raw_pct": -6.22
+      },
+      "SPX": {
+       "return_pct": 25.46,
+       "sharpe": 0.808,
+       "max_dd_pct": 14.88,
+       "ret_over_dd": 1.711,
+       "avg_exposure": 1.026,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.808,
+       "match_k": 0.9748,
+       "return_raw_pct": 26.12
+      },
+      "WTI": {
+       "return_pct": 11.91,
+       "sharpe": 0.166,
+       "max_dd_pct": 35.49,
+       "ret_over_dd": 0.336,
+       "avg_exposure": 1.0275,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.166,
+       "match_k": 0.9733,
+       "return_raw_pct": 12.24
+      },
+      "BRENT": {
+       "return_pct": -4.49,
+       "sharpe": -0.07,
+       "max_dd_pct": 26.09,
+       "ret_over_dd": -0.172,
+       "avg_exposure": 1.0253,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.07,
+       "match_k": 0.974,
+       "return_raw_pct": -4.61
+      }
+     }
+    },
+    "all": {
+     "pooled": {
+      "return_pct": 128.45,
+      "sharpe": 1.127,
+      "max_dd_pct": 22.64,
+      "ret_over_dd": 5.675,
+      "avg_exposure": 0.9963,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.131,
+      "jk_z": 1.522,
+      "jk_p": 0.1280169926407371
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 303.63,
+       "sharpe": 0.891,
+       "max_dd_pct": 78.6,
+       "ret_over_dd": 3.863,
+       "avg_exposure": 1.0289,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.891,
+       "match_k": 0.9725,
+       "return_raw_pct": 312.22
+      },
+      "ETHUSDT": {
+       "return_pct": 499.35,
+       "sharpe": 1.104,
+       "max_dd_pct": 99.08,
+       "ret_over_dd": 5.04,
+       "avg_exposure": 1.0094,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 1.104,
+       "match_k": 0.9914,
+       "return_raw_pct": 503.68
+      },
+      "XAUUSD": {
+       "return_pct": -12.88,
+       "sharpe": -0.144,
+       "max_dd_pct": 40.59,
+       "ret_over_dd": -0.317,
+       "avg_exposure": 0.9822,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.144,
+       "match_k": 1.0184,
+       "return_raw_pct": -12.65
+      },
+      "XAGUSD": {
+       "return_pct": -0.98,
+       "sharpe": -0.006,
+       "max_dd_pct": 70.43,
+       "ret_over_dd": -0.014,
+       "avg_exposure": 0.986,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.006,
+       "match_k": 1.0144,
+       "return_raw_pct": -0.96
+      },
+      "USDJPY": {
+       "return_pct": -12.28,
+       "sharpe": -0.231,
+       "max_dd_pct": 21.51,
+       "ret_over_dd": -0.571,
+       "avg_exposure": 0.9805,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.231,
+       "match_k": 1.0201,
+       "return_raw_pct": -12.04
+      },
+      "SPX": {
+       "return_pct": 43.26,
+       "sharpe": 0.452,
+       "max_dd_pct": 30.49,
+       "ret_over_dd": 1.419,
+       "avg_exposure": 1.0039,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.452,
+       "match_k": 0.9964,
+       "return_raw_pct": 43.41
+      },
+      "WTI": {
+       "return_pct": 134.12,
+       "sharpe": 0.596,
+       "max_dd_pct": 51.41,
+       "ret_over_dd": 2.609,
+       "avg_exposure": 0.988,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.596,
+       "match_k": 1.012,
+       "return_raw_pct": 132.53
+      },
+      "BRENT": {
+       "return_pct": 73.37,
+       "sharpe": 0.357,
+       "max_dd_pct": 74.24,
+       "ret_over_dd": 0.988,
+       "avg_exposure": 0.9911,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.357,
+       "match_k": 1.0085,
+       "return_raw_pct": 72.75
+      }
+     }
+    }
+   },
+   "S4": {
+    "first_half": {
+     "pooled": {
+      "return_pct": 110.89,
+      "sharpe": 1.494,
+      "max_dd_pct": 18.34,
+      "ret_over_dd": 6.046,
+      "avg_exposure": 0.864,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.498,
+      "jk_z": 1.358,
+      "jk_p": 0.17445201926231568
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 262.59,
+       "sharpe": 1.146,
+       "max_dd_pct": 83.14,
+       "ret_over_dd": 3.158,
+       "avg_exposure": 0.8898,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 1.146,
+       "match_k": 1.1244,
+       "return_raw_pct": 233.54
+      },
+      "ETHUSDT": {
+       "return_pct": 420.75,
+       "sharpe": 1.443,
+       "max_dd_pct": 71.37,
+       "ret_over_dd": 5.895,
+       "avg_exposure": 0.8876,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 1.443,
+       "match_k": 1.1277,
+       "return_raw_pct": 373.1
+      },
+      "XAUUSD": {
+       "return_pct": -13.86,
+       "sharpe": -0.268,
+       "max_dd_pct": 34.29,
+       "ret_over_dd": -0.404,
+       "avg_exposure": 0.8962,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.268,
+       "match_k": 1.1157,
+       "return_raw_pct": -12.42
+      },
+      "XAGUSD": {
+       "return_pct": 29.21,
+       "sharpe": 0.281,
+       "max_dd_pct": 50.71,
+       "ret_over_dd": 0.576,
+       "avg_exposure": 0.8682,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.281,
+       "match_k": 1.1516,
+       "return_raw_pct": 25.36
+      },
+      "USDJPY": {
+       "return_pct": -5.89,
+       "sharpe": -0.208,
+       "max_dd_pct": 19.92,
+       "ret_over_dd": -0.296,
+       "avg_exposure": 0.8426,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.208,
+       "match_k": 1.187,
+       "return_raw_pct": -4.96
+      },
+      "SPX": {
+       "return_pct": 11.49,
+       "sharpe": 0.183,
+       "max_dd_pct": 33.57,
+       "ret_over_dd": 0.342,
+       "avg_exposure": 0.8219,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.183,
+       "match_k": 1.217,
+       "return_raw_pct": 9.44
+      },
+      "WTI": {
+       "return_pct": 110.8,
+       "sharpe": 0.775,
+       "max_dd_pct": 54.99,
+       "ret_over_dd": 2.015,
+       "avg_exposure": 0.8528,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.775,
+       "match_k": 1.1723,
+       "return_raw_pct": 94.52
+      },
+      "BRENT": {
+       "return_pct": 72.04,
+       "sharpe": 0.545,
+       "max_dd_pct": 52.98,
+       "ret_over_dd": 1.36,
+       "avg_exposure": 0.8527,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.545,
+       "match_k": 1.1731,
+       "return_raw_pct": 61.41
+      }
+     }
+    },
+    "second_half": {
+     "pooled": {
+      "return_pct": 22.02,
+      "sharpe": 0.604,
+      "max_dd_pct": 23.06,
+      "ret_over_dd": 0.955,
+      "avg_exposure": 0.9066,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.591,
+      "jk_z": 1.006,
+      "jk_p": 0.3146066444800981
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 43.81,
+       "sharpe": 0.406,
+       "max_dd_pct": 73.75,
+       "ret_over_dd": 0.594,
+       "avg_exposure": 0.9054,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.406,
+       "match_k": 1.1053,
+       "return_raw_pct": 39.64
+      },
+      "ETHUSDT": {
+       "return_pct": 121.46,
+       "sharpe": 0.774,
+       "max_dd_pct": 66.88,
+       "ret_over_dd": 1.816,
+       "avg_exposure": 0.8758,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.774,
+       "match_k": 1.1424,
+       "return_raw_pct": 106.31
+      },
+      "XAUUSD": {
+       "return_pct": 4.27,
+       "sharpe": 0.117,
+       "max_dd_pct": 27.43,
+       "ret_over_dd": 0.156,
+       "avg_exposure": 0.893,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.117,
+       "match_k": 1.1205,
+       "return_raw_pct": 3.81
+      },
+      "XAGUSD": {
+       "return_pct": -26.08,
+       "sharpe": -0.394,
+       "max_dd_pct": 49.55,
+       "ret_over_dd": -0.526,
+       "avg_exposure": 0.9237,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.394,
+       "match_k": 1.0834,
+       "return_raw_pct": -24.08
+      },
+      "USDJPY": {
+       "return_pct": -4.99,
+       "sharpe": -0.213,
+       "max_dd_pct": 20.55,
+       "ret_over_dd": -0.243,
+       "avg_exposure": 0.9106,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.213,
+       "match_k": 1.0984,
+       "return_raw_pct": -4.54
+      },
+      "SPX": {
+       "return_pct": 28.41,
+       "sharpe": 0.927,
+       "max_dd_pct": 14.43,
+       "ret_over_dd": 1.969,
+       "avg_exposure": 0.8894,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.927,
+       "match_k": 1.1245,
+       "return_raw_pct": 25.26
+      },
+      "WTI": {
+       "return_pct": 13.04,
+       "sharpe": 0.182,
+       "max_dd_pct": 35.17,
+       "ret_over_dd": 0.371,
+       "avg_exposure": 0.9295,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.182,
+       "match_k": 1.0759,
+       "return_raw_pct": 12.12
+      },
+      "BRENT": {
+       "return_pct": -3.72,
+       "sharpe": -0.058,
+       "max_dd_pct": 27.12,
+       "ret_over_dd": -0.137,
+       "avg_exposure": 0.9252,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.058,
+       "match_k": 1.0794,
+       "return_raw_pct": -3.45
+      }
+     }
+    },
+    "all": {
+     "pooled": {
+      "return_pct": 132.05,
+      "sharpe": 1.179,
+      "max_dd_pct": 23.47,
+      "ret_over_dd": 5.626,
+      "avg_exposure": 0.8816,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.178,
+      "jk_z": 1.5,
+      "jk_p": 0.13356153192147502
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 304.97,
+       "sharpe": 0.891,
+       "max_dd_pct": 82.55,
+       "ret_over_dd": 3.694,
+       "avg_exposure": 0.8962,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.891,
+       "match_k": 1.1164,
+       "return_raw_pct": 273.17
+      },
+      "ETHUSDT": {
+       "return_pct": 543.55,
+       "sharpe": 1.2,
+       "max_dd_pct": 90.57,
+       "ret_over_dd": 6.001,
+       "avg_exposure": 0.8827,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 1.2,
+       "match_k": 1.1338,
+       "return_raw_pct": 479.42
+      },
+      "XAUUSD": {
+       "return_pct": -9.63,
+       "sharpe": -0.109,
+       "max_dd_pct": 41.4,
+       "ret_over_dd": -0.233,
+       "avg_exposure": 0.8949,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.109,
+       "match_k": 1.1177,
+       "return_raw_pct": -8.61
+      },
+      "XAGUSD": {
+       "return_pct": 1.44,
+       "sharpe": 0.009,
+       "max_dd_pct": 65.93,
+       "ret_over_dd": 0.022,
+       "avg_exposure": 0.8913,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.009,
+       "match_k": 1.1223,
+       "return_raw_pct": 1.29
+      },
+      "USDJPY": {
+       "return_pct": -10.92,
+       "sharpe": -0.209,
+       "max_dd_pct": 21.49,
+       "ret_over_dd": -0.508,
+       "avg_exposure": 0.8708,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.209,
+       "match_k": 1.1487,
+       "return_raw_pct": -9.5
+      },
+      "SPX": {
+       "return_pct": 40.84,
+       "sharpe": 0.435,
+       "max_dd_pct": 32.47,
+       "ret_over_dd": 1.258,
+       "avg_exposure": 0.8498,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.435,
+       "match_k": 1.177,
+       "return_raw_pct": 34.7
+      },
+      "WTI": {
+       "return_pct": 120.52,
+       "sharpe": 0.561,
+       "max_dd_pct": 53.02,
+       "ret_over_dd": 2.273,
+       "avg_exposure": 0.8846,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.561,
+       "match_k": 1.1302,
+       "return_raw_pct": 106.64
+      },
+      "BRENT": {
+       "return_pct": 65.63,
+       "sharpe": 0.333,
+       "max_dd_pct": 71.86,
+       "ret_over_dd": 0.913,
+       "avg_exposure": 0.8827,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.333,
+       "match_k": 1.1324,
+       "return_raw_pct": 57.96
+      }
+     }
+    }
+   },
+   "S5": {
+    "first_half": {
+     "pooled": {
+      "return_pct": 107.16,
+      "sharpe": 1.4,
+      "max_dd_pct": 18.07,
+      "ret_over_dd": 5.931,
+      "avg_exposure": 0.827,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.406,
+      "jk_z": 1.128,
+      "jk_p": 0.259220594493477
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 221.87,
+       "sharpe": 0.991,
+       "max_dd_pct": 80.42,
+       "ret_over_dd": 2.759,
+       "avg_exposure": 0.8615,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.991,
+       "match_k": 1.1613,
+       "return_raw_pct": 191.05
+      },
+      "ETHUSDT": {
+       "return_pct": 420.98,
+       "sharpe": 1.445,
+       "max_dd_pct": 73.78,
+       "ret_over_dd": 5.706,
+       "avg_exposure": 0.8533,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 1.445,
+       "match_k": 1.1729,
+       "return_raw_pct": 358.91
+      },
+      "XAUUSD": {
+       "return_pct": -18.14,
+       "sharpe": -0.346,
+       "max_dd_pct": 37.76,
+       "ret_over_dd": -0.48,
+       "avg_exposure": 0.8406,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.346,
+       "match_k": 1.1895,
+       "return_raw_pct": -15.25
+      },
+      "XAGUSD": {
+       "return_pct": 28.55,
+       "sharpe": 0.268,
+       "max_dd_pct": 51.04,
+       "ret_over_dd": 0.559,
+       "avg_exposure": 0.8047,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.268,
+       "match_k": 1.2426,
+       "return_raw_pct": 22.97
+      },
+      "USDJPY": {
+       "return_pct": -4.32,
+       "sharpe": -0.153,
+       "max_dd_pct": 18.52,
+       "ret_over_dd": -0.233,
+       "avg_exposure": 0.7673,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.153,
+       "match_k": 1.3036,
+       "return_raw_pct": -3.31
+      },
+      "SPX": {
+       "return_pct": 9.58,
+       "sharpe": 0.141,
+       "max_dd_pct": 38.27,
+       "ret_over_dd": 0.25,
+       "avg_exposure": 0.8185,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.141,
+       "match_k": 1.222,
+       "return_raw_pct": 7.84
+      },
+      "WTI": {
+       "return_pct": 122.82,
+       "sharpe": 0.74,
+       "max_dd_pct": 52.53,
+       "ret_over_dd": 2.338,
+       "avg_exposure": 0.8356,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.74,
+       "match_k": 1.1964,
+       "return_raw_pct": 102.66
+      },
+      "BRENT": {
+       "return_pct": 75.97,
+       "sharpe": 0.53,
+       "max_dd_pct": 53.87,
+       "ret_over_dd": 1.41,
+       "avg_exposure": 0.8349,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.53,
+       "match_k": 1.198,
+       "return_raw_pct": 63.42
+      }
+     }
+    },
+    "second_half": {
+     "pooled": {
+      "return_pct": 21.24,
+      "sharpe": 0.575,
+      "max_dd_pct": 24.76,
+      "ret_over_dd": 0.858,
+      "avg_exposure": 0.8461,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.562,
+      "jk_z": 0.615,
+      "jk_p": 0.5385904161884603
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 39.91,
+       "sharpe": 0.372,
+       "max_dd_pct": 77.43,
+       "ret_over_dd": 0.515,
+       "avg_exposure": 0.8395,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.372,
+       "match_k": 1.192,
+       "return_raw_pct": 33.48
+      },
+      "ETHUSDT": {
+       "return_pct": 113.33,
+       "sharpe": 0.7,
+       "max_dd_pct": 82.23,
+       "ret_over_dd": 1.378,
+       "avg_exposure": 0.7944,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.7,
+       "match_k": 1.2595,
+       "return_raw_pct": 89.98
+      },
+      "XAUUSD": {
+       "return_pct": 9.8,
+       "sharpe": 0.266,
+       "max_dd_pct": 26.08,
+       "ret_over_dd": 0.376,
+       "avg_exposure": 0.8153,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.266,
+       "match_k": 1.2274,
+       "return_raw_pct": 7.98
+      },
+      "XAGUSD": {
+       "return_pct": -33.34,
+       "sharpe": -0.517,
+       "max_dd_pct": 58.74,
+       "ret_over_dd": -0.568,
+       "avg_exposure": 0.8454,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.517,
+       "match_k": 1.1837,
+       "return_raw_pct": -28.16
+      },
+      "USDJPY": {
+       "return_pct": -7.19,
+       "sharpe": -0.305,
+       "max_dd_pct": 21.84,
+       "ret_over_dd": -0.329,
+       "avg_exposure": 0.8813,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.305,
+       "match_k": 1.135,
+       "return_raw_pct": -6.34
+      },
+      "SPX": {
+       "return_pct": 21.32,
+       "sharpe": 0.67,
+       "max_dd_pct": 16.14,
+       "ret_over_dd": 1.321,
+       "avg_exposure": 0.8432,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.67,
+       "match_k": 1.1862,
+       "return_raw_pct": 17.97
+      },
+      "WTI": {
+       "return_pct": 22.65,
+       "sharpe": 0.313,
+       "max_dd_pct": 30.38,
+       "ret_over_dd": 0.746,
+       "avg_exposure": 0.8771,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.313,
+       "match_k": 1.1402,
+       "return_raw_pct": 19.87
+      },
+      "BRENT": {
+       "return_pct": 3.41,
+       "sharpe": 0.053,
+       "max_dd_pct": 24.06,
+       "ret_over_dd": 0.142,
+       "avg_exposure": 0.873,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.053,
+       "match_k": 1.1439,
+       "return_raw_pct": 2.98
+      }
+     }
+    },
+    "all": {
+     "pooled": {
+      "return_pct": 128.93,
+      "sharpe": 1.115,
+      "max_dd_pct": 24.51,
+      "ret_over_dd": 5.26,
+      "avg_exposure": 0.835,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.115,
+      "jk_z": 1.23,
+      "jk_p": 0.21878311109155638
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 263.57,
+       "sharpe": 0.779,
+       "max_dd_pct": 81.29,
+       "ret_over_dd": 3.242,
+       "avg_exposure": 0.8524,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.779,
+       "match_k": 1.1739,
+       "return_raw_pct": 224.53
+      },
+      "ETHUSDT": {
+       "return_pct": 541.98,
+       "sharpe": 1.177,
+       "max_dd_pct": 104.85,
+       "ret_over_dd": 5.169,
+       "avg_exposure": 0.8289,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 1.177,
+       "match_k": 1.2074,
+       "return_raw_pct": 448.9
+      },
+      "XAUUSD": {
+       "return_pct": -8.75,
+       "sharpe": -0.098,
+       "max_dd_pct": 38.25,
+       "ret_over_dd": -0.229,
+       "avg_exposure": 0.8301,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.098,
+       "match_k": 1.205,
+       "return_raw_pct": -7.26
+      },
+      "XAGUSD": {
+       "return_pct": -6.31,
+       "sharpe": -0.037,
+       "max_dd_pct": 77.32,
+       "ret_over_dd": -0.082,
+       "avg_exposure": 0.8216,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.037,
+       "match_k": 1.2174,
+       "return_raw_pct": -5.19
+      },
+      "USDJPY": {
+       "return_pct": -11.85,
+       "sharpe": -0.225,
+       "max_dd_pct": 23.64,
+       "ret_over_dd": -0.501,
+       "avg_exposure": 0.8145,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.225,
+       "match_k": 1.2281,
+       "return_raw_pct": -9.65
+      },
+      "SPX": {
+       "return_pct": 31.15,
+       "sharpe": 0.308,
+       "max_dd_pct": 37.8,
+       "ret_over_dd": 0.824,
+       "avg_exposure": 0.8287,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.308,
+       "match_k": 1.207,
+       "return_raw_pct": 25.81
+      },
+      "WTI": {
+       "return_pct": 143.65,
+       "sharpe": 0.593,
+       "max_dd_pct": 51.47,
+       "ret_over_dd": 2.791,
+       "avg_exposure": 0.8528,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.593,
+       "match_k": 1.1724,
+       "return_raw_pct": 122.53
+      },
+      "BRENT": {
+       "return_pct": 78.01,
+       "sharpe": 0.371,
+       "max_dd_pct": 65.83,
+       "ret_over_dd": 1.185,
+       "avg_exposure": 0.8507,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.371,
+       "match_k": 1.175,
+       "return_raw_pct": 66.39
+      }
+     }
+    }
+   },
+   "S6": {
+    "first_half": {
+     "pooled": {
+      "return_pct": 100.04,
+      "sharpe": 1.353,
+      "max_dd_pct": 19.89,
+      "ret_over_dd": 5.03,
+      "avg_exposure": 0.9977,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.359,
+      "jk_z": 0.622,
+      "jk_p": 0.5342008225630746
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 208.05,
+       "sharpe": 0.925,
+       "max_dd_pct": 81.4,
+       "ret_over_dd": 2.556,
+       "avg_exposure": 1.0779,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.925,
+       "match_k": 0.9282,
+       "return_raw_pct": 224.15
+      },
+      "ETHUSDT": {
+       "return_pct": 356.91,
+       "sharpe": 1.249,
+       "max_dd_pct": 89.45,
+       "ret_over_dd": 3.99,
+       "avg_exposure": 1.0514,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 1.249,
+       "match_k": 0.952,
+       "return_raw_pct": 374.92
+      },
+      "XAUUSD": {
+       "return_pct": -8.21,
+       "sharpe": -0.16,
+       "max_dd_pct": 32.62,
+       "ret_over_dd": -0.252,
+       "avg_exposure": 0.997,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.16,
+       "match_k": 1.003,
+       "return_raw_pct": -8.18
+      },
+      "XAGUSD": {
+       "return_pct": 22.9,
+       "sharpe": 0.222,
+       "max_dd_pct": 46.01,
+       "ret_over_dd": 0.498,
+       "avg_exposure": 0.9446,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.222,
+       "match_k": 1.0585,
+       "return_raw_pct": 21.64
+      },
+      "USDJPY": {
+       "return_pct": -0.39,
+       "sharpe": -0.014,
+       "max_dd_pct": 16.7,
+       "ret_over_dd": -0.023,
+       "avg_exposure": 0.8905,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.014,
+       "match_k": 1.1232,
+       "return_raw_pct": -0.35
+      },
+      "SPX": {
+       "return_pct": 19.14,
+       "sharpe": 0.303,
+       "max_dd_pct": 30.95,
+       "ret_over_dd": 0.618,
+       "avg_exposure": 1.0003,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.303,
+       "match_k": 0.9999,
+       "return_raw_pct": 19.14
+      },
+      "WTI": {
+       "return_pct": 124.26,
+       "sharpe": 0.806,
+       "max_dd_pct": 54.12,
+       "ret_over_dd": 2.296,
+       "avg_exposure": 1.0091,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.806,
+       "match_k": 0.9907,
+       "return_raw_pct": 125.42
+      },
+      "BRENT": {
+       "return_pct": 77.65,
+       "sharpe": 0.571,
+       "max_dd_pct": 44.88,
+       "ret_over_dd": 1.73,
+       "avg_exposure": 1.011,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.571,
+       "match_k": 0.9893,
+       "return_raw_pct": 78.49
+      }
+     }
+    },
+    "second_half": {
+     "pooled": {
+      "return_pct": 23.64,
+      "sharpe": 0.643,
+      "max_dd_pct": 21.82,
+      "ret_over_dd": 1.083,
+      "avg_exposure": 1.0516,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 0.613,
+      "jk_z": 0.691,
+      "jk_p": 0.489288799483939
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 54.96,
+       "sharpe": 0.522,
+       "max_dd_pct": 66.11,
+       "ret_over_dd": 0.831,
+       "avg_exposure": 1.0366,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.522,
+       "match_k": 0.9654,
+       "return_raw_pct": 56.93
+      },
+      "ETHUSDT": {
+       "return_pct": 122.91,
+       "sharpe": 0.741,
+       "max_dd_pct": 78.16,
+       "ret_over_dd": 1.573,
+       "avg_exposure": 0.9239,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.741,
+       "match_k": 1.0829,
+       "return_raw_pct": 113.5
+      },
+      "XAUUSD": {
+       "return_pct": 13.15,
+       "sharpe": 0.365,
+       "max_dd_pct": 24.32,
+       "ret_over_dd": 0.541,
+       "avg_exposure": 0.9874,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.365,
+       "match_k": 1.0134,
+       "return_raw_pct": 12.97
+      },
+      "XAGUSD": {
+       "return_pct": -38.0,
+       "sharpe": -0.584,
+       "max_dd_pct": 67.92,
+       "ret_over_dd": -0.559,
+       "avg_exposure": 1.0749,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.584,
+       "match_k": 0.9311,
+       "return_raw_pct": -40.81
+      },
+      "USDJPY": {
+       "return_pct": -8.23,
+       "sharpe": -0.349,
+       "max_dd_pct": 21.77,
+       "ret_over_dd": -0.378,
+       "avg_exposure": 1.1046,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.349,
+       "match_k": 0.9055,
+       "return_raw_pct": -9.09
+      },
+      "SPX": {
+       "return_pct": 19.81,
+       "sharpe": 0.635,
+       "max_dd_pct": 16.14,
+       "ret_over_dd": 1.227,
+       "avg_exposure": 1.0582,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.635,
+       "match_k": 0.9451,
+       "return_raw_pct": 20.96
+      },
+      "WTI": {
+       "return_pct": 19.35,
+       "sharpe": 0.274,
+       "max_dd_pct": 29.64,
+       "ret_over_dd": 0.653,
+       "avg_exposure": 1.1162,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.274,
+       "match_k": 0.8959,
+       "return_raw_pct": 21.6
+      },
+      "BRENT": {
+       "return_pct": 5.15,
+       "sharpe": 0.082,
+       "max_dd_pct": 23.23,
+       "ret_over_dd": 0.222,
+       "avg_exposure": 1.1112,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.082,
+       "match_k": 0.8987,
+       "return_raw_pct": 5.73
+      }
+     }
+    },
+    "all": {
+     "pooled": {
+      "return_pct": 123.66,
+      "sharpe": 1.097,
+      "max_dd_pct": 23.31,
+      "ret_over_dd": 5.304,
+      "avg_exposure": 1.0201,
+      "trades": null,
+      "fees_pct": null,
+      "sharpe_unmatched_pool": 1.098,
+      "jk_z": 0.796,
+      "jk_p": 0.4259454627484083
+     },
+     "markets": {
+      "BTCUSDT": {
+       "return_pct": 265.13,
+       "sharpe": 0.782,
+       "max_dd_pct": 82.72,
+       "ret_over_dd": 3.205,
+       "avg_exposure": 1.0608,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.782,
+       "match_k": 0.9432,
+       "return_raw_pct": 281.09
+      },
+      "ETHUSDT": {
+       "return_pct": 489.53,
+       "sharpe": 1.064,
+       "max_dd_pct": 130.4,
+       "ret_over_dd": 3.754,
+       "avg_exposure": 0.9985,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 1.064,
+       "match_k": 1.0023,
+       "return_raw_pct": 488.42
+      },
+      "XAUUSD": {
+       "return_pct": 4.82,
+       "sharpe": 0.055,
+       "max_dd_pct": 32.76,
+       "ret_over_dd": 0.147,
+       "avg_exposure": 0.993,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.055,
+       "match_k": 1.0073,
+       "return_raw_pct": 4.79
+      },
+      "XAGUSD": {
+       "return_pct": -19.2,
+       "sharpe": -0.115,
+       "max_dd_pct": 86.53,
+       "ret_over_dd": -0.222,
+       "avg_exposure": 0.9987,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.115,
+       "match_k": 1.0016,
+       "return_raw_pct": -19.17
+      },
+      "USDJPY": {
+       "return_pct": -9.64,
+       "sharpe": -0.182,
+       "max_dd_pct": 24.55,
+       "ret_over_dd": -0.392,
+       "avg_exposure": 0.9792,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": -0.182,
+       "match_k": 1.0215,
+       "return_raw_pct": -9.43
+      },
+      "SPX": {
+       "return_pct": 39.16,
+       "sharpe": 0.413,
+       "max_dd_pct": 30.23,
+       "ret_over_dd": 1.295,
+       "avg_exposure": 1.0243,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.413,
+       "match_k": 0.9765,
+       "return_raw_pct": 40.1
+      },
+      "WTI": {
+       "return_pct": 139.52,
+       "sharpe": 0.619,
+       "max_dd_pct": 51.84,
+       "ret_over_dd": 2.691,
+       "avg_exposure": 1.0536,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.619,
+       "match_k": 0.949,
+       "return_raw_pct": 147.02
+      },
+      "BRENT": {
+       "return_pct": 79.98,
+       "sharpe": 0.4,
+       "max_dd_pct": 57.08,
+       "ret_over_dd": 1.401,
+       "avg_exposure": 1.0526,
+       "trades": null,
+       "fees_pct": null,
+       "sharpe_raw": 0.4,
+       "match_k": 0.9497,
+       "return_raw_pct": 84.22
+      }
+     }
+    }
+   }
+  }
+ },
+ "judge": {
+  "stream": "main",
+  "variants": {
+   "S1": {
+    "first_half": {
+     "c1_pooled_sharpe": false,
+     "c2_markets": false,
+     "markets_beating": [
+      "BTCUSDT",
+      "USDJPY"
+     ],
+     "c3_dd": false,
+     "c4_forecast": true,
+     "all": false,
+     "sharpe_gain": -0.328
+    },
+    "second_half": {
+     "c1_pooled_sharpe": true,
+     "c2_markets": true,
+     "markets_beating": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "XAGUSD",
+      "USDJPY",
+      "SPX"
+     ],
+     "c3_dd": true,
+     "c4_forecast": true,
+     "all": true,
+     "sharpe_gain": 0.148
+    },
+    "passes_full_bar": false
+   },
+   "S2": {
+    "first_half": {
+     "c1_pooled_sharpe": false,
+     "c2_markets": false,
+     "markets_beating": [
+      "BTCUSDT",
+      "USDJPY"
+     ],
+     "c3_dd": false,
+     "c4_forecast": true,
+     "all": false,
+     "sharpe_gain": -0.521
+    },
+    "second_half": {
+     "c1_pooled_sharpe": true,
+     "c2_markets": false,
+     "markets_beating": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "XAGUSD",
+      "USDJPY"
+     ],
+     "c3_dd": true,
+     "c4_forecast": true,
+     "all": false,
+     "sharpe_gain": 0.149
+    },
+    "passes_full_bar": false
+   },
+   "S3": {
+    "first_half": {
+     "c1_pooled_sharpe": false,
+     "c2_markets": false,
+     "markets_beating": [
+      "BTCUSDT",
+      "USDJPY"
+     ],
+     "c3_dd": true,
+     "c4_forecast": true,
+     "all": false,
+     "sharpe_gain": -0.19
+    },
+    "second_half": {
+     "c1_pooled_sharpe": true,
+     "c2_markets": true,
+     "markets_beating": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "XAGUSD",
+      "USDJPY",
+      "SPX"
+     ],
+     "c3_dd": true,
+     "c4_forecast": true,
+     "all": true,
+     "sharpe_gain": 0.091
+    },
+    "passes_full_bar": false
+   },
+   "S4": {
+    "first_half": {
+     "c1_pooled_sharpe": false,
+     "c2_markets": false,
+     "markets_beating": [
+      "BTCUSDT",
+      "USDJPY",
+      "SPX"
+     ],
+     "c3_dd": false,
+     "c4_forecast": true,
+     "all": false,
+     "sharpe_gain": -0.288
+    },
+    "second_half": {
+     "c1_pooled_sharpe": true,
+     "c2_markets": true,
+     "markets_beating": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "XAGUSD",
+      "USDJPY",
+      "SPX",
+      "BRENT"
+     ],
+     "c3_dd": true,
+     "c4_forecast": true,
+     "all": true,
+     "sharpe_gain": 0.142
+    },
+    "passes_full_bar": false
+   },
+   "S5": {
+    "first_half": {
+     "c1_pooled_sharpe": false,
+     "c2_markets": false,
+     "markets_beating": [
+      "BTCUSDT",
+      "USDJPY",
+      "SPX"
+     ],
+     "c3_dd": true,
+     "c4_forecast": true,
+     "all": false,
+     "sharpe_gain": -0.321
+    },
+    "second_half": {
+     "c1_pooled_sharpe": true,
+     "c2_markets": true,
+     "markets_beating": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "XAGUSD",
+      "USDJPY",
+      "WTI"
+     ],
+     "c3_dd": true,
+     "c4_forecast": true,
+     "all": true,
+     "sharpe_gain": 0.195
+    },
+    "passes_full_bar": false
+   },
+   "S6": {
+    "first_half": {
+     "c1_pooled_sharpe": false,
+     "c2_markets": false,
+     "markets_beating": [
+      "BTCUSDT",
+      "USDJPY"
+     ],
+     "c3_dd": false,
+     "c4_forecast": true,
+     "all": false,
+     "sharpe_gain": -0.396
+    },
+    "second_half": {
+     "c1_pooled_sharpe": true,
+     "c2_markets": false,
+     "markets_beating": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "XAGUSD",
+      "USDJPY"
+     ],
+     "c3_dd": true,
+     "c4_forecast": true,
+     "all": false,
+     "sharpe_gain": 0.196
+    },
+    "passes_full_bar": false
+   }
+  },
+  "chosen": "S3",
+  "chosen_met_first_half_1_3": false,
+  "passed": false,
+  "verdict": "NO PASS",
+  "full_bar_passers": []
+ },
+ "judge_proxy_descriptive": {
+  "stream": "main",
+  "variants": {
+   "S1": {
+    "first_half": {
+     "c1_pooled_sharpe": true,
+     "c2_markets": true,
+     "markets_beating": [
+      "ETHUSDT",
+      "XAUUSD",
+      "XAGUSD",
+      "USDJPY",
+      "SPX",
+      "WTI",
+      "BRENT"
+     ],
+     "c3_dd": false,
+     "c4_forecast": true,
+     "all": false,
+     "sharpe_gain": 0.199
+    },
+    "second_half": {
+     "c1_pooled_sharpe": true,
+     "c2_markets": true,
+     "markets_beating": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "XAUUSD",
+      "USDJPY",
+      "SPX",
+      "WTI",
+      "BRENT"
+     ],
+     "c3_dd": true,
+     "c4_forecast": true,
+     "all": true,
+     "sharpe_gain": 0.267
+    },
+    "passes_full_bar": false
+   },
+   "S2": {
+    "first_half": {
+     "c1_pooled_sharpe": true,
+     "c2_markets": true,
+     "markets_beating": [
+      "XAUUSD",
+      "USDJPY",
+      "SPX",
+      "WTI",
+      "BRENT"
+     ],
+     "c3_dd": false,
+     "c4_forecast": true,
+     "all": false,
+     "sharpe_gain": 0.058
+    },
+    "second_half": {
+     "c1_pooled_sharpe": true,
+     "c2_markets": true,
+     "markets_beating": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "XAUUSD",
+      "USDJPY",
+      "SPX",
+      "WTI",
+      "BRENT"
+     ],
+     "c3_dd": true,
+     "c4_forecast": true,
+     "all": true,
+     "sharpe_gain": 0.433
+    },
+    "passes_full_bar": false
+   },
+   "S3": {
+    "first_half": {
+     "c1_pooled_sharpe": true,
+     "c2_markets": true,
+     "markets_beating": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "XAUUSD",
+      "XAGUSD",
+      "USDJPY",
+      "SPX",
+      "WTI",
+      "BRENT"
+     ],
+     "c3_dd": true,
+     "c4_forecast": true,
+     "all": true,
+     "sharpe_gain": 0.205
+    },
+    "second_half": {
+     "c1_pooled_sharpe": true,
+     "c2_markets": true,
+     "markets_beating": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "XAUUSD",
+      "USDJPY",
+      "SPX",
+      "WTI",
+      "BRENT"
+     ],
+     "c3_dd": true,
+     "c4_forecast": true,
+     "all": true,
+     "sharpe_gain": 0.145
+    },
+    "passes_full_bar": true
+   },
+   "S4": {
+    "first_half": {
+     "c1_pooled_sharpe": true,
+     "c2_markets": true,
+     "markets_beating": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "XAUUSD",
+      "XAGUSD",
+      "USDJPY",
+      "WTI",
+      "BRENT"
+     ],
+     "c3_dd": true,
+     "c4_forecast": true,
+     "all": true,
+     "sharpe_gain": 0.286
+    },
+    "second_half": {
+     "c1_pooled_sharpe": true,
+     "c2_markets": true,
+     "markets_beating": [
+      "BTCUSDT",
+      "XAUUSD",
+      "XAGUSD",
+      "USDJPY",
+      "SPX",
+      "WTI",
+      "BRENT"
+     ],
+     "c3_dd": true,
+     "c4_forecast": true,
+     "all": true,
+     "sharpe_gain": 0.151
+    },
+    "passes_full_bar": true
+   },
+   "S5": {
+    "first_half": {
+     "c1_pooled_sharpe": true,
+     "c2_markets": true,
+     "markets_beating": [
+      "ETHUSDT",
+      "XAUUSD",
+      "USDJPY",
+      "WTI",
+      "BRENT"
+     ],
+     "c3_dd": true,
+     "c4_forecast": true,
+     "all": true,
+     "sharpe_gain": 0.192
+    },
+    "second_half": {
+     "c1_pooled_sharpe": true,
+     "c2_markets": true,
+     "markets_beating": [
+      "BTCUSDT",
+      "XAUUSD",
+      "SPX",
+      "WTI",
+      "BRENT"
+     ],
+     "c3_dd": false,
+     "c4_forecast": true,
+     "all": false,
+     "sharpe_gain": 0.122
+    },
+    "passes_full_bar": false
+   },
+   "S6": {
+    "first_half": {
+     "c1_pooled_sharpe": true,
+     "c2_markets": true,
+     "markets_beating": [
+      "ETHUSDT",
+      "XAUUSD",
+      "USDJPY",
+      "SPX",
+      "WTI",
+      "BRENT"
+     ],
+     "c3_dd": true,
+     "c4_forecast": true,
+     "all": true,
+     "sharpe_gain": 0.145
+    },
+    "second_half": {
+     "c1_pooled_sharpe": true,
+     "c2_markets": true,
+     "markets_beating": [
+      "BTCUSDT",
+      "XAUUSD",
+      "SPX",
+      "WTI",
+      "BRENT"
+     ],
+     "c3_dd": true,
+     "c4_forecast": true,
+     "all": true,
+     "sharpe_gain": 0.19
+    },
+    "passes_full_bar": true
+   }
+  },
+  "chosen": "S4",
+  "chosen_met_first_half_1_3": true,
+  "passed": true,
+  "verdict": "PASS",
+  "full_bar_passers": [
+   "S3",
+   "S4",
+   "S6"
+  ]
+ },
+ "truncation": {
+  "BTCUSDT": {
+   "compared": 320977,
+   "mismatches": 0
+  },
+  "ETHUSDT": {
+   "compared": 320977,
+   "mismatches": 0
+  },
+  "XAUUSD": {
+   "compared": 219500,
+   "mismatches": 0
+  },
+  "XAGUSD": {
+   "compared": 219460,
+   "mismatches": 0
+  },
+  "USDJPY": {
+   "compared": 231049,
+   "mismatches": 0
+  },
+  "SPX": {
+   "compared": 66672,
+   "mismatches": 0
+  },
+  "WTI": {
+   "compared": 219089,
+   "mismatches": 0
+  },
+  "BRENT": {
+   "compared": 200926,
+   "mismatches": 0
+  }
+ },
+ "main_trades_per_market": {
+  "BTCUSDT": {
+   "closed": 235,
+   "open_at_seal": true,
+   "window": [
+    "2020-02-05 00:00",
+    "2025-11-10 23:45"
+   ]
+  },
+  "ETHUSDT": {
+   "closed": 202,
+   "open_at_seal": true,
+   "window": [
+    "2020-02-05 00:00",
+    "2025-11-10 23:45"
+   ]
+  },
+  "XAUUSD": {
+   "closed": 110,
+   "open_at_seal": true,
+   "window": [
+    "2020-02-21 19:00",
+    "2025-11-10 23:45"
+   ]
+  },
+  "XAGUSD": {
+   "closed": 150,
+   "open_at_seal": true,
+   "window": [
+    "2020-02-21 19:00",
+    "2025-11-10 23:45"
+   ]
+  },
+  "USDJPY": {
+   "closed": 70,
+   "open_at_seal": true,
+   "window": [
+    "2020-04-08 21:00",
+    "2025-11-10 23:45"
+   ]
+  },
+  "SPX": {
+   "closed": 33,
+   "open_at_seal": true,
+   "window": [
+    "2021-01-12 17:30",
+    "2025-11-10 20:45"
+   ]
+  },
+  "WTI": {
+   "closed": 113,
+   "open_at_seal": true,
+   "window": [
+    "2020-02-27 19:00",
+    "2025-11-10 21:45"
+   ]
+  },
+  "BRENT": {
+   "closed": 121,
+   "open_at_seal": true,
+   "window": [
+    "2020-02-27 19:00",
+    "2025-11-10 21:45"
+   ]
+  }
+ }
+}

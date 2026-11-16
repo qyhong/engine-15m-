@@ -2184,3 +2184,390 @@ X5, X7 and X8 were slightly negative before costs in the second half, X6 +0.10% 
 Reading: fading a weak new extreme on a day that has used its daily ATR looked useful in 2020-mid 2023 and did not in
 mid 2023-2025; the H44 hint does not survive as a rule. Nothing goes forward as a book. Live scan `py -3
 research/exhaustion_study.py --scan` (paper / untested).
+
+## H50. POST-NEWS DRIFT: does the first 15-60 minutes after a high-impact US release keep going for the rest of the day? (registered 16 Nov 2026, 09:48 UTC, before any H50 code existed or any H50 number was computed)
+
+**Prompted by:** the owner (approved 16 Nov 2026). Question: after CPI, the jobs report (NFP), an FOMC rate decision
+(and PCE / advance GDP), does the move in the first 15 or 60 minutes keep drifting the same way over the next hours /
+day? Related earlier work, all on the six months of live calendar only (May-Nov 2026, a few dozen rows): H1 (CPI
+follow-through on BTC/ETH, forward shadow), H16 (release-day follow-through beyond CPI, forward shadow),
+`research/event_study.py`. H50 is the first test on the 2019+ release history (`engine15/calhistory.py`). I have not
+looked at any post-release returns in the 2020-2025 history before writing this.
+
+**Events (fixed now).** `calhistory.load_history()` (data/sources/calendar_history.csv, the rows `econ.load_events()`
+merges in), rows with country USD, impact High, kind in {CPI, NFP, FOMC, PCE, GDP} and an `official:` source (the
+agency's release date with its standard release time: 8:30 ET for CPI/NFP/PCE/GDP, 14:00 ET for the FOMC statement,
+the 2020 emergency cuts at their own times; derived / nominal-time rows such as ISM and OPEC are not used). Rows at the
+same UTC minute are one release; its type is the first of FOMC > CPI > NFP > PCE > GDP present (the others, and any
+PPI / Retail / ISM row at the same minute, are listed as co-released). Rows flagged ";irregular" (shutdown-shifted
+dates) are kept and counted. Release time T in UTC.
+
+**Bars and readings (15m bars indexed by their open; closed bars only).** C0 = close of the bar that opens at T - 15 min
+(the last close before the release). Bar k = the k-th bar from T (opens at T + 15(k-1) min); Ck = its close (k = 1: 15
+min, k = 4: 60 min). Daily ATR D = `adr.readings` datr (Wilder 14 on UTC daily bars, the last CLOSED day through
+`data.htf_on_15`, held for the day) at bar k; ATR15 = adr's atr15 at the pre-release bar (descriptive only).
+**Impulse** I = (Ck - C0) / D (signed); side s = sign(I). A release counts in a market only if the bars at T - 15, T,
+..., T + 15k min (bar k and the entry bar) are all on file (no gap), the entry bar is in the same UTC day as bar k, and
+D > 0; otherwise it is counted as "not traded there" (the S&P cash market sees the FOMC statement only; the 8:30 ET
+releases are before its open). I = 0 is dropped.
+
+**The variants (8, every one counted; no selection step: the pass bar applies to each):**
+
+| id | k (impulse window) | condition | trade |
+|---|---|---|---|
+| N1 | 1 (15 min) | abs(I) >= 0.25 D | WITH the impulse (side s) |
+| N2 | 1 (15 min) | abs(I) >= 0.5 D | WITH |
+| N3 | 4 (60 min) | abs(I) >= 0.5 D | WITH |
+| N4 | 4 (60 min) | abs(I) >= 1.0 D | WITH |
+| F1 | 1 | abs(I) >= 0.25 D | FADE (side -s) |
+| F2 | 1 | abs(I) >= 0.5 D | FADE |
+| F3 | 4 | abs(I) >= 0.5 D | FADE |
+| F4 | 4 | abs(I) >= 1.0 D | FADE |
+
+F1-F4 have N1-N4's events with the opposite side; with a symmetric bracket their hit rate is close to 100% minus the
+WITH rate (a bar touching both barriers is a miss for both). They are still counted as tests.
+
+**Entry, outcome and the trade (registered).** Decision at bar k's close; entry at the next 15m open (bar k + 1).
+**Primary outcome:** +0.5 D in the trade's favour before -0.5 D against, from the entry open, over the bars from the
+entry bar to the last bar of the release's UTC day (`session_break_study.outcome_window`, unchanged: a bar touching both
+= miss; an open beyond a barrier fills at the open; neither = unresolved, excluded from the hit rate and counted).
+**Secondary (counted in the test total, not in the pass bar):** the same over 24 h (bars from the entry bar up to the
+first bar at or after entry + 24 h). **The trade** = the primary bracket itself: stop entry - side x 0.5 D, target entry
++ side x 0.5 D, out at the barrier or at the close of the UTC day's last bar (SPX: the cash session's last bar), $10,000
+a trade, each market's own fee a side (`playbook.fee_side`), one position per market per variant (a release whose entry
+falls while that variant's earlier trade in the market is still open is skipped for the trade, still counted for the
+hit rate).
+
+**Data and split (H44-H49's, exactly):** BTCUSDT, ETHUSDT, XAUUSD, XAGUSD, USDJPY, SPX, WTI, BRENT from `data.load`
+(`rangebreak_study.load_dev`), rows before the sealed holdout 2025-11-11 00:00 UTC only (dropped right after loading,
+never read); releases with entry from 2020-01-01; first half = entry before 2023-06-07, second half = from it to the
+seal.
+
+**Count and test.** One scope (pooled over the eight markets, each release-market pair one row). Tests per half: 8
+variants x 2 outcomes (day, 24 h) = **16**; Bonferroni threshold p < 0.05 / 16 = 3.13e-3 (exact two-sided binomial
+against 50%, `confluence_study.binom_p`). Per-type (CPI / NFP / FOMC / PCE / GDP), per-market and impulse-size cells are
+descriptive, reported with nominal p, and NOT tests. Caveat stated now: one release moves all eight markets at once, so
+the pooled rows are not independent and the binomial p overstates the evidence; I also report a release-level count
+(each release counted once: a hit if most of its resolved market rows hit, ties dropped) as a descriptive check, not a
+test. Family so far: H44-H49 (see HYPOTHESES.md), H1, H16 (forward only).
+
+**Fixed pass bar (each variant):** ALL of (1) pooled primary hit rate >= 55% in BOTH halves; (2) >= 100 resolved
+release-market rows pooled in EACH half; (3) pooled binomial p < 3.13e-3 in BOTH halves; (4) the registered trade,
+second half, pooled net $ after costs > 0; (5) in the second half at least 5 of the 8 markets have net $ > 0 (a market
+with no trades does not count). A pass is a reason to ask the owner about a forward PAPER book, not proof of an edge;
+nothing is built or wired here.
+
+**Reported whatever the result:** every variant's hit rate (day and 24 h), resolved / unresolved and p, per half, pooled,
+per release type and per market; the trade (trades, win %, R before / after costs, % of stake a trade, PF, net $) per
+half pooled, per type and per market; the release-level check; releases used per type and per half, releases not traded
+per market; **the impulse-size / drift table**: every release-market row (no threshold) bucketed by abs(I) in daily-ATR
+units (< 0.1, 0.1-0.25, 0.25-0.5, 0.5-1.0, >= 1.0) for k = 1 and k = 4, per half: rows, mean drift from the entry open
+to the day's last close and to the 24 h close in the impulse's direction (daily-ATR units), % of rows whose drift is > 0,
+and the WITH hit rate; the same by abs(I) in ATR15 units (< 2, 2-4, 4-8, >= 8).
+
+**Look-ahead guard:** `tests/test_newsdrift.py` builds synthetic bars and a synthetic release list, truncates the bars
+at every point and checks every event decided before the cut (bar indices, C0, Ck, I, D, side) is identical; changes
+bars after bar k and checks the event is unchanged; checks a market gap or a closed session drops the release; checks
+the outcome / trade on hand-made paths. The same truncation check runs on the real bars of every market.
+
+**Prior, stated now:** the release bar's move is usually large but much of it is priced within minutes; the literature
+on intraday post-announcement drift in liquid futures is mixed (small continuation in some studies, reversal in others).
+At a +/- 0.5 daily ATR bracket over the rest of the day I expect WITH hit rates of 48-55%, FOMC rows noisy (few, and
+the press conference 30 min after the statement often reverses the first move), and no pass. Code
+`research/newsdrift_study.py`, report `research/out/newsdrift/study.md` + `.json`.
+
+### H50 results (16 Nov 2026, ~09:53 UTC; development data to 2025-11-11; `research/out/newsdrift/study.md`)
+
+**NO PASS. No variant reached 55% in both halves with >= 100 resolved rows and p < 3.13e-3; 0 of 16 outcome cells pass
+Bonferroni in both halves.** Code `research/newsdrift_study.py` (readings from `adr.readings`, the bracket outcome from
+`session_break_study.outcome_window`, unchanged); `tests/test_newsdrift.py` (6 tests: truncation at 100+ consecutive
+cuts on 24h and cash-hours synthetic bars, bars after bar k scaled by 1.37 change nothing, C0 / Ck / I / D / side checked
+by hand, a closed session or a missing bar drops the release, hand-made outcome / trade path, one position per market,
+same-minute grouping) green on the laptop and on the server. Run on the Singapore server (11 s). Real bars: 0
+mismatched truncation runs on all 8 markets (6,082 events compared). Holdout not touched. A 2-market smoke run (XAUUSD,
+SPX) on the laptop preceded the full run; nothing in the design was changed after it.
+
+**Releases used (with at least one market row; first / second half):** FOMC 28 / 20, CPI 41 / 29, NFP 42 / 27, PCE 41 /
+28, GDP 14 / 8 = 166 / 112 releases; 1,168 / 798 release-market rows (k = 1). SPX sees the FOMC statement only (47 rows).
+
+**Pooled hit rate within the day (first / second half, resolved n, p):** N1 (15 min, >= 0.25 dATR, WITH) 46.8% (203) p
+0.40 / 55.6% (133) p 0.23; N2 (15 min, >= 0.5) 50.0% (96) p 1.00 / 57.1% (49) p 0.39; N3 (60 min, >= 0.5) 52.4% (105) p
+0.70 / 59.4% (64) p 0.17; N4 (60 min, >= 1.0) 61.5% (26) p 0.33 / 79.0% (19) p 0.019; F1-F4 are the mirror (53.2 / 43.6,
+50.0 / 40.8, 47.6 / 39.1, 38.5 / 15.8). 24 h: N1 49.5 / 54.7, N3 55.5 / 55.1, N4 62.1 / 77.3. Release-level check (each
+release once): N1 55.7% / 52.9%, N3 56.4% / 65.5% (29 decided), N4 57.1% / 80.0% (10 decided), none p < 0.1.
+
+**After costs (bracket trade, out at the day's last close):** WITH: first half all negative (N1 -$5,146, N2 -$1,062,
+N3 -$2,899, N4 -$142), second half all positive (N1 +$113 PF 1.02, N2 +$296 PF 1.19, N3 +$1,215 PF 1.42 with 6 of 8
+markets > 0, N4 +$521 PF 2.37 on 27 trades). FADE: first half F1 +$947, F3 +$440; second half all negative (-$780 to
+-$2,453). So the sign flips between the halves: the fade was (slightly) the better side in 2020-mid 2023, following the
+impulse in mid 2023-2025.
+
+**Impulse size vs drift (k = 1, every row):** below 1 dATR there is no first-half drift (mean -0.05 to 0.00 dATR to the
+day's close, WITH hit 41-50%); in the second half small positive drift (+0.04 to +0.19, 52-59%). Only abs(I) >= 1 dATR
+drifts in both halves (+0.41 / +0.69 dATR, 80% / 62% WITH hit) but on 15 / 8 resolved rows. k = 4 the same picture
+(>= 1 dATR: +0.14 / +0.32, 61.5% / 79.0% on 26 / 19). By type (k = 1, no threshold): FOMC 47.9% / 65.5%, CPI 44.8% /
+57.3%, NFP 43.8% / 42.7% (payrolls do not drift in either half), PCE 47.3% / 56.2%, GDP 51.6% / 76.7% (30 rows).
+
+Reading: there is no stable post-release drift at the 15-60 minute horizon in 2020-2025; the second half (2023-2025)
+leans toward continuation, mostly after FOMC and CPI and the largest impulses, but the first half does not, the counts
+for the big-impulse cells are small (tens), and the market rows of one release are not independent. Nothing goes
+forward as a book. Unverified: release clock times are the agencies' standard times, not checked row by row against the
+tape; the FOMC press conference (30 min after the statement) is inside the k = 4 window and not separated.
+
+## H51. CROSS-MARKET CONFIRMATION: does a daily-level break confirmed by a related market continue more often, and does one the related market refuses fail more often? (registered 16 Nov 2026, 09:50 UTC, before any H51 code existed or any H51 outcome was computed)
+
+**Prompted by:** H44-H49 (the first 15m close beyond the prior-day or rolling-24h level reaches +0.5 daily ATR before
+-0.5 daily ATR in ~50% of resolved events; no single-market confluence, regime, session or exhaustion condition lifts
+it above ~54% in both halves). The owner approved this test on 16 Nov 2026: a break CONFIRMED by a related market (a
+break the same way at about the same time) may continue more often, and a break the related market REFUSES
+(diverges from) may fail more often.
+
+**Events and outcome: identical to H46/H47.** Every first 15m close beyond the level in its UTC day per direction
+(s = +1 up, -1 down; `dailybreak_study.daily_breaks`, momentum OFF), levels **pday** (prior UTC day's high / low) and
+**roll24** (previous 96 bars' high / low), daily ATR D from `engine15/sources/adr.py` `readings` (last closed day),
+D > 0 and entry bar i+1 in the same UTC day. **Follow hit** = +0.5 D in the break direction before -0.5 D from the
+next 15m open within 72 h (`confluence_study.outcome(R, i, s, D)` unchanged; a bar touching both = miss; neither =
+unresolved, excluded, counted). **Fade hit** = `confluence_study.outcome(R, i, -s, D)` (the mirror; follow + fade hits
+<= resolved). Eight markets, rows before 2025-11-11 00:00 UTC only (dropped right after loading; the sealed holdout is
+never read), entries from 2020-01-01, first half before 2023-06-07, second half from it to the seal.
+
+**Pairs (partner relation r = +1 same direction, -1 inverse), each used BOTH ways (A's events read against B, and B's
+events against A):** P1 BTCUSDT <-> ETHUSDT (r +1); P2 XAUUSD <-> XAGUSD (r +1); P3 WTI <-> BRENT (r +1); P4 XAUUSD vs
+USDJPY (r -1: a gold up-break is confirmed by a USDJPY DOWN-break, i.e. dollar weakness, and vice versa); P5 SPX vs
+BTCUSDT (r +1, risk-on); P6 WTI vs SPX (r +1, oil as risk / growth; BRENT left out so no SPX event is counted twice in P6).
+
+**Partner reading for an event of market A at bar i (open ms_i, close T = ms_i + 15 min), partner B, relation r,
+same level type as the event, N = 4 bars (1 h), X = 1.0:**
+- **Window** = B's bars whose open is in (ms_i - 4 x 15 min, ms_i], i.e. B's bars that CLOSE in (T - 60 min, T]: only
+  bars closed by the event bar's close (no look-ahead; B's bar closing at exactly T is included). Partner frame = B's
+  own development bars and its own `adr.readings` (its own pdh / pdl, box_hi / box_lo, ATR15).
+- **No read** = B has no bar in the window (market shut: e.g. SPX outside cash hours, metals / oil / fx at the weekly
+  or daily break). Excluded from the buckets, counted.
+- **Confirmed** = at least one B bar in the window CLOSES beyond B's own level of the same type in direction r x s
+  (above B's high for r x s = +1, below B's low for -1). This includes B's first break of the day and B already being
+  through its level (closing beyond it) during the window.
+- **Divergent** = NOT confirmed, and B's move over the window, m = close of B's last bar in the window - open of B's
+  first bar in the window, satisfies r x s x m <= -1.0 x ATR15_B (B's Wilder ATR(14) on 15m at its last bar in the
+  window, `readings` atr15). I.e. B moved the opposite way by >= 1 of its own 15m ATRs over the hour.
+- **Unconfirmed** = read, neither confirmed nor divergent.
+(Confirmed and divergent together are counted for the report: confirmed takes precedence.)
+
+**Variants (8), each a pooled set of (event market, partner) readings:**
+- V1 = P1 pday; V2 = P2 pday; V3 = P3 pday; V4 = P4 pday; V5 = P5 pday; V6 = P6 pday (each event of the pair's two
+  markets, read against the other market of the pair);
+- V7 = ALL pairs, pday, "any partner": every event of all 8 markets once, read against all its partners (BTC: ETH, SPX;
+  ETH: BTC; XAU: XAG, USDJPY inverse; XAG: XAU; USDJPY: XAU inverse; SPX: BTC, WTI; WTI: BRENT, SPX; BRENT: WTI).
+  Confirmed = confirmed by >= 1 partner and divergent from none; divergent = divergent from >= 1 and confirmed by none;
+  "mixed" (confirmed by one, divergent from another) excluded and counted; unconfirmed = read by >= 1 partner, neither;
+  no read = no partner read.
+- V8 = V7 on the **roll24** level.
+
+**Tests:** 8 variants x 3 buckets (confirmed, unconfirmed, divergent) x 2 sides (follow, fade) = **48 tests per half**;
+exact two-sided binomial against 50% (`confluence_study.binom_p`); Bonferroni threshold per half p < 0.05 / 48 =
+1.04e-3. Empty cells still count. The PRIMARY cells are "confirmed, follow" and "divergent, fade", but all 48 count.
+
+**Pass bar (fixed now, per variant and bucket and side):** ALL of (1) hit rate >= 55% in BOTH halves; (2) >= 200
+resolved events in each half (pooled over the variant's pairs); (3) p < 1.04e-3 in BOTH halves; (4) traded (entry at
+the next 15m open, same UTC day only; stop entry -/+ 0.5 D, target entry +/- 0.5 D on the bucket's side; out at the
+first open at or after entry + 72 h; stop first inside a bar, gaps fill at the open; one position per market at a time
+within the bucket and side; $10,000 a trade; each market's own fee a side, `playbook.fee_side`; H46's `trades_of`)
+net $ after costs > 0 in the SECOND half pooled AND net > 0 in a MAJORITY (more than half) of the variant's markets in
+the second half (V1-V6: both markets of the pair; V7/V8: >= 5 of 8; a market with no trades is not
+positive). A pass would be described so it could be registered as a forward paper book after asking the owner; nothing
+is built or wired here.
+
+**Secondary (descriptive, its own count):** per variant, confirmed-follow minus divergent-follow hit rate, two-proportion
+z test (pooled variance), two-sided; "the partner matters" for a variant only if the sign is the same in both halves and
+p < 0.05 / 8 = 0.00625 in BOTH halves. Also reported: each variant's reference (all read events) per half; per event
+market inside each variant; bucket shares; no-read counts; confirmed-and-divergent overlap counts; every bucket traded on
+both sides (trades, win %, R before / after costs, % of stake a trade, net $ per half, per market in the second half).
+Sanity: the union of all events per level must reproduce H46's reference hit rates (pday pooled follow 49.1% of 6,916
+/ 50.0% of 4,919).
+
+**Look-ahead guard:** `tests/test_crossmarket.py`: on synthetic 24h and cash-hours bar pairs, the partner reading of
+every event is identical when the partner frame is truncated to bars opening at or before the event bar's open (so only
+bars closed by the event's close exist), and when both frames are truncated at several cuts; the confirmed / divergent
+logic is checked by hand; the inverse relation flips the side; the window excludes partner bars closing after T. The
+same truncation check runs on the real bars of every pair in the study.
+
+**Prior, stated now:** related markets break together most of the time (BTC/ETH, XAU/XAG, WTI/BRENT are highly
+correlated at 1 h), so "confirmed" will be the large bucket and look like the reference (~50%); "divergent" will be
+small. A divergent break may fade slightly more often, but I expect differences of 0-3 points, no bucket at 55% in both
+halves with 200+ resolved, and nothing positive after costs in the majority of markets. Code
+`research/crossmarket_study.py`, report `research/out/crossmarket/study.md` + `.json`.
+
+### H51 results (16 Nov 2026, ~09:55 UTC; development data to 2025-11-11; `research/out/crossmarket/study.md`)
+
+**NO PASS. A related market's confirmation does not lift a daily-level break, and its refusal does not make the
+break fail.** Code `research/crossmarket_study.py` (events, outcome and trade bookkeeping reused unchanged from
+H45/H46: `dailybreak_study.daily_breaks`, `confluence_study.outcome` / `trades_of` / `binom_p`); `tests/test_crossmarket.py`
+(6 tests: partner reading checked by hand on 24h and cash-hours synthetic pairs; partner truncated to bars opening at or
+before the event bar's open gives identical readings; changing every partner bar after the event's close changes
+nothing; both frames truncated at two cuts; inverse relation; any-partner rule; fade = mirror). Run on the Singapore
+server. Real bars: partner-reading truncation 0 mismatched of 2,438-3,075 compared per market and level (all 8 markets,
+both levels). 25,196 events; the union reproduces H46's reference exactly (pday follow 49.1% of 6,916 / 50.0% of
+4,919). Tests: 48 per half, Bonferroni 1.04e-3. Holdout not touched.
+
+**Primary cells (follow on confirmed; fade on divergent), hit rate first / second half (resolved):** confirmed-follow
+V1 BTC<->ETH 46.8% (1,030) / 50.0% (630); V2 XAU<->XAG 46.1% (862) / 48.5% (549); V3 WTI<->BRENT 49.0% (955) /
+47.6% (745); V4 XAU vs USDJPY inverse 49.3% (608) / 50.2% (408); V5 SPX vs BTC 49.2% (303) / 48.1% (214); V6 WTI vs SPX
+48.2% (313) / 45.3% (192); V7 any partner pday 47.9% (3,640) / 48.9% (2,464); V8 roll24 49.0% (3,132) / 49.6% (2,127).
+Confirmed breaks if anything continue slightly LESS often than the reference. Divergent-fade: V1-V3 almost never
+diverge (2/6, 9/23, 6/1 resolved: the tight pairs move together within the hour); V4 52.5% (120) / 52.0% (123); V5
+52.9% (68) / 56.8% (74); V6 53.5% (114) / 52.8% (108); V7 55.9% (204) / 50.2% (231); V8 54.8% (250) / 49.1% (216).
+0 of 48 cells pass Bonferroni in both halves; 0 reach 55% in both halves with >= 200 resolved. Secondary contrast
+(confirmed-follow minus divergent-follow): 0 of 8 significant; V7 +3.8 / -0.5 points.
+
+Best non-primary cell: V4 unconfirmed-follow (gold break while USDJPY neither confirms nor diverges) 52.5% (998) /
+54.5% (695, p 0.019), not past Bonferroni and below 55% in the first half.
+
+**After costs (stop / target 0.5 daily ATR, 72 h, own fee, one position per market):** only two cells are net > 0 in
+the second half pooled and in a majority of their markets: V1 divergent-follow (6 trades, +$793; meaningless) and V4
+unconfirmed-follow (607 trades, +0.005% a trade, +$320, XAU and USDJPY both positive; first half 867 trades, -$1,650).
+Neither meets the hit-rate / Bonferroni parts. V7 confirmed-follow loses -0.13% a trade (2,274 trades, -$29,820, 1 of 8
+markets positive); V7 divergent-fade +$1,012 first half, -$2,343 second.
+
+Reading: in this history a daily-level break is ~50/50 whether or not its related market breaks with it in the same
+hour; tight pairs (BTC/ETH, XAU/XAG, WTI/BRENT) almost never diverge, and where divergence is common (XAU vs USDJPY,
+SPX vs BTC, WTI vs SPX) it moves the fade by 2-7 points at most, not consistently across halves. Nothing goes forward as
+a book.
+
+## H52. SIZE BY EXPECTED MOVE: scale position size by a volatility forecast, entries and exits unchanged (owner-approved 16 Nov 2026; registered 16 Nov 2026, 09:50 UTC, before any H52 code existed or any H52 number was computed)
+
+**Prompted by:** H39 / H40 / H46: direction is close to unpredictable at 15m, but the SIZE of the next move is
+predictable (DVOL, put/call and stablecoin flows passed Bonferroni only on next-day drawdown tests; ATR clusters).
+Question: with every entry and exit decision held fixed, does scaling the position by the predicted move size earn
+more per unit of risk than constant notional? This is a sizing study only; no decision rule changes.
+
+**The volatility forecast (one, fixed now; no fitted coefficient).** From 15m bars of each market, closed bars only.
+r_j = log(close_j / close_{j-1}) for consecutive bars of the market (a session gap is inside the first bar's return).
+B = the market's bars per trading day, a structural constant: the median count of 15m bars per UTC calendar day with
+any bar, over the development data (96 crypto, about 92 for 23h markets, 26 for SPX cash hours; printed). At the close
+of bar i: v1 = mean r^2 over the last B bars, v5 over the last 5B, v22 over the last 22B (bars <= i only). Per-bar
+variance forecast f_i = (v1 + v5 + v22) / 3 (equal-weight HAR, Corsi 2009, no fitting), daily vol forecast
+sigma_i = sqrt(B * f_i). Reference level m_i = the median of sigma at each UTC-day-end bar over the trailing 365
+calendar days up to bar i (at least 60 day-ends, else no reference and the trade is sized 1). Tercile cut points =
+the 33rd / 67th percentiles of the same trailing set. DVOL is NOT used (crypto only; one forecast for all 8 markets).
+
+**Forecast quality (reported, condition (4) below).** For each UTC day d with >= B/2 bars ("valid day"): forecast =
+sigma at the last bar of day d; realised = next valid day's (high - low) / close of the last bar of day d. Spearman
+and Pearson-of-logs correlation per market per half; pooled = the mean of the 8 per-market Spearman correlations.
+
+**Decision streams (both FIXED; sizing never changes an entry, an exit or a side).**
+- **Primary: the main book's own replayed trades.** `shadows.run` with the main rule (hold to stop or flip; the
+  engine's entries, stops, flips, fill delays and fees), odds formed read-only from `data/evcache` exactly as
+  `research/exit_study.py` `prep_readonly` does (voices walked forward weekly from the engine birth 2020-01-01 with a
+  PRIVATE fits directory, trust and mix as the live step), but with every array CUT at the seal (rows before
+  2025-11-11 00:00 UTC; the walk-forward only uses labels resolved before each refit, so the cut changes no earlier
+  decision). Run on the LAPTOP under research/out/heavy_job.lock (below-normal priority, >= 1,500 MB free), which
+  writes only the trade list (entry time, exit time, side, entry price, exit price, exit reason) per market; a
+  position still open at the seal is closed at the last close before the seal (flagged). The sizing study itself runs
+  on the server from that trade list and the market bars.
+- **Secondary (descriptive, NOT part of the pass bar): a transparent proxy.** Daily 30-day momentum sign: at the last
+  bar of each valid UTC day d, side = sign(close_d / close at the last bar at or before d - 30 calendar days - 1),
+  long or short, held from the next 15m open to the next day's decision, re-sized every day.
+
+**Sizing variants (7 rows: a baseline and 6 sizing rules, every one counted; w set from sigma and m at the decision
+bar, i.e. the close before the entry open).** Capital $10,000 per market, NOT compounded; notional at entry =
+w x $10,000; in the primary stream the quantity is fixed for the life of the trade (size set once at entry); in the
+proxy stream every row (the baseline too) is re-set daily and pays fees on the change.
+
+| id | rule |
+|---|---|
+| S0 | constant notional, w = 1 (baseline) |
+| S1 | inverse volatility, w = clip(m / sigma, 0.25, 4) |
+| S2 | inverse variance, w = clip((m / sigma)^2, 0.25, 4) |
+| S3 | half-strength inverse volatility, w = clip(sqrt(m / sigma), 0.25, 4) |
+| S4 | cut only: w = min(1, m / sigma), floor 0.25 |
+| S5 | top-tercile cut: w = 0.5 when sigma > trailing 67th percentile, else 1 |
+| S6 | three regimes: w = 1.5 below the trailing 33rd percentile, 1 between, 0.5 above the 67th |
+
+**Comparable exposure.** Sharpe and return / max drawdown are scale-free for an uncompounded book. Return and max
+drawdown are reported EXPOSURE-MATCHED: each variant's daily P&L in a (market, half) is multiplied by the constant
+(S0's time-average |notional| / the variant's time-average |notional|) in that cell; the pooled book = the sum of the 8
+exposure-matched market books. The raw average exposure of every variant is printed beside it.
+
+**Costs, fills, data.** Each market's own fee a side (`engine15/playbook.fee_side`) on every unit of notional traded
+(entry, exit, daily re-size in the proxy). Primary fills at the replay's own prices (next 15m open; stop fills at the
+stop or the open beyond it). Markets BTCUSDT, ETHUSDT, XAUUSD, XAGUSD, USDJPY, SPX, WTI, BRENT; development rows
+before 2025-11-11 00:00 UTC only (the sealed holdout is never read); results from 2020-01-01; first half before
+2023-06-07, second half from it to the seal (daily mark-to-market P&L split by date). Daily P&L = change of marked
+equity at each UTC day's last bar.
+
+**Metrics per half, pooled and per market:** return (% of capital, exposure-matched), Sharpe (daily P&L, sqrt(365)),
+max drawdown (% of capital, exposure-matched), return / max drawdown, average exposure, trades, fees; and the paired
+Sharpe-difference test vs S0 on pooled daily P&L (Jobson-Korkie with the Memmel correction), reported with nominal p.
+
+**Count and test.** 6 sizing variants vs S0 on the primary stream: 6 comparisons per half; Bonferroni threshold for
+the reported Sharpe-difference p = 0.05 / 6 = 8.3e-3 (reported, not a pass condition: the owner's bar below decides).
+The proxy stream repeats the 6 rows descriptively (no test). Family: H25/H31/H32 (vol-targeted momentum books in the
+harness) and HRL1 sizing are related earlier work.
+
+**Fixed pass bar (owner's, as written):** a sizing variant passes if ALL hold: (1) its pooled Sharpe > S0's pooled
+Sharpe in BOTH halves; (2) its Sharpe > S0's in a majority of markets (>= 5 of 8) in EACH half; (3) its pooled
+exposure-matched max drawdown is not worse (<=) than S0's in BOTH halves; (4) the forecast's pooled correlation with
+realised next-day range is > 0 in BOTH halves. Choose on the first half, confirm on the second: the CHOSEN variant is
+the one with the largest first-half pooled Sharpe gain over S0 among variants meeting (1)-(3) on the first half
+(else the largest first-half gain, for the write-up); **H52 passes if the chosen variant meets (1)-(4) in the second
+half too.** Every variant's pass/fail on the full bar is also reported. A pass is a reason to ask the owner about
+sizing a forward PAPER book this way, not proof; nothing is built or wired here.
+
+**Look-ahead guard:** `tests/test_volsize.py` truncates synthetic bars and checks sigma, m, the tercile cuts and every
+variant's w at each decision bar equal the values computed on the full series; checks the HAR value by hand; checks
+the proxy side uses closes <= the decision bar only and the next open fills; checks the trade P&L / fee accounting
+and the exposure-matching constant on a hand-made example. The same truncation check runs on real bars of every
+market.
+
+**Prior, stated now:** volatility clustering makes the forecast correlation clearly positive (0.3-0.6 per market).
+For the proxy momentum stream I expect inverse-vol sizing to raise Sharpe modestly (the vol-managed literature,
+Moreira-Muir 2017, is strongest for trend books). For the main book's trades I expect a smaller or no gain: its stops
+are already 3 x ATR(1h) and the engine already sizes non-crypto trades by stop distance, so the trade P&L in % is
+already vol-scaled in part, and the main book's results are concentrated in few large trades (H36), which a size
+rule can as easily shrink as grow. My guess: no pass on the primary stream, S1/S3 the closest. Code
+`research/volsize_study.py`, test `tests/test_volsize.py`, report `research/out/volsize/study.md` + `.json`.
+
+**Implementation note (16 Nov 2026, ~10:15 UTC, written with the code, before any number was computed):** the
+reference set for m and the tercile cuts uses day-end bars strictly BEFORE the decision bar (not "up to and including"
+it): whether a bar is the last of its UTC day is known only once a later bar exists, so including the decision bar
+itself could peek. The proxy side reads closes up to its decision bar (the day's last bar) and fills at the next bar's
+open, the moment that bar shows the day has ended.
+
+### H52 results (16 Nov 2026, ~10:20 UTC; development data to 2025-11-11; `research/out/volsize/study.md` + `.json`)
+
+**NO PASS on the registered primary stream (the main book's own trades).** Code `research/volsize_study.py`, test
+`tests/test_volsize.py` (10 tests: HAR by hand, truncation on 24h and cash-hours synthetic bars, reference strictly
+before the decision bar, weights, trade / proxy accounting, next-open fill, exposure matching; green on laptop and
+server). Real bars: 0 mismatches in the truncation check on all 8 markets (1.8 million values). 6 variants vs S0,
+Bonferroni 8.3e-3 for the reported Sharpe-difference p. Holdout not read for any result.
+
+**Decision stream.** The main book (rule "main", hold to stop or flip) replayed on the LAPTOP from data/evcache
+read-only under research/out/heavy_job.lock with every array cut at the seal (engine config think15-v5.2.3; voices
+walked weekly from 2020-01-01 in a private fits dir, ~16 min): 1,034 closed trades + 8 positions open at the seal
+(closed at the last pre-seal close). The per-trade accounting reproduces the engine's own per-trade % exactly (BTC
+193.0% vs 192.98%, ETH 485.5 / 485.55, XAU 106.6 / 106.59, WTI 194.7 / 194.66, sums of uncompounded 1x trades). Every
+entry maps to a bar open (1,042 / 1,042). Disclosure: the SPX evidence store is older than the newest cards (294 of
+398 feature columns); the 104 missing columns were fed as zeros (those cards silent) for the SPX replay only. The
+sizing study ran on the Singapore server from that trade list.
+
+**Forecast quality (condition 4 met).** Equal-weight HAR sigma vs the next valid day's range: pooled mean Spearman
+0.561 (first half) / 0.435 (second); every market positive in both halves (0.34-0.67).
+
+**Primary, pooled Sharpe first / second half (S0 = constant notional):** S0 1.121 / 1.034; S1 inverse vol 0.793 /
+1.182; S2 inverse variance 0.600 / 1.183; S3 half-strength 0.931 / 1.125; S4 cut-only 0.833 / 1.176; S5 top-tercile
+cut 0.800 / 1.229; S6 three regimes 0.725 / 1.230. Every variant is WORSE than S0 in the first half (beats S0 in only
+2-3 of 8 markets; the main book earned much of 2020-2022 in high-volatility oil and crypto spells that vol sizing
+shrinks: WTI 200% -> 57% under S1) and better in the second half (5-6 of 8 markets for S1/S3/S4/S5, lower matched max
+DD). Chosen on the first half: S3 (smallest loss, -0.19); it fails condition (1)-(2) in the first half, so NO PASS;
+no variant passes the full bar. No Sharpe difference is Bonferroni-significant (best nominal p 0.031, S5 first half,
+in the wrong direction; second-half p 0.13-0.62).
+
+**Secondary proxy (descriptive, not a test): daily 30-day momentum sign.** Vol sizing helped in both halves: S0
+1.208 / 0.453; S3 1.413 / 0.598; S4 1.494 / 0.604; S6 1.353 / 0.643; S1 1.407 / 0.720; S2 1.266 / 0.886. S3, S4 and
+S6 would meet the full bar on this stream (S4 chosen on the first half), but no JK p is below 0.17, so even there the
+gain is not statistically established. This matches the vol-managed-momentum literature and my prior.
+
+Reading: the forecast works (size of move is predictable), and on a simple trend book it raises Sharpe in both
+halves, but on the main engine's own trades it cut Sharpe by 0.19-0.52 in 2020-mid 2023 and raised it by 0.09-0.20
+afterwards: not a stable improvement. Unverified: the main-book replay uses today's engine config over history (as
+H36), the SPX store gap above, and uncompounded 1x accounting (drawdowns can exceed 100% of $10,000 in a market over
+a half). Nothing is built or wired.
