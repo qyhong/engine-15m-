@@ -1,20 +1,22 @@
-# H43: 40% trust cap vs no cap on history (recorded, not a gate; 15 Nov 2026)
+# H43: 40% trust cap vs no cap on history (recorded, not a gate; updated 16 Nov 2026)
 
-Script `research/trust_cap_compare.py` (the H42 machinery, live constants eta 0.2 / floor 0.02, cap applied to the final
-mixing weights as v5.2 does). Development data to 2025-11-10; halves split as in H42. Both runs include the v5.1.2
-cards as (non-voting) voices.
+Script `research/trust_cap_compare.py` (the H42 machinery; live constants eta 0.2 / floor 0.02; the cap applied to
+the final mixing weights as v5.2 does). Development data to 2025-11-10; halves as in H42. Both runs include every
+card up to v5.2.2 as (non-voting) voices, so the no-cap numbers differ slightly from H42's.
 
-**Crypto only so far.** Metals, fx, index and energy stopped: their evidence caches still have the pre-v5.1.2 columns
-(those markets are closed until Monday 16 Nov; the live engine rebuilds each cache at its first step). Re-run then.
+| Group, half | log-loss no cap -> cap | books, no cap | books, cap 40% |
+|---|---|---|---|
+| crypto, 1st | 0.84086 -> 0.84029 | BTC -47% (Sharpe 0.00), ETH +540% (1.20) | BTC -5% (0.30), ETH +756% (1.36) |
+| crypto, 2nd | 0.86692 -> 0.86672 | BTC +136% (0.88), ETH +94% (0.69) | BTC +151% (0.93), ETH +58% (0.56) |
+| metals, 1st | 0.80735 -> 0.80705 | gold -46%, silver +26% | gold -45%, silver +33% |
+| metals, 2nd | 0.79084 -> 0.79076 | gold +420%, silver -45% | identical |
+| fx, 1st | 0.79086 -> 0.79135 | USDJPY +146% | +149% |
+| fx, 2nd | 0.80191 -> 0.80190 | USDJPY +21% | identical |
+| energy, 1st | 0.75845 -> 0.75696 | WTI +289%, Brent +255% | WTI +284%, Brent +336% |
+| energy, 2nd | 0.73644 -> 0.73529 | WTI -38%, Brent -50% | WTI -54%, Brent -53% |
+| index | not run yet: its cache is rebuilt at the S&P's first cash-hours step of v5.2.2 (16 Nov 14:30 UTC) |
 
-| Crypto | log-loss | hit % | BTC return / Sharpe / max DD / trades | ETH return / Sharpe / max DD / trades |
-|---|---|---|---|---|
-| no cap, 1st half | 0.84091 | 50.18 | -64.8% / -0.21 / -79.2% / 160 | +554% / 1.21 / -54.0% / 120 |
-| cap 40%, 1st half | 0.84032 | 50.21 | -11.7% / 0.26 / -73.3% / 123 | +738% / 1.34 / -54.0% / 96 |
-| no cap, 2nd half | 0.86688 | 51.71 | +118.7% / 0.82 / -51.2% / 113 | +133.2% / 0.80 / -56.7% / 98 |
-| cap 40%, 2nd half | 0.86669 | 51.67 | +115.6% / 0.81 / -60.4% / 86 | +38.6% / 0.47 / -57.4% / 84 |
-
-Reading: the cap predicts marginally better in both halves (log-loss -0.06% / -0.02%) and trades less often. The book
-results move a lot in both directions (much better in the first half, ETH much worse in the second): the main book
-lives on a few long holds, so a small change in the odds moves which holds are taken. On crypto alone there is no
-consistent sign either way. Not a reason to reverse the owner's choice; not evidence that it helps.
+Reading: the cap almost never binds in metals and fx (one card held over half the say 0-3% of the time), so they
+trade the same. In crypto and oil it binds more (17-21% of the time): predictions are marginally better in 7 of 8
+group-halves, and the books move both ways (better in the first half, mixed or worse in the second). Same conclusion
+as the crypto-only read: no consistent effect either way; the live record from 15 Nov decides.

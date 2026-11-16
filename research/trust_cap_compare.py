@@ -35,20 +35,24 @@ def _run(group, assets, cap, log):
         model.mix = _plain_mix
 
 
-def main():
+def main(only=None):
     os.makedirs(OUT, exist_ok=True)
     log = lambda *m: print(time.strftime("%H:%M:%S"), *m, flush=True)      # noqa: E731
     ts.ex.below_normal()
     groups = dict((g, list(a)) for g, a in CFG["universes"])
     rows = []
-    for g in ts.GROUPS:
+    for g in (only or ts.GROUPS):
         ts.ex.acquire("trust_cap_compare %s (H43)" % g, log)
         try:
             ts.ex.wait_memory(ts.ex.MIN_FREE_START, log)
             res = {}
-            for cap in (None, 0.40):
-                r = _run(g, groups[g], cap, log)
-                res["cap40" if cap else "nocap"] = r["variants"]["cap40" if cap else "nocap"]
+            try:
+                for cap in (None, 0.40):
+                    r = _run(g, groups[g], cap, log)
+                    res["cap40" if cap else "nocap"] = r["variants"]["cap40" if cap else "nocap"]
+            except IndexError as e:                                  # its evidence cache predates the newest cards
+                log("%s skipped: cache not rebuilt for the current cards yet (%s)" % (g, e))
+                continue
             with open(os.path.join(OUT, "group_%s.json" % g), "w", encoding="utf-8") as fh:
                 json.dump(res, fh)
             for half in ("first", "second"):
@@ -64,4 +68,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:] or None)
