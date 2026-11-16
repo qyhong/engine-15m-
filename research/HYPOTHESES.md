@@ -1820,3 +1820,112 @@ H45, the card ratings). Conditioning on strong momentum usually raises continuat
 crowded breaks often mean-revert. The honest expectation is that no bucket reaches 70% in either half, let alone both;
 the best buckets may sit at 52-56%. Code `research/confluence_study.py`, report `research/out/confluence/study.md` +
 `.json`, test `tests/test_confluence.py`.
+
+## H47. REGIME SPLIT: do daily-level breaks continue in trending regimes and fail in ranging ones? (registered 16 Nov 2026, 05:40 UTC, before any H47 code existed or any H47 outcome was computed)
+
+**Prompted by:** H44-H46 (the first 15m close beyond the prior-day or rolling-24h level reaches +0.5 daily ATR before
+-0.5 daily ATR in ~50% of resolved events, and no momentum / participation confluence lifts it above ~51-54%). The
+owner approved this test on 16 Nov 2026: breaks may CONTINUE in trending regimes and FAIL in ranging ones, so the two
+cancel to ~50% when pooled.
+
+**Events and outcome: identical to H46.** Every first 15m close beyond the level in its UTC day per direction
+(s = +1 up, -1 down; `dailybreak_study.daily_breaks`, momentum OFF), levels **pday** (prior UTC day's high / low) and
+**roll24** (previous 96 bars' high / low), daily ATR D from `engine15/sources/adr.py` `readings` (last closed day),
+D > 0 and entry bar in the same UTC day. **Follow hit** = +0.5 D in the break direction before -0.5 D from the next 15m
+open within 72 h (`confluence_study.outcome(R, i, s, D)` unchanged; a bar touching both = miss; neither = unresolved,
+excluded, counted). **Fade hit** = the same event traded against the break: -0.5 D (in the break direction) before
++0.5 D, computed as `confluence_study.outcome(R, i, -s, D)` (so a bar touching both is a miss for the fade too, and
+follow hits + fade hits <= resolved). Eight markets, rows before 2025-11-11 only (dropped right after loading), entries
+from 2020-01-01, first half before 2023-06-07, second half from it to the seal.
+
+**Regime measures (all on closed UTC daily bars from `data.resample(df15, "1D")`, joined with `data.htf_on_15`, so a
+15m row sees only days that had closed by its own close; recomputed here, no live output read):**
+- **R1, the engine's own regime label** (`indicators.regime_daily`, exactly as evidence.py's `regime` column). 7
+  buckets: R1a TREND aligned (TREND_UP on an up break or TREND_DOWN on a down break); R1b TREND counter; R1c MOMENTUM
+  aligned; R1d MOMENTUM counter; R1e TRENDING any (any TREND_* or MOMENTUM_* label, either direction); R1f RANGE;
+  R1g TRANSITION. No label (first 209 daily bars) = no read, counted.
+- **R2, daily ADX(14)** (Wilder, `engine15/sources/ltf.py` `adx` on the daily bars), DI alignment = s x (+DI - -DI) > 0.
+  5 buckets: R2a ADX >= 25; R2b ADX >= 25 and DI aligned; R2c ADX >= 25 and DI counter; R2d 20 <= ADX < 25; R2e ADX < 20.
+- **R3, Kaufman efficiency ratio over the last 20 daily closes**: ER = |C_t - C_t-20| / sum of |C_k - C_k-1| over the
+  20 steps (regime_daily's er); direction = sign(C_t - C_t-20). Tercile cutoffs = the 33.3 / 66.7 percentiles of ER
+  over FIRST-HALF events only (both levels, all markets pooled; values only, no outcomes), then fixed. 5 buckets:
+  R3a high tercile; R3b high and aligned with the break; R3c high and counter; R3d middle; R3e low.
+- **R4, realised-volatility percentile**: rv20 = standard deviation of the last 20 daily log returns; pct = rank of
+  today's rv20 among the last 250 daily rv20 values (incl. today's; pandas rolling(250).rank(pct=True)). Terciles on
+  first-half events as R3. 3 buckets: R4a high, R4b middle, R4c low.
+- **R5, variance ratio (persistence)**: VR(5) = variance of the overlapping 5-day log-return sums / (5 x variance of the
+  1-day log returns), over the last 250 daily returns (246 sums); VR > 1 = trending / persistent, < 1 = mean
+  reverting. Terciles on first-half events as R3. 3 buckets: R5a high, R5b middle, R5c low.
+
+**Count.** 23 buckets (7 + 5 + 5 + 3 + 3), each tested on 2 sides (follow, fade) x 2 levels x 6 scopes (pooled + the 5
+market groups crypto, metals, fx, index, energy) = **552 tests per half**; Bonferroni threshold per half
+p < 0.05 / 552 = 9.06e-5 (exact two-sided binomial against 50%, `confluence_study.binom_p`). Empty cells still count.
+
+**Pass bar (fixed now; evaluated on the POOLED scope of each level, both sides):** a bucket passes if ALL hold: (1) hit
+rate >= 55% in BOTH halves; (2) >= 200 resolved events in each half; (3) binomial p < 9.06e-5 in BOTH halves; (4)
+traded (entry next 15m open, same UTC day only; the follow trade's stop entry - s x 0.5 D, target entry + s x 0.5 D;
+the fade trade the mirror image (side -s); 72 h max, out at the first open at or after entry + 72 h; stop first inside
+a bar, gaps fill at the open; one position per market at a time within the bucket; $10,000 a trade; each market's own
+fee a side, `playbook.fee_side`; H46's `trades_of`) net $ after costs > 0 in the SECOND half pooled AND net > 0 in at
+least 5 of the 8 markets in the second half (a market with no trades is not positive). A pass would be described so it
+could be registered as a forward paper book after asking the owner; nothing is built or wired here.
+
+**The core question: does regime explain the 50%?** Per measure the primary contrast is the trend bucket vs the range
+bucket on the FOLLOW side: R1e vs R1f, R2a vs R2e, R3a vs R3e, R4a vs R4c (high vs low volatility), R5a vs R5c; per
+level, pooled: 10 contrasts per half. Test: two-proportion z test (pooled variance), two-sided. "Regime explains" a
+measure's split only if the difference has the same sign in both halves and p < 0.05 / 10 = 0.005 in BOTH halves; the
+size of the difference (points) is reported either way, and also per market group (descriptive). Secondary,
+descriptive: aligned vs counter within the trend buckets (R1a vs R1b, R2b vs R2c, R3b vs R3c).
+
+**Reported whatever the result:** every bucket's follow and fade hit rate, resolved n, unresolved count and p per half,
+pooled and per market group, per level; every pooled bucket traded both sides (trades, win %, R before / after costs,
+% of stake a trade, net $ per half, per market in the second half, events per month); event counts without a regime
+read. Sanity check: the reference (all events) must reproduce H46's reference hit rates.
+
+**Look-ahead guard:** `tests/test_regime_split.py` truncates synthetic 24h and cash-hours bars and checks every regime
+array (label, ADX, DI, ER, direction, rv percentile, VR) is identical on every row before the cut; the same check runs
+on the real bars of every market in the study; the R1 label is cross-checked against evidence.py's join recipe.
+
+**Prior, stated now:** H44-H46 found no lift from any momentum-type condition, and the daily trend-map alignment (H46
+group 6, a cousin of these measures) moved the hit rate by under 1 point. Regime filters often look better in theory
+than in 15m-to-3-day data. I expect trend-vs-range differences of 0-3 points, not significant in both halves, and no
+bucket at 55%. Code `research/regime_split_study.py`, report `research/out/regime_split/study.md` + `.json`.
+
+### H47 results (16 Nov 2026, ~05:45 UTC; development data to 2025-11-11; `research/out/regime_split/study.md`)
+
+**NO PASS, and regime does not explain the 50%.** Code `research/regime_split_study.py` (events, outcome, binomial test
+and trade bookkeeping reused from H45/H46); `tests/test_regime_split.py` (truncation of every regime array on 24h and
+cash-hours synthetic bars, ER and VR recomputed by hand from closed days only, R1 equal to evidence.py's recipe, fade =
+mirror of follow, bucket logic). Real bars: 0 mismatched regime arrays (8 markets x 2 cuts), 0 R1 mismatches against
+the evidence.py recipe. 25,196 events (the reference reproduces H46's table exactly: pday pooled follow 49.1% of 6,916
+/ 50.0% of 4,919). No-read events: only the volatility percentile on SPX (18 / 12) and Brent (10 / 10). Tests: 552
+per half (23 buckets x 2 sides x 2 levels x 6 scopes), Bonferroni 9.06e-5. Holdout not touched. Tercile cutoffs
+(first half): ER 0.137 / 0.305; volatility percentile 0.320 / 0.664; VR(5) 0.884 / 0.983.
+
+**Core question (follow side, pooled, trend bucket minus range bucket, first / second half):** R1 engine label
+(TRENDING any vs RANGE) pday +0.0 / -1.9 points, roll24 -0.3 / -2.3; R2 daily ADX >= 25 vs < 20 pday -2.7 (p 0.048) /
+-0.8, roll24 -2.3 / -1.2; R3 ER high vs low tercile pday -0.1 / -3.0, roll24 -0.4 / -1.3; R4 high vs low volatility
+pday -1.4 / -4.0 (p 0.019), roll24 -1.9 / -2.9; R5 VR high vs low pday -0.5 / -2.5, roll24 -0.9 / -2.1. **0 of 10
+contrasts significant in both halves** (none even nominally p < 0.05 in both). Where there is a lean, it is the
+REVERSE of the hypothesis: breaks in trending / high-ADX / high-volatility regimes continued slightly LESS often (about
+48-49.5%) than breaks in quiet / ranging regimes (about 50-52%). Hit rates (follow, first / second half, pday): R1e
+trending 49.4% / 48.7%, R1f RANGE 49.4% / 50.6%; R2a ADX >= 25 48.4% / 49.7%, R2e ADX < 20 51.1% / 50.5%; R4a high vol
+48.5% / 47.5%, R4c low vol 49.9% / 51.5%. So "fade in range" is not there either: fade in RANGE 50.6% / 49.3%, fade
+at ADX < 20 48.9% / 49.4%.
+
+Direction within trend (descriptive): breaks aligned with the trend did a little better than counter-trend breaks in
+the first half (R1a vs R1b +2.5 / +4.5 points, R3b vs R3c +4.8 / +4.3), not in the second (+4.0 / +1.6, -0.7 / +0.1),
+nothing significant. Per market group a few single cells reach p < 0.01 (crypto R4 second half -9.9; fx R3 roll24
+second half -14.8, R5 roll24 -11.9 / -14.0), all from small samples among 50 group contrasts (100 half-cells), none significant in both halves.
+
+Best pooled bucket by the lower half: roll24 R1b (TREND label counter to the break) FADED, 52.2% of 523 / 52.7% of
+355, far below 55% and the n bar. Buckets passing Bonferroni in both halves: 0 of 552. After costs (stop and target
+0.5 daily ATR, 72 h, own fee, one position per market) no bucket on either side is positive in >= 5 of 8 markets in
+the second half; the best pooled second-half results are pday R1d fade +0.030% a trade (55 trades), roll24 R1a fade
++0.007% (442), pday R1b fade +0.002% (345), i.e. zero. Every other bucket loses (follow -0.02% to -0.33%, fade
+-0.004% to -0.23% a trade).
+
+Reading: in this history a daily-level break is ~50/50 in every regime these five measures can name; the pooled 50% is
+not two opposite halves cancelling. Nothing goes forward as a book. The live scan (`py -3
+research/regime_split_study.py --scan`) prints each market's regime readings and today's breaks with their buckets,
+labelled paper / untested.
