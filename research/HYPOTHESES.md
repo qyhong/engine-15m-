@@ -1525,3 +1525,114 @@ silent voices drop out, in `backtest.prepare`, `leanprep.prepare_live` and `intr
 not selected by a test: I advised testing 30/40/50% first (H42 had found more balanced blends predicted marginally
 better but traded worse). The history comparison below is recorded for the review, not as a gate. Forward grading: the
 main books' live record from v5.2 on, compared at the 10 Dec review with v5.1.2's record before it.
+
+## H44. Range breaks with momentum, read against the daily ATR budget ("eagle view") (registered 16 Nov 2026, 04:40 UTC, before any H44 code existed or any H44 number was computed)
+
+**Prompted by:** the owner, 16 Nov 2026: "Do a research to see any pattern or any technical indicator can identify if
+the price range broke with momentum on the average range. There might be a trending/momentum up or down. With a
+confluence of eagle view of daily ATR on 15 minutes. Then spot the potential setup at 15 minutes time frame".
+
+**Interpretation (mine, stated before any number).**
+(1) A 15m **range break with momentum** = a 15m bar that CLOSES beyond a recent range, and whose true range is at least
+k x ATR(14, 15m) as it stood at the close of the bar BEFORE (so the break bar does not inflate its own yardstick).
+Ranges tried: the last N bars' high/low (N = 24 = 6 hours, or N = 12 = 3 hours; the bars before the break bar), the
+prior UTC day's high/low (first close beyond it), the UTC day's opening range (high/low of the day's first 4 bars on
+file, i.e. 00:00-01:00 UTC for crypto and the first cash hour for the S&P; breaks counted from the 5th bar, first close
+beyond it). A volume condition is NOT used: volume is not comparable across sources outside crypto (extdata
+VOLUME_NOTE; USDJPY has none).
+(2) The **eagle view** = the daily ATR(14) (Wilder, on UTC daily bars from `data.resample`, joined with
+`data.htf_on_15`: the last CLOSED day's value). At the break bar's close: **used** = (today's high - today's low so
+far, this bar included) / daily ATR; **room left** in the break direction = 1 - (close - today's low) / daily ATR for
+an up break (1 - (today's high - close) / daily ATR down); **position** in today's range = (close - low) / (high - low).
+(3) **Hypothesis:** breaks with momentum while the day has room left (used < 0.65) continue; breaks after the day has
+already used >= 1.0 daily ATR are exhausted (continuation fails or fades). Buckets: room-left used < 0.65, middle
+0.65-1.0, exhausted >= 1.0.
+
+**The trade (fixed now, common to every variant).** Decision at the break bar's close, fill at the next open (a fill
+that gaps beyond the stop is not taken). Stop = the break bar's close -/+ 1.0 x ATR(14, 15m) at that close (so 1R is
+about one 15m ATR). Exit E1 (the engine's "fixed"): half at 1R, the rest at 2R, the stop to entry from the bar after
+1R fills. Hold limit 16 bars (4 hours), then out at the next open. Same frame as every playbook: a stop and a target in
+one bar = stop first, a gap through the stop fills at the open, one trade at a time per market, $10,000 a trade, the
+market's own fee a side (`playbook.fee_side`: crypto 0.10%, gold 0.02%, silver 0.03%, USDJPY 0.01%, S&P 0.02%, WTI
+and Brent 0.04%). The simulator is `playbook.simulate` unchanged.
+
+**The variants (8, all counted):**
+
+| id | range | k | daily-ATR filter | exit | role |
+|---|---|---|---|---|---|
+| V1 | last 24 bars | 1.5 | room-left (used < 0.65) | E1 | candidate |
+| V2 | last 24 bars | 2.0 | room-left | E1 | candidate |
+| V3 | last 12 bars | 1.5 | room-left | E1 | candidate |
+| V4 | prior UTC day high/low | 1.5 | room-left | E1 | candidate |
+| V5 | opening range (first 4 bars) | 1.5 | room-left | E1 | candidate |
+| V6 | last 24 bars | 1.5 | room-left | half at 1R, rest at the day's room level (today's low + 1 daily ATR for a long, high - 1 daily ATR for a short; T1 + 1R if that is not 0.5R beyond T1) | candidate |
+| V7 | last 24 bars | 1.5 | EXHAUSTED (used >= 1.0) | E1 | contrast, not selectable |
+| V8 | last 24 bars | 1.5 | none | E1 | no-eagle-view control, not selectable |
+
+The pass bar compares the chosen variant with its **no-eagle twin**: the same rule with the daily-ATR filter removed,
+run through the same code (for V1 that is V8; for the others it is computed as a control, not counted as a variant).
+
+**Data:** the eight markets (BTCUSDT, ETHUSDT, XAUUSD, XAGUSD, USDJPY, SPX, WTI, BRENT) from `data.load`, rows before
+the sealed holdout 2025-11-11 00:00 UTC only (later rows dropped right after loading; never read). Trades count from
+2020-01-01 by entry time (2019 is warm-up). First half: entries before 2023-06-07 (the H6/H41 split). Second half:
+2023-06-07 to the seal.
+
+**Selection (first half only):** among V1-V6, the highest mean over markets (each with >= 20 first-half trades) of the
+first-half expectancy after costs (% of stake per trade), among variants with >= 100 first-half trades in all. Ties:
+the lower id. Nothing from the second half is used to choose.
+
+**Fixed pass bar (second half, the chosen variant):** all of (1) pooled 8-market net $ after costs > 0 with >= 100
+trades; (2) net $ > 0 in at least 5 of the 8 markets; (3) pooled profit factor >= 1.1; (4) pooled expectancy per trade
+after costs (% of stake) higher than its no-eagle twin's in the second half. A pass would be a reason to propose a
+forward paper book to the owner, not proof of an edge; no pass -> reported as such, nothing trades.
+
+**Descriptive table (reported whatever the result; pre-cost, events not trades, overlaps allowed):** for every break
+with momentum (each range at k 1.5, and the 24-bar range at k 2.0), by bucket (room-left / middle / exhausted) and
+half: count, forward return in the break direction from the next open to the close 4 / 8 / 16 bars later (in ATR15
+units and %), MFE and MAE over the 16 bars after entry (ATR15 units), and the share reaching +1 ATR15 before -1 ATR15
+from the entry within 16 bars (same bar = loss; neither = reported separately). Reference row: 24-bar breaks WITHOUT
+momentum (true range < 1.0 x ATR15).
+
+**Overlap to report:** the engine already reads `cs_used_x` (today's range / the 14-day average high-low range, card
+"Candle size and realistic targets"), `tq_sq_release` and `tq_bos` (card "Trend quality and squeeze") and `id_or`
+(opening-range position, card "Intraday levels"). H7 (breakout trap) faded first closes beyond the 48-bar / prior-day /
+swing levels; H44 trades WITH the break and only with momentum.
+
+**Prior, stated now:** 15m breakouts have been near zero before costs in this project's earlier tests (H7 faded them
+and lost about the cost); with a stop of about one 15m ATR the crypto round-trip fee is a large share of 1R. I do not
+expect a pass; the descriptive table is the main deliverable. Code: `research/rangebreak_study.py`, report
+`research/out/rangebreak/study.md` + `.json`; reading-only card `engine15/sources/adr.py` (not wired).
+
+### H44 results (16 Nov 2026, ~04:50 UTC; development data to 2025-11-11; `research/out/rangebreak/study.md`)
+
+**NO PASS.** Code: `research/rangebreak_study.py` (readings and the break definition from `engine15/sources/adr.py`,
+trades through `playbook.simulate` unchanged). Truncation check on real bars: 0 mismatched runs (726,536 signals compared
+over 8 markets x 13 rules x 2 cuts); `tests/test_rangebreak.py` checks the signal function the same way on synthetic
+24h and cash-hours bars. Variants tried: 8 (+5 no-eagle twins as controls). Holdout not touched.
+
+Chosen on the first half: **V4** (first close beyond the prior UTC day's high/low on a bar >= 1.5 x ATR15, day used
+< 65% of its daily ATR, half 1R / rest 2R), score -0.074% a trade (V1-V6 scores ran from -0.091% to -0.074%: all
+negative after costs). First half pooled: 4,946 trades, 47.0% won, +0.04R before / -0.31R after costs, -0.077% a trade,
+PF 0.61, net -$38,018. **Second half pooled: 3,504 trades, 40.0% won, -0.04R before / -0.51R after costs, -0.106% a
+trade, PF 0.38, net -$37,093; negative in all 8 markets.** Its no-eagle twin (same rule, no daily filter): 5,575
+trades, -0.108% a trade, net -$59,909. Bar: pooled positive NO; >= 5 of 8 markets NO (0); PF >= 1.1 NO; better per trade
+than the twin YES (by 0.002 points, i.e. nothing).
+
+What the daily ATR adds: nothing measurable. Room-left vs no filter, second half per trade: V1 -0.122% vs V8 -0.119%,
+V2 -0.124% vs -0.121%, V3 -0.119% vs -0.118%, V4 -0.106% vs -0.108%, V5 -0.107% vs -0.110%, V6 -0.118% vs -0.116%.
+The exhausted contrast V7 did NOT lose more before costs (-0.01R second half, +0.02R first) than room-left V1 (-0.04R,
+-0.01R); its stops are wider (median 0.35% vs 0.20% of price), so costs take 0.24R instead of 0.45R.
+
+Descriptive, pre-cost, all 2020-2025 dev events (24-bar box, k 1.5): room left (n 29,180) forward 16 bars +0.03 ATR15,
++1 ATR before -1 ATR 48.7%; middle (13,491) +0.01, 48.6%; exhausted (9,852) +0.10, 49.6%; MFE 2.6-2.8 vs MAE 2.3-2.6
+ATR15 over 16 bars. Every range (12/24-bar, prior day, opening range) and k 2.0 looks the same: a coin flip, and if
+anything the reverse of the hypothesis (exhausted breaks slightly better), small and not steady across halves. The one
+visible pattern is in the reference row: 24-bar breaks WITHOUT momentum on an exhausted day drifted back (-0.22 ATR15
+at 16 bars, 41% hit, first half; -0.06, 47% second half), not registered and not claimed.
+
+Why it fails as a trade: no gross edge, and a stop of one 15m ATR is small (median 0.2% of price), so the fee is
+0.3-0.45R a trade (crypto ~0.6R). Overlap: `cs_used_x` already reads the same "share of the day used" idea; H44's new
+pieces (room left per direction, the momentum-break flag) carry no history edge either. Nothing goes forward as a book.
+As the owner asked for data points, the reading-only card `engine15/sources/adr.py` ("Daily range budget and range
+breaks", voice `adr`, all eight markets) is built and tested but NOT wired into `sources.MODULES`; a live scan
+(`py -3 research/rangebreak_study.py --scan`) lists current breaks with their daily-ATR context, labelled untested.
