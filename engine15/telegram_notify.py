@@ -33,6 +33,16 @@ REFIT_LOGS = (os.path.join(ROOT, "research", "out", "rl", "forward5", "update.lo
               os.path.join(ROOT, "research", "out", "rl", "forward6", "update.log"))
 API = "https://api.telegram.org/bot%s/%s"
 STALE_MIN = 40
+DISK_LOW_GB = 3.0                                                     # warn when the data disk has less than this free
+
+
+def disk_free_gb(path=None):
+    """Free space (GB) on the disk that holds the engine's data; None if it cannot be read."""
+    try:
+        import shutil
+        return shutil.disk_usage(path or DATA_DIR).free / 1e9
+    except Exception:
+        return None
 SUMMARY_UTC = (0, 0)
 QUIET = ("p1_", "p2_", "p3_", "p6_vwap", "p7_session", "p8_", "p9_", "p10_", "p11_", "p12_")
 FORWARD = ("playbook4", "playbook5", "playbook6", "playbook7")
@@ -213,7 +223,11 @@ def summary(page, score, now=None):
     age = page_age_min(page, now)
     ok = age is not None and age <= STALE_MIN
     L = [head, u"%s Engine %s \u00b7 updated %s" % (OK if ok else WARN, _esc(page.get("version", "?")),
-                                                   "?" if age is None else "%.0f min ago" % age), ""]
+                                                   "?" if age is None else "%.0f min ago" % age)]
+    free = disk_free_gb()
+    if free is not None:
+        L.append(u"%s Server disk %.1f GB free" % (OK if free >= DISK_LOW_GB else WARN, free))
+    L.append("")
     rows, tot_open = [], 0.0
     for a, d in (page.get("assets") or {}).items():
         tr = d.get("trade") or {}
@@ -275,6 +289,14 @@ def check(st, tok, send=True, now=None):
     c, v, net = counts(score, page)
     cur = {"c": c, "v": v, "net": net, "refits": refit_marks()}
     ev = events(st, cur, page, now)
+    free = disk_free_gb()
+    if free is not None:                                              # server health: the data disk filling up
+        if free < DISK_LOW_GB and not st.get("disk_low"):
+            ev.append(u"%s <b>Server disk low</b>\nOnly %.1f GB free on the data disk. The engine stops writing when it is full."
+                      % (WARN, free))
+        elif free >= DISK_LOW_GB + 1 and st.get("disk_low"):
+            ev.append(u"%s <b>Server disk OK again</b>\n%.1f GB free." % (OK, free))
+        cur["disk_low"] = free < DISK_LOW_GB or (bool(st.get("disk_low")) and free < DISK_LOW_GB + 1)
     age = page_age_min(page, now)
     stale = bool(age is not None and age > STALE_MIN)
     day = now.strftime("%Y-%m-%d")

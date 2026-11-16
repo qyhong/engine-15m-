@@ -19,6 +19,11 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   the same key (`/data/mind15/tools/pull_answers.py`, cursor `/data/mind15/data/pull_cursor.json`). Estate files copied to
   `/data/estate`. NEVER start the laptop loop again while the service runs (two engines would overwrite the page).
   Status: `ssh -i ~/.ssh/minds15.pem ec2-user@13.251.40.113 "systemctl is-active mind15; tail -5 /data/mind15/live.log"`.
+  24/7 hardening (16 Nov 13:05 UTC): drop-ins `/etc/systemd/system/{mind15,mind15-telegram}.service.d/24x7.conf`
+  (RequiresMountsFor=/data, StartLimitIntervalSec=0: they wait for the data disk and never give up restarting);
+  `/etc/logrotate.d/mind15` rotates `/data/mind15/*.log` weekly (copytruncate, 8 kept). Crash test: SIGKILL between
+  steps, back in 30 s, next step on time. The Telegram bot warns when the data disk has under 3 GB free (it had
+  6.5 GB free of 24 GB; the reading cache `data/evcache` is 13 GB and the S&P cache is not built yet).
   Deploying code: commit on the laptop, `git archive HEAD | ssh ... "tar xf - -C /data/mind15"`, then
   `sudo systemctl restart mind15` between steps (right after a "step done" line). Research runs on the box too
   (`nice -n 5 /data/venv/bin/python research/<study>.py`; outputs copied back with scp). The laptop keeps the code, the

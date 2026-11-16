@@ -76,3 +76,16 @@ def test_chat_lock_summary_once_and_key_never_printed(monkeypatch, tmp_path, cap
 def test_no_key_file_means_waiting(tmp_path, monkeypatch):
     monkeypatch.setattr(tn, "TOKEN_FILE", str(tmp_path / "missing"))
     assert tn.token() is None
+
+
+def test_disk_low_alert_once_then_ok(monkeypatch):
+    monkeypatch.setattr(tn, "_load", lambda p, d=None: page() if p.endswith("page.json") else score())
+    monkeypatch.setattr(tn, "refit_marks", lambda: [0, 0])
+    monkeypatch.setattr(tn, "disk_free_gb", lambda path=None: 1.5)
+    st, ev = tn.check({}, None, now=NOW)
+    assert any("Server disk low" in e for e in ev) and st["disk_low"]
+    st, ev = tn.check(st, None, now=NOW)
+    assert not any("Server disk low" in e for e in ev)                # once, not every check
+    monkeypatch.setattr(tn, "disk_free_gb", lambda path=None: 6.0)
+    st, ev = tn.check(st, None, now=NOW)
+    assert any("disk OK again" in e for e in ev) and not st["disk_low"]
