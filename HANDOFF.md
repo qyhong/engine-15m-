@@ -23,8 +23,10 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   `sudo systemctl restart mind15` between steps (right after a "step done" line). Research runs on the box too
   (`nice -n 5 /data/venv/bin/python research/<study>.py`; outputs copied back with scp). The laptop keeps the code, the
   version history and a copy of the data, so it can take over again (its reading cache was deleted: a first laptop step
-  would rebuild it). Not yet on the box: the candle-forecast feed (available at
-  https://alphaprediction.ai/aitrading/forecasts.json; fetch at most once per step over HTTPS).
+  would rebuild it). The candle-forecast feed runs on the same box since 16 Nov 11:35 UTC (AI Trading Bot's systemd
+  `aitrading-forecast`, nice 10): `ENGINE15_KRONOS=/var/www/aitrading` (forecasts.json, news.json). nginx on the box serves
+  the new public host https://aitrading.alphaprediction.ai/ (page: /mind15/page.json); the old alphaprediction.ai/aitrading/
+  redirects there. The page is still PUSHED to the old web box over ssh until the AI Trading Bot session says otherwise.
 - **Telegram alerts (16 Nov 2026, owner: "Alerts + daily summary"):** `engine15/telegram_notify.py`, systemd service
   `mind15-telegram` on the box (log `/data/mind15/telegram.log`, state `data/telegram_state.json`). It only reads
   out/live/page.json, scoreboard.json and the RL refit logs. The bot key is a file the OWNER places at
