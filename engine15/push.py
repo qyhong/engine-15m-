@@ -24,8 +24,8 @@ import subprocess
 
 from .config import OUT_DIR
 
-KEY = os.path.expanduser("~/.ssh/flowerworlds.pem")
-HOST = "ec2-user@98.93.142.222"
+KEY = os.path.expanduser(os.environ.get("ENGINE15_PUSH_KEY", "~/.ssh/flowerworlds.pem"))   # the Singapore box uses its own key
+HOST = os.environ.get("ENGINE15_PUSH_HOST", "ec2-user@98.93.142.222")
 REMOTE_DIR = "/var/www/aitrading/mind15"
 # fixed, short; the file arrives on stdin
 REMOTE = ("cat > %(d)s/.page.json.tmp && mv -f %(d)s/.page.json.tmp %(d)s/page.json && "

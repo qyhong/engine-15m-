@@ -42,7 +42,8 @@ def pull(log=print, timeout=90):
         return None
     _last_pull[0] = time.time()
     try:
-        r = subprocess.run([sys.executable, PULL_TOOL], capture_output=True, text=True, timeout=timeout)
+        extra = ["--key", os.environ["MIND15_PULL_KEY"]] if os.environ.get("MIND15_PULL_KEY") else []   # Singapore box: own key
+        r = subprocess.run([sys.executable, PULL_TOOL] + extra, capture_output=True, text=True, timeout=timeout)
     except Exception as e:
         log("web answers: pull did not run (%r)" % (e,))
         return None
