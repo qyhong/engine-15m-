@@ -17,12 +17,15 @@ ESTATE = os.environ.get("ENGINE15_ESTATE", os.path.join(os.path.dirname(ROOT), "
 LIBRARY_JSON = os.path.join(ESTATE, "research", "local", "library", "strategy_library.json")
 
 # Said once in the journal (each market group's next entry) after "version" changes (live.step_group).
-VERSION_NOTE = ("think15-v5.2.2: six new reading-only crypto cards (Deribit options flow, Korea premium, CME gap from spot "
-                "prices, BTC dominance of a tracked basket, spot vs perp leadership, funding and open interest across "
-                "Binance, Bybit and OKX). They are recorded and graded; they do not vote, so the rules are unchanged.")
+VERSION_NOTE = ("think15-v5.2.3: six new reading-only cards for every market (daily range budget and range breaks, "
+                "Williams %R, Chaikin money flow and OBV, Elder-Ray, pivot points, RSI divergence). They are recorded and "
+                "graded; they do not vote, so the rules are unchanged.")
 
 CFG = {
-    "version": "think15-v5.2.2",      # v5.2.2 (15 Nov 2026): six crypto reading-only cards (sources/cryptox.py: Deribit options flow,
+    "version": "think15-v5.2.3",      # v5.2.3 (16 Nov 2026): six reading-only cards for every market: daily range budget and range
+                                      #   breaks (sources/adr.py) and card batch 3 (sources/osc4.py: Williams %R, Chaikin money flow/OBV,
+                                      #   Elder-Ray, pivot points, RSI divergence); owner "Yes". Rules and votes unchanged.
+                                      # v5.2.2 (15 Nov 2026): six crypto reading-only cards (sources/cryptox.py: Deribit options flow,
                                       #   Korea premium, CME gap (spot proxy), BTC dominance, spot vs perp, cross-exchange funding/OI);
                                       #   owner "Yes". Rules and votes unchanged.
                                       # v5.2.1 (15 Nov 2026): CCI card, 15m to daily, all markets, reading-only (sources/osc3.py);

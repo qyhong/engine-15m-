@@ -36,7 +36,8 @@ pipeline, a batch of up to five at a time. Nothing in it changes a trade until a
 | 2 | Parabolic SAR, Money Flow Index, Volume profile, Heikin-Ashi trend, Aroon/Vortex (`sources/osc2.py`) | live 15 Nov 2026 10:21 UTC (v5.1.2), reading-only |
 | 2b | CCI 15m-daily, all markets (`sources/osc3.py`), owner's request for metals | live 15 Nov 2026 as v5.2.1, reading-only |
 | 3c | Crypto: Deribit options flow, Korea premium, CME gap (spot proxy: no clean free CME price source), BTC dominance (tracked-basket proxy, reads ~6-7 points above a full-market figure), spot vs perp leadership, cross-exchange funding/OI (OKX only ~3 months free) (`sources/cryptox.py`) | owner "Yes" 15 Nov 2026; live as v5.2.2, BTC/ETH only, reading-only |
-| 3 | next five from the general queue | waiting for the owner's go |
+| 3 | Williams %R, Chaikin money flow / OBV divergence, Elder-Ray, pivot points, RSI divergence (`sources/osc4.py`) + the daily range budget card (`sources/adr.py`, from H44) | owner "Yes" 16 Nov 2026; live as v5.2.3, reading-only |
+| 4 | next five (to be proposed) | waiting for the owner's go |
 
 ## Queue for batch 3 (proposed by Claude, 15 Nov 2026; the owner edits freely)
 

@@ -2059,3 +2059,128 @@ H44-H48 family is USDJPY's, and it does not carry to USDSGD, so it should be rea
 FX rule, and it does not pay its costs. Nothing goes forward as a book. Live scan `py -3
 research/session_break_study.py --scan` (paper / untested; USDSGD and NDX scans are stale because the Kronos store
 ends 5-6 Nov 2026).
+
+## H49. The EXHAUSTION FADE: weak new extremes on a day that has already used its daily ATR (registered 16 Nov 2026, 06:25 UTC, before any H49 code existed or any H49 outcome was computed)
+
+**Prompted by:** H44's descriptive reference row (NOT registered there, not claimed): 24-bar breaks WITHOUT momentum
+(true range < 1.0 x ATR15) on a day that had already used >= 100% of its daily ATR drifted back (-0.22 ATR15 at 16
+bars, +1 before -1 ATR15 in 41% of events, first half; -0.06 and 47% in the second half). The owner approved H49 on
+16 Nov 2026: FADE the weak, late push on an exhausted day. The idea came from looking at H44's table (both halves), so
+H49 is a follow-up test of a pattern already seen in this development data, not a fresh out-of-sample test; I state
+that now.
+
+**Definitions (fixed now; readings from `engine15/sources/adr.py` `readings`, as H44-H48).** Daily ATR D = Wilder
+ATR(14) on UTC daily bars, the value of the last CLOSED day (through `data.htf_on_15`), held for the whole UTC day.
+**used** at bar i = (today's high - today's low over today's bars up to and including bar i) / D (adr's `used`; only
+bars up to the event bar). ATR15 = Wilder ATR(14) on 15m; **bar_x** = bar i's true range / ATR15 as of bar i-1. Side
+s = +1 for an up push (the fade is SHORT), -1 for a down push (the fade is LONG).
+- **Level "run" (running day extreme):** bar i's close > the highest high of today's bars BEFORE bar i (up), or < the
+  lowest low of today's earlier bars (down). Needs at least one earlier bar today.
+- **Level "pday":** a fresh close beyond the prior UTC day's high / low (close_i > pdh and close_{i-1} <= pdh; mirror
+  for down), as adr's `breaks('pday')` without the momentum condition.
+- **Qualifying bar:** level condition AND used >= U AND bar_x < K (the weak push) AND D > 0 AND ATR15 > 0.
+- **Event:** the FIRST qualifying bar of the UTC day per direction (at most one up and one down event per day per
+  variant). With **confirmation**, the event is the first qualifying bar of the day per direction whose NEXT bar (same
+  UTC day) closes back: for "run" below the push bar's close (up; above for down), for "pday" back inside the level
+  (close < pdh up; > pdl down); the decision is then at the confirmation bar's close. The decision bar is called i_dec.
+  An event needs its entry bar (i_dec + 1) in the same UTC day; else it is dropped and counted.
+
+**The variants (8, every one counted; there is no selection step: the pass bar applies to each):**
+
+| id | level | exhaustion U | momentum ceiling K | confirmation | stop | target |
+|---|---|---|---|---|---|---|
+| X1 | run | 1.0 | 1.0 | no | day extreme + 0.25 ATR15 | 0.5 D |
+| X2 | run | 1.3 | 1.0 | no | day extreme + 0.25 ATR15 | 0.5 D |
+| X3 | run | 1.0 | 0.7 | no | day extreme + 0.25 ATR15 | 0.5 D |
+| X4 | run | 1.0 | 1.0 | yes | day extreme + 0.25 ATR15 | 0.5 D |
+| X5 | pday | 1.0 | 1.0 | no | day extreme + 0.25 ATR15 | 0.5 D |
+| X6 | pday | 1.0 | 1.0 | yes | day extreme + 0.25 ATR15 | 0.5 D |
+| X7 | run | 1.0 | 1.0 | no | day extreme + 0.25 D | the day's midpoint |
+| X8 | run | 1.3 | 1.0 | yes | day extreme + 0.25 D | the day's midpoint |
+
+X7 has the same events as X1 (only the trade differs), so its hit rate equals X1's; it is still counted as a test.
+
+**The trade (registered, per variant).** Decision at i_dec's close; entry at the next 15m open AGAINST the push (side
+-s), only if that bar is in the same UTC day. Day extreme = today's high (up push) / low (down push) up to and
+including i_dec. Stop = day extreme + s x 0.25 x ATR15 (ATR15 at i_dec) or + s x 0.25 x D, as the table says.
+Target = entry - s x 0.5 x D, or the day's midpoint (today's high + low) / 2 at i_dec; a midpoint nearer than 0.25 D
+to the entry is replaced by entry - s x 0.25 D (H45's floor). VWAP is NOT used: USDJPY has no volume after its source
+join and the other non-crypto volumes change source (extdata VOLUME_NOTE). A fill that opens beyond the stop is not
+taken. Inside a bar the stop is checked first; an open beyond the stop or the target fills at that open. Time exit:
+the close of the last bar of the event's UTC day (H48 B's rule; for SPX the cash session's last bar). One position per
+market at a time per variant, $10,000 a trade, each market's own fee a side (`playbook.fee_side`).
+
+**Primary statistic (H46's symmetric outcome, mirrored for the fade).** From the entry (next open), fade hit = price
+reaches entry - s x 0.5 D before entry + s x 0.5 D, using bars from the entry bar to the last bar of the event's UTC
+day (`session_break_study.outcome_window` with side -s). A bar touching both = miss; neither = unresolved, excluded
+from the hit rate and counted. Chance ~50% (slightly below for a driftless walk). **Secondary (descriptive, not a
+test):** the same over 72 h (`confluence_study.outcome(R, i_dec, -s, D)`, unchanged).
+
+**Data and split (H44-H48's, exactly):** BTCUSDT, ETHUSDT, XAUUSD, XAGUSD, USDJPY, SPX, WTI, BRENT from `data.load`
+(`rangebreak_study.load_dev`), rows before the sealed holdout 2025-11-11 00:00 UTC only (dropped right after loading,
+never read); events with entry from 2020-01-01; first half = entry before 2023-06-07, second half = from it to the seal.
+
+**Count and test.** Scopes: pooled + the 5 market groups (crypto, metals, fx, index, energy) = 6. Tests per half:
+8 variants x 6 scopes = **48**; Bonferroni threshold p < 0.05 / 48 = 1.04e-3 (exact two-sided binomial against 50%,
+`confluence_study.binom_p`). Per-market cells and the 72 h outcome are reported with nominal p and are NOT tests (no
+condition below reads them). Family so far: H44 (6 selectable + 1 contrast + 6 controls), H45 (4 + 4 controls), H46
+(384 bucket tests), H47 (552), H48 (7 variants, 33 tests), H49 (8 variants, 48 tests); earlier related fade: H7
+(breakout trap, faded first closes beyond 48-bar / prior-day / swing levels; lost about its costs).
+
+**Fixed pass bar (each variant):** ALL of (1) pooled fade hit rate >= 55% in BOTH halves; (2) >= 200 resolved events
+pooled in EACH half; (3) pooled binomial p < 1.04e-3 in BOTH halves; (4) the registered trade, second half: pooled net $
+after costs > 0 AND pooled profit factor >= 1.1; (5) in the second half at least 5 of the 8 markets have net $ > 0 AND
+profit factor >= 1.1 (a market with no trades does not count). A pass is a reason to ask the owner about a forward
+PAPER book, not proof of an edge; nothing is built or wired here. **Reported variant ("chosen"):** among passing
+variants the highest lower-of-two-halves pooled hit rate; if none passes, the variant with the highest lower-of-two-
+halves pooled hit rate among those with >= 200 resolved per half (for the write-up only).
+
+**Reported whatever the result:** every variant's fade hit rate (day and 72 h), resolved / unresolved counts and p, per
+half, pooled, per market group and per market; every variant's trade (trades, win %, R before / after costs, % of stake
+a trade, PF, net $) per half pooled, per group and per market; events and trades per month; dropped events.
+
+**Look-ahead guard:** `tests/test_exhaustion.py` truncates synthetic 24h and cash-hours bars and checks the event
+function returns the same events (i_dec, side, used, day extreme, stop/target inputs) on every row before the cut;
+recomputes the running extreme and `used` by hand from bars up to the event bar only; checks the confirmation event is
+decided at the confirmation bar; checks the day-end outcome and the trade frame. The same truncation check runs on the
+real bars of every market in the study.
+
+**Prior, stated now:** the H44 drift was small (0.06-0.22 ATR15, i.e. a few hundredths of a daily ATR) and weaker in the
+second half; at a +/- 0.5 daily ATR scale within the remaining day I expect fade hit rates of 50-54%, many unresolved
+events, and no pass. The tight stops (0.25 ATR15 beyond the extreme) make costs a large share of 1R, worst in crypto
+(0.10% a side). Code `research/exhaustion_study.py`, report `research/out/exhaustion/study.md` + `.json`.
+
+### H49 results (16 Nov 2026, ~06:30 UTC; development data to 2025-11-11; `research/out/exhaustion/study.md`)
+
+**NO PASS. No variant reached 55% in both halves, and none made money after costs in the second half.** Code
+`research/exhaustion_study.py` (readings from `adr.readings`, the day-end outcome from `session_break_study.outcome_window`,
+the 72 h outcome from `confluence_study.outcome`, both unchanged); `tests/test_exhaustion.py` (truncation on 24h and
+cash-hours synthetic bars; the running extreme, `used` and the event checked by hand bar by bar from bars up to the
+event bar only; confirmation decided at the confirmation bar; trade frame, day-end outcome, one position per market).
+Real bars: 0 mismatched truncation runs on all 8 markets (15,952 events compared). 8 variants, 48 tests per half,
+Bonferroni 1.04e-3. Holdout not touched. Sanity: on BTC, 838 of 2,141 days reach >= 100% of the daily ATR, but only
+126 of them have a WEAK bar (TR < 1 x ATR15) closing at a new extreme after that: late new extremes are mostly made by
+big bars, so the events are rare (pooled 10-30 a month across 8 markets).
+
+**Pooled fade hit rate within the day (first / second half, resolved n; most events do not resolve by the day's end,
+68% unresolved for X1):** X1 (running extreme, used >= 100%, TR < 1.0 ATR15) 55.2% (337) / 45.0% (269); X2 (used >=
+130%) 59.0% (183) / 48.2% (137); X3 (TR < 0.7) 56.6% (83) / 48.9% (90); X4 (X1 + next bar closes back) 56.9% (209) /
+50.6% (174); X5 (prior-day level) 47.0% (181) / 47.1% (104); X6 (X5 + back inside) 46.1% (65) / 60.0% (40); X7 = X1's
+events; X8 (used >= 130% + confirmation) 61.0% (105) / 46.5% (99). The first half leans the fade's way (55-61% on the
+running-extreme variants, p 0.02-0.06, none past Bonferroni); the second half is at or below 50% everywhere except
+X6 (40 resolved). 0 of 48 cells pass Bonferroni in both halves. 72 h (secondary): 49-55% first, 51-58% second. The
+H44 drift is therefore a first-half pattern that did not hold: the second-half failure is mostly UP pushes (fade
+short) in a period of strong uptrends (X1 up pushes 55.4% / 41.0%, down pushes 54.9% / 52.1%; metals 36% in the second
+half).
+
+**After costs (registered trade, second half pooled):** X1 889 trades, -0.048% a trade, PF 0.70, net -$4,249, all 8
+markets negative; X2 -0.034%, -$1,507 (SPX the only market net > 0 with PF >= 1.1); X3 -$1,540; X4 -$3,232 (Brent);
+X5 -$3,819; X6 158 trades, +0.004% a trade, PF 1.02, +$69 (3 markets); X7 -$6,814; X8 -$2,917 (BTC). First half:
+X2 +$1,655 (PF 1.17), X7 +$2,279 (1.07), X8 +$4,512 (1.38) were positive, and all three turned negative in the second
+half. The tight-stop variants (X1-X4, median stop 0.05-0.14 daily ATR) had small positive gross results (+0.02% to
++0.10% a trade, R before costs +0.05 to +0.38) but costs took 0.2-0.6 R a trade; of the wider-stop variants (X5-X8)
+X5, X7 and X8 were slightly negative before costs in the second half, X6 +0.10% a trade gross on 158 trades.
+
+Reading: fading a weak new extreme on a day that has used its daily ATR looked useful in 2020-mid 2023 and did not in
+mid 2023-2025; the H44 hint does not survive as a rule. Nothing goes forward as a book. Live scan `py -3
+research/exhaustion_study.py --scan` (paper / untested).

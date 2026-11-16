@@ -82,4 +82,4 @@ def test_describe_and_not_wired():
     assert "no read" in adr.describe(f.iloc[0], "TEST")[title]
     assert adr.update() == {}
     from engine15 import sources
-    assert "adr" not in sources.MODULES
+    assert "adr" in sources.MODULES                                      # wired as think15-v5.2.3 (16 Nov 2026)
