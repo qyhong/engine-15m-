@@ -33,3 +33,9 @@ research/out/rl/forward6/
 
 # never: bot keys
 secrets/
+
+# server backups pulled to the laptop (tools/backup_pull.py)
+/backup/
+
+# agent worktrees
+/.claude/

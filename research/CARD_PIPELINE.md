@@ -37,7 +37,8 @@ pipeline, a batch of up to five at a time. Nothing in it changes a trade until a
 | 2b | CCI 15m-daily, all markets (`sources/osc3.py`), owner's request for metals | live 15 Nov 2026 as v5.2.1, reading-only |
 | 3c | Crypto: Deribit options flow, Korea premium, CME gap (spot proxy: no clean free CME price source), BTC dominance (tracked-basket proxy, reads ~6-7 points above a full-market figure), spot vs perp leadership, cross-exchange funding/OI (OKX only ~3 months free) (`sources/cryptox.py`) | owner "Yes" 15 Nov 2026; live as v5.2.2, BTC/ETH only, reading-only |
 | 3 | Williams %R, Chaikin money flow / OBV divergence, Elder-Ray, pivot points, RSI divergence (`sources/osc4.py`) + the daily range budget card (`sources/adr.py`, from H44) | owner "Yes" 16 Nov 2026; live as v5.2.3, reading-only |
-| 4 | next five (to be proposed) | waiting for the owner's go |
+| 4 | Fisher Transform, Ultimate Oscillator, TRIX, Linear-regression channel, Mass Index (`sources/osc5.py`) | owner "let's continue pending tasks" 17 Nov 2026; wired as v5.2.4 (17 Nov 2026), reading-only |
+| 5 | next five (to be proposed) | waiting for the owner's go |
 
 ## Queue for batch 3 (proposed by Claude, 15 Nov 2026; the owner edits freely)
 
@@ -51,3 +52,8 @@ Not yet read anywhere in the engine (check with grep before building), one per f
 
 Later candidates: Keltner position, Donchian breakouts as a card, ADX/DMI as its own card, Ichimoku on daily,
 liquidation history (paid, owner said "Not now").
+
+Note (17 Nov 2026): Keltner, Bollinger, ADX/DMI and TTM squeeze are already read in `sources/ltf.py`, Ichimoku and
+Kaufman efficiency in `sources/trendtools.py`, Donchian in `evidence.py`; so batch 4 took five families read nowhere:
+Fisher Transform, Ultimate Oscillator, TRIX, Linear-regression channel, Mass Index. Still unread for batch 5: Hurst
+exponent, Choppiness Index, Chande momentum, Coppock curve, Ulcer index.
