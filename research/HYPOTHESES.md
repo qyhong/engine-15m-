@@ -2621,3 +2621,27 @@ propose the next step to the owner, not proof of an edge. Counted as one variant
 
 **Preview only:** signal cards and follow-ups go to the owner's own Telegram chat, labelled as a subscriber preview.
 No subscriber channel exists; nothing is sold; paper only.
+
+### H53 amendment (17 Nov 2026, 04:55 UTC; before the preview was deployed and before any live S1 signal existed)
+Forced by how the page works, not chosen from a result. Disclosed: before writing this I had seen a mechanics-only replay
+of 11-17 Nov records through the finished code (24 signals, 11 filled, 9 of them won); those numbers are not the
+registered record and nothing below was picked because of them.
+- **Bar A.** The registration said bar A is "the bar whose open is the book's fill". That cannot happen: the page shows a
+  `b_targets` position only after its fill bar F has closed (`shadows.advance` works on closed bars), so the alert goes
+  out in bar F+1 at the earliest. **Bar A is the bar in which the alert is actually sent.** Bars F to A never fill, and a
+  stop or Target 1 trading in bars F to A also voids the signal. A subscriber therefore hears of a signal at least one
+  full bar (15 minutes) after the book entered, not about four minutes.
+- **Rule 4** in practice: the followable exit is at the open of the first bar after the exit alert's bar, which is two bars
+  after the book's own exit, not one.
+- **Conservative readings fixed with it:** in the bar that takes Target 1 the stop at E is live at once (if that bar also
+  holds E, the rest closes at E); a bar wholly on the favourable side of E without touching it is not a fill; the four
+  bars are the four 15-minute slots after A (a later bar after a session gap does not fill); a position already showing
+  Target 1 taken when first seen is sent as "do not enter" and counts as no fill; "$10,000 a signal" is $10,000 notional
+  without leverage (% and R are what subscribers see; the verdict is on $ at equal size, the same as on %); a position
+  that opens and closes inside its own fill bar never shows as open and is never a signal, so the "book result of the same
+  signals" leaves such instant stop-outs out (said wherever that comparison is shown); a signal counts only once its card
+  was delivered.
+- **Not changed:** the limit at E, the four-bar window, the half/half exit, the costs, the judgement on live followable
+  results only, and the commercial gate (100 signals, 60 days, "ahead").
+- **Follows from it (not part of S1):** the engine knows a `b_targets` entry one bar before the page shows the position;
+  publishing the signal at decision time would be a different, earlier signal and would be registered as its own book.
