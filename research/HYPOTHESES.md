@@ -2655,3 +2655,15 @@ live record with its trade count; **the gate (100 signals over 60 days and "ahea
 condition for charging money for it.** H53's grading is unchanged: live followable signals only, from 2026-11-17 04:58 UTC.
 The page is the site sessions' work; this project supplies `out/live/setups.json` (a pure function of the page and the S1
 log; no new rule, no change to any book).
+
+### H53 note 2: the owner drops the charging gate for the Setups page (17 Nov 2026, 05:05 UTC)
+The website serves its data behind a paywall (members with a plan). Asked in this session whether Setups should be free
+while experimental ("Free for now", my recommendation), "Included for paying members", or members-only labelled beta, the
+owner chose **"Included for paying members"**: Setups sits behind the existing paywall from day one, as part of the plan
+members already pay for. This replaces the earlier "Launch now, gate for charging" for the Setups page: **the commercial
+gate of H53 (100 signals over 60 days and "ahead") no longer conditions selling the Setups page.** It is the owner's
+decision against my recommendation; recorded as such. Unchanged: S1's rules and its grading on live followable signals
+only (from 2026-11-17 04:58 UTC); the record and its trade count are shown on the page; nothing is described as a proven
+edge; the question whether selling trade signals is a regulated activity is the owner's to settle with a lawyer. The
+gate's numbers remain the bar for any claim that S1 "works", and for the Telegram signal product, which is still a
+preview to the owner's chat only.

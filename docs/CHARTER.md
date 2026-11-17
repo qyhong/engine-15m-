@@ -302,5 +302,7 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
 - **Subscriber product (owner, 17 Nov 2026):** subscribers "only want to know trade opportunity", not the research.
   Signal book S1 = `b_targets` scored the way a person can follow it (H53, with its 17 Nov amendment); preview cards go
   to the owner's chat only ("Yes, build preview"; the card "look ok"). The site gets a main page "Setups" fed by
-  `out/live/setups.json`; the owner's ruling: **"Launch now, gate for charging"** (the page is public now, experimental
-  and paper-only; nothing is charged for it before 100 signals over 60 days and an "ahead" followable record).
+  `setups.json`; the owner's rulings, in order: "no, launch now" (to the site session), then here "Launch now, gate
+  for charging", then, told the site serves data behind its paywall, **"Included for paying members"**: Setups is
+  part of the paid plan from day one; H53's gate no longer conditions selling the Setups page (against my
+  recommendation "Free for now"). S1's grading is unchanged and the Telegram signal product stays an owner-only preview.
