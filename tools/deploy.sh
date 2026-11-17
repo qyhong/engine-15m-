@@ -40,7 +40,17 @@ for i in $(seq 1 120); do
 done
 
 echo "== 3/4 unpacking the commit on the box"
-git archive HEAD | "${SSH[@]}" 'tar xf - --no-overwrite-dir -C /data/mind15 && /data/venv/bin/python -m compileall -q /data/mind15/engine15 >/dev/null; echo unpacked'
+# tar may complain about the mode or time of a folder the service user owns: that is harmless, so its exit code is not
+# trusted either way. What counts is the check below: every engine file on the box must equal the commit, byte for byte.
+git archive HEAD | "${SSH[@]}" 'tar xf - --no-overwrite-dir -C /data/mind15 2>&1 | grep -v -E "Cannot (change mode|utime)|Exiting with failure" ; /data/venv/bin/python -m compileall -q /data/mind15/engine15 >/dev/null; echo unpacked'
+FILES=$(git ls-files engine15 | grep '\.py$' | LC_ALL=C sort)
+WANT_SUMS=$(for f in $FILES; do printf '%s  %s\n' "$(git show "HEAD:$f" | sha256sum | cut -d' ' -f1)" "$f"; done)
+HAVE_SUMS=$(printf '%s\n' "$FILES" | "${SSH[@]}" 'cd /data/mind15 && xargs sha256sum' 2>&1) || true
+if [ "$WANT_SUMS" != "$HAVE_SUMS" ]; then
+  echo "STOP: the engine files on the box do not match the commit (the engine has NOT been restarted and still runs the old code in memory):"
+  diff <(echo "$WANT_SUMS") <(echo "$HAVE_SUMS") | head -10; exit 1
+fi
+echo "   $(echo "$FILES" | wc -l) engine files on the box match the commit"
 
 echo "== 4/4 restarting the engine and the Telegram bot"
 "${SSH[@]}" "sudo systemctl restart mind15 mind15-telegram; sleep 8; a=\$(systemctl is-active mind15); b=\$(systemctl is-active mind15-telegram); v=\$(cd /data/mind15 && /data/venv/bin/python -c \"from engine15.config import CFG; print(CFG['version'])\"); echo \"engine: \$a   telegram bot: \$b   version on the box: \$v\"; [ \"\$a\" = active ] && [ \"\$b\" = active ] && [ \"\$v\" = '$WANT' ]" \

@@ -74,6 +74,7 @@ for d in $OWNED; do sudo mkdir -p $M/$d; done
 for d in $SHARED; do sudo chgrp -R mind15 $M/$d; done
 for d in $OWNED; do sudo chown -R mind15:mind15 $M/$d; done
 for d in $OWNED $SHARED; do sudo chmod -R g+rwX $M/$d; sudo find $M/$d -type d -exec chmod g+s {} +; done
+sudo chown ec2-user:mind15 $M/research/out/rl          # this folder itself is in git: a deploy's tar must be able to set its mode
 sudo chown -R ec2-user:mind15 $M/secrets; sudo chmod 750 $M/secrets; sudo chmod 640 $M/secrets/*   # the bot reads its key through the group
 sudo chgrp mind15 $M/mind15.env; chmod 640 $M/mind15.env
 sudo chmod -R go-w $M/engine15 $M/tools $M/tests $M/configs $M/docs $M/web /data/venv
