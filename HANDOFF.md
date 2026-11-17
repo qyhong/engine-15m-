@@ -53,6 +53,14 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   its own market without a read; alert once, recovery once), and a weekly live-calibration card with `/calibration`
   (`engine15/livecheck.py` re-grades each stated call with the engine's own triple-barrier rule on the bar files and
   checks it against `graded_now`). The bot replaces the forecast model's name as the page does.
+- **Subscriber signal preview (17 Nov 2026, owner "Yes, build preview"; H53, signal book S1):** `engine15/signals.py`,
+  run inside the bot's check. Source: the shadow book `b_targets` (`page["shadows"]["books"]["b_targets"]["assets"]`);
+  a signal = a new open position; the FOLLOWABLE record (limit at the book's entry, four bars after the alert bar, half
+  at Target 1, rest at Target 2) is the one judged; rules and the 17 Nov amendment are in `research/HYPOTHESES.md` H53
+  and must not be tuned. State `data/signals_state.json`, log `data/signals_log.jsonl` (the registered record: live
+  since 2026-11-17 04:58 UTC; positions open then were not signalled). PREVIEW: every card goes only to the owner's
+  chat, first line "Subscriber preview"; no channel exists; commercial gate = 100 signals, 60 days, "ahead".
+  Commands `/signals`, `/record`. Subscriber cards never name books, research or the server.
 - **Backups (17 Nov 2026):** `tools/backup_pull.py`, Windows scheduled task "Mind15 server backup" daily 12:00 SGT:
   one tar over ssh of journal, out/live, data (no evcache/raw), RL forward books and logs into `backup/server/`
   (git-ignored), 7 kept, taken in a gap between steps, rejected if a bar or state file is empty.
@@ -76,8 +84,8 @@ hosts/scripts/fonts, no innerHTML, the word Kronos never appears (export.py repl
 ## Memory
 8 GB laptop. Old live step: `backtest.prepare` over all history every 15 minutes, about 5-6 GB per step
 (crypto). **Lean step** (`ENGINE15_LEAN=1` before `py -3 -m engine15 live`; off by default until the owner's
-session switches it on): `engine15/evcache.py` keeps each group's readings and X on disk in
-`data/evcache/<group>/` (memory maps, about 11 GB for all five groups; pre-built 11 Nov ~16:10 UTC). `engine15/leanprep.py` caches the
+session switches it on): `engine15/evcache.py` keeps each group's readings on disk in
+`data/evcache/<group>/` (memory maps). Since 17 Nov 2026 (layout 2) the feature matrix X is NOT stored: it is rebuilt row by row from the stored reading columns, and every write checks bit for bit that the store gives back the matrix (a mismatch = StoreError, the step falls back to the full prepare and says so). Before that X.bin was a third of the store (15 GB at v5.2.4). Each step logs `timing <group>: ...` and `timing step: ...` lines (where the time went). `engine15/leanprep.py` caches the
 weekly refits in `data/evcache/<group>/fits/`. A step computes only new rows plus a 30-day refresh, and runs
 a full check of the learning rows once a UTC day. Peaks: crypto about 1.3 GB per step and 1.5 GB on the
 daily check, metals 1.1 GB. A first build after a code or config change rebuilds the store in pieces: crypto
