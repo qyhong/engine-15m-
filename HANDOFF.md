@@ -53,8 +53,9 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   its own market without a read; alert once, recovery once), and a weekly live-calibration card with `/calibration`
   (`engine15/livecheck.py` re-grades each stated call with the engine's own triple-barrier rule on the bar files and
   checks it against `graded_now`). The bot replaces the forecast model's name as the page does.
-  Since 17 Nov 2026 the bot shows every paper-book dollar amount at 100x (`DISPLAY_X`, env `MIND15_TG_DISPLAY_X`), matching the
-  website's display-only 100x (owner: "Enlarge the capital by 100 times"; for the bot "Scale the bot 100x too"). The engine's
+  Since 17 Nov 2026 the bot shows every paper-book dollar amount at 15x (`DISPLAY_X`, env `MIND15_TG_DISPLAY_X`; first 100x, then
+  "Lets adjust 100x to 15x. So it is at 1mil usd range"), matching the
+  website's display-only scaling (owner: "Enlarge the capital by 100 times"; for the bot "Scale the bot 100x too"). The engine's
   files keep the real figures; never rescale page.json or setups.json (the pages already multiply). The owner chose to
   keep the word "edge" in engine sentences and let the website relabel it ("Leave it to the website"); tell the AI Trading
   Bot session before adding any new engine sentence with "edge" or book money in it.

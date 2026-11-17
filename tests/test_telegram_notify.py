@@ -43,7 +43,7 @@ def test_alerts_from_changes():
     prev = {"c": c0, "v": v0, "net": n0, "refits": [1, 1], "stale": False}
     c1, v1, n1 = tn.counts(score(23, 5200.0), page())
     ev = tn.events(prev, {"c": c1, "v": v1, "net": n1, "refits": [2, 1]}, page(), NOW)
-    assert any("B trail (shadow)" in e and "closed 1 trade" in e and "+$22,200" in e for e in ev)
+    assert any("B trail (shadow)" in e and "closed 1 trade" in e and "+$3,330" in e for e in ev)
     assert any("Phase 5" in e for e in ev)
     c2, v2, n2 = tn.counts(score(30, 6000.0), page())
     ev2 = tn.events({"c": c1, "v": v1, "net": n1, "refits": [2, 1]}, {"c": c2, "v": v2, "net": n2, "refits": [2, 1]}, page(), NOW)
@@ -60,7 +60,7 @@ def test_stale_and_fresh_again():
 
 def test_summary_text():
     s = tn.summary(page(), score(), NOW)
-    assert "daily summary" in s and "BTC" in s and "SHORT" in s and "+$120k" in s and "B trail" in s and "+$25,000" in s and "<pre>" in s
+    assert "daily summary" in s and "BTC" in s and "SHORT" in s and "+$18.0k" in s and "B trail" in s and "+$3,750" in s and "<pre>" in s
 
 
 def test_chat_lock_summary_once_and_key_never_printed(monkeypatch, tmp_path, capsys):
@@ -414,8 +414,9 @@ def test_a_bar_file_caught_mid_write_is_said_once_and_changes_nothing(monkeypatc
     assert len(calls) == 3 and "Target 1 hit" in calls[2]["text"] and calls[2]["reply_to_message_id"] == 701
 
 
-def test_dollars_display_at_100x_and_tables_stay_narrow():
-    assert tn._usd(222.0) == "+$22,200" and tn._usd(-1368.0) == "-$136,800"
-    assert tn._usd_short(9.5) == "+$950" and tn._usd_short(123.4) == "+$12.3k" and tn._usd_short(-1368.0) == "-$137k"
-    assert tn._usd_short(12400.0) == "+$1.24M"
+def test_dollars_display_at_15x_and_tables_stay_narrow():
+    assert tn.DISPLAY_X == 15
+    assert tn._usd(222.0) == "+$3,330" and tn._usd(-1368.0) == "-$20,520"
+    assert tn._usd_short(60.0) == "+$900" and tn._usd_short(1000.0) == "+$15.0k" and tn._usd_short(-9120.0) == "-$137k"
+    assert tn._usd_short(80000.0) == "+$1.20M"
     assert max(len(tn._usd_short(x)) for x in (9.5, 123.4, -1368.0, 12400.0, -99999.0)) <= 9

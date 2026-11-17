@@ -112,10 +112,11 @@ def _call(tok, method, payload, timeout=20):
         return {"ok": False, "description": "HTTP %s" % r.status_code}
 
 
-# Owner, 17 Nov 2026: the website shows paper-book dollars at 100x ("Enlarge the capital by 100 times"); asked whether this bot
-# should match, the owner chose "Scale the bot 100x too". Display only: every paper-book dollar amount the bot prints goes
-# through _usd; percentages, win rates, prices and points are unchanged, and the engine's files keep the real figures.
-DISPLAY_X = float(os.environ.get("MIND15_TG_DISPLAY_X", "100"))
+# Owner, 17 Nov 2026: the website shows paper-book dollars enlarged ("Enlarge the capital by 100 times"), the bot matches
+# ("Scale the bot 100x too"); later the same day: "Lets adjust 100x to 15x. So it is at 1mil usd range". Display only: every
+# paper-book dollar amount the bot prints goes through _usd; percentages, win rates, prices and points are unchanged, and
+# the engine's files keep the real figures.
+DISPLAY_X = float(os.environ.get("MIND15_TG_DISPLAY_X", "15"))
 
 
 def _usd(v):
