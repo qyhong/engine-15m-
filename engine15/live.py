@@ -15,6 +15,9 @@ One step, in order:
                (the mandate in policy.py), from the state the last step left.
   4. JOURNAL   one entry per coin per session into journal/<day>.jsonl and .md.
   5. PUBLISH   out/live/page.json for the web tab (export.py).
+Steps 1 to 5 run once per market group, one group after another. With ENGINE15_PARALLEL=N (N >= 2;
+parallel.py) up to N groups fetch and think at the same time, each in a process of its own, and decide,
+journal and publish one at a time in the same fixed order: the same files, sooner.
 Nothing here places an order anywhere. It reads public market data and writes local files.
 """
 import json
@@ -300,7 +303,16 @@ def step(log=print, fetch=True):
         log("reports: %r" % (e,))
     tm.lap("reports")
     out, page = [], None
-    for g, assets in universes():
+    todo, par = universes(), parallel_workers()
+    if par:                                                        # ENGINE15_PARALLEL >= 2: the groups think at the same
+        done = []                                                  # time (parallel.py); a group it could not step is left
+        try:                                                       # for the loop below, which is the step as it always was
+            from . import parallel
+            page = parallel.run(todo, state, out, tm, log=log, fetch=fetch, workers=par, finished=done)
+        except Exception as e:
+            log("parallel step failed (%r): the market groups one after another" % (e,))
+        todo = [x for x in todo if x[0] not in done]
+    for g, assets in todo:
         try:
             got = step_group(g, assets, state, log=log, fetch=fetch)
         except Exception as e:                                     # one market failing never stops the others
@@ -341,13 +353,40 @@ def step(log=print, fetch=True):
     return out
 
 
-def step_group(g, assets, state, log=print, fetch=True):
+def parallel_workers():
+    """ENGINE15_PARALLEL: how many market groups may think at the same time (parallel.py). Unset, empty,
+    0, 1 or not a number -> 0: one group after another, the step as it always was."""
+    try:
+        n = int(os.environ.get("ENGINE15_PARALLEL", "0").strip() or 0)
+    except ValueError:
+        return 0
+    return n if n >= 2 else 0
+
+
+def _take_turn(gate, tm):
+    """The parallel step only (gate is None otherwise): wait here until every earlier market group has
+    finished its step, then go on with the state they left. -> (state, its marks)"""
+    state = gate()
+    tm.lap("wait for turn")
+    return state, state.setdefault("last_ms", {})
+
+
+def step_group(g, assets, state, log=print, fetch=True, gate=None):
+    """One market group's step. gate: None, always, in the step as it always was. The parallel step
+    (parallel.py) runs this in a process of the group's own and passes a gate: what comes before it (bars,
+    live reads, the lean think) touches only this group's own files and runs beside the other groups; from
+    the gate on (decide, shadow books, journal, state, page: they read and write what the groups share, and
+    a full prepare, which holds all history in memory) one group runs at a time, in the groups' fixed order."""
     assets = list(assets)
     tm = StepClock()
     bars, funding, live = {}, {}, {}
     for a in assets:                                               # 1. sources
         bars[a] = _update_bars(a) if fetch else data.load(a)
     tm.lap("bars")
+    if gate is not None and fetch:                                 # the parallel step only: this group fetches earlier in
+        from . import parallel                                     # the step than it used to, so a bar that is due and not
+        if parallel.wait_for_bars(g, assets, bars, _update_bars, log=log):     # published yet is asked for again for a while
+            tm.lap("bar wait")
     last_open = min(df.index[-1] for df in bars.values())
     close_s = int(last_open.timestamp()) + CFG["bar_ms"] // 1000
     marks = state.setdefault("last_ms", {})
@@ -383,6 +422,8 @@ def step_group(g, assets, state, log=print, fetch=True):
             prep = None
             tm.lap("lean think (failed)")
     if prep is None:
+        if gate is not None:
+            (state, marks), gate = _take_turn(gate, tm), None
         prep = backtest.prepare(cfg=cfg, bars=bars, funding=funding, live=live)
         tm.lap("full prepare")
     else:
@@ -391,11 +432,15 @@ def step_group(g, assets, state, log=print, fetch=True):
     n = len(times)
     lo = n - 1 if done is None else int(times.searchsorted(pd.Timestamp(done, unit="ms", tz="UTC"), side="right"))
     if "lean_lo" in prep and lo < prep["lean_lo"]:                 # a catch-up older than the birth date: all of it
+        if gate is not None:
+            (state, marks), gate = _take_turn(gate, tm), None
         prep = backtest.prepare(cfg=cfg, bars=bars, funding=funding, live=live)
         tm.lap("full prepare")
     if lo >= n:
         log("%s: nothing new: the last closed session (%s) is already in the journal" % (g, times[-1]))
         return None
+    if gate is not None:
+        (state, marks), gate = _take_turn(gate, tm), None
     books, entries, trades_now = {}, [], {}
     for a in assets:                                               # 3. decide
         ev = prep["ev"][a]
