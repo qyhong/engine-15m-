@@ -2571,3 +2571,11 @@ halves, but on the main engine's own trades it cut Sharpe by 0.19-0.52 in 2020-m
 afterwards: not a stable improvement. Unverified: the main-book replay uses today's engine config over history (as
 H36), the SPX store gap above, and uncompounded 1x accounting (drawdowns can exceed 100% of $10,000 in a market over
 a half). Nothing is built or wired.
+
+## RL loop round 4 (HRL4): the committee at 1.25, and a four-vote committee (registered 17 Nov 2026, 03:21 UTC, in `research/rl_loop/LOOP_RL.md`, before any round-4 code was written or any result)
+Run at the owner's request of 17 Nov 2026 ("Concurrently do the RL tasks too") after the 14 Nov advice not to. Rules, frame and yardstick unchanged; two execution-only variants, no retrain: R4-a `committee_riskoff_125` (R3-c's two-of-three committee, long request 1.25) and R4-b `committee4_riskoff` (Phase 6, round-2 and round-3 agents plus the daily trend; flat on three of four bearish votes, 1x). Cumulative RL variants 25, threshold 0.00200. New inputs from `flows.py` / `cryptox.py` not used (too short, or already short of the bar alone in H39/H40, or never tested alone). Run on the research server on a rebuilt input cache after a gate that reproduced the Phase 6 primary and R3-b/c/d exactly. The loop's frame has no sealed holdout (full span to 2026-11-11, as frozen in LOOP_RL.md).
+### Verdicts, RL loop round 4 (17 Nov 2026, 03:40 UTC; `research/out/rl_loop/round4_report.md`)
+**No pass.** Yardstick BTC spot buy-and-hold +583.9%, Sharpe 0.82, DD 77% (sub-span +879.7%, 1.03).
+- **R4-a: FAIL** (20/21). +1,474%, Sharpe 1.17 (1.21 / 1.28 / 1.03), DD 59-61%, 57 trades/yr; sub-span +1,552%, 1.35; fold share 56% (14/25); ETH +1,263%, 1.07. Fails only S4: gap +0.46, SE 0.25, p 0.036 vs 0.00200 (needs ~0.73).
+- **R4-b: FAIL** (16/21). +593%, 1.01, DD 49-55%; mean CAGR 36.7% vs 36.9%; sub-span +652% vs +880%; fold share 44%; p 0.093.
+- The 1.25x bought the return rules, not information: the Sharpe gap is R3-c's (+0.43) within an eighth of a standard error. No round 5 proposed. Not proof of anything either way.

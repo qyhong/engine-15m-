@@ -2,8 +2,8 @@
  "loop": "RL strategy loop (Phase 6 core strategy vs BTC spot buy-and-hold)",
  "rules": "research/rl_loop/LOOP_RL.md (frozen 2026-11-13 04:10 UTC)",
  "phase6_variants_counted": 8,
- "cumulative_variants": 23,
- "status": "round 3 run 2026-11-13 10:13 UTC: no pass (R3-b 19/21 fails S1 and S4; R3-c 18/21 passes S1, fails sub-span return and S4); round 4 proposed, not registered",
+ "cumulative_variants": 25,
+ "status": "round 4 run 2026-11-17 03:40 UTC on the research server: no pass (R4-a 20/21, fails S4 only, p 0.036 vs 0.00200; R4-b 16/21); no round 5 proposed",
  "rounds": [
   {
    "round": 1,
@@ -558,26 +558,138 @@
     "bear-fold wins fell to 4-6 of 10 (no shorts); bull-fold wins up to 4 of 9 (R3-c); fold 23 -1.96 -> +1.69",
     "R3-d: long/flat agent not better; ETH Sharpe 0.93 < 0.962 floor (E1)"
    ]
-  }
- ],
- "next_proposals": [
-  {
-   "id": "R4-a committee_riskoff_125",
-   "rule": "R3-c's committee (flat on >=2 of 3 bearish votes) with long request 1.25; targets R3-c's only non-S4 failure (sub-span return); risk: R3-c is at exactly 13/25 folds and 1.25 cost R3-a one fold",
-   "retrain": false
   },
   {
-   "id": "R4-b committee4_riskoff",
-   "rule": "votes: Phase 6 agent s<=0, r2 agent s<=0, r3 long/flat agent s=0 (same seed), m=-1; flat when >=3 of 4 bearish, else 1",
-   "retrain": false
-  },
-  {
-   "id": "R4-c retrain_longflat_bhselect",
-   "rule": "R3-d's long/flat training with beta and the 0.5 fallback bar chosen on the validation slice by the executed long-core book's Sharpe gap over buy-and-hold",
-   "retrain": true,
-   "est_hours": 2.2
+   "round": 4,
+   "registered_utc": "2026-11-17 03:21",
+   "deviation": "run on the research server on an input cache rebuilt there (laptop caches deleted); gate (Phase 6 primary + R3-b/c/d reproduced exactly) passed before any round-4 variant was computed; R4-c proposal (retrain_longflat_bhselect) not registered, not run; registration in LOOP_RL.md only (HYPOTHESES.md paragraph handed to the session lead)",
+   "variants": {
+    "R4a_committee_riskoff_125": "request 0 when >=2 of {p6 s<=0, r2 s<=0, m=-1} (same seed) else 1.25; V2 execution",
+    "R4b_committee4_riskoff": "request 0 when >=3 of {p6 s<=0, r2 s<=0, r3 s=0, m=-1} (same seed) else 1; V2 execution"
+   },
+   "results": {
+    "R4a_committee_riskoff_125": {
+     "pass": false,
+     "rules_met": "20/21",
+     "failed": [
+      "S4_significant"
+     ],
+     "btc_full": {
+      "total_return": 14.7416,
+      "cagr": 0.5595,
+      "sharpe": 1.1749,
+      "max_drawdown": 0.5988,
+      "trades_per_year": 57.0052
+     },
+     "btc_full_seed_sharpe": [
+      1.213,
+      1.282,
+      1.029
+     ],
+     "btc_full_seed_max_drawdown": [
+      0.611,
+      0.589,
+      0.596
+     ],
+     "btc_dev": {
+      "total_return": 15.516,
+      "sharpe": 1.3542
+     },
+     "eth_full": {
+      "total_return": 12.6316,
+      "sharpe": 1.0721,
+      "max_drawdown": 0.5318
+     },
+     "fold_share": 0.56,
+     "fold_share_dev": 0.4762,
+     "book_p": 0.0358,
+     "sharpe_edge": 0.456,
+     "se": 0.253,
+     "edge_needed": 0.728,
+     "corr_bh_daily": 0.799,
+     "halves_sharpe_edge_p": {
+      "first": [
+       0.524,
+       0.1129
+      ],
+      "second": [
+       0.355,
+       0.0876
+      ]
+     }
+    },
+    "R4b_committee4_riskoff": {
+     "pass": false,
+     "rules_met": "16/21",
+     "failed": [
+      "T_mean_cagr_gt_bh",
+      "T4_dev_return_gt_bh",
+      "T4_dev_mean_cagr_gt_bh",
+      "S1_fold_share_ge_half",
+      "S4_significant"
+     ],
+     "btc_full": {
+      "total_return": 5.9257,
+      "cagr": 0.3666,
+      "sharpe": 1.0067,
+      "max_drawdown": 0.5164,
+      "trades_per_year": 61.1471
+     },
+     "btc_full_seed_sharpe": [
+      1.096,
+      1.065,
+      0.859
+     ],
+     "btc_full_seed_max_drawdown": [
+      0.49,
+      0.554,
+      0.506
+     ],
+     "btc_dev": {
+      "total_return": 6.5177,
+      "sharpe": 1.1863
+     },
+     "eth_full": {
+      "total_return": 9.9568,
+      "sharpe": 1.0931,
+      "max_drawdown": 0.5145
+     },
+     "fold_share": 0.44,
+     "fold_share_dev": 0.3333,
+     "book_p": 0.093,
+     "sharpe_edge": 0.326,
+     "se": 0.247,
+     "edge_needed": 0.71,
+     "corr_bh_daily": 0.818,
+     "halves_sharpe_edge_p": {
+      "first": [
+       0.595,
+       0.078
+      ],
+      "second": [
+       0.036,
+       0.4447
+      ]
+     }
+    }
+   },
+   "run_utc": "2026-11-17 03:40",
+   "compute_min": {
+    "gate": 1.7,
+    "evaluation": 2.1
+   },
+   "host": "research server",
+   "gate": "research/out/rl_loop/round4_check.json",
+   "report": "research/out/rl_loop/round4_report.md",
+   "notes": [
+    "R4-a 20/21: fails only S4 (gap +0.46, SE 0.25, p 0.036 vs 0.00200; edge needed 0.73); leverage bought the return rules, the Sharpe gap is R3-c's (+0.43) within an eighth of a standard error; every seed's drawdown 59-61%",
+    "R4-b 16/21: flat less (23% vs R3-c's 27%), lower return (+593%), gap +0.33, fold share 44%",
+    "REF row shows 10/21 (rounds 1-3: 11/21): its ETH Sharpe equals the E1 floor and differs in the last bit on the server; information only",
+    "new inputs (flows.py, cryptox.py) not used: positioning / Bitfinex / CME-ETH / OKX / Bybit histories too short for the pooled walk-forward; on-chain and options flow tested alone in H39/H40 and short of the bar; Korea premium, dominance, spot-vs-perp, CME-gap proxy long enough but never tested alone"
+   ]
   }
  ],
+ "next_proposals": [],
  "yardstick": {
   "btc_spot_bh_full": {
    "total_return": 5.839,
@@ -594,5 +706,5 @@
    "sharpe": 0.755
   }
  },
- "next_note": "cumulative would be 26 (threshold 0.05/26 = 0.00192, z 2.89). With the long core S4 needs a Sharpe gap of ~0.65-0.75 over spot buy-and-hold (an overlay information ratio ~1.15 over 6.1 years); the best of 23 RL variants shows +0.44 (p 0.033). Not expected to be reached by execution or combination variants of the same signals; whether to continue for S1 and the sub-span return alone is the owner's call. Rules unchanged."
+ "next_note": "No round 5 is proposed. A further variant would make the count 26 (threshold 0.05/26 = 0.00192). With the long core S4 needs a Sharpe gap of ~0.71-0.73 over spot buy-and-hold; rounds 3-4 show +0.33 to +0.46 (SE ~0.25) from execution and combination variants of the same three agents and the daily trend, and leverage does not change it. The only untried direction is new information: the long-enough cryptox inputs (Korea premium, dominance, spot-vs-perp leadership, CME-gap proxy) would first need an H39-style test alone (bar: partial risk IC at 7 days >= 0.12, Bonferroni-significant, both coins, both halves). Whether to do that is the owner's call. Rules unchanged."
 }

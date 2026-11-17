@@ -1,0 +1,151 @@
+{
+ "tolerance": {
+  "return": 0.005,
+  "sharpe": 0.005
+ },
+ "rule3": {
+  "BTCUSDT": {
+   "return_new": 4.586076154579318,
+   "return_saved": 4.586076154579318,
+   "sharpe_new": 0.8655270217925448,
+   "sharpe_saved": 0.8655270217925448,
+   "d_return_abs": 0.0,
+   "d_sharpe": 0.0,
+   "max_seed_d_return_abs": 0.0,
+   "max_seed_d_sharpe": 0.0
+  },
+  "ETHUSDT": {
+   "return_new": 7.091417894612882,
+   "return_saved": 7.091417894612884,
+   "sharpe_new": 0.9619259727196603,
+   "sharpe_saved": 0.9619259727196611,
+   "d_return_abs": 1.7763568394002505e-15,
+   "d_sharpe": 7.771561172376096e-16,
+   "max_seed_d_return_abs": 2.6645352591003757e-15,
+   "max_seed_d_sharpe": 7.771561172376096e-16
+  }
+ },
+ "compare": [
+  {
+   "variant": "R3b_core_riskoff_125",
+   "asset": "BTCUSDT",
+   "return_new": 14.278552160999292,
+   "return_saved": 14.278552160999292,
+   "sharpe_new": 1.1385375099975927,
+   "sharpe_saved": 1.1385375099975927,
+   "d_return_rel": 0.0,
+   "d_sharpe": 0.0,
+   "max_seed_d_return_abs": 0.0,
+   "max_seed_d_sharpe": 0.0,
+   "ok": true
+  },
+  {
+   "variant": "R3b_core_riskoff_125",
+   "asset": "ETHUSDT",
+   "return_new": 16.443249164486065,
+   "return_saved": 16.443249164486065,
+   "sharpe_new": 1.1292075274733164,
+   "sharpe_saved": 1.1292075274733169,
+   "d_return_rel": 0.0,
+   "d_sharpe": 4.440892098500626e-16,
+   "max_seed_d_return_abs": 0.0,
+   "max_seed_d_sharpe": 6.661338147750939e-16,
+   "ok": true
+  },
+  {
+   "variant": "R3c_committee_riskoff",
+   "asset": "BTCUSDT",
+   "return_new": 7.100124716730011,
+   "return_saved": 7.100124716730011,
+   "sharpe_new": 1.0863202576773372,
+   "sharpe_saved": 1.0863202576773372,
+   "d_return_rel": 0.0,
+   "d_sharpe": 0.0,
+   "max_seed_d_return_abs": 0.0,
+   "max_seed_d_sharpe": 0.0,
+   "ok": true
+  },
+  {
+   "variant": "R3c_committee_riskoff",
+   "asset": "ETHUSDT",
+   "return_new": 7.734421414694199,
+   "return_saved": 7.734421414694207,
+   "sharpe_new": 1.0340806674698146,
+   "sharpe_saved": 1.0340806674698149,
+   "d_return_rel": 1.0335105043687573e-15,
+   "d_sharpe": 2.220446049250313e-16,
+   "max_seed_d_return_abs": 2.6645352591003757e-14,
+   "max_seed_d_sharpe": 4.440892098500626e-16,
+   "ok": true
+  },
+  {
+   "variant": "R3d_retrain_longflat_riskoff",
+   "asset": "BTCUSDT",
+   "return_new": 8.507984974689263,
+   "return_saved": 8.507984974689263,
+   "sharpe_new": 1.1110825406644673,
+   "sharpe_saved": 1.1110825406644673,
+   "d_return_rel": 0.0,
+   "d_sharpe": 0.0,
+   "max_seed_d_return_abs": 0.0,
+   "max_seed_d_sharpe": 0.0,
+   "ok": true
+  },
+  {
+   "variant": "R3d_retrain_longflat_riskoff",
+   "asset": "ETHUSDT",
+   "return_new": 6.698856888214228,
+   "return_saved": 6.698856888214228,
+   "sharpe_new": 0.9293638288531909,
+   "sharpe_saved": 0.9293638288531914,
+   "d_return_rel": 0.0,
+   "d_sharpe": 4.440892098500626e-16,
+   "max_seed_d_return_abs": 0.0,
+   "max_seed_d_sharpe": 5.551115123125783e-16,
+   "ok": true
+  }
+ ],
+ "risk_run": {
+  "risk_run_equals_risk3_BTCUSDT_fee_0.10%": 0.0,
+  "risk_run_equals_risk3_BTCUSDT_fee_0.05%": 0.0,
+  "risk_run_equals_risk3_ETHUSDT_fee_0.10%": 0.0,
+  "risk_run_equals_risk3_ETHUSDT_fee_0.05%": 0.0
+ },
+ "rule3_ok": true,
+ "compare_ok": true,
+ "gate_ok": true,
+ "generated_utc": "2026-11-17 03:35 UTC",
+ "elapsed_min": 1.7,
+ "host": "research server (Linux)",
+ "cache_dir": "research/out/rl_loop/r4_work/cache",
+ "model_roots": {
+  "p6": "research/out/rl_loop/r4_work/inputs/models6/b6a25c5d",
+  "r2": "research/out/rl_loop/r4_work/inputs/models_r2",
+  "r3": "research/out/rl_loop/r4_work/inputs/models_r3"
+ },
+ "p6_full": "research/out/rl_loop/r4_work/inputs/phase6_full.json",
+ "snapshots": {
+  "readings_snapshot_BTCUSDT": {
+   "asset": "BTCUSDT",
+   "rows": 275935,
+   "first": "2019-01-01 00:00:00+00:00",
+   "last": "2026-11-17 03:00:00+00:00",
+   "store_created": "2026-11-16T09:49:23Z",
+   "read_utc": "2026-11-17 03:34:02",
+   "built_this_call": true,
+   "store_meta_mtime_before": 1794885467.3125653,
+   "store_meta_mtime_after": 1794885467.3125653
+  },
+  "readings_snapshot_ETHUSDT": {
+   "asset": "ETHUSDT",
+   "rows": 275935,
+   "first": "2019-01-01 00:00:00+00:00",
+   "last": "2026-11-17 03:00:00+00:00",
+   "store_created": "2026-11-16T09:49:25Z",
+   "read_utc": "2026-11-17 03:34:04",
+   "built_this_call": true,
+   "store_meta_mtime_before": 1794885467.3203592,
+   "store_meta_mtime_after": 1794885467.3203592
+  }
+ }
+}

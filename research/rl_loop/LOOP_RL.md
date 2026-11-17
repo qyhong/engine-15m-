@@ -102,11 +102,12 @@ unless the extra exposure is placed where the edge is larger.
 | 2 | 13 Nov 2026 | 6 / 19 | R2-f retrain_spot_longlever +1,574%, Sharpe 1.09, DD 54% (worst seed 60%); R2-b blend_125 +1,073%, 1.06, 48%; R2-d retrain_spot_lean +867%, 1.03, fold share 48% | none | No pass. R2-b, c, e, f meet 19 of 21 (fail fold share 32-44% and significance); R2-d 15/21 (fold share 48%, seed 2 Sharpe 0.82, sub-span return); R2-a 17/21 (218 trades/yr: the funding cap flips the request at each settlement). Best p 0.151 vs 0.00263 (edge +0.41 vs ~1.1 needed). Retrained agent: gain mostly from more fallback folds, ETH worse. Report: `research/out/rl_loop/round2_report.md`. |
 | 3 | 13 Nov 2026 | 4 / 23 | R3-b core_riskoff_125 +1,428%, Sharpe 1.14, DD 57% (worst seed 60%), 44 trades/yr; R3-c committee_riskoff +710%, 1.09, fold share 52% | none | No pass. R3-b 19/21 (fails fold share 40% and significance); R3-c 18/21 (passes fold share 13/25 with 4 bull folds; fails sub-span return +746% vs +880% and significance); R3-a 17/21; R3-d 18/21 (ETH Sharpe 0.93 < 0.962). Long core: SE of the Sharpe gap 0.22-0.26 (was 0.37-0.44), edge needed 0.64-0.73, seen +0.40 to +0.44, p 0.033-0.044 vs 0.00217. Round 2's proposals replaced (disclosed). Report: `research/out/rl_loop/round3_report.md`. |
 
-| 4 | 17 Nov 2026 | 2 / 25 | (registered 17 Nov 2026, 03:21 UTC; not run yet) | - | Registered, no result yet: R4-a committee_riskoff_125, R4-b committee4_riskoff (see "Round 4" below). |
+| 4 | 17 Nov 2026 | 2 / 25 | R4-a committee_riskoff_125 +1,474%, Sharpe 1.17 (1.21 / 1.28 / 1.03), DD 60% (worst seed 61%), 57 trades/yr, fold share 56%; R4-b committee4_riskoff +593%, 1.01, DD 52% | none | No pass. R4-a 20/21: meets every return, Sharpe, drawdown, sub-span, fold-share (14/25), turnover and ETH rule and fails only S4 significance (gap +0.46, SE 0.25, p 0.036 vs 0.00200; edge needed 0.73). R4-b 16/21 (fails mean CAGR 36.7% vs 36.9%, sub-span return +652% vs +880% (total and mean CAGR), fold share 44%, significance p 0.093). Both execution-only; run on the research server after an exact reproduction gate (disclosed). Report: `research/out/rl_loop/round4_report.md`. |
 
 Running count of RL variants: **25** (Phase 6's 8 + round 1's 5 + round 2's 6 + round 3's 4 + round 4's 2; round 4
-registered 17 Nov 2026, 03:21 UTC, before any round-4 code was written or any round-4 number existed). Significance
-threshold from round 4 on: p <= 0.05 / 25 = 0.00200.
+registered 17 Nov 2026, 03:21 UTC, before any round-4 code was written or any round-4 number existed; gate run 03:34 UTC,
+variants run 03:38-03:40 UTC). Significance threshold from round 4 on: p <= 0.05 / 25 = 0.00200. No round 5 is proposed
+(`research/out/rl_loop/loop_state.json`).
 
 ## Round 1 (registered 13 Nov 2026, 04:10 UTC, before any round-1 code ran)
 
@@ -317,3 +318,82 @@ have. The realistic best case is 20 of 21 rules (all but S4) for R4-a, which wou
 - The loop's rule 1 asks for registration here and in `research/HYPOTHESES.md`. Another session is editing that file
   today, so this section is the registration; the matching HYPOTHESES.md paragraph is handed to the session lead to
   merge (deviation, disclosed).
+
+### Round 4 result (17 Nov 2026; gate 03:34-03:35 UTC, variants 03:38-03:40 UTC; `research/out/rl_loop/round4_report.md`)
+
+**No pass.** R4-a meets 20 of 21 rules and fails S4 (significance); R4-b meets 16 of 21. Cumulative RL variants: 25;
+threshold p <= 0.00200. Nothing is proposed for a forward paper book (only a pass is). Not proof of anything either way.
+
+Gate (stage 1, before any round-4 variant was computed): PASSED. On the server's rebuilt inputs the Phase 6 primary came
+out at BTC +458.6076%, Sharpe 0.8655 and ETH +709.1418%, 0.9619 (differences from Phase 6's saved run: 0 on BTC, under
+3e-15 on ETH), and R3-b, R3-c and R3-d matched round 3's saved results on both coins to within 3e-14 (return) and 7e-16
+(Sharpe). The evaluation run repeated both checks with the same outcome (rule 3: difference 0).
+
+Yardstick, this run: BTC spot buy-and-hold +583.9%, CAGR 36.9%, Sharpe 0.82, max DD 77% (to 2025-11-11: +879.7%, CAGR
+56.2%, Sharpe 1.03); ETH spot buy-and-hold +470.6%, CAGR 33.0%, Sharpe 0.76, max DD 81%. Floors: BTC 0.8700, BTC
+sub-span 1.0505, ETH 0.9619. All figures after 0.10% a side, spread, slippage and funding; seeds 0 / 1 / 2.
+
+| Rule | R4-a `committee_riskoff_125` | R4-b `committee4_riskoff` |
+|---|---|---|
+| T1 return > B&H (full span) | PASS: +1,474.2% (seeds +1,600% / +1,947% / +875%) | PASS: +592.6% (+706% / +702% / +369%) |
+| T1 mean of seed CAGRs > B&H's 36.9% | PASS: 56.0% | **fail**: 36.7% |
+| T2 Sharpe >= 0.87 | PASS: 1.17 | PASS: 1.01 |
+| T2 Sharpe > B&H's 0.82 | PASS | PASS |
+| T2 every seed's Sharpe > B&H's | PASS: 1.21 / 1.28 / 1.03 | PASS: 1.10 / 1.06 / 0.86 |
+| T3 every seed's max DD <= B&H's 77% | PASS: 61% / 59% / 60% | PASS: 49% / 55% / 51% |
+| T4 sub-span return > B&H's +879.7% | PASS: +1,551.6% | **fail**: +651.8% |
+| T4 sub-span mean CAGR > B&H's 56.2% | PASS: 72.1% | **fail**: 47.7% |
+| T4 sub-span Sharpe >= 1.0505 | PASS: 1.35 | PASS: 1.19 |
+| T4 sub-span Sharpe > B&H's 1.03 | PASS | PASS |
+| T4 sub-span every seed's Sharpe > B&H's | PASS: 1.40 / 1.45 / 1.21 | PASS: 1.29 / 1.24 / 1.03 (seed 2: 1.0286 vs 1.0272) |
+| T4 sub-span every seed's max DD <= B&H's | PASS: 61% / 59% / 60% | PASS: 49% / 55% / 51% |
+| S1 fold share >= half | PASS: 14 of 25 (56%); by seed 48% / 60% / 52%; sub-span 48% (reported) | **fail**: 11 of 25 (44%); by seed 40% / 48% / 36%; sub-span 33% |
+| S2 not fee-only at 0.05% | PASS | PASS |
+| S3 trades <= 100 a year, every seed | PASS: 53 / 64 / 54 | PASS: 56 / 72 / 56 |
+| S3 turnover <= 100 a year, every seed | PASS: 43 / 49 / 43 | PASS: 39 / 46 / 36 |
+| S4 significance, p <= 0.00200 | **fail**: Sharpe gap +0.46, SE 0.25, p 0.0358; edge needed 0.73 (1.02 if the strategy loop's 1,910 were added); deflated-Sharpe probability 0.84 | **fail**: gap +0.33, SE 0.25, p 0.0930; edge needed 0.71 (1.00); deflated-Sharpe probability 0.72 |
+| E1 ETH Sharpe >= 0.9619 | PASS: 1.07 (1.12 / 0.98 / 1.12) | PASS: 1.09 (1.18 / 0.93 / 1.17) |
+| E2 ETH return > B&H's +470.6% | PASS: +1,263.2% | PASS: +995.7% |
+| E2 ETH mean CAGR > B&H's 33.0% | PASS: 52.8% | PASS: 47.1% |
+| E3 ETH every seed's max DD <= B&H's 81% | PASS: 49% / 59% / 51% | PASS: 48% / 55% / 51% |
+| Rules met | 20 / 21 | 16 / 21 |
+
+S5, calendar-year net returns, BTC, seed means (2020 from 1 Oct, 2026 to 11 Nov): R4-a +196% / +26% / -38% / +178% /
++140% / +8% / -7%; R4-b +150% / +29% / -32% / +104% / +66% / +3% / -9%; spot buy-and-hold +168% / +60% / -64% / +156% /
++121% / -6% / -16%.
+
+Reported, not a rule (registered): seed-mean book Sharpe minus buy-and-hold's in each half of the span split at
+2023-06-07: R4-a +0.52 (p 0.113) then +0.36 (p 0.088); R4-b +0.60 (p 0.078) then +0.04 (p 0.445).
+
+Reading, with the limits stated:
+- R4-a is R3-c with 1.25x on the long side (the book is above 1x 44% of the time and pays about 1% a year of funding
+  for it). The Sharpe gap over buy-and-hold is +0.46 against R3-c's +0.43, a change of about an eighth of its standard
+  error: the leverage bought the return rules (sub-span +1,552% against +880%), not information. Every seed's drawdown rose to
+  59-61% (R3-c: 47-56%). Fold share went from 13 to 14 of 25 (folds 5 and 11 gained, fold 3 lost); it sits one fold
+  above the bar and seed 0 alone is at 48%.
+- S4 is the rule that says whether the gap could be luck, and it fails by a wide margin: p 0.036 against 0.00200; the
+  gap would have to be about 0.73, i.e. 1.6 times what was seen. R4-a is also the best of 25 variants chosen after
+  seeing the earlier ones, which is exactly the selection the Bonferroni bar exists for.
+- R4-b: a higher bar for going flat did not help. The book was flat less (23% of the span against R3-c's 27%) and
+  earned less (+593% against +710%), with a smaller Sharpe gap (+0.33) and fewer fold wins (11). R4-b is flat only
+  where R3-c is flat too, so its extra time in the market (where two of R3-c's three votes were bearish but the fourth
+  vote did not make three) lost money on balance.
+- The stated prior held: no pass, best case 20 of 21 for R4-a. Execution and combination variants of the same three
+  agents and the daily trend have not raised the Sharpe gap (+0.33 to +0.46 over rounds 3-4, each with a standard
+  error near 0.25). No round 5 is proposed.
+
+Deviations and disclosures:
+- Run on the research server instead of the laptop, on an input cache rebuilt from the server's files and its evidence
+  store (created 2026-11-16 09:49 UTC, not the 11 Nov store Phase 6 read), as registered before the run. The gate shows
+  the rebuilt inputs give the saved results to the last digits; bars and funding up to the data end were also compared
+  between the two machines beforehand (identical hashes; no result computed).
+- `research/HYPOTHESES.md` was not edited by this round (see the registration); its paragraph is with the session lead.
+- One sentence of the registration's gate bullet was reworded ("nothing is tuned to make it pass") a few minutes after
+  03:21 UTC, before any round-4 code existed; no variant, rule or threshold changed.
+- The reference row (the Phase 6 primary, information only, not a variant) shows 10 of 21 rules in this run against 11
+  in rounds 1-3: its ETH Sharpe IS the E1 floor, an exact tie, and on the server the seed mean differs from the floor in
+  the last bit (8e-16), so `>=` reads false. No round-4 number is near a floor (nearest: R4-b's sub-span seed 2 Sharpe,
+  1.0286 against buy-and-hold's 1.0272, which passed).
+- No retrain, no memory pause, no code bug found after the run, nothing re-run. Compute: gate 1.7 min, evaluation 2.1
+  min, one process at low priority. The temporary work folder on the server (rebuilt cache, copied models) was deleted
+  after the result files were copied back.

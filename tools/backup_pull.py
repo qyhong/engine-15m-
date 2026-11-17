@@ -20,7 +20,10 @@ HOST = os.environ.get("MIND15_BOX", "ec2-user@13.251.40.113")
 KEY = os.path.expanduser(os.environ.get("MIND15_BOX_KEY", "~/.ssh/minds15.pem"))
 KEEP = 7
 MIN_BYTES = 5_000_000                                                 # a real archive is far larger; smaller = something failed
-REMOTE = ("cd /data/mind15 && tar czf - --ignore-failed-read --warning=no-file-changed "
+# Wait (up to 12 minutes) until the engine is asleep between steps: it rewrites its bar files during a step, and a copy taken
+# mid-step can catch one of them empty (seen 17 Nov 2026: xauusd_15m.csv, 0 bytes).
+REMOTE = ("for i in $(seq 1 72); do case \"$(tail -1 /data/mind15/live.log)\" in sleeping*) break;; esac; sleep 10; done; "
+          "cd /data/mind15 && tar czf - --ignore-failed-read --warning=no-file-changed "
           "--exclude=data/evcache --exclude=data/raw --exclude='data/backup_*' --exclude=secrets --exclude=mind15.env "
           "journal out/live data research/out/rl/forward5 research/out/rl/forward6 research/out/rl/logs "
           "live.log telegram.log 2>/dev/null; true")
@@ -46,13 +49,17 @@ def main():
            "-o", "StrictHostKeyChecking=accept-new", HOST, REMOTE]
     try:
         with open(tmp, "wb") as f:
-            r = subprocess.run(cmd, stdout=f, stderr=subprocess.PIPE, timeout=3600)
+            r = subprocess.run(cmd, stdout=f, stderr=subprocess.PIPE, timeout=3600)                     # includes the wait for a gap between steps
         size = os.path.getsize(tmp)
         if size < MIN_BYTES:
             raise RuntimeError("archive too small (%d bytes), ssh exit %d: %s"
                                % (size, r.returncode, r.stderr.decode("utf-8", "replace").strip()[-200:]))
         with tarfile.open(tmp, "r:gz") as t:                          # read it through: proves it is whole
-            names = t.getnames()
+            members = t.getmembers()
+        names = [m.name for m in members]
+        empty = [m.name for m in members if m.isfile() and m.size == 0 and m.name.endswith(("_15m.csv", "_state.json", "page.json"))]
+        if empty:
+            raise RuntimeError("caught mid-write, empty in the archive: %s" % ", ".join(empty[:5]))
         if not any(n.startswith("journal/") for n in names) or "out/live/page.json" not in names:
             raise RuntimeError("archive is missing the journal or the page (%d files)" % len(names))
         os.replace(tmp, out)
