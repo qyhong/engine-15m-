@@ -61,6 +61,13 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   since 2026-11-17 04:58 UTC; positions open then were not signalled). PREVIEW: every card goes only to the owner's
   chat, first line "Subscriber preview"; no channel exists; commercial gate = 100 signals, 60 days, "ahead".
   Commands `/signals`, `/record`. Subscriber cards never name books, research or the server.
+- **Setups page feed (17 Nov 2026):** `engine15/setups.py`, called in `live.step()` after the page is written (guarded;
+  log line `setups: 8 markets -> ...`). It writes `out/live/setups.json` and, when `MIND15_SETUPS_WEB_DIR` is set (the
+  box: `/var/www/aitrading-m15`, in the unit's ReadWritePaths), the same bytes there, atomically, mode 0644. Schema 1:
+  one entry per market from `b_targets` (side, entry, stop, targets, price, `rr_now_*`, `stop_dist_now_pct`,
+  `entry_window_open`), the book record, the S1 followable record, learning hit rates. No push; the AI Trading Bot
+  session serves it at /setups/setups.json behind the paywall (owner: "Included for paying members"). No display text
+  may contain the word "edge" or the forecast model's name. The page is the site sessions' work.
 - **Backups (17 Nov 2026):** `tools/backup_pull.py`, Windows scheduled task "Mind15 server backup" daily 12:00 SGT:
   one tar over ssh of journal, out/live, data (no evcache/raw), RL forward books and logs into `backup/server/`
   (git-ignored), 7 kept, taken in a gap between steps, rejected if a bar or state file is empty.
