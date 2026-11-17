@@ -74,6 +74,10 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   `entry_window_open`), the book record, the S1 followable record, learning hit rates. No push; the AI Trading Bot
   session serves it at /setups/setups.json behind the paywall (owner: "Included for paying members"). No display text
   may contain the word "edge" or the forecast model's name. The page is the site sessions' work.
+- **Research Python on the box (17 Nov 2026, owner approved):** `/data/venv-research` = scikit-learn 1.9.1, scipy 1.18.1,
+  joblib, threadpoolctl, narwhals (installed `--no-deps`), and every engine package through a `.pth` pointing at
+  `/data/venv` (numpy 2.4.5 shared). Research scripts that need sklearn/scipy run with it. Never install into `/data/venv`:
+  numpy/pandas versions are part of the reading cache's signature (a change = 20-minute rebuild).
 - **Backups (17 Nov 2026):** `tools/backup_pull.py`, Windows scheduled task "Mind15 server backup" daily 12:00 SGT:
   one tar over ssh of journal, out/live, data (no evcache/raw), RL forward books and logs into `backup/server/`
   (git-ignored), 7 kept, taken in a gap between steps, rejected if a bar or state file is empty.
