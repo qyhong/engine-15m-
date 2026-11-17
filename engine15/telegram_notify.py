@@ -112,8 +112,28 @@ def _call(tok, method, payload, timeout=20):
         return {"ok": False, "description": "HTTP %s" % r.status_code}
 
 
+# Owner, 17 Nov 2026: the website shows paper-book dollars at 100x ("Enlarge the capital by 100 times"); asked whether this bot
+# should match, the owner chose "Scale the bot 100x too". Display only: every paper-book dollar amount the bot prints goes
+# through _usd; percentages, win rates, prices and points are unchanged, and the engine's files keep the real figures.
+DISPLAY_X = float(os.environ.get("MIND15_TG_DISPLAY_X", "100"))
+
+
 def _usd(v):
+    v = float(v) * DISPLAY_X
     return ("+$%s" if v >= 0 else "-$%s") % "{:,.0f}".format(abs(v))
+
+
+def _usd_short(v):
+    """The same amount for the fixed-width tables (phone width): +$950, +$12.3k, +$136k, +$1.24M."""
+    v = float(v) * DISPLAY_X
+    a, sign = abs(v), ("+" if v >= 0 else "-")
+    if a >= 1e6:
+        return "%s$%.2fM" % (sign, a / 1e6)
+    if a >= 1e5:
+        return "%s$%.0fk" % (sign, a / 1e3)
+    if a >= 1e4:
+        return "%s$%.1fk" % (sign, a / 1e3)
+    return "%s$%s" % (sign, "{:,.0f}".format(a))
 
 
 NAMES = {"main": "Main engine", "b_trail": "B trail (shadow)", "b_targets": "B targets (shadow)",
@@ -400,9 +420,9 @@ def summary(page, score, now=None, health=None):
         pos = str(d.get("position") or tr.get("status") or "-")
         edge = d.get("edge_pts")
         rows.append("%-6s %-5s %6s %9s" % (MKT.get(a, d.get("short") or a)[:6], pos[:5],
-                                          "" if edge is None else "%+.1f" % float(edge), _usd(u)))
+                                          "" if edge is None else "%+.1f" % float(edge), _usd_short(u)))
     table = "\n".join(["%-6s %-5s %6s %9s" % ("Market", "Side", "Edge", "Open"), "-" * 29] + rows +
-                      ["-" * 29, "%-19s %9s" % ("Total open", _usd(tot_open))])
+                      ["-" * 29, "%-19s %9s" % ("Total open", _usd_short(tot_open))])
     L += ["<b>Positions</b>", "<pre>%s</pre>" % _esc(table)]
     since = now.timestamp() - 86400
     closed = []
@@ -421,7 +441,7 @@ def summary(page, score, now=None, health=None):
     lead = sorted((r for r in srows if int(r.get("trades") or 0) >= 5), key=lambda r: -float(r.get("net_usd") or 0))[:3]
     if lead:
         L += ["", "<b>Leaders</b> (5+ trades)", "<pre>%s</pre>" % _esc("\n".join(
-            "%-12s %8s %3d trades" % (_tname(r["book"]), _usd(float(r["net_usd"] or 0)), int(r["trades"]))
+            "%-12s %8s %3d trades" % (_tname(r["book"]), _usd_short(float(r["net_usd"] or 0)), int(r["trades"]))
             for r in lead))]
     near = sorted((r for r in srows if 15 <= int(r.get("trades") or 0) < 30), key=lambda r: -int(r["trades"]))
     L += ["", "<b>Close to a verdict</b>"]
