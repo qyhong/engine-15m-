@@ -2844,3 +2844,31 @@ scikit-learn exactly as registered** (F1: `LogisticRegression(penalty="l2", C=0.
 solver="lbfgs", max_iter=5000)` on standardised inputs; F2: `HistGradientBoostingClassifier(max_depth=3,
 learning_rate=0.05, max_iter=200, min_samples_leaf=50, l2_regularization=1.0, early_stopping=False, random_state=55)`,
 class weights none, as registered). The numpy stand-ins are reported beside them as a cross-check only, never judged.
+
+### Verdicts, H55 (17 Nov 2026, ~14:50 UTC; development data 2020-02-05 .. 2025-11-10, seal never read; `research/out/setups_filter/report.md` + `results.json`)
+**No pass. Neither filter passes; the Setups signals are not filtered and no S1-F forward book is proposed on this read.**
+Judged with scikit-learn 1.9.1 (the library note above); the numpy stand-ins agree (cross-check, not judged: same
+keep/skip on 99.7% (F1) and 92.4% (F2) of second-half signals, and neither would pass).
+- Population: 5,034 `b_targets` signals in all eight markets (2,858 first half, entries before 2023-06-07; 2,176 second
+  half). Second half: BTC 410, ETH 352, XAU 241, XAG 245, USDJPY 297, SPX 104, WTI 253, BRENT 274. Followable fill rate
+  59.2% / 60.2%; most no-fills are the four-bar window passing (819 of 866 in the second half). Label base rate (> 0 R
+  after costs, no fill = 0): 25.3% first half, 24.7% second half. All second-half signals: mean -0.027 R per sent signal,
+  -59.6 R in total (the book's own result of the same trades: -0.028 R, -61.0 R).
+- AUC, first half (in-sample) / second half: F1 0.760 / 0.520; F2 0.917 / 0.566. The in-sample separation does not carry
+  over: the kept sets made +0.23 R (F1) and +0.35 R (F2) per signal in the first half and lost in the second.
+- Pass bar, second half (F1 | F2):
+  (1) kept mean R > all, block bootstrap p <= 0.025: F1 -0.0355 vs -0.0274, p = 0.649, FAIL | F2 -0.0202 vs -0.0274,
+      p = 0.371, FAIL.
+  (2) kept total R > 0: F1 -39.1 R, FAIL | F2 -21.7 R, FAIL.
+  (3) kept better in >= 5 of the 8 eligible markets: F1 4 (BTC, XAG, USDJPY, BRENT), FAIL | F2 4 (BTC, ETH, WTI, BRENT), FAIL.
+  (4) kept >= 100 signals: F1 1,101, pass | F2 1,077, pass.
+- With the BOOK result instead: F2's kept set -0.001 R vs all -0.028 R (skipped -0.055 R); F1's kept set -0.027 R vs
+  -0.028 R. Neither is a profit on the book's own fills either.
+- Deviations / disclosures: inputs at the decision bar k = fill bar - 1 - fill delay; the stop and Target-1 distances are
+  the book's plan at that close (entry = the close, since the fill is the next open); 18 trades that opened and closed
+  inside their own fill bar are never signals (H53 amendment) and 8 trades open at the seal are left out; odds walked from
+  2020-01-01 as H36 replayed the books (the live step walks 240 days); SPX was read after the engine rebuilt its store on
+  the current code (14:47 UTC). Scoring is `engine15/signals.py`'s own state machine (tested against `signals.run` on
+  synthetic bars).
+- Plainly: this is history the engine's authors have lived through, one registered try with two variants. It rejects
+  this filter on this data; it proves nothing about the signals going forward.
