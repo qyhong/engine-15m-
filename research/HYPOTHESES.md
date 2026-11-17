@@ -2645,3 +2645,13 @@ registered record and nothing below was picked because of them.
   results only, and the commercial gate (100 signals, 60 days, "ahead").
 - **Follows from it (not part of S1):** the engine knows a `b_targets` entry one bar before the page shows the position;
   publishing the signal at decision time would be a different, earlier signal and would be registered as its own book.
+
+### H53 note: the Setups page launches before the gate; the gate stays for charging (17 Nov 2026, 05:01 UTC)
+The site coordination session relayed that the owner, asked "Should Setups launch as an owner-only preview until the
+signal book passes its 100-signal gate?", answered **"no, launch now"**. Confirmed with the owner in this session the
+same hour; of three options the owner chose **"Launch now, gate for charging"**: the Setups page on
+aitrading.alphaprediction.ai goes live now, fed by `b_targets` / S1, labelled experimental and paper-only, showing the
+live record with its trade count; **the gate (100 signals over 60 days and "ahead" on the followable record) remains the
+condition for charging money for it.** H53's grading is unchanged: live followable signals only, from 2026-11-17 04:58 UTC.
+The page is the site sessions' work; this project supplies `out/live/setups.json` (a pure function of the page and the S1
+log; no new rule, no change to any book).

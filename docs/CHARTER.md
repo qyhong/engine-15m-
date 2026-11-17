@@ -299,3 +299,8 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
 - **The data disk stays 24 GB** ("just utilise whatever we have now"); the laptop no longer runs the 30-minute watcher.
 - **Own user + sandbox for the engine and the bot** on the Singapore box: owner "Yes, do it" (the box audit's top
   finding); script `tools/server/mind15_own_user.sh` (apply / --undo).
+- **Subscriber product (owner, 17 Nov 2026):** subscribers "only want to know trade opportunity", not the research.
+  Signal book S1 = `b_targets` scored the way a person can follow it (H53, with its 17 Nov amendment); preview cards go
+  to the owner's chat only ("Yes, build preview"; the card "look ok"). The site gets a main page "Setups" fed by
+  `out/live/setups.json`; the owner's ruling: **"Launch now, gate for charging"** (the page is public now, experimental
+  and paper-only; nothing is charged for it before 100 signals over 60 days and an "ahead" followable record).
