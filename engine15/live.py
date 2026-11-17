@@ -344,6 +344,14 @@ def step(log=print, fetch=True):
     except Exception as e:
         log("setups: not written (%r)" % (e,))
     tm.lap("setups")
+    try:                                                           # stocks.json: the S&P 500 model read on the Setups
+        from . import stocks                                       # page's top five stocks (stocks.py: paper, read only,
+        info = stocks.maybe_run(out, out_dir=LIVE_OUT, data_dir=os.path.dirname(STATE), log=log)   # its own files);
+        if info:                                                   # never stops the step (None: no pass yet, no line)
+            log(stocks.line(info))
+    except Exception as e:
+        log("stocks: not written (%r)" % (e,))
+    tm.lap("stocks")
     from . import push
     if push.enabled():                                             # to the web server, only when switched on
         log("web push: %s" % push.push(page)[1])
