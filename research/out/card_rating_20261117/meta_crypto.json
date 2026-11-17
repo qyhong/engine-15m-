@@ -1,0 +1,67 @@
+{
+ "group": "crypto",
+ "assets": [
+  "BTCUSDT",
+  "ETHUSDT"
+ ],
+ "window": [
+  "2020-01-01 00:00",
+  "2025-11-10 23:45"
+ ],
+ "split": "2022-11-30 20:30",
+ "horizon": 96,
+ "graded_rows": 390670,
+ "graded_rows_by_asset": {
+  "BTCUSDT": 193571,
+  "ETHUSDT": 197099
+ },
+ "up_pct": 50.3,
+ "seconds": 1393.4,
+ "peak_mb": null,
+ "voting_cards": [
+  "Pivot points (daily and weekly)",
+  "Moving-average ribbon",
+  "Trend quality and squeeze",
+  "Momentum and stretch",
+  "News and economic events",
+  "Support and resistance",
+  "Market structure",
+  "Aroon and Vortex (1h to daily)",
+  "Coinbase premium",
+  "Kaufman adaptive average (KAMA)"
+ ],
+ "voting_voices": [
+  "pivots",
+  "ribbon",
+  "trendq",
+  "momentum",
+  "meanrev",
+  "pullback",
+  "news",
+  "macro",
+  "levels",
+  "structure",
+  "aroon",
+  "cbprem",
+  "kama",
+  "owner"
+ ],
+ "floor": "worse half > 50.5%, top 10, at least 3",
+ "engine_version": "think15-v5.2.4",
+ "end": "2025-11-11",
+ "current_voters": [
+  "regime",
+  "momentum",
+  "meanrev",
+  "pullback",
+  "levels",
+  "cbprem",
+  "flow",
+  "breadth",
+  "trend",
+  "strategies",
+  "stable",
+  "basis",
+  "owner"
+ ]
+}

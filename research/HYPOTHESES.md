@@ -2667,3 +2667,129 @@ only (from 2026-11-17 04:58 UTC); the record and its trade count are shown on th
 edge; the question whether selling trade signals is a regulated activity is the owner's to settle with a lawyer. The
 gate's numbers remain the bar for any claim that S1 "works", and for the Telegram signal product, which is still a
 preview to the owner's chat only.
+
+## H54. DUPLICATE CARDS: which cards say the same thing, and does one idea vote several times? (owner-approved 17 Nov 2026, "6 to 10 also ok", task 9; registered 17 Nov 2026, 06:15 UTC, before any H54 code existed or any H54 number was computed)
+
+**Prompted by:** the engine now reads 82 cards (think15-v5.2.4) and many indicator families measure the same thing
+(Williams %R, Stochastic, StochRSI and CCI all place the close in its recent range; Supertrend, Parabolic SAR,
+Heikin-Ashi, the moving-average cards, KAMA, Hull and Ichimoku all follow trend). The owner approved a study of duplicate
+cards. Known before any number: three voices share readings by construction (`pullback` reads `tr_1d` and `k_1h`, which
+`trend` and `meanrev` also read).
+
+**What this is.** A DESCRIPTIVE study. No trading rule, no selection, no pass bar, no variant search; counted as one
+descriptive study with no variants. **Nothing is removed, merged or re-weighted on the strength of it: removing or
+merging a card is a new engine version, registered on its own, and the owner's decision.** A high overlap says two cards
+lean together; it does not say either of them is right.
+
+**Data.** The engine's evidence stores `data/evcache/<group>/<asset>` on the research server, opened READ-ONLY (memory
+maps; nothing under `data/` is written and no rebuild is triggered), for crypto, metals, fx and energy. The index group
+is included only if its store is on the engine's current version when the study runs; at registration it is known NOT
+to be (last built 16 Nov 21:04 UTC on the previous signature; it rebuilds when the S&P opens at 14:30 UTC), so it is
+expected to be skipped and that will be said. Rows before the sealed holdout 2025-11-11 00:00 UTC only (later rows are
+cut off before anything is computed; the holdout is never read). Sessions from 2020-01-01 where the engine's required
+readings exist (`ready`). First half = sessions before 2023-06-07 00:00 UTC, second half = from it to the seal (the
+H6/H41/H44 split). Every measure is computed on each half separately.
+
+**The unit is the voice** (what votes: `config.voting_by_group` lists voices), shown under its card title. The two cards
+with several voices (Momentum and stretch: `momentum`, `meanrev`, `pullback`; News and economic events: `news`, `macro`)
+are kept as separate voices. Left out: `all`, `base`, `owner`; in each group the voices that do not apply there, and
+voices with no history (live-only readings). The voices are those of the engine as it stands today (v5.2.4), walked
+through history as if it had run then.
+
+**The overlap measures, fixed now** (`research/card_overlap.py`; report `research/out/card_overlap_20261117.md` + `.json`):
+- **A voice's pull** at a session = P(up) - P(down) of that voice's own odds (before trust), formed as the engine forms
+  them: weekly refits walked forward from 2020-01-01 by `leanprep.walk_forward_cached` on the stored readings, with the
+  refits kept in a PRIVATE directory under `research/out/card_overlap/` (never the engine's fits directory). A voice
+  **speaks** at a session when at least one of its readings is non-zero there (the engine's silent-voice rule).
+- **M1, pull overlap (primary):** Spearman rank correlation of the two voices' pulls over the sessions of the half where
+  both speak and both have odds. Per asset; a pair is measured for an asset and half only with at least 2,000 such
+  sessions and a pull that varies for both; the group's value for the half is the mean over its measured assets.
+- **M2, agreement:** on the same sessions, how often the two pulls have the same sign (both non-zero). Reported, not
+  used in any definition.
+- **M3, reading overlap (secondary):** Spearman rank correlation between every pair of readings as the voices see them
+  (the feature matrix: a missing reading is 0), over the ready sessions of the half, per asset. For two voices A and B:
+  R(A in B) = the mean, over A's readings that vary in the sample, of the largest |rho| with any reading of B;
+  R(A, B) = the smaller of R(A in B) and R(B in A); the group's value is the mean over its assets. Also listed: "A is
+  contained in B" when R(A in B) >= 0.85 in both halves.
+- **A pair's similarity in a group:** s = the smaller |M1| of the two halves, and 0 when the sign of M1 differs between
+  the halves. (r, for readings: the smaller R of the two halves.)
+- **Across groups:** with G = the number of groups in which the pair is measured in both halves, S = the k-th largest
+  of its group similarities, k = ceil(0.75 x G) (3 of 4, 3 of 3, 2 of 2, 1 of 1). Pairs never measured together: S = 0.
+
+**Definitions, fixed now.** Two voices are **duplicates** when S >= 0.85 (|rho| of their pulls at least 0.85 in BOTH
+halves in at least three quarters of the groups where both apply) and **near-duplicates** when 0.70 <= S < 0.85. The same
+two thresholds applied to the reading overlap give the secondary labels "reads alike" (>= 0.85) and "reads nearly alike"
+(>= 0.70); they are reported beside the primary ones and never replace them.
+
+**Clusters, by a fixed rule.** Average linkage: start with every voice alone; repeatedly join the two clusters whose
+average pairwise similarity is highest, while that average is at or above the threshold (ties: the pair that comes
+first in the engine's voice order). Run at 0.70 (near-duplicate clusters) and at 0.85 (duplicate clusters), (a) across
+groups on S and (b) inside each group on s, and the same on the reading overlap. Clusters of two or more are reported.
+
+**What will be reported.** (1) Every pair at or above 0.70 with its M1, M2 and reading overlap in each half and group.
+(2) The clusters. (3) For each cluster and group, its best-rated member in Task 8's rating of 17 Nov 2026
+(`research/out/card_rating_summary_20261117.md`: the card's worse half). (4) Per group, how much of the vote each
+cluster holds among the current voters: the number of its voting voices out of the group's voters (the owner aside), and
+its share of the say = the voting trust as the engine forms it on the same history (`leanprep.trust_tail` over all
+voices, the group's voters only, renormalised, the 40% cap, then per asset the silent-voice mask and the cap again, as
+`leanprep.prepare_live`), mean over the sessions of each half and over the group's assets, summed over the cluster's
+voting members. (5) The count of pairs measured, and a plain-English summary with clean-up OPTIONS for the owner.
+
+**Why it may mislead.** The voices' pulls are small (heavy ridge, even prior), so a rank correlation can be high between
+two voices that both barely move the odds. Higher-timeframe readings are step functions, so the number of independent
+observations is far below the session count; no significance test is run and none is claimed. 0.85 and 0.70 are
+conventions chosen before looking, not measured boundaries. Two cards that overlap on history can still differ in the
+rare sessions that matter. In-sample history: this describes how the cards behaved together, it proves no edge and no
+redundancy going forward.
+
+**If the registered design proves infeasible** (a store that cannot be read, memory, time), the run stops, the reason is
+recorded here as a disclosed deviation, and no definition above is changed after a number has been seen.
+
+### H54 note on the time (17 Nov 2026, 06:14 UTC; still before any H54 code existed)
+The heading above says 06:15 UTC; by the research server's clock the section was appended at about 06:12 UTC (the time
+was written a few minutes ahead). No H54 code existed and no H54 number had been computed at either time. Running at
+that moment, and unrelated to H54's definitions: Task 8's card rating (`research/rate_cards_snapshot.py`, started
+06:12 UTC on the server), whose results H54 only uses to name each cluster's best-rated member.
+
+### H54 results (17 Nov 2026, ~07:00 UTC; development data to 2025-11-10; `research/out/card_overlap_20261117.md` + `.json`)
+
+**Descriptive; nothing changes in the engine.** Code: `research/card_overlap.py` (group stage on the research server,
+06:38-06:57 UTC, two workers; report on the laptop from `research/out/card_overlap/group_<g>.json`). Groups run: crypto,
+metals, fx, energy. **Index not run**, as expected at registration: its store was still on the previous signature. 71
+voices measured in at least one group, 2,251 distinct pairs (4,793 pair-by-group measurements). Never measured: `book`,
+`kronos`, `news`, `lsratio`, `liq`, `etf` (no or too little history before the seal) and the index-only voices
+`overnight`, `eqbreadth`, `putcall`, `earnings`. Holdout not touched. One descriptive study, no variants.
+
+- **Duplicates (pull overlap S >= 0.85): none**, in no group (within-group maxima: crypto 0.80, fx 0.81, energy 0.78,
+  metals 0.75).
+- **Near-duplicates (0.70 <= S < 0.85): two pairs.** `meanrev` (Stretch and exhaustion) with `stochrsi`: S 0.75, measured
+  in all four groups (crypto 0.66 / 0.74, metals 0.75 / 0.78, fx 0.80 / 0.85, energy 0.81 / 0.78). `momentum` with `flow`
+  (Order flow, CVD): 0.73 / 0.75, crypto only. Within single groups more pairs pass 0.70 (crypto 19, fx 8, metals 2,
+  energy 1), e.g. `cci`-`willr` 0.80 in crypto and 0.81 in fx, but 0.69 and 0.65 in metals and energy, so S = 0.69.
+- **Reading overlap (secondary):** one pair "reads alike": `cci`-`willr` (0.87-0.90 in every group). 29 further pairs
+  "read nearly alike". Clusters at 0.70: {`meanrev`, `ribbon`, `kama`, `stochrsi`, `cci`, `willr`, `elder`},
+  {`trend`, `mavg`}, {`intraday`, `vprofile`}. Contained (R(A in B) >= 0.85): `stochrsi` in `meanrev` 0.91, `trend` in
+  `mavg` 0.90, `cci` and `willr` in each other 0.88, `elder` in `cci` 0.88, `kama` in `cci` 0.87 and in `ribbon` 0.85.
+  Not near-copies on either measure: `supertrend`, `psar`, `heikin` among themselves (0.4-0.5), `cmf`-`mfi` (0.45).
+- **Does one idea vote several times?** By the vote: only in crypto, where `momentum` and `flow` are both voters (2 of
+  12; 15% / 14% of the say). Separate voting ideas at the near-duplicate threshold: crypto 11 of 12, metals 13 of 13, fx
+  12 of 12, energy 10 of 10. By the readings: metals has 3 voters in the range/average family (`momentum`, `meanrev`,
+  `kama`: 23% / 23% of the say) and 2 in {`trend`, `mavg`} (15% / 16%); fx has {`trend`, `mavg`} (17% / 18%) and
+  {`momentum`, `meanrev`} (18% / 18%); crypto and energy have no reading family with two voters. On this history the
+  say is spread evenly (no voter above 15.3% on average in any group and half).
+- **Best-rated members** (17 Nov rating): of {`cci`, `willr`}: CCI in crypto (#12), metals (#6) and fx (#31), Williams %R
+  in energy (#20); of the family of seven: the ribbon in crypto (#2), Elder-Ray in metals (#5) and energy (#7), Momentum
+  and stretch in fx (#4).
+
+**Disclosed.** (1) The heading's time is three minutes ahead of the append (note above). (2) After the first group's
+numbers existed, the REPORT code was changed twice, presentation only: a cluster's best-rated member is now listed only
+for groups where at least two of its members are measured, and a voter without a card title prints its voice name. No
+measure, threshold or clustering rule was changed, and no group was re-run. (3) Added beyond the registered list, as
+context only: each card's mean |pull| in points and how often it speaks (section 6 of the report). (4) The registration's
+"82 cards" are the engine's 82 voices including the owner's; 81 were candidates here. (5) The group stage copied the
+rows before the seal out of the stores (read-only memory maps) into memory and worked from the copy; the engine's
+steps at 06:45 and 07:00 UTC ran normally meanwhile.
+
+**Reading.** By how they vote, the cards are less repetitive than their names suggest; by what they read, the newer
+oscillator cards mostly repeat an idea the engine already had. Options for the owner are in the report; none is
+proposed here. In-sample, descriptive, no edge claimed.

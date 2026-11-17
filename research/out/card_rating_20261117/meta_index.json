@@ -1,0 +1,63 @@
+{
+ "group": "index",
+ "assets": [
+  "SPX"
+ ],
+ "window": [
+  "2020-01-02 14:30",
+  "2025-11-10 20:45"
+ ],
+ "split": "2022-11-29 17:15",
+ "horizon": 26,
+ "graded_rows": 26732,
+ "graded_rows_by_asset": {
+  "SPX": 26732
+ },
+ "up_pct": 52.5,
+ "seconds": 122.0,
+ "peak_mb": null,
+ "voting_cards": [
+  "Mass Index (1h to daily)",
+  "Trade setups",
+  "RSI divergence (15m to 4h)",
+  "Ultimate Oscillator (15m, 1h, daily)",
+  "Moving averages (SMA and EMA 5-200)",
+  "Linear-regression channel (1h to daily)",
+  "Momentum and stretch",
+  "Daily range budget and range breaks",
+  "Stock-market breadth",
+  "Regime"
+ ],
+ "voting_voices": [
+  "mass",
+  "setups",
+  "rsidiv",
+  "ultosc",
+  "mavg",
+  "linreg",
+  "momentum",
+  "meanrev",
+  "pullback",
+  "adr",
+  "eqbreadth",
+  "regime",
+  "owner"
+ ],
+ "floor": "worse half > 50.5%, top 10, at least 3",
+ "engine_version": "think15-v5.2.4",
+ "end": "2025-11-11",
+ "current_voters": [
+  "setups",
+  "news",
+  "macro",
+  "mavg",
+  "overnight",
+  "trendq",
+  "levels",
+  "regime",
+  "intraday",
+  "fib",
+  "rates",
+  "owner"
+ ]
+}

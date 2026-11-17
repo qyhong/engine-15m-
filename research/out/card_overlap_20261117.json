@@ -1,0 +1,3479 @@
+{
+ "tag": "20261117",
+ "groups": [
+  "crypto",
+  "metals",
+  "fx",
+  "energy"
+ ],
+ "cut": "2025-11-11",
+ "split": "2023-06-07",
+ "thresholds": {
+  "duplicate": 0.85,
+  "near": 0.7
+ },
+ "pairs_measured": 2251,
+ "voices": [
+  "trend",
+  "regime",
+  "levels",
+  "momentum",
+  "meanrev",
+  "pullback",
+  "flow",
+  "funding",
+  "strategies",
+  "macro",
+  "risk",
+  "cross",
+  "basis",
+  "options",
+  "clock",
+  "stable",
+  "cbprem",
+  "breadth",
+  "sentiment",
+  "structure",
+  "setups",
+  "intraday",
+  "trendq",
+  "candles",
+  "fib",
+  "volx",
+  "rates",
+  "metals",
+  "goldetf",
+  "mavg",
+  "ribbon",
+  "mavg_sr",
+  "ichimoku",
+  "hull",
+  "kama",
+  "cot",
+  "japan",
+  "eia",
+  "opec",
+  "oilvol",
+  "oilpos",
+  "oilspread",
+  "metrics",
+  "bitfinex",
+  "cme",
+  "onchain",
+  "supertrend",
+  "stochrsi",
+  "psar",
+  "mfi",
+  "vprofile",
+  "heikin",
+  "aroon",
+  "cci",
+  "optflow",
+  "kprem",
+  "cmegap",
+  "dom",
+  "spotlead",
+  "xfund",
+  "adr",
+  "willr",
+  "cmf",
+  "elder",
+  "pivots",
+  "rsidiv",
+  "fisher",
+  "ultosc",
+  "trix",
+  "linreg",
+  "mass"
+ ],
+ "titles": {
+  "trend": "Timeframe strength",
+  "regime": "Regime",
+  "levels": "Support and resistance",
+  "momentum": "Momentum and stretch: Momentum",
+  "meanrev": "Momentum and stretch: Stretch and exhaustion",
+  "pullback": "Momentum and stretch: Pullback inside the trend",
+  "flow": "Order flow (CVD)",
+  "funding": "Funding and positioning",
+  "strategies": "Working strategies",
+  "macro": "News and economic events: Economic calendar and macro tape",
+  "risk": "Risk and volatility",
+  "cross": "The other coin",
+  "basis": "Perp basis and premium",
+  "options": "Options: implied volatility and skew",
+  "clock": "Time and session",
+  "stable": "Stablecoin supply",
+  "cbprem": "Coinbase premium",
+  "breadth": "Market breadth and ETH/BTC",
+  "sentiment": "Fear and Greed",
+  "structure": "Market structure",
+  "setups": "Trade setups",
+  "intraday": "Intraday levels (VWAP and opening range)",
+  "trendq": "Trend quality and squeeze",
+  "candles": "Candle size and realistic targets",
+  "fib": "Fibonacci retracement",
+  "mavg": "Moving averages (SMA and EMA 5-200)",
+  "ribbon": "Moving-average ribbon",
+  "mavg_sr": "Moving averages as support and resistance",
+  "ichimoku": "Ichimoku cloud",
+  "hull": "Hull moving average",
+  "kama": "Kaufman adaptive average (KAMA)",
+  "metrics": "Binance positioning (archive)",
+  "bitfinex": "Bitfinex margin positions",
+  "cme": "CME futures positioning (CFTC)",
+  "onchain": "On-chain activity and flows",
+  "supertrend": "Supertrend (15m to daily)",
+  "stochrsi": "StochRSI (15m to daily)",
+  "psar": "Parabolic SAR (15m to daily)",
+  "mfi": "Money Flow Index (15m to daily)",
+  "vprofile": "Volume profile (session and 7 days)",
+  "heikin": "Heikin-Ashi trend (15m to 4h)",
+  "aroon": "Aroon and Vortex (1h to daily)",
+  "cci": "CCI (15m to daily)",
+  "optflow": "Options flow (Deribit)",
+  "kprem": "Korea premium",
+  "cmegap": "CME gap (spot proxy)",
+  "dom": "BTC dominance",
+  "spotlead": "Spot vs perp leadership",
+  "xfund": "Cross-exchange funding and OI",
+  "adr": "Daily range budget and range breaks",
+  "willr": "Williams %R (15m to daily)",
+  "cmf": "Chaikin money flow and OBV (1h to daily)",
+  "elder": "Elder-Ray (1h to daily)",
+  "pivots": "Pivot points (daily and weekly)",
+  "rsidiv": "RSI divergence (15m to 4h)",
+  "fisher": "Fisher Transform (15m to 4h)",
+  "ultosc": "Ultimate Oscillator (15m, 1h, daily)",
+  "trix": "TRIX (1h to daily)",
+  "linreg": "Linear-regression channel (1h to daily)",
+  "mass": "Mass Index (1h to daily)",
+  "volx": "Volatility gauges",
+  "rates": "Rates and the dollar",
+  "metals": "Metals ratios",
+  "goldetf": "Gold and silver ETF holdings",
+  "cot": "Futures positioning (CFTC)",
+  "japan": "Japan watch",
+  "eia": "EIA crude inventories",
+  "opec": "OPEC+ calendar",
+  "oilvol": "Oil volatility",
+  "oilpos": "Crude futures positioning (CFTC)",
+  "oilspread": "WTI-Brent and curve"
+ },
+ "group_meta": {
+  "crypto": {
+   "assets": [
+    "BTCUSDT",
+    "ETHUSDT"
+   ],
+   "engine_version": "think15-v5.2.4",
+   "store": {
+    "sig": "abf420acf67a2b29e17d1c90a7685cf0bf488650fd6444e914e882d5cbc42f52",
+    "updated_utc": "2026-11-17T06:33:02Z",
+    "n": 275948
+   },
+   "rows": 240306,
+   "window": [
+    "2020-01-01 00:00",
+    "2025-11-10 23:45"
+   ],
+   "sessions": {
+    "BTCUSDT": {
+     "first": 116775,
+     "second": 85248
+    },
+    "ETHUSDT": {
+     "first": 116775,
+     "second": 85248
+    }
+   },
+   "voices": [
+    "trend",
+    "regime",
+    "levels",
+    "momentum",
+    "meanrev",
+    "pullback",
+    "flow",
+    "funding",
+    "strategies",
+    "macro",
+    "risk",
+    "cross",
+    "basis",
+    "options",
+    "clock",
+    "stable",
+    "cbprem",
+    "breadth",
+    "sentiment",
+    "structure",
+    "setups",
+    "intraday",
+    "trendq",
+    "candles",
+    "fib",
+    "mavg",
+    "ribbon",
+    "mavg_sr",
+    "ichimoku",
+    "hull",
+    "kama",
+    "metrics",
+    "bitfinex",
+    "cme",
+    "onchain",
+    "supertrend",
+    "stochrsi",
+    "psar",
+    "mfi",
+    "vprofile",
+    "heikin",
+    "aroon",
+    "cci",
+    "optflow",
+    "kprem",
+    "cmegap",
+    "dom",
+    "spotlead",
+    "xfund",
+    "adr",
+    "willr",
+    "cmf",
+    "elder",
+    "pivots",
+    "rsidiv",
+    "fisher",
+    "ultosc",
+    "trix",
+    "linreg",
+    "mass"
+   ],
+   "excluded": {
+    "book": "speaks on fewer than 2000 sessions in a half (BTCUSDT 0/0, ETHUSDT 0/0)",
+    "kronos": "speaks on fewer than 2000 sessions in a half (BTCUSDT 0/0, ETHUSDT 0/0)",
+    "news": "speaks on fewer than 2000 sessions in a half (BTCUSDT 0/0, ETHUSDT 0/0)",
+    "lsratio": "speaks on fewer than 2000 sessions in a half (BTCUSDT 0/0, ETHUSDT 0/0)",
+    "liq": "speaks on fewer than 2000 sessions in a half (BTCUSDT 0/0, ETHUSDT 0/0)",
+    "etf": "speaks on fewer than 2000 sessions in a half (BTCUSDT 0/62833, ETHUSDT 0/44305)",
+    "overnight": "does not apply to this market",
+    "volx": "does not apply to this market",
+    "rates": "does not apply to this market",
+    "metals": "does not apply to this market",
+    "eqbreadth": "does not apply to this market",
+    "goldetf": "does not apply to this market",
+    "cot": "does not apply to this market",
+    "japan": "does not apply to this market",
+    "putcall": "does not apply to this market",
+    "earnings": "does not apply to this market",
+    "eia": "does not apply to this market",
+    "opec": "does not apply to this market",
+    "oilvol": "does not apply to this market",
+    "oilpos": "does not apply to this market",
+    "oilspread": "does not apply to this market"
+   },
+   "voters": [
+    "trend",
+    "regime",
+    "levels",
+    "momentum",
+    "meanrev",
+    "pullback",
+    "flow",
+    "strategies",
+    "basis",
+    "stable",
+    "cbprem",
+    "breadth"
+   ],
+   "say": {
+    "trend": {
+     "first": 0.0709,
+     "second": 0.0703
+    },
+    "regime": {
+     "first": 0.0552,
+     "second": 0.051
+    },
+    "levels": {
+     "first": 0.1028,
+     "second": 0.0932
+    },
+    "momentum": {
+     "first": 0.0752,
+     "second": 0.075
+    },
+    "meanrev": {
+     "first": 0.0986,
+     "second": 0.0924
+    },
+    "pullback": {
+     "first": 0.0803,
+     "second": 0.0835
+    },
+    "flow": {
+     "first": 0.0741,
+     "second": 0.0694
+    },
+    "strategies": {
+     "first": 0.0783,
+     "second": 0.0936
+    },
+    "basis": {
+     "first": 0.08,
+     "second": 0.0697
+    },
+    "stable": {
+     "first": 0.0771,
+     "second": 0.0693
+    },
+    "cbprem": {
+     "first": 0.1013,
+     "second": 0.1369
+    },
+    "breadth": {
+     "first": 0.1062,
+     "second": 0.0958
+    },
+    "owner": {
+     "first": 0.0,
+     "second": 0.0
+    }
+   },
+   "pull_size_pts": {
+    "trend": {
+     "first": 3.96,
+     "second": 3.198
+    },
+    "regime": {
+     "first": 3.65,
+     "second": 2.511
+    },
+    "levels": {
+     "first": 11.046,
+     "second": 8.601
+    },
+    "momentum": {
+     "first": 4.202,
+     "second": 3.28
+    },
+    "meanrev": {
+     "first": 5.434,
+     "second": 4.617
+    },
+    "pullback": {
+     "first": 3.392,
+     "second": 3.251
+    },
+    "flow": {
+     "first": 3.688,
+     "second": 2.606
+    },
+    "funding": {
+     "first": 4.291,
+     "second": 0.806
+    },
+    "strategies": {
+     "first": 3.766,
+     "second": 3.563
+    },
+    "macro": {
+     "first": 3.544,
+     "second": 2.702
+    },
+    "risk": {
+     "first": 1.209,
+     "second": 1.185
+    },
+    "cross": {
+     "first": 2.398,
+     "second": 1.516
+    },
+    "basis": {
+     "first": 3.413,
+     "second": 1.065
+    },
+    "options": {
+     "first": 3.986,
+     "second": 2.384
+    },
+    "clock": {
+     "first": 4.694,
+     "second": 2.585
+    },
+    "stable": {
+     "first": 1.811,
+     "second": 0.73
+    },
+    "cbprem": {
+     "first": 4.342,
+     "second": 4.878
+    },
+    "breadth": {
+     "first": 4.735,
+     "second": 3.865
+    },
+    "sentiment": {
+     "first": 1.998,
+     "second": 1.37
+    },
+    "structure": {
+     "first": 6.273,
+     "second": 4.63
+    },
+    "setups": {
+     "first": 3.547,
+     "second": 3.41
+    },
+    "intraday": {
+     "first": 5.275,
+     "second": 4.355
+    },
+    "trendq": {
+     "first": 6.678,
+     "second": 5.116
+    },
+    "candles": {
+     "first": 2.425,
+     "second": 1.436
+    },
+    "fib": {
+     "first": 3.465,
+     "second": 2.756
+    },
+    "mavg": {
+     "first": 5.191,
+     "second": 4.273
+    },
+    "ribbon": {
+     "first": 5.676,
+     "second": 4.645
+    },
+    "mavg_sr": {
+     "first": 3.498,
+     "second": 2.857
+    },
+    "ichimoku": {
+     "first": 6.04,
+     "second": 4.98
+    },
+    "hull": {
+     "first": 3.208,
+     "second": 2.708
+    },
+    "kama": {
+     "first": 4.439,
+     "second": 4.412
+    },
+    "metrics": {
+     "first": 4.499,
+     "second": 3.18
+    },
+    "bitfinex": {
+     "first": 1.885,
+     "second": 1.008
+    },
+    "cme": {
+     "first": 0.782,
+     "second": 0.722
+    },
+    "onchain": {
+     "first": 2.605,
+     "second": 0.779
+    },
+    "supertrend": {
+     "first": 4.975,
+     "second": 3.158
+    },
+    "stochrsi": {
+     "first": 4.135,
+     "second": 3.919
+    },
+    "psar": {
+     "first": 2.448,
+     "second": 2.03
+    },
+    "mfi": {
+     "first": 4.05,
+     "second": 3.743
+    },
+    "vprofile": {
+     "first": 4.513,
+     "second": 3.68
+    },
+    "heikin": {
+     "first": 3.999,
+     "second": 4.009
+    },
+    "aroon": {
+     "first": 6.683,
+     "second": 6.376
+    },
+    "cci": {
+     "first": 3.957,
+     "second": 3.362
+    },
+    "optflow": {
+     "first": 2.775,
+     "second": 1.101
+    },
+    "kprem": {
+     "first": 1.57,
+     "second": 1.604
+    },
+    "cmegap": {
+     "first": 1.649,
+     "second": 1.174
+    },
+    "dom": {
+     "first": 1.914,
+     "second": 1.266
+    },
+    "spotlead": {
+     "first": 1.977,
+     "second": 1.842
+    },
+    "xfund": {
+     "first": 3.169,
+     "second": 1.243
+    },
+    "adr": {
+     "first": 5.015,
+     "second": 5.146
+    },
+    "willr": {
+     "first": 3.854,
+     "second": 3.701
+    },
+    "cmf": {
+     "first": 4.154,
+     "second": 2.732
+    },
+    "elder": {
+     "first": 4.923,
+     "second": 4.23
+    },
+    "pivots": {
+     "first": 4.746,
+     "second": 4.222
+    },
+    "rsidiv": {
+     "first": 2.157,
+     "second": 1.52
+    },
+    "fisher": {
+     "first": 3.591,
+     "second": 3.24
+    },
+    "ultosc": {
+     "first": 2.659,
+     "second": 2.348
+    },
+    "trix": {
+     "first": 5.619,
+     "second": 3.69
+    },
+    "linreg": {
+     "first": 5.679,
+     "second": 4.985
+    },
+    "mass": {
+     "first": 2.284,
+     "second": 1.644
+    }
+   },
+   "speaks_share": {
+    "trend": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "regime": {
+     "first": 0.7248,
+     "second": 0.7196
+    },
+    "levels": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "momentum": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "meanrev": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "pullback": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "flow": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "funding": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "strategies": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "macro": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "risk": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "cross": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "basis": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "options": {
+     "first": 0.6613,
+     "second": 1.0
+    },
+    "clock": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "stable": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "cbprem": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "breadth": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "sentiment": {
+     "first": 0.9967,
+     "second": 0.9944
+    },
+    "structure": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "setups": {
+     "first": 0.3023,
+     "second": 0.3191
+    },
+    "intraday": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "trendq": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "candles": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "fib": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "mavg": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "ribbon": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "mavg_sr": {
+     "first": 0.9943,
+     "second": 0.993
+    },
+    "ichimoku": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "hull": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "kama": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "metrics": {
+     "first": 0.6347,
+     "second": 1.0
+    },
+    "bitfinex": {
+     "first": 0.6738,
+     "second": 0.9998
+    },
+    "cme": {
+     "first": 0.7414,
+     "second": 0.966
+    },
+    "onchain": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "supertrend": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "stochrsi": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "psar": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "mfi": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "vprofile": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "heikin": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "aroon": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "cci": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "optflow": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "kprem": {
+     "first": 0.9984,
+     "second": 0.9979
+    },
+    "cmegap": {
+     "first": 0.5916,
+     "second": 0.6902
+    },
+    "dom": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "spotlead": {
+     "first": 0.9979,
+     "second": 1.0
+    },
+    "xfund": {
+     "first": 0.9028,
+     "second": 1.0
+    },
+    "adr": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "willr": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "cmf": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "elder": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "pivots": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "rsidiv": {
+     "first": 0.489,
+     "second": 0.5068
+    },
+    "fisher": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "ultosc": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "trix": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "linreg": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "mass": {
+     "first": 1.0,
+     "second": 1.0
+    }
+   },
+   "refits": {
+    "refits": 301,
+    "reused": 0
+   },
+   "seconds": 896.2
+  },
+  "metals": {
+   "assets": [
+    "XAUUSD",
+    "XAGUSD"
+   ],
+   "engine_version": "think15-v5.2.4",
+   "store": {
+    "sig": "abf420acf67a2b29e17d1c90a7685cf0bf488650fd6444e914e882d5cbc42f52",
+    "updated_utc": "2026-11-17T06:33:57Z",
+    "n": 186125
+   },
+   "rows": 162215,
+   "window": [
+    "2020-01-01 23:00",
+    "2025-11-10 23:45"
+   ],
+   "sessions": {
+    "XAUUSD": {
+     "first": 77703,
+     "second": 57550
+    },
+    "XAGUSD": {
+     "first": 77703,
+     "second": 57550
+    }
+   },
+   "voices": [
+    "trend",
+    "regime",
+    "levels",
+    "momentum",
+    "meanrev",
+    "pullback",
+    "strategies",
+    "macro",
+    "risk",
+    "cross",
+    "clock",
+    "structure",
+    "setups",
+    "intraday",
+    "trendq",
+    "candles",
+    "fib",
+    "volx",
+    "rates",
+    "metals",
+    "goldetf",
+    "mavg",
+    "ribbon",
+    "mavg_sr",
+    "ichimoku",
+    "hull",
+    "kama",
+    "cot",
+    "supertrend",
+    "stochrsi",
+    "psar",
+    "mfi",
+    "vprofile",
+    "heikin",
+    "aroon",
+    "cci",
+    "adr",
+    "willr",
+    "cmf",
+    "elder",
+    "pivots",
+    "rsidiv",
+    "fisher",
+    "ultosc",
+    "trix",
+    "linreg",
+    "mass"
+   ],
+   "excluded": {
+    "flow": "does not apply to this market",
+    "funding": "does not apply to this market",
+    "book": "does not apply to this market",
+    "kronos": "speaks on fewer than 2000 sessions in a half (XAUUSD 0/0, XAGUSD 0/0)",
+    "news": "speaks on fewer than 2000 sessions in a half (XAUUSD 0/0, XAGUSD 0/0)",
+    "basis": "does not apply to this market",
+    "lsratio": "does not apply to this market",
+    "liq": "does not apply to this market",
+    "options": "does not apply to this market",
+    "etf": "does not apply to this market",
+    "stable": "does not apply to this market",
+    "cbprem": "does not apply to this market",
+    "breadth": "does not apply to this market",
+    "sentiment": "does not apply to this market",
+    "overnight": "does not apply to this market",
+    "eqbreadth": "does not apply to this market",
+    "japan": "does not apply to this market",
+    "putcall": "does not apply to this market",
+    "earnings": "does not apply to this market",
+    "eia": "does not apply to this market",
+    "opec": "does not apply to this market",
+    "oilvol": "does not apply to this market",
+    "oilpos": "does not apply to this market",
+    "oilspread": "does not apply to this market",
+    "metrics": "does not apply to this market",
+    "bitfinex": "does not apply to this market",
+    "cme": "does not apply to this market",
+    "onchain": "does not apply to this market",
+    "optflow": "does not apply to this market",
+    "kprem": "does not apply to this market",
+    "cmegap": "does not apply to this market",
+    "dom": "does not apply to this market",
+    "spotlead": "does not apply to this market",
+    "xfund": "does not apply to this market"
+   },
+   "voters": [
+    "trend",
+    "regime",
+    "momentum",
+    "meanrev",
+    "pullback",
+    "news",
+    "macro",
+    "structure",
+    "volx",
+    "goldetf",
+    "mavg",
+    "ichimoku",
+    "kama"
+   ],
+   "say": {
+    "trend": {
+     "first": 0.0725,
+     "second": 0.076
+    },
+    "regime": {
+     "first": 0.0676,
+     "second": 0.0575
+    },
+    "momentum": {
+     "first": 0.0744,
+     "second": 0.0744
+    },
+    "meanrev": {
+     "first": 0.0758,
+     "second": 0.0772
+    },
+    "pullback": {
+     "first": 0.0741,
+     "second": 0.0739
+    },
+    "news": {
+     "first": 0.0,
+     "second": 0.0
+    },
+    "macro": {
+     "first": 0.1035,
+     "second": 0.1076
+    },
+    "structure": {
+     "first": 0.0848,
+     "second": 0.0791
+    },
+    "volx": {
+     "first": 0.1023,
+     "second": 0.098
+    },
+    "goldetf": {
+     "first": 0.0932,
+     "second": 0.1097
+    },
+    "mavg": {
+     "first": 0.0736,
+     "second": 0.0872
+    },
+    "ichimoku": {
+     "first": 0.1016,
+     "second": 0.0795
+    },
+    "kama": {
+     "first": 0.0767,
+     "second": 0.0799
+    },
+    "owner": {
+     "first": 0.0,
+     "second": 0.0
+    }
+   },
+   "pull_size_pts": {
+    "trend": {
+     "first": 2.211,
+     "second": 1.675
+    },
+    "regime": {
+     "first": 4.588,
+     "second": 3.0
+    },
+    "levels": {
+     "first": 4.19,
+     "second": 3.056
+    },
+    "momentum": {
+     "first": 2.498,
+     "second": 1.993
+    },
+    "meanrev": {
+     "first": 2.617,
+     "second": 2.154
+    },
+    "pullback": {
+     "first": 1.825,
+     "second": 0.681
+    },
+    "strategies": {
+     "first": 5.855,
+     "second": 3.617
+    },
+    "macro": {
+     "first": 4.419,
+     "second": 2.673
+    },
+    "risk": {
+     "first": 2.162,
+     "second": 1.391
+    },
+    "cross": {
+     "first": 1.584,
+     "second": 1.172
+    },
+    "clock": {
+     "first": 4.651,
+     "second": 4.681
+    },
+    "structure": {
+     "first": 3.442,
+     "second": 1.822
+    },
+    "setups": {
+     "first": 3.146,
+     "second": 3.361
+    },
+    "intraday": {
+     "first": 2.43,
+     "second": 1.573
+    },
+    "trendq": {
+     "first": 6.156,
+     "second": 3.869
+    },
+    "candles": {
+     "first": 2.947,
+     "second": 1.024
+    },
+    "fib": {
+     "first": 2.965,
+     "second": 1.507
+    },
+    "volx": {
+     "first": 4.95,
+     "second": 2.597
+    },
+    "rates": {
+     "first": 2.694,
+     "second": 1.369
+    },
+    "metals": {
+     "first": 3.375,
+     "second": 2.837
+    },
+    "goldetf": {
+     "first": 3.333,
+     "second": 3.116
+    },
+    "mavg": {
+     "first": 2.881,
+     "second": 2.319
+    },
+    "ribbon": {
+     "first": 3.053,
+     "second": 2.219
+    },
+    "mavg_sr": {
+     "first": 3.179,
+     "second": 2.164
+    },
+    "ichimoku": {
+     "first": 4.238,
+     "second": 2.591
+    },
+    "hull": {
+     "first": 3.626,
+     "second": 3.103
+    },
+    "kama": {
+     "first": 2.775,
+     "second": 2.494
+    },
+    "cot": {
+     "first": 1.455,
+     "second": 1.297
+    },
+    "supertrend": {
+     "first": 4.148,
+     "second": 1.853
+    },
+    "stochrsi": {
+     "first": 2.266,
+     "second": 2.445
+    },
+    "psar": {
+     "first": 2.692,
+     "second": 2.956
+    },
+    "mfi": {
+     "first": 1.773,
+     "second": 1.292
+    },
+    "vprofile": {
+     "first": 1.715,
+     "second": 1.267
+    },
+    "heikin": {
+     "first": 4.191,
+     "second": 2.918
+    },
+    "aroon": {
+     "first": 4.933,
+     "second": 3.167
+    },
+    "cci": {
+     "first": 2.778,
+     "second": 2.095
+    },
+    "adr": {
+     "first": 3.156,
+     "second": 1.833
+    },
+    "willr": {
+     "first": 2.287,
+     "second": 1.767
+    },
+    "cmf": {
+     "first": 3.248,
+     "second": 3.111
+    },
+    "elder": {
+     "first": 3.444,
+     "second": 3.014
+    },
+    "pivots": {
+     "first": 3.055,
+     "second": 2.559
+    },
+    "rsidiv": {
+     "first": 3.188,
+     "second": 3.074
+    },
+    "fisher": {
+     "first": 2.447,
+     "second": 1.776
+    },
+    "ultosc": {
+     "first": 1.812,
+     "second": 2.657
+    },
+    "trix": {
+     "first": 4.212,
+     "second": 2.621
+    },
+    "linreg": {
+     "first": 4.169,
+     "second": 3.694
+    },
+    "mass": {
+     "first": 2.008,
+     "second": 0.715
+    }
+   },
+   "speaks_share": {
+    "trend": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "regime": {
+     "first": 0.6618,
+     "second": 0.7108
+    },
+    "levels": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "momentum": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "meanrev": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "pullback": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "strategies": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "macro": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "risk": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "cross": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "clock": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "structure": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "setups": {
+     "first": 0.3256,
+     "second": 0.3226
+    },
+    "intraday": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "trendq": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "candles": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "fib": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "volx": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "rates": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "metals": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "goldetf": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "mavg": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "ribbon": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "mavg_sr": {
+     "first": 0.994,
+     "second": 0.9925
+    },
+    "ichimoku": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "hull": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "kama": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "cot": {
+     "first": 0.9884,
+     "second": 0.9664
+    },
+    "supertrend": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "stochrsi": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "psar": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "mfi": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "vprofile": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "heikin": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "aroon": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "cci": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "adr": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "willr": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "cmf": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "elder": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "pivots": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "rsidiv": {
+     "first": 0.5576,
+     "second": 0.5386
+    },
+    "fisher": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "ultosc": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "trix": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "linreg": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "mass": {
+     "first": 1.0,
+     "second": 1.0
+    }
+   },
+   "refits": {
+    "refits": 202,
+    "reused": 0
+   },
+   "seconds": 411.3
+  },
+  "fx": {
+   "assets": [
+    "USDJPY"
+   ],
+   "engine_version": "think15-v5.2.4",
+   "store": {
+    "sig": "abf420acf67a2b29e17d1c90a7685cf0bf488650fd6444e914e882d5cbc42f52",
+    "updated_utc": "2026-11-17T06:34:24Z",
+    "n": 196335
+   },
+   "rows": 171130,
+   "window": [
+    "2020-01-01 22:00",
+    "2025-11-10 23:45"
+   ],
+   "sessions": {
+    "USDJPY": {
+     "first": 78962,
+     "second": 60548
+    }
+   },
+   "voices": [
+    "trend",
+    "regime",
+    "levels",
+    "momentum",
+    "meanrev",
+    "pullback",
+    "strategies",
+    "macro",
+    "risk",
+    "clock",
+    "structure",
+    "setups",
+    "intraday",
+    "trendq",
+    "candles",
+    "fib",
+    "volx",
+    "rates",
+    "mavg",
+    "ribbon",
+    "mavg_sr",
+    "ichimoku",
+    "hull",
+    "kama",
+    "cot",
+    "japan",
+    "supertrend",
+    "stochrsi",
+    "psar",
+    "heikin",
+    "aroon",
+    "cci",
+    "adr",
+    "willr",
+    "elder",
+    "pivots",
+    "rsidiv",
+    "fisher",
+    "ultosc",
+    "trix",
+    "linreg",
+    "mass"
+   ],
+   "excluded": {
+    "flow": "does not apply to this market",
+    "funding": "does not apply to this market",
+    "book": "does not apply to this market",
+    "kronos": "speaks on fewer than 2000 sessions in a half (USDJPY 0/0)",
+    "news": "speaks on fewer than 2000 sessions in a half (USDJPY 0/0)",
+    "cross": "speaks on fewer than 2000 sessions in a half (USDJPY 0/0)",
+    "basis": "does not apply to this market",
+    "lsratio": "does not apply to this market",
+    "liq": "does not apply to this market",
+    "options": "does not apply to this market",
+    "etf": "does not apply to this market",
+    "stable": "does not apply to this market",
+    "cbprem": "does not apply to this market",
+    "breadth": "does not apply to this market",
+    "sentiment": "does not apply to this market",
+    "overnight": "does not apply to this market",
+    "metals": "does not apply to this market",
+    "eqbreadth": "does not apply to this market",
+    "goldetf": "does not apply to this market",
+    "putcall": "does not apply to this market",
+    "earnings": "does not apply to this market",
+    "eia": "does not apply to this market",
+    "opec": "does not apply to this market",
+    "oilvol": "does not apply to this market",
+    "oilpos": "does not apply to this market",
+    "oilspread": "does not apply to this market",
+    "metrics": "does not apply to this market",
+    "bitfinex": "does not apply to this market",
+    "cme": "does not apply to this market",
+    "onchain": "does not apply to this market",
+    "mfi": "speaks on fewer than 2000 sessions in a half (USDJPY 0/0)",
+    "vprofile": "speaks on fewer than 2000 sessions in a half (USDJPY 0/0)",
+    "optflow": "does not apply to this market",
+    "kprem": "does not apply to this market",
+    "cmegap": "does not apply to this market",
+    "dom": "does not apply to this market",
+    "spotlead": "does not apply to this market",
+    "xfund": "does not apply to this market",
+    "cmf": "speaks on fewer than 2000 sessions in a half (USDJPY 0/0)"
+   },
+   "voters": [
+    "trend",
+    "regime",
+    "levels",
+    "momentum",
+    "meanrev",
+    "pullback",
+    "strategies",
+    "clock",
+    "setups",
+    "trendq",
+    "rates",
+    "mavg"
+   ],
+   "say": {
+    "trend": {
+     "first": 0.0844,
+     "second": 0.0855
+    },
+    "regime": {
+     "first": 0.0641,
+     "second": 0.0543
+    },
+    "levels": {
+     "first": 0.0839,
+     "second": 0.0892
+    },
+    "momentum": {
+     "first": 0.0826,
+     "second": 0.0854
+    },
+    "meanrev": {
+     "first": 0.0957,
+     "second": 0.0931
+    },
+    "pullback": {
+     "first": 0.0848,
+     "second": 0.0892
+    },
+    "strategies": {
+     "first": 0.1073,
+     "second": 0.0869
+    },
+    "clock": {
+     "first": 0.0921,
+     "second": 0.119
+    },
+    "setups": {
+     "first": 0.0277,
+     "second": 0.0251
+    },
+    "trendq": {
+     "first": 0.095,
+     "second": 0.0952
+    },
+    "rates": {
+     "first": 0.0936,
+     "second": 0.0872
+    },
+    "mavg": {
+     "first": 0.0887,
+     "second": 0.0897
+    },
+    "owner": {
+     "first": 0.0,
+     "second": 0.0
+    }
+   },
+   "pull_size_pts": {
+    "trend": {
+     "first": 3.536,
+     "second": 2.299
+    },
+    "regime": {
+     "first": 3.505,
+     "second": 1.702
+    },
+    "levels": {
+     "first": 4.148,
+     "second": 3.137
+    },
+    "momentum": {
+     "first": 2.924,
+     "second": 1.583
+    },
+    "meanrev": {
+     "first": 4.024,
+     "second": 3.668
+    },
+    "pullback": {
+     "first": 3.087,
+     "second": 3.254
+    },
+    "strategies": {
+     "first": 5.133,
+     "second": 1.091
+    },
+    "macro": {
+     "first": 3.465,
+     "second": 2.083
+    },
+    "risk": {
+     "first": 2.234,
+     "second": 1.086
+    },
+    "clock": {
+     "first": 4.953,
+     "second": 5.159
+    },
+    "structure": {
+     "first": 6.064,
+     "second": 4.367
+    },
+    "setups": {
+     "first": 7.552,
+     "second": 5.56
+    },
+    "intraday": {
+     "first": 3.928,
+     "second": 3.143
+    },
+    "trendq": {
+     "first": 5.821,
+     "second": 4.102
+    },
+    "candles": {
+     "first": 4.148,
+     "second": 2.306
+    },
+    "fib": {
+     "first": 4.18,
+     "second": 2.751
+    },
+    "volx": {
+     "first": 3.663,
+     "second": 2.936
+    },
+    "rates": {
+     "first": 3.32,
+     "second": 1.829
+    },
+    "mavg": {
+     "first": 3.803,
+     "second": 2.957
+    },
+    "ribbon": {
+     "first": 3.639,
+     "second": 2.985
+    },
+    "mavg_sr": {
+     "first": 2.438,
+     "second": 1.753
+    },
+    "ichimoku": {
+     "first": 4.105,
+     "second": 3.486
+    },
+    "hull": {
+     "first": 4.902,
+     "second": 3.013
+    },
+    "kama": {
+     "first": 3.598,
+     "second": 3.309
+    },
+    "cot": {
+     "first": 1.711,
+     "second": 2.26
+    },
+    "japan": {
+     "first": 1.8,
+     "second": 2.676
+    },
+    "supertrend": {
+     "first": 3.973,
+     "second": 2.567
+    },
+    "stochrsi": {
+     "first": 3.211,
+     "second": 3.458
+    },
+    "psar": {
+     "first": 4.304,
+     "second": 2.969
+    },
+    "heikin": {
+     "first": 5.135,
+     "second": 3.523
+    },
+    "aroon": {
+     "first": 6.161,
+     "second": 4.44
+    },
+    "cci": {
+     "first": 3.443,
+     "second": 2.927
+    },
+    "adr": {
+     "first": 3.528,
+     "second": 2.519
+    },
+    "willr": {
+     "first": 3.16,
+     "second": 2.914
+    },
+    "elder": {
+     "first": 4.249,
+     "second": 5.627
+    },
+    "pivots": {
+     "first": 3.424,
+     "second": 2.722
+    },
+    "rsidiv": {
+     "first": 2.061,
+     "second": 1.621
+    },
+    "fisher": {
+     "first": 4.366,
+     "second": 3.551
+    },
+    "ultosc": {
+     "first": 2.404,
+     "second": 2.651
+    },
+    "trix": {
+     "first": 4.863,
+     "second": 3.005
+    },
+    "linreg": {
+     "first": 4.658,
+     "second": 3.104
+    },
+    "mass": {
+     "first": 1.38,
+     "second": 1.735
+    }
+   },
+   "speaks_share": {
+    "trend": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "regime": {
+     "first": 0.6755,
+     "second": 0.6446
+    },
+    "levels": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "momentum": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "meanrev": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "pullback": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "strategies": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "macro": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "risk": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "clock": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "structure": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "setups": {
+     "first": 0.3191,
+     "second": 0.3071
+    },
+    "intraday": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "trendq": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "candles": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "fib": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "volx": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "rates": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "mavg": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "ribbon": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "mavg_sr": {
+     "first": 0.9898,
+     "second": 0.9922
+    },
+    "ichimoku": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "hull": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "kama": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "cot": {
+     "first": 0.9879,
+     "second": 0.9666
+    },
+    "japan": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "supertrend": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "stochrsi": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "psar": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "heikin": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "aroon": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "cci": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "adr": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "willr": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "elder": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "pivots": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "rsidiv": {
+     "first": 0.5288,
+     "second": 0.5589
+    },
+    "fisher": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "ultosc": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "trix": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "linreg": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "mass": {
+     "first": 1.0,
+     "second": 1.0
+    }
+   },
+   "refits": {
+    "refits": 208,
+    "reused": 0
+   },
+   "seconds": 234.0
+  },
+  "energy": {
+   "assets": [
+    "WTI",
+    "BRENT"
+   ],
+   "engine_version": "think15-v5.2.4",
+   "store": {
+    "sig": "abf420acf67a2b29e17d1c90a7685cf0bf488650fd6444e914e882d5cbc42f52",
+    "updated_utc": "2026-11-17T06:35:11Z",
+    "n": 169083
+   },
+   "rows": 147360,
+   "window": [
+    "2020-01-02 01:00",
+    "2025-11-10 21:45"
+   ],
+   "sessions": {
+    "WTI": {
+     "first": 70447,
+     "second": 52395
+    },
+    "BRENT": {
+     "first": 70447,
+     "second": 52395
+    }
+   },
+   "voices": [
+    "trend",
+    "regime",
+    "levels",
+    "momentum",
+    "meanrev",
+    "pullback",
+    "strategies",
+    "macro",
+    "risk",
+    "cross",
+    "clock",
+    "structure",
+    "setups",
+    "intraday",
+    "trendq",
+    "candles",
+    "fib",
+    "mavg",
+    "ribbon",
+    "mavg_sr",
+    "ichimoku",
+    "hull",
+    "kama",
+    "eia",
+    "opec",
+    "oilvol",
+    "oilpos",
+    "oilspread",
+    "supertrend",
+    "stochrsi",
+    "psar",
+    "mfi",
+    "vprofile",
+    "heikin",
+    "aroon",
+    "cci",
+    "adr",
+    "willr",
+    "cmf",
+    "elder",
+    "pivots",
+    "rsidiv",
+    "fisher",
+    "ultosc",
+    "trix",
+    "linreg",
+    "mass"
+   ],
+   "excluded": {
+    "flow": "does not apply to this market",
+    "funding": "does not apply to this market",
+    "book": "does not apply to this market",
+    "kronos": "speaks on fewer than 2000 sessions in a half (WTI 0/0, BRENT 0/0)",
+    "news": "speaks on fewer than 2000 sessions in a half (WTI 0/0, BRENT 0/0)",
+    "basis": "does not apply to this market",
+    "lsratio": "does not apply to this market",
+    "liq": "does not apply to this market",
+    "options": "does not apply to this market",
+    "etf": "does not apply to this market",
+    "stable": "does not apply to this market",
+    "cbprem": "does not apply to this market",
+    "breadth": "does not apply to this market",
+    "sentiment": "does not apply to this market",
+    "overnight": "does not apply to this market",
+    "volx": "does not apply to this market",
+    "rates": "does not apply to this market",
+    "metals": "does not apply to this market",
+    "eqbreadth": "does not apply to this market",
+    "goldetf": "does not apply to this market",
+    "cot": "does not apply to this market",
+    "japan": "does not apply to this market",
+    "putcall": "does not apply to this market",
+    "earnings": "does not apply to this market",
+    "metrics": "does not apply to this market",
+    "bitfinex": "does not apply to this market",
+    "cme": "does not apply to this market",
+    "onchain": "does not apply to this market",
+    "optflow": "does not apply to this market",
+    "kprem": "does not apply to this market",
+    "cmegap": "does not apply to this market",
+    "dom": "does not apply to this market",
+    "spotlead": "does not apply to this market",
+    "xfund": "does not apply to this market"
+   },
+   "voters": [
+    "regime",
+    "levels",
+    "setups",
+    "trendq",
+    "candles",
+    "fib",
+    "mavg",
+    "kama",
+    "oilvol",
+    "oilspread"
+   ],
+   "say": {
+    "regime": {
+     "first": 0.0905,
+     "second": 0.0836
+    },
+    "levels": {
+     "first": 0.1523,
+     "second": 0.1326
+    },
+    "setups": {
+     "first": 0.0312,
+     "second": 0.0314
+    },
+    "trendq": {
+     "first": 0.115,
+     "second": 0.0988
+    },
+    "candles": {
+     "first": 0.0923,
+     "second": 0.0933
+    },
+    "fib": {
+     "first": 0.109,
+     "second": 0.0996
+    },
+    "mavg": {
+     "first": 0.0988,
+     "second": 0.1034
+    },
+    "kama": {
+     "first": 0.1099,
+     "second": 0.146
+    },
+    "oilvol": {
+     "first": 0.107,
+     "second": 0.1192
+    },
+    "oilspread": {
+     "first": 0.094,
+     "second": 0.0921
+    },
+    "owner": {
+     "first": 0.0,
+     "second": 0.0
+    }
+   },
+   "pull_size_pts": {
+    "trend": {
+     "first": 6.061,
+     "second": 1.594
+    },
+    "regime": {
+     "first": 6.64,
+     "second": 5.341
+    },
+    "levels": {
+     "first": 17.466,
+     "second": 16.877
+    },
+    "momentum": {
+     "first": 4.651,
+     "second": 1.619
+    },
+    "meanrev": {
+     "first": 6.329,
+     "second": 2.795
+    },
+    "pullback": {
+     "first": 5.154,
+     "second": 1.633
+    },
+    "strategies": {
+     "first": 8.732,
+     "second": 1.914
+    },
+    "macro": {
+     "first": 3.289,
+     "second": 2.314
+    },
+    "risk": {
+     "first": 4.305,
+     "second": 1.268
+    },
+    "cross": {
+     "first": 5.016,
+     "second": 0.685
+    },
+    "clock": {
+     "first": 5.245,
+     "second": 4.947
+    },
+    "structure": {
+     "first": 6.257,
+     "second": 2.641
+    },
+    "setups": {
+     "first": 3.477,
+     "second": 3.624
+    },
+    "intraday": {
+     "first": 4.279,
+     "second": 1.865
+    },
+    "trendq": {
+     "first": 7.687,
+     "second": 4.069
+    },
+    "candles": {
+     "first": 3.401,
+     "second": 1.165
+    },
+    "fib": {
+     "first": 3.528,
+     "second": 2.14
+    },
+    "mavg": {
+     "first": 8.012,
+     "second": 2.6
+    },
+    "ribbon": {
+     "first": 5.714,
+     "second": 2.43
+    },
+    "mavg_sr": {
+     "first": 5.413,
+     "second": 2.419
+    },
+    "ichimoku": {
+     "first": 7.098,
+     "second": 2.73
+    },
+    "hull": {
+     "first": 4.514,
+     "second": 2.099
+    },
+    "kama": {
+     "first": 4.752,
+     "second": 3.629
+    },
+    "eia": {
+     "first": 9.722,
+     "second": 2.354
+    },
+    "opec": {
+     "first": 1.95,
+     "second": 2.254
+    },
+    "oilvol": {
+     "first": 3.794,
+     "second": 1.947
+    },
+    "oilpos": {
+     "first": 1.872,
+     "second": 2.083
+    },
+    "oilspread": {
+     "first": 1.588,
+     "second": 0.685
+    },
+    "supertrend": {
+     "first": 7.709,
+     "second": 1.277
+    },
+    "stochrsi": {
+     "first": 4.828,
+     "second": 2.258
+    },
+    "psar": {
+     "first": 5.921,
+     "second": 1.658
+    },
+    "mfi": {
+     "first": 3.243,
+     "second": 2.04
+    },
+    "vprofile": {
+     "first": 2.954,
+     "second": 1.378
+    },
+    "heikin": {
+     "first": 6.066,
+     "second": 2.964
+    },
+    "aroon": {
+     "first": 8.463,
+     "second": 3.223
+    },
+    "cci": {
+     "first": 4.775,
+     "second": 1.603
+    },
+    "adr": {
+     "first": 3.534,
+     "second": 2.214
+    },
+    "willr": {
+     "first": 4.826,
+     "second": 1.416
+    },
+    "cmf": {
+     "first": 4.53,
+     "second": 2.664
+    },
+    "elder": {
+     "first": 8.537,
+     "second": 2.966
+    },
+    "pivots": {
+     "first": 4.82,
+     "second": 2.312
+    },
+    "rsidiv": {
+     "first": 2.701,
+     "second": 3.872
+    },
+    "fisher": {
+     "first": 5.136,
+     "second": 3.417
+    },
+    "ultosc": {
+     "first": 3.054,
+     "second": 1.382
+    },
+    "trix": {
+     "first": 8.007,
+     "second": 3.56
+    },
+    "linreg": {
+     "first": 6.463,
+     "second": 4.435
+    },
+    "mass": {
+     "first": 3.977,
+     "second": 1.971
+    }
+   },
+   "speaks_share": {
+    "trend": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "regime": {
+     "first": 0.7088,
+     "second": 0.6664
+    },
+    "levels": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "momentum": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "meanrev": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "pullback": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "strategies": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "macro": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "risk": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "cross": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "clock": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "structure": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "setups": {
+     "first": 0.3457,
+     "second": 0.3462
+    },
+    "intraday": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "trendq": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "candles": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "fib": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "mavg": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "ribbon": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "mavg_sr": {
+     "first": 0.9938,
+     "second": 0.9932
+    },
+    "ichimoku": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "hull": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "kama": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "eia": {
+     "first": 0.998,
+     "second": 0.9973
+    },
+    "opec": {
+     "first": 0.2767,
+     "second": 0.1599
+    },
+    "oilvol": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "oilpos": {
+     "first": 0.9942,
+     "second": 0.9832
+    },
+    "oilspread": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "supertrend": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "stochrsi": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "psar": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "mfi": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "vprofile": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "heikin": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "aroon": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "cci": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "adr": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "willr": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "cmf": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "elder": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "pivots": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "rsidiv": {
+     "first": 0.5631,
+     "second": 0.547
+    },
+    "fisher": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "ultosc": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "trix": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "linreg": {
+     "first": 1.0,
+     "second": 1.0
+    },
+    "mass": {
+     "first": 1.0,
+     "second": 1.0
+    }
+   },
+   "refits": {
+    "refits": 183,
+    "reused": 0
+   },
+   "seconds": 346.0
+  }
+ },
+ "pairs": [
+  {
+   "a": "meanrev",
+   "b": "stochrsi",
+   "S": 0.7526,
+   "label": "near-duplicate",
+   "groups_measured": 4,
+   "reading_S": 0.7951,
+   "reading_label": "reads nearly alike",
+   "per_group": {
+    "crypto": {
+     "m1": [
+      0.6628,
+      0.7431
+     ],
+     "m2": [
+      0.7254,
+      0.7681
+     ],
+     "reading": 0.7789
+    },
+    "metals": {
+     "m1": [
+      0.7526,
+      0.7806
+     ],
+     "m2": [
+      0.7833,
+      0.7929
+     ],
+     "reading": 0.7993
+    },
+    "fx": {
+     "m1": [
+      0.8026,
+      0.8539
+     ],
+     "m2": [
+      0.8117,
+      0.8619
+     ],
+     "reading": 0.7951
+    },
+    "energy": {
+     "m1": [
+      0.8105,
+      0.7791
+     ],
+     "m2": [
+      0.8139,
+      0.798
+     ],
+     "reading": 0.7993
+    }
+   }
+  },
+  {
+   "a": "momentum",
+   "b": "flow",
+   "S": 0.7259,
+   "label": "near-duplicate",
+   "groups_measured": 1,
+   "reading_S": 0.4865,
+   "reading_label": "",
+   "per_group": {
+    "crypto": {
+     "m1": [
+      0.7259,
+      0.7473
+     ],
+     "m2": [
+      0.7598,
+      0.7572
+     ],
+     "reading": 0.4865
+    }
+   }
+  }
+ ],
+ "reads_alike_only": [
+  {
+   "a": "cci",
+   "b": "willr",
+   "reading_S": 0.8827,
+   "S": 0.6888,
+   "groups": 4
+  },
+  {
+   "a": "trend",
+   "b": "mavg",
+   "reading_S": 0.8332,
+   "S": 0.5177,
+   "groups": 4
+  },
+  {
+   "a": "ribbon",
+   "b": "kama",
+   "reading_S": 0.8289,
+   "S": 0.4523,
+   "groups": 4
+  },
+  {
+   "a": "cci",
+   "b": "elder",
+   "reading_S": 0.8145,
+   "S": 0.5709,
+   "groups": 4
+  },
+  {
+   "a": "meanrev",
+   "b": "ribbon",
+   "reading_S": 0.8097,
+   "S": 0.4562,
+   "groups": 4
+  },
+  {
+   "a": "ribbon",
+   "b": "willr",
+   "reading_S": 0.7975,
+   "S": 0.4159,
+   "groups": 4
+  },
+  {
+   "a": "meanrev",
+   "b": "willr",
+   "reading_S": 0.7961,
+   "S": 0.5881,
+   "groups": 4
+  },
+  {
+   "a": "intraday",
+   "b": "vprofile",
+   "reading_S": 0.7892,
+   "S": 0.4113,
+   "groups": 3
+  },
+  {
+   "a": "ribbon",
+   "b": "cci",
+   "reading_S": 0.7854,
+   "S": 0.5242,
+   "groups": 4
+  },
+  {
+   "a": "kama",
+   "b": "willr",
+   "reading_S": 0.7834,
+   "S": 0.2254,
+   "groups": 4
+  },
+  {
+   "a": "meanrev",
+   "b": "cci",
+   "reading_S": 0.7726,
+   "S": 0.5025,
+   "groups": 4
+  },
+  {
+   "a": "momentum",
+   "b": "cci",
+   "reading_S": 0.7692,
+   "S": 0.5482,
+   "groups": 4
+  },
+  {
+   "a": "stochrsi",
+   "b": "willr",
+   "reading_S": 0.7626,
+   "S": 0.6789,
+   "groups": 4
+  },
+  {
+   "a": "kama",
+   "b": "cci",
+   "reading_S": 0.7619,
+   "S": 0.3502,
+   "groups": 4
+  },
+  {
+   "a": "ribbon",
+   "b": "elder",
+   "reading_S": 0.7493,
+   "S": 0.3708,
+   "groups": 4
+  },
+  {
+   "a": "meanrev",
+   "b": "kama",
+   "reading_S": 0.7474,
+   "S": 0.3656,
+   "groups": 4
+  },
+  {
+   "a": "mavg",
+   "b": "elder",
+   "reading_S": 0.7468,
+   "S": 0.3945,
+   "groups": 4
+  },
+  {
+   "a": "mavg",
+   "b": "cci",
+   "reading_S": 0.7438,
+   "S": 0.3651,
+   "groups": 4
+  },
+  {
+   "a": "momentum",
+   "b": "meanrev",
+   "reading_S": 0.7381,
+   "S": 0.2945,
+   "groups": 4
+  },
+  {
+   "a": "momentum",
+   "b": "willr",
+   "reading_S": 0.7363,
+   "S": 0.4047,
+   "groups": 4
+  },
+  {
+   "a": "willr",
+   "b": "elder",
+   "reading_S": 0.7348,
+   "S": 0.5482,
+   "groups": 4
+  },
+  {
+   "a": "intraday",
+   "b": "pivots",
+   "reading_S": 0.7265,
+   "S": 0.4373,
+   "groups": 4
+  },
+  {
+   "a": "elder",
+   "b": "pivots",
+   "reading_S": 0.7157,
+   "S": 0.3461,
+   "groups": 4
+  },
+  {
+   "a": "intraday",
+   "b": "kama",
+   "reading_S": 0.7149,
+   "S": 0.2491,
+   "groups": 4
+  },
+  {
+   "a": "mavg",
+   "b": "willr",
+   "reading_S": 0.7147,
+   "S": 0.3772,
+   "groups": 4
+  },
+  {
+   "a": "stochrsi",
+   "b": "cci",
+   "reading_S": 0.7106,
+   "S": 0.4698,
+   "groups": 4
+  },
+  {
+   "a": "intraday",
+   "b": "ribbon",
+   "reading_S": 0.7101,
+   "S": 0.3471,
+   "groups": 4
+  },
+  {
+   "a": "ichimoku",
+   "b": "cci",
+   "reading_S": 0.7076,
+   "S": 0.3411,
+   "groups": 4
+  },
+  {
+   "a": "ichimoku",
+   "b": "elder",
+   "reading_S": 0.7061,
+   "S": 0.3054,
+   "groups": 4
+  }
+ ],
+ "contained": [
+  {
+   "a": "trend",
+   "b": "mavg",
+   "value": 0.9006,
+   "groups": 4
+  },
+  {
+   "a": "kama",
+   "b": "ribbon",
+   "value": 0.8503,
+   "groups": 4
+  },
+  {
+   "a": "kama",
+   "b": "cci",
+   "value": 0.8733,
+   "groups": 4
+  },
+  {
+   "a": "stochrsi",
+   "b": "meanrev",
+   "value": 0.9087,
+   "groups": 4
+  },
+  {
+   "a": "cci",
+   "b": "willr",
+   "value": 0.8827,
+   "groups": 4
+  },
+  {
+   "a": "willr",
+   "b": "cci",
+   "value": 0.8827,
+   "groups": 4
+  },
+  {
+   "a": "elder",
+   "b": "cci",
+   "value": 0.8773,
+   "groups": 4
+  }
+ ],
+ "clusters_across": {
+  "pull_0.85": [],
+  "pull_0.70": [
+   [
+    "momentum",
+    "flow"
+   ],
+   [
+    "meanrev",
+    "stochrsi"
+   ]
+  ],
+  "reading_0.85": [
+   [
+    "cci",
+    "willr"
+   ]
+  ],
+  "reading_0.70": [
+   [
+    "trend",
+    "mavg"
+   ],
+   [
+    "meanrev",
+    "ribbon",
+    "kama",
+    "stochrsi",
+    "cci",
+    "willr",
+    "elder"
+   ],
+   [
+    "intraday",
+    "vprofile"
+   ]
+  ]
+ },
+ "per_group": {
+  "crypto": {
+   "voters": [
+    "trend",
+    "regime",
+    "levels",
+    "momentum",
+    "meanrev",
+    "pullback",
+    "flow",
+    "strategies",
+    "basis",
+    "stable",
+    "cbprem",
+    "breadth"
+   ],
+   "clusters": {
+    "pull_0.85": [],
+    "pull_0.70": [
+     {
+      "members": [
+       "trend",
+       "cci",
+       "willr",
+       "elder",
+       "linreg"
+      ],
+      "voters_in": [
+       "trend"
+      ],
+      "say": [
+       0.0709,
+       0.0703
+      ],
+      "best": {
+       "voice": "linreg",
+       "rank": 11,
+       "worse_half": 53.3
+      }
+     },
+     {
+      "members": [
+       "momentum",
+       "flow"
+      ],
+      "voters_in": [
+       "momentum",
+       "flow"
+      ],
+      "say": [
+       0.1493,
+       0.1444
+      ],
+      "best": {
+       "voice": "momentum",
+       "rank": 4,
+       "worse_half": 53.9
+      }
+     },
+     {
+      "members": [
+       "pullback",
+       "stochrsi"
+      ],
+      "voters_in": [
+       "pullback"
+      ],
+      "say": [
+       0.0803,
+       0.0835
+      ],
+      "best": {
+       "voice": "pullback",
+       "rank": 4,
+       "worse_half": 53.9
+      }
+     },
+     {
+      "members": [
+       "intraday",
+       "vprofile",
+       "adr"
+      ],
+      "voters_in": [],
+      "say": [
+       0,
+       0
+      ],
+      "best": {
+       "voice": "vprofile",
+       "rank": 17,
+       "worse_half": 52.8
+      }
+     }
+    ],
+    "reading_0.85": [
+     {
+      "members": [
+       "cci",
+       "willr"
+      ],
+      "voters_in": [],
+      "say": [
+       0,
+       0
+      ],
+      "best": {
+       "voice": "cci",
+       "rank": 12,
+       "worse_half": 53.2
+      }
+     }
+    ],
+    "reading_0.70": [
+     {
+      "members": [
+       "trend",
+       "mavg"
+      ],
+      "voters_in": [
+       "trend"
+      ],
+      "say": [
+       0.0709,
+       0.0703
+      ],
+      "best": {
+       "voice": "mavg",
+       "rank": 19,
+       "worse_half": 52.5
+      }
+     },
+     {
+      "members": [
+       "meanrev",
+       "stochrsi"
+      ],
+      "voters_in": [
+       "meanrev"
+      ],
+      "say": [
+       0.0986,
+       0.0924
+      ],
+      "best": {
+       "voice": "meanrev",
+       "rank": 4,
+       "worse_half": 53.9
+      }
+     },
+     {
+      "members": [
+       "intraday",
+       "vprofile"
+      ],
+      "voters_in": [],
+      "say": [
+       0,
+       0
+      ],
+      "best": {
+       "voice": "vprofile",
+       "rank": 17,
+       "worse_half": 52.8
+      }
+     },
+     {
+      "members": [
+       "ribbon",
+       "kama",
+       "cci",
+       "willr",
+       "elder"
+      ],
+      "voters_in": [],
+      "say": [
+       0,
+       0
+      ],
+      "best": {
+       "voice": "ribbon",
+       "rank": 2,
+       "worse_half": 54.4
+      }
+     }
+    ]
+   },
+   "separate_voting_ideas_near": 11,
+   "separate_voting_ideas_dup": 12
+  },
+  "metals": {
+   "voters": [
+    "trend",
+    "regime",
+    "momentum",
+    "meanrev",
+    "pullback",
+    "news",
+    "macro",
+    "structure",
+    "volx",
+    "goldetf",
+    "mavg",
+    "ichimoku",
+    "kama"
+   ],
+   "clusters": {
+    "pull_0.85": [],
+    "pull_0.70": [
+     {
+      "members": [
+       "meanrev",
+       "stochrsi"
+      ],
+      "voters_in": [
+       "meanrev"
+      ],
+      "say": [
+       0.0758,
+       0.0772
+      ],
+      "best": {
+       "voice": "meanrev",
+       "rank": 12,
+       "worse_half": 51.7
+      }
+     }
+    ],
+    "reading_0.85": [
+     {
+      "members": [
+       "cci",
+       "willr"
+      ],
+      "voters_in": [],
+      "say": [
+       0,
+       0
+      ],
+      "best": {
+       "voice": "cci",
+       "rank": 6,
+       "worse_half": 52.1
+      }
+     }
+    ],
+    "reading_0.70": [
+     {
+      "members": [
+       "trend",
+       "mavg"
+      ],
+      "voters_in": [
+       "trend",
+       "mavg"
+      ],
+      "say": [
+       0.1461,
+       0.1632
+      ],
+      "best": {
+       "voice": "mavg",
+       "rank": 31,
+       "worse_half": 50.9
+      }
+     },
+     {
+      "members": [
+       "momentum",
+       "meanrev",
+       "ribbon",
+       "kama",
+       "stochrsi",
+       "cci",
+       "willr",
+       "elder"
+      ],
+      "voters_in": [
+       "momentum",
+       "meanrev",
+       "kama"
+      ],
+      "say": [
+       0.2269,
+       0.2315
+      ],
+      "best": {
+       "voice": "elder",
+       "rank": 5,
+       "worse_half": 52.3
+      }
+     },
+     {
+      "members": [
+       "intraday",
+       "vprofile",
+       "pivots"
+      ],
+      "voters_in": [],
+      "say": [
+       0,
+       0
+      ],
+      "best": {
+       "voice": "pivots",
+       "rank": 7,
+       "worse_half": 52.0
+      }
+     }
+    ]
+   },
+   "separate_voting_ideas_near": 13,
+   "separate_voting_ideas_dup": 13
+  },
+  "fx": {
+   "voters": [
+    "trend",
+    "regime",
+    "levels",
+    "momentum",
+    "meanrev",
+    "pullback",
+    "strategies",
+    "clock",
+    "setups",
+    "trendq",
+    "rates",
+    "mavg"
+   ],
+   "clusters": {
+    "pull_0.85": [],
+    "pull_0.70": [
+     {
+      "members": [
+       "meanrev",
+       "stochrsi"
+      ],
+      "voters_in": [
+       "meanrev"
+      ],
+      "say": [
+       0.0957,
+       0.0931
+      ],
+      "best": {
+       "voice": "meanrev",
+       "rank": 4,
+       "worse_half": 52.5
+      }
+     },
+     {
+      "members": [
+       "macro",
+       "rates"
+      ],
+      "voters_in": [
+       "rates"
+      ],
+      "say": [
+       0.0936,
+       0.0872
+      ],
+      "best": {
+       "voice": "rates",
+       "rank": 30,
+       "worse_half": 50.5
+      }
+     },
+     {
+      "members": [
+       "ribbon",
+       "cci",
+       "willr"
+      ],
+      "voters_in": [],
+      "say": [
+       0,
+       0
+      ],
+      "best": {
+       "voice": "ribbon",
+       "rank": 23,
+       "worse_half": 51.0
+      }
+     }
+    ],
+    "reading_0.85": [
+     {
+      "members": [
+       "cci",
+       "willr"
+      ],
+      "voters_in": [],
+      "say": [
+       0,
+       0
+      ],
+      "best": {
+       "voice": "cci",
+       "rank": 31,
+       "worse_half": 50.5
+      }
+     }
+    ],
+    "reading_0.70": [
+     {
+      "members": [
+       "trend",
+       "mavg"
+      ],
+      "voters_in": [
+       "trend",
+       "mavg"
+      ],
+      "say": [
+       0.1731,
+       0.1752
+      ],
+      "best": {
+       "voice": "trend",
+       "rank": 16,
+       "worse_half": 51.7
+      }
+     },
+     {
+      "members": [
+       "momentum",
+       "meanrev",
+       "ribbon",
+       "kama",
+       "stochrsi",
+       "cci",
+       "willr",
+       "elder"
+      ],
+      "voters_in": [
+       "momentum",
+       "meanrev"
+      ],
+      "say": [
+       0.1783,
+       0.1785
+      ],
+      "best": {
+       "voice": "momentum",
+       "rank": 4,
+       "worse_half": 52.5
+      }
+     },
+     {
+      "members": [
+       "intraday",
+       "pivots"
+      ],
+      "voters_in": [],
+      "say": [
+       0,
+       0
+      ],
+      "best": {
+       "voice": "intraday",
+       "rank": 7,
+       "worse_half": 52.1
+      }
+     },
+     {
+      "members": [
+       "aroon",
+       "trix"
+      ],
+      "voters_in": [],
+      "say": [
+       0,
+       0
+      ],
+      "best": {
+       "voice": "aroon",
+       "rank": 13,
+       "worse_half": 52.0
+      }
+     }
+    ]
+   },
+   "separate_voting_ideas_near": 12,
+   "separate_voting_ideas_dup": 12
+  },
+  "energy": {
+   "voters": [
+    "regime",
+    "levels",
+    "setups",
+    "trendq",
+    "candles",
+    "fib",
+    "mavg",
+    "kama",
+    "oilvol",
+    "oilspread"
+   ],
+   "clusters": {
+    "pull_0.85": [],
+    "pull_0.70": [
+     {
+      "members": [
+       "meanrev",
+       "stochrsi"
+      ],
+      "voters_in": [],
+      "say": [
+       0,
+       0
+      ],
+      "best": {
+       "voice": "meanrev",
+       "rank": 13,
+       "worse_half": 51.3
+      }
+     }
+    ],
+    "reading_0.85": [
+     {
+      "members": [
+       "cci",
+       "willr"
+      ],
+      "voters_in": [],
+      "say": [
+       0,
+       0
+      ],
+      "best": {
+       "voice": "willr",
+       "rank": 20,
+       "worse_half": 51.0
+      }
+     }
+    ],
+    "reading_0.70": [
+     {
+      "members": [
+       "trend",
+       "cross",
+       "mavg"
+      ],
+      "voters_in": [
+       "mavg"
+      ],
+      "say": [
+       0.0988,
+       0.1034
+      ],
+      "best": {
+       "voice": "mavg",
+       "rank": 9,
+       "worse_half": 51.8
+      }
+     },
+     {
+      "members": [
+       "momentum",
+       "meanrev",
+       "ribbon",
+       "kama",
+       "stochrsi",
+       "cci",
+       "willr",
+       "elder"
+      ],
+      "voters_in": [
+       "kama"
+      ],
+      "say": [
+       0.1099,
+       0.146
+      ],
+      "best": {
+       "voice": "elder",
+       "rank": 7,
+       "worse_half": 52.0
+      }
+     },
+     {
+      "members": [
+       "intraday",
+       "vprofile"
+      ],
+      "voters_in": [],
+      "say": [
+       0,
+       0
+      ],
+      "best": {
+       "voice": "intraday",
+       "rank": 33,
+       "worse_half": 50.6
+      }
+     },
+     {
+      "members": [
+       "ichimoku",
+       "pivots"
+      ],
+      "voters_in": [],
+      "say": [
+       0,
+       0
+      ],
+      "best": {
+       "voice": "pivots",
+       "rank": 5,
+       "worse_half": 52.7
+      }
+     },
+     {
+      "members": [
+       "aroon",
+       "trix"
+      ],
+      "voters_in": [],
+      "say": [
+       0,
+       0
+      ],
+      "best": {
+       "voice": "aroon",
+       "rank": 8,
+       "worse_half": 52.0
+      }
+     }
+    ]
+   },
+   "separate_voting_ideas_near": 10,
+   "separate_voting_ideas_dup": 10
+  }
+ }
+}

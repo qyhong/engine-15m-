@@ -1,0 +1,62 @@
+{
+ "group": "energy",
+ "assets": [
+  "WTI",
+  "BRENT"
+ ],
+ "window": [
+  "2020-01-02 01:00",
+  "2025-11-10 21:45"
+ ],
+ "split": "2022-12-07 21:45",
+ "horizon": 96,
+ "graded_rows": 249569,
+ "graded_rows_by_asset": {
+  "WTI": 124767,
+  "BRENT": 124802
+ },
+ "up_pct": 50.7,
+ "seconds": 748.1,
+ "peak_mb": null,
+ "voting_cards": [
+  "Mass Index (1h to daily)",
+  "Trade setups",
+  "Chaikin money flow and OBV (1h to daily)",
+  "Oil volatility",
+  "Pivot points (daily and weekly)",
+  "Linear-regression channel (1h to daily)",
+  "Elder-Ray (1h to daily)",
+  "Aroon and Vortex (1h to daily)",
+  "Moving averages (SMA and EMA 5-200)",
+  "Fibonacci retracement"
+ ],
+ "voting_voices": [
+  "mass",
+  "setups",
+  "cmf",
+  "oilvol",
+  "pivots",
+  "linreg",
+  "elder",
+  "aroon",
+  "mavg",
+  "fib",
+  "owner"
+ ],
+ "floor": "worse half > 50.5%, top 10, at least 3",
+ "engine_version": "think15-v5.2.4",
+ "end": "2025-11-11",
+ "current_voters": [
+  "oilvol",
+  "regime",
+  "setups",
+  "oilspread",
+  "fib",
+  "mavg",
+  "levels",
+  "kama",
+  "candles",
+  "trendq",
+  "owner"
+ ]
+}

@@ -1,0 +1,69 @@
+## Plain-English summary (for the owner)
+
+**The question.** The engine reads 82 cards. Do some of them say the same thing, and does one idea get several votes?
+
+**Two ways of being "the same".** Two cards can READ the same thing (their numbers move together) and still VOTE
+differently, because each card learns its own way of turning its readings into a lean. The registered definition of a
+duplicate is about the vote (the card's pull on the odds); the readings are reported beside it. Both matter: the vote
+tells you whether an idea is counted twice today, the readings tell you which cards are the same raw material.
+
+**What was found** (history before November 2025, both halves, four market groups; the S&P group was not run because
+its reading cache was one version behind):
+
+1. **No two cards are duplicates by their vote.** No pair reaches the 0.85 bar in any group. The closest anywhere is
+   about 0.80 (CCI with Williams %R in crypto and USDJPY).
+2. **Two pairs are near-duplicates by their vote:**
+   - **"Stretch and exhaustion" and the new "StochRSI" card, in all four groups** (0.66 to 0.85). No surprise: the
+     Stretch card already reads StochRSI on 15m, 1h and 4h itself; the StochRSI card's readings are matched 0.91 by it.
+   - **"Momentum" and "Order flow (CVD)" in crypto** (0.73 / 0.75). Both are current crypto voters, so in crypto this
+     one idea ("which way have price and buying been going") votes twice; together they hold about 15% of the say.
+     It is the only case in any group where two current voters vote alike.
+3. **By what they READ, there is one large family of near-copies and a few small ones:**
+   - **CCI and Williams %R are the same reading** (0.87 to 0.90 in every group). Neither votes anywhere today.
+   - **A family of seven that all answer "where is price inside its recent range / against its averages":** Stretch
+     and exhaustion, Moving-average ribbon, KAMA, StochRSI, CCI, Williams %R, Elder-Ray. Each one's readings are matched
+     0.70 to 0.88 by another's.
+   - **Timeframe strength and Moving averages** (0.83 to 0.84): the trend score is built from the same moving averages.
+   - **Intraday levels (VWAP) and Volume profile** (about 0.8, where volume exists).
+4. **What is NOT duplicated, although it sounds as if it should be:** the trend followers Supertrend, Parabolic SAR and
+   Heikin-Ashi overlap only 0.4 to 0.5 with each other on both measures; Chaikin money flow and Money Flow Index 0.45;
+   Fisher, TRIX, Ultimate Oscillator, the regression channel, Mass Index, Aroon/Vortex, RSI divergence, the range
+   budget, Hull and every crypto positioning card do not reach 0.70 with any other card across the groups, on either
+   measure.
+
+**Is one idea over-represented among the voters?**
+
+| Group | By the vote | By the readings |
+|---|---|---|
+| Crypto (12 voters) | Momentum + Order flow: 2 voters, about 15% of the say | no family holds two voters |
+| Gold and silver (13) | none | the range/average family holds 3 voters (Momentum, Stretch, KAMA: about 23% of the say) and the trend family 2 (Timeframe strength, Moving averages: about 15%); together 5 of 13 voters and about 38% of the say |
+| USDJPY (12) | none | Timeframe strength + Moving averages (about 17%) and Momentum + Stretch (about 18%): 4 of 12 voters, about 35% |
+| Oil (10) | none | none |
+
+So the voters are less repetitive than the card list suggests: by how they actually vote, each group's voters are
+all separate ideas except one pair (crypto: 11 ideas from 12 voters; gold/silver 13, USDJPY 12, oil 10). The repetition is mostly among cards that do NOT vote (the new oscillator
+batches), and in gold/silver and USDJPY among voters that read the same raw material but lean differently.
+
+**What a clean-up could look like: options, not recommendations.** Nothing changes unless the owner says so; any of
+these is a new engine version and would be registered first.
+
+- **A. Leave everything.** Reading-only cards cost nothing in the vote. The price is a longer card list on the page and
+  in the journal.
+- **B. Tidy the page only.** Group the near-copies under one heading (for example "Range position: Stretch, StochRSI,
+  CCI, Williams %R, Elder-Ray") so one idea is seen once. No change to readings or votes.
+- **C. Retire the plainest copies from the card list.** The clearest candidates by this study: Williams %R (the same
+  reading as CCI, and rated below it in three of four groups) and the separate StochRSI card (already inside Stretch and
+  exhaustion). Both are reading-only, so no vote changes; it still changes what is journaled.
+- **D. A promotion rule for the pipeline.** When a new card is proposed for a vote (step 5), also check that it is not
+  a near-copy of a card that already votes in that group. This matters soon: CCI, Elder-Ray, the ribbon and KAMA rate
+  well in several groups and are all in the same family, so promoting two of them together would give one idea two
+  votes.
+- **E. Look at crypto's Momentum + Order flow pair** at the next voting review: keep both (15% for one idea is far under
+  the 40% cap), or let only the better-rated of the two vote. In the 17 Nov rating Momentum and stretch is #4 and Order
+  flow #21 in crypto.
+
+**How sure is this?** It describes how the cards behaved together on history that has been looked at before. The
+thresholds (0.85 and 0.70) were fixed before looking and are conventions. Pairs just under a line (CCI with Williams %R
+by vote: 0.69 across groups) are not meaningfully different from pairs just over it. A card that copies another on
+history can still differ on the rare days that matter. None of this says any card is right, and no card has a proven
+edge.

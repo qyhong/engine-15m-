@@ -1,0 +1,64 @@
+{
+ "group": "fx",
+ "assets": [
+  "USDJPY"
+ ],
+ "window": [
+  "2020-01-01 22:00",
+  "2025-11-10 23:45"
+ ],
+ "split": "2022-12-02 20:00",
+ "horizon": 96,
+ "graded_rows": 142250,
+ "graded_rows_by_asset": {
+  "USDJPY": 142250
+ },
+ "up_pct": 50.7,
+ "seconds": 338.3,
+ "peak_mb": null,
+ "voting_cards": [
+  "Trade setups",
+  "Regime",
+  "Time and session",
+  "Momentum and stretch",
+  "StochRSI (15m to daily)",
+  "Volatility gauges",
+  "Intraday levels (VWAP and opening range)",
+  "Daily range budget and range breaks",
+  "Linear-regression channel (1h to daily)",
+  "Working strategies"
+ ],
+ "voting_voices": [
+  "setups",
+  "regime",
+  "clock",
+  "momentum",
+  "meanrev",
+  "pullback",
+  "stochrsi",
+  "volx",
+  "intraday",
+  "adr",
+  "linreg",
+  "strategies",
+  "owner"
+ ],
+ "floor": "worse half > 50.5%, top 10, at least 3",
+ "engine_version": "think15-v5.2.4",
+ "end": "2025-11-11",
+ "current_voters": [
+  "setups",
+  "regime",
+  "strategies",
+  "clock",
+  "mavg",
+  "rates",
+  "trendq",
+  "momentum",
+  "meanrev",
+  "pullback",
+  "levels",
+  "trend",
+  "owner"
+ ]
+}

@@ -31,14 +31,19 @@ pipeline, a batch of up to five at a time. Nothing in it changes a trade until a
 
 | Batch | Cards | Status |
 |---|---|---|
-| 0 | Binance positioning, Bitfinex margin, CME positioning, on-chain activity (`sources/flows.py`) | live 13 Nov 2026 (v5.1.1), reading-only |
-| 1 | Supertrend 15m-daily, StochRSI 15m-daily (`sources/osc.py`) | live 15 Nov 2026 10:21 UTC (v5.1.2), reading-only |
-| 2 | Parabolic SAR, Money Flow Index, Volume profile, Heikin-Ashi trend, Aroon/Vortex (`sources/osc2.py`) | live 15 Nov 2026 10:21 UTC (v5.1.2), reading-only |
-| 2b | CCI 15m-daily, all markets (`sources/osc3.py`), owner's request for metals | live 15 Nov 2026 as v5.2.1, reading-only |
-| 3c | Crypto: Deribit options flow, Korea premium, CME gap (spot proxy: no clean free CME price source), BTC dominance (tracked-basket proxy, reads ~6-7 points above a full-market figure), spot vs perp leadership, cross-exchange funding/OI (OKX only ~3 months free) (`sources/cryptox.py`) | owner "Yes" 15 Nov 2026; live as v5.2.2, BTC/ETH only, reading-only |
-| 3 | Williams %R, Chaikin money flow / OBV divergence, Elder-Ray, pivot points, RSI divergence (`sources/osc4.py`) + the daily range budget card (`sources/adr.py`, from H44) | owner "Yes" 16 Nov 2026; live as v5.2.3, reading-only |
-| 4 | Fisher Transform, Ultimate Oscillator, TRIX, Linear-regression channel, Mass Index (`sources/osc5.py`) | owner "let's continue pending tasks" 17 Nov 2026; wired as v5.2.4 (17 Nov 2026), reading-only |
+| 0 | Binance positioning, Bitfinex margin, CME positioning, on-chain activity (`sources/flows.py`) | live 13 Nov 2026 (v5.1.1), reading-only; rated 17 Nov 2026 |
+| 1 | Supertrend 15m-daily, StochRSI 15m-daily (`sources/osc.py`) | live 15 Nov 2026 10:21 UTC (v5.1.2), reading-only; rated 17 Nov 2026 |
+| 2 | Parabolic SAR, Money Flow Index, Volume profile, Heikin-Ashi trend, Aroon/Vortex (`sources/osc2.py`) | live 15 Nov 2026 10:21 UTC (v5.1.2), reading-only; rated 17 Nov 2026 |
+| 2b | CCI 15m-daily, all markets (`sources/osc3.py`), owner's request for metals | live 15 Nov 2026 as v5.2.1, reading-only; rated 17 Nov 2026 |
+| 3c | Crypto: Deribit options flow, Korea premium, CME gap (spot proxy: no clean free CME price source), BTC dominance (tracked-basket proxy, reads ~6-7 points above a full-market figure), spot vs perp leadership, cross-exchange funding/OI (OKX only ~3 months free) (`sources/cryptox.py`) | owner "Yes" 15 Nov 2026; live as v5.2.2, BTC/ETH only, reading-only; rated 17 Nov 2026 |
+| 3 | Williams %R, Chaikin money flow / OBV divergence, Elder-Ray, pivot points, RSI divergence (`sources/osc4.py`) + the daily range budget card (`sources/adr.py`, from H44) | owner "Yes" 16 Nov 2026; live as v5.2.3, reading-only; rated 17 Nov 2026 |
+| 4 | Fisher Transform, Ultimate Oscillator, TRIX, Linear-regression channel, Mass Index (`sources/osc5.py`) | owner "let's continue pending tasks" 17 Nov 2026; wired as v5.2.4 (17 Nov 2026), reading-only; rated 17 Nov 2026 |
 | 5 | next five (to be proposed) | waiting for the owner's go |
+
+Rating of 17 Nov 2026 (step 3 for batches 0 to 4): `research/out/card_rating_summary_20261117.md`, files in
+`research/out/card_rating_20261117/` (run through `research/rate_cards_snapshot.py`, history before the sealed holdout;
+the page's rating files of 11 Nov are untouched). In-sample ranks, no proof of an edge; nothing is proposed for a vote
+before step 4. Duplicate cards are studied in H54 (`research/out/card_overlap_20261117.md`).
 
 ## Queue for batch 3 (proposed by Claude, 15 Nov 2026; the owner edits freely)
 
