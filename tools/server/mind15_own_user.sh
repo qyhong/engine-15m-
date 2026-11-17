@@ -141,7 +141,8 @@ RestartSec=30
 StandardOutput=append:/data/mind15/live.log
 StandardError=append:/data/mind15/live.log
 # sandbox: the whole file system is read-only except the engine's own state; the bot key and the site's secrets are out of reach
-ReadWritePaths=$M/data $M/journal $M/out $M/research/out $HOMEDIR
+# /var/www/aitrading-m15: the web folder for setups.json (created and served by the AI Trading Bot session; MIND15_SETUPS_WEB_DIR)
+ReadWritePaths=$M/data $M/journal $M/out $M/research/out $HOMEDIR -/var/www/aitrading-m15
 InaccessiblePaths=-$M/secrets $OTHERS
 $SANDBOX
 
