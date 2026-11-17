@@ -2579,3 +2579,45 @@ Run at the owner's request of 17 Nov 2026 ("Concurrently do the RL tasks too") a
 - **R4-a: FAIL** (20/21). +1,474%, Sharpe 1.17 (1.21 / 1.28 / 1.03), DD 59-61%, 57 trades/yr; sub-span +1,552%, 1.35; fold share 56% (14/25); ETH +1,263%, 1.07. Fails only S4: gap +0.46, SE 0.25, p 0.036 vs 0.00200 (needs ~0.73).
 - **R4-b: FAIL** (16/21). +593%, 1.01, DD 49-55%; mean CAGR 36.7% vs 36.9%; sub-span +652% vs +880%; fold share 44%; p 0.093.
 - The 1.25x bought the return rules, not information: the Sharpe gap is R3-c's (+0.43) within an eighth of a standard error. No round 5 proposed. Not proof of anything either way.
+
+## H53. The signal book S1: `b_targets` as a signal a person can follow (registered 17 Nov 2026, 04:18 UTC, before any S1 code existed or any S1 result was computed)
+
+**Prompted by:** the owner, 17 Nov 2026: subscribers "only want to know trade opportunity"; "Yes, build preview". The main
+books close about five trades a week and hold for days; the shadow book `b_targets` (half off at Target 1, the rest at
+Target 2, stop to break-even after Target 1; `engine15/shadows.py`) trades two to three times a day and every trade has an
+entry, a stop and two targets. Disclosed before registering: on the live scoreboard today `b_targets` shows 16 trades,
+75% won, +$2,954; on 2020-2026 history it lost $28,862 against the main book (H36). One good week is not evidence.
+
+**What S1 is.** Not a new trading rule: S1 is `b_targets` unchanged, in all eight markets, re-scored the way a subscriber
+could really trade it. The book fills at the open of the bar after its decision; an alert reaches a person minutes later
+(about four today), so the book's own fills cannot be had. S1 keeps two records per signal: the BOOK result (as
+`b_targets` booked it) and the FOLLOWABLE result under the fixed rules below. Only the followable record is judged.
+
+**A signal** is issued when `b_targets` shows a new open position in a market (a new `opened_utc`). It carries: side, the
+book's entry price E, the stop S, Target 1 and Target 2, as the page shows them at that moment. 1R = |E - S|.
+
+**Followable rules (fixed now).** Bars are the engine's own 15-minute bars. Let bar A be the bar during which the alert was
+sent (the bar whose open is the book's fill).
+1. Entry: a limit order at E. It counts as filled at E on the first of the FOUR bars after bar A whose range holds E
+   (low <= E <= high). Bar A itself never counts (the alert arrives part-way through it).
+2. No fill: if S or Target 1 trades in bar A or in any later bar before the fill (a bar that holds E and S or Target 1
+   together counts as no fill), or the four bars pass, or the book closes its own trade first, the signal ends as
+   "no fill": no result, counted as a signal sent but not as a trade.
+3. After the fill: half is closed at Target 1, the rest at Target 2; after Target 1 the stop is at E. A bar that holds the
+   stop and a target together counts as the stop. A gap through the stop fills at that bar's open.
+4. If the book closes its own trade for any other reason (a flip, a decision exit) while the followable trade is open, the
+   followable trade closes at the OPEN of the bar after the bar in which that exit alert was sent (one bar later than the
+   book).
+5. Costs: the market's own fee a side (`playbook.fee_side`) on each fill; $10,000 a signal; results in $, % and R.
+6. Nothing is tuned on live results: the four-bar window, the limit at E and the half/half exit are fixed here.
+
+**Judged on live signals only** (from the first signal sent by the deployed preview; nothing before it, no history replay):
+the followable record through the scoreboard's own rule (mean result per filled trade, 90% range; "ahead" = the low end
+above zero). Interim reading at 30 filled trades. **Commercial gate (fixed now): S1 is not sold before it has at least 100
+signals over at least 60 days and its followable record is "ahead".** Reported with it, always: the fill rate (filled /
+sent), the book result of the SAME signals (so the cost of followability is visible), and the results of signals that
+did not fill, had they been taken at the book's price (to show what the limit rule misses). A pass is a reason to
+propose the next step to the owner, not proof of an edge. Counted as one variant.
+
+**Preview only:** signal cards and follow-ups go to the owner's own Telegram chat, labelled as a subscriber preview.
+No subscriber channel exists; nothing is sold; paper only.
