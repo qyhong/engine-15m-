@@ -21,6 +21,12 @@ Two read-only reports (the arithmetic is in livecheck.py):
     happened, per market, from the live journal (streamed, a few numbers kept per line; at most CALIB_DAYS days and
     CALIB_BUDGET_S seconds). A record of forecasts, never proof of an edge.
 
+SUBSCRIBER SIGNAL PREVIEW (H53, the signal book S1; the rules and the arithmetic are in signals.py): when the b_targets
+  paper book opens a position a signal card goes out, and follow-ups (entry filled, no fill, Target 1, Target 2, stopped,
+  closed by the model) are sent as replies to it; a daily recap goes with the daily summary; /signals and /record answer
+  on request. PREVIEW: every one of these goes to the owner's own chat only, under a first line "Subscriber preview".
+  No subscriber channel exists. A failure in the signals code is logged once and never stops the alerts above.
+
 THE KEY: read from a file the owner places (TOKEN_FILE, chmod 600); never printed, logged or stored anywhere else.
 THE CHAT: the first chat that sends /start is locked in (state file); every other chat is ignored. No key file = it waits.
 """
@@ -31,7 +37,7 @@ import sys
 import time
 from datetime import datetime, timedelta, timezone
 
-from . import livecheck
+from . import livecheck, signals
 from .config import DATA_DIR, JOURNAL_DIR, OUT_DIR, ROOT
 
 TOKEN_FILE = os.environ.get("MIND15_TELEGRAM_TOKEN_FILE", os.path.join(ROOT, "secrets", "telegram_token"))
@@ -48,6 +54,14 @@ BARS = DATA_DIR                                                       # the engi
 CALIB_DAYS = 90                                                       # the calibration card looks back at most this far
 CALIB_BUDGET_S = 45.0                                                 # ... and stops reading older days after this long
 LIST_MAX = 8                                                          # lines per section in one data alert
+SIGNALS_PREVIEW = True                                                # H53: signal cards go to the owner's own chat ONLY
+SIGNALS_CHANNEL = None                                                # a future subscriber channel id; unused in the preview
+SIGNALS_HEAD = u"\U0001f9ea Subscriber preview"                       # the first line of every signal message in the preview
+SIGNALS_STATE = os.path.join(DATA_DIR, "signals_state.json")          # the signals' own state and log (signals.py writes them)
+SIGNALS_LOG = os.path.join(DATA_DIR, "signals_log.jsonl")
+LIVE = os.path.join(OUT_DIR, "live")                                  # the book's closed-trade files (read only)
+_SIGNALS_ERR = [None]                                                 # the last signals failure printed (printed once)
+_SIGNALS_UNREAD = [""]                                                # the markets whose bars could not be read, as last printed
 
 
 def disk_free_gb(path=None):
@@ -142,10 +156,14 @@ def _bar(n, total=30, width=10):
     return u"\u2588" * k + u"\u2591" * (width - k)
 
 
-def _send(tok, chat, text):
-    """One message as HTML (bold, fixed-width tables); plain text if Telegram rejects the markup."""
+def _send(tok, chat, text, reply_to=None):
+    """One message as HTML (bold, fixed-width tables); plain text if Telegram rejects the markup.
+    reply_to: send it as a reply to that message; if the reply is refused it goes out as a message of its own."""
     text = text.replace("Kronos", "AlphaPrediction AI").replace("kronos", "candle forecast")   # same wording rule as the page (export.py)
-    r = _call(tok, "sendMessage", {"chat_id": chat, "text": text, "parse_mode": "HTML", "disable_web_page_preview": True})
+    msg = {"chat_id": chat, "text": text, "parse_mode": "HTML", "disable_web_page_preview": True}
+    r = _call(tok, "sendMessage", dict(msg, reply_to_message_id=reply_to)) if reply_to is not None else {"ok": False}
+    if not r.get("ok"):
+        r = _call(tok, "sendMessage", msg)
     if not r.get("ok"):
         import re as _re
         plain = _re.sub(r"<[^>]+>", "", text).replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&")
@@ -412,6 +430,48 @@ def summary(page, score, now=None, health=None):
     return "\n".join(L)
 
 
+# ------------------------------------------------------------------ the subscriber signal preview (H53; signals.py)
+def _signal_send(tok, st, text, reply_to=None):
+    """One signal message -> (delivered, its message id). PREVIEW: the owner's own chat only, under the preview line."""
+    chat = st.get("chat_id") if SIGNALS_PREVIEW else SIGNALS_CHANNEL
+    if not tok or chat is None:
+        return False, None
+    r = _send(tok, chat, (SIGNALS_HEAD + u"\n" if SIGNALS_PREVIEW else u"") + text, reply_to)
+    ok = bool(isinstance(r, dict) and r.get("ok"))
+    return ok, ((r.get("result") or {}).get("message_id") if ok else None)
+
+
+def _signals_guard(what, fn):
+    """Run one piece of signals code. Whatever it raises is caught and printed once (never the key): the admin alerts,
+    the summary and the state of this bot never depend on it."""
+    try:
+        out = fn()
+        _SIGNALS_ERR[0] = None
+        return out
+    except Exception as e:
+        tag = "%s: %s" % (what, type(e).__name__)
+        if _SIGNALS_ERR[0] != tag:
+            _SIGNALS_ERR[0] = tag
+            print(time.strftime("%Y-%m-%d %H:%M:%S"), "signals failed (%s)" % tag, flush=True)
+        return None
+
+
+def signals_check(st, tok, page, now, recap=False):
+    """The signals part of one check: follow the signals out, issue new ones, and the daily recap with the summary."""
+    def work():
+        send = lambda text, reply_to=None: _signal_send(tok, st, text, reply_to)   # noqa: E731
+        info = signals.run(page, now, send, BARS, LIVE, SIGNALS_STATE, SIGNALS_LOG)
+        unread = ",".join(sorted(set(info.get("bars_unread") or [])))
+        if unread != _SIGNALS_UNREAD[0]:                              # a bar file caught mid-write: said once, read again later
+            _SIGNALS_UNREAD[0] = unread
+            if unread:
+                print(time.strftime("%Y-%m-%d %H:%M:%S"), "signals: bars not readable now, will retry (%s)" % unread, flush=True)
+        if recap and os.path.exists(SIGNALS_STATE):                   # only once the preview has started
+            send(signals.recap_card(SIGNALS_LOG, now, signals.load_state(SIGNALS_STATE)))
+        return info
+    return _signals_guard("check", work)
+
+
 # ------------------------------------------------------------------ the loop
 def check(st, tok, send=True, now=None):
     """One check: learn the chat from /start, send alerts, send the daily summary once a day. -> the new state."""
@@ -441,6 +501,12 @@ def check(st, tok, send=True, now=None):
                     _send(tok, chat, calibration_card(calibration_now(now)))
                 except Exception as e:
                     _send(tok, chat, u"%s Calibration could not be read (%s)." % (WARN, type(e).__name__))
+            elif text.startswith("/signals"):
+                _signals_guard("/signals", lambda: _signal_send(tok, st, signals.open_card(
+                    signals.load_state(SIGNALS_STATE), now)))
+            elif text.startswith("/record"):
+                _signals_guard("/record", lambda: _signal_send(tok, st, signals.record_card(
+                    SIGNALS_LOG, signals.load_state(SIGNALS_STATE))))
     page, score = _load(PAGE), _load(SCORE)
     c, v, net = counts(score, page)
     cur = {"c": c, "v": v, "net": net, "refits": refit_marks()}
@@ -479,6 +545,7 @@ def check(st, tok, send=True, now=None):
                         _send(tok, st["chat_id"], calibration_card(res))
                 except Exception as e:
                     print(time.strftime("%Y-%m-%d %H:%M:%S"), "calibration failed: %s" % type(e).__name__, flush=True)
+        signals_check(st, tok, page, now, recap=due)                  # last, and guarded: it cannot stop anything above
     elif due and st.get("chat_id") is None:
         pass                                                          # no chat yet: the summary waits
     st.update(cur, stale=stale, checked_utc=now.strftime("%Y-%m-%dT%H:%M:%SZ"))
