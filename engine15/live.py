@@ -326,6 +326,12 @@ def step(log=print, fetch=True):
     if page is None:
         tm.say(log, "step")
         return out or None
+    try:                                                           # setups.json beside the page (setups.py: one call per
+        from . import setups                                       # market for the Setups page); it never stops the step,
+        log(setups.line(setups.write(page, out_dir=LIVE_OUT, log=log)))    # the page or the push
+    except Exception as e:
+        log("setups: not written (%r)" % (e,))
+    tm.lap("setups")
     from . import push
     if push.enabled():                                             # to the web server, only when switched on
         log("web push: %s" % push.push(page)[1])
