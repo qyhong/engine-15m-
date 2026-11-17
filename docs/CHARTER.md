@@ -278,3 +278,24 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   sessions (09:30-10:30 UTC) matched the laptop exactly; the box has pushed since 10:50 UTC as systemd service `mind15`;
   the laptop loop is stopped. Research H50 (news drift), H51 (cross-market confirmation), H52 (size by expected move) ran on
   the box: all no pass. Laptop cleanup (owner-approved): out/replay, RL caches and data/evcache deleted (20 GB -> 1.5 GB).
+
+### Status notes, 17 Nov 2026 (owner decisions)
+- **Verdict rules approved** ("Approve all", 17 Nov 2026, before either book reached 30 live trades):
+  `research/VERDICT_RULES.md` is in force for `b_trail` and `p8_fvg`. In short: the verdict at 30 is the first server
+  scoreboard showing 30 or more trades; `b_trail` changes nothing at 30, and a proposal to make its trail the main exit
+  (new version, registered first, owner's yes) is made only if it is "ahead" at both 30 and 60 trades, beats the fresh
+  main copy in total and in at least 5 of 8 markets, with the second check read no earlier than 10 Dec 2026; "behind" =
+  post-mortem, then the owner chooses retire or keep as a reference; "undecided" = run on to 60, then 100. `p8_fvg`'s
+  30-trade verdict is interim: H13's registered rule (200 trades or 30 days) still decides. No tuning and re-grading,
+  no moving the lines, no real money.
+- **Card batch 4** live as think15-v5.2.4 (Fisher Transform, Ultimate Oscillator, TRIX, linear-regression channel,
+  Mass Index; `sources/osc5.py`), reading-only. H43 finished: the S&P trades identically with and without the 40% cap.
+- **Subagents run on Fable 5.2** from 17 Nov ("use fable 5.2 agents"); before that Opus 5.5.
+- **Ten-task plan agreed**: 1 backup to the laptop (done: `tools/backup_pull.py`, daily 12:00 SGT, 7 kept), 2 outside
+  alarm (owner chose the AI Trading Bot's stale-page alarm; asked for), 3 slim the reading cache, 4 one-command deploy
+  (done: `tools/deploy.sh`), 5 verdict rules (done, above), 6 live calibration report, 7 data-health check, 8 rate the
+  new cards, 9 find duplicate cards, 10 where the step time goes. RL loop Round 4 registered 03:21 UTC on the owner's
+  "Concurrently do the RL tasks too" (my 14 Nov advice against it stands as a caution, not a block).
+- **The data disk stays 24 GB** ("just utilise whatever we have now"); the laptop no longer runs the 30-minute watcher.
+- **Own user + sandbox for the engine and the bot** on the Singapore box: owner "Yes, do it" (the box audit's top
+  finding); script `tools/server/mind15_own_user.sh` (apply / --undo).

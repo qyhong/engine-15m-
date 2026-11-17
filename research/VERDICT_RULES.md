@@ -1,6 +1,6 @@
 # Verdict rules for `p8_fvg` and `b_trail`: what a pass or a fail changes
 
-**Status: PROPOSED. Nothing in this file is in force until the owner says yes to it (section 7).**
+**Status: APPROVED by the owner on 17 Nov 2026 ("Approve all", including the optional 10 Dec line 4), before either book reached 30 live trades (server scoreboard at the time: `p8_fvg` 24 of 30, `b_trail` 22 of 30). In force as written. Where the text below says PROPOSED, read it as approved on that date; the wording is kept as it was approved.**
 
 Written 17 Nov 2026, before either book reached 30 live trades. Paper only. Nothing here places an order.
 
@@ -358,23 +358,23 @@ as H41 was for P1. It is never graded on these live trades.
 
 ## 7. For the owner to approve
 
-Each line is **PROPOSED** until answered. Answer yes or no to each.
+Each line was PROPOSED until answered. **Answered 17 Nov 2026: the owner approved all of them in one answer ("Approve all (Recommended)": all rules as drafted, including reading `b_trail`'s second check no earlier than 10 Dec).**
 
 | # | Proposed rule | Yes / No |
 |---|---|---|
-| 1 | "The verdict at 30" is the first server scoreboard showing 30 or more trades for the book. Later changes of the text do not change it. | |
-| 2 | `b_trail` "ahead" at 30: nothing changes; a short note; the question goes to a second check at 60 trades. | |
-| 3 | `b_trail` second check: a proposal to the owner is made only if it is "ahead" at both checkpoints, beats the fresh main copy in total, and beats it in at least 5 of 8 markets. | |
-| 4 | Optional: the `b_trail` second check is read no earlier than 10 Dec 2026 (the charter's first review), so the record spans a month and not one week. | |
-| 5 | If line 3 is met, the proposal is: the trailing exit as the main books' exit in a new engine version, registered first, the hold rule kept as a shadow. Until the owner says yes to that, "Let the winner run" stands. | |
-| 6 | `b_trail` "behind" at any checkpoint: a post-mortem, then the owner chooses between retiring it as P1 was and keeping it as a labelled reference. | |
-| 7 | `b_trail` "undecided": it runs on to 60, then 100 trades. After 100 there is no further decision point unless the owner sets one in writing first. | |
-| 8 | `p8_fvg`: the 30-trade verdict is an interim reading. H13's registered rule (200 trades or 30 days; above +0.05R, profit factor above 1.1, 4 of 6 markets positive) still decides keep or retire. | |
-| 9 | `p8_fvg` "ahead" or "undecided" at 30: it stays a separate paper book, unchanged, to H13's verdict. | |
-| 10 | `p8_fvg` "behind" at 30: a post-mortem; the owner chooses early retirement or running to H13's verdict; with no word, it runs on. | |
-| 11 | `p8_fvg` passing H13's rule: kept as a paper book; the next step is put to the owner then (the 10 Feb 2027 review at the latest). | |
-| 12 | The nine "will NOT be done" points of section 6 hold for both books. | |
-| 13 | Retiring a shadow book or a batch-3 strategy book needs a small code change (a `RETIRED` stamp like P1's). It is asked for when needed, not approved here. | |
+| 1 | "The verdict at 30" is the first server scoreboard showing 30 or more trades for the book. Later changes of the text do not change it. | Yes (17 Nov 2026) |
+| 2 | `b_trail` "ahead" at 30: nothing changes; a short note; the question goes to a second check at 60 trades. | Yes (17 Nov 2026) |
+| 3 | `b_trail` second check: a proposal to the owner is made only if it is "ahead" at both checkpoints, beats the fresh main copy in total, and beats it in at least 5 of 8 markets. | Yes (17 Nov 2026) |
+| 4 | Optional: the `b_trail` second check is read no earlier than 10 Dec 2026 (the charter's first review), so the record spans a month and not one week. | Yes (17 Nov 2026) |
+| 5 | If line 3 is met, the proposal is: the trailing exit as the main books' exit in a new engine version, registered first, the hold rule kept as a shadow. Until the owner says yes to that, "Let the winner run" stands. | Yes (17 Nov 2026) |
+| 6 | `b_trail` "behind" at any checkpoint: a post-mortem, then the owner chooses between retiring it as P1 was and keeping it as a labelled reference. | Yes (17 Nov 2026) |
+| 7 | `b_trail` "undecided": it runs on to 60, then 100 trades. After 100 there is no further decision point unless the owner sets one in writing first. | Yes (17 Nov 2026) |
+| 8 | `p8_fvg`: the 30-trade verdict is an interim reading. H13's registered rule (200 trades or 30 days; above +0.05R, profit factor above 1.1, 4 of 6 markets positive) still decides keep or retire. | Yes (17 Nov 2026) |
+| 9 | `p8_fvg` "ahead" or "undecided" at 30: it stays a separate paper book, unchanged, to H13's verdict. | Yes (17 Nov 2026) |
+| 10 | `p8_fvg` "behind" at 30: a post-mortem; the owner chooses early retirement or running to H13's verdict; with no word, it runs on. | Yes (17 Nov 2026) |
+| 11 | `p8_fvg` passing H13's rule: kept as a paper book; the next step is put to the owner then (the 10 Feb 2027 review at the latest). | Yes (17 Nov 2026) |
+| 12 | The nine "will NOT be done" points of section 6 hold for both books. | Yes (17 Nov 2026) |
+| 13 | Retiring a shadow book or a batch-3 strategy book needs a small code change (a `RETIRED` stamp like P1's). It is asked for when needed, not approved here. | Yes (17 Nov 2026) |
 
 ---
 
