@@ -18,6 +18,11 @@ def no_real_records(monkeypatch, tmp_path):
     """No test reads a real journal or bar file: the calibration card looks into an empty folder."""
     monkeypatch.setattr(tn, "JOURNAL", str(tmp_path / "journal"))
     monkeypatch.setattr(tn, "BARS", str(tmp_path / "data"))
+    monkeypatch.setattr(tn, "LIVE", str(tmp_path / "live"))          # ... and the signal preview keeps its files there
+    monkeypatch.setattr(tn, "SIGNALS_STATE", str(tmp_path / "data" / "signals_state.json"))
+    monkeypatch.setattr(tn, "SIGNALS_LOG", str(tmp_path / "data" / "signals_log.jsonl"))
+    monkeypatch.setattr(tn, "_SIGNALS_ERR", [None])
+    monkeypatch.setattr(tn, "_SIGNALS_UNREAD", [""])
 
 
 def page(gen="2026-11-17T00:00:00Z"):
@@ -254,3 +259,156 @@ def test_calibration_and_health_card_text():
     assert "BTC    8640 61% underconfident" in tn.calibration_card(wide)
     assert "No graded live forecasts" in tn.calibration_card({"markets": {}})
     assert "No cards seen yet" in tn.health_card(None) and tn.health_line(None) is None
+
+
+# ------------------------------------------------------------------ the subscriber signal preview (H53; signals.py)
+def signal_page(view, as_of, gen="2026-11-17T00:00:00Z"):
+    p = page(gen)
+    p["markets"] = {"crypto": ["BTCUSDT"]}
+    p["assets"]["BTCUSDT"].update(market_group="crypto", structure="mixed",
+                                  voices=[{"title": "Momentum", "pull_pts": 1.0}, {"title": "Kronos forecast", "pull_pts": 5.0}])
+    p["shadows"] = {"books": {"b_targets": {"assets": {"BTCUSDT": view}}}, "markets": {"crypto": {"as_of_utc": as_of}}}
+    return p
+
+
+LONG = {"status": "LONG", "entry": 100.0, "stop": 98.0, "opened_utc": "2026-11-17 00:00", "target_1": 103.0,
+        "target_2": 105.0, "t1_taken": False}
+
+
+def signal_bot(monkeypatch, tmp_path, refuse_replies=False):
+    """A fake Telegram that numbers its messages. -> (the sendMessage payloads, the page holder)."""
+    calls, holder = [], {"page": signal_page({"status": "FLAT"}, "2026-11-16 23:45"), "updates": []}
+
+    def fake_call(tok, method, payload, timeout=20):
+        if method == "getUpdates":
+            ups, holder["updates"] = holder["updates"], []
+            return {"ok": True, "result": [{"update_id": 10 + k, "message": {"chat": {"id": c}, "text": t}}
+                                           for k, (c, t) in enumerate(ups)]}
+        calls.append(dict(payload))
+        if refuse_replies and "reply_to_message_id" in payload:
+            return {"ok": False, "description": "Bad Request: message to be replied not found"}
+        return {"ok": True, "result": {"message_id": 700 + len(calls)}}
+    monkeypatch.setattr(tn, "_call", fake_call)
+    monkeypatch.setattr(tn, "_load", lambda p, d=None: holder["page"] if p.endswith("page.json") else score())
+    monkeypatch.setattr(tn, "refit_marks", lambda: [0, 0])
+    monkeypatch.setattr(tn, "disk_free_gb", lambda path=None: 50.0)
+    os.makedirs(str(tmp_path / "data"), exist_ok=True)
+    return calls, holder
+
+
+def bars_file(tmp_path, rows):
+    with open(str(tmp_path / "data" / "btcusdt_15m.csv"), "w") as fh:
+        fh.write("ts_ms,open,high,low,close,volume,taker_buy\n")
+        for k, (o, h, l, c) in enumerate(rows):
+            fh.write("%d,%s,%s,%s,%s,1.0,\n" % (1794873600000 + 900000 * k, o, h, l, c))
+
+
+def at17(h, m):
+    return datetime(2026, 11, 17, h, m, tzinfo=timezone.utc)
+
+
+def run_to_fill(monkeypatch, tmp_path, **kw):
+    calls, holder = signal_bot(monkeypatch, tmp_path, **kw)
+    st = {"chat_id": 42, "summary_day": "2026-11-16", "calib_week": "2026-W47"}
+    st, _ = tn.check(st, "k", now=datetime(2026, 11, 16, 23, 50, tzinfo=timezone.utc))   # the preview starts, book flat
+    assert calls == [] and os.path.exists(tn.SIGNALS_STATE)
+    st["summary_day"] = "2026-11-17"
+    holder["page"] = signal_page(dict(LONG), "2026-11-17 00:15")
+    bars_file(tmp_path, [(101, 101.5, 100.5, 101)])
+    st, _ = tn.check(st, "k", now=at17(0, 16))                       # the book shows a new position: the signal card
+    holder["page"] = signal_page(dict(LONG), "2026-11-17 00:45", "2026-11-17T00:45:30Z")
+    bars_file(tmp_path, [(101, 101.5, 100.5, 101), (101, 101.5, 100.5, 101), (100.5, 101, 99.5, 100.2)])
+    st, _ = tn.check(st, "k", now=at17(0, 46))                       # the bar after bar A holds the entry: filled
+    return calls, holder, st
+
+
+def test_signal_preview_goes_to_the_owner_chat_only_under_the_preview_line(monkeypatch, tmp_path):
+    assert tn.SIGNALS_PREVIEW is True and tn.SIGNALS_CHANNEL is None
+    calls, holder, st = run_to_fill(monkeypatch, tmp_path)
+    assert len(calls) == 2 and all(c["chat_id"] == 42 for c in calls)
+    assert all(c["text"].startswith(u"\U0001f9ea Subscriber preview\n") for c in calls)
+    assert "BUY BTC" in calls[0]["text"] and "BTC-1117-01" in calls[0]["text"] and "reply_to_message_id" not in calls[0]
+    assert "strongest on the buy side: Momentum." in calls[0]["text"]
+    assert "Entry filled" in calls[1]["text"] and calls[1]["reply_to_message_id"] == 701     # a reply to the card itself
+    for c in calls:
+        low = c["text"].lower()
+        assert "b_targets" not in low and "shadow" not in low and "kronos" not in low and "$" not in c["text"]
+        assert "alphaprediction" not in low and c["text"].endswith("not financial advice.</i>")
+    st, _ = tn.check(st, "k", now=at17(0, 47))                       # the same records again: nothing is sent twice
+    assert len(calls) == 2
+    assert "open" not in st and "seen" not in st                     # the bot's own state does not carry the signals
+
+
+def test_signal_follow_up_falls_back_to_a_plain_message_when_the_reply_fails(monkeypatch, tmp_path):
+    calls, _holder, _st = run_to_fill(monkeypatch, tmp_path, refuse_replies=True)
+    assert len(calls) == 3 and calls[1]["reply_to_message_id"] == 701
+    assert "reply_to_message_id" not in calls[2] and calls[2]["text"] == calls[1]["text"] and "Entry filled" in calls[2]["text"]
+    assert calls[2]["parse_mode"] == "HTML"
+
+
+def test_an_exception_in_signals_code_never_blocks_the_admin_alerts(monkeypatch, tmp_path, capsys):
+    calls, holder = signal_bot(monkeypatch, tmp_path)
+
+    def boom(*a, **k):
+        raise RuntimeError("signals are broken")
+    monkeypatch.setattr(tn.signals, "run", boom)
+    monkeypatch.setattr(tn, "disk_free_gb", lambda path=None: 1.5)
+    st, ev = tn.check({"chat_id": 42}, "k", now=NOW)
+    texts = [c["text"] for c in calls]
+    assert any("Server disk low" in t for t in texts) and any("daily summary" in t for t in texts)
+    assert st["summary_day"] == "2026-11-17" and st["disk_low"] and st["checked_utc"]
+    st, ev = tn.check(st, "k", now=NOW)
+    st, ev = tn.check(st, "k", now=NOW)
+    out = capsys.readouterr().out
+    assert out.count("signals failed (check: RuntimeError)") == 1    # logged once, not every minute
+    assert "signals are broken" not in out
+    assert tn._signals_guard("x", lambda: 7) == 7
+
+
+def test_signal_commands_answer_the_locked_chat_only(monkeypatch, tmp_path):
+    calls, holder, st = run_to_fill(monkeypatch, tmp_path)
+    n = len(calls)
+    holder["updates"] = [(99, "/signals"), (99, "/record")]
+    st, _ = tn.check(st, "k", now=at17(0, 48))
+    assert len(calls) == n                                           # a stranger gets no answer
+    holder["updates"] = [(42, "/signals"), (42, "/record")]
+    st, _ = tn.check(st, "k", now=at17(0, 49))
+    a, b = calls[n]["text"], calls[n + 1]["text"]
+    assert a.startswith(u"\U0001f9ea Subscriber preview\n") and "open now" in a and "BTC-1117-01 BUY       in trade" in a
+    assert "the record" in b and "Signals sent                 1" in b and "Filled                1 (100%)" in b
+    assert "Verdict: no trades yet." in b and "Live since 16 Nov 2026" in b
+    assert calls[n]["chat_id"] == calls[n + 1]["chat_id"] == 42
+
+
+def test_daily_recap_goes_with_the_daily_summary_once_the_preview_has_started(monkeypatch, tmp_path):
+    calls, holder, st = run_to_fill(monkeypatch, tmp_path)
+    n = len(calls)
+    holder["page"] = signal_page(dict(LONG), "2026-11-18 00:00", "2026-11-18T00:00:30Z")
+    st, _ = tn.check(st, "k", now=datetime(2026, 11, 18, 0, 1, tzinfo=timezone.utc))
+    texts = [c["text"] for c in calls[n:]]
+    assert len(texts) == 2 and "daily summary" in texts[0] and not texts[0].startswith(tn.SIGNALS_HEAD)
+    assert texts[1].startswith(tn.SIGNALS_HEAD) and "daily recap" in texts[1] and "Tue 17 Nov (UTC)" in texts[1]
+    assert "BTC-1117-01 BUY       in trade" in texts[1] and "Live since 16 Nov 2026" in texts[1]
+    st, _ = tn.check(st, "k", now=datetime(2026, 11, 18, 0, 2, tzinfo=timezone.utc))
+    assert len(calls) == n + 2                                       # once a day
+
+
+def test_no_signal_files_and_no_recap_before_the_page_carries_the_book(monkeypatch, tmp_path):
+    sent, _reads, _h = bot(monkeypatch)                              # the old page: no shadow books on it
+    st, _ = tn.check({"chat_id": 42, "calib_week": "2026-W47"}, "k", now=NOW)
+    assert len(sent) == 1 and "daily summary" in sent[0][1]
+    assert not os.path.exists(tn.SIGNALS_STATE) and not os.path.exists(tn.SIGNALS_LOG)
+
+
+def test_a_bar_file_caught_mid_write_is_said_once_and_changes_nothing(monkeypatch, tmp_path, capsys):
+    calls, holder, st = run_to_fill(monkeypatch, tmp_path)
+    state = open(tn.SIGNALS_STATE).read()
+    open(str(tmp_path / "data" / "btcusdt_15m.csv"), "w").close()    # caught empty, as the engine rewrites it
+    holder["page"] = signal_page(dict(LONG), "2026-11-17 01:00", "2026-11-17T01:00:30Z")
+    for m in (1, 2, 3):
+        st, _ = tn.check(st, "k", now=at17(1, m))
+    assert open(tn.SIGNALS_STATE).read() == state and len(calls) == 2
+    assert capsys.readouterr().out.count("bars not readable now, will retry (BTCUSDT)") == 1
+    bars_file(tmp_path, [(101, 101.5, 100.5, 101), (101, 101.5, 100.5, 101), (100.5, 101, 99.5, 100.2), (101, 103.5, 100.5, 103)])
+    st, _ = tn.check(st, "k", now=at17(1, 4))                        # whole again: the bar is read now
+    assert len(calls) == 3 and "Target 1 hit" in calls[2]["text"] and calls[2]["reply_to_message_id"] == 701
