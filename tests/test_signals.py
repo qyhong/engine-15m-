@@ -633,9 +633,9 @@ def test_why_sentence_falls_back_to_plain_reasons_and_never_to_internal_names():
     assert signals.why_sentence(lib, -1) == "Why: strongest on the sell side: Working strategies."
 
 
-def test_prices_print_as_the_page_shows_them():
-    assert [signals._p(v) for v in (65203.2, 7596.66, 159.765, 47.085, 48.38975, 91.3731, 85.0)] == [
-        "65,203.20", "7,596.66", "159.765", "47.085", "48.38975", "91.3731", "85.00"]
+def test_prices_print_with_at_most_three_decimals():
+    assert [signals._p(v) for v in (65203.2, 7596.66, 159.765, 47.085, 48.38975, 91.3731, 85.0, 54.10301)] == [
+        "65,203.20", "7,596.66", "159.765", "47.085", "48.39", "91.373", "85.00", "54.103"]
 
 
 def test_log_lines_written_twice_count_once(sim):

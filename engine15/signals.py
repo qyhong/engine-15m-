@@ -103,13 +103,13 @@ def _esc(t):
 
 
 def _p(v):
-    """A price as the page shows it: 65,203.20 / 159.765 / 47.085 / 48.38975."""
+    """A price for a card: 65,203.20 / 159.765 / 47.085 / 54.103 (at most three decimals; the log keeps the full price)."""
     v = float(v)
     if abs(v) >= 1000:
         return "{:,.2f}".format(v)
     if abs(v) >= 100:
         return "%.3f" % v
-    s = ("%.5f" % v).rstrip("0")
+    s = ("%.3f" % v).rstrip("0")
     whole, _dot, frac = s.partition(".")
     return whole + "." + frac.ljust(2, "0")
 
