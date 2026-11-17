@@ -35,6 +35,8 @@ if [ "${1:-}" = "--undo" ]; then
   sudo systemctl stop mind15 mind15-telegram
   sudo cp -p "$O/mind15.service" "$O/mind15-telegram.service" $UNITS/
   cp -p "$O/mind15.env" $M/mind15.env
+  # the ec2-user copy of the push key was removed after the switch (17 Nov 2026): put it back from the root-owned one
+  [ -f /home/ec2-user/.ssh/mind15_web ] || sudo install -o ec2-user -g ec2-user -m 0600 $ETC/push_key /home/ec2-user/.ssh/mind15_web
   owners_back
   sudo systemctl daemon-reload && sudo systemctl start mind15 mind15-telegram
   sleep 8
@@ -54,7 +56,7 @@ sudo usermod -aG mind15 ec2-user                   # deploys, research runs and 
 sudo mkdir -p $HOMEDIR/.ssh $HOMEDIR/.cache $ETC
 ssh-keygen -F 98.93.142.222 -f /home/ec2-user/.ssh/known_hosts | grep -v '^#' | sudo tee $HOMEDIR/.ssh/known_hosts >/dev/null
 sudo chown -R mind15:mind15 $HOMEDIR; sudo chmod 700 $HOMEDIR $HOMEDIR/.ssh; sudo chmod 644 $HOMEDIR/.ssh/known_hosts
-sudo install -o root -g mind15 -m 0640 /home/ec2-user/.ssh/mind15_web $ETC/push_key
+[ -f $ETC/push_key ] || sudo install -o root -g mind15 -m 0640 /home/ec2-user/.ssh/mind15_web $ETC/push_key
 sudo chown root:mind15 $ETC; sudo chmod 750 $ETC
 
 sudo systemctl stop mind15 mind15-telegram
