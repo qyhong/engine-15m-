@@ -19,6 +19,18 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   the same key (`/data/mind15/tools/pull_answers.py`, cursor `/data/mind15/data/pull_cursor.json`). Estate files copied to
   `/data/estate`. NEVER start the laptop loop again while the service runs (two engines would overwrite the page).
   Status: `ssh -i ~/.ssh/minds15.pem ec2-user@13.251.40.113 "systemctl is-active mind15; tail -5 /data/mind15/live.log"`.
+  **Own user + sandbox (17 Nov 2026 04:05 UTC, owner "Yes, do it"; the box audit's top finding):** both services run as
+  the system user `mind15` (no shell, no sudo) under systemd sandboxing (ProtectSystem=strict; they can write only
+  `/data/mind15/{data,journal,out,research/out}` and `/var/lib/mind15`; the engine cannot read `secrets/`, the bot
+  cannot read the push key; the site's auth/backup/letsencrypt paths are inaccessible). The push key is a copy at
+  `/etc/mind15/push_key` (root:mind15 0640; `mind15.env` points there), known_hosts in `/var/lib/mind15/.ssh`.
+  State folders are mind15:mind15, setgid, group-writable; ec2-user is in group `mind15` (deploys, research runs, the
+  laptop's backup). Code and `/data/venv` stay ec2-user's, read-only to the service (it writes no .pyc: the deploy
+  compiles them). Script with `--undo`: `tools/server/mind15_own_user.sh` (unit backups in
+  `/home/ec2-user/mind15_backups/`). Deploy with `bash tools/deploy.sh [pytest args]` (tests, waits for a real gap,
+  unpacks HEAD, restarts both services). "Asleep" means the log's last line is `sleeping Ns ...` AND log mtime + N is
+  still in the future: the last line alone is wrong during a long silent step. A restart is followed at once by a
+  catch-up step if a close was missed.
   24/7 hardening (16 Nov 13:05 UTC): drop-ins `/etc/systemd/system/{mind15,mind15-telegram}.service.d/24x7.conf`
   (RequiresMountsFor=/data, StartLimitIntervalSec=0: they wait for the data disk and never give up restarting);
   `/etc/logrotate.d/mind15` rotates `/data/mind15/*.log` weekly (copytruncate, 8 kept). Crash test: SIGKILL between
@@ -37,6 +49,13 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   out/live/page.json, scoreboard.json and the RL refit logs. The bot key is a file the OWNER places at
   `/data/mind15/secrets/telegram_token` (chmod 600; `secrets/` is git-ignored); never handle or print it. The first chat
   that sends /start is locked in; /summary sends the summary on demand; the daily summary goes at 00:00 UTC (08:00 SGT).
+  Since 17 Nov: `/health` and one "Data: N of M cards reading" line in the summary (a card is silent after 8 closes of
+  its own market without a read; alert once, recovery once), and a weekly live-calibration card with `/calibration`
+  (`engine15/livecheck.py` re-grades each stated call with the engine's own triple-barrier rule on the bar files and
+  checks it against `graded_now`). The bot replaces the forecast model's name as the page does.
+- **Backups (17 Nov 2026):** `tools/backup_pull.py`, Windows scheduled task "Mind15 server backup" daily 12:00 SGT:
+  one tar over ssh of journal, out/live, data (no evcache/raw), RL forward books and logs into `backup/server/`
+  (git-ignored), 7 kept, taken in a gap between steps, rejected if a bar or state file is empty.
 - **Sources**: every step calls each source module's `update()` (`engine15/sources/__init__.py` MODULES). `flows`
   (v5.1.1) throttles itself per source (`MIN_GAP_S`; last attempts in `data/sources/flows_state.json`) and keeps the
   Binance archive zips in `data/raw/binance_metrics/`. `cryptox` (v5.2.2) throttles each of its six feeds the same
