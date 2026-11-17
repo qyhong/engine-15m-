@@ -53,6 +53,11 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   its own market without a read; alert once, recovery once), and a weekly live-calibration card with `/calibration`
   (`engine15/livecheck.py` re-grades each stated call with the engine's own triple-barrier rule on the bar files and
   checks it against `graded_now`). The bot replaces the forecast model's name as the page does.
+  Since 17 Nov 2026 the bot shows every paper-book dollar amount at 100x (`DISPLAY_X`, env `MIND15_TG_DISPLAY_X`), matching the
+  website's display-only 100x (owner: "Enlarge the capital by 100 times"; for the bot "Scale the bot 100x too"). The engine's
+  files keep the real figures; never rescale page.json or setups.json (the pages already multiply). The owner chose to
+  keep the word "edge" in engine sentences and let the website relabel it ("Leave it to the website"); tell the AI Trading
+  Bot session before adding any new engine sentence with "edge" or book money in it.
 - **Subscriber signal preview (17 Nov 2026, owner "Yes, build preview"; H53, signal book S1):** `engine15/signals.py`,
   run inside the bot's check. Source: the shadow book `b_targets` (`page["shadows"]["books"]["b_targets"]["assets"]`);
   a signal = a new open position; the FOLLOWABLE record (limit at the book's entry, four bars after the alert bar, half
