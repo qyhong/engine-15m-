@@ -13,6 +13,14 @@ Alerts: a closed trade on the main, shadow, RL and pair books; any book reaching
 not updated for STALE_MIN minutes (and when it is fresh again); the weekly RL refits finishing. Busy strategy books only
 alert at 30 trades or a verdict change. Daily summary at SUMMARY_UTC (00:00 UTC = 08:00 Singapore).
 
+Two read-only reports (the arithmetic is in livecheck.py):
+  DATA HEALTH, every check, from the page it already loads (never the journal): a card that was reading and has said
+    "no read" for 8 closes in a row of its own market gets ONE alert (all cards in one message per check) and a line when
+    it reads again; a closed market has no new close and is never counted. One line in the daily summary; /health lists all.
+  LIVE CALIBRATION, with the first daily summary of each ISO week and on /calibration: the stated odds against what
+    happened, per market, from the live journal (streamed, a few numbers kept per line; at most CALIB_DAYS days and
+    CALIB_BUDGET_S seconds). A record of forecasts, never proof of an edge.
+
 THE KEY: read from a file the owner places (TOKEN_FILE, chmod 600); never printed, logged or stored anywhere else.
 THE CHAT: the first chat that sends /start is locked in (state file); every other chat is ignored. No key file = it waits.
 """
@@ -21,9 +29,10 @@ import json
 import os
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
-from .config import DATA_DIR, OUT_DIR, ROOT
+from . import livecheck
+from .config import DATA_DIR, JOURNAL_DIR, OUT_DIR, ROOT
 
 TOKEN_FILE = os.environ.get("MIND15_TELEGRAM_TOKEN_FILE", os.path.join(ROOT, "secrets", "telegram_token"))
 STATE = os.path.join(DATA_DIR, "telegram_state.json")
@@ -34,6 +43,11 @@ REFIT_LOGS = (os.path.join(ROOT, "research", "out", "rl", "forward5", "update.lo
 API = "https://api.telegram.org/bot%s/%s"
 STALE_MIN = 40
 DISK_LOW_GB = 3.0                                                     # warn when the data disk has less than this free
+JOURNAL = JOURNAL_DIR                                                 # the live day files (read only for the calibration card)
+BARS = DATA_DIR                                                       # the engine's own 15m bar files (read only, tail only)
+CALIB_DAYS = 90                                                       # the calibration card looks back at most this far
+CALIB_BUDGET_S = 45.0                                                 # ... and stops reading older days after this long
+LIST_MAX = 8                                                          # lines per section in one data alert
 
 
 def disk_free_gb(path=None):
@@ -99,6 +113,7 @@ NAMES = {"main": "Main engine", "b_trail": "B trail (shadow)", "b_targets": "B t
          "p5_squeeze": "P5 squeeze"}
 GREEN, RED, FLAG_END, SCALE, BRAIN, WARN, OK, WAVE, CHART = (u"\U0001f7e2", u"\U0001f534", u"\U0001f3c1", u"\u2696\ufe0f",
                                                             u"\U0001f9e0", u"\u26a0\ufe0f", u"\u2705", u"\U0001f44b", u"\U0001f4ca")
+TARGET, DISH = u"\U0001f3af", u"\U0001f4e1"
 
 
 def _esc(t):
@@ -214,8 +229,135 @@ def events(prev, cur, page, now=None):
     return ev
 
 
-def summary(page, score, now=None):
-    """The daily summary card (HTML: bold headings, fixed-width tables)."""
+# ------------------------------------------------------------------ data health (the page's cards) and live calibration
+def _mk(a):
+    return MKT.get(a, a)
+
+
+def _short(title):
+    """A card's name without its bracket: 'Liquidity (order book)' -> 'Liquidity'."""
+    return str(title).split(" (")[0]
+
+
+def _when(t, date=True):
+    """'2026-11-16 14:45' -> '16 Nov 14:45 UTC' (or '14:45 UTC')."""
+    try:
+        d = datetime.strptime(str(t)[:16], "%Y-%m-%d %H:%M")
+    except Exception:
+        return "?"
+    return ("%d %s " % (d.day, d.strftime("%b")) if date else "") + d.strftime("%H:%M") + " UTC"
+
+
+def _feeds(rows, fmt, limit=LIST_MAX):
+    out = [u"• %s: %s" % (_esc(_short(r["card"])), fmt(r)) for r in rows[:limit]]
+    return out + (["+%d more" % (len(rows) - limit)] if len(rows) > limit else [])
+
+
+def _markets(r):
+    return _esc(", ".join(_mk(a) for a in r["assets"]))
+
+
+def health_line(h):
+    """The ONE data line of the daily summary; None before the first look at the page's cards."""
+    v = livecheck.health_view(h)
+    if not v["cards"]:
+        return None
+    names = [_short(r["card"]) for r in v["silent"]]
+    s = u"%s Data: %d of %d cards reading" % (OK if not names else WARN, v["reading"], v["cards"])
+    if names:
+        s += u" · silent: %s%s" % (_esc(", ".join(names[:3])), " +%d more" % (len(names) - 3) if len(names) > 3 else "")
+    return s
+
+
+def health_alert(gone, back):
+    """ONE message for everything that went silent or came back at this check (a feed outage cannot spam the chat)."""
+    L = []
+    if gone:
+        rows = livecheck._by_card(gone)
+        L += [u"%s <b>Data feed silent</b>" % WARN] + _feeds(rows, lambda r: u"%s · no read for %d closes, since %s" % (
+            _markets(r), r["closes"], _when(r["since"], False)))
+    if back:
+        rows = livecheck._by_card(back)
+        L += [u"%s <b>Data back</b>" % OK] + _feeds(rows, lambda r: u"%s · reading again after %d closes" % (
+            _markets(r), r["closes"]))
+    return "\n".join(L + ["Send /health for the full list."]) if L else None
+
+
+def health_card(h):
+    """The /health answer: every silent card and since when."""
+    v = livecheck.health_view(h)
+    head = u"%s <b>Mind 15 · data health</b>\n" % DISH
+    if not v["last"]:
+        return head + u"<i>paper only</i>\n\nNo cards seen yet: the page has not been read."
+    L = [head + u"Last close seen %s · <i>paper only</i>" % _when(v["last"]),
+         u"%s <b>%d of %d cards reading</b>" % (OK if not v["silent"] else WARN, v["reading"], v["cards"]), ""]
+    L += [u"<b>Silent</b> (was reading, now past its limit)"]
+    L += _feeds(v["silent"], lambda r: u"%s\n   since %s · %d closes" % (_markets(r), _when(r["since"]), r["closes"]),
+                20) or ["none"]
+    if v["missed"]:
+        L += ["", u"<b>Missed the last closes</b> (inside the limit)"]
+        L += _feeds(v["missed"], lambda r: u"%s · %d" % (_markets(r), r["closes"]), 10)
+    if v["never"]:
+        L += ["", u"<b>Never read here</b> since the watch began (not counted): %d" % len(v["never"]),
+              _esc(u" · ".join("%s: %s" % (_short(r["card"]), ", ".join(_mk(a) for a in r["assets"]))
+                                    for r in v["never"][:12])) + (" +%d more" % (len(v["never"]) - 12) if len(v["never"]) > 12 else "")]
+    L += ["", u"Limit: %d closes in a row of its own market (2 h of trading), or twice its longest earlier gap, at most %d. "
+              u"A closed market has no new close, so it is not counted." % (livecheck.SILENT_CLOSES, livecheck.SILENT_CAP)]
+    return "\n".join(L)
+
+
+def calibration_now(now=None):
+    """The heavy read: the live journal of the last CALIB_DAYS days, streamed. Only at the weekly card or on /calibration."""
+    now = now or datetime.now(timezone.utc)
+    return livecheck.calibration(JOURNAL, BARS, start=(now - timedelta(days=CALIB_DAYS)).strftime("%Y-%m-%d"),
+                                 end=now.strftime("%Y-%m-%d"), budget_s=CALIB_BUDGET_S)
+
+
+def calibration_card(res):
+    """The weekly calibration card: one line per market, then the stated odds against what came, all markets pooled."""
+    head = u"%s <b>Mind 15 · live calibration</b>\n" % TARGET
+    mk = dict((a, s) for a, s in ((res or {}).get("markets") or {}).items() if s.get("n"))
+    if not mk:
+        return head + u"<i>paper only</i>\n\nNo graded live forecasts in the journal yet."
+    try:
+        since = datetime.strptime(res["since"], "%Y-%m-%d")
+        since = "%d %s" % (since.day, since.strftime("%b %Y"))
+    except Exception:
+        since = "?"
+    L = [head + u"Live data since %s · <i>paper only</i>" % since,
+         u"When it says 60%, does it happen 60% of the time?", ""]
+    rows, notes, most = [], [], None
+    for a, s in mk.items():
+        checked = s.get("source") == "bars"
+        rows.append("%-6s %4d %3s %s" % (_mk(a)[:6], s["n"], "-" if s.get("hit_pct") is None else "%.0f%%" % s["hit_pct"],
+                                         s.get("verdict") if checked else "n/a *"))
+        if not checked:
+            notes.append(u"* %s: %s, so the engine's own tallies and no odds check." % (_mk(a), s.get("why") or "not re-graded"))
+        elif most is None or s.get("ind_n", 0) > most[1]:
+            most = (_mk(a), s.get("ind_n", 0))
+    L += ["<pre>%s</pre>" % _esc("\n".join(["%-6s %4s %3s %s" % ("Market", "n", "Hit", "Verdict"), "-" * 30] + rows))]
+    p = res.get("pooled") or {}
+    table = ["%-8s %5d %4s %4s" % (r["said"], r["n"], "%.0f%%" % r["avg_said_pct"], "%.0f%%" % r["came_pct"])
+             for r in p.get("table") or [] if r.get("n")]
+    if table:
+        L += ["<b>All markets pooled</b>",
+              "<pre>%s</pre>" % _esc("\n".join(["%-8s %5s %4s %4s" % ("Said %", "n", "Avg", "Came"), "-" * 24] + table))]
+        if p.get("brier") is not None:
+            L.append(u"Brier %.3f against %.3f for the base rate (lower is better)." % (p["brier"], p["brier_base"]))
+    L += [u"<b>Hit</b>: direction right among calls graded up or down, by the engine's own grading. "
+          u"<b>Said / Came</b>: the odds it gave the side it favoured, and how often that side came first."]
+    if most:
+        L.append(u"<b>Verdict</b>: a 95%% binomial interval on calls that do not overlap in time; under %d of those is too few "
+                 u"(most so far: %s %d)." % (res.get("min_ind", livecheck.MIN_IND), most[0], most[1]))
+    L += [_esc(n) for n in notes]
+    if res.get("partial"):
+        L.append("Older days were not read (time limit).")
+    L.append(u"<i>A record of live forecasts, not proof of an edge.</i>")
+    return "\n".join(L)
+
+
+def summary(page, score, now=None, health=None):
+    """The daily summary card (HTML: bold headings, fixed-width tables). health: the bot's remembered card health."""
     now = now or datetime.now(timezone.utc)
     head = u"%s <b>Mind 15 \u00b7 daily summary</b>\n%s UTC \u00b7 <i>paper only</i>" % (CHART, now.strftime("%a %d %b, %H:%M"))
     if not page:
@@ -227,6 +369,9 @@ def summary(page, score, now=None):
     free = disk_free_gb()
     if free is not None:
         L.append(u"%s Server disk %.1f GB free" % (OK if free >= DISK_LOW_GB else WARN, free))
+    data = health_line(health)
+    if data:
+        L.append(data)
     L.append("")
     rows, tot_open = [], 0.0
     for a, d in (page.get("assets") or {}).items():
@@ -282,13 +427,30 @@ def check(st, tok, send=True, now=None):
             if st.get("chat_id") is None and text.startswith("/start"):
                 st["chat_id"] = chat
                 _send(tok, chat, u"%s <b>Mind 15 alerts are on</b> for this chat.\nTrade closes, verdicts, engine warnings and a "
-                                 u"daily summary at 08:00 SGT. Send /summary any time.\n<i>paper only</i>" % WAVE)
-            elif chat == st.get("chat_id") and text.startswith("/summary"):
-                _send(tok, chat, summary(_load(PAGE), _load(SCORE), now))
+                                 u"daily summary at 08:00 SGT. Send /summary, /health or /calibration any time.\n"
+                                 u"<i>paper only</i>" % WAVE)
+            elif chat != st.get("chat_id"):
+                continue                                              # the chat lock: nobody else gets an answer
+            elif text.startswith("/summary"):
+                _send(tok, chat, summary(_load(PAGE), _load(SCORE), now, st.get("health")))
+            elif text.startswith("/health"):
+                _send(tok, chat, health_card(st.get("health")))
+            elif text.startswith("/calibration"):
+                try:
+                    _send(tok, chat, calibration_card(calibration_now(now)))
+                except Exception as e:
+                    _send(tok, chat, u"%s Calibration could not be read (%s)." % (WARN, type(e).__name__))
     page, score = _load(PAGE), _load(SCORE)
     c, v, net = counts(score, page)
     cur = {"c": c, "v": v, "net": net, "refits": refit_marks()}
     ev = events(st, cur, page, now)
+    try:                                                              # data health, from the page already in hand
+        st["health"], gone, back = livecheck.health_update(st.get("health"), (page or {}).get("assets"))
+        feeds = health_alert(gone, back)                              # one message, whatever the number of cards
+        if feeds:
+            ev.append(feeds)
+    except Exception as e:                                            # a page shaped unexpectedly never stops the other alerts
+        print(time.strftime("%Y-%m-%d %H:%M:%S"), "data health failed: %s" % type(e).__name__, flush=True)
     free = disk_free_gb()
     if free is not None:                                              # server health: the data disk filling up
         if free < DISK_LOW_GB and not st.get("disk_low"):
@@ -305,8 +467,17 @@ def check(st, tok, send=True, now=None):
         for e in ev:
             _send(tok, st["chat_id"], e)
         if due:
-            _send(tok, st["chat_id"], summary(page, score, now))
+            _send(tok, st["chat_id"], summary(page, score, now, st.get("health")))
             st["summary_day"] = day
+            week = "%d-W%02d" % tuple(now.isocalendar())[:2]
+            if st.get("calib_week") != week:                          # with the first daily summary of each ISO week, once
+                st["calib_week"] = week                               # marked before the read: a failed read is not retried every minute
+                try:
+                    res = calibration_now(now)
+                    if any(s.get("n") for s in res["markets"].values()):
+                        _send(tok, st["chat_id"], calibration_card(res))
+                except Exception as e:
+                    print(time.strftime("%Y-%m-%d %H:%M:%S"), "calibration failed: %s" % type(e).__name__, flush=True)
     elif due and st.get("chat_id") is None:
         pass                                                          # no chat yet: the summary waits
     st.update(cur, stale=stale, checked_utc=now.strftime("%Y-%m-%dT%H:%M:%SZ"))
@@ -321,7 +492,7 @@ def main(argv=None):
         if not (tok and st.get("chat_id") is not None):
             print("no key file or no chat yet: send /start to the bot after the key file is in place")
             return 1
-        _send(tok, st["chat_id"], summary(_load(PAGE), _load(SCORE)))
+        _send(tok, st["chat_id"], summary(_load(PAGE), _load(SCORE), health=st.get("health")))
         return 0
     if "--sample" in argv:                                            # one example alert card, labelled as a sample
         tok = token()
