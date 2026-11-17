@@ -573,6 +573,58 @@ def load_events(data_dir=None):
     return events, st.get("live_since") if isinstance(st, dict) else None
 
 
+# ------------------------------------------------------------------ landing.json (open: no levels of open setups)
+# Served WITHOUT a session (the public landing page). Owner's rule there: "Counts only, no percent": no percent return
+# and no money figure anywhere in this file; no entry, stop or target of an OPEN setup.
+LANDING_FILE = "landing.json"
+NEAR_FRAC = 0.35                         # "near the entry": within this share of the entry-to-stop distance
+
+
+def _state(m):
+    """new / near / running / flat, the Setups page's own rule (codes only)."""
+    side = m.get("side")
+    if side not in ("LONG", "SHORT"):
+        return "flat"
+    if m.get("entry_window_open"):
+        return "new"
+    e, st, t1, px = _num(m.get("entry")), _num(m.get("stop")), _num(m.get("target_1")), _num(m.get("price"))
+    if not m.get("t1_taken") and None not in (e, st, t1, px) and e != st:
+        lo, hi = sorted((st, t1))
+        if lo < px < hi and abs(px - e) <= NEAR_FRAC * abs(e - st):
+            return "near"
+    return "running"
+
+
+def _since(page):
+    ms = [_ms(_get(page, "shadows", "markets", g, "started_utc")) for g in (_get(page, "shadows", "markets") or {})]
+    ms = [x for x in ms if x is not None]
+    return _iso(min(ms)) if ms else None
+
+
+def build_landing(doc, page=None):
+    """The open landing file from a built setups.json document (and the page, for the book's start): the board
+    (side and state per market, no levels), the record, wins per market and the newest five CLOSED setups. Nothing
+    that would give away an open setup's entry, stop or targets."""
+    ms = [m for m in (doc.get("markets") or []) if isinstance(m, dict)]
+    book = doc.get("book") or {}
+    closed, won = _int(book.get("closed")), _int(book.get("won"))
+    return {"generated_utc": doc.get("generated_utc"), "schema": 1,
+            "board": [{"symbol": m.get("symbol"), "short": m.get("short"),
+                       "side": m.get("side") if m.get("side") in ("LONG", "SHORT") else "FLAT",
+                       "opened_utc": m.get("opened_utc") if m.get("side") in ("LONG", "SHORT") else None,
+                       "state": _state(m),
+                       "rr_now_t2": m.get("rr_now_t2") if m.get("side") in ("LONG", "SHORT") else None,
+                       "market_open": m.get("market_open")} for m in ms],
+            "record": {"closed": closed, "won": won, "lost": max(0, closed - won),
+                       "open": sum(1 for m in ms if m.get("side") in ("LONG", "SHORT")),
+                       "since_utc": _since(page) if isinstance(page, dict) else None,
+                       "verdict": book.get("verdict"), "judged_at": 30},
+            "by_market": [{"symbol": m.get("symbol"), "short": m.get("short"), "closed": _int(m.get("closed")),
+                           "wins": _int(m.get("wins"))} for m in ms],
+            "closed_setups": [dict((k, v) for k, v in c.items() if k not in ("result_pct", "result_usd"))
+                              for c in (doc.get("closed_setups") or [])[:5] if isinstance(c, dict)]}
+
+
 # ------------------------------------------------------------------ the file
 def _atomic(path, text, mode=None):
     """Write `text` to `path` through a temp file in the same folder and os.replace; `mode` is set on the temp
@@ -676,6 +728,11 @@ def write(page, out_dir=None, s1=None, now=None, data_dir=None, log=None, bars_d
     doc = build(page, s1=load_s1(data_dir) if s1 is None else s1, now=now, bars=bars,
                 trades=read_trades(trades_dir or TRADES_DIR), prev=_read_json(os.path.join(out_dir, FILE)))
     path, web = _publish(FILE, doc, out_dir, log, "setups")
+    try:                                                          # the open landing file: its own guard, one line
+        lp, lw = _publish(LANDING_FILE, build_landing(doc, page), out_dir, log, "landing")
+        _say(log, "landing: %d markets -> %s%s" % (len(doc["markets"]), lp, " (web copy: %s)" % lw if lw else ""))
+    except Exception as e:
+        _say(log, "landing: not written (%r)" % (e,))
     return {"markets": len(doc["markets"]), "path": path, "web_path": web}
 
 

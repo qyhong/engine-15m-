@@ -462,10 +462,10 @@ def test_write_is_atomic_and_lands_next_to_the_page(tmp_path, monkeypatch):
     with open(path, encoding="utf-8") as fh:
         first = fh.read()
     assert json.loads(first) == setups.build(make_page()) and "NaN" not in first
-    assert sorted(os.listdir(str(live_dir))) == ["page.json", "setup_events.json", "setups.json"]   # no temp file left
+    assert sorted(os.listdir(str(live_dir))) == ["landing.json", "page.json", "setup_events.json", "setups.json"]   # no temp file left
     other = tmp_path / "elsewhere" / "deep"                           # from the dict, into a folder that is made
     assert setups.write(make_page(), out_dir=str(other))["path"] == str(other / "setups.json")
-    assert sorted(os.listdir(str(other))) == ["setup_events.json", "setups.json"]
+    assert sorted(os.listdir(str(other))) == ["landing.json", "setup_events.json", "setups.json"]
     # the rename is the only moment the file changes: a write that dies before it leaves the old file whole
     seen = []
     real = os.replace
@@ -484,7 +484,7 @@ def test_write_is_atomic_and_lands_next_to_the_page(tmp_path, monkeypatch):
     assert seen == [("setup_events.json.tmp", "setup_events.json", True), ("setups.json.tmp", "setups.json", True)]
     with open(path, encoding="utf-8") as fh:
         assert fh.read() == first                                     # the old file, untouched
-    assert sorted(os.listdir(str(live_dir))) == ["page.json", "setup_events.json", "setups.json"]
+    assert sorted(os.listdir(str(live_dir))) == ["landing.json", "page.json", "setup_events.json", "setups.json"]
     assert json.loads(open(str(live_dir / "setups.json"), encoding="utf-8").read())["version"] == "think15-v5.2.4"
     setups.write(changed, out_dir=str(live_dir))
     assert json.load(open(path, encoding="utf-8"))["version"] == "think15-next"
@@ -509,7 +509,8 @@ def test_web_copy_only_when_the_variable_is_set(tmp_path, monkeypatch):
     lines = []
     info = setups.write(make_page(), out_dir=str(live_dir), log=lines.append)            # unset: no web copy
     assert info["web_path"] is None and os.listdir(str(web)) == []
-    assert lines == ["setup_events: 0 events -> %s" % str(live_dir / "setup_events.json")]
+    assert [x for x in lines if not x.startswith("landing:")] == ["setup_events: 0 events -> %s" % str(live_dir / "setup_events.json")]
+    assert [x for x in lines if x.startswith("landing:")] == ["landing: 8 markets -> %s" % str(live_dir / "landing.json")]
     del lines[:]
     monkeypatch.setenv(setups.WEB_ENV, "   ")                         # blank is unset
     assert setups.write(make_page(), out_dir=str(live_dir), log=lines.append)["web_path"] is None
@@ -522,17 +523,20 @@ def test_web_copy_only_when_the_variable_is_set(tmp_path, monkeypatch):
     info = setups.write(make_page(), out_dir=str(live_dir), log=lines.append)
     target, events = str(web / "setups.json"), str(web / "setup_events.json")
     assert info == {"markets": 8, "path": str(live_dir / "setups.json"), "web_path": target}
-    assert lines == ["setup_events: 0 events -> %s (web copy: %s)" % (str(live_dir / "setup_events.json"), events)]
+    assert [x for x in lines if not x.startswith("landing:")] == ["setup_events: 0 events -> %s (web copy: %s)" % (str(live_dir / "setup_events.json"), events)]
     assert setups.line(info) == "setups: 8 markets -> %s (web copy: %s)" % (info["path"], target)
     with open(info["path"], "rb") as a, open(target, "rb") as b:
         assert a.read() == b.read()                                   # the same JSON, byte for byte
-    assert sorted(os.listdir(str(web))) == ["setup_events.json", "setups.json"]
+    assert sorted(os.listdir(str(web))) == ["landing.json", "setup_events.json", "setups.json"]
     # each file: the local file first; then the web copy: a temp file in the web folder itself, 0644 before the rename
     local_ev = str(live_dir / "setup_events.json")
+    land_local, land_web = str(live_dir / "landing.json"), os.path.join(os.path.dirname(target), "landing.json")
     assert calls == [("replace", local_ev + ".tmp", local_ev), ("chmod", events + ".tmp", 0o644),
                      ("replace", events + ".tmp", events),
                      ("replace", info["path"] + ".tmp", info["path"]), ("chmod", target + ".tmp", 0o644),
-                     ("replace", target + ".tmp", target)]
+                     ("replace", target + ".tmp", target),
+                     ("replace", land_local + ".tmp", land_local), ("chmod", land_web + ".tmp", 0o644),
+                     ("replace", land_web + ".tmp", land_web)]
     with open(local_ev, "rb") as a, open(events, "rb") as b:
         assert a.read() == b.read()
     if os.name == "posix":
@@ -553,7 +557,7 @@ def test_web_copy_that_fails_stops_nothing(tmp_path, monkeypatch):
         assert len(mine) == 1 and mine[0].startswith("setups: web copy not written (") and "\n" not in mine[0]
         ev = [x for x in lines if x.startswith("setup_events:")]      # the events file: its own two lines
         assert len(ev) == 2 and ev[0].startswith("setup_events: web copy not written (") and ev[1].startswith(
-            "setup_events: 0 events -> ") and len(lines) == 3
+            "setup_events: 0 events -> ") and len([x for x in lines if not x.startswith("landing:")]) == 3
         assert setups.line(info) == "setups: 8 markets -> %s" % info["path"]
         assert setups.write(make_page(), out_dir=str(live_dir), log=None)["web_path"] is None          # no log: still fine
         assert setups.write(make_page(), out_dir=str(live_dir), log=lambda *_: 1 / 0)["web_path"] is None
@@ -575,7 +579,7 @@ def test_web_copy_that_fails_stops_nothing(tmp_path, monkeypatch):
     info = setups.write(changed, out_dir=str(live_dir), log=lines.append)
     assert info["web_path"] is None
     assert [x for x in lines if x.startswith("setups:")] == ["setups: web copy not written (PermissionError('read-only web folder'))"]
-    assert (web / "setups.json").read_bytes() == old and sorted(os.listdir(str(web))) == ["setup_events.json", "setups.json"]
+    assert (web / "setups.json").read_bytes() == old and sorted(os.listdir(str(web))) == ["landing.json", "setup_events.json", "setups.json"]
     assert json.load(open(info["path"], encoding="utf-8"))["version"] == "think15-next"
 
 
@@ -612,7 +616,7 @@ def test_step_writes_setups_after_the_page_and_before_the_push(monkeypatch, tmp_
     assert lines.index(mine[0]) < lines.index("web push: ok (a stand-in, nothing sent)")
     doc = json.load(open(path, encoding="utf-8"))
     assert doc["schema"] == 1 and [m["symbol"] for m in doc["markets"]] == ORDER
-    assert sorted(os.listdir(os.path.dirname(page_path))) == ["page.json", "setup_events.json", "setups.json"]
+    assert sorted(os.listdir(os.path.dirname(page_path))) == ["landing.json", "page.json", "setup_events.json", "setups.json"]
     ev = [x for x in lines if x.startswith("setup_events:")]
     assert ev == ["setup_events: 0 events -> %s" % os.path.join(os.path.dirname(page_path), "setup_events.json")]
     assert lines.index(ev[0]) < lines.index(mine[0])
@@ -1207,7 +1211,7 @@ def test_one_file_failing_does_not_stop_the_other(tmp_path, monkeypatch):
     monkeypatch.setattr(setups, "build_events", lambda *a, **k: 1 / 0)
     lines = []
     info = setups.write(make_page(), out_dir=str(live_dir), data_dir=str(dd), log=lines.append)
-    assert lines == ["setup_events: not written (ZeroDivisionError('division by zero'))"]
+    assert [x for x in lines if not x.startswith("landing:")] == ["setup_events: not written (ZeroDivisionError('division by zero'))"]
     assert json.load(open(info["path"], encoding="utf-8"))["followable"]["signals"] == 10
     assert not os.path.exists(str(live_dir / "setup_events.json"))
     monkeypatch.setattr(setups, "build_events", real)
@@ -1234,8 +1238,8 @@ def test_one_file_failing_does_not_stop_the_other(tmp_path, monkeypatch):
     monkeypatch.setattr(setups.os, "replace", replace)
     lines = []
     info = setups.write(make_page(), out_dir=str(live_dir), data_dir=str(dd), log=lines.append)
-    assert info["web_path"] == str(web / "setups.json") and os.listdir(str(web)) == ["setups.json"]
-    assert lines == ["setup_events: web copy not written (PermissionError('no'))",
+    assert info["web_path"] == str(web / "setups.json") and sorted(os.listdir(str(web))) == ["landing.json", "setups.json"]
+    assert [x for x in lines if not x.startswith("landing:")] == ["setup_events: web copy not written (PermissionError('no'))",
                      "setup_events: 25 events -> %s" % str(live_dir / "setup_events.json")]
 
 
@@ -1250,3 +1254,33 @@ def test_step_writes_both_files_and_an_events_failure_never_breaks_it(monkeypatc
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+
+def test_landing_has_no_levels_of_open_setups_and_the_near_rule():
+    from engine15 import setups as su
+    doc = {"generated_utc": "2026-11-17T14:00:00Z", "book": {"closed": 4, "won": 3, "equity_usd": 20400.0, "verdict": None},
+           "markets": [
+               {"symbol": "BTCUSDT", "short": "BTC", "side": "SHORT", "opened_utc": "2026-11-15T03:15:00Z", "entry": 100.0,
+                "stop": 110.0, "target_1": 80.0, "target_2": 70.0, "t1_taken": False, "price": 102.0, "rr_now_t2": 4.0,
+                "entry_window_open": False, "market_open": True, "closed": 3, "wins": 2},
+               {"symbol": "USDJPY", "short": "USDJPY", "side": "FLAT", "entry": None, "stop": None, "target_1": None,
+                "target_2": None, "t1_taken": False, "price": 159.0, "market_open": True, "closed": 1, "wins": 1}],
+           "closed_setups": [{"symbol": "X", "n": i} for i in range(9)]}
+    page = {"shadows": {"markets": {"crypto": {"started_utc": "2026-11-11 05:45"}, "fx": {"started_utc": "2026-11-11 05:30"}}}}
+    d = su.build_landing(doc, page)
+    assert d["board"][0]["state"] == "near" and d["board"][1]["state"] == "flat" and d["board"][1]["opened_utc"] is None
+    assert d["record"] == {"closed": 4, "won": 3, "lost": 1, "open": 1,
+                           "since_utc": "2026-11-11T05:30:00Z", "verdict": None, "judged_at": 30}
+    assert len(d["closed_setups"]) == 5 and d["by_market"][0] == {"symbol": "BTCUSDT", "short": "BTC", "closed": 3, "wins": 2}
+    doc["closed_setups"] = [{"symbol": "X", "entry": 1.0, "exit": 1.1, "r": 0.5, "result_pct": 1.0, "result_usd": 9.0}]
+    cs = su.build_landing(doc, page)["closed_setups"][0]
+    assert cs == {"symbol": "X", "entry": 1.0, "exit": 1.1, "r": 0.5}                 # counts only: no percent, no money
+    import json
+    txt = json.dumps(d["board"])
+    for k in ("entry", "stop", "target_1", "target_2", "price"):
+        assert '"%s"' % k not in txt
+    doc["markets"][0]["price"] = 106.0
+    assert su.build_landing(doc, page)["board"][0]["state"] == "running"
+    doc["markets"][0]["entry_window_open"] = True
+    assert su.build_landing(doc, page)["board"][0]["state"] == "new"
