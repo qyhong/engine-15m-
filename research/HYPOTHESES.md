@@ -2793,3 +2793,44 @@ steps at 06:45 and 07:00 UTC ran normally meanwhile.
 **Reading.** By how they vote, the cards are less repetitive than their names suggest; by what they read, the newer
 oscillator cards mostly repeat an idea the engine already had. Options for the owner are in the report; none is
 proposed here. In-sample, descriptive, no edge claimed.
+
+## H55. SETUPS QUALITY FILTER: can the engine's own readings at a setup's start tell which Setups signals are worth sending? (registered 17 Nov 2026, 12:03 UTC, before any H55 code existed or any H55 number was computed)
+
+**Prompted by:** the owner, 17 Nov 2026, choosing the first of four ways RL could help ("Setups quality filter ... Yes").
+Not an RL agent: a supervised "take it or skip it" classifier on top of an existing book (meta-labelling). The four RL
+rounds showed learning direction from scratch fails; this asks a narrower question about trades that already exist.
+
+**Population.** Every `b_targets` trade (the Setups / S1 source book, `engine15/shadows.py`, rule unchanged) in the eight
+markets, replayed on history with the engine's own machinery, entries from 2020-01-01 to the sealed holdout 2025-11-11
+00:00 UTC (later rows dropped right after loading; never read). Each trade is scored by H53's FOLLOWABLE rules as amended
+on 17 Nov (bar A = the bar after the book's fill bar; limit at the book's entry for four bars; half at Target 1, rest at
+Target 2, stop to entry after T1; same-bar = stop; costs = the market's fee a side): result in R, or "no fill".
+
+**Label.** y = 1 if the followable result is > 0 R after costs, else 0; a "no fill" counts as y = 0 for training (a signal
+that cannot be traded is not worth sending) and as 0 R in the results.
+
+**Inputs (at the book's decision bar only, nothing later):** every feature the engine reads at that close
+(`evidence.FEATURES` as stored for the bar, i.e. what the engine saw), the main call's odds and edge points signed to the
+setup's side, the market (one-hot), the UTC hour and weekday, the stop distance and the Target-1 distance in ATR(14, 15m)
+and their ratio. A test proves the inputs at bar t are identical with and without the bars after t.
+
+**Variants (2, both counted):**
+- F1: logistic regression, L2, C = 0.1, inputs standardised on the training rows, class weights balanced.
+- F2: gradient-boosted trees (scikit-learn HistGradientBoostingClassifier if installed, else a stated stand-in fixed before
+  running): max_depth 3, learning_rate 0.05, 200 iterations, min_samples_leaf 50, l2_regularization 1.0, early stopping off.
+Each is trained ONCE on first-half signals (entries before 2023-06-07). **The filter keeps a signal when its predicted
+probability is at or above the median of the first-half predictions** (so it keeps about half; the cut is fixed on the
+first half). Nothing from the second half is used to train, scale, choose a cut or choose between F1 and F2.
+
+**Fixed pass bar (second half, 2023-06-07 to the seal; each variant on its own; Bonferroni over 2 variants):**
+(1) mean followable R per SENT signal of the kept set is higher than that of all signals, with a one-sided block
+bootstrap p <= 0.025 (blocks = calendar weeks, 10,000 resamples, fixed seed 55); (2) the kept set's total followable R
+after costs is > 0; (3) the kept set's mean R is higher than all signals' in at least 5 of the markets that have >= 20
+second-half signals; (4) the kept set has >= 100 second-half signals. A pass would be a reason to propose a forward paper
+filter book ("S1-F": the same live signals, sent only when the filter keeps them, graded on live followable results beside
+S1) to the owner, not proof of an edge and not a change to Setups.
+
+**Reported whatever the result:** counts, fill rates, mean and total R, win rates, per market and per half, for all
+signals and for kept/skipped; the AUC of each variant on each half; the ten inputs that move each variant most; the same
+table with the BOOK result instead of the followable one. **Disclosed already:** `b_targets` lost $28,862 against the main
+book on 2020-2026 history (H36); its live record is 17 trades; the followable record has 1 live signal.
