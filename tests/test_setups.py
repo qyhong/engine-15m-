@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """setups.json (engine15/setups.py): one voice per market from the b_targets view of a synthetic page, the record
-blocks, the wording rule, valid JSON, the atomic write and its web copy, and the live step's guard.
+blocks, the wording rule, valid JSON, the atomic write and its web copy, and the live step's guard; the closes from the
+engine's bar files, closed_setups from the book's trade files, and setup_events.json from the S1 log.
 
     py -3 -m pytest tests/test_setups.py -q
 
@@ -8,6 +9,7 @@ Nothing real runs here: the pages are made up, the files live in pytest's tmp fo
 stand-in step of tests/test_step_timing.py (no network, no source, no book).
 """
 import copy
+import io
 import json
 import os
 import stat
@@ -23,11 +25,11 @@ import pytest  # noqa: E402
 import test_step_timing as timing  # noqa: E402
 from engine15 import export, live, setups, signals  # noqa: E402
 
-TOP = ["generated_utc", "version", "schema", "note", "book", "followable", "learning", "markets"]
+TOP = ["generated_utc", "version", "schema", "note", "book", "followable", "learning", "markets", "closed_setups"]
 MARKET = ["symbol", "short", "group", "side", "entry", "stop", "target_1", "target_2", "t1_taken", "opened_utc", "price",
           "price_bar_utc", "unrealized_usd", "unrealized_pct", "market_open", "next_open_utc", "edge_with_position_pts",
           "hit_24h_30d_pct", "rr_now_t1", "rr_now_t2", "stop_dist_now_pct", "entry_window_open", "entry_valid_until_utc",
-          "closed", "wins", "realized_usd"]
+          "closed", "wins", "realized_usd", "closes", "closes_step_min", "closes_end_utc"]
 POSITION = ["entry", "stop", "target_1", "target_2", "opened_utc", "unrealized_usd", "unrealized_pct",
             "edge_with_position_pts", "rr_now_t1", "rr_now_t2", "stop_dist_now_pct", "entry_valid_until_utc"]
 ORDER = ["BTCUSDT", "ETHUSDT", "XAUUSD", "XAGUSD", "USDJPY", "SPX", "WTI", "BRENT"]
@@ -37,9 +39,11 @@ OTHER_BOOKS = ("b_targets", "b_trail", "b_be_t1", "h3_flip", "a_pullback", "m_sw
 
 @pytest.fixture(autouse=True)
 def _alone(monkeypatch, tmp_path):
-    """No web folder and no real S1 record unless a test asks for one."""
+    """No web folder, no real S1 record, no real bar or trade file unless a test asks for one."""
     monkeypatch.delenv(setups.WEB_ENV, raising=False)
     monkeypatch.setattr(setups, "S1_DIR", str(tmp_path / "no_s1_here"))
+    monkeypatch.setattr(setups, "BARS_DIR", str(tmp_path / "no_bars_here"))
+    monkeypatch.setattr(setups, "TRADES_DIR", str(tmp_path / "no_trades_here"))
 
 
 def view(status="FLAT", **kw):
@@ -458,10 +462,10 @@ def test_write_is_atomic_and_lands_next_to_the_page(tmp_path, monkeypatch):
     with open(path, encoding="utf-8") as fh:
         first = fh.read()
     assert json.loads(first) == setups.build(make_page()) and "NaN" not in first
-    assert sorted(os.listdir(str(live_dir))) == ["page.json", "setups.json"]             # no temp file left
+    assert sorted(os.listdir(str(live_dir))) == ["page.json", "setup_events.json", "setups.json"]   # no temp file left
     other = tmp_path / "elsewhere" / "deep"                           # from the dict, into a folder that is made
     assert setups.write(make_page(), out_dir=str(other))["path"] == str(other / "setups.json")
-    assert os.listdir(str(other)) == ["setups.json"]
+    assert sorted(os.listdir(str(other))) == ["setup_events.json", "setups.json"]
     # the rename is the only moment the file changes: a write that dies before it leaves the old file whole
     seen = []
     real = os.replace
@@ -477,10 +481,10 @@ def test_write_is_atomic_and_lands_next_to_the_page(tmp_path, monkeypatch):
     with pytest.raises(OSError):
         setups.write(changed, out_dir=str(live_dir))
     monkeypatch.setattr(setups.os, "replace", real)
-    assert seen == [("setups.json.tmp", "setups.json", True)]
+    assert seen == [("setup_events.json.tmp", "setup_events.json", True), ("setups.json.tmp", "setups.json", True)]
     with open(path, encoding="utf-8") as fh:
         assert fh.read() == first                                     # the old file, untouched
-    assert sorted(os.listdir(str(live_dir))) == ["page.json", "setups.json"]
+    assert sorted(os.listdir(str(live_dir))) == ["page.json", "setup_events.json", "setups.json"]
     assert json.loads(open(str(live_dir / "setups.json"), encoding="utf-8").read())["version"] == "think15-v5.2.4"
     setups.write(changed, out_dir=str(live_dir))
     assert json.load(open(path, encoding="utf-8"))["version"] == "think15-next"
@@ -504,26 +508,35 @@ def test_web_copy_only_when_the_variable_is_set(tmp_path, monkeypatch):
     web.mkdir()
     lines = []
     info = setups.write(make_page(), out_dir=str(live_dir), log=lines.append)            # unset: no web copy
-    assert info["web_path"] is None and os.listdir(str(web)) == [] and lines == []
+    assert info["web_path"] is None and os.listdir(str(web)) == []
+    assert lines == ["setup_events: 0 events -> %s" % str(live_dir / "setup_events.json")]
+    del lines[:]
     monkeypatch.setenv(setups.WEB_ENV, "   ")                         # blank is unset
     assert setups.write(make_page(), out_dir=str(live_dir), log=lines.append)["web_path"] is None
     monkeypatch.setenv(setups.WEB_ENV, str(web))
+    del lines[:]
     calls = []
     real_chmod, real_replace = os.chmod, os.replace
     monkeypatch.setattr(setups.os, "chmod", lambda p, mode: calls.append(("chmod", p, mode)) or real_chmod(p, mode))
     monkeypatch.setattr(setups.os, "replace", lambda a, b: calls.append(("replace", a, b)) or real_replace(a, b))
     info = setups.write(make_page(), out_dir=str(live_dir), log=lines.append)
-    target = str(web / "setups.json")
-    assert info == {"markets": 8, "path": str(live_dir / "setups.json"), "web_path": target} and lines == []
+    target, events = str(web / "setups.json"), str(web / "setup_events.json")
+    assert info == {"markets": 8, "path": str(live_dir / "setups.json"), "web_path": target}
+    assert lines == ["setup_events: 0 events -> %s (web copy: %s)" % (str(live_dir / "setup_events.json"), events)]
     assert setups.line(info) == "setups: 8 markets -> %s (web copy: %s)" % (info["path"], target)
     with open(info["path"], "rb") as a, open(target, "rb") as b:
         assert a.read() == b.read()                                   # the same JSON, byte for byte
-    assert os.listdir(str(web)) == ["setups.json"]
-    # the local file first; then the web copy: a temp file in the web folder itself, 0644 before the rename
-    assert calls == [("replace", info["path"] + ".tmp", info["path"]), ("chmod", target + ".tmp", 0o644),
+    assert sorted(os.listdir(str(web))) == ["setup_events.json", "setups.json"]
+    # each file: the local file first; then the web copy: a temp file in the web folder itself, 0644 before the rename
+    local_ev = str(live_dir / "setup_events.json")
+    assert calls == [("replace", local_ev + ".tmp", local_ev), ("chmod", events + ".tmp", 0o644),
+                     ("replace", events + ".tmp", events),
+                     ("replace", info["path"] + ".tmp", info["path"]), ("chmod", target + ".tmp", 0o644),
                      ("replace", target + ".tmp", target)]
+    with open(local_ev, "rb") as a, open(events, "rb") as b:
+        assert a.read() == b.read()
     if os.name == "posix":
-        assert stat.S_IMODE(os.stat(target).st_mode) == 0o644
+        assert stat.S_IMODE(os.stat(target).st_mode) == 0o644 and stat.S_IMODE(os.stat(events).st_mode) == 0o644
 
 
 def test_web_copy_that_fails_stops_nothing(tmp_path, monkeypatch):
@@ -536,7 +549,11 @@ def test_web_copy_that_fails_stops_nothing(tmp_path, monkeypatch):
         info = setups.write(make_page(), out_dir=str(live_dir), log=lines.append)
         assert info["web_path"] is None and info["markets"] == 8
         assert json.load(open(info["path"], encoding="utf-8"))["schema"] == 1            # the local file is there
-        assert len(lines) == 1 and lines[0].startswith("setups: web copy not written (") and "\n" not in lines[0]
+        mine = [x for x in lines if x.startswith("setups:")]
+        assert len(mine) == 1 and mine[0].startswith("setups: web copy not written (") and "\n" not in mine[0]
+        ev = [x for x in lines if x.startswith("setup_events:")]      # the events file: its own two lines
+        assert len(ev) == 2 and ev[0].startswith("setup_events: web copy not written (") and ev[1].startswith(
+            "setup_events: 0 events -> ") and len(lines) == 3
         assert setups.line(info) == "setups: 8 markets -> %s" % info["path"]
         assert setups.write(make_page(), out_dir=str(live_dir), log=None)["web_path"] is None          # no log: still fine
         assert setups.write(make_page(), out_dir=str(live_dir), log=lambda *_: 1 / 0)["web_path"] is None
@@ -556,8 +573,9 @@ def test_web_copy_that_fails_stops_nothing(tmp_path, monkeypatch):
     changed, lines = make_page(), []
     changed["version"] = "think15-next"
     info = setups.write(changed, out_dir=str(live_dir), log=lines.append)
-    assert info["web_path"] is None and lines == ["setups: web copy not written (PermissionError('read-only web folder'))"]
-    assert (web / "setups.json").read_bytes() == old and os.listdir(str(web)) == ["setups.json"]
+    assert info["web_path"] is None
+    assert [x for x in lines if x.startswith("setups:")] == ["setups: web copy not written (PermissionError('read-only web folder'))"]
+    assert (web / "setups.json").read_bytes() == old and sorted(os.listdir(str(web))) == ["setup_events.json", "setups.json"]
     assert json.load(open(info["path"], encoding="utf-8"))["version"] == "think15-next"
 
 
@@ -594,7 +612,10 @@ def test_step_writes_setups_after_the_page_and_before_the_push(monkeypatch, tmp_
     assert lines.index(mine[0]) < lines.index("web push: ok (a stand-in, nothing sent)")
     doc = json.load(open(path, encoding="utf-8"))
     assert doc["schema"] == 1 and [m["symbol"] for m in doc["markets"]] == ORDER
-    assert sorted(os.listdir(os.path.dirname(page_path))) == ["page.json", "setups.json"]
+    assert sorted(os.listdir(os.path.dirname(page_path))) == ["page.json", "setup_events.json", "setups.json"]
+    ev = [x for x in lines if x.startswith("setup_events:")]
+    assert ev == ["setup_events: 0 events -> %s" % os.path.join(os.path.dirname(page_path), "setup_events.json")]
+    assert lines.index(ev[0]) < lines.index(mine[0])
 
 
 def test_an_exception_in_setups_never_breaks_the_step(monkeypatch, tmp_path):
@@ -657,6 +678,574 @@ def test_setups_is_on_the_step_clock(monkeypatch, tmp_path):
     live.step(log=lines.append, fetch=True)
     t = [x for x in lines if x.startswith("timing step: ")]
     assert len(t) == 1 and " | setups 0." in t[0], t
+
+
+# ------------------------------------------------------------------ closes (the engine's own bars)
+BAR = 900000
+HEADER = "ts_ms,open,high,low,close,volume,taker_buy\n"
+
+
+def bar_lines(last_open, n, base, step=1.0):
+    """n bar lines ending with the bar that opens at last_open ('YYYY-MM-DD HH:MM'); close = base + k * step."""
+    end = setups._ms(last_open)
+    out = []
+    for k in range(n):
+        ts = end - (n - 1 - k) * BAR
+        c = base + k * step
+        out.append("%d,%r,%r,%r,%r,10.0,5.0\n" % (ts, c, c + 1, c - 1, c))
+    return out
+
+
+def write_bars(d, sym, last_open, n, base, step=1.0, header=True):
+    os.makedirs(str(d), exist_ok=True)
+    path = os.path.join(str(d), "%s_15m.csv" % sym.lower())
+    with open(path, "w", encoding="utf-8", newline="") as fh:
+        fh.write((HEADER if header else "") + "".join(bar_lines(last_open, n, base, step)))
+    return path
+
+
+def all_bars(d):
+    """Bar files for the eight markets of make_page, each holding bars beyond the page's price bar."""
+    write_bars(d, "BTCUSDT", "2026-11-17 03:30", 300, 100000.0, 1.234567)      # two bars newer than the page
+    write_bars(d, "ETHUSDT", "2026-11-17 03:00", 50, 1800.0)                   # fewer than 96 bars
+    write_bars(d, "XAUUSD", "2026-11-17 03:15", 150, 3800.123456, 0.5)         # fill_delay 1: one bar newer
+    write_bars(d, "XAGUSD", "2026-11-17 02:45", 150, 47.123456, 0.001)         # fill_delay 1: the file is behind the page
+    write_bars(d, "USDJPY", "2026-11-17 03:15", 150, 159.123456, 0.001)
+    write_bars(d, "SPX", "2026-11-16 20:45", 150, 7400.0, 0.25)                # shut: the last bar there is
+    write_bars(d, "WTI", "2026-11-17 03:30", 150, 85.0, 0.01)                  # no page time: the energy close
+    write_bars(d, "BRENT", "2026-11-17 03:00", 150, 93.0, 0.01)
+
+
+def built_with_bars(d, page=None, prev=None):
+    syms = ORDER
+    bars = dict((a, setups.read_closes(setups.bar_path(str(d), a))) for a in syms)
+    return setups.build(page or make_page(), bars=bars, prev=prev)
+
+
+def test_closes_window_and_end(tmp_path):
+    all_bars(tmp_path / "bars")
+    got = by_symbol(built_with_bars(tmp_path / "bars"))
+    m = got["BTCUSDT"]                                                # the page's price bar opens 03:00, closes 03:15
+    assert m["closes_step_min"] == 15 and len(m["closes"]) == 96
+    assert m["closes_end_utc"] == m["price_bar_utc"] == "2026-11-17T03:15:00Z"
+    k = 300 - 3                                                       # the bar opening 03:00 is the 298th of 300
+    assert m["closes"][-1] == round(100000.0 + k * 1.234567, 2) and m["closes"][0] == round(100000.0 + (k - 95) * 1.234567, 2)
+    assert m["closes"] == sorted(m["closes"])                         # oldest first
+    m = got["ETHUSDT"]
+    assert len(m["closes"]) == 50 and m["closes"][-1] == 1849.0 and m["closes_end_utc"] == "2026-11-17T03:15:00Z"
+    m = got["XAUUSD"]                                                 # one bar behind: the same bar as the page's price
+    assert m["closes_end_utc"] == "2026-11-17T03:15:00Z" and m["closes"][-1] == round(3800.123456 + 148 * 0.5, 2)
+    m = got["XAGUSD"]                                                 # the file holds less than the page: its last bar
+    assert m["closes_end_utc"] == "2026-11-17T03:00:00Z" and m["closes"][-1] == round(47.123456 + 149 * 0.001, 5)
+    m = got["USDJPY"]                                                 # page time 03:30: the bar that opens 03:15
+    assert m["closes_end_utc"] == "2026-11-17T03:30:00Z" and m["closes"][-1] == round(159.123456 + 149 * 0.001, 3)
+    m = got["SPX"]
+    assert m["closes_end_utc"] == m["price_bar_utc"] == "2026-11-16T21:00:00Z" and len(m["closes"]) == 96
+    m = got["WTI"]                                                    # no asset time: the energy books' close
+    assert m["closes_end_utc"] == "2026-11-17T03:15:00Z" and m["closes"][-1] == round(85.0 + 147 * 0.01, 5)
+    assert all(isinstance(x, float) for mk in got.values() for x in mk["closes"])
+    # no price bar at all (no time anywhere): the last bars there are
+    page = make_page()
+    page["assets"]["WTI"] = {"short": "WTI"}
+    page["shadows"]["markets"]["energy"].pop("as_of_utc")
+    m = by_symbol(built_with_bars(tmp_path / "bars", page))["WTI"]
+    assert m["price_bar_utc"] is None and m["closes_end_utc"] == "2026-11-17T03:45:00Z" and len(m["closes"]) == 96
+
+
+def test_metals_and_energy_step_one_bar_behind(tmp_path):
+    """fill_delay 1 (config): the page's price is the bar the engine has, one bar behind the clock; the closes end
+    there too, never on a newer bar the file may already hold."""
+    from engine15.config import CFG
+    assert all(CFG["fill_delay"].get(a) == 1 for a in ("XAUUSD", "XAGUSD", "WTI", "BRENT"))
+    d = tmp_path / "bars"
+    page = make_page()
+    for a in ("XAUUSD", "BRENT"):
+        page["assets"][a]["time"] = "2026-11-17 03:00"               # the page one bar behind the crypto markets
+        write_bars(d, a, "2026-11-17 03:15", 120, 50.0, 0.25)        # the file already holds two newer bars
+    got = by_symbol(setups.build(page, bars=dict((a, setups.read_closes(setups.bar_path(str(d), a)))
+                                                 for a in ("XAUUSD", "BRENT"))))
+    for a in ("XAUUSD", "BRENT"):
+        assert got[a]["price_bar_utc"] == got[a]["closes_end_utc"] == "2026-11-17T03:00:00Z"
+        assert got[a]["closes"][-1] == 50.0 + 117 * 0.25 and len(got[a]["closes"]) == 96
+    assert got["BTCUSDT"]["closes"] is None and got["BTCUSDT"]["closes_end_utc"] is None    # no file read: null
+
+
+def test_read_closes_reads_only_the_tail_and_trusts_no_garbled_read(tmp_path, monkeypatch):
+    d = tmp_path / "bars"
+    path = write_bars(d, "BTCUSDT", "2026-11-17 03:00", 5000, 100.0, 0.001)
+    assert os.path.getsize(path) > 4 * setups.TAIL_BYTES
+    rows = setups.read_closes(path)
+    assert 96 <= len(rows) <= setups.TAIL_LINES and rows[-1][0] == setups._ms("2026-11-17 03:00")
+    assert all(b[0] - a[0] == BAR for a, b in zip(rows, rows[1:]))
+    seen, real_open = [], io.open
+
+    class Spy(object):
+        def __init__(self, fh):
+            self.fh = fh
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            self.fh.close()
+
+        def seek(self, n):
+            seen.append(("seek", n))
+            return self.fh.seek(n)
+
+        def read(self, n=-1):
+            data = self.fh.read(n)
+            seen.append(("read", len(data)))
+            return data
+    monkeypatch.setattr(setups.io, "open", lambda p, mode="r", *a, **k: Spy(real_open(p, mode, *a, **k)))
+    assert setups.read_closes(path) == rows
+    monkeypatch.undo()
+    size = os.path.getsize(path)
+    assert seen == [("seek", size - setups.TAIL_BYTES), ("read", setups.TAIL_BYTES)]     # the tail only, one read
+    with open(path, "a", encoding="utf-8") as fh:                     # a line still being written: left out
+        fh.write("1794886200000,100.0,10")
+    assert setups.read_closes(path)[-1] == rows[-1]
+    for junk in ("", "{\n \"started_utc\": \"2026-11-10T13:26:48Z\",\n \"last_session_ms\": 1794884400000\n}\n",
+                 HEADER, HEADER + "1794884400000,1,2,3\n", HEADER + "1794884400000,1,2,0.5,nan,1,1\n",
+                 HEADER + "1794884400001,1,2,0.5,1,1,1\n",                                     # not on a 15-minute open
+                 HEADER + "1794884400000,1,2,0.5,1,1,1\n1794884400000,1,2,0.5,1,1,1\n"):       # not increasing
+        with open(path, "w", encoding="utf-8") as fh:
+            fh.write(junk)
+        assert setups.read_closes(path) is None, junk
+    lines = bar_lines("2026-11-17 03:00", 300, 100.0)                  # one bad line in the middle of the tail
+    lines[250] = "1794,abc,1,1,1,1,1\n"
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write(HEADER + "".join(lines))
+    assert setups.read_closes(path) is None
+    assert setups.read_closes(str(d / "no_such_15m.csv")) is None
+    write_bars(d, "ETHUSDT", "2026-11-17 03:00", 3, 1.0, header=False)                       # no header: fine
+    assert [c for _t, c in setups.read_closes(setups.bar_path(str(d), "ETHUSDT"))] == [1.0, 2.0, 3.0]
+    with open(path, "wb") as fh:                                      # Windows line ends
+        fh.write("".join(bar_lines("2026-11-17 03:00", 4, 7.0)).replace("\n", "\r\n").encode())
+    assert [c for _t, c in setups.read_closes(path)] == [7.0, 8.0, 9.0, 10.0]
+
+
+def test_a_bar_file_that_cannot_be_read_keeps_the_previous_closes(tmp_path):
+    d, live_dir = tmp_path / "bars", tmp_path / "live"
+    all_bars(d)
+    first = setups.write(make_page(), out_dir=str(live_dir), bars_dir=str(d))
+    before = by_symbol(json.load(open(first["path"], encoding="utf-8")))
+    assert before["BTCUSDT"]["closes"] and before["XAUUSD"]["closes"]
+    open(setups.bar_path(str(d), "BTCUSDT"), "w").close()             # empty
+    with open(setups.bar_path(str(d), "XAUUSD"), "w", encoding="utf-8") as fh:
+        fh.write('{\n "started_utc": "2026-11-10T13:26:48Z"\n}\n')    # not a bar file at all (the archive's gold file)
+    os.remove(setups.bar_path(str(d), "SPX"))                          # missing
+    write_bars(d, "ETHUSDT", "2026-11-17 03:00", 60, 2000.0)          # read fine: new closes
+    second = setups.write(make_page(), out_dir=str(live_dir), bars_dir=str(d))
+    after = by_symbol(json.load(open(second["path"], encoding="utf-8")))
+    for a in ("BTCUSDT", "XAUUSD", "SPX"):
+        assert after[a]["closes"] == before[a]["closes"] and after[a]["closes_end_utc"] == before[a]["closes_end_utc"]
+    assert after["ETHUSDT"]["closes"][-1] == 2059.0 and len(after["ETHUSDT"]["closes"]) == 60
+    # no previous file (or one that cannot be read): null
+    for prev in (None, "{ half a file"):
+        other = tmp_path / ("fresh%d" % (prev is None))
+        other.mkdir()
+        if prev:
+            (other / "setups.json").write_text(prev, encoding="utf-8")
+        got = by_symbol(json.load(open(setups.write(make_page(), out_dir=str(other), bars_dir=str(d))["path"],
+                                       encoding="utf-8")))
+        assert got["BTCUSDT"]["closes"] is None and got["XAUUSD"]["closes_end_utc"] is None
+        assert got["XAUUSD"]["closes_step_min"] == 15 and got["ETHUSDT"]["closes"][-1] == 2059.0
+    # a previous file with junk in its closes is not used
+    junk = {"markets": [{"symbol": "BTCUSDT", "closes": [1.0, "x"], "closes_end_utc": "2026-11-17T03:15:00Z"},
+                        {"symbol": "XAUUSD", "closes": "many"}, "nonsense"]}
+    got = by_symbol(setups.build(make_page(), bars={}, prev=junk))
+    assert got["BTCUSDT"]["closes"] is None and got["XAUUSD"]["closes"] is None
+    got = by_symbol(setups.build(make_page(), bars={}, prev={"markets": [{"symbol": "SPX", "closes": [7400.123456]}]}))
+    assert got["SPX"]["closes"] == [7400.12] and got["SPX"]["closes_end_utc"] is None
+
+
+# ------------------------------------------------------------------ closed_setups (the book's trade files)
+TCOLS = ["t_in_ms", "t_out_ms", "side", "p_in", "p_out", "why_in", "why_out", "pnl_pct", "equity", "qty", "pnl_usd",
+         "fees_usd", "stop0", "risk_usd", "r_mult", "target_1", "target_2", "time_in", "time_out"]
+
+
+def trow(t_in, t_out, side, p_in, p_out, why, pct, usd=12.3456, stop0=None, r=0.98765, t1=None, t2=None):
+    t_in, t_out = setups._ms(t_in), setups._ms(t_out)
+    return [t_in, t_out, side, p_in, p_out, "ENTER", why, pct, 10000.0, 1.0, usd, 1.0,
+            stop0 if stop0 is not None else p_in * (1 - 0.01 * side), 100.0, r,
+            t1 if t1 is not None else p_in * (1 + 0.01 * side), t2 if t2 is not None else p_in * (1 + 0.02 * side),
+            "x", "y"]
+
+
+def write_trades(d, sym, rows, book="b_targets", extra=""):
+    os.makedirs(str(d), exist_ok=True)
+    path = os.path.join(str(d), "shadow_trades_%s_%s.csv" % (book, sym))
+    with open(path, "w", encoding="utf-8", newline="") as fh:
+        fh.write(",".join(TCOLS) + "\n")
+        for r in rows:
+            fh.write((r if isinstance(r, str) else ",".join(repr(x) if isinstance(x, float) else str(x) for x in r)) + "\n")
+        fh.write(extra)
+    return path
+
+
+def test_why_out_codes():
+    assert setups.why_code("T1+T2") == "TARGET_2" and setups.why_code("STOP") == "STOP"
+    assert setups.why_code("T1+STOP_BE") == "T1_THEN_ENTRY"
+    assert setups.why_code("FLIP") == "FLIP" and setups.why_code("T1+FLIP") == "T1_THEN_FLIP"
+    assert setups.why_code("FLIP_MKT") == "FLIP" and setups.why_code("T1+FLIP_LMT") == "T1_THEN_FLIP"
+    assert setups.why_code("STEP_ASIDE") == "EXIT" and setups.why_code("T1+STEP_ASIDE") == "T1_THEN_EXIT"
+    for w in ("TRAIL", "T1+TRAIL", "STOP_BE", "T1+STOP", "T2", "ENTER", "FORCED", "", None, "stop", "T1+", "T1+T2+X"):
+        assert setups.why_code(w) == "OTHER", w
+
+
+def test_closed_setups_order_limit_mapping(tmp_path):
+    d = tmp_path / "trades"
+    # BTC: 20 trades one hour apart, the why_out words in turn; ETH: 20 more, half an hour later each
+    words = ["T1+T2", "STOP", "T1+STOP_BE", "FLIP", "T1+FLIP", "STEP_ASIDE", "T1+STEP_ASIDE", "TRAIL", "T1+TRAIL"]
+
+    def hour(h, m=0):
+        return setups._iso(setups._ms("2026-11-01 00:00") + (h * 60 + m) * 60000)
+    btc = [trow(hour(h), hour(h, 45), 1 if h % 2 else -1, 100000.0 + h, 100100.123456 + h, words[h % len(words)], 0.123456 * h)
+           for h in range(20)]
+    eth = [trow(hour(h, 15), hour(h, 30 + 60), -1, 2000.0, 1990.0, "T1+T2", 1.0) for h in range(20)]
+    write_trades(d, "BTCUSDT", btc)
+    write_trades(d, "ETHUSDT", eth)
+    rows = setups.read_trades(str(d))
+    assert len(rows) == 40 and rows[0][0] == "BTCUSDT"
+    cs = setups.build(make_page(), trades=rows)["closed_setups"]
+    assert len(cs) == 30
+    assert [c["closed_utc"] for c in cs] == sorted([c["closed_utc"] for c in cs], reverse=True)       # newest first
+    assert list(cs[0]) == ["symbol", "side", "opened_utc", "closed_utc", "entry", "exit", "stop", "target_1", "target_2",
+                           "t1_taken", "why_out", "result_pct", "result_usd", "r"]
+    assert cs[0]["symbol"] == "ETHUSDT" and cs[0]["closed_utc"] == hour(20, 30)
+    assert setups._closed_setups(rows + [("X", "junk"), "junk", None]) == cs
+    by = dict(((c["symbol"], c["opened_utc"]), c) for c in (setups._closed_trade(a, r) for a, r in rows))
+    expect = {"T1+T2": ("TARGET_2", True), "STOP": ("STOP", False), "T1+STOP_BE": ("T1_THEN_ENTRY", True),
+              "FLIP": ("FLIP", False), "T1+FLIP": ("T1_THEN_FLIP", True), "STEP_ASIDE": ("EXIT", False),
+              "T1+STEP_ASIDE": ("T1_THEN_EXIT", True), "TRAIL": ("OTHER", False), "T1+TRAIL": ("OTHER", True)}
+    for h in range(9):
+        c = by[("BTCUSDT", hour(h))]
+        assert (c["why_out"], c["t1_taken"]) == expect[words[h]], words[h]
+    c = by[("BTCUSDT", hour(3))]
+    assert c["side"] == "LONG" and c["entry"] == 100003.0 and c["exit"] == 100103.12 and c["closed_utc"] == hour(3, 45)
+    assert c["result_pct"] == 0.37 and c["result_usd"] == 12.35 and c["r"] == 0.99
+    assert c["stop"] == 99002.97 and c["target_1"] == 101003.03 and c["target_2"] == 102003.06
+    assert by[("BTCUSDT", hour(2))]["side"] == "SHORT"
+
+
+def test_closed_setups_two_part_exit_and_garbled_rows(tmp_path):
+    """p_out is already the average exit when Target 1 took half (shadows.run: (q1 * T1 + q2 * exit) / (q1 + q2),
+    q1 = q2 = half): it is shown as it is."""
+    d = tmp_path / "trades"
+    t1, t2 = 71954.54248, 70971.58762
+    rows = [trow("2026-11-11 06:45", "2026-11-13 00:30", -1, 73659.98, (t1 + t2) / 2, "T1+T2", 2.785, t1=t1, t2=t2),
+            trow("2026-11-14 15:30", "2026-11-15 03:00", -1, 65214.46, (62915.93844 + 65214.46) / 2, "T1+STOP_BE", 1.56,
+                 t1=62915.93844, t2=61766.67766),
+            "1794379500000,1794529800000,-1,73659.98",                                    # cut short
+            "1794379500000,1794529800000,-1,abc,1,ENTER,STOP,1,1,1,1,1,1,1,1,1,1,x,y",     # a word for a price
+            "1794379500000,,-1,100,101,ENTER,STOP,1,1,1,1,1,1,1,1,1,1,x,y",                 # not closed (no exit time)
+            "1794379500000,1794529800000,0,100,101,ENTER,STOP,1,1,1,1,1,1,1,1,1,1,x,y",     # no side
+            "1794379500000,1794529800000,1,100,101,ENTER,STOP,,1,1,1,1,1,1,1,1,1,x,y",      # no result
+            "1794529800000,1794379500000,1,100,101,ENTER,STOP,1,1,1,1,1,1,1,1,1,1,x,y",     # out before in
+            "1794379500000,1794529800000,1,100,101,ENTER,STOP,1,1,1,1,1,1,1,1,1,1,x,y,extra",   # one field too many
+            "1794379500000,1794529800000,1,nan,101,ENTER,STOP,1,1,1,1,1,1,1,1,1,1,x,y"]
+    write_trades(d, "BTCUSDT", rows, extra="1794379500000,17945")      # a last line cut while written
+    cs = setups.build(make_page(), trades=setups.read_trades(str(d)))["closed_setups"]
+    assert len(cs) == 2
+    assert cs[1]["exit"] == round((t1 + t2) / 2, 2) and cs[1]["t1_taken"] is True and cs[1]["why_out"] == "TARGET_2"
+    assert cs[0]["exit"] == round((62915.93844 + 65214.46) / 2, 2) and cs[0]["why_out"] == "T1_THEN_ENTRY"
+    # a row written twice (a step re-run) counts once
+    write_trades(d, "BTCUSDT", rows[:2] + rows[:1])
+    assert len(setups.build(make_page(), trades=setups.read_trades(str(d)))["closed_setups"]) == 2
+    # other books, other names and a file too large are not read
+    write_trades(d, "BTCUSDT", rows[:1], book="b_trail")
+    write_trades(d, "btc", rows[:1])
+    write_trades(d, "ETHUSDT", rows[:2] * 5)
+    assert sorted(set(s for s, _r in setups.read_trades(str(d)))) == ["BTCUSDT", "ETHUSDT"]
+    small = os.path.getsize(os.path.join(str(d), "shadow_trades_b_targets_BTCUSDT.csv"))
+    assert os.path.getsize(os.path.join(str(d), "shadow_trades_b_targets_ETHUSDT.csv")) > small
+    old = setups.TRADES_MAX_BYTES
+    try:
+        setups.TRADES_MAX_BYTES = small
+        assert sorted(set(s for s, _r in setups.read_trades(str(d)))) == ["BTCUSDT"]
+    finally:
+        setups.TRADES_MAX_BYTES = old
+    assert setups.TRADES_MAX_BYTES == 5 * 1024 * 1024
+    assert setups.read_trades(str(tmp_path / "nowhere")) == [] and setups.build(make_page())["closed_setups"] == []
+
+
+def test_write_reads_the_trade_files(tmp_path):
+    d = tmp_path / "trades"
+    write_trades(d, "XAUUSD", [trow("2026-11-12 10:15", "2026-11-16 05:45", -1, 3951.6, 3872.1145592483376, "T1+T2",
+                                    1.9718771596267997, usd=334.94500863303784, r=1.6054859383373836)])
+    info = setups.write(make_page(), out_dir=str(tmp_path / "live"), trades_dir=str(d))
+    cs = json.load(open(info["path"], encoding="utf-8"))["closed_setups"]
+    assert cs == [{"symbol": "XAUUSD", "side": "SHORT", "opened_utc": "2026-11-12T10:15:00Z",
+                   "closed_utc": "2026-11-16T05:45:00Z", "entry": 3951.6, "exit": 3872.11, "stop": 3991.12,
+                   "target_1": 3912.08, "target_2": 3872.57, "t1_taken": True, "why_out": "TARGET_2", "result_pct": 1.97,
+                   "result_usd": 334.95, "r": 1.61}]
+
+
+# ------------------------------------------------------------------ setup_events.json
+def ev(sid, key, kind, t, **kw):
+    return dict({"t": t, "id": sid, "k": key, "ev": kind, "asset": key.split("|")[0], "delivered": True}, **kw)
+
+
+def event_log():
+    """Every kind signals.py logs: start, seen_not_signalled, signal, filled, t1, model_exit, closed (t2, stop,
+    stop_be, model), no_fill (window, stop, target, model; one without a bar), book_closed."""
+    a, b, c, d = "BTCUSDT|2026-11-17 05:00", "XAUUSD|2026-11-17 06:00", "SPX|2026-11-17 15:00", "ETHUSDT|2026-11-17 07:00"
+    e, f, g, h = "WTI|2026-11-17 08:00", "BRENT|2026-11-17 08:30", "USDJPY|2026-11-17 09:00", "XAGUSD|2026-11-17 09:30"
+    i, j = "BTCUSDT|2026-11-17 10:00", "ETHUSDT|2026-11-17 11:00"
+
+    def sig(sid, key, t, side, entry, stop, t1, t2, until):
+        return ev(sid, key, "signal", t, side=side, entry=entry, stop=stop, t1=t1, t2=t2, fee=0.0005, opened_utc=key[-16:],
+                  bar_a_utc=t[:14] + "00:00Z", valid_until_utc=until, msg_id=7)
+    return [
+        {"t": "2026-11-17T04:58:00Z", "k": "start", "ev": "start", "live_since": "2026-11-17T04:58:00Z"},
+        {"t": "2026-11-17T04:58:00Z", "k": "SPX|2026-11-16 20:00", "ev": "seen_not_signalled", "asset": "SPX",
+         "why": "already open when the preview started"},
+        sig("BTC-1117-01", a, "2026-11-17T05:16:00Z", 1, 100000.123456, 99000.0, 101000.0, 102000.0, "2026-11-17T06:30:00Z"),
+        ev("BTC-1117-01", a, "filled", "2026-11-17T05:46:00Z", px=100000.123456, bar_utc="2026-11-17T05:30:00Z"),
+        ev("BTC-1117-01", a, "t1", "2026-11-17T07:01:00Z", px=101000.0, bar_utc="2026-11-17T06:45:00Z"),
+        ev("BTC-1117-01", a, "closed", "2026-11-17T09:01:00Z", why="t2", px=102000.0, bar_utc="2026-11-17T08:45:00Z",
+           pct=1.4567, usd=145.67, r=1.4321, avg_exit=101500.0),
+        ev("BTC-1117-01", a, "book_closed", "2026-11-17T09:16:00Z", known=True, why_out="T1+T2", pct=1.5, r=1.5, usd=150.0),
+        sig("XAU-1117-01", b, "2026-11-17T06:16:00Z", -1, 4000.0, 4040.0, 3960.0, 3920.0, "2026-11-17T07:30:00Z"),
+        ev("XAU-1117-01", b, "filled", "2026-11-17T06:31:00Z", px=4000.0, bar_utc="2026-11-17T06:15:00Z"),
+        ev("XAU-1117-01", b, "closed", "2026-11-17T08:01:00Z", why="stop", px=4040.0, bar_utc="2026-11-17T07:45:00Z",
+           pct=-1.05, usd=-105.0, r=-1.0),
+        sig("SPX-1117-01", c, "2026-11-17T15:16:00Z", 1, 7400.0, 7350.0, 7450.0, 7500.0, "2026-11-17T16:30:00Z"),
+        ev("SPX-1117-01", c, "no_fill", "2026-11-17T16:31:00Z", reason="window", bar_utc="2026-11-17T16:30:00Z"),
+        sig("ETH-1117-01", d, "2026-11-17T07:16:00Z", -1, 2000.0, 2050.0, 1950.0, 1900.0, "2026-11-17T08:30:00Z"),
+        ev("ETH-1117-01", d, "filled", "2026-11-17T07:31:00Z", px=2000.0, bar_utc="2026-11-17T07:15:00Z"),
+        ev("ETH-1117-01", d, "t1", "2026-11-17T08:01:00Z", px=1950.0, bar_utc="2026-11-17T07:45:00Z"),
+        ev("ETH-1117-01", d, "closed", "2026-11-17T08:01:00Z", why="stop_be", px=2000.0, bar_utc="2026-11-17T07:45:00Z",
+           pct=1.2, usd=120.0, r=0.5),
+        sig("WTI-1117-01", e, "2026-11-17T08:16:00Z", 1, 85.0, 84.0, 86.0, 87.0, "2026-11-17T09:30:00Z"),
+        ev("WTI-1117-01", e, "no_fill", "2026-11-17T08:31:00Z", reason="stop", bar_utc="2026-11-17T08:15:00Z"),
+        sig("BRN-1117-01", f, "2026-11-17T08:46:00Z", 1, 95.0, 94.0, 96.0, 97.0, "2026-11-17T10:00:00Z"),
+        ev("BRN-1117-01", f, "no_fill", "2026-11-17T09:01:00Z", reason="target", bar_utc="2026-11-17T08:45:00Z"),
+        sig("JPY-1117-01", g, "2026-11-17T09:16:00Z", 1, 159.5, 159.0, 160.0, 160.5, "2026-11-17T10:30:00Z"),
+        ev("JPY-1117-01", g, "book_closed", "2026-11-17T09:31:00Z", known=True, why_out="FLIP", pct=-0.1, r=-0.2, usd=-10.0),
+        ev("JPY-1117-01", g, "no_fill", "2026-11-17T09:31:00Z", reason="model"),                 # no bar: after the bars
+        sig("XAG-1117-01", h, "2026-11-17T09:46:00Z", -1, 47.5, 48.0, 47.0, 46.5, "2026-11-17T11:00:00Z"),
+        sig("BTC-1117-02", i, "2026-11-17T10:16:00Z", 1, 101000.0, 100000.0, 102000.0, 103000.0, "2026-11-17T11:30:00Z"),
+        ev("BTC-1117-02", i, "filled", "2026-11-17T10:46:00Z", px=101000.0, bar_utc="2026-11-17T10:30:00Z"),
+        ev("BTC-1117-02", i, "book_closed", "2026-11-17T11:16:00Z", known=True, why_out="STEP_ASIDE", pct=0.1, r=0.1, usd=10.0),
+        ev("BTC-1117-02", i, "model_exit", "2026-11-17T11:16:00Z", alert_bar_utc="2026-11-17T11:15:00Z"),
+        ev("BTC-1117-02", i, "closed", "2026-11-17T11:31:00Z", why="model", px=101200.0, bar_utc="2026-11-17T11:30:00Z",
+           pct=0.1, usd=10.0, r=0.1),
+        sig("ETH-1117-02", j, "2026-11-17T11:16:00Z", 1, 2010.0, 2000.0, 2015.0, 2020.0, "2026-11-17T12:30:00Z"),
+        ev("ETH-1117-02", j, "no_fill", "2026-11-17T11:16:00Z", reason="target"),                # Target 1 before the alert
+    ]
+
+
+EVENT_KEYS = ["id", "signal_id", "type", "symbol", "side", "utc", "bar_utc", "entry", "stop", "target_1", "target_2", "price",
+              "entry_valid_until_utc", "result_pct", "r", "reason_code"]
+
+
+def test_events_mapping_for_every_kind():
+    doc = setups.build_events(event_log(), generated_utc="2026-11-17T12:00:00Z")
+    assert list(doc) == ["generated_utc", "schema", "live_since_utc", "events"]
+    assert (doc["generated_utc"], doc["schema"], doc["live_since_utc"]) == ("2026-11-17T12:00:00Z", 1, "2026-11-17T04:58:00Z")
+    evs = doc["events"]
+    assert all(list(e) == EVENT_KEYS for e in evs)
+    assert len(evs) == 25                                             # 31 lines - start, seen, 3 book_closed, model_exit
+    by = dict((e["id"], e) for e in evs)
+    e = by["BTC-1117-01:NEW_SETUP"]
+    assert e == {"id": "BTC-1117-01:NEW_SETUP", "signal_id": "BTC-1117-01", "type": "NEW_SETUP", "symbol": "BTCUSDT",
+                 "side": "LONG", "utc": "2026-11-17T05:16:00Z", "bar_utc": None, "entry": 100000.12, "stop": 99000.0,
+                 "target_1": 101000.0, "target_2": 102000.0, "price": None, "entry_valid_until_utc": "2026-11-17T06:30:00Z",
+                 "result_pct": None, "r": None, "reason_code": None}
+    e = by["BTC-1117-01:ENTRY_FILLED"]
+    assert (e["utc"], e["bar_utc"], e["price"], e["entry"], e["side"]) == ("2026-11-17T05:46:00Z", "2026-11-17T05:30:00Z",
+                                                                           100000.12, 100000.12, "LONG")
+    assert e["entry_valid_until_utc"] is None and e["result_pct"] is None
+    assert (by["BTC-1117-01:TARGET_1"]["price"], by["BTC-1117-01:TARGET_1"]["utc"]) == (101000.0, "2026-11-17T07:01:00Z")
+    e = by["BTC-1117-01:CLOSED"]
+    assert (e["reason_code"], e["result_pct"], e["r"], e["price"], e["bar_utc"]) == ("TARGET_2", 1.46, 1.43, 102000.0,
+                                                                                    "2026-11-17T08:45:00Z")
+    assert by["XAU-1117-01:CLOSED"]["reason_code"] == "STOP" and by["XAU-1117-01:CLOSED"]["side"] == "SHORT"
+    assert by["XAU-1117-01:CLOSED"]["r"] == -1.0 and by["XAU-1117-01:CLOSED"]["result_pct"] == -1.05
+    assert by["ETH-1117-01:CLOSED"]["reason_code"] == "T1_THEN_ENTRY"
+    assert by["BTC-1117-02:CLOSED"]["reason_code"] == "MODEL_CLOSED" and by["BTC-1117-02:CLOSED"]["utc"] == "2026-11-17T11:31:00Z"
+    nf = dict((e["signal_id"], e) for e in evs if e["type"] == "NO_FILL")
+    assert dict((k, v["reason_code"]) for k, v in nf.items()) == {"SPX-1117-01": "WINDOW", "WTI-1117-01": "STOP_FIRST",
+                                                                  "BRN-1117-01": "TARGET_FIRST", "JPY-1117-01": "MODEL_CLOSED",
+                                                                  "ETH-1117-02": "TARGET_FIRST"}
+    assert nf["JPY-1117-01"]["bar_utc"] is None and nf["JPY-1117-01"]["utc"] == "2026-11-17T09:31:00Z"
+    assert all(v["result_pct"] is None and v["r"] is None and v["price"] is None for v in nf.values())
+    assert set(e["type"] for e in evs) == {"NEW_SETUP", "ENTRY_FILLED", "NO_FILL", "TARGET_1", "CLOSED"}
+    assert not any(e["type"] in ("MODEL_EXIT",) or "book" in e["id"].lower() for e in evs)
+    # a waiting signal (XAG) is only its NEW_SETUP; a signal line that was lost leaves its events with no levels
+    assert [e["type"] for e in evs if e["signal_id"] == "XAG-1117-01"] == ["NEW_SETUP"]
+    lost = [x for x in event_log() if not (x["ev"] == "signal" and x.get("id") == "XAU-1117-01")]
+    e = dict((x["id"], x) for x in setups.build_events(lost)["events"])["XAU-1117-01:CLOSED"]
+    assert (e["symbol"], e["side"], e["entry"], e["reason_code"]) == ("XAUUSD", None, None, "STOP")
+    # an unknown reason is no code, not a sentence
+    odd = event_log() + [ev("BTC-1117-09", "BTCUSDT|2026-11-17 12:00", "no_fill", "2026-11-17T12:31:00Z", reason="later")]
+    got = dict((x["id"], x) for x in setups.build_events(odd)["events"])["BTC-1117-09:NO_FILL"]
+    assert got["reason_code"] is None and got["type"] == "NO_FILL"
+
+
+def test_events_newest_first_and_utc_is_the_log_time():
+    evs = setups.build_events(event_log())["events"]
+    keys = [(e["utc"]) for e in evs]
+    assert keys == sorted(keys, reverse=True)
+    assert [e["id"] for e in evs[:5]] == ["SPX-1117-01:NO_FILL", "SPX-1117-01:NEW_SETUP", "BTC-1117-02:CLOSED",
+                                          "ETH-1117-02:NO_FILL", "ETH-1117-02:NEW_SETUP"]   # same time: the later line first
+    assert evs[-1]["id"] == "BTC-1117-01:NEW_SETUP"
+    # ETH-1117-01's TARGET_1 and CLOSED share 08:01: CLOSED (written after) comes first
+    i, j = [e["id"] for e in evs].index("ETH-1117-01:CLOSED"), [e["id"] for e in evs].index("ETH-1117-01:TARGET_1")
+    assert i < j
+    assert setups.build_events([])["events"] == [] and setups.build_events(None)["live_since_utc"] is None
+    assert setups.build_events([], live_since="2026-11-17T04:58:00Z")["live_since_utc"] == "2026-11-17T04:58:00Z"
+
+
+def test_events_limit_100_newest_first():
+    log = [{"t": "2026-11-17T00:00:00Z", "k": "start", "ev": "start", "live_since": "2026-11-17T00:00:00Z"}]
+    for n in range(80):
+        t0 = setups._ms("2026-11-17 01:00") + n * 3600000
+        key = "BTCUSDT|%s" % setups._iso(t0)[:16].replace("T", " ")
+        sid = "BTC-%s-%02d" % (setups._iso(t0)[5:10].replace("-", ""), n % 24 + 1)
+        log += [ev(sid, key, "signal", setups._iso(t0 + 60000), side=1, entry=1.0, stop=0.5, t1=2.0, t2=3.0,
+                   valid_until_utc=setups._iso(t0 + 4500000)),
+                ev(sid, key, "no_fill", setups._iso(t0 + 1800000), reason="window", bar_utc=setups._iso(t0 + 900000))]
+    evs = setups.build_events(log)["events"]
+    assert len(evs) == 100 and len(set(e["id"] for e in evs)) == 100
+    assert evs[0]["utc"] == setups._iso(setups._ms("2026-11-17 01:00") + 79 * 3600000 + 1800000)
+    assert [e["utc"] for e in evs] == sorted([e["utc"] for e in evs], reverse=True)
+    assert evs[-1]["utc"] == setups._iso(setups._ms("2026-11-17 01:00") + 30 * 3600000 + 60000)    # the 60 oldest left out
+    assert evs[-1]["type"] == "NEW_SETUP" and evs[-2]["type"] == "NO_FILL"
+
+
+def test_event_ids_are_stable_and_never_repeat(tmp_path):
+    log = event_log()
+    a, b = setups.build_events(log), setups.build_events(copy.deepcopy(log))
+    assert a == b                                                     # the same log, the same file
+    ids = [e["id"] for e in a["events"]]
+    assert len(ids) == len(set(ids))
+    assert all(i == "%s:%s" % (e["signal_id"], e["type"]) for i, e in zip(ids, a["events"]))
+    # more lines appended later: every earlier event keeps its id
+    more = log + [ev("XAG-1117-01", "XAGUSD|2026-11-17 09:30", "filled", "2026-11-17T12:01:00Z", px=47.5,
+                     bar_utc="2026-11-17T11:45:00Z")]
+    c = setups.build_events(more)
+    assert dict((e["id"], e) for e in c["events"] if e["id"] in ids) == dict((e["id"], e) for e in a["events"])
+    # a signal id that comes back for another position (no year in the id; a new state file restarts the counter)
+    again = more + [ev("BTC-1117-01", "BTCUSDT|2027-11-17 05:00", "signal", "2027-11-17T05:16:00Z", side=-1, entry=90000.0,
+                       stop=91000.0, t1=89000.0, t2=88000.0, valid_until_utc="2027-11-17T06:30:00Z"),
+                    ev("BTC-1117-01", "BTCUSDT|2027-11-17 05:00", "filled", "2027-11-17T05:46:00Z", px=90000.0,
+                       bar_utc="2027-11-17T05:30:00Z")]
+    d = setups.build_events(again)
+    ids2 = [e["id"] for e in d["events"]]
+    assert len(ids2) == len(set(ids2))
+    assert ids2[:2] == ["BTC-1117-01:ENTRY_FILLED:20271117T0530", "BTC-1117-01:NEW_SETUP:20271117T0516"]
+    assert "BTC-1117-01:NEW_SETUP" in ids2 and dict((e["id"], e) for e in d["events"])["BTC-1117-01:NEW_SETUP"]["side"] == "LONG"
+    assert d["events"][1]["side"] == "SHORT" and d["events"][1]["entry"] == 90000.0
+    assert setups.build_events(again) == d
+    # the same through the file: signals' own reader (a line written twice counts once, a cut line is skipped)
+    dd = tmp_path / "data"
+    dd.mkdir()
+    with open(str(dd / "signals_log.jsonl"), "w", encoding="utf-8") as fh:
+        fh.write("".join(json.dumps(r) + "\n" for r in log + log[3:5]) + "{ a line cut sho")
+    for _ in range(2):
+        info = setups.write_events(str(tmp_path / "live"), data_dir=str(dd), generated_utc="2026-11-17T12:00:00Z")
+        got = json.load(open(info["path"], encoding="utf-8"))
+        assert got == dict(json.loads(json.dumps(a)), generated_utc="2026-11-17T12:00:00Z") and info["events"] == 25
+    assert setups.events_line(info) == "setup_events: 25 events -> %s" % info["path"]
+
+
+def test_events_no_free_text_no_nan():
+    log = event_log()
+    log[5] = dict(log[5], pct=float("nan"), r=float("inf"))           # BTC-1117-01's close
+    log[2] = dict(log[2], entry=float("nan"), stop="soon", why="Kronos sees an edge")
+    log.append(ev("BTC-1118-01", "BTCUSDT|2026-11-18 00:00", "signal", "2026-11-18T00:16:00Z", side=1, entry=1.0, stop=0.5,
+                  t1=2.0, t2=3.0, valid_until_utc="later"))
+    doc = setups.build_events(log, generated_utc="2026-11-17T12:00:00Z")
+    text = json.dumps(doc, allow_nan=False)
+    assert "NaN" not in text and "Infinity" not in text and "kronos" not in text.lower() and "edge" not in text.lower()
+    c = dict((e["id"], e) for e in doc["events"])["BTC-1117-01:CLOSED"]
+    assert c["result_pct"] is None and c["r"] is None and c["entry"] is None and c["stop"] is None
+    codes = set(setups.EV_TYPE.values()) | set(setups.NO_FILL_CODE.values()) | set(setups.CLOSED_CODE.values()) | \
+        {"LONG", "SHORT"} | set(ORDER)
+    for d in (doc, setups.build_events(event_log())):
+        for e in d["events"]:
+            for k, v in e.items():
+                if isinstance(v, str):
+                    assert v in codes or setups._ms(v) is not None or k in ("id", "signal_id"), (k, v)
+                    assert " " not in v, (k, v)                       # a code, a name, a time: never a sentence
+
+
+def test_closes_and_closed_setups_no_free_text_no_nan_small_file(tmp_path):
+    all_bars(tmp_path / "bars")
+    d = tmp_path / "trades"
+    for n, a in enumerate(ORDER):
+        write_trades(d, a, [trow(setups._iso(setups._ms("2026-11-10 00:00") + (n * 10 + k) * 3600000),
+                                 setups._iso(setups._ms("2026-11-10 00:30") + (n * 10 + k) * 3600000), 1,
+                                 123456.789012, 123999.123456, "T1+STOP_BE", 1.23456789, usd=float("nan"), r=float("inf"))
+                            for k in range(10)])
+    info = setups.write(make_page(), out_dir=str(tmp_path / "live"), bars_dir=str(tmp_path / "bars"), trades_dir=str(d))
+    text = open(info["path"], encoding="utf-8").read()
+    doc = json.loads(text)
+    assert "NaN" not in text and "Infinity" not in text and len(doc["closed_setups"]) == 30
+    assert doc["closed_setups"][0]["result_usd"] is None and doc["closed_setups"][0]["r"] is None
+    assert all(len(m["closes"]) <= 96 for m in doc["markets"]) and sum(len(m["closes"]) for m in doc["markets"]) == 96 * 7 + 50
+    size = os.path.getsize(info["path"])
+    assert size < 30000, size                                         # the whole file stays small
+    allowed = set(setups.WHY_OUT.values()) | {"FLIP", "T1_THEN_FLIP", "EXIT", "T1_THEN_EXIT", "OTHER", "LONG", "SHORT"} | set(ORDER)
+    for c in doc["closed_setups"]:
+        for k, v in c.items():
+            if isinstance(v, str):
+                assert v in allowed or setups._ms(v) is not None, (k, v)
+
+
+def test_one_file_failing_does_not_stop_the_other(tmp_path, monkeypatch):
+    live_dir = tmp_path / "live"
+    dd = tmp_path / "data"
+    dd.mkdir()
+    with open(str(dd / "signals_log.jsonl"), "w", encoding="utf-8") as fh:
+        fh.write("".join(json.dumps(r) + "\n" for r in event_log()))
+    # the events file fails: setups.json is written all the same, one line says so
+    real = setups.build_events
+    monkeypatch.setattr(setups, "build_events", lambda *a, **k: 1 / 0)
+    lines = []
+    info = setups.write(make_page(), out_dir=str(live_dir), data_dir=str(dd), log=lines.append)
+    assert lines == ["setup_events: not written (ZeroDivisionError('division by zero'))"]
+    assert json.load(open(info["path"], encoding="utf-8"))["followable"]["signals"] == 10
+    assert not os.path.exists(str(live_dir / "setup_events.json"))
+    monkeypatch.setattr(setups, "build_events", real)
+    # setups.json fails (a page it cannot use, a page that is not there): the events file is written, then it raises
+    for page in ({"shadows": None, "generated_utc": "2026-11-17T12:00:00Z"}, str(tmp_path / "no_page.json")):
+        lines = []
+        if os.path.exists(str(live_dir / "setup_events.json")):
+            os.remove(str(live_dir / "setup_events.json"))
+        with pytest.raises((ValueError, FileNotFoundError)):
+            setups.write(page, out_dir=str(live_dir), data_dir=str(dd), log=lines.append)
+        got = json.load(open(str(live_dir / "setup_events.json"), encoding="utf-8"))
+        assert len(got["events"]) == 25 and lines == ["setup_events: 25 events -> %s" % str(live_dir / "setup_events.json")]
+        assert setups._ms(got["generated_utc"]) is not None
+    # the events web copy fails alone: both local files, the setups web copy
+    web = tmp_path / "www"
+    web.mkdir()
+    monkeypatch.setenv(setups.WEB_ENV, str(web))
+    real_replace = os.replace
+
+    def replace(src, dst):
+        if dst == str(web / "setup_events.json"):
+            raise PermissionError("no")
+        return real_replace(src, dst)
+    monkeypatch.setattr(setups.os, "replace", replace)
+    lines = []
+    info = setups.write(make_page(), out_dir=str(live_dir), data_dir=str(dd), log=lines.append)
+    assert info["web_path"] == str(web / "setups.json") and os.listdir(str(web)) == ["setups.json"]
+    assert lines == ["setup_events: web copy not written (PermissionError('no'))",
+                     "setup_events: 25 events -> %s" % str(live_dir / "setup_events.json")]
+
+
+def test_step_writes_both_files_and_an_events_failure_never_breaks_it(monkeypatch, tmp_path):
+    calls, lines, page_path = _step(monkeypatch, tmp_path)
+    monkeypatch.setattr(setups, "load_events", lambda data_dir=None: 1 / 0)
+    out = live.step(log=lines.append, fetch=True)
+    _same_step(out, calls, lines, page_path)
+    assert [x for x in lines if x.startswith("setup_events:")] == ["setup_events: not written (ZeroDivisionError('division by zero'))"]
+    assert [x for x in lines if x.startswith("setups:")] == ["setups: 8 markets -> %s" % os.path.join(os.path.dirname(page_path), "setups.json")]
 
 
 if __name__ == "__main__":
