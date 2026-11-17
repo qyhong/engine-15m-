@@ -28,17 +28,19 @@ echo "== 1/4 tests on the laptop"
 PYTHONIOENCODING=utf-8 py -3 -m pytest -q -x "$@"
 
 echo "== 2/4 waiting for a gap between steps on the box"
-for i in $(seq 1 80); do
-  S=$("${SSH[@]}" 'l=$(tail -1 /data/mind15/live.log); n=$(date -u +%s); left=$(( 900 - n % 900 )); a=$(systemctl is-active mind15); echo "$left|$a|$l"') || { echo "STOP: cannot reach the box"; exit 1; }
-  LEFT=${S%%|*}; REST=${S#*|}; ACT=${REST%%|*}; LINE=${REST#*|}
-  case "$LINE" in sleeping*) ASLEEP=1;; *) ASLEEP=0;; esac
-  if [ "$ACT" != "active" ] || { [ "$ASLEEP" = 1 ] && [ "$LEFT" -gt 120 ]; }; then break; fi
-  echo "   engine busy or too close to the next step (${LEFT}s to the close): waiting"; sleep 20
-  [ "$i" = 80 ] && { echo "STOP: no gap found in 25 minutes"; exit 1; }
+# Asleep = the log's last line is "sleeping Ns until the next close" AND that sleep has not run out yet (the log's own
+# time + N). The last line alone is not enough: a long step prints nothing for minutes after waking up.
+GAP='l=$(tail -1 /data/mind15/live.log); rem=-1; case "$l" in sleeping*) s=${l#sleeping }; s=${s%%s*}; rem=$(( $(stat -c %Y /data/mind15/live.log) + s - $(date +%s) ));; esac; echo "$rem|$(systemctl is-active mind15)"'
+for i in $(seq 1 120); do
+  S=$("${SSH[@]}" "$GAP") || { echo "STOP: cannot reach the box"; exit 1; }
+  REM=${S%%|*}; ACT=${S#*|}
+  if [ "$ACT" != "active" ] || [ "$REM" -gt 120 ]; then break; fi
+  echo "   engine busy or too close to its next step (asleep for another ${REM}s; -1 = mid-step): waiting"; sleep 20
+  [ "$i" = 120 ] && { echo "STOP: no gap found in 40 minutes"; exit 1; }
 done
 
 echo "== 3/4 unpacking the commit on the box"
-git archive HEAD | "${SSH[@]}" 'tar xf - -C /data/mind15 && find /data/mind15/engine15 -name __pycache__ -prune -exec rm -rf {} + ; echo unpacked'
+git archive HEAD | "${SSH[@]}" 'tar xf - --no-overwrite-dir -C /data/mind15 && /data/venv/bin/python -m compileall -q /data/mind15/engine15 >/dev/null; echo unpacked'
 
 echo "== 4/4 restarting the engine and the Telegram bot"
 "${SSH[@]}" "sudo systemctl restart mind15 mind15-telegram; sleep 8; a=\$(systemctl is-active mind15); b=\$(systemctl is-active mind15-telegram); v=\$(cd /data/mind15 && /data/venv/bin/python -c \"from engine15.config import CFG; print(CFG['version'])\"); echo \"engine: \$a   telegram bot: \$b   version on the box: \$v\"; [ \"\$a\" = active ] && [ \"\$b\" = active ] && [ \"\$v\" = '$WANT' ]" \

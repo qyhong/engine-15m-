@@ -144,6 +144,7 @@ def _bar(n, total=30, width=10):
 
 def _send(tok, chat, text):
     """One message as HTML (bold, fixed-width tables); plain text if Telegram rejects the markup."""
+    text = text.replace("Kronos", "AlphaPrediction AI").replace("kronos", "candle forecast")   # same wording rule as the page (export.py)
     r = _call(tok, "sendMessage", {"chat_id": chat, "text": text, "parse_mode": "HTML", "disable_web_page_preview": True})
     if not r.get("ok"):
         import re as _re

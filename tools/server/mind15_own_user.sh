@@ -16,10 +16,11 @@ OWNED="data journal out research/out/rl"          # become mind15:mind15 (the en
 SHARED="research/out"                              # stays ec2-user's, group mind15 may write (research runs + the engine's reports)
 BK=/home/ec2-user/mind15_backups
 
-gap_ok() {                                         # asleep between steps with more than 3 minutes to the next close?
-  local l n left
-  l=$(tail -1 $M/live.log); n=$(date -u +%s); left=$(( 900 - n % 900 ))
-  case "$l" in sleeping*) [ "$left" -gt 180 ];; *) return 1;; esac
+gap_ok() {                                         # asleep between steps with more than 3 minutes of sleep left?
+  local l s rem=-1                                 # the last log line alone is not enough: a long step prints nothing for minutes
+  l=$(tail -1 $M/live.log)
+  case "$l" in sleeping*) s=${l#sleeping }; s=${s%%s*}; rem=$(( $(stat -c %Y $M/live.log) + s - $(date +%s) ));; esac
+  [ "$rem" -gt 180 ]
 }
 
 owners_back() {
@@ -64,7 +65,7 @@ restore() {
   owners_back
   sudo systemctl daemon-reload; sudo systemctl start mind15 mind15-telegram || true
 }
-trap restore ERR
+trap 'echo "failed at line $LINENO: $BASH_COMMAND"; restore' ERR
 
 # 2. who owns what. State: the service user's. Code, tests, tools and the Python environment: ec2-user's, read-only to it.
 for d in $OWNED; do sudo mkdir -p $M/$d; done

@@ -20,9 +20,10 @@ HOST = os.environ.get("MIND15_BOX", "ec2-user@13.251.40.113")
 KEY = os.path.expanduser(os.environ.get("MIND15_BOX_KEY", "~/.ssh/minds15.pem"))
 KEEP = 7
 MIN_BYTES = 5_000_000                                                 # a real archive is far larger; smaller = something failed
-# Wait (up to 12 minutes) until the engine is asleep between steps: it rewrites its bar files during a step, and a copy taken
+# Wait (up to 25 minutes) until the engine is asleep between steps, with 45 s of its sleep left (log time + N, not the last line alone): it rewrites its bar files during a step, and a copy taken
 # mid-step can catch one of them empty (seen 17 Nov 2026: xauusd_15m.csv, 0 bytes).
-REMOTE = ("for i in $(seq 1 72); do case \"$(tail -1 /data/mind15/live.log)\" in sleeping*) break;; esac; sleep 10; done; "
+REMOTE = ("for i in $(seq 1 150); do l=$(tail -1 /data/mind15/live.log); rem=-1; case \"$l\" in sleeping*) s=${l#sleeping }; "
+          "s=${s%%s*}; rem=$(( $(stat -c %Y /data/mind15/live.log) + s - $(date +%s) ));; esac; [ $rem -gt 45 ] && break; sleep 10; done; "
           "cd /data/mind15 && tar czf - --ignore-failed-read --warning=no-file-changed "
           "--exclude=data/evcache --exclude=data/raw --exclude='data/backup_*' --exclude=secrets --exclude=mind15.env "
           "journal out/live data research/out/rl/forward5 research/out/rl/forward6 research/out/rl/logs "
