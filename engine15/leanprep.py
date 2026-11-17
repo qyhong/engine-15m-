@@ -5,7 +5,8 @@ backtest.prepare builds every reading of every session since 2019 in memory (abo
 crypto group) although a live step only consumes: the training rows (one every train_step
 sessions since train_floor), the sessions since the birth date (the voices' calls, trust and odds)
 and the few sessions it decides on. prepare_live gives the live step the same numbers:
-  * readings and the feature matrix come from evcache (memory maps, only new rows computed),
+  * readings come from evcache (memory maps, only new rows computed) and the feature matrix is
+    rebuilt from them a few rows at a time (evcache.FeatureRows: X is not kept on disk),
   * the weekly refits are cached on disk, keyed by the refit session and a hash of exactly the
     rows, grades and warm start each one learns from (a refit is reused only when it is the same fit),
   * the voices' calls and trust are kept from the birth date on (before it there is no model, so
@@ -111,7 +112,7 @@ def walk_forward_cached(X, ready, y, cfg, birth_idx, floor_idx, n, fits_dir=None
             continue
 
         def training():
-            Xs = [np.asarray(np.asarray(X[a])[sel]) for a, sel in zip(assets, sels)]
+            Xs = [np.asarray(X[a][sel]) for a, sel in zip(assets, sels)]
             ys = [y[a][sel] for a, sel in zip(assets, sels)]
             return Xs, ys
         h = hashlib.sha256(chain.encode())
@@ -161,6 +162,8 @@ def walk_forward_cached(X, ready, y, cfg, birth_idx, floor_idx, n, fits_dir=None
         warm = dict(raw)
         used.add(key)
         fitted_w = {}
+        chunk = slice(s, min(s + every, n))
+        Xc = dict((a, np.asarray(X[a][chunk])) for a in assets)   # this week's rows, read once for every voice
         for vi, v in enumerate(model.VOICES):
             W = raw[v]
             if cfg.get("even_prior"):
@@ -168,12 +171,11 @@ def walk_forward_cached(X, ready, y, cfg, birth_idx, floor_idx, n, fits_dir=None
                 W[:, 0] = W[:, 0].mean()
             fitted_w[v] = W
             for a in assets:
-                chunk = slice(s, min(s + every, n))
-                pr = model.predict(W, np.asarray(X[a][chunk])[:, model._COLS[v]])
+                pr = model.predict(W, Xc[a][:, model._COLS[v]])
                 pr[~ready[a][chunk]] = np.nan
                 probs[a][chunk.start - birth_idx:chunk.stop - birth_idx, vi] = pr
         models.append((s, fitted_w, n_rows))
-        Xtr = ytr = None
+        Xtr = ytr = Xc = None
     for f in os.listdir(fits_dir):                               # keep only this walk's refits
         if f.endswith(".npz") and f[:-4] not in used:
             try:
@@ -211,8 +213,10 @@ def prepare_live(cfg, bars, funding, live, group, log=None, root=None):
     """backtest.prepare for the live step (see the module doc). -> the same dict keys, with
     "lean_lo" (the first row kept for probs / trust) and "evcache" (the store's report)."""
     t0 = time.time()
+    tp = [time.perf_counter()]                                   # where the time went (for the step log only)
     say = log or (lambda *_: None)
     stores, common, rep = evcache.update(group, bars, funding, live, cfg, log=say, root=root)
+    tp.append(time.perf_counter())
     assets = list(bars)
     times = common
     n = len(times)
@@ -230,7 +234,9 @@ def prepare_live(cfg, bars, funding, live, group, log=None, root=None):
     birth_idx = int(times.searchsorted(pd.Timestamp(cfg["birth"], tz="UTC")))
     floor_idx = int(times.searchsorted(pd.Timestamp(cfg.get("train_floor", cfg["birth"]), tz="UTC")))
     fits = os.path.join(root or FITS_DIR, group, "fits")
+    tp.append(time.perf_counter())
     probs, models, frep = walk_forward_cached(X, ready, y, cfg, birth_idx, min(floor_idx, birth_idx), n, fits)
+    tp.append(time.perf_counter())
     say("voices: %d refits, %d from the cache (%.0fs)" % (frep["refits"], frep["reused"], time.time() - t0))
     lo = birth_idx
     trust = trust_tail(probs, y, res, cfg, lo, n)
@@ -253,6 +259,8 @@ def prepare_live(cfg, bars, funding, live, group, log=None, root=None):
         odds[a] = o
         del Xa, speaks, w
     say("trust and odds done (%.0fs)" % (time.time() - t0))
+    tp.append(time.perf_counter())
+    timing = dict(zip(("cache", "labels", "voices", "mix"), (round(b - a, 3) for a, b in zip(tp, tp[1:]))))
     return {"cfg": dict(cfg), "assets": assets, "times": times, "ev": ev, "px": px, "X": X, "ready": ready,
             "y": y, "res": res, "probs": probs, "models": models, "trust": Tail(trust, lo, n), "odds": odds,
-            "birth_idx": birth_idx, "lean_lo": lo, "evcache": rep, "fits": frep}
+            "birth_idx": birth_idx, "lean_lo": lo, "evcache": rep, "fits": frep, "timing": timing}

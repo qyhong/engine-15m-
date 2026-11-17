@@ -2,7 +2,7 @@
 """evcache -- every session's readings kept on disk, so a live step only adds what is new. PAPER ONLY.
 
 The past does not change: a row of evidence uses only what was known at its close (evidence.py),
-so the live step keeps the readings and the feature matrix of every session of a market group in
+so the live step keeps the readings of every session of a market group in
 data/evcache/<group>/<asset>/ as memory maps (the operating system pages in only the rows a step
 touches; they do not count against the process's own memory) and computes, each step, only:
   * the sessions it has not stored yet,
@@ -17,9 +17,16 @@ score, the support/resistance list), then only the requested rows are kept.
 
 Stored compactly: float64 / float32 columns in their own dtype, a column with no reading in any
 stored row is not stored at all (a "no read" filler), text columns as small integer codes plus a
-table. The whole store is rebuilt automatically when the code or the config that makes the
-readings changes (a signature of those files and CFG) or when its shape no longer fits.
+table. The feature matrix X is NOT stored (layout 2, 17 Nov 2026; it was a third of the store):
+X is evidence.matrix's ev[FEATURES].astype(float).fillna(0.0), a pure function of the stored
+readings, so FeatureRows rebuilds exactly the rows a caller asks for from the stored columns, and
+every write checks, bit for bit, that the stored readings give back the matrix evidence.matrix made.
+The whole store is rebuilt automatically when the code or the config that makes the readings
+changes (a signature of those files and CFG), when its layout is an older one, when a file has not
+the size its meta says (a crash while the files were being enlarged) or when its shape no longer
+fits. A build that did not finish is never trusted: group.json says "building" until it has.
 """
+import gc
 import hashlib
 import json
 import os
@@ -38,10 +45,116 @@ SPARE_COLS = 16             # free column slots per float kind (a "no read" colu
 GROW_ROWS = 96 * 120        # free rows kept at the end of each file (about four months)
 HASH_BLOCK = 4096           # rows per fingerprint block of the bars
 MISS = {-1: None, -2: "nan", -3: "na"}   # codes of missing values in a text column
+LAYOUT = 2                  # 1: X.bin beside the readings (until 17 Nov 2026); 2: X rebuilt from the readings
 
 
 class Rebuild(Exception):
     """The store no longer fits the readings: build it again from scratch."""
+
+
+class StoreError(Exception):
+    """The store cannot serve these readings exactly (building it again would not help): the live
+    step falls back to the full prepare and says so."""
+
+
+class FeatureRows:
+    """The feature matrix of a store's rows, rebuilt on demand from the stored readings: for each
+    feature the stored column as float64 with NaN -> 0.0, which is evidence.matrix's
+    ev[FEATURES].astype(float).fillna(0.0) value for value (float32 -> float64 is exact; a "no read"
+    column is 0.0). It behaves like the (n, features) memory map it replaces wherever the engine reads
+    it: X[i] -> one row, X[a:b] -> the same thing for those rows (still nothing read),
+    X[row numbers] / X[mask] -> an array, X[rows, cols] -> only those columns are read,
+    np.asarray(X) -> the whole matrix in memory (do that on a slice, not on all history)."""
+
+    ndim = 2
+
+    def __init__(self, src, lo, n):
+        self._src, self._lo, self._n = list(src), int(lo), int(n)   # src: None | (is text, (slots, cap) array, slot)
+        self.shape = (self._n, len(self._src))
+        self.dtype = np.dtype(np.float64)
+
+    def __len__(self):
+        return self._n
+
+    def _take(self, rows):
+        """rows: a slice or an array of the STORE's row numbers -> (len, features) float64."""
+        k = rows.stop - rows.start if isinstance(rows, slice) else len(rows)
+        out = np.zeros((k, len(self._src)))
+        if not k:
+            return out
+        for j, s in enumerate(self._src):
+            if s is None:                                        # no reading in any stored row: 0.0
+                continue
+            text, base, slot = s
+            v = base[slot, rows]
+            if text:                                             # a text column can only be a feature while empty
+                if (v >= 0).any():
+                    raise StoreError("feature column %d holds text" % j)
+                continue
+            out[:, j] = v
+        np.copyto(out, 0.0, where=np.isnan(out))
+        return out
+
+    def _rows(self, key):
+        """A row key -> ("view", lo, n) | ("one", row) | ("rows", store row numbers)."""
+        n = self._n
+        if isinstance(key, slice):
+            a, b, step = key.indices(n)
+            if step == 1:
+                return "view", self._lo + a, max(b - a, 0)
+            return "rows", self._lo + np.arange(a, b, step)
+        if isinstance(key, (int, np.integer)):
+            k = int(key) + (n if key < 0 else 0)
+            if not 0 <= k < n:
+                raise IndexError("row %d of %d" % (int(key), n))
+            return "one", self._lo + k
+        rows = np.asarray(key)
+        if rows.ndim != 1:
+            raise IndexError("rows are picked by a number, a slice or a 1-d array")
+        if rows.dtype == bool:
+            if len(rows) != n:
+                raise IndexError("a mask of %d rows for %d" % (len(rows), n))
+            rows = np.flatnonzero(rows)
+        elif not len(rows):
+            rows = np.zeros(0, dtype=np.int64)
+        elif rows.dtype.kind not in "iu":
+            raise IndexError("rows are picked by whole numbers, not %s" % rows.dtype)
+        rows = np.where(rows < 0, rows + n, rows).astype(np.int64)
+        if len(rows) and (rows.min() < 0 or rows.max() >= n):
+            raise IndexError("a row outside 0 .. %d" % (n - 1))
+        return "rows", self._lo + rows
+
+    def __getitem__(self, key):
+        if isinstance(key, tuple):
+            if len(key) == 1:
+                return self[key[0]]
+            if len(key) != 2:
+                raise IndexError("a feature matrix has two axes")
+            rk, ck = key
+            if isinstance(ck, (int, np.integer)):
+                return np.asarray(FeatureRows([self._src[ck]], self._lo, self._n)[rk])[..., 0]
+            if isinstance(ck, slice):
+                src = self._src[ck]
+            else:
+                if not isinstance(rk, (slice, int, np.integer)):
+                    raise IndexError("rows and columns both by arrays: take the rows first, X[rows][:, cols]")
+                ck = np.asarray(ck)
+                ck = np.flatnonzero(ck) if ck.dtype == bool else ck
+                src = [self._src[int(i)] for i in ck]
+            return np.asarray(FeatureRows(src, self._lo, self._n)[rk])
+        how = self._rows(key)
+        if how[0] == "view":
+            return FeatureRows(self._src, how[1], how[2])
+        if how[0] == "one":
+            return self._take(slice(how[1], how[1] + 1))[0]
+        return self._take(how[1])
+
+    def __array__(self, dtype=None, copy=None):
+        out = self._take(slice(self._lo, self._lo + self._n))
+        return out if dtype is None else out.astype(dtype, copy=False)
+
+    def astype(self, dtype):
+        return np.asarray(self).astype(dtype, copy=False)
 
 
 # --------------------------------------------------------------------------------------------
@@ -122,9 +235,11 @@ def _live_arrays(lv):
 # --------------------------------------------------------------------------------------------
 class AssetStore:
     """data/evcache/<group>/<asset>/: meta.json, times.bin, f8.bin, f4.bin, b1.bin, i8.bin, code.bin,
-    X.bin, ready.bin. Column-major blocks (cols, cap) for the readings, row-major (cap, F) for X."""
+    ready.bin. Column-major blocks (cols, cap) for the readings. The feature matrix is not a file:
+    X() rebuilds its rows from the readings (FeatureRows)."""
 
     KINDS = {"f8": np.float64, "f4": np.float32, "b1": np.bool_, "i8": np.int64, "code": np.int32}
+    FILES = ("times", "ready") + tuple(KINDS)
 
     def __init__(self, path):
         self.path = path
@@ -139,9 +254,26 @@ class AssetStore:
         p = os.path.join(self.path, "meta.json")
         if not os.path.exists(p):
             return False
-        with open(p, encoding="utf-8") as fh:
-            self.meta = json.load(fh)
         self._mm = {}
+        self.meta = None
+        try:
+            with open(p, encoding="utf-8") as fh:
+                meta = json.load(fh)
+        except (OSError, ValueError):
+            return False
+        if meta.get("version") != LAYOUT or "features" not in meta:   # an older layout (X.bin): build again
+            return False
+        self.meta = meta
+        for name in self.FILES:                                  # every file exactly the size the meta says: a crash
+            shape, dt = self._spec(name)                         # while the files were being enlarged leaves one that
+            want = int(np.prod(shape)) * np.dtype(dt).itemsize   # is not, and such a store is never read
+            try:
+                have = os.path.getsize(self._file(name))
+            except OSError:
+                have = -1
+            if have != want:
+                self.meta = None
+                return False
         return True
 
     def save_meta(self):
@@ -159,8 +291,6 @@ class AssetStore:
             return (cap,), np.int64
         if name == "ready":
             return (cap,), np.bool_
-        if name == "X":
-            return (cap, m["n_x"]), np.float64
         return (m["slots"][name], cap), self.KINDS[name]
 
     def mm(self, name, mode="r"):
@@ -182,8 +312,20 @@ class AssetStore:
         self._mm = {}
 
     # ---- creating the files
-    def create(self, columns, kinds, dtypes, n_x, cap):
-        """Empty files for `cap` rows. columns/kinds/dtypes in the evidence frame's order."""
+    def create(self, columns, kinds, dtypes, n_x, cap, features=None):
+        """Empty files for `cap` rows. columns/kinds/dtypes in the evidence frame's order; features:
+        the columns of the feature matrix, in its order (evidence.FEATURES). Whatever stood in the
+        folder (an older layout's X.bin too) is removed first, so a rebuild never needs more disk
+        than the store it replaces."""
+        if features is None:
+            from .evidence import FEATURES as features
+        features = list(features)
+        known = set(columns)
+        missing = [f for f in features if f not in known]
+        if len(features) != int(n_x) or missing:
+            raise StoreError("the feature matrix (%d wide) is not made of the readings: %s" % (n_x, missing[:5]))
+        self.close()
+        gc.collect()                                             # Windows cannot remove a file that is still mapped
         if os.path.exists(self.path):
             shutil.rmtree(self.path)
         os.makedirs(self.path)
@@ -198,9 +340,10 @@ class AssetStore:
         used = dict(slots)
         slots["f8"] += SPARE_COLS
         slots["f4"] += SPARE_COLS
-        self.meta = {"version": 1, "n": 0, "cap": int(cap), "n_x": int(n_x), "cols": cols, "slots": slots,
-                     "used": used, "tables": {}, "created_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
-        for name in ("times", "ready", "X") + tuple(self.KINDS):
+        self.meta = {"version": LAYOUT, "n": 0, "cap": int(cap), "n_x": int(n_x), "cols": cols, "slots": slots,
+                     "used": used, "tables": {}, "features": features,
+                     "created_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
+        for name in self.FILES:
             self._alloc(name)
         self.save_meta()
 
@@ -213,13 +356,14 @@ class AssetStore:
 
     def grow(self, need):
         """More rows at the end of every file: each file is copied into a larger one, a column (or
-        a block of rows) at a time, so memory stays small. A rare event (every few months)."""
-        import gc
+        a block of rows) at a time, so memory stays small. A rare event (every few months). The new
+        size goes into meta.json last: after a crash in between, load() finds a file that has not the
+        size the meta says and the store is built again."""
         n, cap_old = self.meta["n"], self.meta["cap"]
         cap = int(need + GROW_ROWS)
         self.close()
         gc.collect()
-        for name in ("times", "ready", "X") + tuple(self.KINDS):
+        for name in self.FILES:
             src = self._file(name)
             (shape_o, dt), (shape_n, _) = self._spec(name, cap_old), self._spec(name, cap)
             if 0 in shape_o:
@@ -231,9 +375,6 @@ class AssetStore:
             newm = np.memmap(src, dtype=dt, mode="r+", shape=shape_n)
             if name in ("times", "ready"):
                 newm[:n] = oldm[:n]
-            elif name == "X":
-                for s0 in range(0, n, 20000):
-                    newm[s0:min(s0 + 20000, n)] = oldm[s0:min(s0 + 20000, n)]
             else:
                 for j in range(shape_o[0]):
                     newm[j, :n] = oldm[j, :n]
@@ -245,8 +386,11 @@ class AssetStore:
         self.save_meta()
 
     # ---- writing rows
-    def write(self, start, times_ms, frame, X, ready):
-        """Rows start .. start+len(frame)-1 (the store must already hold rows 0 .. start-1)."""
+    def write(self, start, times_ms, frame, X, ready, overwrite=False):
+        """Rows start .. start+len(frame)-1 (the store must already hold rows 0 .. start-1). X, the
+        matrix evidence.matrix made of `frame`, is not stored: it is compared, bit for bit, with what
+        the stored readings give back (StoreError if they differ). overwrite: rows in the middle of
+        the store are rewritten and the rows after them stay."""
         m = self.meta
         k = len(frame)
         if start > m["n"]:
@@ -272,7 +416,7 @@ class AssetStore:
                     slot = m["used"][kind]
                     m["used"][kind] += 1
                     w = self.mm(kind, "r+")
-                    w[slot, :start] = np.nan
+                    w[slot, :max(start, m["n"])] = np.nan        # every other stored row of it: still "no read"
                     spec[1], spec[2] = kind, slot
                 else:
                     continue
@@ -282,9 +426,14 @@ class AssetStore:
             else:
                 w[slot, start:end] = s.to_numpy(dtype=self.KINDS[kind])
         self.mm("times", "r+")[start:end] = times_ms
-        self.mm("X", "r+")[start:end] = X
         self.mm("ready", "r+")[start:end] = ready
-        m["n"] = end
+        want = np.ascontiguousarray(X, dtype=np.float64)
+        got = self._features("r+")._take(slice(start, end))
+        if got.shape != want.shape or not np.array_equal(got.view(np.int64), want.view(np.int64)):
+            self.close()
+            raise StoreError("rows %d .. %d: the stored readings do not give back the feature matrix" % (start, end - 1))
+        del got, want
+        m["n"] = max(m["n"], end) if overwrite else end
         self.close()
 
     def _encode(self, col, s):
@@ -358,8 +507,24 @@ class AssetStore:
             return vals.reshape(1, -1)
         return pd.array(vals, dtype=pd.api.types.pandas_dtype(dts))
 
+    def _features(self, mode="r"):
+        """FeatureRows over every row slot of the files (rows past n too: write() checks what it wrote)."""
+        m = self.meta
+        spec = dict((c[0], c) for c in m["cols"])
+        base, src = {}, []
+        for f in m["features"]:
+            _, kind, slot, _ = spec[f]
+            if kind in ("nan8", "nan4"):
+                src.append(None)
+                continue
+            if kind not in base:
+                base[kind] = np.asarray(self.mm(kind, mode))     # a plain view of the memory map (it keeps it open)
+            src.append((kind == "code", base[kind], int(slot)))
+        return FeatureRows(src, 0, m["cap"])
+
     def X(self):
-        return self.mm("X")[:self.meta["n"]]
+        """The feature matrix of the stored rows (FeatureRows: nothing is read until rows are asked for)."""
+        return self._features()[:self.meta["n"]]
 
     def ready(self):
         return np.array(self.mm("ready")[:self.meta["n"]])
@@ -475,7 +640,9 @@ def update(group, bars, funding, live, cfg, log=print, root=None, force_check=Fa
             changed = dict((a, 0) for a in assets)
             for p0 in range(0, len(want), CHUNK_ROWS):           # in pieces, so a long catch-up stays small
                 piece = want[p0:p0 + CHUNK_ROWS]
+                te = time.perf_counter()
                 ev = evidence.build(bars, funding, live, rows=piece)
+                rep["evidence_s"] = round(rep.get("evidence_s", 0.0) + time.perf_counter() - te, 2)   # for the step log
                 old_part = piece < R                             # checked rows: compare, rewrite where changed
                 for a in assets:
                     fr = ev[a]
@@ -486,9 +653,8 @@ def update(group, bars, funding, live, cfg, log=print, root=None, force_check=Fa
                         j = np.flatnonzero(old_part)
                         old = st.rows_frame(rr)
                         newf = fr.iloc[j].reset_index(drop=True)
-                        ne = ~_rows_equal(np.asarray(st.X()[rr]), Xr[j])
-                        ne |= st.ready()[rr] != rd[j]
-                        for c in old.columns:
+                        ne = st.ready()[rr] != rd[j]             # (X is made of the columns: no column changed,
+                        for c in old.columns:                    # no row of X changed)
                             ne |= ~_col_equal(old[c], newf[c])
                         for r0, r1 in _runs([int(x) for x in rr[ne]]):
                             jj = np.searchsorted(piece, np.arange(r0, r1))
@@ -511,9 +677,15 @@ def update(group, bars, funding, live, cfg, log=print, root=None, force_check=Fa
         except Rebuild as e:
             log("%s: evidence store rebuilt (%s)" % (group, e))
             ok = False
+            for s in stores.values():
+                s.close()
         if ok:
             gmeta["checked_day"] = today if check else gmeta.get("checked_day")
     if not ok:
+        os.makedirs(base, exist_ok=True)
+        with open(gmeta_p + ".tmp", "w", encoding="utf-8") as fh:   # until the build has finished the group has no
+            json.dump({"building": True}, fh)                       # signature: after a crash in between it is built
+        os.replace(gmeta_p + ".tmp", gmeta_p)                       # again, a half-written store is never trusted
         _build_all(group, stores, bars, funding, live, common, log)
         rep["rebuilt"] = True
         gmeta = {"checked_day": time.strftime("%Y-%m-%d", time.gmtime())}
@@ -560,12 +732,7 @@ def _runs(rows):
 
 def _overwrite(st, r0, fr, X, rd, tms):
     """Rewrite stored rows r0 .. r0+len(fr)-1 in place."""
-    n = st.meta["n"]
-    st.meta["n"] = r0                                            # write() appends at n: pretend, then restore
-    try:
-        st.write(r0, tms, fr, X, rd)
-    finally:
-        st.meta["n"] = max(n, r0 + len(fr))
+    st.write(r0, tms, fr, X, rd, overwrite=True)
 
 
 def _build_all(group, stores, bars, funding, live, common, log):
@@ -585,7 +752,8 @@ def _build_all(group, stores, bars, funding, live, common, log):
             fr = ev[a]
             Xr, rd = evidence.matrix(fr)
             if first:
-                st.create(list(fr.columns), kinds[a], [str(fr[c].dtype) for c in fr.columns], Xr.shape[1], n + GROW_ROWS)
+                st.create(list(fr.columns), kinds[a], [str(fr[c].dtype) for c in fr.columns], Xr.shape[1], n + GROW_ROWS,
+                          features=evidence.FEATURES)
             st.write(s, cms[rows], fr, Xr, rd)
             st.save_meta()
         first = False

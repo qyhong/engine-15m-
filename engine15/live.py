@@ -175,20 +175,111 @@ def _update_bars(a):
     return df
 
 
+class StepClock:
+    """Where a step's time went, for the log (time.perf_counter; nothing else reads it). lap(name)
+    books the time since the last lap under `name`. A clock must never stop a step: every method
+    keeps its own errors to itself."""
+
+    def __init__(self):
+        self.parts, self.notes = {}, {}                            # name -> seconds (first-seen order), name -> remark
+        try:
+            self.t0 = self.last = time.perf_counter()
+        except Exception:
+            self.t0 = self.last = None
+
+    def lap(self, name, note=None):
+        try:
+            now = time.perf_counter()
+            self.parts[name] = self.parts.get(name, 0.0) + (now - self.last)
+            self.last = now
+            if note:
+                self.notes[name] = str(note)
+        except Exception:
+            pass
+
+    def lap_parts(self, parts, rest, notes=None):
+        """The time since the last lap, split as `parts` ({name: seconds}, measured by the callee);
+        what they do not cover goes to `rest`."""
+        try:
+            now = time.perf_counter()
+            left = now - self.last
+            self.last = now
+            for k, v in (parts or {}).items():
+                self.parts[k] = self.parts.get(k, 0.0) + float(v)
+                left -= float(v)
+            if left > 0.05 or not parts:
+                self.parts[rest] = self.parts.get(rest, 0.0) + max(left, 0.0)
+            for k, v in (notes or {}).items():
+                if v:
+                    self.notes[k] = str(v)
+        except Exception:
+            pass
+
+    def slowest(self, floor=1.0):
+        """"flows 31.0, cryptox 22.1": the parts that took `floor` seconds or more, slowest first."""
+        try:
+            return ", ".join("%s %.1f" % (k, v) for k, v in sorted(self.parts.items(), key=lambda kv: -kv[1]) if v >= floor)
+        except Exception:
+            return ""
+
+    def line(self, label):
+        """"timing <label>: 12.3s = bars 1.0 | cache 8.2 (96 rows) | ..." (parts under 0.05 s are left out)."""
+        try:
+            total = time.perf_counter() - self.t0
+            bits = []
+            for k, v in self.parts.items():
+                if v >= 0.05 or k in self.notes:
+                    bits.append("%s %.1f%s" % (k, v, " (%s)" % self.notes[k] if k in self.notes else ""))
+            other = total - sum(self.parts.values())
+            if other >= 0.5:
+                bits.append("other %.1f" % other)
+            return "timing %s: %.1fs = %s" % (label, total, " | ".join(bits) or "-")
+        except Exception as e:
+            return "timing %s: not available (%r)" % (label, e)
+
+    def say(self, log, label):
+        try:
+            log(self.line(label))
+        except Exception:
+            pass
+
+
+def _think_notes(prep, key=None):
+    """Remarks for the timing line of a lean think: what the evidence store and the refits did
+    (key="timing": the seconds leanprep measured instead). Never raises."""
+    try:
+        if key:
+            return dict(prep.get(key) or {})
+        rep, fits = prep.get("evcache") or {}, prep.get("fits") or {}
+        cache = "rebuilt" if rep.get("rebuilt") else "%d rows" % rep.get("rows_written", 0)
+        if rep.get("checked"):
+            cache += ", daily check"
+        if rep.get("evidence_s") is not None and not rep.get("rebuilt"):
+            cache += ", readings %.1f" % rep["evidence_s"]
+        return {"cache": cache, "voices": "%d refits" % fits["refits"] if fits.get("refits") else None}
+    except Exception:
+        return {}
+
+
 def step(log=print, fetch=True):
     """One step for every market group; a group whose market has no new closed bar (the S&P at
     night, everything but crypto at the weekend) is skipped. One page for all of them."""
     t0 = time.time()
-    if fetch:
+    tm = StepClock()                                               # where the time went: one "timing" line per group
+    if fetch:                                                      # that stepped and one for the whole step
         from .evidence import SOURCES
+        src = StepClock()                                          # each source module's own seconds
         for m in SOURCES:                                          # cards 11 to 20 keep their own files fresh
             try:
                 m.update(log=lambda *_: None)
             except Exception as err:
                 log("source %s did not update: %r" % (m.__name__, err))
+            src.lap(str(getattr(m, "__name__", m)).rsplit(".", 1)[-1])
+        tm.lap("sources", src.slowest())
         econ.update_calendar()
         if time.gmtime().tm_min < 15:                              # the macro tape is daily: once an hour is plenty
             econ.update_macro()
+        tm.lap("calendar")
     try:                                                           # answers given on the web page (PIN checked there)
         from . import inbox
         if fetch:
@@ -196,6 +287,7 @@ def step(log=print, fetch=True):
         inbox.read_new(log=log)
     except Exception as e:
         log("web answers could not be read: %r" % (e,))
+    tm.lap("answers")
     state = load_state()
     try:                                                           # charter L1/L5: the daily and weekly discovery reports
         from . import reports
@@ -206,13 +298,16 @@ def step(log=print, fetch=True):
                 state["ideas_day"] = state.get("report_day")
     except Exception as e:
         log("reports: %r" % (e,))
+    tm.lap("reports")
     out, page = [], None
     for g, assets in universes():
         try:
             got = step_group(g, assets, state, log=log, fetch=fetch)
         except Exception as e:                                     # one market failing never stops the others
             log("%s: STEP FAILED: %r" % (g, e))
+            tm.lap(g, "FAILED")
             continue
+        tm.lap(g, None if got else "no new bar")
         if got:
             out += got[0]
             page = got[1]
@@ -220,25 +315,33 @@ def step(log=print, fetch=True):
         from . import reports                                      # bars, so a decision at a close is made on that close
         pb_rows = reports.playbooks(log=log)                       # (before 12 Nov 2026 they ran first, on bars one step old,
         reports.scoreboard(pb_rows, log=log)                       # and were recorded ~16 min late: optimistic fills)
+        tm.lap("strategy books")
         if page is not None:
             from . import export
             page = export.rewrite_merged(LIVE_OUT)                 # the page carries the books as they stand now
+            tm.lap("page")
     except Exception as e:
         log("strategy books: %r" % (e,))
+        tm.lap("strategy books")
     if page is None:
+        tm.say(log, "step")
         return out or None
     from . import push
     if push.enabled():                                             # to the web server, only when switched on
         log("web push: %s" % push.push(page)[1])
+        tm.lap("push")
+    tm.say(log, "step")
     log("step done in %.0fs: %d entries ; page %s" % (time.time() - t0, len(out), page))
     return out
 
 
 def step_group(g, assets, state, log=print, fetch=True):
     assets = list(assets)
+    tm = StepClock()
     bars, funding, live = {}, {}, {}
     for a in assets:                                               # 1. sources
         bars[a] = _update_bars(a) if fetch else data.load(a)
+    tm.lap("bars")
     last_open = min(df.index[-1] for df in bars.values())
     close_s = int(last_open.timestamp()) + CFG["bar_ms"] // 1000
     marks = state.setdefault("last_ms", {})
@@ -258,6 +361,7 @@ def step_group(g, assets, state, log=print, fetch=True):
                 livefeeds.upsert_live(a, {int(last_open.timestamp()) * 1000: reads})
         funding[a] = data.load_funding(a) if a in crypto else None
         live[a] = livefeeds.load_live(a)
+    tm.lap("live reads")
     bars = dict((a, df[df.index <= last_open]) for a, df in bars.items())      # all history: the voices learn from all of it
     cfg = dict(CFG, assets=tuple(assets), birth=str((last_open - pd.Timedelta(days=LEARN_DAYS)).date()),
                voting=voting_for(g))                                # v5.1: the group's own voting cards
@@ -271,13 +375,18 @@ def step_group(g, assets, state, log=print, fetch=True):
         except Exception as e:
             log("%s: lean think failed (%r): the full prepare instead" % (g, e))
             prep = None
+            tm.lap("lean think (failed)")
     if prep is None:
         prep = backtest.prepare(cfg=cfg, bars=bars, funding=funding, live=live)
+        tm.lap("full prepare")
+    else:
+        tm.lap_parts(_think_notes(prep, "timing"), "think", _think_notes(prep))
     times = prep["times"]
     n = len(times)
     lo = n - 1 if done is None else int(times.searchsorted(pd.Timestamp(done, unit="ms", tz="UTC"), side="right"))
     if "lean_lo" in prep and lo < prep["lean_lo"]:                 # a catch-up older than the birth date: all of it
         prep = backtest.prepare(cfg=cfg, bars=bars, funding=funding, live=live)
+        tm.lap("full prepare")
     if lo >= n:
         log("%s: nothing new: the last closed session (%s) is already in the journal" % (g, times[-1]))
         return None
@@ -315,12 +424,14 @@ def step_group(g, assets, state, log=print, fetch=True):
                 new.update(plan_targets(int(new["pos"]), float(new["entry"]), new.get("stop"), ev.iloc[k_dec]))
         state["books"][a] = new
         trades_now[a] = open_trade(a, new, float(prep["px"][a]["close"][n - 1]), times[n - 1] + pd.Timedelta(minutes=15), acfg)
+    tm.lap("decide")
     shadow_view = None                                             # 3b. the challenger shadow books (shadows.py)
     try:                                                           # same odds and readings; never stops the main step
         from . import shadows
         shadow_view = shadows.step(prep, g, assets, n, cfg=cfg, main_books=state["books"], log=log)
     except Exception as e:
         log("%s: shadow books failed: %r" % (g, e))
+    tm.lap("shadow books")
     store = backtest.store_from(prep, books, (lo, n))
     for i in range(lo, n):                                         # 4. journal
         for a in assets:
@@ -339,10 +450,13 @@ def step_group(g, assets, state, log=print, fetch=True):
     if g == "crypto":
         state["last_session_ms"] = marks[g]
     save_state(state)
+    tm.lap("journal")
     page = export.write_page(store, state, entries, out_dir=LIVE_OUT, group=g, shadows=shadow_view)     # 5. publish
+    tm.lap("page")
     for e in entries[-len(assets):]:
         log("%s %s  %s" % (e["time"], e["asset"], e["decision"]))
     log("%s: %d sessions journaled -> %s" % (g, n - lo, written[-1] if written else "-"))
+    tm.say(log, g)
     return entries, page
 
 
