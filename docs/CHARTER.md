@@ -290,7 +290,7 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   no moving the lines, no real money.
 - **Card batch 4** live as think15-v5.2.4 (Fisher Transform, Ultimate Oscillator, TRIX, linear-regression channel,
   Mass Index; `sources/osc5.py`), reading-only. H43 finished: the S&P trades identically with and without the 40% cap.
-- **Subagents run on Fable 5.2** from 17 Nov ("use fable 5.2 agents"); before that Opus 5.5.
+- **Subagents run on Opus 5.5** ("Let all the agents utilise opus 5.5", 17 Nov evening; Fable 5.2 earlier that day).
 - **Ten-task plan agreed**: 1 backup to the laptop (done: `tools/backup_pull.py`, daily 12:00 SGT, 7 kept), 2 outside
   alarm (owner chose the AI Trading Bot's stale-page alarm; asked for), 3 slim the reading cache, 4 one-command deploy
   (done: `tools/deploy.sh`), 5 verdict rules (done, above), 6 live calibration report, 7 data-health check, 8 rate the
