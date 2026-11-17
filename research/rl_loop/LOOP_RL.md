@@ -102,8 +102,11 @@ unless the extra exposure is placed where the edge is larger.
 | 2 | 13 Nov 2026 | 6 / 19 | R2-f retrain_spot_longlever +1,574%, Sharpe 1.09, DD 54% (worst seed 60%); R2-b blend_125 +1,073%, 1.06, 48%; R2-d retrain_spot_lean +867%, 1.03, fold share 48% | none | No pass. R2-b, c, e, f meet 19 of 21 (fail fold share 32-44% and significance); R2-d 15/21 (fold share 48%, seed 2 Sharpe 0.82, sub-span return); R2-a 17/21 (218 trades/yr: the funding cap flips the request at each settlement). Best p 0.151 vs 0.00263 (edge +0.41 vs ~1.1 needed). Retrained agent: gain mostly from more fallback folds, ETH worse. Report: `research/out/rl_loop/round2_report.md`. |
 | 3 | 13 Nov 2026 | 4 / 23 | R3-b core_riskoff_125 +1,428%, Sharpe 1.14, DD 57% (worst seed 60%), 44 trades/yr; R3-c committee_riskoff +710%, 1.09, fold share 52% | none | No pass. R3-b 19/21 (fails fold share 40% and significance); R3-c 18/21 (passes fold share 13/25 with 4 bull folds; fails sub-span return +746% vs +880% and significance); R3-a 17/21; R3-d 18/21 (ETH Sharpe 0.93 < 0.962). Long core: SE of the Sharpe gap 0.22-0.26 (was 0.37-0.44), edge needed 0.64-0.73, seen +0.40 to +0.44, p 0.033-0.044 vs 0.00217. Round 2's proposals replaced (disclosed). Report: `research/out/rl_loop/round3_report.md`. |
 
-Running count of RL variants: **23** (Phase 6's 8 + round 1's 5 + round 2's 6 + round 3's 4; round 3 registered 13 Nov 2026,
-08:02 UTC, run 10:13 UTC). Round 4 proposals: `research/out/rl_loop/loop_state.json` (not registered, not run).
+| 4 | 17 Nov 2026 | 2 / 25 | (registered 17 Nov 2026, 03:21 UTC; not run yet) | - | Registered, no result yet: R4-a committee_riskoff_125, R4-b committee4_riskoff (see "Round 4" below). |
+
+Running count of RL variants: **25** (Phase 6's 8 + round 1's 5 + round 2's 6 + round 3's 4 + round 4's 2; round 4
+registered 17 Nov 2026, 03:21 UTC, before any round-4 code was written or any round-4 number existed). Significance
+threshold from round 4 on: p <= 0.05 / 25 = 0.00200.
 
 ## Round 1 (registered 13 Nov 2026, 04:10 UTC, before any round-1 code ran)
 
@@ -230,3 +233,87 @@ Cumulative RL variants after round 3: 19 + 4 = **23**; significance threshold p 
 Compute: the retrain is ~3-4 h at below-normal priority with the shared heavy-job lock taken per seed and released between
 seeds (90 s gaps), memory-gated more strictly than rule 5 (start >= 1,600 MB free, pause under 1,500 MB), never while
 `research/out/rl/forward5/update.lock` is held. All four are evaluated at once after the retrain.
+
+## Round 4 (registered 17 Nov 2026, 03:21 UTC, before any round-4 code was written or any round-4 number existed)
+
+**Why there is a round 4.** On 14 Nov 2026 the session lead advised the owner not to run it (low odds; every extra variant
+tightens the Bonferroni bar) and the owner agreed; on 17 Nov 2026 the owner asked for the RL tasks to be done
+("Concurrently do the RL tasks too"). It is run once, small, under the unchanged rules.
+
+Same frame, rules, yardstick, seeds, folds, costs and grading as rounds 1-3: **nothing in "Target", "Honesty" or "Rounds"
+above is changed.** Harness `research/rl_loop/round4.py` / `round4_eval.py` (new files; rounds 1-3 code reused unchanged,
+nothing under `engine15/` edited). Notation as round 3: s = sign of an agent's decided action (decisions with min hold 16),
+m = daily 30-day momentum sign at the same close; "V2 execution" = min hold 16 bars, re-size band 0.40, the risk manager
+(vol target 60%, drawdown brake), spot longs, any part above 1x on perp (pays funding), executed position capped at 1.5x.
+
+**Two variants, both execution-only (no retrain; trained fold models of Phase 6, round 2 and round 3 reused unchanged):**
+- **R4-a `committee_riskoff_125`**: R3-c's committee with a long request of 1.25. Per seed k, three bearish votes:
+  {Phase 6 agent seed k: s <= 0}, {round 2 spot-trained agent `r_missed_spot` seed k: s <= 0}, {m = -1}. Request r = 0
+  when at least two of the three vote bearish, else r = 1.25. No shorts. V2 execution; the part above 1x is perp.
+  Why: R3-c is the only long-core variant that met S1 (13 of 25 folds) and its only failures besides S4 were the two
+  sub-span return rules (+746% against buy-and-hold's +880%); in round 3 the same step from 1 to 1.25 on the R3-a rule
+  took the sub-span return from +857% to +1,622%. Risk, stated now: R3-c sits at exactly 13 of 25 folds and 1.25 cost
+  R3-a one fold (11 -> 10), so S1 may be lost; every seed's drawdown rises (R3-b's worst seed 60% against R3-a's 55%).
+- **R4-b `committee4_riskoff`**: a four-vote committee at 1x. Per seed k, bearish votes: {Phase 6 agent seed k: s <= 0},
+  {round 2 `r_missed_spot` agent seed k: s <= 0}, {round 3 long/flat agent `r_missed_longflat` seed k: s = 0 (its
+  actions are {0, 0.5, 1})}, {m = -1}. Request r = 0 when at least three of the four vote bearish, else r = 1. No shorts,
+  no leverage, no funding. V2 execution. Why: the same aim (R3-c's sub-span return) without leverage: a higher bar for
+  going flat keeps the book long more of the time (R3-c requested flat whenever two of three agreed), which should also
+  move it closer to buy-and-hold and shrink the standard error of the Sharpe gap. Risk, stated now: fewer exits can also
+  mean a smaller Sharpe gap and a deeper drawdown; the third agent's ETH record is weak (R3-d ETH Sharpe 0.93).
+
+In a fallback fold an agent's action is the daily momentum position (long/flat agent: long, or flat when momentum is
+short), so its vote there equals the trend's, exactly as in R3-c. The fold split "agent folds / fallback folds" uses
+the Phase 6 agent's fallback folds (as R3-c).
+
+**Proposals not registered (disclosed).** Of round 3's three proposals (`loop_state.json`), R4-a and R4-b are the two
+above, unchanged. R4-c (`retrain_longflat_bhselect`, a retrain of about 2-3 h) is NOT registered and not run: R3-d's
+long/flat retrain was not better than the reused agents, R2-d's retrain gained mostly from more fallback folds, and the
+count is kept small.
+
+**New inputs since round 3: not used, and why (checked 17 Nov 2026 on the stored source files; no result computed).**
+The engine now records crypto reading-only inputs in `engine15/sources/flows.py` and `engine15/sources/cryptox.py`. An
+RL variant with new inputs needs them for BOTH coins of the pooled agent from about 2019-09 (the training data before
+the first test fold, 2020-10-01).
+- Too short: Binance positioning (open interest, long/short ratios) BTC from 2020-09-01, ETH from 2021-12-01; Bitfinex
+  margin positions from 2021-02; CME leveraged-funds positions ETH from 2021-04 (BTC 2018-04); OKX funding about 3
+  months and OKX open interest about 60 days; Bybit funding BTC from 2020-03, ETH from 2020-10, Bybit open interest
+  from 2020-07.
+- Long enough, but already tested alone and short of the registered bar: the on-chain inputs (CoinMetrics, from 2015;
+  H39: best partial IC at 7 days +0.075 against the ~0.16 that S4 needs) and Deribit options flow (hourly rows from
+  2019-01 BTC / 2019-03 ETH; H40: best +0.026, every BTC partial IC negative). H39 and H40 concluded that nothing
+  supported an RL round built on them; that conclusion stands.
+- Long enough and never tested alone: Korea premium (Upbit, from 2019-09-01), BTC and stablecoin dominance (from
+  2019-01-01), spot-versus-perp leadership (perp bars BTC from 2019-09-08, ETH from 2019-11-27) and the CME-gap spot
+  proxy. H39 fixed the order "each input alone first, then an RL round"; putting them into a retrain now would skip
+  that gate. They are left for an H39-style test, which is not part of this round.
+
+**Target and pass rules: unchanged** (T1-T4, S1-S4, E1-E3 above; 21 graded rules; a variant passes only if every rule
+holds; nothing is averaged away; a pass is only a proposal for a forward paper book to the owner, confirmed at 30
+forward trades, never proof of an edge). **Cumulative RL variants after round 4: 23 + 2 = 25; significance threshold
+(S4) p <= 0.05 / 25 = 0.00200** (one-sided z 2.88; with the strategy loop's 1,910 added it would be 0.05 / 1,935 =
+2.6e-05, reported). Reported besides the rules, not a pass rule: the seed-mean book's Sharpe minus spot buy-and-hold's in
+each half of the span split at 2023-06-07 (the split used elsewhere in `research/HYPOTHESES.md`).
+
+**Prior, stated now.** No pass is expected. S4 needs a Sharpe gap of about 0.65-0.75 over spot buy-and-hold on a long
+core; the best of 23 variants showed +0.44 (p 0.033), and neither variant adds information the earlier ones did not
+have. The realistic best case is 20 of 21 rules (all but S4) for R4-a, which would still be a fail.
+
+**Where and how it runs (disclosed before the run).**
+- Rounds 1-3 ran on the laptop. Its RL input caches (`research/out/rl/phase4_cache`) and the evidence store
+  (`data/evcache`) were deleted in the owner-approved cleanup, so the inputs cannot be rebuilt there. Round 4 runs on the
+  research server (`/data/mind15`, one process, 2 threads, low priority), where the cache is rebuilt by the unchanged
+  `engine15.rl.pool4.prepare` from the server's own bar and funding files (cut at the frozen data end, 2026-11-11 11:30)
+  and the server's evidence store (read only) into a round-4 folder under `research/out/rl_loop/` (the live engine's
+  folders are not written). The trained fold models (Phase 6 `models6/b6a25c5d/r_missed`, `models_r2`, `models_r3`) and
+  Phase 6's saved run file are copied from the laptop into the same round-4 folder (research inputs; no engine state).
+- **Gate before any round-4 number is computed (stage 1, `round4.py --check`).** It computes only the Phase 6 primary
+  (rule 3) and round 3's R3-b, R3-c and R3-d again, no round-4 variant. Stage 2 (`--eval`, the two variants) starts only
+  if (i) rule 3 holds (BTC seed-mean return within 0.5%, Sharpe within 0.005 of Phase 6's saved run) AND (ii) the BTC
+  and ETH seed-mean total return and Sharpe of R3-b, R3-c and R3-d are each within 0.5% (return, relative) and 0.005
+  (Sharpe) of round 3's saved results (the check that the rebuilt inputs and all three model sets behave on the server
+  as they did on the laptop). If the gate fails, the round is recorded as NOT RUN with the differences; nothing is tuned
+  to make it pass.
+- The loop's rule 1 asks for registration here and in `research/HYPOTHESES.md`. Another session is editing that file
+  today, so this section is the registration; the matching HYPOTHESES.md paragraph is handed to the session lead to
+  merge (deviation, disclosed).
