@@ -24,6 +24,12 @@ pipeline, a batch of up to five at a time. Nothing in it changes a trade until a
    forward check, it beats the weakest current voter of that group. A change to the voting list is a new minor version
    (v5.x), registered in `research/HYPOTHESES.md` first, and goes live only on the owner's yes. A voter that falls
    below the floor in a later rating is proposed for removal the same way.
+   **Not a near-copy (17 Nov 2026, owner asked for my recommendation and I adopted it):** a card is not proposed as an
+   additional voter if its readings overlap a current voter's of that group at |rho| >= 0.70 in BOTH halves (the H54
+   measure: `research/card_overlap.py`, the reading-overlap matrix). If it ranks clearly above that voter in both the
+   history rating and the 30-day forward check, it may be proposed as a REPLACEMENT for that voter instead (one idea,
+   one vote). Existing near-copies among the voters are not removed by this rule; removal is a new version and the
+   owner's decision.
 6. **Next batch.** When a batch is live (step 2 done), the next five can be built; ratings run monthly or after each
    batch, whichever comes first.
 
