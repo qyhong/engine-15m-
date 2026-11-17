@@ -2834,3 +2834,13 @@ S1) to the owner, not proof of an edge and not a change to Setups.
 signals and for kept/skipped; the AUC of each variant on each half; the ten inputs that move each variant most; the same
 table with the BOOK result instead of the followable one. **Disclosed already:** `b_targets` lost $28,862 against the main
 book on 2020-2026 history (H36); its live record is 17 trades; the followable record has 1 live signal.
+
+### H55 note: library decision (17 Nov 2026, 12:36 UTC; before any H55 result on real data was computed or seen)
+scikit-learn was not installed when H55 was registered; the study agent prepared numpy stand-ins (a Newton-method L2
+logistic regression for F1, a numpy histogram GBM for F2). The owner then approved installing scikit-learn 1.9.1 and
+scipy 1.18.1 in a SEPARATE research Python setup on the server (`/data/venv-research`; the live engine's `/data/venv` is
+byte-for-byte unchanged, numpy 2.4.5 shared). Decided now, before any real-data number: **F1 and F2 are judged with
+scikit-learn exactly as registered** (F1: `LogisticRegression(penalty="l2", C=0.1, class_weight="balanced",
+solver="lbfgs", max_iter=5000)` on standardised inputs; F2: `HistGradientBoostingClassifier(max_depth=3,
+learning_rate=0.05, max_iter=200, min_samples_leaf=50, l2_regularization=1.0, early_stopping=False, random_state=55)`,
+class weights none, as registered). The numpy stand-ins are reported beside them as a cross-check only, never judged.
