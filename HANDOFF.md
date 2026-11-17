@@ -74,6 +74,17 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   `entry_window_open`), the book record, the S1 followable record, learning hit rates. No push; the AI Trading Bot
   session serves it at /setups/setups.json behind the paywall (owner: "Included for paying members"). No display text
   may contain the word "edge" or the forecast model's name. The page is the site sessions' work.
+  Since 17 Nov 13:48 UTC setups.json also has per-market `closes` (96 x 15m, ending at `price_bar_utc`) and top-level
+  `closed_setups` (the book's last 30 closed trades, why_out codes TARGET_2/STOP/T1_THEN_ENTRY/FLIP/T1_THEN_FLIP/EXIT/
+  T1_THEN_EXIT/OTHER), and a second file `setup_events.json` (last 100 S1 events from `data/signals_log.jsonl`, stable ids
+  `<signal_id>:<type>`) is written beside it for alert senders.
+- **Stock stances (17 Nov 2026, owner: "S&P model on each stock"):** `engine15/stocks.py`, hooked after setups in
+  `live.step()`, runs when the S&P stepped (or the ticker list changed). Tickers from `/var/lib/aitrading-top5/top5.json`
+  (env `MIND15_TOP5_FILE`; the website's single source of truth; fallbacks: last list, env `MIND15_STOCKS`, default five).
+  Readings from each stock's Yahoo bars (`data/stocks/`) with the engine's own card code, market-wide cards copied from the
+  S&P entry, mixed with the S&P call's own trust and refit voices (read only). Writes `stocks.json` (out/live + web dir);
+  every stance is logged (`data/stocks_log.jsonl`) and graded with `labels.triple_barrier` (26 bars). Labelled "S&P 500
+  model applied to single stocks; not validated on single stocks". No positions, stops or sizing.
 - **Research Python on the box (17 Nov 2026, owner approved):** `/data/venv-research` = scikit-learn 1.9.1, scipy 1.18.1,
   joblib, threadpoolctl, narwhals (installed `--no-deps`), and every engine package through a `.pth` pointing at
   `/data/venv` (numpy 2.4.5 shared). Research scripts that need sklearn/scipy run with it. Never install into `/data/venv`:
