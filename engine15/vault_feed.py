@@ -200,6 +200,8 @@ def _content(book):
 
 
 # ------------------------------------------------------------------ positions -> exit intents
+EXITS_ONLY_IF_WINDOW_SEEN = True     # the guard of 18 Nov 2026 (vault live): see track()
+
 def _pos_of(m):
     """The open position a setups market shows: {side, opened_utc, entry, target_1, t1_taken}; None when FLAT;
     "unknown" when the entry cannot be read (then nothing is concluded)."""
@@ -327,8 +329,14 @@ def track(sym, m, st, trades_dir, now):
         return None
     first, prev = sym not in seen, seen.get(sym)
     now_px = dec_text(m.get("price"))
+    # GUARD (18 Nov 2026, the vault live): exits only for a setup the vault could have joined: one whose entry window was
+    # seen OPEN by this feed. A setup already past its window when the feed first saw it (e.g. the 15 Nov shorts) is
+    # never acted on, so an exit never reaches a member position the vault did not open from this book.
+    if isinstance(cur, dict):
+        same = isinstance(prev, dict) and prev.get("side") == cur["side"] and prev.get("opened_utc") == cur["opened_utc"]
+        cur["eligible"] = bool(m.get("entry_window_open") is True or (same and prev.get("eligible")))
     new = []
-    if not first and prev:
+    if not first and prev and (prev.get("eligible") or not EXITS_ONLY_IF_WINDOW_SEEN):
         if cur is not None and cur["side"] == prev["side"] and cur["opened_utc"] == prev["opened_utc"]:
             if cur["t1_taken"] and not prev.get("t1_taken"):
                 new = t1_intents(sym, dict(prev, target_1=cur.get("target_1") or prev.get("target_1")), now_px)

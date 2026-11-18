@@ -49,6 +49,13 @@ def bar(n):
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(ep("2026-11-18T10:00:00Z") + 900 * n))
 
 
+@pytest.fixture(autouse=True)
+def _exit_guard_off_by_default(monkeypatch):
+    """The exit mechanics below predate the guard (exits only for a setup whose entry window the feed saw open); the
+    guard has its own tests, which switch it back on."""
+    monkeypatch.setattr(vf, "EXITS_ONLY_IF_WINDOW_SEEN", False)
+
+
 def mkt(sym="BTCUSDT", side="LONG", entry=65000.0, stop=64000.0, t1=66000.0, t2=67000.0, price=65203.2,
         t1_taken=False, window=False, opened=OPENED, at=None, rr="auto", **kw):
     """A market entry as setups._market writes it (the keys the feed reads, plus a few it must ignore)."""
@@ -939,3 +946,21 @@ def test_the_real_vault_refuses_a_missing_or_foreign_client_certificate(tmp_path
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+
+def test_guard_no_exit_for_a_setup_whose_window_the_feed_never_saw_open(feed, fake, monkeypatch):
+    monkeypatch.setattr(vf, "EXITS_ONLY_IF_WINDOW_SEEN", True)
+    feed.step(mkt(window=False))                                   # first sight: already past its entry window
+    feed.step(mkt(at=bar(2), t1_taken=True, price=66080.5))        # target 1: nothing for the vault
+    feed.step(mkt(side="FLAT", at=bar(3), price=66990.0))          # exit: nothing either
+    assert not fake.ops("submit_intent")
+
+
+def test_guard_exits_for_a_setup_seen_inside_its_window(feed, fake, monkeypatch):
+    monkeypatch.setattr(vf, "EXITS_ONLY_IF_WINDOW_SEEN", True)
+    feed.step(mkt(window=True))                                    # seen while its entry was still open: joinable
+    feed.step(mkt(at=bar(2), window=False))                        # the window closes: stays eligible
+    feed.step(mkt(at=bar(3), t1_taken=True, price=66080.5))
+    acts = [b["intent"]["action"] for b in fake.ops("submit_intent")]
+    assert acts == ["reduce", "reduce", "move_stop"]
