@@ -382,6 +382,7 @@ Each line was PROPOSED until answered. **Answered 17 Nov 2026: the owner approve
 
 | Book | Checkpoint | Scoreboard written (UTC) | Trades | Net $ | Mean $ | 90% range $ | Won % | Verdict text | vs main $ (`b_trail`) | What was done | Owner's word |
 |---|---|---|---|---|---|---|---|---|---|---|---|
+| `p8_fvg` | 30 (first server scoreboard seen with >= 30) | 2026-11-18 03:18 | 31 | -77.42 | -2.50 | -28.12 to +23.12 | 41.9 | undecided: the range includes zero | n/a | Rule 9: stays a separate paper book, unchanged, until H13's verdict (200 trades or 30 days). Disclosure: first seen at 31 trades (the 30th trade closed between my checks); the book passed 30 earlier in the evening of 17 Nov UTC. | approved rules (17 Nov 2026) |
 | | | | | | | | | | | | |
 
 ---
