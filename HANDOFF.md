@@ -97,6 +97,12 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   stop == entry) and exit-only intents (reduce 0.5 + futures move_stop at Target 1, close at the book's exit; never
   `open`). State `data/vault_feed_state.json`. The vault runs on TESTNET; live only on the owner's yes in the AI Trading Bot
   session. The Telegram unit cannot read /etc/ait-engine. VIP member: `helix2d`.
+- **B trail book (18 Nov 2026, owner's request):** `research/b_trail_history.py` replayed `b_trail` and the main rule with
+  today's engine from 2020 to each group's live start (`research/out/b_trail_history/trades.csv`, `summary.json`, also on
+  the box). `engine15/book_view.py` (guarded hook after the setups/vault/stocks hooks) writes `b_trail_book.json` every
+  step (history totals, yearly rows, monthly curve labelled "history replay with today's engine, in-sample, not a test",
+  plus the live record since 11 Nov and a combined curve) and `b_trail_history_trades.json` (web dir only, when the CSV
+  is newer). History: B trail -$47,444 (11,420 trades) vs main +$187,617 on the same span.
 - **Backups (17 Nov 2026):** `tools/backup_pull.py`, Windows scheduled task "Mind15 server backup" daily 12:00 SGT:
   one tar over ssh of journal, out/live, data (no evcache/raw), RL forward books and logs into `backup/server/`
   (git-ignored), 7 kept, taken in a gap between steps, rejected if a bar or state file is empty.
