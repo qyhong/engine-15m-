@@ -173,7 +173,7 @@ StandardOutput=append:/data/mind15/telegram.log
 StandardError=append:/data/mind15/telegram.log
 # sandbox: it may write only its own state file's folder; the push key is out of reach
 ReadWritePaths=$M/data
-InaccessiblePaths=-$ETC $OTHERS
+InaccessiblePaths=-$ETC -/etc/ait-engine $OTHERS
 $SANDBOX
 
 [Install]
