@@ -314,3 +314,7 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   live trades. Scope: Mind 15 itself still places no order and holds no exchange key; it only SENDS its book
   (BTCUSDT, ETHUSDT) to the vault on 127.0.0.1 each step; the vault decides and places orders. Everything else in
   Mind 15 stays paper. A vault failure never affects Mind 15's paper books or outputs.
+- **Vault exits (owner, 18 Nov 2026, 13:31 UTC):** asked whether the feed may also send exit instructions, the owner chose **"Allow close,
+  reduce, stop"**: `close` when the setups book exits (stop, flip, its exit rule), `reduce` to take half at Target 1, and
+  `move_stop` to the entry after Target 1, exactly as the book does, for BTCUSDT and ETHUSDT only. Never `open` or any
+  instruction that adds to a position.
