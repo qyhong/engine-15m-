@@ -8,11 +8,23 @@ Mind 15 holds no exchange key and never sends an order. It SENDS, to the vault's
                  `reduce` (half) when Target 1 is taken, `move_stop` to the entry after Target 1 (futures only). Never
                  `open`, never anything that adds.
 
-    run(setups_path, log=print)   one pass, called by live.step right after setups.write when MIND15_VAULT_URL is set.
-                                  It never raises: every failure is ONE line "vault: <symbol> ... not sent (<reason>)".
+    run(setups_path, log=print)   one pass, called by live.step right after setups.write when MIND15_VAULT_CONFIG is
+                                  set. It never raises: every failure is ONE line "vault: <symbol> ... not sent (<reason>)".
+
+Configuration: env MIND15_VAULT_CONFIG names the JSON file the vault's installer writes (/etc/ait-engine/engine.json):
+  {"caller": "engine", "host": "127.0.0.1", "port": 8443, "secret_file": "/etc/ait-engine/engine.secret",
+   "ca": "/etc/ait-engine/vault_ca.pem", "cert": "/etc/ait-engine/engine.crt", "key": "/etc/ait-engine/engine.key"}
+  Unset = feature OFF (nothing sent, no line). It and the files it names are read at every step; anything wrong is one
+  line and nothing is sent (exits are still detected and queued). caller must be "engine", host exactly "127.0.0.1",
+  port an integer, every path absolute. engine.secret is one line of 64 hex characters: the key is
+  bytes.fromhex(line.strip()), exactly 32 bytes, never logged. (MIND15_VAULT_URL, the plain-HTTP setting from before
+  the installer existed, is gone: the vault's listener takes mTLS only.)
 
 The vault's spec (its repo: vault/README.md "Engine calls", vault/server/aitvault/{api,vault,joinrule}.py):
-  * POST /v1/<op>, JSON body json.dumps(body, sort_keys=True); headers X-Ait-Caller (engine), X-Ait-Ts (unix s, within 30 s
+  * POST https://127.0.0.1:<port>/v1/<op> over mutual TLS, built as api.client_tls(ca, cert, key) builds it: only the
+    vault's own CA is trusted, the engine's client certificate is presented, TLS 1.2 or newer, and the server's
+    certificate is checked against "127.0.0.1". The listener drops a caller without a certificate from its CA.
+  * JSON body json.dumps(body, sort_keys=True); headers X-Ait-Caller (engine), X-Ait-Ts (unix s, within 30 s
     of the vault's clock), X-Ait-Nonce (16-64 of [A-Za-z0-9_-], once per 120 s), X-Ait-Sig = hex HMAC-SHA256(secret,
     "POST\\n<path>\\n<ts>\\n<nonce>\\n<sha256(body) hex>"). Any auth failure answers 404 not_found.
   * a book: prices are decimal strings, flags real booleans, levels strictly in order (LONG stop < entry < T1 < T2, SHORT
@@ -37,23 +49,24 @@ import calendar
 import csv
 import hashlib
 import hmac
+import http.client
 import io
 import json
 import os
 import re
 import secrets
 import socket
+import ssl
 import time
-import urllib.error
-import urllib.parse
-import urllib.request
 from decimal import ROUND_HALF_EVEN, Decimal, InvalidOperation
 
 from .config import DATA_DIR
 
 ALLOWED = ("BTCUSDT", "ETHUSDT")                 # the owner's scope; anything else is ignored even if listed
-URL_ENV = "MIND15_VAULT_URL"                     # unset = feature OFF (nothing sent, no line)
-SECRET_ENV = "MIND15_VAULT_SECRET_FILE"          # the engine caller's HMAC secret, hex text (read each step, never logged)
+CONFIG_ENV = "MIND15_VAULT_CONFIG"               # the installer's engine.json; unset = feature OFF (nothing sent, no line)
+CONFIG_KEYS = ("caller", "host", "port", "secret_file", "ca", "cert", "key")
+CONFIG_MAX = 65536                               # bytes read at most from engine.json / engine.secret
+SECRET_RE = re.compile(r"^[0-9a-fA-F]{64}\Z")    # engine.secret: 64 hex characters, i.e. exactly 32 bytes
 SYMBOLS_ENV = "MIND15_VAULT_SYMBOLS"             # default "BTCUSDT,ETHUSDT"
 CALLER = "engine"
 HOST = "127.0.0.1"                               # the only host ever called
@@ -333,27 +346,71 @@ def track(sym, m, st, trades_dir, now):
 
 
 # ------------------------------------------------------------------ config, state, the call
-def check_url(url):
-    """-> ("http://127.0.0.1:<port>", None) or (None, reason). Only plain http to 127.0.0.1 with a port, no path."""
+def load_config(path):
+    """The installer's engine.json -> ({the seven keys}, None) or (None, short reason). caller "engine", host exactly
+    "127.0.0.1", an integer port, absolute paths; other keys are ignored."""
     try:
-        u = urllib.parse.urlsplit((url or "").strip())
-        port = u.port
-    except ValueError:
-        return None, "bad vault url"
-    if u.scheme != "http" or u.hostname != HOST or u.username or u.password or port is None \
-            or u.path not in ("", "/") or u.query or u.fragment:
-        return None, "vault url not allowed (only http://127.0.0.1:<port>)"
-    return "http://%s:%d" % (HOST, port), None
+        with open(path, "rb") as fh:
+            raw = fh.read(CONFIG_MAX + 1)
+        if len(raw) > CONFIG_MAX:
+            return None, "vault config unreadable (too large)"
+        conf = json.loads(raw.decode("utf-8"))
+    except (OSError, ValueError):                                # (a bad UTF-8 or JSON is a ValueError too)
+        return None, "vault config unreadable"
+    if not isinstance(conf, dict):
+        return None, "vault config invalid (not an object)"
+    missing = [k for k in CONFIG_KEYS if k not in conf]
+    if missing:
+        return None, "vault config invalid (missing %s)" % ",".join(missing)
+    if conf["caller"] != CALLER:
+        return None, "vault config invalid (caller must be engine)"
+    if conf["host"] != HOST:
+        return None, "vault config invalid (host must be 127.0.0.1)"
+    if type(conf["port"]) is not int or not 0 < conf["port"] < 65536:
+        return None, "vault config invalid (port)"
+    for k in ("secret_file", "ca", "cert", "key"):
+        v = conf[k]
+        if not isinstance(v, str) or not v or "\x00" in v or not os.path.isabs(v):
+            return None, "vault config invalid (%s not an absolute path)" % k
+    return dict((k, conf[k]) for k in CONFIG_KEYS), None
 
 
 def read_secret(path):
-    """The engine caller's secret: hex text of at least 32 bytes (what the vault's Callers.from_config reads), or None."""
+    """engine.secret: one line of 64 hex characters -> bytes.fromhex(line.strip()), exactly 32 bytes; else None. The
+    vault's Callers.from_config reads the same file the same way, so both hold the same key. Never logged."""
     try:
-        with open(path, "r", encoding="ascii") as fh:
-            sec = bytes.fromhex(fh.read().strip())
-    except (OSError, TypeError, ValueError):
+        with open(path, "rb") as fh:
+            raw = fh.read(CONFIG_MAX + 1)
+        line = raw.decode("ascii").strip()
+    except (OSError, ValueError):
         return None
-    return sec if len(sec) >= 32 else None
+    if len(raw) > CONFIG_MAX or not SECRET_RE.match(line):
+        return None
+    key = bytes.fromhex(line)
+    return key if len(key) == 32 else None
+
+
+def _no_password():
+    return b""                                                   # an encrypted key fails at once, never a prompt
+
+
+def client_tls(ca, cert, key):
+    """The vault's api.client_tls(ca, cert, key), step for step: a TLS client context (certificate required, the
+    hostname checked: PROTOCOL_TLS_CLIENT's defaults, left on), TLS 1.2 at least, the vault's CA as the ONLY trust
+    anchor (no system store), the engine's client certificate and key. -> (context, None) or (None, short reason)."""
+    ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    ctx.minimum_version = ssl.TLSVersion.TLSv1_2
+    if ctx.verify_mode != ssl.CERT_REQUIRED or not ctx.check_hostname:          # (never true; a guard, not a setting)
+        return None, "tls context without verification"
+    try:
+        ctx.load_verify_locations(ca)
+    except (OSError, ValueError):
+        return None, "vault CA unreadable"
+    try:
+        ctx.load_cert_chain(cert, key, password=_no_password)
+    except (OSError, ValueError):
+        return None, "client certificate or key unreadable"
+    return ctx, None
 
 
 def load_state(path):
@@ -381,31 +438,26 @@ def save_state(path, st):
         raise
 
 
-class _NoRedirect(urllib.request.HTTPRedirectHandler):
-    def redirect_request(self, *a, **k):                         # a redirect is an error: nothing leaves 127.0.0.1
-        return None
-
-
-def post(base, secret, op, body, timeout=None):
-    """One signed call. -> (HTTP status, answer dict); status 0 = the vault could not be reached (answer {"error":
-    reason}). Never raises."""
+def post(port, secret, tls, op, body, timeout=None):
+    """One signed call to https://127.0.0.1:<port>/v1/<op> over the mTLS context `tls` (as VaultClient.call makes it:
+    http.client, so no proxy is ever read and no redirect followed; a 3xx is just a status). -> (HTTP status, answer
+    dict); status 0 = no answer (answer {"error": reason}). Never raises."""
     path = "/v1/" + op
     raw = encode(body)
-    req = urllib.request.Request(base + path, data=raw, headers=headers(secret, path, raw), method="POST")
-    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), _NoRedirect())
+    conn = None
     try:
-        with opener.open(req, timeout=TIMEOUT_S if timeout is None else timeout) as r:
-            return r.status, _answer(r.read(1 << 20))
-    except urllib.error.HTTPError as e:
-        try:
-            data = e.read(1 << 20)
-        except Exception:
-            data = b""
-        return e.code, _answer(data)
-    except urllib.error.URLError as e:
-        return 0, {"error": _net_reason(e.reason)}
-    except Exception as e:                                       # a timeout while reading, a reset, anything
+        conn = http.client.HTTPSConnection(HOST, port, timeout=TIMEOUT_S if timeout is None else timeout, context=tls)
+        conn.request("POST", path, body=raw, headers=headers(secret, path, raw))
+        r = conn.getresponse()
+        return r.status, _answer(r.read(1 << 20))
+    except Exception as e:                                       # refused, a timeout, a TLS refusal, a reset, anything
         return 0, {"error": _net_reason(e)}
+    finally:
+        if conn is not None:
+            try:
+                conn.close()
+            except Exception:
+                pass
 
 
 def _answer(data):
@@ -417,16 +469,27 @@ def _answer(data):
 
 
 def _net_reason(e):
+    """A short, value-free reason. TLS trouble starts with "tls " (the server's certificate not trusted, or the vault
+    refusing ours: its alert's name, e.g. TLSV13_ALERT_CERTIFICATE_REQUIRED or TLSV1_ALERT_UNKNOWN_CA)."""
+    if isinstance(e, ssl.SSLCertVerificationError):
+        return "tls vault certificate not trusted: %s" % str(e.verify_message or "?")[:80]
+    if isinstance(e, (ssl.SSLEOFError, ssl.SSLZeroReturnError)):
+        return "tls failed: closed by the vault (%s)" % type(e).__name__
+    if isinstance(e, ssl.SSLError):
+        return "tls failed: %s" % str(e.reason or type(e).__name__)[:60]
     if isinstance(e, ConnectionRefusedError):
         return "connection refused"
     if isinstance(e, (socket.timeout, TimeoutError)) or "timed out" in str(e):
         return "timeout"
-    return type(e).__name__ if isinstance(e, BaseException) else str(e)[:40]
+    if isinstance(e, (http.client.RemoteDisconnected, ConnectionResetError, ConnectionAbortedError, BrokenPipeError)):
+        return "connection closed by the vault"
+    return type(e).__name__
 
 
 def _why(status, out):
     if status == 0:
-        return "vault down: %s" % out.get("error", "?")
+        r = str(out.get("error", "?"))
+        return r if r.startswith("tls ") else "vault down: %s" % r
     code = str(out.get("error") or "no code")[:40]
     extra = "".join(" %s=%s" % (k, str(out[k])[:40]) for k in ("field", "why") if k in out)
     return ("refused %d %s%s" if 400 <= status < 500 else "vault error %d %s%s") % (status, code, extra)
@@ -444,7 +507,7 @@ def run(setups_path, log=print, environ=None, state_path=None, trades_dir=None, 
     """Send what changed. -> {"books": [symbols sent], "intents": [ids sent]} or None when the feature is off. Never
     raises."""
     env = os.environ if environ is None else environ
-    if not (env.get(URL_ENV) or "").strip():
+    if not (env.get(CONFIG_ENV) or "").strip():
         return None
     try:
         return _run(setups_path, log, env, state_path or STATE_PATH,
@@ -461,10 +524,6 @@ def _run(setups_path, log, env, state_path, trades_dir, now):
     if not syms:
         return done
     tag = ",".join(syms)
-    base, err = check_url(env.get(URL_ENV))
-    if err:
-        _say(log, "vault: %s not sent (%s)" % (tag, err))
-        return done
     try:
         with io.open(setups_path, encoding="utf-8") as fh:
             doc = json.load(fh)
@@ -494,12 +553,18 @@ def _run(setups_path, log, env, state_path, trades_dir, now):
             it["status"] = "expired"
             b = it.get("body") or {}
             _say(log, "vault: %s %s %s not sent (given up after 24 h)" % (b.get("symbol"), b.get("action"), b.get("market")))
-    secret_file = (env.get(SECRET_ENV) or "").strip()
-    secret = read_secret(secret_file) if secret_file else None
-    if secret is None:
+    conf, err = load_config(env[CONFIG_ENV].strip())             # read at every step, as are the files it names
+    secret = tls = None
+    if err is None:
+        secret = read_secret(conf["secret_file"])
+        err = "secret file unreadable" if secret is None else None
+    if err is None:
+        tls, err = client_tls(conf["ca"], conf["cert"], conf["key"])
+    if err:
         save_state(state_path, st)                               # the exits stay queued for the next step
-        _say(log, "vault: %s not sent (secret file %s)" % (tag, "unreadable" if secret_file else "not set"))
+        _say(log, "vault: %s not sent (%s)" % (tag, err))
         return done
+    port = conf["port"]
     # 1. the exits first (each once; retried next step until the vault answers)
     for iid, it in sorted(queue.items(), key=lambda kv: kv[1].get("seq", 0)):
         b = it.get("body")
@@ -510,7 +575,7 @@ def _run(setups_path, log, env, state_path, trades_dir, now):
             it["status"] = "refused"
             _say(log, "vault: %s not sent (not an allowed exit)" % label)
             continue
-        status, out = post(base, secret, "submit_intent", {"intent": b})
+        status, out = post(port, secret, tls, "submit_intent", {"intent": b})
         if status == 200 and out.get("ok"):
             it["status"] = "sent"
             done["intents"].append(iid)
@@ -542,7 +607,7 @@ def _run(setups_path, log, env, state_path, trades_dir, now):
                 continue
             if content == last.get("content") and dt < HEARTBEAT_S:
                 continue
-        status, out = post(base, secret, "submit_book", body)
+        status, out = post(port, secret, tls, "submit_book", body)
         if status == 200 and out.get("ok"):
             held[sym] = {"content": content, "as_of": as_of}
             done["books"].append(sym)

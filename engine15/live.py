@@ -346,7 +346,7 @@ def step(log=print, fetch=True):
     except Exception as e:
         log("setups: not written (%r)" % (e,))
     tm.lap("setups")
-    if sinfo and os.environ.get("MIND15_VAULT_URL"):               # the BTC/ETH book (+ exit intents) to the VIP vault on
+    if sinfo and os.environ.get("MIND15_VAULT_CONFIG"):            # the BTC/ETH book (+ exit intents) to the VIP vault on
         try:                                                       # 127.0.0.1, from the setups.json just written (owner's
             from . import vault_feed                               # exception, 18 Nov 2026); it never stops the step
             vault_feed.run(sinfo["path"], log=log)
