@@ -226,7 +226,9 @@ def test_levels_out_of_order_or_missing_are_not_sent():
     assert vf.build_book(mkt(stop=65500.0), bar(1)) == (None, "levels out of order")
     assert vf.build_book(mkt("ETHUSDT", "SHORT", entry=3000.0, stop=2900.0, t1=2950.0, t2=2900.0, price=3000.0),
                          bar(1)) == (None, "levels out of order")
-    assert vf.build_book(mkt(t1_taken=True), bar(1)) == (None, "levels out of order (stop at entry after target 1)")
+    after_t1 = vf.build_book(mkt(t1_taken=True), bar(1))[0]["book"]        # stop == entry after T1: sent (vault a88253e)
+    assert after_t1["t1_taken"] is True and after_t1["stop"] == after_t1["entry"]
+    assert vf.build_book(mkt(t1_taken=False, stop=65000.0), bar(1)) == (None, "levels out of order")   # not without T1
     assert vf.build_book(mkt(target_2=None), bar(1)) == (None, "levels missing (target_2)")
     assert vf.build_book(mkt(price=None), bar(1)) == (None, "no price")
     assert vf.build_book(mkt(), None) == (None, "no price bar time")
@@ -423,7 +425,7 @@ def test_target_1_on_a_long_reduce_both_and_stop_to_entry_on_futures(feed, fake)
     assert feed.new[:3] == ["vault: BTCUSDT reduce spot sent (id BTCUSDT.20261118T090000Z.reduce.spot)",
                             "vault: BTCUSDT reduce futures sent (id BTCUSDT.20261118T090000Z.reduce.futures)",
                             "vault: BTCUSDT move_stop futures sent (id BTCUSDT.20261118T090000Z.move_stop.futures)"]
-    assert feed.new[3] == "vault: BTCUSDT not sent (levels out of order (stop at entry after target 1))"
+    assert feed.new[3].startswith("vault: BTCUSDT LONG sent") and len(fake.ops("submit_book")) == 2   # the T1 book goes too
     feed.step(mkt(at=bar(3), t1_taken=True, price=66200.0))        # once only
     assert len(fake.ops("submit_intent")) == 3
 
@@ -613,8 +615,7 @@ def test_end_to_end_against_the_real_vault(tmp_path):
         f.step(mkt(price=65203.2, at=at(0), **btc), mkt(price=2990.0, at=at(0), **eth), now=now)
         assert f.new == ["vault: BTCUSDT LONG sent (as_of %s, duplicate)" % t[0],
                          "vault: ETHUSDT SHORT sent (as_of %s, duplicate)" % t[0]]
-        # target 1 on both: reduce (+ spot for the long) and the stop to the entry on futures; the books after T1 are not
-        # sent (the vault's strict level order refuses stop == entry)
+        # target 1 on both: reduce (+ spot for the long) and the stop to the entry on futures; the books after T1 go too
         f.step(mkt(price=66080.5, t1_taken=True, at=at(1), **btc), mkt(price=2895.0, t1_taken=True, at=at(1), **eth), now=now)
         rows = dict((r["id"], json.loads(r["body"])) for r in rig.store.q("SELECT id, body FROM intents"))
         assert rows == {
@@ -636,7 +637,9 @@ def test_end_to_end_against_the_real_vault(tmp_path):
                  "market": "futures", "symbol": "ETHUSDT", "action": "move_stop", "side": "SELL", "stop_price": "3000",
                  "reference_price": "2895"}}
         assert len([x for x in f.new if " sent (id " in x]) == 5
-        assert sum("levels out of order (stop at entry after target 1)" in x for x in f.new) == 2
+        # the books after T1 (stop == entry) are accepted by the vault since a88253e: both are sent and held with t1_taken
+        assert sum(x.startswith(("vault: BTCUSDT LONG sent", "vault: ETHUSDT SHORT sent")) for x in f.new) == 2
+        assert not any("not sent" in x for x in f.new)
         # a lost state re-sends the same ids with the same bodies: the vault's harmless duplicate
         st = json.load(open(f.state, encoding="utf-8"))
         for it in st["intents"].values():
@@ -661,7 +664,7 @@ def test_end_to_end_against_the_real_vault(tmp_path):
         assert f.new == ["vault: BTCUSDT not sent (refused 409 book_stale)", "vault: ETHUSDT not sent (refused 409 book_stale)"]
         # the vault's own address binding: the engine caller from 127.0.0.1 only (the test front is bound to it)
         audit = [r["event"] for r in rig.store.q("SELECT event FROM audit")]
-        assert audit.count("book") == 4 and audit.count("intent") == 8
+        assert audit.count("book") == 6 and audit.count("intent") == 8          # 4 books + the 2 books after T1
     finally:
         srv.shutdown()
         srv.server_close()

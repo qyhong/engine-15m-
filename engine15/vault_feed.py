@@ -160,9 +160,10 @@ def build_book(m, as_of):
     if not isinstance(opened, str) or not UTC_RE.match(opened):
         return None, "bad opened_utc"
     e, s, t1, t2 = (Decimal(lv[k]) for k in LEVELS)
-    if not ((side == "LONG" and s < e < t1 < t2) or (side == "SHORT" and t2 < t1 < e < s)):
-        if e == s and m.get("t1_taken"):
-            return None, "levels out of order (stop at entry after target 1)"
+    # after Target 1 the book's stop IS the entry: the vault accepts stop == entry exactly when t1_taken is true
+    # (vip-vault a88253e); otherwise the order is strict
+    at_entry = bool(m.get("t1_taken")) and e == s and ((side == "LONG" and e < t1 < t2) or (side == "SHORT" and t2 < t1 < e))
+    if not (at_entry or (side == "LONG" and s < e < t1 < t2) or (side == "SHORT" and t2 < t1 < e < s)):
         return None, "levels out of order"
     b = {"symbol": sym, "side": side, "entry": lv["entry"], "stop": lv["stop"], "target_1": lv["target_1"],
          "target_2": lv["target_2"], "price": price, "t1_taken": m["t1_taken"],
