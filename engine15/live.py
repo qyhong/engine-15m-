@@ -338,12 +338,21 @@ def step(log=print, fetch=True):
     if page is None:
         tm.say(log, "step")
         return out or None
+    sinfo = None
     try:                                                           # setups.json beside the page (setups.py: one call per
         from . import setups                                       # market for the Setups page); it never stops the step,
-        log(setups.line(setups.write(page, out_dir=LIVE_OUT, log=log)))    # the page or the push
+        sinfo = setups.write(page, out_dir=LIVE_OUT, log=log)      # the page or the push
+        log(setups.line(sinfo))
     except Exception as e:
         log("setups: not written (%r)" % (e,))
     tm.lap("setups")
+    if sinfo and os.environ.get("MIND15_VAULT_URL"):               # the BTC/ETH book (+ exit intents) to the VIP vault on
+        try:                                                       # 127.0.0.1, from the setups.json just written (owner's
+            from . import vault_feed                               # exception, 18 Nov 2026); it never stops the step
+            vault_feed.run(sinfo["path"], log=log)
+        except Exception as e:
+            log("vault: not sent (%r)" % (e,))
+        tm.lap("vault")
     try:                                                           # stocks.json: the S&P 500 model read on the Setups
         from . import stocks                                       # page's top five stocks (stocks.py: paper, read only,
         info = stocks.maybe_run(out, out_dir=LIVE_OUT, data_dir=os.path.dirname(STATE), log=log)   # its own files);
