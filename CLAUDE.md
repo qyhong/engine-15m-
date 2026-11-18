@@ -32,7 +32,10 @@ Quote the readings and the reason the entry gives. If the journal does not hold 
 
 ## Rules
 
-- Paper only. Nothing here places orders; do not add anything that does.
+- Paper only. Nothing here places orders; do not add anything that does. One owner-approved exception (18 Nov 2026,
+  docs/CHARTER.md): `engine15/vault_feed.py` SENDS the BTC/ETH setups book to the site's VIP key vault on the box,
+  which places real orders for opted-in accounts. Mind 15 holds no exchange key and sends no order itself; do not
+  widen this (more markets, intents that open trades, sizes) without the owner's word in this project.
 - Never describe a reading, a voice or Kronos as having a proven edge. The replay is a
   warm-up and post-mortem material, not validation (see THOUGHT_PROCESS.md).
 - `C:\Ai Dataset\eth-signal-bot` (the AI Trading Bot) is read-only from here. Its own session owns it.

@@ -306,3 +306,11 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   for charging", then, told the site serves data behind its paywall, **"Included for paying members"**: Setups is
   part of the paid plan from day one; H53's gate no longer conditions selling the Setups page (against my
   recommendation "Free for now"). S1's grading is unchanged and the Telegram signal product stays an owner-only preview.
+- **Real-money exception (owner, 18 Nov 2026, 13:29 UTC):** asked whether to lift the founding "paper only" rule so Mind 15 can send its
+  BTC/ETH setups book to the site's VIP key vault, which places REAL orders on the opted-in "helix" Binance account
+  (site session's request; owner's words there: "Let the helix user able to access the VIP feature where can automate
+  the trading... As we are experiment the binance automation trading"), the owner chose **"Yes, feed the vault
+  (experiment)"**, after being told the setups book lost about -0.03R per signal on 2023-2025 history (H55) and has 17
+  live trades. Scope: Mind 15 itself still places no order and holds no exchange key; it only SENDS its book
+  (BTCUSDT, ETHUSDT) to the vault on 127.0.0.1 each step; the vault decides and places orders. Everything else in
+  Mind 15 stays paper. A vault failure never affects Mind 15's paper books or outputs.
