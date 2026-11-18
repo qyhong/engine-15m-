@@ -89,6 +89,13 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   joblib, threadpoolctl, narwhals (installed `--no-deps`), and every engine package through a `.pth` pointing at
   `/data/venv` (numpy 2.4.5 shared). Research scripts that need sklearn/scipy run with it. Never install into `/data/venv`:
   numpy/pandas versions are part of the reading cache's signature (a change = 20-minute rebuild).
+- **VIP vault feed (18 Nov 2026, owner's exception to paper-only, docs/CHARTER.md):** `engine15/vault_feed.py`, hooked after
+  setups in `live.step()`, OFF unless `MIND15_VAULT_URL` (http://127.0.0.1:<port> only) is set in `mind15.env`. Sends the
+  BTC/ETH setups book (`submit_book`, as_of = price_bar_utc, once per bar) and exit-only intents (reduce 0.5 + futures
+  move_stop at Target 1, close at the book's exit; never `open`) to the site's VIP key vault, HMAC caller "engine", secret
+  file `MIND15_VAULT_SECRET_FILE` (proposed `/etc/mind15/vault_engine_secret`, root:mind15 0640). State
+  `data/vault_feed_state.json`. Not switched on until the AI Trading Bot's installer gives the secret path and the vault
+  fixes stop==entry after T1 and spot exits limited to the joined quantity. VIP member: `helix2d`.
 - **Backups (17 Nov 2026):** `tools/backup_pull.py`, Windows scheduled task "Mind15 server backup" daily 12:00 SGT:
   one tar over ssh of journal, out/live, data (no evcache/raw), RL forward books and logs into `backup/server/`
   (git-ignored), 7 kept, taken in a gap between steps, rejected if a bar or state file is empty.
