@@ -1,0 +1,1407 @@
+{
+ "label": "history replay with today's engine, in-sample, not a test",
+ "book": "b_trail",
+ "name": "B trail",
+ "note": "History replay with today's engine, in-sample, not a test. Paper only. Each market's book starts at $10,000 and compounds. Trades are counted in the month and year they closed; equity_end is all markets' marked equity summed at the period's last daily close. A trade open at the hand-over is closed at that close less the exit fee (why_out HANDOVER).",
+ "rule": "The main book's entries; once a trade is 1R in profit the stop trails the last confirmed 15-minute swing or 2 x ATR(14, 15m), whichever is tighter; it re-enters on its own clock.",
+ "generated_utc": "2026-11-18T17:42:47Z",
+ "version": "think15-v5.2.4",
+ "from_utc": "2020-02-05 00:00",
+ "to_utc": "2026-11-11 14:45",
+ "handover_utc": {
+  "crypto": "2026-11-11 05:45",
+  "metals": "2026-11-11 05:30",
+  "fx": "2026-11-11 05:45",
+  "energy": "2026-11-11 05:45",
+  "index": "2026-11-11 14:45"
+ },
+ "store": {
+  "crypto": {
+   "sig": "abf420acf67a2b29e17d1c90a7685cf0bf488650fd6444e914e882d5cbc42f52",
+   "updated_utc": "2026-11-18T13:32:58Z",
+   "n_store": 276072
+  },
+  "metals": {
+   "sig": "abf420acf67a2b29e17d1c90a7685cf0bf488650fd6444e914e882d5cbc42f52",
+   "updated_utc": "2026-11-18T13:47:23Z",
+   "n_store": 186244
+  },
+  "fx": {
+   "sig": "abf420acf67a2b29e17d1c90a7685cf0bf488650fd6444e914e882d5cbc42f52",
+   "updated_utc": "2026-11-18T13:47:01Z",
+   "n_store": 196459
+  },
+  "energy": {
+   "sig": "abf420acf67a2b29e17d1c90a7685cf0bf488650fd6444e914e882d5cbc42f52",
+   "updated_utc": "2026-11-18T13:47:27Z",
+   "n_store": 169194
+  },
+  "index": {
+   "sig": "abf420acf67a2b29e17d1c90a7685cf0bf488650fd6444e914e882d5cbc42f52",
+   "updated_utc": "2026-11-17T21:01:56Z",
+   "n_store": 51319
+  }
+ },
+ "b_trail": {
+  "total": {
+   "trades": 11420,
+   "won_pct": 50.1,
+   "net_usd": -47443.54,
+   "fees_usd": 105547.56,
+   "best_usd": 5034.08,
+   "worst_usd": -6032.08,
+   "markets": 8,
+   "start_usd": 80000.0,
+   "equity_end": 32556.45,
+   "max_dd_pct": -75.42,
+   "max_dd_usd": -99886.17,
+   "from_utc": "2020-02-05 00:00",
+   "to_utc": "2026-11-11 14:45"
+  },
+  "markets": {
+   "BTCUSDT": {
+    "trades": 1805,
+    "won_pct": 50.9,
+    "net_usd": -8196.52,
+    "fees_usd": 22252.65,
+    "best_usd": 3030.75,
+    "worst_usd": -4144.98,
+    "equity_end": 1803.48,
+    "max_dd_pct": -91.03,
+    "max_dd_usd": -16474.16,
+    "from_utc": "2020-02-05 00:00",
+    "to_utc": "2026-11-11 05:45",
+    "open_at_handover": "SHORT"
+   },
+   "ETHUSDT": {
+    "trades": 1967,
+    "won_pct": 50.1,
+    "net_usd": -9866.68,
+    "fees_usd": 6722.69,
+    "best_usd": 2816.09,
+    "worst_usd": -4404.59,
+    "equity_end": 133.32,
+    "max_dd_pct": -99.46,
+    "max_dd_usd": -14607.85,
+    "from_utc": "2020-02-05 00:00",
+    "to_utc": "2026-11-11 05:45",
+    "open_at_handover": "SHORT"
+   },
+   "XAUUSD": {
+    "trades": 1422,
+    "won_pct": 51.0,
+    "net_usd": -2384.31,
+    "fees_usd": 8031.85,
+    "best_usd": 1420.99,
+    "worst_usd": -544.91,
+    "equity_end": 7615.69,
+    "max_dd_pct": -73.29,
+    "max_dd_usd": -9402.68,
+    "from_utc": "2020-02-21 19:00",
+    "to_utc": "2026-11-11 05:30",
+    "open_at_handover": "SHORT"
+   },
+   "XAGUSD": {
+    "trades": 1264,
+    "won_pct": 49.1,
+    "net_usd": -7360.72,
+    "fees_usd": 5769.85,
+    "best_usd": 2098.94,
+    "worst_usd": -1328.14,
+    "equity_end": 2639.28,
+    "max_dd_pct": -87.15,
+    "max_dd_usd": -15472.55,
+    "from_utc": "2020-02-21 19:00",
+    "to_utc": "2026-11-11 05:30",
+    "open_at_handover": "SHORT"
+   },
+   "USDJPY": {
+    "trades": 1535,
+    "won_pct": 49.8,
+    "net_usd": -6333.02,
+    "fees_usd": 11013.92,
+    "best_usd": 1000.03,
+    "worst_usd": -445.13,
+    "equity_end": 3666.98,
+    "max_dd_pct": -69.93,
+    "max_dd_usd": -8275.7,
+    "from_utc": "2020-04-08 21:00",
+    "to_utc": "2026-11-11 05:45",
+    "open_at_handover": "FLAT"
+   },
+   "WTI": {
+    "trades": 1472,
+    "won_pct": 49.8,
+    "net_usd": -4376.92,
+    "fees_usd": 27974.01,
+    "best_usd": 5034.08,
+    "worst_usd": -6032.08,
+    "equity_end": 5623.08,
+    "max_dd_pct": -91.28,
+    "max_dd_usd": -48098.65,
+    "from_utc": "2020-02-27 19:00",
+    "to_utc": "2026-11-11 05:45",
+    "open_at_handover": "SHORT"
+   },
+   "BRENT": {
+    "trades": 1462,
+    "won_pct": 50.1,
+    "net_usd": -5116.63,
+    "fees_usd": 20716.55,
+    "best_usd": 4055.83,
+    "worst_usd": -3309.31,
+    "equity_end": 4883.37,
+    "max_dd_pct": -90.0,
+    "max_dd_usd": -35503.09,
+    "from_utc": "2020-02-27 19:00",
+    "to_utc": "2026-11-11 05:45",
+    "open_at_handover": "SHORT"
+   },
+   "SPX": {
+    "trades": 493,
+    "won_pct": 49.9,
+    "net_usd": -3808.75,
+    "fees_usd": 3066.04,
+    "best_usd": 712.85,
+    "worst_usd": -524.41,
+    "equity_end": 6191.25,
+    "max_dd_pct": -50.22,
+    "max_dd_usd": -6065.85,
+    "from_utc": "2021-01-12 17:30",
+    "to_utc": "2026-11-11 14:45",
+    "open_at_handover": "FLAT"
+   }
+  },
+  "years": [
+   {
+    "year": "2020",
+    "trades": 1318,
+    "net_usd": 36527.17,
+    "equity_end": 117687.61,
+    "won_pct": 50.8
+   },
+   {
+    "year": "2021",
+    "trades": 1748,
+    "net_usd": -18885.61,
+    "equity_end": 97615.79,
+    "won_pct": 48.9
+   },
+   {
+    "year": "2022",
+    "trades": 1718,
+    "net_usd": -20414.35,
+    "equity_end": 77542.04,
+    "won_pct": 50.8
+   },
+   {
+    "year": "2023",
+    "trades": 1673,
+    "net_usd": -15515.56,
+    "equity_end": 62021.3,
+    "won_pct": 48.9
+   },
+   {
+    "year": "2024",
+    "trades": 1714,
+    "net_usd": -11142.46,
+    "equity_end": 50814.45,
+    "won_pct": 50.8
+   },
+   {
+    "year": "2025",
+    "trades": 1766,
+    "net_usd": -12651.16,
+    "equity_end": 37927.96,
+    "won_pct": 50.1
+   },
+   {
+    "year": "2026",
+    "trades": 1483,
+    "net_usd": -5361.57,
+    "equity_end": 32556.45,
+    "won_pct": 51.2
+   }
+  ],
+  "months": [
+   {
+    "month": "2020-02",
+    "trades": 63,
+    "net_usd": -1052.18,
+    "equity_end": 79042.34
+   },
+   {
+    "month": "2020-03",
+    "trades": 97,
+    "net_usd": 9832.83,
+    "equity_end": 89599.15
+   },
+   {
+    "month": "2020-04",
+    "trades": 126,
+    "net_usd": 19007.65,
+    "equity_end": 110318.89
+   },
+   {
+    "month": "2020-05",
+    "trades": 121,
+    "net_usd": 6513.95,
+    "equity_end": 114818.02
+   },
+   {
+    "month": "2020-06",
+    "trades": 119,
+    "net_usd": -1301.12,
+    "equity_end": 114418.16
+   },
+   {
+    "month": "2020-07",
+    "trades": 147,
+    "net_usd": 6595.68,
+    "equity_end": 120714.05
+   },
+   {
+    "month": "2020-08",
+    "trades": 109,
+    "net_usd": 3172.13,
+    "equity_end": 122921.41
+   },
+   {
+    "month": "2020-09",
+    "trades": 127,
+    "net_usd": -5931.25,
+    "equity_end": 116779.3
+   },
+   {
+    "month": "2020-10",
+    "trades": 139,
+    "net_usd": -305.68,
+    "equity_end": 116839.11
+   },
+   {
+    "month": "2020-11",
+    "trades": 145,
+    "net_usd": 882.77,
+    "equity_end": 117272.64
+   },
+   {
+    "month": "2020-12",
+    "trades": 125,
+    "net_usd": -887.6,
+    "equity_end": 117687.61
+   },
+   {
+    "month": "2021-01",
+    "trades": 156,
+    "net_usd": -1412.06,
+    "equity_end": 114652.74
+   },
+   {
+    "month": "2021-02",
+    "trades": 144,
+    "net_usd": 13626.29,
+    "equity_end": 128560.84
+   },
+   {
+    "month": "2021-03",
+    "trades": 157,
+    "net_usd": -14796.56,
+    "equity_end": 114333.17
+   },
+   {
+    "month": "2021-04",
+    "trades": 140,
+    "net_usd": -7835.89,
+    "equity_end": 106455.82
+   },
+   {
+    "month": "2021-05",
+    "trades": 152,
+    "net_usd": -5363.78,
+    "equity_end": 100629.37
+   },
+   {
+    "month": "2021-06",
+    "trades": 154,
+    "net_usd": 2638.12,
+    "equity_end": 104028.71
+   },
+   {
+    "month": "2021-07",
+    "trades": 152,
+    "net_usd": -449.82,
+    "equity_end": 103053.68
+   },
+   {
+    "month": "2021-08",
+    "trades": 142,
+    "net_usd": -5313.49,
+    "equity_end": 97487.71
+   },
+   {
+    "month": "2021-09",
+    "trades": 145,
+    "net_usd": -848.9,
+    "equity_end": 96295.11
+   },
+   {
+    "month": "2021-10",
+    "trades": 150,
+    "net_usd": 872.34,
+    "equity_end": 98401.68
+   },
+   {
+    "month": "2021-11",
+    "trades": 152,
+    "net_usd": 5979.99,
+    "equity_end": 103483.17
+   },
+   {
+    "month": "2021-12",
+    "trades": 104,
+    "net_usd": -5981.84,
+    "equity_end": 97615.79
+   },
+   {
+    "month": "2022-01",
+    "trades": 133,
+    "net_usd": 4030.29,
+    "equity_end": 101719.88
+   },
+   {
+    "month": "2022-02",
+    "trades": 153,
+    "net_usd": 6476.93,
+    "equity_end": 108069.7
+   },
+   {
+    "month": "2022-03",
+    "trades": 154,
+    "net_usd": -9408.43,
+    "equity_end": 98178.54
+   },
+   {
+    "month": "2022-04",
+    "trades": 133,
+    "net_usd": -12356.55,
+    "equity_end": 86915.29
+   },
+   {
+    "month": "2022-05",
+    "trades": 139,
+    "net_usd": -100.63,
+    "equity_end": 86729.58
+   },
+   {
+    "month": "2022-06",
+    "trades": 149,
+    "net_usd": -1875.79,
+    "equity_end": 85180.68
+   },
+   {
+    "month": "2022-07",
+    "trades": 140,
+    "net_usd": -2274.17,
+    "equity_end": 83134.97
+   },
+   {
+    "month": "2022-08",
+    "trades": 151,
+    "net_usd": -140.25,
+    "equity_end": 82862.78
+   },
+   {
+    "month": "2022-09",
+    "trades": 139,
+    "net_usd": 5346.79,
+    "equity_end": 88477.96
+   },
+   {
+    "month": "2022-10",
+    "trades": 167,
+    "net_usd": -10999.7,
+    "equity_end": 76472.91
+   },
+   {
+    "month": "2022-11",
+    "trades": 130,
+    "net_usd": 2314.26,
+    "equity_end": 79741.69
+   },
+   {
+    "month": "2022-12",
+    "trades": 130,
+    "net_usd": -1427.09,
+    "equity_end": 77542.04
+   },
+   {
+    "month": "2023-01",
+    "trades": 143,
+    "net_usd": -4164.08,
+    "equity_end": 72816.43
+   },
+   {
+    "month": "2023-02",
+    "trades": 118,
+    "net_usd": -3436.64,
+    "equity_end": 69207.88
+   },
+   {
+    "month": "2023-03",
+    "trades": 157,
+    "net_usd": -2250.7,
+    "equity_end": 67632.45
+   },
+   {
+    "month": "2023-04",
+    "trades": 120,
+    "net_usd": -1158.74,
+    "equity_end": 66380.17
+   },
+   {
+    "month": "2023-05",
+    "trades": 139,
+    "net_usd": 2232.02,
+    "equity_end": 68652.78
+   },
+   {
+    "month": "2023-06",
+    "trades": 148,
+    "net_usd": -4578.53,
+    "equity_end": 63646.69
+   },
+   {
+    "month": "2023-07",
+    "trades": 130,
+    "net_usd": 1896.95,
+    "equity_end": 66247.17
+   },
+   {
+    "month": "2023-08",
+    "trades": 152,
+    "net_usd": -5373.32,
+    "equity_end": 60677.83
+   },
+   {
+    "month": "2023-09",
+    "trades": 139,
+    "net_usd": 2375.81,
+    "equity_end": 62692.27
+   },
+   {
+    "month": "2023-10",
+    "trades": 136,
+    "net_usd": -418.4,
+    "equity_end": 62822.04
+   },
+   {
+    "month": "2023-11",
+    "trades": 151,
+    "net_usd": 158.68,
+    "equity_end": 62890.55
+   },
+   {
+    "month": "2023-12",
+    "trades": 140,
+    "net_usd": -798.6,
+    "equity_end": 62021.3
+   },
+   {
+    "month": "2024-01",
+    "trades": 148,
+    "net_usd": -4531.81,
+    "equity_end": 57023.08
+   },
+   {
+    "month": "2024-02",
+    "trades": 139,
+    "net_usd": -44.9,
+    "equity_end": 56763.08
+   },
+   {
+    "month": "2024-03",
+    "trades": 130,
+    "net_usd": -2114.17,
+    "equity_end": 55730.89
+   },
+   {
+    "month": "2024-04",
+    "trades": 150,
+    "net_usd": 467.53,
+    "equity_end": 55343.0
+   },
+   {
+    "month": "2024-05",
+    "trades": 143,
+    "net_usd": -302.88,
+    "equity_end": 55449.03
+   },
+   {
+    "month": "2024-06",
+    "trades": 124,
+    "net_usd": -570.03,
+    "equity_end": 54710.18
+   },
+   {
+    "month": "2024-07",
+    "trades": 182,
+    "net_usd": -766.02,
+    "equity_end": 53959.56
+   },
+   {
+    "month": "2024-08",
+    "trades": 145,
+    "net_usd": 128.52,
+    "equity_end": 54869.44
+   },
+   {
+    "month": "2024-09",
+    "trades": 134,
+    "net_usd": 1496.29,
+    "equity_end": 55495.28
+   },
+   {
+    "month": "2024-10",
+    "trades": 159,
+    "net_usd": -40.31,
+    "equity_end": 55377.38
+   },
+   {
+    "month": "2024-11",
+    "trades": 132,
+    "net_usd": -1586.25,
+    "equity_end": 54285.16
+   },
+   {
+    "month": "2024-12",
+    "trades": 128,
+    "net_usd": -3278.41,
+    "equity_end": 50814.45
+   },
+   {
+    "month": "2025-01",
+    "trades": 142,
+    "net_usd": -26.11,
+    "equity_end": 49946.89
+   },
+   {
+    "month": "2025-02",
+    "trades": 158,
+    "net_usd": -2289.42,
+    "equity_end": 48162.41
+   },
+   {
+    "month": "2025-03",
+    "trades": 124,
+    "net_usd": -612.49,
+    "equity_end": 47644.23
+   },
+   {
+    "month": "2025-04",
+    "trades": 124,
+    "net_usd": 678.66,
+    "equity_end": 48433.67
+   },
+   {
+    "month": "2025-05",
+    "trades": 151,
+    "net_usd": -4237.06,
+    "equity_end": 44085.89
+   },
+   {
+    "month": "2025-06",
+    "trades": 147,
+    "net_usd": -1356.98,
+    "equity_end": 42874.12
+   },
+   {
+    "month": "2025-07",
+    "trades": 166,
+    "net_usd": -1076.45,
+    "equity_end": 41642.34
+   },
+   {
+    "month": "2025-08",
+    "trades": 133,
+    "net_usd": -3130.43,
+    "equity_end": 38509.91
+   },
+   {
+    "month": "2025-09",
+    "trades": 170,
+    "net_usd": -687.72,
+    "equity_end": 38004.44
+   },
+   {
+    "month": "2025-10",
+    "trades": 159,
+    "net_usd": 373.6,
+    "equity_end": 38012.34
+   },
+   {
+    "month": "2025-11",
+    "trades": 136,
+    "net_usd": -886.46,
+    "equity_end": 37703.7
+   },
+   {
+    "month": "2025-12",
+    "trades": 156,
+    "net_usd": 599.7,
+    "equity_end": 37927.96
+   },
+   {
+    "month": "2026-01",
+    "trades": 147,
+    "net_usd": 2645.84,
+    "equity_end": 40624.12
+   },
+   {
+    "month": "2026-02",
+    "trades": 105,
+    "net_usd": -1879.09,
+    "equity_end": 38899.17
+   },
+   {
+    "month": "2026-03",
+    "trades": 140,
+    "net_usd": 4778.08,
+    "equity_end": 42626.23
+   },
+   {
+    "month": "2026-04",
+    "trades": 118,
+    "net_usd": -1008.88,
+    "equity_end": 42656.61
+   },
+   {
+    "month": "2026-05",
+    "trades": 158,
+    "net_usd": -3797.38,
+    "equity_end": 38778.31
+   },
+   {
+    "month": "2026-06",
+    "trades": 153,
+    "net_usd": 3097.37,
+    "equity_end": 42147.05
+   },
+   {
+    "month": "2026-07",
+    "trades": 169,
+    "net_usd": -4134.25,
+    "equity_end": 38059.4
+   },
+   {
+    "month": "2026-08",
+    "trades": 131,
+    "net_usd": -2956.66,
+    "equity_end": 34776.14
+   },
+   {
+    "month": "2026-09",
+    "trades": 139,
+    "net_usd": -860.14,
+    "equity_end": 33815.59
+   },
+   {
+    "month": "2026-10",
+    "trades": 166,
+    "net_usd": 918.58,
+    "equity_end": 34869.72
+   },
+   {
+    "month": "2026-11",
+    "trades": 57,
+    "net_usd": -2165.05,
+    "equity_end": 32556.45
+   }
+  ]
+ },
+ "main": {
+  "total": {
+   "trades": 987,
+   "won_pct": 17.8,
+   "net_usd": 187617.35,
+   "fees_usd": 43226.16,
+   "best_usd": 90025.94,
+   "worst_usd": -12257.05,
+   "markets": 8,
+   "start_usd": 80000.0,
+   "equity_end": 267617.35,
+   "max_dd_pct": -38.12,
+   "max_dd_usd": -136237.52,
+   "from_utc": "2020-02-05 00:00",
+   "to_utc": "2026-11-11 14:45"
+  },
+  "markets": {
+   "BTCUSDT": {
+    "trades": 203,
+    "won_pct": 17.2,
+    "net_usd": 22970.37,
+    "fees_usd": 6708.85,
+    "best_usd": 21217.78,
+    "worst_usd": -1929.82,
+    "equity_end": 32970.37,
+    "max_dd_pct": -79.21,
+    "max_dd_usd": -24541.43,
+    "from_utc": "2020-02-05 00:00",
+    "to_utc": "2026-11-11 05:45",
+    "open_at_handover": "SHORT"
+   },
+   "ETHUSDT": {
+    "trades": 190,
+    "won_pct": 21.1,
+    "net_usd": 115525.53,
+    "fees_usd": 27170.82,
+    "best_usd": 90025.94,
+    "worst_usd": -12257.05,
+    "equity_end": 125525.53,
+    "max_dd_pct": -61.63,
+    "max_dd_usd": -131889.74,
+    "from_utc": "2020-02-05 00:00",
+    "to_utc": "2026-11-11 05:45",
+    "open_at_handover": "SHORT"
+   },
+   "XAUUSD": {
+    "trades": 106,
+    "won_pct": 17.0,
+    "net_usd": 17148.58,
+    "fees_usd": 914.32,
+    "best_usd": 24185.98,
+    "worst_usd": -612.63,
+    "equity_end": 27148.58,
+    "max_dd_pct": -64.18,
+    "max_dd_usd": -14888.98,
+    "from_utc": "2020-02-21 19:00",
+    "to_utc": "2026-11-11 05:30",
+    "open_at_handover": "SHORT"
+   },
+   "XAGUSD": {
+    "trades": 118,
+    "won_pct": 11.9,
+    "net_usd": -1527.18,
+    "fees_usd": 826.94,
+    "best_usd": 5440.16,
+    "worst_usd": -376.85,
+    "equity_end": 8472.82,
+    "max_dd_pct": -79.39,
+    "max_dd_usd": -15729.23,
+    "from_utc": "2020-02-21 19:00",
+    "to_utc": "2026-11-11 05:30",
+    "open_at_handover": "SHORT"
+   },
+   "USDJPY": {
+    "trades": 99,
+    "won_pct": 14.1,
+    "net_usd": 6927.07,
+    "fees_usd": 1980.16,
+    "best_usd": 17081.5,
+    "worst_usd": -672.87,
+    "equity_end": 16927.07,
+    "max_dd_pct": -58.19,
+    "max_dd_usd": -22544.76,
+    "from_utc": "2020-04-08 21:00",
+    "to_utc": "2026-11-11 05:45",
+    "open_at_handover": "LONG"
+   },
+   "WTI": {
+    "trades": 124,
+    "won_pct": 18.5,
+    "net_usd": 10768.83,
+    "fees_usd": 3058.44,
+    "best_usd": 16881.0,
+    "worst_usd": -3376.43,
+    "equity_end": 20768.83,
+    "max_dd_pct": -68.37,
+    "max_dd_usd": -38837.28,
+    "from_utc": "2020-02-27 19:00",
+    "to_utc": "2026-11-11 05:45",
+    "open_at_handover": "LONG"
+   },
+   "BRENT": {
+    "trades": 110,
+    "won_pct": 20.9,
+    "net_usd": 9026.82,
+    "fees_usd": 2361.82,
+    "best_usd": 12490.85,
+    "worst_usd": -1518.16,
+    "equity_end": 19026.82,
+    "max_dd_pct": -68.69,
+    "max_dd_usd": -35474.43,
+    "from_utc": "2020-02-27 19:00",
+    "to_utc": "2026-11-11 05:45",
+    "open_at_handover": "LONG"
+   },
+   "SPX": {
+    "trades": 37,
+    "won_pct": 24.3,
+    "net_usd": 6777.33,
+    "fees_usd": 204.81,
+    "best_usd": 5207.74,
+    "worst_usd": -647.69,
+    "equity_end": 16777.33,
+    "max_dd_pct": -31.0,
+    "max_dd_usd": -3836.71,
+    "from_utc": "2021-01-12 17:30",
+    "to_utc": "2026-11-11 14:45",
+    "open_at_handover": "LONG"
+   }
+  },
+  "years": [
+   {
+    "year": "2020",
+    "trades": 185,
+    "net_usd": 41949.42,
+    "equity_end": 145558.73,
+    "won_pct": 25.9
+   },
+   {
+    "year": "2021",
+    "trades": 211,
+    "net_usd": 31325.74,
+    "equity_end": 169570.35,
+    "won_pct": 14.2
+   },
+   {
+    "year": "2022",
+    "trades": 79,
+    "net_usd": 22578.32,
+    "equity_end": 226857.58,
+    "won_pct": 21.5
+   },
+   {
+    "year": "2023",
+    "trades": 150,
+    "net_usd": 26399.56,
+    "equity_end": 256156.48,
+    "won_pct": 16.0
+   },
+   {
+    "year": "2024",
+    "trades": 122,
+    "net_usd": 40056.99,
+    "equity_end": 272851.72,
+    "won_pct": 14.8
+   },
+   {
+    "year": "2025",
+    "trades": 125,
+    "net_usd": -41963.68,
+    "equity_end": 277697.99,
+    "won_pct": 11.2
+   },
+   {
+    "year": "2026",
+    "trades": 115,
+    "net_usd": 67271.0,
+    "equity_end": 267617.35,
+    "won_pct": 21.7
+   }
+  ],
+  "months": [
+   {
+    "month": "2020-02",
+    "trades": 31,
+    "net_usd": -2960.35,
+    "equity_end": 81410.62
+   },
+   {
+    "month": "2020-03",
+    "trades": 25,
+    "net_usd": 4286.58,
+    "equity_end": 92341.98
+   },
+   {
+    "month": "2020-04",
+    "trades": 25,
+    "net_usd": 10261.4,
+    "equity_end": 108149.12
+   },
+   {
+    "month": "2020-05",
+    "trades": 13,
+    "net_usd": 7793.86,
+    "equity_end": 118786.45
+   },
+   {
+    "month": "2020-06",
+    "trades": 5,
+    "net_usd": -982.15,
+    "equity_end": 123920.6
+   },
+   {
+    "month": "2020-07",
+    "trades": 3,
+    "net_usd": -438.11,
+    "equity_end": 140233.38
+   },
+   {
+    "month": "2020-08",
+    "trades": 0,
+    "net_usd": 0.0,
+    "equity_end": 151142.57
+   },
+   {
+    "month": "2020-09",
+    "trades": 28,
+    "net_usd": 22782.38,
+    "equity_end": 127507.42
+   },
+   {
+    "month": "2020-10",
+    "trades": 22,
+    "net_usd": -8404.65,
+    "equity_end": 126387.06
+   },
+   {
+    "month": "2020-11",
+    "trades": 20,
+    "net_usd": 14406.38,
+    "equity_end": 137945.03
+   },
+   {
+    "month": "2020-12",
+    "trades": 13,
+    "net_usd": -4795.93,
+    "equity_end": 145558.73
+   },
+   {
+    "month": "2021-01",
+    "trades": 23,
+    "net_usd": 14495.08,
+    "equity_end": 153760.65
+   },
+   {
+    "month": "2021-02",
+    "trades": 14,
+    "net_usd": 9454.17,
+    "equity_end": 182770.13
+   },
+   {
+    "month": "2021-03",
+    "trades": 32,
+    "net_usd": -15923.01,
+    "equity_end": 160293.04
+   },
+   {
+    "month": "2021-04",
+    "trades": 18,
+    "net_usd": 2283.29,
+    "equity_end": 169730.65
+   },
+   {
+    "month": "2021-05",
+    "trades": 16,
+    "net_usd": 26144.36,
+    "equity_end": 193176.55
+   },
+   {
+    "month": "2021-06",
+    "trades": 11,
+    "net_usd": 10103.26,
+    "equity_end": 198771.85
+   },
+   {
+    "month": "2021-07",
+    "trades": 18,
+    "net_usd": -6042.68,
+    "equity_end": 195685.08
+   },
+   {
+    "month": "2021-08",
+    "trades": 17,
+    "net_usd": 14531.27,
+    "equity_end": 200852.43
+   },
+   {
+    "month": "2021-09",
+    "trades": 19,
+    "net_usd": -25059.49,
+    "equity_end": 186663.39
+   },
+   {
+    "month": "2021-10",
+    "trades": 13,
+    "net_usd": -3779.38,
+    "equity_end": 199535.32
+   },
+   {
+    "month": "2021-11",
+    "trades": 17,
+    "net_usd": 5338.89,
+    "equity_end": 175074.51
+   },
+   {
+    "month": "2021-12",
+    "trades": 13,
+    "net_usd": -220.01,
+    "equity_end": 169570.35
+   },
+   {
+    "month": "2022-01",
+    "trades": 9,
+    "net_usd": -205.41,
+    "equity_end": 189470.62
+   },
+   {
+    "month": "2022-02",
+    "trades": 6,
+    "net_usd": 817.08,
+    "equity_end": 193862.25
+   },
+   {
+    "month": "2022-03",
+    "trades": 5,
+    "net_usd": 9698.29,
+    "equity_end": 197817.87
+   },
+   {
+    "month": "2022-04",
+    "trades": 6,
+    "net_usd": -5534.37,
+    "equity_end": 209674.19
+   },
+   {
+    "month": "2022-05",
+    "trades": 3,
+    "net_usd": 176.32,
+    "equity_end": 232575.74
+   },
+   {
+    "month": "2022-06",
+    "trades": 5,
+    "net_usd": -240.15,
+    "equity_end": 247037.3
+   },
+   {
+    "month": "2022-07",
+    "trades": 3,
+    "net_usd": 5558.24,
+    "equity_end": 225422.23
+   },
+   {
+    "month": "2022-08",
+    "trades": 11,
+    "net_usd": 2687.0,
+    "equity_end": 227650.28
+   },
+   {
+    "month": "2022-09",
+    "trades": 1,
+    "net_usd": -208.42,
+    "equity_end": 241815.99
+   },
+   {
+    "month": "2022-10",
+    "trades": 14,
+    "net_usd": -4794.42,
+    "equity_end": 222387.56
+   },
+   {
+    "month": "2022-11",
+    "trades": 12,
+    "net_usd": -1212.8,
+    "equity_end": 222937.77
+   },
+   {
+    "month": "2022-12",
+    "trades": 4,
+    "net_usd": 15836.98,
+    "equity_end": 226857.58
+   },
+   {
+    "month": "2023-01",
+    "trades": 10,
+    "net_usd": 39509.13,
+    "equity_end": 239995.61
+   },
+   {
+    "month": "2023-02",
+    "trades": 16,
+    "net_usd": 4335.99,
+    "equity_end": 225716.92
+   },
+   {
+    "month": "2023-03",
+    "trades": 18,
+    "net_usd": -8502.36,
+    "equity_end": 234897.34
+   },
+   {
+    "month": "2023-04",
+    "trades": 17,
+    "net_usd": 7370.66,
+    "equity_end": 225863.56
+   },
+   {
+    "month": "2023-05",
+    "trades": 19,
+    "net_usd": -20006.89,
+    "equity_end": 212765.16
+   },
+   {
+    "month": "2023-06",
+    "trades": 15,
+    "net_usd": -5502.53,
+    "equity_end": 211987.38
+   },
+   {
+    "month": "2023-07",
+    "trades": 6,
+    "net_usd": -1644.95,
+    "equity_end": 210822.85
+   },
+   {
+    "month": "2023-08",
+    "trades": 6,
+    "net_usd": 257.06,
+    "equity_end": 217776.18
+   },
+   {
+    "month": "2023-09",
+    "trades": 13,
+    "net_usd": -1814.82,
+    "equity_end": 224033.41
+   },
+   {
+    "month": "2023-10",
+    "trades": 13,
+    "net_usd": 6320.33,
+    "equity_end": 230900.11
+   },
+   {
+    "month": "2023-11",
+    "trades": 11,
+    "net_usd": 663.29,
+    "equity_end": 240020.8
+   },
+   {
+    "month": "2023-12",
+    "trades": 6,
+    "net_usd": 5414.64,
+    "equity_end": 256156.48
+   },
+   {
+    "month": "2024-01",
+    "trades": 7,
+    "net_usd": -1564.54,
+    "equity_end": 248848.39
+   },
+   {
+    "month": "2024-02",
+    "trades": 9,
+    "net_usd": -2502.37,
+    "equity_end": 314952.1
+   },
+   {
+    "month": "2024-03",
+    "trades": 14,
+    "net_usd": 91453.36,
+    "equity_end": 317225.36
+   },
+   {
+    "month": "2024-04",
+    "trades": 12,
+    "net_usd": -33229.68,
+    "equity_end": 288124.88
+   },
+   {
+    "month": "2024-05",
+    "trades": 12,
+    "net_usd": -9721.23,
+    "equity_end": 281924.96
+   },
+   {
+    "month": "2024-06",
+    "trades": 11,
+    "net_usd": -9728.08,
+    "equity_end": 260294.48
+   },
+   {
+    "month": "2024-07",
+    "trades": 17,
+    "net_usd": -20463.23,
+    "equity_end": 233461.97
+   },
+   {
+    "month": "2024-08",
+    "trades": 10,
+    "net_usd": 14103.11,
+    "equity_end": 256556.6
+   },
+   {
+    "month": "2024-09",
+    "trades": 1,
+    "net_usd": -358.08,
+    "equity_end": 258707.4
+   },
+   {
+    "month": "2024-10",
+    "trades": 17,
+    "net_usd": -18352.42,
+    "equity_end": 234782.45
+   },
+   {
+    "month": "2024-11",
+    "trades": 3,
+    "net_usd": -8893.61,
+    "equity_end": 272408.46
+   },
+   {
+    "month": "2024-12",
+    "trades": 9,
+    "net_usd": 39313.76,
+    "equity_end": 272851.72
+   },
+   {
+    "month": "2025-01",
+    "trades": 23,
+    "net_usd": -27699.01,
+    "equity_end": 237046.02
+   },
+   {
+    "month": "2025-02",
+    "trades": 8,
+    "net_usd": -4686.34,
+    "equity_end": 266533.44
+   },
+   {
+    "month": "2025-03",
+    "trades": 2,
+    "net_usd": 4840.78,
+    "equity_end": 279665.09
+   },
+   {
+    "month": "2025-04",
+    "trades": 5,
+    "net_usd": 1571.37,
+    "equity_end": 294985.03
+   },
+   {
+    "month": "2025-05",
+    "trades": 15,
+    "net_usd": 4317.66,
+    "equity_end": 253025.96
+   },
+   {
+    "month": "2025-06",
+    "trades": 11,
+    "net_usd": -17047.37,
+    "equity_end": 226585.57
+   },
+   {
+    "month": "2025-07",
+    "trades": 19,
+    "net_usd": -10820.31,
+    "equity_end": 257900.06
+   },
+   {
+    "month": "2025-08",
+    "trades": 18,
+    "net_usd": 24738.01,
+    "equity_end": 256708.72
+   },
+   {
+    "month": "2025-09",
+    "trades": 19,
+    "net_usd": -1710.45,
+    "equity_end": 239958.62
+   },
+   {
+    "month": "2025-10",
+    "trades": 5,
+    "net_usd": -15468.02,
+    "equity_end": 243062.61
+   },
+   {
+    "month": "2025-11",
+    "trades": 0,
+    "net_usd": 0.0,
+    "equity_end": 272263.69
+   },
+   {
+    "month": "2025-12",
+    "trades": 0,
+    "net_usd": 0.0,
+    "equity_end": 277697.99
+   },
+   {
+    "month": "2026-01",
+    "trades": 11,
+    "net_usd": 11745.0,
+    "equity_end": 290884.7
+   },
+   {
+    "month": "2026-02",
+    "trades": 7,
+    "net_usd": 870.07,
+    "equity_end": 310744.45
+   },
+   {
+    "month": "2026-03",
+    "trades": 1,
+    "net_usd": 1900.01,
+    "equity_end": 320693.06
+   },
+   {
+    "month": "2026-04",
+    "trades": 7,
+    "net_usd": 29404.94,
+    "equity_end": 315106.24
+   },
+   {
+    "month": "2026-05",
+    "trades": 17,
+    "net_usd": 13285.92,
+    "equity_end": 303797.84
+   },
+   {
+    "month": "2026-06",
+    "trades": 5,
+    "net_usd": 16675.09,
+    "equity_end": 337851.31
+   },
+   {
+    "month": "2026-07",
+    "trades": 6,
+    "net_usd": -4416.74,
+    "equity_end": 308794.17
+   },
+   {
+    "month": "2026-08",
+    "trades": 17,
+    "net_usd": -7308.16,
+    "equity_end": 281481.67
+   },
+   {
+    "month": "2026-09",
+    "trades": 21,
+    "net_usd": -7329.91,
+    "equity_end": 292693.7
+   },
+   {
+    "month": "2026-10",
+    "trades": 10,
+    "net_usd": -746.01,
+    "equity_end": 281060.44
+   },
+   {
+    "month": "2026-11",
+    "trades": 13,
+    "net_usd": 13190.79,
+    "equity_end": 267617.35
+   }
+  ]
+ },
+ "vs_main_usd": -235060.89,
+ "h36_reference": {
+  "source": "research/out/exits/trail_study.json (H36, written 13 Nov 2026 04:30 UTC)",
+  "version": "think15-v5.1",
+  "span": "first session with odds (Feb 2020; SPX Jan 2021) to 13 Nov 2026 ~04:00 UTC",
+  "b_trail_net_usd": -48808.27,
+  "b_trail_trades": 11663,
+  "main_net_usd": 329439.1,
+  "main_trades": 1322
+ }
+}

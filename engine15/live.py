@@ -361,6 +361,14 @@ def step(log=print, fetch=True):
     except Exception as e:
         log("stocks: not written (%r)" % (e,))
     tm.lap("stocks")
+    try:                                                           # b_trail_book.json: the B trail shadow book's history
+        from . import book_view                                    # replay and live record in one file (book_view.py:
+        info = book_view.write(page, out_dir=LIVE_OUT, live_dir=LIVE_OUT, log=log)   # paper, read only); never stops
+        if info:                                                   # the step, the page or the push (None: no page or no
+            log(book_view.line(info))                              # B trail book on it, no line)
+    except Exception as e:
+        log("b_trail book: not written (%r)" % (e,))
+    tm.lap("book view")
     from . import push
     if push.enabled():                                             # to the web server, only when switched on
         log("web push: %s" % push.push(page)[1])
