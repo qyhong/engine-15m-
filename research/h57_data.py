@@ -317,12 +317,23 @@ def fetch(t, first):
     days = sorted(set(pd.to_datetime([r[0] for r in hours], unit="ms", utc=True).normalize()))
     days = [d for d in days if pd.Timestamp(MINUTES_FROM, tz="UTC") <= d < pd.Timestamp(SEAL, tz="UTC")]
     log("%s: %d hourly rows; %d minute days to fetch" % (t, len(hours), len(days)))
+    failed = []
     for k, d in enumerate(days):
-        raw, ok = cached(min_url(instrument(t), d), min_path(t, d))
-        if not ok:
-            raise RuntimeError("%s %s: minute file did not load" % (t, d.date()))
+        raw, ok = cached(min_url(instrument(t), d), min_path(t, d), attempts=3)
+        if not ok:                                   # Dukascopy sometimes answers 503 for a while: later pass
+            failed.append(d)
         if k % 250 == 0:
             log("%s: %d / %d days (%s) %s" % (t, k, len(days), d.date(), STATS))
+    for p in range(4):                               # the days that did not load, again, after a pause
+        if not failed:
+            break
+        log("%s: %d minute days did not load; pass %d after a pause" % (t, len(failed), p + 2))
+        time.sleep(120)
+        failed = [d for d in failed if not cached(min_url(instrument(t), d), min_path(t, d), attempts=3)[1]]
+    missing = [str(d.date()) for d in failed]
+    if missing:
+        log("%s: %d minute days never loaded (left absent): %s" % (t, len(missing), missing[:20]))
+    return missing
 
 
 # ------------------------------------------------------------------ Yahoo daily (scale and split check only)
@@ -447,9 +458,9 @@ def main(argv=None):
         with open(path, encoding="utf-8") as fh:
             doc = json.load(fh)
     for t in tick:
-        if cmd == "fetch":
-            fetch(t, p["first_month"][t])
+        missing = fetch(t, p["first_month"][t]) if cmd == "fetch" else (doc.get(t) or {}).get("minute_days_missing", [])
         doc[t] = build(t, p["first_month"][t])
+        doc[t]["minute_days_missing"] = missing
         with open(path + ".tmp", "w", encoding="utf-8") as fh:
             json.dump(doc, fh, indent=1)
         os.replace(path + ".tmp", path)
