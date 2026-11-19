@@ -10,7 +10,9 @@ touches; they do not count against the process's own memory) and computes, each 
     the daily / weekly source files, the macro tape and the release calendar, the owner's answers,
   * from the first session whose bars, funding or live reads differ from what was stored,
   * once a UTC day, every row the step's learning reads (the training rows since train_floor and
-    every session since the birth date), compared with what is stored and rewritten where changed.
+    every session since the birth date), compared with what is stored and rewritten where changed:
+    the changed rows of a piece in one write and one flush, and an asset that would write more than
+    CHECK_MAX_BYTES or take more than CHECK_MAX_SECONDS stops the group's check until the next day.
 Those rows come from evidence.build(..., rows=...), the replay's own code: each reading is still
 computed over all history (several have unbounded memory: the seeded EMAs of the weekly trend
 score, the support/resistance list), then only the requested rows are kept.
@@ -46,6 +48,9 @@ GROW_ROWS = 96 * 120        # free rows kept at the end of each file (about four
 HASH_BLOCK = 4096           # rows per fingerprint block of the bars
 MISS = {-1: None, -2: "nan", -3: "na"}   # codes of missing values in a text column
 LAYOUT = 2                  # 1: X.bin beside the readings (until 17 Nov 2026); 2: X rebuilt from the readings
+PAGE = 4096                 # a memory map is written back to the disk in pages of this size
+CHECK_MAX_BYTES = 2 << 30   # the daily check of one asset stops past this many bytes written (pages) ...
+CHECK_MAX_SECONDS = 300     # ... or past this many seconds comparing and writing (it retries the next UTC day)
 
 
 class Rebuild(Exception):
@@ -395,13 +400,60 @@ class AssetStore:
         k = len(frame)
         if start > m["n"]:
             raise Rebuild("gap: writing row %d with %d stored" % (start, m["n"]))
+        self._fits(frame, X)
+        end = start + k
+        if end > m["cap"]:
+            self.grow(end)
+        self._put(slice(start, end), max(start, m["n"]), times_ms, frame, X, ready, "rows %d .. %d" % (start, end - 1))
+        m["n"] = max(m["n"], end) if overwrite else end
+        self.close()
+
+    def write_rows(self, rows, times_ms, frame, X, ready):
+        """Rewrite some stored rows in place (sorted row numbers, all below n; frame/X/ready: their
+        rows in that order) in ONE pass: every column written at those rows, the feature matrix checked
+        bit for bit once for all of them, one flush. The daily check uses it for every changed row of a
+        piece at once: what reaches the disk is the pages those rows touch, once, not one flush of every
+        file per run of changed rows. -> the bytes written (dirty_bytes)."""
+        m = self.meta
+        rows = np.asarray(rows, dtype=np.int64)
+        if not len(rows):
+            return 0
+        if len(frame) != len(rows) or rows[0] < 0 or rows[-1] >= m["n"] or (np.diff(rows) <= 0).any():
+            raise ValueError("write_rows: sorted distinct stored rows, one per frame row")
+        self._fits(frame, X)
+        cost = self.dirty_bytes(rows)
+        self._put(rows, m["n"], times_ms, frame, X, ready, "%d rows %d .. %d" % (len(rows), rows[0], rows[-1]))
+        self.close()
+        return cost
+
+    def dirty_bytes(self, rows):
+        """About what writing these rows (sorted) puts on the disk: every file holds a row of each of
+        its columns in a different page, and a flush writes whole pages."""
+        rows = np.asarray(rows, dtype=np.int64)
+        if not len(rows):
+            return 0
+        count = dict((k, 0) for k in self.KINDS)
+        for _, kind, _, _ in self.meta["cols"]:
+            if kind in count:
+                count[kind] += 1
+        total = 0
+        for isz, cols in [(8, 1), (1, 1)] + [(np.dtype(dt).itemsize, count[k]) for k, dt in self.KINDS.items()]:
+            if cols:
+                total += cols * len(np.unique(rows * isz // PAGE)) * PAGE
+        return int(total)
+
+    def _fits(self, frame, X):
+        m = self.meta
         if list(frame.columns) != [c[0] for c in m["cols"]]:
             raise Rebuild("columns changed")
         if X.shape[1] != m["n_x"]:
             raise Rebuild("feature matrix width changed")
-        end = start + k
-        if end > m["cap"]:
-            self.grow(end)
+
+    def _put(self, where, fill_to, times_ms, frame, X, ready, what):
+        """Every column, the times and the ready flags at `where` (a slice or sorted row numbers), then
+        the bit-for-bit check of the feature matrix there. fill_to: a "no read" column that starts
+        reading gets a slot whose rows 0 .. fill_to-1 are NaN (still "no read") before its rows here."""
+        m = self.meta
         for spec in m["cols"]:
             c, kind, slot, dts = spec
             s = frame[c]
@@ -416,25 +468,23 @@ class AssetStore:
                     slot = m["used"][kind]
                     m["used"][kind] += 1
                     w = self.mm(kind, "r+")
-                    w[slot, :max(start, m["n"])] = np.nan        # every other stored row of it: still "no read"
+                    w[slot, :fill_to] = np.nan                   # every other stored row of it: still "no read"
                     spec[1], spec[2] = kind, slot
                 else:
                     continue
             w = self.mm(kind, "r+")
             if kind == "code":
-                w[slot, start:end] = self._encode(c, s)
+                w[slot, where] = self._encode(c, s)
             else:
-                w[slot, start:end] = s.to_numpy(dtype=self.KINDS[kind])
-        self.mm("times", "r+")[start:end] = times_ms
-        self.mm("ready", "r+")[start:end] = ready
+                w[slot, where] = s.to_numpy(dtype=self.KINDS[kind])
+        self.mm("times", "r+")[where] = times_ms
+        self.mm("ready", "r+")[where] = ready
         want = np.ascontiguousarray(X, dtype=np.float64)
-        got = self._features("r+")._take(slice(start, end))
+        got = self._features("r+")._take(where)
         if got.shape != want.shape or not np.array_equal(got.view(np.int64), want.view(np.int64)):
             self.close()
-            raise StoreError("rows %d .. %d: the stored readings do not give back the feature matrix" % (start, end - 1))
+            raise StoreError("%s: the stored readings do not give back the feature matrix" % what)
         del got, want
-        m["n"] = max(m["n"], end) if overwrite else end
-        self.close()
 
     def _encode(self, col, s):
         table = self.meta["tables"].setdefault(col, [])
@@ -638,8 +688,13 @@ def update(group, bars, funding, live, cfg, log=print, root=None, force_check=Fa
                 extra = np.union1d(lat[lat < R], np.arange(min(birth, R), R))
             want = np.union1d(extra, rows)
             changed = dict((a, 0) for a in assets)
+            spent, took, stop = dict((a, 0) for a in assets), dict((a, 0.0) for a in assets), None
             for p0 in range(0, len(want), CHUNK_ROWS):           # in pieces, so a long catch-up stays small
                 piece = want[p0:p0 + CHUNK_ROWS]
+                if stop is not None:                             # the check stopped: only the refresh rows still
+                    piece = piece[piece >= R]
+                    if not len(piece):
+                        continue
                 te = time.perf_counter()
                 ev = evidence.build(bars, funding, live, rows=piece)
                 rep["evidence_s"] = round(rep.get("evidence_s", 0.0) + time.perf_counter() - te, 2)   # for the step log
@@ -648,7 +703,8 @@ def update(group, bars, funding, live, cfg, log=print, root=None, force_check=Fa
                     fr = ev[a]
                     Xr, rd = evidence.matrix(fr)
                     st = stores[a]
-                    if old_part.any():
+                    if old_part.any() and stop is None:
+                        tc = time.perf_counter()
                         rr = piece[old_part]
                         j = np.flatnonzero(old_part)
                         old = st.rows_frame(rr)
@@ -656,12 +712,24 @@ def update(group, bars, funding, live, cfg, log=print, root=None, force_check=Fa
                         ne = st.ready()[rr] != rd[j]             # (X is made of the columns: no column changed,
                         for c in old.columns:                    # no row of X changed)
                             ne |= ~_col_equal(old[c], newf[c])
-                        for r0, r1 in _runs([int(x) for x in rr[ne]]):
-                            jj = np.searchsorted(piece, np.arange(r0, r1))
-                            _overwrite(st, r0, fr.iloc[jj], Xr[jj], rd[jj], cms[r0:r1])
-                        changed[a] += int(ne.sum())
-                        rep["checked"] = True
                         del old, newf
+                        jj = j[ne]                               # every changed row of the piece: ONE write, one flush
+                        cost = st.dirty_bytes(piece[jj])
+                        took[a] += time.perf_counter() - tc
+                        if took[a] > CHECK_MAX_SECONDS:
+                            stop = "%s: %.0f s comparing and writing, over the %d s budget" % (a, took[a], CHECK_MAX_SECONDS)
+                        elif spent[a] + cost > CHECK_MAX_BYTES:
+                            stop = "%s: %.2f GB to write, over the %.2f GB budget" % (a, (spent[a] + cost) / 2.0 ** 30,
+                                                                                   CHECK_MAX_BYTES / 2.0 ** 30)
+                        else:
+                            tc = time.perf_counter()
+                            spent[a] += st.write_rows(piece[jj], cms[piece[jj]], fr.iloc[jj], Xr[jj], rd[jj])
+                            took[a] += time.perf_counter() - tc
+                            changed[a] += int(ne.sum())
+                        rep["checked"] = True
+                        if stop is not None:
+                            log("%s: daily check stopped (%s), will retry tomorrow" % (group, stop))
+                            rep["check_stopped"] = stop
                     j = np.flatnonzero(~old_part)
                     if len(j):
                         start = int(piece[j[0]])
@@ -717,22 +785,6 @@ def _col_equal(a, b):
         return x == y
     sa, sb = pd.Series(a.to_numpy(dtype=object)), pd.Series(b.to_numpy(dtype=object))
     return ((sa == sb) | (sa.isna() & sb.isna())).to_numpy(dtype=bool)
-
-
-def _runs(rows):
-    """Sorted row numbers -> [(first, last + 1)] of consecutive runs."""
-    out = []
-    for r in rows:
-        if out and r == out[-1][1]:
-            out[-1][1] = r + 1
-        else:
-            out.append([r, r + 1])
-    return [tuple(x) for x in out]
-
-
-def _overwrite(st, r0, fr, X, rd, tms):
-    """Rewrite stored rows r0 .. r0+len(fr)-1 in place."""
-    st.write(r0, tms, fr, X, rd, overwrite=True)
 
 
 def _build_all(group, stores, bars, funding, live, common, log):
