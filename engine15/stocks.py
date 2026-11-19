@@ -44,7 +44,7 @@ from datetime import datetime, timedelta, timezone
 import numpy as np
 import pandas as pd
 
-from . import data, extdata, labels, model, policy
+from . import data, extdata, labels, market_calendar, model, policy
 from .config import CFG, DATA_DIR, JOURNAL_DIR, OUT_DIR, voting_for
 
 SCHEMA = 1
@@ -235,7 +235,7 @@ def last_session_bar_ms(now):
     """Open time (ms) of the last 15m slot of the US cash session that has closed by `now`, or None."""
     end = pd.Timestamp(int(now // 900) * 900 - 900, unit="s", tz="UTC")
     grid = pd.date_range(end - pd.Timedelta(days=12), end, freq="15min")
-    m = extdata.open_mask(SESSION, grid)
+    m = market_calendar.open_mask(SESSION, grid)                # the NYSE's hours, holidays and early closes
     return int(data.to_ms(grid[m])[-1]) if m.any() else None
 
 
@@ -739,7 +739,7 @@ def run(out=None, paths=None, now=None, fetch=True, log=None, env=None, budget_s
     now = _now() if now is None else float(now)
     state = load_state(paths)
     tickers, source, as_of = resolve_tickers(state, env)
-    market_open = extdata.is_open(SESSION, int(now * 1000))
+    market_open = market_calendar.is_open(SESSION, int(now * 1000))   # a holiday: closed, so never "stale"
     last_slot = last_session_bar_ms(now)
     cfg = index_cfg()
     stances = state.setdefault("stances", {})

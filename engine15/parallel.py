@@ -130,10 +130,11 @@ def bar_due(asset, last_open, now_s):
     late = bar * (1 + int(CFG.get("fill_delay", {}).get(asset, 0)))
     last_s = int(pd.Timestamp(last_open).timestamp())
     s = ((int(now_s) - late) // bar) * bar
-    if s <= last_s or (s - last_s) // bar > 1000 or not extdata.is_open(asset, s * 1000, feed=True):
+    from . import market_calendar                                # the feed's hours less exchange holidays/early closes
+    if s <= last_s or (s - last_s) // bar > 1000 or not market_calendar.is_open(asset, s * 1000, feed=True):
         return None
     between = pd.to_datetime(np.arange(last_s + bar, s, bar, dtype="int64"), unit="s", utc=True)
-    if len(between) and extdata.open_mask(asset, between, feed=True).any():
+    if len(between) and market_calendar.open_mask(asset, between, feed=True).any():
         return None
     return s
 

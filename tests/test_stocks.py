@@ -449,6 +449,31 @@ def test_closed_market_keeps_the_last_stance(world):
     assert len(stocks.read_log(world.paths.log)) == 4                   # no new stance while closed
 
 
+def test_a_holiday_is_closed_not_stale(world):
+    """Thanksgiving (Thursday 26 November 2026) and the Friday after its 13:00 New York early close: the US market
+    reads closed (market_calendar), so a last bar hours old is not stale and nothing is fetched again."""
+    start = "2026-09-25"
+    bars = {"AAA": cash_bars(days=64, seed=1, start=start), "BBB": cash_bars(days=64, seed=2, p0=50.0, start=start)}
+    assert bars["AAA"].index[-1] == pd.Timestamp("2026-11-27 17:45", tz="UTC")       # Friday's early close
+    for label, end, now in (("thanksgiving", "2026-11-25 20:45", "2026-11-26 19:00"),
+                            ("friday", "2026-11-27 17:45", "2026-11-27 21:00")):
+        part = dict((t, b[b.index <= pd.Timestamp(end, tz="UTC")]) for t, b in bars.items())
+        world.feed.bars = part
+        world.feed.daily = dict((t, daily_bars(b.index[0], seed=k + 11, p0=float(b["open"].iloc[0])))
+                                for k, (t, b) in enumerate(part.items()))
+        t_now = pd.Timestamp(now, tz="UTC").timestamp()
+        world.feed.now = t_now
+        key = stocks._close_key(int(data.to_ms(part["AAA"].index[-1:])[0]))
+        doc = _doc(stocks.run([world.entry(key)], paths=world.paths, now=t_now))
+        assert doc["market_open"] is False, label
+        for s in doc["stocks"]:
+            assert s["market_open"] is False and s["stale"] is False and s["error"] is None, (label, s)
+            assert s["as_of_utc"] == key.replace(" ", "T") + ":00Z", label
+        n = len(world.feed.calls)
+        stocks.run([], paths=world.paths, now=t_now + 3600)                           # an hour later: up to date
+        assert len(world.feed.calls) == n, label
+
+
 def test_a_failing_ticker_is_null_with_a_reason(world):
     world.feed.broken = {"BBB"}
     doc = _doc(stocks.run([world.entry(world.key)], paths=world.paths, now=world.now))

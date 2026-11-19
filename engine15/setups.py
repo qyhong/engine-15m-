@@ -191,23 +191,24 @@ def _group(page, sym, asset):
 
 def market_hours(sym, now_ms):
     """(market_open, next_open_utc) at that moment, by the engine's own trading-hours rule: crypto never shuts;
-    the others ask extdata.is_open (weekly hours, the daily breaks, NYSE holidays for the S&P; public holidays
-    of gold, silver, oil and USDJPY are not modelled there). next_open_utc is the first 15-minute slot at which
-    that same rule says open, when the market is shut now. (None, None) when it cannot be told."""
+    the others ask market_calendar.is_open (extdata's weekly hours and daily breaks, plus the exchange holidays
+    and early closes of 2026-2027: NYSE for the S&P, CME for gold, silver and WTI, ICE for Brent; USDJPY has
+    none). next_open_utc is the first 15-minute slot at which that same rule says open, when the market is shut
+    now. (None, None) when it cannot be told."""
     if now_ms is None:
         return None, None
     try:
         if sym in CFG.get("crypto", ()):
             return True, None
-        from . import extdata
+        from . import extdata, market_calendar
         if sym not in extdata.MARKETS:
             return None, None
         import pandas as pd
         t = pd.Timestamp(int(now_ms), unit="ms", tz="UTC")
-        if extdata.is_open(sym, t):
+        if market_calendar.is_open(sym, t):
             return True, None
         idx = pd.date_range(t.ceil("15min"), periods=LOOK_AHEAD, freq="15min")
-        k = next((i for i, x in enumerate(extdata.open_mask(sym, idx)) if x), None)
+        k = next((i for i, x in enumerate(market_calendar.open_mask(sym, idx)) if x), None)
         return False, None if k is None else _iso(int(round(idx[k].timestamp() * 1000)))
     except Exception:
         return None, None
