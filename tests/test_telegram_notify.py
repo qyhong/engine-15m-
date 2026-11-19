@@ -29,6 +29,8 @@ def no_real_records(monkeypatch, tmp_path):
     monkeypatch.setattr(tn, "EARLY_STATE", str(tmp_path / "data" / "signals_early_state.json"))     # H56 early preview
     monkeypatch.setattr(tn, "EARLY_LOG", str(tmp_path / "data" / "signals_early_log.jsonl"))
     monkeypatch.setattr(tn, "_EARLY_ERR", [None])
+    monkeypatch.setattr(tn, "CHECK_REPORT", str(tmp_path / "data" / "check_report.json"))       # never the real report
+    monkeypatch.setattr(tn, "_CHECK_ERR", [None])
 
 
 def page(gen="2026-11-17T00:00:00Z"):
