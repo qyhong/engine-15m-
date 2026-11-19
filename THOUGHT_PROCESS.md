@@ -10,6 +10,12 @@ A 15-minute thinking engine. Paper only. First written for BTC and ETH (`think15
   $10,000 book. Fees a side: crypto 0.10%, gold 0.02%, silver 0.03%, USDJPY 0.01%, S&P 0.02%, oil 0.04%.
 - **Sizing:** crypto 1x; the others sized so a stop-out costs ~2% of equity, between 1x and the cap
   (USDJPY 100x, the others 5x). A total-risk cap: all open stops together at most 10% of total equity.
+- **Exits (think15-v5.2.5, 19 Nov 2026):** every main book still leaves a trade only at its stop or on a flip.
+  One market differs: on USDJPY the stop moves to the entry price once Target 1 has traded, live from the next
+  bar (`CFG["be_t1"]`, `backtest.run_book`; a stop-out there is `STOP_BE`). The owner's call ("Follow the
+  target", then "Stop to entry after T1"), not a passed test: on 2020-2026 history it was the only one of 15
+  exit variants ahead of holding on USDJPY (+$27,238 against +$19,209, H36), and behind holding on the eight
+  markets pooled. No profit is taken at the targets; the other seven markets are unchanged.
 - **Fills:** decision at a bar's close, fill at the next open; gold, silver and oil one bar later (their
   live bars arrive ~10 minutes late). Futures rolls are smoothed (data/rolls.csv).
 - **v5 decision rules:** a higher-timeframe bias (1h, 4h and daily trend one way and price on that side of

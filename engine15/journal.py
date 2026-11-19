@@ -124,7 +124,7 @@ def entry(store, asset, i, raw=None, trade=None):
     e["action"] = ACTIONS[int(book["act"][i])]
     e["reason"] = book["reason"][i]
     tr = book["trades"]
-    stopped = tr[(tr.i_out == i) & (tr.why_out == "STOP")]
+    stopped = tr[(tr.i_out == i) & tr.why_out.isin(("STOP", "STOP_BE"))]   # "STOP_BE": at the entry after Target 1
     e["stopped_at"] = float(stopped.p_out.iloc[0]) if len(stopped) else None
     e["position"] = SIDE[0 if len(stopped) else int(book["held"][i])]
     e["idle_sessions"] = int(book["idle"][i])

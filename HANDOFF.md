@@ -172,6 +172,15 @@ crypto replay).
   records `late_starts` so the scoreboard compares them with main over their own time only). Open-trade view:
   `trail_price`, `trail_basis` ("EMA20 on 1h"), `trail_arm`, `trail_armed`, `stop_basis`.
 - Shared exit code for a possible v5.2: `engine15/exits.py`; the switch checklist is in the study's last section.
+- **Live since think15-v5.2.5 (19 Nov 2026), USDJPY's main book only:** the stop moves to the entry once Target 1
+  trades. Where: `CFG["be_t1"] = ("USDJPY",)`; `live.asset_cfg` turns it into `be_t1=True` for that market (the
+  raw CFG holds the list, and `run_book` acts only on exactly `True` plus a `t1_of` planner, so the replay and every
+  other caller are unchanged); `backtest.run_book` keeps `t1`, `t1_hit`, `stop0` in the book's state;
+  `live.adopt_be_t1` brings a trade that was already open under the rule (Target 1 traded since entry -> the stop
+  goes to the entry from the next bar; nothing is back-dated and no switch exit is made, a narrower migration than
+  the study's checklist item 3). The open-trade view gains `stop_basis`. The shadow books are NOT changed: their
+  `main` copy keeps hold-to-stop-or-flip on every market, so on USDJPY it is now the old rule's forward record.
+  Tests: `tests/test_be_t1.py`. To undo: empty the tuple and bump the version (an open trade keeps the stop it has).
 
 ## Open items
 See the task tables and the dated status notes at the end of `docs/CHARTER.md`.

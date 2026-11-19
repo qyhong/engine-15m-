@@ -20,10 +20,11 @@ import time
 import numpy as np
 import pandas as pd
 
-from . import data, evidence, labels, model, policy
+from . import data, evidence, exits, labels, model, policy
 from .config import CFG, OUT_DIR
 
 START_EQUITY = 10000.0
+STOP_WORDS = ("STOP", "STOP_BE")     # a stop-out; "STOP_BE" = at the entry price after Target 1 (v5.2.5, run_book)
 ACTIONS = [policy.WAIT, policy.IDLE, policy.HOLD, policy.ENTER, policy.FORCED, policy.FLIP, policy.STEP_ASIDE]
 ACT_CODE = dict((a, i) for i, a in enumerate(ACTIONS))
 
@@ -88,10 +89,15 @@ def leverage(cfg, price, stop_dist):
     return float(min(cap, max(1.0, cfg.get("risk_per_trade", 0.02) / (stop_dist / price))))
 
 
-def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None, bias=None, guard=None):
+def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None, bias=None, guard=None, t1_of=None):
     """One asset's paper book over sessions lo .. hi-1. -> dict of per-session arrays and trades.
     `state` (the dict a previous call returned under "state") resumes a book exactly where it
-    stopped: the live engine advances one session at a time this way."""
+    stopped: the live engine advances one session at a time this way.
+    Break-even after Target 1 (v5.2.5; only where cfg["be_t1"] is exactly True AND t1_of is given, else nothing changes):
+    t1_of(i, side, entry, stop) -> Target 1 of a trade filled at bar i's open (None: that trade has no target and
+    keeps its entry stop). Once a bar trades through Target 1 (read after that bar's stop check) the stop moves to
+    the entry price, live from the next bar and never looser (exits.be_stop, the b_be_t1 shadow's rule); a stop-out
+    there is booked as "STOP_BE"."""
     o, h, l, c = px["open"], px["high"], px["low"], px["close"]
     n = len(c)
     act = np.zeros(n, dtype=np.int8)
@@ -104,14 +110,21 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
     fee = cfg["cost_side"] * cost_mult
     pos, idle, qty, entry, stop, eq = 0, 0, 0.0, 0.0, np.nan, START_EQUITY
     t_in, why_in, pending = -1, "", None
+    # v5.2.5: the stop to entry after Target 1. Only on exactly True, which live.asset_cfg sets for the markets in
+    # CFG["be_t1"]: the raw CFG holds the LIST of those markets there, and a list must never switch the rule on.
+    be = cfg.get("be_t1") is True and t1_of is not None
+    t1, t1_hit, stop0 = None, False, np.nan
     fees_paid = [float((state or {}).get("fees", 0.0))]           # every fee this book has paid, across steps
     if state:
         pos, idle, qty, entry, eq = state["pos"], state["idle"], state["qty"], state["entry"], state["eq"]
         stop = np.nan if state["stop"] is None else state["stop"]
         why_in, pending = state["why_in"], tuple(state["pending"]) if state["pending"] else None
+        if be and pos != 0:
+            t1, t1_hit = state.get("t1"), bool(state.get("t1_hit", False))
+            stop0 = stop if state.get("stop0") is None else state["stop0"]
 
     def close(i, price, why):
-        nonlocal pos, qty, eq, stop
+        nonlocal pos, qty, eq, stop, t1, t1_hit, stop0
         gross = qty * pos * (price - entry)
         fees = fee * qty * (entry + price)
         eq += gross - fees
@@ -119,6 +132,7 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
         trades.append((t_in, i, pos, entry, price, why_in, why, (gross - fees) / (qty * entry) * 100.0, eq,
                        qty, gross - fees, fees))
         pos, qty, stop = 0, 0.0, np.nan
+        t1, t1_hit, stop0 = None, False, np.nan
 
     p_up, p_dn = odds[:, labels.UP], odds[:, labels.DOWN]
     for i in range(lo, hi):
@@ -138,14 +152,21 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
                 if q > 0:
                     pos, entry, qty, t_in, why_in = target, o[i], q, i, a
                     stop = entry - pos * cfg["stop_units"] * unit[i - 1]
+                    t1, t1_hit, stop0 = None, False, stop
+                    if be:
+                        t1 = t1_of(i, pos, entry, stop)
             pending = None
         held[i] = pos
+        stop_why = "STOP_BE" if (be and t1_hit) else "STOP"       # after Target 1 the stop sits at the entry
         if pos == 1 and l[i] <= stop:                             # 2. the protective stop
-            close(i, min(o[i], stop), "STOP")
+            close(i, min(o[i], stop), stop_why)
             idle = 0
         elif pos == -1 and h[i] >= stop:
-            close(i, max(o[i], stop), "STOP")
+            close(i, max(o[i], stop), stop_why)
             idle = 0
+        if be and pos != 0 and t1 is not None and not t1_hit and exits.reached(pos, h[i], l[i], t1):
+            t1_hit = True                                         # 2b. Target 1 traded in this bar: the stop goes to
+            stop = exits.be_stop(pos, entry, stop)                # the entry, live from the next bar, never looser
         pu = p_up[i]                                              # 3. the decision at this close
         a, target, why = policy.decide(pos, idle, None if pu != pu else pu, p_dn[i], bool(shock[i]),
                                        tide[i] if tide[i] == tide[i] else 0.0, cfg,
@@ -167,6 +188,9 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
                  "stop": None if stop != stop else float(stop), "eq": float(eq), "why_in": why_in,
                  "pending": list(pending) if pending else None, "entered_here": bool(t_in >= 0),
                  "i_in": int(t_in), "fees": fees_paid[0]}
+    if be:                                                        # only books under the rule carry these (others unchanged)
+        end_state.update(t1=None if (t1 is None or not pos) else float(t1), t1_hit=bool(t1_hit and pos),
+                         stop0=None if (stop0 != stop0 or not pos) else float(stop0), be_t1=True)
     if pos != 0:                                                  # still open: mark it, charge nothing more
         trades.append((t_in, hi - 1, pos, entry, c[hi - 1], why_in, "OPEN", (pos * (c[hi - 1] - entry) / entry
                                                                              - fee) * 100.0, eq_arr[hi - 1],
@@ -221,7 +245,7 @@ def summarize(book, times, lo, hi, cost_rt):
         "time_long_pct": round(float((held[live] == 1).mean() * 100), 1) if live.any() else 0.0,
         "time_short_pct": round(float((held[live] == -1).mean() * 100), 1) if live.any() else 0.0,
         "time_flat_pct": round(float((held[live] == 0).mean() * 100), 1) if live.any() else 0.0,
-        "flips": int((closed.why_out == policy.FLIP).sum()), "stops": int((closed.why_out == "STOP").sum()),
+        "flips": int((closed.why_out == policy.FLIP).sum()), "stops": int(closed.why_out.isin(STOP_WORDS).sum()),
         "step_asides": int((closed.why_out == policy.STEP_ASIDE).sum()),
         "forced_entries": int((closed.why_in == policy.FORCED).sum()),
         "max_flat_sessions_in_a_row": int(max_flat_run(book["held"], book["act"], lo, hi)),

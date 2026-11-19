@@ -17,12 +17,14 @@ ESTATE = os.environ.get("ENGINE15_ESTATE", os.path.join(os.path.dirname(ROOT), "
 LIBRARY_JSON = os.path.join(ESTATE, "research", "local", "library", "strategy_library.json")
 
 # Said once in the journal (each market group's next entry) after "version" changes (live.step_group).
-VERSION_NOTE = ("think15-v5.2.4: five new reading-only cards for every market (Fisher Transform, Ultimate Oscillator, "
-                "TRIX, linear-regression channel, Mass Index). They are recorded and graded; they do not vote, so the "
-                "rules are unchanged.")
+VERSION_NOTE = ("think15-v5.2.5: on USDJPY the main book now moves its stop to the entry price once Target 1 has "
+                "traded (break-even after Target 1). Entries, sizing, flips and every other market are unchanged.")
 
 CFG = {
-    "version": "think15-v5.2.4",      # v5.2.4 (17 Nov 2026): card batch 4, five reading-only cards for every market (sources/osc5.py:
+    "version": "think15-v5.2.5",      # v5.2.5 (19 Nov 2026): the FX main book (USDJPY) moves its stop to the entry once Target 1
+                                      #   trades ("be_t1", below); owner: "Follow the target", then chose "Stop to entry after T1".
+                                      #   The first change to a main-book EXIT rule. Every other market unchanged.
+                                      # v5.2.4 (17 Nov 2026): card batch 4, five reading-only cards for every market (sources/osc5.py:
                                       #   Fisher Transform, Ultimate Oscillator, TRIX, linear-regression channel, Mass Index); owner
                                       #   "let's continue pending tasks". Rules and votes unchanged.
                                       # v5.2.3 (16 Nov 2026): six reading-only cards for every market: daily range budget and range
@@ -84,6 +86,15 @@ CFG = {
     "theta_flip": 0.10,               # leave a held side for the other at 10 points against
     "shock_ratio": 2.0,               # high risk: last hour's 15m range >= 2x its 24h norm
     "stop_units": 2.0,                # protective stop = 2 barriers (3 x ATR 1H) from the fill
+    # v5.2.5 (owner, 19 Nov 2026, of the USDJPY long that was past Target 1 with its stop still below entry: "Follow the
+    # target"; of the two readings offered the owner chose "Stop to entry after T1"). Markets listed here: once a bar trades
+    # through the trade's Target 1 (live.plan_targets, set at entry) the main book's stop moves to the entry price, live
+    # from the next bar, never looser (backtest.run_book, exits.be_stop; a stop-out there is "STOP_BE"). History (H36,
+    # research/out/exits/trail_study.md, in-sample, 1 of 15 exit variants): on USDJPY +$27,238 against +$19,209 for
+    # holding, the only variant ahead of holding there; pooled over all eight markets it made less than holding, which
+    # is why the list is USDJPY alone. Adopted on the owner's call, not on a passed test. The shadow books are
+    # unchanged: their "main" copy keeps hold-to-stop-or-flip, so the old rule stays on the forward record beside it.
+    "be_t1": ("USDJPY",),
     # v3 (owner, 10 Nov 2026): HOLD when risk is high and the edge is gone, instead of stepping
     # aside. In the replay the step-aside rule made about 770 exits and 1,000 forced re-entries a coin.
     "step_aside": False,

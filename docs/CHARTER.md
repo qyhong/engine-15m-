@@ -321,3 +321,11 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
 - **P10 round numbers retired** (owner: "Post-mortem, then retire", 19 Nov 2026; stamp 04:00 UTC) after its post-mortem
   (`research/out/p10_postmortem.md`: no pull toward round numbers even before costs, live as on history).
   `playbook3.RETIRED`; the record of 120 live trades (-$2,018) stays on the page, frozen.
+- **USDJPY main book: stop to entry after Target 1** (think15-v5.2.5, 19 Nov 2026). The owner, of the USDJPY long
+  that was past Target 1 with its stop still below the entry and price stalling under 160: "Follow the target";
+  of the two readings offered (stop to entry after Target 1, or take profit at the targets) the owner chose
+  "Stop to entry after T1". The first change to a main-book exit rule, and for one market only. History (H36,
+  in-sample, 1 of 15 variants): USDJPY +$27,238 against +$19,209 for holding; all eight markets pooled, less than
+  holding. The owner's earlier idea the same evening (close a profitable trade when the odds lean against it) was
+  not adopted: on USDJPY the odds leaned against the open long in 327 of 646 bars, by a median 0.9 points.
+  Still paper only; nothing about the vault changes (it carries BTC and ETH setups only).

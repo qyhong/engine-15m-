@@ -69,6 +69,8 @@ def open_trade(asset, st, mark, close_time, cfg):
                 leverage=round(qty * entry / st["eq"], 2) if st["eq"] else None,
                 leverage_cap=CFG.get("max_leverage", {}).get(asset, 1.0),
                 stop_price=None if stop is None else round(stop, 2),
+                stop_basis=("the entry price: Target 1 has traded (break-even rule)" if st.get("t1_hit")
+                            else "the entry stop; it moves to the entry price once Target 1 trades") if st.get("be_t1") else None,
                 stop_distance_pct=None if stop is None else round(abs(stop - entry) / entry * 100, 2),
                 risk_to_stop_usd=None if stop is None else round(qty * abs(stop - entry), 2),
                 mark_price=round(mark, 2), unrealized_usd=round(unreal, 2), unrealized_pct=round(pos * (mark - entry) / entry * 100, 3),
@@ -145,10 +147,36 @@ def universes():
 
 
 def asset_cfg(a, cfg):
-    """The asset's own fee: gold, silver, USDJPY and the S&P 500 trade far cheaper than crypto spot."""
+    """The asset's own fee: gold, silver, USDJPY and the S&P 500 trade far cheaper than crypto spot.
+    be_t1 (v5.2.5): whether this market's main book moves its stop to the entry after Target 1 (CFG["be_t1"])."""
     return dict(cfg, cost_side=CFG.get("asset_cost", {}).get(a, cfg["cost_side"]),
                 leverage_cap=CFG.get("max_leverage", {}).get(a, 1.0),
-                fill_delay_bars=CFG.get("fill_delay", {}).get(a, 0))
+                fill_delay_bars=CFG.get("fill_delay", {}).get(a, 0),
+                be_t1=a in (CFG.get("be_t1") or ()))
+
+
+def adopt_be_t1(old, px, times, lo):
+    """A trade that was already running when its market came under the break-even rule (v5.2.5): give its state
+    what backtest.run_book needs. t1 = the Target 1 planned at its entry; t1_hit = whether any bar from the entry
+    bar to the last journaled one (lo - 1) traded through it; if so the stop goes to the entry now (never looser),
+    live from bar lo. The past is not rewritten: bars before lo are not re-checked against the moved stop.
+    -> a new state dict; `old` itself is returned when there is nothing to adopt."""
+    if not old or not old.get("pos") or "t1_hit" in old:
+        return old
+    from . import exits
+    new = dict(old, be_t1=True, t1=old.get("target_1"), t1_hit=False, stop0=old.get("stop"))
+    t1, t_in = new["t1"], old.get("t_in_ms")
+    if t1 is None or t_in is None or new["stop"] is None:
+        return new
+    i0 = int(times.searchsorted(pd.Timestamp(int(t_in), unit="ms", tz="UTC"), side="left"))
+    if i0 >= lo:
+        return new
+    pos = int(old["pos"])
+    hi_, lo_ = np.nanmax(px["high"][i0:lo]), np.nanmin(px["low"][i0:lo])
+    if exits.reached(pos, hi_, lo_, float(t1)):
+        new["t1_hit"] = True
+        new["stop"] = float(exits.be_stop(pos, float(old["entry"]), float(old["stop"])))
+    return new
 
 
 def risk_budget(asset, state):
@@ -533,9 +561,14 @@ def step_group(g, assets, state, log=print, fetch=True, gate=None):
         old = state["books"].get(a) or {}
         acfg = asset_cfg(a, cfg)
         acfg["risk_budget_usd"] = risk_budget(a, state)          # the total-risk cap across all main books
+        t1_of = None
+        if acfg.get("be_t1"):                                    # v5.2.5: the stop to entry after Target 1 (CFG["be_t1"])
+            old = adopt_be_t1(old, prep["px"][a], times, lo)     # a trade already running comes under the rule now
+            t1_of = lambda i, side, entry, stop, ev=ev: plan_targets(   # the same Target 1 the page shows (below)
+                int(side), float(entry), float(stop), ev.iloc[max(i - 1, 0)]).get("target_1")
         b = backtest.run_book(prep["px"][a], prep["odds"][a], ev["shock"].values, ev["tide"].values,
                               (cfg["barrier_atr"] * ev["atr1h"]).values, acfg, lo, n, state=old or None,
-                              bias=ev["htf_bias"].values, guard=ev["release_soon"].values)
+                              bias=ev["htf_bias"].values, guard=ev["release_soon"].values, t1_of=t1_of)
         books[a] = b
         tr = b["trades"]
         closed = tr[tr.why_out != "OPEN"]
@@ -558,7 +591,8 @@ def step_group(g, assets, state, log=print, fetch=True, gate=None):
                     new[k] = old.get(k)
             else:
                 k_dec = max(new["i_in"] - 1, 0) if new["i_in"] >= lo else n - 1   # the decision close (or now, for a carried trade)
-                new.update(plan_targets(int(new["pos"]), float(new["entry"]), new.get("stop"), ev.iloc[k_dec]))
+                s0 = new.get("stop0") if new.get("stop0") is not None else new.get("stop")   # the stop at entry
+                new.update(plan_targets(int(new["pos"]), float(new["entry"]), s0, ev.iloc[k_dec]))
         state["books"][a] = new
         trades_now[a] = open_trade(a, new, float(prep["px"][a]["close"][n - 1]), times[n - 1] + pd.Timedelta(minutes=15), acfg)
     tm.lap("decide")

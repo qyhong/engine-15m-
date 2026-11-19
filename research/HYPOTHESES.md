@@ -2939,3 +2939,14 @@ before it is kept as is. The verdict rule (200 trades or 30 days) was not reache
 - Pairing with S1 on the entry's `opened_utc`; a no fill counts 0 for either side; an entry S1 never signalled counts S1 as
   0 once the book's trade is closed. If the book's levels never become known (no position on the page and no closed-trade
   row 30 minutes after the pending is gone), the S2 signal ends "no fill" (sent, not a trade).
+
+### Adoption note, think15-v5.2.5 (19 Nov 2026, ~21:30 UTC): H36's `be_t1` on USDJPY's main book. NOT a pass.
+
+The owner switched USDJPY's main book to break-even after Target 1 (docs/CHARTER.md, same date). This is a rule
+change on the owner's word, as v5.2's trust cap was; it is not a verdict on H36 and no H36 line is moved. What the
+record says, unchanged: H36's history read is in-sample and seen; `be_t1` was 1 of 15 variants; it was ahead of
+holding in 2 of 8 markets (BTC, USDJPY) and failed "better than hold" pooled; on USDJPY both it and holding lost
+about $13,000 in the second half. Picking the one market where one variant won is a selection made after the
+result. Forward, the comparison stays readable: the shadow `main` copy keeps hold-to-stop-or-flip on USDJPY, and
+`b_be_t1` keeps running; their USDJPY lines and the main book's own are read at 30 closed forward trades, as
+research/VERDICT_RULES.md says, and the owner decides then whether USDJPY keeps the rule.
