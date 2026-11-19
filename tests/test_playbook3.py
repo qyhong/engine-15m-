@@ -492,3 +492,39 @@ def test_book_ids_do_not_clash_with_the_other_modules():
     assert not set(pb.BOOKS) & (set(playbook.BOOKS) | set(playbook2.BOOKS))
     assert [pb.BOOKS[b]["hypothesis"] for b in sorted(pb.BOOKS, key=lambda x: int(x[1:].split("_")[0]))] == \
         ["H%d" % i for i in range(11, 18)]
+
+
+def test_retired_book_takes_nothing_from_the_stamp_on():
+    """A retired book (owner's word) keeps only trades entered before its stamp; no WAITING or later entry."""
+    for book, stamp in pb.RETIRED.items():
+        cut = pd.Timestamp(stamp, tz="UTC")
+        rows = [r for r in pb.step() if r["book"] == book]
+        assert all(r["entry_utc"] is not None for r in rows)
+        assert all(pd.Timestamp(r["entry_utc"], tz="UTC") < cut for r in rows)
+        assert "retired" in pb.page_block(rows)[book]
+
+
+def test_retirement_drops_only_entries_from_the_stamp_on(monkeypatch):
+    """Bars past the stamp: the retired book's rows are exactly the unretired rows entered before the stamp,
+    unchanged; the other books are untouched; the title and the page say retired."""
+    assert pb.RETIRED.get("p10_round") and "(retired 19 Nov 2026)" in pb.BOOKS["p10_round"]["title"]
+    bars = {"BTCUSDT": walk("2026-06-01", 96 * 180, seed=5),
+            "XAUUSD": walk("2026-06-01", 96 * 180, seed=6, asset="XAUUSD", vol=0.0015)}
+    for a, x in (("BTCUSDT", 350.0), ("XAUUSD", 40.0)):                      # prices where the round numbers are near
+        bars[a][["open", "high", "low", "close"]] *= x
+    for book, stamp in dict(pb.RETIRED).items():
+        cut = pd.Timestamp(stamp, tz="UTC")
+        now = int((cut + pd.Timedelta(days=3)).value // 10**6)
+        monkeypatch.setattr(pb, "RETIRED", {book: stamp})
+        kept = pb.step(bars, now_ms=now)
+        monkeypatch.setattr(pb, "RETIRED", {})
+        full = pb.step(bars, now_ms=now)
+        monkeypatch.setattr(pb, "RETIRED", {book: stamp})
+        assert [r for r in kept if r["book"] != book] == [r for r in full if r["book"] != book]
+        want = [r for r in full if r["book"] == book and r["entry_utc"] is not None
+                and pd.Timestamp(r["entry_utc"], tz="UTC") < cut]
+        mine = [r for r in kept if r["book"] == book]
+        assert mine == want and len(want) > 0
+        assert len([r for r in full if r["book"] == book]) > len(mine)          # something was cut
+        blk = pb.page_block(kept)[book]
+        assert blk["retired"] == stamp and "Retired" in blk["note"] and not blk["open"]

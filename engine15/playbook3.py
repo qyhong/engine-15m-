@@ -40,6 +40,8 @@ the window's last bar. Structural stops sit PAD_ATR x ATR(1h) beyond the structu
 The books are recomputed from the bars at every step from a FIXED warm-up anchor (registration minus
 WARMUP_DAYS), so they hold no state and the same bars always give the same rows.
 """
+import time
+
 import numpy as np
 import pandas as pd
 
@@ -123,12 +125,17 @@ RULES = {
     "p12_orb_us": [{"orb": "us_open"}],
 }
 
+# Retired books (owner's word): no trade entered at or after the stamp counts; the record before it is kept as is
+# (as playbook.RETIRED). p10_round: owner "Post-mortem, then retire" (19 Nov 2026) after 120 live trades, -$2,018,
+# -0.14R a trade even before costs (research/out/p10_postmortem.md); its history had no edge before costs either.
+RETIRED = {"p10_round": "2026-11-19 04:00"}
+
 BOOKS = {
     "p6_vwap": {"title": "VWAP reversion / reclaim", "hypothesis": "H11", "registered": REGISTERED, "assets": ASSETS},
     "p7_session": {"title": "Session plays", "hypothesis": "H12", "registered": REGISTERED, "assets": ("XAUUSD", "USDJPY")},
     "p8_fvg": {"title": "Fair value gap / order block", "hypothesis": "H13", "registered": REGISTERED, "assets": ASSETS},
     "p9_cascade": {"title": "Crypto liquidation cascades", "hypothesis": "H14", "registered": REGISTERED, "assets": CRYPTO},
-    "p10_round": {"title": "Round-number magnets", "hypothesis": "H15", "registered": REGISTERED, "assets": ASSETS},
+    "p10_round": {"title": "Round-number magnets (retired 19 Nov 2026)", "hypothesis": "H15", "registered": REGISTERED, "assets": ASSETS},
     "p11_release": {"title": "Release-day trades beyond CPI", "hypothesis": "H16", "registered": REGISTERED, "assets": ASSETS},
     "p12_orb_us": {"title": "Crypto opening range at the US equity open", "hypothesis": "H17", "registered": REGISTERED,
                    "assets": CRYPTO, "forward_only": True},
@@ -939,7 +946,17 @@ def step(bars=None, now_ms=None):
                 continue
             S = _subset(S, ctx.ms[S["i"]] + BAR_MS >= reg_ms)
             T = simulate(ctx, S)
+            ret = RETIRED.get(book)
+            ret_ms = int(pd.Timestamp(ret, tz="UTC").value // 10**6) if ret else None
             for j in range(len(T["k"])):
+                if ret_ms is not None:
+                    if int(T["status"][j]) == ST_WAIT:                # WAITING: it cannot fill before the next bar opens,
+                        now_eff = int(now_ms) if now_ms is not None else int(time.time() * 1000)   # nor before now
+                        fill_ms = max(int(ctx.ms[-1]) + BAR_MS, now_eff)
+                    else:
+                        fill_ms = int(ctx.ms[int(S["i"][int(T["k"][j])]) + 1])
+                    if fill_ms >= ret_ms:
+                        continue                                      # retired: nothing entered from the stamp on
                 rows.append(_row(book, ctx, S, T, j))
     return rows
 
@@ -1026,11 +1043,16 @@ def page_block(rows):
         if facts.get("forward_only"):
             note = ("Paper only. FOUND in the history (playbook2 session breakdown), so it is graded forward only, from %s."
                     % facts["registered"])
+        if book in RETIRED:
+            note = ("Retired %s UTC (owner): the post-mortem found no pull toward round numbers even before costs, live as on "
+                    "2019-2026 history. No new trades; the live record is kept." % RETIRED[book])
         out[book] = {"title": facts["title"], "hypothesis": facts["hypothesis"], "registered": facts["registered"],
                      "rule": rule_text(book), "open": live,
                      "recent": [dict((k, r[k]) for k in ("asset", "side", "entry_utc", "entry", "exit_utc", "exit", "why_out",
                                                           "r", "pnl_usd", "text")) for r in closed[-5:]],
                      "totals": _totals(closed), "by_asset": per, "note": note}
+        if book in RETIRED:
+            out[book]["retired"] = RETIRED[book]
     return out
 
 

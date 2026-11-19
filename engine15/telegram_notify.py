@@ -144,7 +144,7 @@ NAMES = {"main": "Main engine", "b_trail": "B trail (shadow)", "b_targets": "B t
          "p5_rlq": "P5 RL agent", "p6_mtrend": "P6 RL momentum", "p6_p4trend": "P6 control (RL)", "p7_rvbear": "P7 BTC/ETH pair",
          "p4_h30spot": "P4 rule A", "p4_h31trail": "P4 rule B", "p1_liqhunt": "P1 liquidity hunt (retired)",
          "p3_orb": "P3 opening range", "p6_vwap": "P6 VWAP", "p7_session": "P7 session", "p8_fvg": "P8 fair-value gap",
-         "p10_round": "P10 round numbers", "p11_release": "P11 release", "p12_orb_us": "P12 US opening range",
+         "p10_round": "P10 round numbers (retired)", "p11_release": "P11 release", "p12_orb_us": "P12 US opening range",
          "p5_squeeze": "P5 squeeze"}
 GREEN, RED, FLAG_END, SCALE, BRAIN, WARN, OK, WAVE, CHART = (u"\U0001f7e2", u"\U0001f534", u"\U0001f3c1", u"\u2696\ufe0f",
                                                             u"\U0001f9e0", u"\u26a0\ufe0f", u"\u2705", u"\U0001f44b", u"\U0001f4ca")

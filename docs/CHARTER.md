@@ -318,3 +318,6 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   reduce, stop"**: `close` when the setups book exits (stop, flip, its exit rule), `reduce` to take half at Target 1, and
   `move_stop` to the entry after Target 1, exactly as the book does, for BTCUSDT and ETHUSDT only. Never `open` or any
   instruction that adds to a position.
+- **P10 round numbers retired** (owner: "Post-mortem, then retire", 19 Nov 2026; stamp 04:00 UTC) after its post-mortem
+  (`research/out/p10_postmortem.md`: no pull toward round numbers even before costs, live as on history).
+  `playbook3.RETIRED`; the record of 120 live trades (-$2,018) stays on the page, frozen.
