@@ -2939,3 +2939,70 @@ before it is kept as is. The verdict rule (200 trades or 30 days) was not reache
 - Pairing with S1 on the entry's `opened_utc`; a no fill counts 0 for either side; an entry S1 never signalled counts S1 as
   0 once the book's trade is closed. If the book's levels never become known (no position on the page and no closed-trade
   row 30 minutes after the pending is gone), the S2 signal ends "no fill" (sent, not a trade).
+
+## H57. STOCK STANCES ON HISTORY: do the Setups page's single-stock stances (`engine15/stocks.py`) carry any information on pre-seal history? (registered 19 Nov 2026, 09:58 UTC, before any H57 code existed or any H57 number was computed)
+
+**Prompted by:** the owner, 19 Nov 2026: "Test the stock stances on history". `engine15/stocks.py` publishes, for the Setups
+page's top five US stocks, a LONG / SHORT / FLAT stance: the S&P 500 call's cards read on each stock's own bars plus the
+market-wide cards as the S&P call has them, mixed with the index group's learned trust and refit voices, side by
+`policy.decide` for a flat book with an idle clock of 0. It is live for paying members, labelled "not validated on single
+stocks". One variant, fixed here; nothing below is tuned after seeing a number.
+
+**Population (fixed now, in this order).** (a) The five: NVDA, ARGX, MU, T, DDOG. (b) The larger, less hand-picked sample:
+the ten largest S&P 500 companies by index weight around the seal (Nov 2025, from memory of the weights, not looked up),
+one ticker per company, NVDA not counted again (it is in the five): AAPL, MSFT, AMZN, GOOGL, AVGO, META, TSLA, BRK.B, JPM,
+LLY. A ticker of (b) that has no Dukascopy CFD with 15-minute history starting on or before 2024-11-11 (at least a year
+before the seal) is replaced by the next of WMT, ORCL, V, MA, XOM, NFLX, COST, in that order, until (b) has ten. The five
+are never replaced: one without such history is reported as NOT TESTABLE (Yahoo's free 15-minute bars cover only the last
+60 days, all after the seal; the card code reads 15-minute bars only, so Yahoo's 1-hour bars are not a clean substitute
+and are not used). Availability is decided by probing Dukascopy's public files only (no outcome is looked at).
+
+**Data.** Dukascopy's free BID minute candles of the stock CFD (`datafeed.dukascopy.com`, the format `extdata.read_dukascopy`
+reads: flat zero-volume minutes dropped), aggregated to 15-minute bars keyed by open time, kept to US cash hours with
+`extdata.open_mask("SPX", ..., calendar=False)` as `stocks.fetch_15m` keeps Yahoo's bars; a 15-minute slot with no traded
+minute is absent. Splits: the series is checked against Yahoo's split-adjusted daily closes and any step at a split date is
+removed by the split ratio (said per ticker in the report). Every row whose bar opens at or after 2025-11-11 00:00 UTC is
+dropped at load. Downloads on the research server, paced at least 1 s apart, one connection, raw files under
+`research/out/h57_stocks/raw/` (deleted after the 15-minute files are built).
+
+**The stance, replayed as `stocks.py` makes it, at every US-hours 15-minute close where the S&P 500 also has a close:**
+- Readings: `stocks.readings(bars15, daily, ticker)` (the engine's own card code, both placeholder shapes, the agreement
+  rule). To reproduce the live situation (a 15-minute store that starts 60 days back, daily bars before it), the closes of
+  each calendar month M are read from a window of the stock's 15-minute bars that starts 60 days before M's first day, with
+  daily bars for every NY trading day before the window (built from the same Dukascopy 15-minute bars: the cash session's
+  open, high, low, close, volume; Yahoo's daily bars are not mixed in). Only M's rows are kept. `stocks.REQUIRED` missing:
+  no stance at that close.
+- Market-wide cards (`stocks.MARKET_VOICES`), the release guard (`ec_next`) and nothing else from the S&P 500 call's
+  readings at the same close, read from the index group's evidence store (`data/evcache/index`, read only, copied as
+  `research/card_overlap.py` / `research/b_trail_history.py` copy it).
+- The S&P model AS IT STOOD AT THAT CLOSE: the index group's voices walked forward weekly from the engine's birth by
+  `leanprep.walk_forward_cached` on the copied rows (refits in a private folder `research/out/h57_stocks/fits/`, deleted
+  after), the refit in force at that close (the week's refit, even prior applied, as the live call uses it); trust =
+  `leanprep.trust_tail` with the index group's voting cards and the trust cap, exactly as `leanprep.prepare_live` forms it,
+  at that close (what the S&P call's journal entry records), renormalised as `stocks.entry_trust` does. Never a model
+  fitted on later data. Closes before the index model's first refit have no stance.
+- Mix and side: `stocks.feature_vector`, `stocks.stance_odds`, `stocks.decide` (shock, tide, htf_bias from the stock's own
+  row; guard from the S&P call's `ec_next`), unchanged.
+
+**Grading (the engine's own):** `labels.triple_barrier` on the stock's 15-minute bars (consecutive cash-session bars, as
+`stocks.grade_one` grades on the stored bars), unit = 1.5 x the stock's `atr1h` at the close, 26 bars. NEITHER is not
+counted in hit rates.
+
+**Measures.**
+- Hit rate of LONG / SHORT calls (LONG right on UP, SHORT right on DOWN) against 50%, per ticker and pooled. The interval
+  (Wilson 95%) is on NON-OVERLAPPING calls: per ticker, in time order, a call is taken only if the previous taken call's
+  grade was known (its first touch or its 26th bar) before it; graded NEITHER calls still block. All calls (overlapping)
+  are reported beside, without an interval. Pooling adds the tickers' non-overlapping calls (calls of different stocks at
+  the same time are correlated through the market; a block bootstrap by trading day is reported beside, descriptive only).
+- Brier score and log-loss of the two-way probability p = P(up) / (P(up) + P(down)) on every stance row (LONG, SHORT and
+  FLAT) graded UP or DOWN, against the base rate = that ticker's own UP share over the same half (an in-sample constant:
+  the yardstick is given an advantage); skill = 1 - model / base. Per ticker and pooled; descriptive, not in the pass bar.
+- First half / second half split at the median date of the pooled graded LONG / SHORT calls; the same split date for
+  every ticker.
+
+**Pass bar (fixed now):** PASS only if (1) the pooled non-overlapping hit rate is above 50% with the Wilson 95% lower
+bound above 50% in BOTH halves, AND (2) at least 40% of the tested tickers (6 of 15 when all 15 are tested; rounded up)
+have a full-period non-overlapping hit rate above 50%. The five and the ten are also reported separately; the bar is on
+all tested tickers together. A pass would only allow the page's label to say "tested on history" (no edge is claimed); a
+fail means the page should say the stance showed no edge on history (the wording is the owner's call). The live record
+the page already builds is unaffected either way.
