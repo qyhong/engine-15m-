@@ -42,6 +42,13 @@ DATA HISTORY CHANGED (owner, 19 Nov 2026, "add an alert"): the reading cache's o
   ONE card per group and UTC day when an asset had more than MIND15_CHECK_ALERT_ROWS (default 2,000) changed old rows or
   the check was stopped by its budget. Read only; a missing or garbled file means no card; never twice for a group/day.
 
+WEEKLY RANKING (owner, 19 Nov 2026): with the first daily summary of each ISO week (Monday 00:00 UTC), once (state key
+  rank_week), and on /ranking: every forward book ranked by return %. Table 1, the books on the main engine's entries
+  (page shadows scoreboard; marked incl. open trades; capital $10k x markets); table 2, the strategy and RL books (page
+  playbook; closed trades only; capital $10k x markets traded, RL books 2, the pair book 1). Retired books at the bottom,
+  unranked. "This week": 30 trades reached, verdict changed, retired, best and worst mover, against the snapshot stored at
+  the previous weekly card (rank_prev, rank_prev_utc). Its own guard: a failure there never stops the rest.
+
 THE KEY: read from a file the owner places (TOKEN_FILE, chmod 600); never printed, logged or stored anywhere else.
 THE CHAT: the first chat that sends /start is locked in (state file); every other chat is ignored. No key file = it waits.
 """
@@ -225,9 +232,11 @@ def counts(score, page):
         k = "%s|%s" % (r.get("book"), r.get("title"))
         c[k], v[k], net[k] = int(r.get("trades") or 0), str(r.get("verdict") or ""), float(r.get("net_usd") or 0.0)
         WON[k] = r.get("won_pct")
+    pb = (page or {}).get("playbook") if isinstance(page, dict) else None
     for mod in FORWARD:
-        for bk, b in ((page or {}).get("playbook", {}).get(mod) or {}).items():
-            if isinstance(b, dict) and "totals" in b and not any(k.startswith(bk + "|") for k in c):
+        books = pb.get(mod) if isinstance(pb, dict) else None             # a garbled page never stops the check
+        for bk, b in (books.items() if isinstance(books, dict) else ()):
+            if isinstance(b, dict) and isinstance(b.get("totals"), dict) and not any(k.startswith(bk + "|") for k in c):
                 c[bk + "|forward"] = int(b["totals"].get("trades") or 0)
                 net[bk + "|forward"] = float(b["totals"].get("net_usd") or 0.0)
     return c, v, net
@@ -864,6 +873,189 @@ def early_recap_line(now):
     return _early_guard("recap", work, default="") or ""
 
 
+# ------------------------------------------------------------------ the weekly ranking (owner, 19 Nov 2026)
+RANK_CAPITAL = 10000.0                                                # paper capital per market, as on the page
+RANK_SINCE = u"11 Nov 2026"                                           # the forward books' common start
+RANK_MARKETS = {"playbook5": 2, "playbook6": 2, "playbook7": 1}       # RL books trade BTC and ETH by design; the pair book is one
+RANK_SHORT = {"v4": "v4 old", "h3_flip_limit": "H3 flip", "h5_damp": "H5 damped", "y_4h": "Y 4h", "y_1d": "Y daily",
+              "m_swing_1h": "M swing 1h", "m_swing_4h": "M swing 4h", "p2_trap": "P2 trap", "p4_gapfill": "P4 gap fill",
+              "p5_squeeze": "P5 squeeze", "p7_session": "P7 session", "p9_cascade": "P9 cascade", "p11_release": "P11 release",
+              "p12_orb_us": "P12 US ORB", "p4_h30spot": "P4 rule A", "p4_h31trail": "P4 rule B"}
+TROPHY, STOP, UP, DOWN = u"\U0001f3c6", u"\U0001f6d1", u"\U0001f4c8", u"\U0001f4c9"
+_RANK_ERR = [None]                                                    # the last ranking failure printed (printed once)
+
+
+def _rname(book):
+    """The table's short name (11 characters): the bot's TABLE label, then RANK_SHORT, then NAMES."""
+    return TABLE.get(book) or RANK_SHORT.get(book) or NAMES.get(book, str(book))
+
+
+def _num(v):
+    """A finite float or None (garbled values are skipped, never raised)."""
+    import math
+    try:
+        f = float(v)
+    except Exception:
+        return None
+    return f if math.isfinite(f) else None
+
+
+def _rank_verdict(s):
+    """'behind: even the high end ...' -> 'behind'; 'too few trades to judge (5 of 30)' -> 'too few'."""
+    s = str(s or "").strip()
+    if not s:
+        return ""
+    return "too few" if s.startswith("too few") else s.split(":")[0].strip()[:12]
+
+
+def ranking_books(page, score):
+    """-> list of book dicts {id, book, kind ('main'|'strat'), name, ret, pnl, trades, retired, verdict} from the page.
+    kind 'main': the shadows scoreboard (marked incl. open trades; capital $10k x its markets).
+    kind 'strat': the strategy and RL books (closed trades only; capital $10k x markets traded, RL 2, pair book 1)."""
+    page = page if isinstance(page, dict) else {}
+    verdict = {}
+    for r in ((score if isinstance(score, dict) else {}).get("rows") or []):
+        if isinstance(r, dict):
+            t = str(r.get("title") or "")
+            kind = "main" if t.startswith("Shadow") else "strat" if t.startswith("Strategy") else None
+            if kind:
+                verdict[(kind, str(r.get("book")))] = _rank_verdict(r.get("verdict"))
+    out, seen = [], set()
+    sh = page.get("shadows")
+    sb = sh.get("scoreboard") if isinstance(sh, dict) else None
+    for r in ((sb.get("rows") if isinstance(sb, dict) else None) or []):
+        if not isinstance(r, dict) or not r.get("book"):
+            continue
+        book, pnl, n = str(r["book"]), _num(r.get("pnl_usd")), _num(r.get("trades"))
+        mk = _num(r.get("assets"))
+        ret = pnl / (RANK_CAPITAL * mk) * 100.0 if pnl is not None and mk and mk > 0 else _num(r.get("return_pct"))
+        if ret is None or ("main", book) in seen:
+            continue
+        seen.add(("main", book))
+        out.append({"id": "s:" + book, "book": book, "kind": "main", "name": _rname(book)[:11], "ret": ret,
+                    "pnl": pnl if pnl is not None else ret / 100.0 * RANK_CAPITAL * (mk or 1),
+                    "trades": int(n or 0), "retired": bool(r.get("retired")), "verdict": verdict.get(("main", book), "")})
+    pb = page.get("playbook")
+    for mod, books in (sorted(pb.items()) if isinstance(pb, dict) else []):
+        if not isinstance(books, dict):
+            continue
+        for book, b in sorted(books.items()):
+            if not isinstance(b, dict) or not isinstance(b.get("totals"), dict) or ("strat", book) in seen:
+                continue
+            net, n = _num(b["totals"].get("net_usd")), _num(b["totals"].get("trades"))
+            if net is None:
+                continue
+            mk = RANK_MARKETS.get(mod) or (len(b["by_asset"]) if isinstance(b.get("by_asset"), dict) else 0) or 1
+            seen.add(("strat", book))
+            out.append({"id": "p:" + book, "book": book, "kind": "strat", "name": _rname(book)[:11],
+                        "ret": net / (RANK_CAPITAL * mk) * 100.0, "pnl": net, "trades": int(n or 0), "markets": mk,
+                        "retired": bool(b.get("retired")) or "(retired" in str(b.get("title") or "").lower(),
+                        "verdict": verdict.get(("strat", book), "")})
+    return out
+
+
+def _rank_table(rows):
+    """One fixed-width table (28 characters): ranked books by return %, then the retired ones, unranked, at the bottom."""
+    live = sorted((b for b in rows if not b["retired"] and b["trades"] > 0), key=lambda b: (-b["ret"], -b["trades"], b["name"]))
+    gone = sorted((b for b in rows if b["retired"]), key=lambda b: -b["ret"])
+    L = ["%2s %-11s %8s %4s" % ("#", "Book", "Return", "Trd"), "-" * 28]
+    L += ["%2d %-11s %8s %4d" % (i, b["name"], "%+.2f%%" % b["ret"], b["trades"]) for i, b in enumerate(live, 1)]
+    if gone:
+        L += ["-" * 9 + " retired " + "-" * 10]
+        L += ["%2s %-11s %8s %4d" % ("--", b["name"], "%+.2f%%" % b["ret"], b["trades"]) for b in gone]
+    out = ["<pre>%s</pre>" % _esc("\n".join(L))] if live or gone else ["none yet"]
+    idle = [b["name"] for b in rows if not b["retired"] and b["trades"] <= 0]
+    if idle:
+        out.append(u"No trades yet: %s%s" % (_esc(", ".join(idle[:8])), " +%d more" % (len(idle) - 8) if len(idle) > 8 else ""))
+    return out
+
+
+def ranking_snapshot(books):
+    """What the next weekly card compares with: {id: {t: trades, v: verdict, r: return %, x: retired}}."""
+    return dict((b["id"], {"t": b["trades"], "v": b["verdict"], "r": round(b["ret"], 4), "x": b["retired"]}) for b in books)
+
+
+def ranking_week_lines(books, prev):
+    """The 'this week' lines: 30 trades reached, verdict changed, retired; the best and worst mover by return % change."""
+    if not isinstance(prev, dict) or not prev:
+        return [u"First weekly card: changes are counted from here on."]
+    L, moves = [], []
+    for b in books:
+        p = prev.get(b["id"]) if isinstance(prev.get(b["id"]), dict) else {}
+        old_t = int(_num(p.get("t")) or 0)
+        nm = _esc(b["name"])
+        if b["trades"] >= 30 > old_t:
+            L.append(u"%s %s reached <b>30 trades</b> (%d)" % (FLAG_END, nm, b["trades"]))
+        if p.get("v") and b["verdict"] and b["verdict"] != p.get("v"):
+            L.append(u"%s %s verdict now <b>%s</b> (was %s)" % (SCALE, nm, _esc(b["verdict"]), _esc(p["v"])))
+        if b["retired"] and not p.get("x") and p:
+            L.append(u"%s %s retired" % (STOP, nm))
+        old_r = _num(p.get("r"))
+        if old_r is not None and not b["retired"]:
+            moves.append((b["ret"] - old_r, b))
+    if moves:
+        best, worst = max(moves, key=lambda m: m[0]), min(moves, key=lambda m: m[0])
+        if best[0] > 0:
+            L.append(u"%s Best mover: %s %+.2f pts, now %+.2f%% (%s)" % (UP, _esc(best[1]["name"]), best[0], best[1]["ret"],
+                                                                      _usd_short(best[1]["pnl"])))
+        if worst[0] < 0 and worst[1] is not best[1]:
+            L.append(u"%s Worst mover: %s %+.2f pts, now %+.2f%% (%s)" % (DOWN, _esc(worst[1]["name"]), worst[0],
+                                                                       worst[1]["ret"], _usd_short(worst[1]["pnl"])))
+    return L or [u"No checkpoint crossed and no return change."]
+
+
+def ranking_card(books, prev=None, prev_utc=None, now=None):
+    """The weekly ranking card (HTML). books: ranking_books(); prev: the snapshot stored at the previous weekly card."""
+    now = now or datetime.now(timezone.utc)
+    L = [u"%s <b>Mind 15 · weekly ranking</b>" % TROPHY,
+         u"Week %d · %s UTC" % (now.isocalendar()[1], now.strftime("%a %d %b %Y, %H:%M"))]
+    if not books:
+        return "\n".join(L + ["", u"No forward books in the page yet.", u"<i>paper only · not advice</i>"])
+    L += ["", u"<b>On the main engine's entries</b>", u"<i>marked incl. open trades · $10k per market</i>"]
+    L += _rank_table([b for b in books if b["kind"] == "main"])
+    L += ["", u"<b>Strategy and RL books</b>", u"<i>closed trades only · $10k per market traded (RL 2, pair 1)</i>"]
+    L += _rank_table([b for b in books if b["kind"] == "strat"])
+    try:
+        since = datetime.strptime(str(prev_utc)[:10], "%Y-%m-%d")
+        since = u" (since %d %s)" % (since.day, since.strftime("%b"))
+    except Exception:
+        since = ""
+    L += ["", u"<b>This week</b>%s" % since] + ranking_week_lines(books, prev)
+    L += ["", u"<i>paper only · returns since %s · not advice</i>" % RANK_SINCE]
+    return "\n".join(L)
+
+
+def _rank_guard(what, fn):
+    """Run one ranking piece; any failure is printed once (by kind) and swallowed: alerts and the summary never wait on it."""
+    try:
+        return fn()
+    except Exception as e:
+        err = "%s: %s" % (what, type(e).__name__)
+        if _RANK_ERR[0] != err:
+            _RANK_ERR[0] = err
+            print(time.strftime("%Y-%m-%d %H:%M:%S"), "ranking failed (%s)" % err, flush=True)
+        return None
+
+
+def ranking_weekly(st, tok, chat, page, score, now):
+    """With the first daily summary of the ISO week: the card, then this week's snapshot (state keys rank_prev, rank_prev_utc).
+    rank_week is marked by the caller before this runs, so a failure is not retried every minute."""
+    def work():
+        books = ranking_books(page, score)
+        if not books:
+            return None                                               # no page or no books: no card, last snapshot kept
+        _send(tok, chat, ranking_card(books, st.get("rank_prev"), st.get("rank_prev_utc"), now))
+        st["rank_prev"], st["rank_prev_utc"] = ranking_snapshot(books), now.strftime("%Y-%m-%dT%H:%M:%SZ")
+        return True
+    return _rank_guard("weekly", work)
+
+
+def ranking_command(st, tok, chat, now):
+    """/ranking: the same card any time, against the last weekly snapshot (the snapshot is not changed)."""
+    return _rank_guard("/ranking", lambda: _send(tok, chat, ranking_card(ranking_books(_load(PAGE), _load(SCORE)),
+                                                                         st.get("rank_prev"), st.get("rank_prev_utc"), now)))
+
+
 # ------------------------------------------------------------------ the loop
 def check(st, tok, send=True, now=None):
     """One check: learn the chat from /start, send alerts, send the daily summary once a day. -> the new state."""
@@ -880,7 +1072,7 @@ def check(st, tok, send=True, now=None):
             if st.get("chat_id") is None and text.startswith("/start"):
                 st["chat_id"] = chat
                 _send(tok, chat, u"%s <b>Mind 15 alerts are on</b> for this chat.\nTrade closes, verdicts, engine warnings and a "
-                                 u"daily summary at 08:00 SGT. Send /summary, /health or /calibration any time.\n"
+                                 u"daily summary at 08:00 SGT. Send /summary, /health, /calibration or /ranking any time.\n"
                                  u"<i>paper only</i>" % WAVE)
             elif chat != st.get("chat_id"):
                 continue                                              # the chat lock: nobody else gets an answer
@@ -901,6 +1093,8 @@ def check(st, tok, send=True, now=None):
                     SIGNALS_LOG, signals.load_state(SIGNALS_STATE))))
             elif text.startswith("/early"):
                 early_command(st, tok)                                # H56 early signal preview (own guard)
+            elif text.startswith("/ranking"):
+                ranking_command(st, tok, chat, now)                   # the weekly ranking on request (own guard)
     page, score = _load(PAGE), _load(SCORE)
     c, v, net = counts(score, page)
     cur = {"c": c, "v": v, "net": net, "refits": refit_marks()}
@@ -939,6 +1133,9 @@ def check(st, tok, send=True, now=None):
                         _send(tok, st["chat_id"], calibration_card(res))
                 except Exception as e:
                     print(time.strftime("%Y-%m-%d %H:%M:%S"), "calibration failed: %s" % type(e).__name__, flush=True)
+            if st.get("rank_week") != week:                          # the weekly ranking: same first summary of the week, once
+                st["rank_week"] = week                                # marked before the build: a failure is not retried
+                ranking_weekly(st, tok, st["chat_id"], page, score, now)   # guarded inside
         ev += vault_check(st, tok, st["chat_id"], now)                # guarded inside: it cannot stop anything above
         ev += history_check(st, tok, st["chat_id"], now)              # the daily check's report; guarded inside
         signals_check(st, tok, page, now, recap=due)                  # last, and guarded: it cannot stop anything above

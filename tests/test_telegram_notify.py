@@ -206,7 +206,7 @@ def test_real_read_of_an_empty_journal_sends_no_card(monkeypatch):
 
 def test_chat_lock_on_health_and_calibration(monkeypatch):
     sent, reads, holder = bot(monkeypatch, [(99, "/health"), (99, "/calibration"), (99, "/summary")])
-    st = {"chat_id": 42, "summary_day": "2026-11-17", "calib_week": "2026-W47"}
+    st = {"chat_id": 42, "summary_day": "2026-11-17", "calib_week": "2026-W47", "rank_week": "2026-W47"}
     st, _ = tn.check(st, "k", now=NOW)
     assert sent == [] and reads == []                                # a stranger gets no answer and causes no read
     holder["updates"] = [(42, "/health"), (42, "/calibration"), (99, "/calibration")]
@@ -218,7 +218,7 @@ def test_chat_lock_on_health_and_calibration(monkeypatch):
 
 def test_data_alert_once_in_one_message_then_recovered(monkeypatch):
     sent, _reads, holder = bot(monkeypatch)
-    st = {"chat_id": 42, "summary_day": "2026-11-17", "calib_week": "2026-W47"}
+    st = {"chat_id": 42, "summary_day": "2026-11-17", "calib_week": "2026-W47", "rank_week": "2026-W47"}
     ts = ["2026-11-17 %02d:%02d" % divmod(15 * k, 60) for k in range(1, 40)]
     good = dict(Korea_premium="Upbit +2.1%.", Spot_vs_perp_leadership="Spot 12%.", Regime="RANGE (daily).")
     dead = dict(Korea_premium="No Korea premium read for BTC at this close.",
@@ -317,7 +317,7 @@ def at17(h, m):
 
 def run_to_fill(monkeypatch, tmp_path, **kw):
     calls, holder = signal_bot(monkeypatch, tmp_path, **kw)
-    st = {"chat_id": 42, "summary_day": "2026-11-16", "calib_week": "2026-W47"}
+    st = {"chat_id": 42, "summary_day": "2026-11-16", "calib_week": "2026-W47", "rank_week": "2026-W47"}
     st, _ = tn.check(st, "k", now=datetime(2026, 11, 16, 23, 50, tzinfo=timezone.utc))   # the preview starts, book flat
     assert calls == [] and os.path.exists(tn.SIGNALS_STATE)
     st["summary_day"] = "2026-11-17"
@@ -403,7 +403,7 @@ def test_daily_recap_goes_with_the_daily_summary_once_the_preview_has_started(mo
 
 def test_no_signal_files_and_no_recap_before_the_page_carries_the_book(monkeypatch, tmp_path):
     sent, _reads, _h = bot(monkeypatch)                              # the old page: no shadow books on it
-    st, _ = tn.check({"chat_id": 42, "calib_week": "2026-W47"}, "k", now=NOW)
+    st, _ = tn.check({"chat_id": 42, "calib_week": "2026-W47", "rank_week": "2026-W47"}, "k", now=NOW)
     assert len(sent) == 1 and "daily summary" in sent[0][1]
     assert not os.path.exists(tn.SIGNALS_STATE) and not os.path.exists(tn.SIGNALS_LOG)
 
@@ -435,7 +435,7 @@ import json  # noqa: E402
 
 VNOW = datetime(2026, 11, 19, 10, 30, tzinfo=timezone.utc)
 MADE = VNOW.timestamp() - 600
-VST = {"chat_id": 42, "summary_day": "2026-11-19", "calib_week": "2026-W47"}
+VST = {"chat_id": 42, "summary_day": "2026-11-19", "calib_week": "2026-W47", "rank_week": "2026-W47"}
 
 
 def intent(sym, opened, action, market, status, ref="65203.2", **extra):
@@ -642,7 +642,7 @@ def early_bars(tmp_path, rows):
 
 def run_to_early(monkeypatch, tmp_path):
     calls, holder = signal_bot(monkeypatch, tmp_path)
-    st = {"chat_id": 42, "summary_day": "2026-11-16", "calib_week": "2026-W47"}
+    st = {"chat_id": 42, "summary_day": "2026-11-16", "calib_week": "2026-W47", "rank_week": "2026-W47"}
     st, _ = tn.check(st, "k", now=datetime(2026, 11, 16, 23, 50, tzinfo=timezone.utc))   # both previews start, book flat
     assert calls == [] and os.path.exists(tn.EARLY_STATE) and os.path.exists(tn.SIGNALS_STATE)
     st["summary_day"] = "2026-11-17"
@@ -711,3 +711,193 @@ def test_an_exception_in_early_code_never_blocks_s1_or_the_alerts(monkeypatch, t
     assert out.count("early signals failed (check: RuntimeError)") == 1 and "early signals are broken" not in out
     assert "signals failed (check" not in out.replace("early signals failed (check", "")      # S1 never failed
     assert tn._early_guard("x", lambda: 7) == 7
+
+
+# ------------------------------------------------------------------ the weekly ranking (owner, 19 Nov 2026)
+def rank_page(trail=20, trail_pnl=5407.89, fvg=20, fvg_net=504.15, p1_retired=True):
+    """A realistic page: the shadows scoreboard (marked, 8 markets) and the strategy / RL / pair books (closed only)."""
+    sh = [{"book": "main", "title": "Main rule (v5), fresh copy", "assets": 8, "pnl_usd": 4517.86, "return_pct": 5.65,
+           "trades": 2, "win_rate_pct": 0.0},
+          {"book": "b_trail", "title": "B trail", "assets": 8, "pnl_usd": trail_pnl, "return_pct": 6.76, "trades": trail},
+          {"book": "b_targets", "title": "B targets", "assets": 8, "pnl_usd": 3497.49, "return_pct": 4.37, "trades": 15},
+          {"book": "m_swing_4h", "title": "M 4h", "assets": 8, "pnl_usd": -195.19, "return_pct": -0.24, "trades": 1},
+          {"book": "m_swing_1h", "title": "M 1h", "assets": 8, "pnl_usd": 0.0, "return_pct": 0.0, "trades": 0}]
+    ba = lambda *a: dict((x, {"trades": 1}) for x in a)                                  # noqa: E731
+    six = ("BTCUSDT", "ETHUSDT", "XAUUSD", "XAGUSD", "USDJPY", "SPX")
+    p1 = {"title": "Liquidation hunt (retired 15 Nov 2026)", "totals": {"trades": 66, "net_usd": -1367.6}, "by_asset": ba(*six)}
+    if p1_retired:
+        p1["retired"] = "2026-11-15 06:15"
+    else:
+        p1["title"] = "Liquidation hunt"
+    return {"generated_utc": "2026-11-23T00:00:00Z", "version": "think15-v5.2.3", "assets": {},
+            "shadows": {"scoreboard": {"rows": sh}},
+            "playbook": {"playbook": {"p1_liqhunt": p1, "p2_trap": {"totals": {"trades": 0, "net_usd": 0.0}, "by_asset": {}}},
+                         "playbook3": {"p8_fvg": {"totals": {"trades": fvg, "net_usd": fvg_net}, "by_asset": ba(*six)},
+                                       "p10_round": {"totals": {"trades": 67, "net_usd": -531.15}, "by_asset": ba(*six)}},
+                         "playbook5": {"p5_rlq": {"totals": {"trades": 5, "net_usd": 211.53}, "by_asset": ba("BTCUSDT")}},
+                         "playbook6": {"p6_p4trend": {"totals": {"trades": 2, "net_usd": 424.67}, "by_asset": ba("BTCUSDT")}},
+                         "playbook7": {"p7_rvbear": {"totals": {"trades": 1, "net_usd": -587.29}, "by_asset": ba("BTCUSDT")}}}}
+
+
+def rank_score(fvg_verdict="too few trades to judge (20 of 30)"):
+    return {"rows": [{"book": "main", "title": "Main books (live)", "trades": 5, "net_usd": -1332.0, "verdict": "ahead: x"},
+                     {"book": "b_trail", "title": "Shadow: b_trail", "trades": 20, "net_usd": 4526.0,
+                      "verdict": "too few trades to judge (20 of 30)"},
+                     {"book": "p8_fvg", "title": "Strategy: p8_fvg", "trades": 20, "net_usd": 504.15, "verdict": fvg_verdict},
+                     {"book": "p1_liqhunt", "title": "Strategy: p1_liqhunt", "trades": 66, "net_usd": -1367.6,
+                      "verdict": "behind: even the high end of the range is negative"}]}
+
+
+def _pre_rows(card, k):
+    """The rows of the k-th <pre> table of a card (header and rule dropped)."""
+    return card.split("<pre>")[k + 1].split("</pre>")[0].split("\n")[2:]
+
+
+RNOW = datetime(2026, 11, 23, 0, 1, tzinfo=timezone.utc)
+
+
+def test_ranking_order_and_percent_maths_marked_vs_closed():
+    books = dict((b["id"], b) for b in tn.ranking_books(rank_page(), rank_score()))
+    assert abs(books["s:b_trail"]["ret"] - 5407.89 / 80000 * 100) < 1e-9          # marked, incl. open: $10k x 8 markets
+    assert abs(books["s:m_swing_4h"]["ret"] - (-195.19 / 80000 * 100)) < 1e-9
+    assert abs(books["p:p8_fvg"]["ret"] - 504.15 / 60000 * 100) < 1e-9            # closed only: 6 markets traded
+    assert abs(books["p:p5_rlq"]["ret"] - 211.53 / 20000 * 100) < 1e-9            # RL: BTC and ETH by design (2)
+    assert abs(books["p:p6_p4trend"]["ret"] - 424.67 / 20000 * 100) < 1e-9
+    assert abs(books["p:p7_rvbear"]["ret"] - (-587.29 / 10000 * 100)) < 1e-9      # the pair book: 1
+    assert books["s:main"]["kind"] == "main" and books["p:p8_fvg"]["kind"] == "strat"
+    assert books["p:p8_fvg"]["verdict"] == "too few" and books["p:p1_liqhunt"]["verdict"] == "behind"
+    assert books["s:main"]["verdict"] == ""                                        # 'Main books (live)' is not the shadow copy
+    card = tn.ranking_card(list(books.values()), now=RNOW)
+    t1, t2 = _pre_rows(card, 0), _pre_rows(card, 1)
+    assert t1[0].startswith(" 1 B trail") and "+6.76%" in t1[0] and t1[0].rstrip().endswith("20")
+    assert t1[1].startswith(" 2 Main") and "+5.65%" in t1[1]
+    assert t1[2].startswith(" 3 B targets") and t1[3].startswith(" 4 M swing 4h") and "-0.24%" in t1[3]
+    assert "M swing 1h" not in "\n".join(t1) and "No trades yet: M swing 1h" in card       # 0 trades: one line
+    assert t2[0].startswith(" 1 P6 RL ctrl") and "+2.12%" in t2[0]                # 424.67 / 20,000
+    assert [r[3:14].strip() for r in t2[:5]] == ["P6 RL ctrl", "P5 RL", "P8 FVG", "P10 round", "P7 pair"]
+    assert "-5.87%" in t2[4] and "No trades yet: P2 trap" in card.split("Strategy and RL books")[1]
+    assert "weekly ranking" in card and "paper only · returns since 11 Nov 2026 · not advice" in card
+    assert "edge" not in card.lower() and "kronos" not in card.lower()
+
+
+def test_ranking_retired_at_the_bottom_unranked_and_tables_narrow():
+    card = tn.ranking_card(tn.ranking_books(rank_page(), rank_score()), now=RNOW)
+    t2 = _pre_rows(card, 1)
+    i = next(k for k, r in enumerate(t2) if "retired" in r)
+    assert t2[-1].startswith("-- P1 liq hunt") and "-2.28%" in t2[-1] and i == len(t2) - 2   # after every ranked row
+    assert all(not r.startswith("--") for r in t2[:i])
+    for k in (0, 1):
+        pre = card.split("<pre>")[k + 1].split("</pre>")[0]
+        assert max(len(ln) for ln in pre.split("\n")) <= 30
+    t2b = _pre_rows(tn.ranking_card(tn.ranking_books(rank_page(p1_retired=False), rank_score())), 1)
+    assert not any("retired" in r for r in t2b) and any(r.startswith(" 5 P1 liq hunt") for r in t2b)   # not retired: ranked
+
+
+def test_ranking_this_week_diff_30_trades_verdict_retired_and_movers():
+    prev = tn.ranking_snapshot(tn.ranking_books(rank_page(trail=27, trail_pnl=4000.0, fvg=26, p1_retired=False), rank_score()))
+    books = tn.ranking_books(rank_page(trail=31, trail_pnl=5600.0, fvg=30, fvg_net=-300.0),
+                             rank_score("ahead: the range is above zero"))
+    card = tn.ranking_card(books, prev, "2026-11-16T00:01:00Z", RNOW)
+    week = card.split("This week")[1]
+    assert "(since 16 Nov)" in week
+    assert "B trail reached <b>30 trades</b> (31)" in week and "P8 FVG reached <b>30 trades</b> (30)" in week
+    assert "P8 FVG verdict now <b>ahead</b> (was too few)" in week
+    assert "P1 liq hunt retired" in week
+    assert "Best mover: B trail +2.00 pts, now +7.00% (+$84.0k)" in week          # (5600-4000)/80,000; $ at 15x
+    assert "Worst mover: P8 FVG -1.34 pts, now -0.50% (-$4,500)" in week           # (-300-504.15)/60,000
+    assert "Main reached" not in week and "B targets" not in week                  # no checkpoint, no move
+    assert "First weekly card" in tn.ranking_card(books, None)
+
+
+def ranking_bot(monkeypatch, pg=None, sc=None, updates=()):
+    sent, holder = [], {"page": rank_page() if pg is None else pg, "score": rank_score() if sc is None else sc,
+                        "updates": list(updates)}
+
+    def fake_call(tok, method, payload, timeout=20):
+        if method == "getUpdates":
+            ups, holder["updates"] = holder["updates"], []
+            return {"ok": True, "result": [{"update_id": 50 + k, "message": {"chat": {"id": c}, "text": t}}
+                                           for k, (c, t) in enumerate(ups)]}
+        sent.append((payload.get("chat_id"), payload.get("text", "")))
+        return {"ok": True}
+    monkeypatch.setattr(tn, "_call", fake_call)
+    monkeypatch.setattr(tn, "_load", lambda p, d=None: holder["page"] if p.endswith("page.json") else holder["score"])
+    monkeypatch.setattr(tn, "refit_marks", lambda: [0, 0])
+    monkeypatch.setattr(tn, "disk_free_gb", lambda path=None: 50.0)
+    monkeypatch.setattr(tn, "calibration_now", lambda now=None: calib_result(n=0))
+    monkeypatch.setattr(tn, "_RANK_ERR", [None])
+    return sent, holder
+
+
+def test_weekly_ranking_once_per_iso_week_and_snapshot(monkeypatch):
+    sent, holder = ranking_bot(monkeypatch)
+    at = lambda d, h=0, m=1: datetime(2026, 11, d, h, m, tzinfo=timezone.utc)   # noqa: E731
+    st = {"chat_id": 42}
+    for now in (at(16), at(16, 0, 2), at(17), at(22, 23, 59)):                # Monday 16 Nov to Sunday 22 Nov
+        st, _ = tn.check(st, "k", now=now)
+    rk = [i for i, (_c, t) in enumerate(sent) if "weekly ranking" in t]
+    assert rk == [1] and st["rank_week"] == "2026-W47" and st["rank_prev_utc"] == "2026-11-16T00:01:00Z"
+    assert st["rank_prev"]["s:b_trail"] == {"t": 20, "v": "too few", "r": round(5407.89 / 800, 4), "x": False}
+    assert "First weekly card" in sent[1][1]
+    holder["page"] = rank_page(trail=30, trail_pnl=6000.0)
+    st, _ = tn.check(st, "k", now=at(23))                                     # the next Monday: second card, with the diff
+    rk = [t for _c, t in sent if "weekly ranking" in t]
+    assert len(rk) == 2 and st["rank_week"] == "2026-W48" and "B trail reached <b>30 trades</b>" in rk[1]
+    assert "(since 16 Nov)" in rk[1] and st["rank_prev"]["s:b_trail"]["t"] == 30
+    assert sum("daily summary" in t for _c, t in sent) == 4
+
+
+def test_ranking_command_chat_lock_and_snapshot_unchanged(monkeypatch):
+    sent, holder = ranking_bot(monkeypatch, updates=[(99, "/ranking")])
+    snap = {"s:b_trail": {"t": 25, "v": "too few", "r": 6.0, "x": False}}
+    st = {"chat_id": 42, "summary_day": "2026-11-17", "calib_week": "2026-W47", "rank_week": "2026-W47",
+          "rank_prev": dict(snap), "rank_prev_utc": "2026-11-16T00:01:00Z"}
+    st, _ = tn.check(st, "k", now=NOW)
+    assert sent == []                                                          # a stranger gets no answer
+    holder["updates"] = [(42, "/ranking"), (99, "/ranking")]
+    st, _ = tn.check(st, "k", now=NOW)
+    assert [c for c, _t in sent] == [42] and "weekly ranking" in sent[0][1] and "Best mover: B trail" in sent[0][1]
+    assert st["rank_prev"] == snap                                             # /ranking never moves the snapshot
+
+
+GARBLED = [
+    (None, None),
+    ({"generated_utc": "2026-11-17T00:00:00Z", "shadows": "garbled", "playbook": [1, 2]}, None),
+    ({"generated_utc": "2026-11-17T00:00:00Z", "shadows": {"scoreboard": "x"}, "playbook": {"playbook5": None}},
+     {"rows": [{"book": "p8_fvg", "title": "Strategy: p8_fvg", "trades": 0, "net_usd": 0, "verdict": None}]}),
+    ({"generated_utc": "2026-11-17T00:00:00Z",
+      "shadows": {"scoreboard": {"rows": [None, {"book": "b_trail", "assets": 0, "pnl_usd": "abc", "trades": "x"},
+                                          {"book": "b_targets", "assets": "8", "pnl_usd": float("nan"), "trades": 3}]}},
+      "playbook": {"playbook3": {"p8_fvg": {"totals": "nope"}, "p6_vwap": {"totals": {"trades": 3, "net_usd": None}}},
+                   "playbook5": "garbled"}}, {"rows": [{"book": "b_trail", "title": "Shadow: b_trail", "verdict": 7}]}),
+]
+
+
+@pytest.mark.parametrize("pg,sc", GARBLED)
+def test_ranking_with_missing_or_garbled_data_never_stops_the_summary(monkeypatch, pg, sc):
+    sent, holder = ranking_bot(monkeypatch)
+    holder["page"], holder["score"] = pg, sc
+    st, _ = tn.check({"chat_id": 42}, "k", now=NOW)
+    assert any("daily summary" in t for _c, t in sent) and st["summary_day"] == "2026-11-17" and st["rank_week"] == "2026-W47"
+    assert not any("weekly ranking" in t for _c, t in sent) and "rank_prev" not in st     # no books: no card, no snapshot
+    holder["updates"] = [(42, "/ranking")]
+    st, _ = tn.check(st, "k", now=NOW)
+    assert "No forward books in the page yet" in sent[-1][1]
+
+
+def test_ranking_failure_is_guarded_and_printed_once(monkeypatch, capsys):
+    sent, holder = ranking_bot(monkeypatch)
+
+    def boom(*a, **k):
+        raise RuntimeError("ranking broke")
+    monkeypatch.setattr(tn, "ranking_books", boom)
+    monkeypatch.setattr(tn, "disk_free_gb", lambda path=None: 1.5)
+    st, _ = tn.check({"chat_id": 42}, "k", now=NOW)
+    holder["updates"] = [(42, "/ranking"), (42, "/ranking")]
+    st, _ = tn.check(st, "k", now=NOW)
+    texts = [t for _c, t in sent]
+    assert any("daily summary" in t for t in texts) and any("Server disk low" in t for t in texts)
+    assert not any("weekly ranking" in t for t in texts) and st["rank_week"] == "2026-W47"
+    out = capsys.readouterr().out
+    assert out.count("ranking failed (weekly: RuntimeError)") == 1 and out.count("ranking failed (/ranking: RuntimeError)") == 1
+    assert "ranking broke" not in out
