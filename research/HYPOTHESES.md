@@ -3006,3 +3006,11 @@ have a full-period non-overlapping hit rate above 50%. The five and the ten are 
 all tested tickers together. A pass would only allow the page's label to say "tested on history" (no edge is claimed); a
 fail means the page should say the stance showed no edge on history (the wording is the owner's call). The live record
 the page already builds is unaffected either way.
+### H57 note: data availability (19 Nov 2026, 10:12 UTC; from Dukascopy's file listing only, before any H57 number was computed)
+- Dukascopy names its US stock CFDs `<TICKER>USUSD`; Meta Platforms' CFD still carries its old name `FBUSUSD` (live to
+  2025). It is META's CFD, so META stays in the ten (the rule replaces a ticker only when it has no CFD); WMT is not used.
+- ARGX and DDOG have no Dukascopy CFD: NOT TESTABLE, as registered. Tested: NVDA, MU, T (of the five) and the ten (AAPL,
+  MSFT, AMZN, GOOGL, AVGO, META, TSLA, BRK.B, JPM, LLY): 13 tickers, so condition (2) of the pass bar needs 6 of 13.
+- Daily bars for days before the minute downloads (which start 2020-10-01, 60 days before the index model's first odds
+  in 2021) are built from Dukascopy's hourly candles of the cash-session hours (09:00-16:00 New York hour buckets), not
+  from 15-minute bars; from 2020-10-01 on they are built from the 15-minute bars as registered.
