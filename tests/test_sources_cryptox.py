@@ -458,7 +458,11 @@ def test_update_never_raises_and_a_failed_source_keeps_its_file(tmp_path, monkey
 
     out = cx.update(log=bad_log, src_dir=src, assets=(A,))
     fails = [k for k, v in out.items() if str(v).startswith("failed: ")]
-    assert set(fails) >= {"optflow_BTCUSDT", "stables", "fx", "caps"}, out
+    assert set(fails) >= {"optflow_BTCUSDT", "stables", "caps"}, out
+    # fx: once today's ECB rate is published (17:00 Frankfurt) the first run already holds it, the second run has no
+    # day left to ask for and so cannot fail: before that hour it must fail, after it it returns the same row count.
+    # (The test reads the real clock; requiring "fx" in `fails` made it fail every day from 16:00 UTC to midnight.)
+    assert "fx" in fails or out["fx"] == len(cx.load_source("fx", None, src)), out
     for p, blob in before.items():
         assert open(p, "rb").read() == blob, "%s changed after a failed fetch" % os.path.basename(p)
 
