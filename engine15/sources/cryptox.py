@@ -55,7 +55,7 @@ import pandas as pd
 from .. import data as _data
 from ..config import DATA_DIR
 from . import options_hist as _oh
-from .flows import _asof, _write
+from .flows import _asof, _store, _write, read_csv_exact
 
 SRC_DIR = os.path.join(DATA_DIR, "sources")
 STATE_NAME = "cryptox_state.json"
@@ -191,7 +191,7 @@ _CACHE = OrderedDict()
 
 
 def _read(path, cols, key):
-    d = pd.read_csv(path, dtype={"date": str} if key == "date" else None, float_precision="round_trip")
+    d = read_csv_exact(path, dtype={"date": str} if key == "date" else None)
     for c in cols:
         if c not in d:
             d[c] = np.nan
@@ -214,12 +214,7 @@ def _extend(kind, asset, src_dir, old, new):
         new = new[~new[key].isin(set(old[key]))]
     if not len(new):
         return len(old)
-    both = pd.concat([old, new], ignore_index=True) if len(old) else new.copy()
-    both = both.drop_duplicates(key, keep="first").sort_values(key)
-    if key == "ts_ms":
-        both["ts_ms"] = both["ts_ms"].astype("int64")
-    _write(path_for(kind, asset, src_dir), both)
-    return len(both)
+    return _store(path_for(kind, asset, src_dir), cols, old, new)     # old is read bit for bit already (_read)
 
 
 def known_at(nominal_ms, seen_ms, window_ms):
