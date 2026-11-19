@@ -37,6 +37,11 @@ EARLY SIGNAL PREVIEW (H56, the early signal book S2; signals_early.py): the same
   to the owner's chat only, beside the S1 preview; /early answers with its record and the paired comparison; one line in
   the daily recap. Its own guard: a failure there never touches S1, the alerts or the summary.
 
+DATA HISTORY CHANGED (owner, 19 Nov 2026, "add an alert"): the reading cache's once-a-day check (evcache.update) re-reads
+  every stored row and rewrites the ones whose readings changed; live.py writes what it found to data/check_report.json.
+  ONE card per group and UTC day when an asset had more than MIND15_CHECK_ALERT_ROWS (default 2,000) changed old rows or
+  the check was stopped by its budget. Read only; a missing or garbled file means no card; never twice for a group/day.
+
 THE KEY: read from a file the owner places (TOKEN_FILE, chmod 600); never printed, logged or stored anywhere else.
 THE CHAT: the first chat that sends /start is locked in (state file); every other chat is ignored. No key file = it waits.
 """
@@ -701,6 +706,106 @@ def vault_check(st, tok, chat, now):
             print(time.strftime("%Y-%m-%d %H:%M:%S"), "vault alerts failed (%s)" % tag, flush=True)
     return done
 
+# ------------------------------------------------------------------ data history changed (the daily check's report, read only)
+# Owner, 19 Nov 2026: "add an alert". Once a UTC day the reading cache re-reads every stored row of each group and rewrites
+# the rows whose readings changed (evcache.update); live.write_check_report puts what it found in data/check_report.json:
+#   {"groups": {group: {"day", "changed_rows": {asset: n}, "stopped", "stop_reason", "seconds", "at_utc"}}}
+# ONE card per group and UTC day when an asset had more than CHECK_ALERT_ROWS changed old rows (MIND15_CHECK_ALERT_ROWS)
+# or the check was stopped by its budget. Read only, one small read per check; a missing or garbled file means no card.
+CHECK_REPORT = os.path.join(DATA_DIR, "check_report.json")
+CHECK_ALERT_ROWS = 2000                                               # changed old rows of ONE asset that make a card
+CHECK_READ_MAX = 1 << 16                                              # bytes read at most; a larger file is not read
+CHECK_FRESH_DAYS = 1                                                  # a report of today or yesterday (UTC) only
+CHECK_MEMORY_DAYS = 8                                                 # group/day keys alerted, kept this long
+COMPASS = u"\U0001f9ed"
+_CHECK_ERR = [None]                                                   # the last failure printed (printed once)
+
+
+def check_alert_rows():
+    """MIND15_CHECK_ALERT_ROWS (a whole number >= 1), else CHECK_ALERT_ROWS."""
+    try:
+        v = int(str(os.environ.get("MIND15_CHECK_ALERT_ROWS", "")).strip() or CHECK_ALERT_ROWS)
+        return v if v >= 1 else CHECK_ALERT_ROWS
+    except ValueError:
+        return CHECK_ALERT_ROWS
+
+
+def _check_read(path=None):
+    """-> {group: entry} from the report, or {} when it is missing, too large, garbled or shaped otherwise."""
+    try:
+        with open(path or CHECK_REPORT, "rb") as fh:
+            raw = fh.read(CHECK_READ_MAX + 1)
+        if len(raw) > CHECK_READ_MAX:
+            return {}
+        doc = json.loads(raw.decode("utf-8"))
+        groups = doc.get("groups") if isinstance(doc, dict) else None
+        return dict((g, e) for g, e in groups.items() if isinstance(g, str) and isinstance(e, dict)) \
+            if isinstance(groups, dict) else {}
+    except Exception:
+        return {}
+
+
+def history_card(g, e, limit=None):
+    """One group's entry -> the card, or None when no asset passed the limit and the check was not stopped."""
+    limit = check_alert_rows() if limit is None else limit
+    rows = {}
+    for a, n in (e.get("changed_rows") if isinstance(e.get("changed_rows"), dict) else {}).items():
+        try:
+            n = int(n)
+        except (TypeError, ValueError):
+            continue
+        if n > 0:
+            rows[str(a)] = n
+    stopped = e.get("stopped") is True
+    if not stopped and not any(n > limit for n in rows.values()):
+        return None
+    total = sum(rows.values())
+    who = u" · ".join(u"%s %s" % (_esc(MKT.get(a, a)), "{:,}".format(n)) for a, n in sorted(rows.items(), key=lambda r: -r[1]))
+    try:
+        secs = u"finished in %.0fs" % float(e.get("seconds"))
+    except (TypeError, ValueError):
+        secs = u"finished"
+    how = u"was stopped by its limit and resumes tomorrow" if stopped else secs
+    return u"%s <b>Data history changed · %s</b>: %s old row%s revised today%s; the daily check %s" % (
+        COMPASS, _esc(g), "{:,}".format(total), "" if total == 1 else "s", u" (%s)" % who if who else "", how)
+
+
+def history_check(st, tok, chat, now, path=None):
+    """The data-history part of one check: one card per group and UTC day (a key is remembered only once its card is
+    delivered, so never twice). Never raises. -> the cards delivered."""
+    done = []
+    try:
+        mem = st.get("history_alerted") if isinstance(st.get("history_alerted"), dict) else {}
+        today = now.date()
+        now_s = now.timestamp()
+        for g, e in _check_read(path).items():
+            try:
+                day = datetime.strptime(str(e.get("day")), "%Y-%m-%d").date()
+            except Exception:
+                continue
+            if not 0 <= (today - day).days <= CHECK_FRESH_DAYS:
+                continue
+            key = "%s|%s" % (g, day.isoformat())
+            if key in mem:
+                continue
+            card = history_card(g, e)
+            if card is None:
+                continue
+            r = _send(tok, chat, card)
+            if isinstance(r, dict) and r.get("ok"):
+                mem[key] = now_s
+                done.append(card)
+        cut = now_s - CHECK_MEMORY_DAYS * 86400
+        st["history_alerted"] = dict((k, v) for k, v in mem.items() if isinstance(v, (int, float)) and v >= cut)
+        _CHECK_ERR[0] = None
+    except Exception as e:                                            # never stops the other alerts; printed once
+        tag = type(e).__name__
+        if _CHECK_ERR[0] != tag:
+            _CHECK_ERR[0] = tag
+            print(time.strftime("%Y-%m-%d %H:%M:%S"), "data history alert failed (%s)" % tag, flush=True)
+    return done
+
+
 # ------------------------------------------------------------------ the early signal preview (H56; signals_early.py)
 EARLY_HEAD = u"\U0001f9ea Early signal preview"                       # the first line of every early signal message
 EARLY_STATE = os.path.join(DATA_DIR, "signals_early_state.json")      # its own state and log (signals_early.py writes them)
@@ -835,6 +940,7 @@ def check(st, tok, send=True, now=None):
                 except Exception as e:
                     print(time.strftime("%Y-%m-%d %H:%M:%S"), "calibration failed: %s" % type(e).__name__, flush=True)
         ev += vault_check(st, tok, st["chat_id"], now)                # guarded inside: it cannot stop anything above
+        ev += history_check(st, tok, st["chat_id"], now)              # the daily check's report; guarded inside
         signals_check(st, tok, page, now, recap=due)                  # last, and guarded: it cannot stop anything above
         early_check(st, tok, page, now)                               # H56 early signal preview: after S1, its own guard
     elif due and st.get("chat_id") is None:

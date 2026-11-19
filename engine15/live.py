@@ -264,6 +264,61 @@ def _think_notes(prep, key=None):
         return {}
 
 
+# ------------------------------------------------------------------ the daily check's report (telegram_notify reads it)
+# Owner, 19 Nov 2026: "add an alert" when the reading cache's daily check (evcache.update) finds many old rows changed.
+# The lean think's report is turned into one small entry per group right after the think (check_entry) and written
+# in the guarded part of the group's step (write_check_report): one group at a time, in the groups' fixed order, in
+# the step one after another and in the parallel step's worker alike (it holds the turn there). Never raises.
+CHECK_REPORT = os.path.join(DATA_DIR, "check_report.json")
+
+
+def check_entry(prep, now_s=None):
+    """The lean think's evcache report -> this group's entry of data/check_report.json, or None when no daily check
+    ran (no lean think, a rebuild, or not the first step of the UTC day)."""
+    try:
+        rep = (prep or {}).get("evcache")
+        if not isinstance(rep, dict) or not (rep.get("checked") or rep.get("check_stopped")):
+            return None
+        now_s = time.time() if now_s is None else now_s
+        stop = rep.get("check_stopped")
+        return {"day": time.strftime("%Y-%m-%d", time.gmtime(now_s)),
+                "changed_rows": dict((str(a), int(n)) for a, n in (rep.get("changed_rows") or {}).items()),
+                "stopped": bool(stop), "stop_reason": str(stop)[:200] if stop else None,
+                "seconds": round(float(rep.get("seconds") or 0.0), 1),
+                "at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(now_s))}
+    except Exception:
+        return None
+
+
+def write_check_report(g, entry, log=print, path=None):
+    """This group's entry into data/check_report.json ({"groups": {group: entry}}), written atomically. Called only
+    where the group holds the turn, so the groups never write it at the same time. -> True when written."""
+    if entry is None:
+        return False
+    path = path or CHECK_REPORT
+    try:
+        try:
+            with open(path, encoding="utf-8") as fh:
+                doc = json.load(fh)
+        except Exception:                                          # missing or garbled: start a new one
+            doc = {}
+        if not isinstance(doc, dict) or not isinstance(doc.get("groups"), dict):
+            doc = {"groups": {}}
+        doc["groups"][g] = entry
+        doc["updated_utc"] = entry.get("at_utc")
+        tmp = path + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as fh:
+            json.dump(doc, fh, indent=1, sort_keys=True)
+        os.replace(tmp, path)
+        return True
+    except Exception as e:
+        try:
+            log("%s: the daily check report could not be written (%r)" % (g, e))
+        except Exception:
+            pass
+        return False
+
+
 def step(log=print, fetch=True):
     """One step for every market group; a group whose market has no new closed bar (the S&P at
     night, everything but crypto at the weekend) is skipped. One page for all of them."""
@@ -453,6 +508,7 @@ def step_group(g, assets, state, log=print, fetch=True, gate=None):
         tm.lap("full prepare")
     else:
         tm.lap_parts(_think_notes(prep, "timing"), "think", _think_notes(prep))
+    check = check_entry(prep)                                      # the daily check's report, if one ran (written below)
     times = prep["times"]
     n = len(times)
     lo = n - 1 if done is None else int(times.searchsorted(pd.Timestamp(done, unit="ms", tz="UTC"), side="right"))
@@ -462,10 +518,15 @@ def step_group(g, assets, state, log=print, fetch=True, gate=None):
         prep = backtest.prepare(cfg=cfg, bars=bars, funding=funding, live=live)
         tm.lap("full prepare")
     if lo >= n:
+        if check is not None:                                      # the check still ran: its report, in the turn
+            if gate is not None:
+                (state, marks), gate = _take_turn(gate, tm), None
+            write_check_report(g, check, log=log)
         log("%s: nothing new: the last closed session (%s) is already in the journal" % (g, times[-1]))
         return None
     if gate is not None:
         (state, marks), gate = _take_turn(gate, tm), None
+    write_check_report(g, check, log=log)                          # the guarded part: one group at a time, in order
     books, entries, trades_now = {}, [], {}
     for a in assets:                                               # 3. decide
         ev = prep["ev"][a]
