@@ -581,6 +581,7 @@ def _run(setups_path, log, env, state_path, trades_dir, now):
         label = "%s %s %s" % (b.get("symbol"), b.get("action"), b.get("market"))
         if not intent_ok(b):
             it["status"] = "refused"
+            it["why"] = "not an allowed exit"                    # kept for the Telegram card
             _say(log, "vault: %s not sent (not an allowed exit)" % label)
             continue
         status, out = post(port, secret, tls, "submit_intent", {"intent": b})
@@ -591,6 +592,7 @@ def _run(setups_path, log, env, state_path, trades_dir, now):
         else:
             if status in (400, 409):                             # the same id and body would always be refused
                 it["status"] = "refused"
+                it["why"] = _why(status, out)                    # the vault's code, kept for the Telegram card
             _say(log, "vault: %s not sent (%s)" % (label, _why(status, out)))
     # 2. the books
     held = st.setdefault("book", {})
