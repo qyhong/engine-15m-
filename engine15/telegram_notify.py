@@ -27,6 +27,11 @@ SUBSCRIBER SIGNAL PREVIEW (H53, the signal book S1; the rules and the arithmetic
   on request. PREVIEW: every one of these goes to the owner's own chat only, under a first line "Subscriber preview".
   No subscriber channel exists. A failure in the signals code is logged once and never stops the alerts above.
 
+VIP VAULT EXIT INSTRUCTIONS (owner, 19 Nov 2026): every exit intent vault_feed.py sends to the live VIP vault gets ONE card
+  the first time its status is final: accepted by the vault, refused, or given up after 24 h; and one card when sends have
+  failed for 30 min (one more when they go through again). Read only: one small read of data/vault_feed_state.json per
+  check; vault_feed is never imported. A missing or garbled file means no card; a failure there never stops the rest.
+
 THE KEY: read from a file the owner places (TOKEN_FILE, chmod 600); never printed, logged or stored anywhere else.
 THE CHAT: the first chat that sends /start is locked in (state file); every other chat is ignored. No key file = it waits.
 """
@@ -62,6 +67,16 @@ SIGNALS_LOG = os.path.join(DATA_DIR, "signals_log.jsonl")
 LIVE = os.path.join(OUT_DIR, "live")                                  # the book's closed-trade files (read only)
 _SIGNALS_ERR = [None]                                                 # the last signals failure printed (printed once)
 _SIGNALS_UNREAD = [""]                                                # the markets whose bars could not be read, as last printed
+# VIP vault exit alerts (owner, 19 Nov 2026): the feed's own state file, READ ONLY (vault_feed.py writes it; never imported here)
+VAULT_STATE = os.path.join(DATA_DIR, "vault_feed_state.json")
+VAULT_READ_MAX = 1 << 20                                              # bytes read at most; a larger file is not read (no alert)
+VAULT_WINDOW_S = 2 * 86400                                            # only intents made this recently are alerted (made + 24 h)
+VAULT_MEMORY_S = 8 * 86400                                            # alerted ids kept this long (the feed drops them after 7 d)
+VAULT_MEMORY_MAX = 400                                                # ... and at most this many (the newest)
+VAULT_FAIL_S = 1800                                                   # sends failing this long -> one card
+VAULT_BAR_S = 900                                                     # a book goes once per 15m bar: its as_of may lag one bar
+VAULT_ALIVE_S = 600                                                   # the feed wrote its state this recently = it is running
+_VAULT_ERR = [None]                                                   # the last vault-alert failure printed (printed once)
 
 
 def disk_free_gb(path=None):
@@ -148,7 +163,7 @@ NAMES = {"main": "Main engine", "b_trail": "B trail (shadow)", "b_targets": "B t
          "p5_squeeze": "P5 squeeze"}
 GREEN, RED, FLAG_END, SCALE, BRAIN, WARN, OK, WAVE, CHART = (u"\U0001f7e2", u"\U0001f534", u"\U0001f3c1", u"\u2696\ufe0f",
                                                             u"\U0001f9e0", u"\u26a0\ufe0f", u"\u2705", u"\U0001f44b", u"\U0001f4ca")
-TARGET, DISH = u"\U0001f3af", u"\U0001f4e1"
+TARGET, DISH, BANK, CROSS = u"\U0001f3af", u"\U0001f4e1", u"\U0001f3e6", u"❌"
 
 
 def _esc(t):
@@ -493,6 +508,195 @@ def signals_check(st, tok, page, now, recap=False):
     return _signals_guard("check", work)
 
 
+# ------------------------------------------------------------------ VIP vault exit instructions (vault_feed.py's state, read only)
+# The feed (vault_feed.run) queues each exit intent once: {"body", "status", "made", "seq"}. Its statuses:
+#   pending   queued, retried every step until the vault answers (also while the vault is down or the config is wrong)
+#   sent      the vault took it (HTTP 200 ok; a duplicate of one it already holds is "sent" too)      -> alert: accepted
+#   refused   the vault answered 400 / 409, or the feed's own last guard refused the body           -> alert: refused
+#   expired   still pending 24 h after it was made: given up                                        -> alert: given up
+# Finished intents stay in the file for 7 days, then the feed deletes them.
+VAULT_ACTION = {"close": u"close the position", "move_stop": u"move the stop to the entry"}
+
+
+def _vault_read(path=None):
+    """-> (the feed's state dict, its mtime) or (None, None): missing, too large, garbled or not an object. One read."""
+    path = path or VAULT_STATE
+    try:
+        mtime = os.path.getmtime(path)
+        with open(path, "rb") as fh:
+            raw = fh.read(VAULT_READ_MAX + 1)
+        if len(raw) > VAULT_READ_MAX:
+            return None, None
+        doc = json.loads(raw.decode("utf-8"))
+    except Exception:
+        return None, None
+    return (doc, mtime) if isinstance(doc, dict) else (None, None)
+
+
+def _vault_px(s):
+    """The vault's decimal string with thousands commas: '65203.2' -> '65,203.2'; anything else as text (escaped)."""
+    s = str(s)
+    whole, dot, frac = s.partition(".")
+    if not whole.isdigit() or (frac and not frac.isdigit()):
+        return _esc(s[:24])
+    return "{:,}".format(int(whole)) + dot + frac
+
+
+def _vault_hm(t):
+    try:
+        return datetime.fromtimestamp(float(t), timezone.utc).strftime("%d %b %H:%M UTC").lstrip("0")
+    except Exception:
+        return "?"
+
+
+def _vault_opened(iid):
+    """The setup's opening time from the intent id 'BTCUSDT.20261118T101500Z.close.futures' -> '18 Nov 10:15 UTC'."""
+    try:
+        d = datetime.strptime(iid.split(".")[1], "%Y%m%dT%H%M%SZ")
+    except Exception:
+        return None
+    return d.strftime("%d %b %H:%M UTC").lstrip("0")
+
+
+def _vault_side(iid, body, intents):
+    """The setup's side. A move_stop names it (BUY = a long book, as vault_feed builds it); the feed makes spot intents
+    for a LONG book only, and always together with the futures ones of the same step, so the same setup (symbol and
+    opening time) with a spot intent is long and without one short. None when it cannot be read."""
+    if body.get("action") == "move_stop" and body.get("side") in ("BUY", "SELL"):
+        return "long" if body["side"] == "BUY" else "short"
+    parts = iid.split(".")
+    if len(parts) < 4:
+        return None
+    sibs = [it.get("body") for k, it in intents.items()
+            if isinstance(k, str) and k.split(".")[:2] == parts[:2] and isinstance(it, dict) and isinstance(it.get("body"), dict)]
+    for b in sibs:
+        if b.get("action") == "move_stop" and b.get("side") in ("BUY", "SELL"):
+            return "long" if b["side"] == "BUY" else "short"
+    return "long" if any(b.get("market") == "spot" for b in sibs) else "short"
+
+
+def vault_card(iid, it, intents, now):
+    """One exit instruction's card (HTML, plain words, no id, no secret, no URL), or None when it is not final."""
+    status, b = it.get("status"), it.get("body")
+    if status not in ("sent", "refused", "expired") or not isinstance(b, dict):
+        return None
+    act = b.get("action")
+    if act == "reduce":
+        try:
+            pct = float(b.get("fraction")) * 100
+            words = (u"take half (reduce 50%)" if pct == 50 else u"reduce %.0f%%" % pct)
+        except Exception:
+            words = u"reduce the position"
+    elif act == "move_stop":
+        words = VAULT_ACTION[act] + (u" at %s" % _vault_px(b["stop_price"]) if b.get("stop_price") else u"")
+    else:
+        words = VAULT_ACTION.get(act, _esc(str(act)[:20]))
+    if status == "sent":
+        outcome = u"%s Accepted by the vault" % OK
+    elif status == "refused":
+        code = next((it[k] for k in ("code", "why", "error") if it.get(k)), None)
+        outcome = u"%s Refused: %s" % (CROSS, _esc(str(code)[:60]) if code else
+                                       u"code not kept in the feed's state (see the engine log)")
+    else:
+        outcome = u"%s Not delivered for 24 h, given up" % WARN
+    side, opened = _vault_side(iid, b, intents), _vault_opened(iid)
+    setup = u"%s opened %s" % (side or u"side unknown", opened) if opened else (side or u"unknown")
+    return u"\n".join([
+        u"%s <b>VIP vault · exit instruction</b>" % BANK,
+        u"%s %s: <b>%s</b>" % (_esc(_mk(str(b.get("symbol")))), _esc(str(b.get("market"))), words),
+        u"Reference price %s" % _vault_px(b.get("reference_price")),
+        u"Setup: %s" % _esc(setup),
+        outcome,
+        u"Made %s · seen %s" % (_vault_hm(it.get("made")), now.strftime("%d %b %H:%M UTC").lstrip("0"))])
+
+
+def vault_failing(doc, mtime, now_s):
+    """-> the lines of the 'sends failing' card, [] when sends go through. Two signs, both from the feed's state:
+    an exit still pending VAULT_FAIL_S after it was made, and (while the feed keeps writing its state) no book accepted
+    for VAULT_FAIL_S beyond the one-bar lag (the state keeps the as_of of the last accepted book, not a send time)."""
+    out = []
+    intents = doc.get("intents") if isinstance(doc.get("intents"), dict) else {}
+    late = []
+    for it in intents.values():
+        try:
+            if it.get("status") == "pending" and now_s - float(it["made"]) > VAULT_FAIL_S:
+                late.append(now_s - float(it["made"]))
+        except Exception:
+            continue
+    if late:
+        out.append(u"• %d exit instruction%s waiting, the oldest for %.0f min" % (
+            len(late), "" if len(late) == 1 else "s", max(late) / 60.0))
+    if mtime is not None and now_s - mtime <= VAULT_ALIVE_S:
+        newest = None
+        for v in (doc.get("book") if isinstance(doc.get("book"), dict) else {}).values():
+            try:
+                t = datetime.strptime(v["as_of"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc).timestamp()
+            except Exception:
+                continue
+            newest = t if newest is None else max(newest, t)
+        if newest is not None and now_s - newest > VAULT_FAIL_S + VAULT_BAR_S:
+            out.append(u"• no book accepted for %.0f min (newest: bar of %s) while the feed keeps running"
+                       % ((now_s - newest) / 60.0, _vault_hm(newest)))
+    return out
+
+
+def vault_check(st, tok, chat, now):
+    """The vault part of one check: a card per intent the first time it is final, and one card when sends fail for
+    30 min (and one when they go through again). An id is remembered only once its card is delivered. Never raises.
+    -> the cards delivered."""
+    done = []
+    try:
+        doc, mtime = _vault_read()
+        if doc is None:
+            return done
+        now_s = now.timestamp()
+        mem = st.get("vault_alerted") if isinstance(st.get("vault_alerted"), dict) else {}
+        intents = doc.get("intents") if isinstance(doc.get("intents"), dict) else {}
+        order = []
+        for iid, it in intents.items():
+            if not isinstance(iid, str) or not isinstance(it, dict) or iid in mem:
+                continue
+            try:
+                made = float(it.get("made"))
+                seq = int(it.get("seq") or 0)
+            except Exception:
+                continue
+            if now_s - made <= VAULT_WINDOW_S and it.get("status") in ("sent", "refused", "expired"):
+                order.append((seq, made, iid, it))
+        for seq, made, iid, it in sorted(order, key=lambda r: (r[0], r[1])):
+            card = vault_card(iid, it, intents, now)
+            if card is None:
+                continue
+            r = _send(tok, chat, card)
+            if isinstance(r, dict) and r.get("ok"):
+                mem[iid] = made
+                done.append(card)
+        cut = now_s - VAULT_MEMORY_S
+        keep = sorted(((k, v) for k, v in mem.items() if isinstance(v, (int, float)) and v >= cut), key=lambda kv: -kv[1])
+        st["vault_alerted"] = dict(keep[:VAULT_MEMORY_MAX])
+        lines = vault_failing(doc, mtime, now_s)
+        if lines and not st.get("vault_failing"):
+            card = u"\n".join([u"%s <b>VIP vault · sends failing</b>" % WARN] + lines +
+                              [u"The feed retries every step; an exit still pending after 24 h is given up."])
+            r = _send(tok, chat, card)
+            if isinstance(r, dict) and r.get("ok"):
+                st["vault_failing"] = True
+                done.append(card)
+        elif not lines and st.get("vault_failing"):
+            card = u"%s <b>VIP vault · sends going through again</b>" % OK
+            r = _send(tok, chat, card)
+            if isinstance(r, dict) and r.get("ok"):
+                st["vault_failing"] = False
+                done.append(card)
+        _VAULT_ERR[0] = None
+    except Exception as e:                                            # never stops the other alerts; printed once
+        tag = type(e).__name__
+        if _VAULT_ERR[0] != tag:
+            _VAULT_ERR[0] = tag
+            print(time.strftime("%Y-%m-%d %H:%M:%S"), "vault alerts failed (%s)" % tag, flush=True)
+    return done
+
+
 # ------------------------------------------------------------------ the loop
 def check(st, tok, send=True, now=None):
     """One check: learn the chat from /start, send alerts, send the daily summary once a day. -> the new state."""
@@ -566,6 +770,7 @@ def check(st, tok, send=True, now=None):
                         _send(tok, st["chat_id"], calibration_card(res))
                 except Exception as e:
                     print(time.strftime("%Y-%m-%d %H:%M:%S"), "calibration failed: %s" % type(e).__name__, flush=True)
+        ev += vault_check(st, tok, st["chat_id"], now)                # guarded inside: it cannot stop anything above
         signals_check(st, tok, page, now, recap=due)                  # last, and guarded: it cannot stop anything above
     elif due and st.get("chat_id") is None:
         pass                                                          # no chat yet: the summary waits

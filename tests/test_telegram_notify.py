@@ -23,6 +23,8 @@ def no_real_records(monkeypatch, tmp_path):
     monkeypatch.setattr(tn, "SIGNALS_LOG", str(tmp_path / "data" / "signals_log.jsonl"))
     monkeypatch.setattr(tn, "_SIGNALS_ERR", [None])
     monkeypatch.setattr(tn, "_SIGNALS_UNREAD", [""])
+    monkeypatch.setattr(tn, "VAULT_STATE", str(tmp_path / "data" / "vault_feed_state.json"))   # never the real feed's file
+    monkeypatch.setattr(tn, "_VAULT_ERR", [None])
 
 
 def page(gen="2026-11-17T00:00:00Z"):
@@ -420,3 +422,202 @@ def test_dollars_display_at_15x_and_tables_stay_narrow():
     assert tn._usd_short(60.0) == "+$900" and tn._usd_short(1000.0) == "+$15.0k" and tn._usd_short(-9120.0) == "-$137k"
     assert tn._usd_short(80000.0) == "+$1.20M"
     assert max(len(tn._usd_short(x)) for x in (9.5, 123.4, -1368.0, 12400.0, -99999.0)) <= 9
+
+
+# ------------------------------------------------------------------ VIP vault exit instructions (the feed's state, read only)
+import json  # noqa: E402
+
+VNOW = datetime(2026, 11, 19, 10, 30, tzinfo=timezone.utc)
+MADE = VNOW.timestamp() - 600
+VST = {"chat_id": 42, "summary_day": "2026-11-19", "calib_week": "2026-W47"}
+
+
+def intent(sym, opened, action, market, status, ref="65203.2", **extra):
+    iid = "%s.%s.%s.%s" % (sym, opened, action, market)
+    body = dict({"intent_id": iid, "market": market, "symbol": sym, "action": action, "reference_price": ref}, **extra)
+    return iid, {"body": body, "status": status, "made": MADE, "seq": 1}
+
+
+def vault_state(intents, book=None, extra=None):
+    os.makedirs(os.path.dirname(tn.VAULT_STATE), exist_ok=True)
+    doc = dict({"intents": dict(intents), "pos": {}, "seq": len(intents)}, **(extra or {}))
+    if book is not None:
+        doc["book"] = book
+    with open(tn.VAULT_STATE, "w", encoding="utf-8") as fh:
+        json.dump(doc, fh)
+
+
+def vault_bot(monkeypatch, ok=True):
+    sent, holder = [], {"ok": ok}
+
+    def fake_call(tok, method, payload, timeout=20):
+        if method == "getUpdates":
+            return {"ok": True, "result": []}
+        sent.append(payload.get("text", ""))
+        return {"ok": holder["ok"]}
+    monkeypatch.setattr(tn, "_call", fake_call)
+    monkeypatch.setattr(tn, "_load", lambda p, d=None: page("2026-11-19T10:29:00Z") if p.endswith("page.json") else score())
+    monkeypatch.setattr(tn, "refit_marks", lambda: [0, 0])
+    monkeypatch.setattr(tn, "disk_free_gb", lambda path=None: 50.0)
+    return sent, holder
+
+
+def vault_cards(sent):
+    return [t for t in sent if "VIP vault" in t]
+
+
+def three():
+    a = intent("BTCUSDT", "20261118T101500Z", "close", "spot", "sent")
+    b = intent("ETHUSDT", "20261118T091500Z", "reduce", "futures", "refused", ref="3120.55", fraction=0.5)
+    c = intent("ETHUSDT", "20261118T091500Z", "move_stop", "futures", "expired", ref="3120.55", side="SELL",
+               stop_price="3180.4")
+    return dict([a, b, c])
+
+
+def test_vault_accepted_refused_given_up_one_card_each_never_twice(monkeypatch):
+    sent, _h = vault_bot(monkeypatch)
+    vault_state(three())
+    st, ev = tn.check(dict(VST), "k", now=VNOW)
+    cards = vault_cards(sent)
+    assert len(cards) == 3 and all(c.startswith(u"\U0001f3e6 <b>VIP vault · exit instruction</b>") for c in cards)
+    close, = [c for c in cards if "BTC spot" in c]
+    assert "<b>close the position</b>" in close and "Reference price 65,203.2" in close
+    assert "Setup: long opened 18 Nov 10:15 UTC" in close and "Accepted by the vault" in close
+    reduce_, = [c for c in cards if "take half (reduce 50%)" in c]
+    assert "ETH futures" in reduce_ and "Refused:" in reduce_ and "Setup: short opened 18 Nov 09:15 UTC" in reduce_
+    stop, = [c for c in cards if "move the stop to the entry at 3,180.4" in c]
+    assert "Not delivered for 24 h, given up" in stop and "Made 19 Nov 10:20 UTC" in stop
+    assert set(st["vault_alerted"]) == set(three())
+    st, ev = tn.check(st, "k", now=VNOW)                             # the same file again: nothing new
+    assert len(vault_cards(sent)) == 3
+    st = json.loads(json.dumps(st))                                  # a restart from the saved bot state
+    st, ev = tn.check(st, "k", now=VNOW)
+    assert len(vault_cards(sent)) == 3
+
+
+def test_vault_pending_waits_then_alerts_once_when_final(monkeypatch):
+    sent, _h = vault_bot(monkeypatch)
+    iid, it = intent("BTCUSDT", "20261118T101500Z", "close", "futures", "pending")
+    vault_state({iid: it})
+    st, _ = tn.check(dict(VST), "k", now=VNOW)
+    assert vault_cards(sent) == []
+    it.update(status="refused", why="refused 400 stale_reference")   # a code, if the feed ever keeps one
+    vault_state({iid: it})
+    st, _ = tn.check(st, "k", now=VNOW)
+    st, _ = tn.check(st, "k", now=VNOW)
+    cards = vault_cards(sent)
+    assert len(cards) == 1 and "Refused: refused 400 stale_reference" in cards[0]
+    assert "Setup: short opened" in cards[0]                          # a futures-only setup is a short book
+
+
+def test_vault_card_retried_when_telegram_fails_and_old_intents_skipped(monkeypatch):
+    sent, holder = vault_bot(monkeypatch, ok=False)
+    iid, it = intent("BTCUSDT", "20261118T101500Z", "close", "spot", "sent")
+    old_id, old = intent("ETHUSDT", "20261110T101500Z", "close", "spot", "sent")
+    old["made"] = VNOW.timestamp() - 5 * 86400                        # finished days ago: no card after a fresh start
+    vault_state({iid: it, old_id: old})
+    st, _ = tn.check(dict(VST), "k", now=VNOW)
+    assert st.get("vault_alerted") == {}                              # not delivered: not remembered
+    holder["ok"], sent[:] = True, []
+    st, _ = tn.check(st, "k", now=VNOW)
+    assert len(vault_cards(sent)) == 1 and list(st["vault_alerted"]) == [iid]
+
+
+def test_vault_memory_is_capped(monkeypatch):
+    vault_bot(monkeypatch)
+    vault_state({})
+    now_s = VNOW.timestamp()
+    st = {"vault_alerted": dict(("X.%d" % k, now_s - k) for k in range(tn.VAULT_MEMORY_MAX + 50))}
+    st["vault_alerted"]["ancient"] = now_s - tn.VAULT_MEMORY_S - 1
+    tn.vault_check(st, "k", 42, VNOW)
+    assert len(st["vault_alerted"]) == tn.VAULT_MEMORY_MAX and "ancient" not in st["vault_alerted"]
+    assert "X.0" in st["vault_alerted"]                              # the newest are kept
+
+
+@pytest.mark.parametrize("content", [None, b"", b"{not json", b"[1, 2]", b'{"intents": [1, 2]}',
+                                     b'{"intents": {"a": 5, "b": {"status": "sent", "made": "x"}, '
+                                     b'"c": {"status": "sent", "made": 1}, "d": {"status": "sent", "made": 1e12}}}',
+                                     b"\xff\xfe garbage"])
+def test_vault_missing_or_garbled_file_no_card_no_crash(monkeypatch, capsys, content):
+    sent, _h = vault_bot(monkeypatch)
+    monkeypatch.setattr(tn, "disk_free_gb", lambda path=None: 1.5)
+    if content is not None:
+        os.makedirs(os.path.dirname(tn.VAULT_STATE), exist_ok=True)
+        with open(tn.VAULT_STATE, "wb") as fh:
+            fh.write(content)
+    st, _ = tn.check(dict(VST), "k", now=VNOW)
+    assert vault_cards(sent) == [] and any("Server disk low" in t for t in sent)
+    assert "vault alerts failed" not in capsys.readouterr().out
+
+
+def test_vault_too_large_file_is_not_read(monkeypatch):
+    sent, _h = vault_bot(monkeypatch)
+    monkeypatch.setattr(tn, "VAULT_READ_MAX", 200)
+    vault_state(three())
+    tn.check(dict(VST), "k", now=VNOW)
+    assert vault_cards(sent) == []
+
+
+def test_vault_exception_never_stops_the_other_alerts(monkeypatch, capsys):
+    sent, _h = vault_bot(monkeypatch)
+    monkeypatch.setattr(tn, "disk_free_gb", lambda path=None: 1.5)
+
+    def boom(path=None):
+        raise RuntimeError("vault read broke")
+    monkeypatch.setattr(tn, "_vault_read", boom)
+    st = dict(VST, summary_day="2026-11-18")
+    st, _ = tn.check(st, "k", now=VNOW)
+    st, _ = tn.check(st, "k", now=VNOW)
+    assert any("Server disk low" in t for t in sent) and any("daily summary" in t for t in sent)
+    out = capsys.readouterr().out
+    assert out.count("vault alerts failed (RuntimeError)") == 1 and "vault read broke" not in out
+
+
+def test_vault_cards_carry_no_secret_no_url_no_dollars(monkeypatch):
+    sent, _h = vault_bot(monkeypatch)
+    ints = three()
+    for it in ints.values():                                          # whatever else might sit beside an intent
+        it.update(secret="deadbeef" * 8, nonce="n0nce-SHOULD-NOT-SHOW")
+    vault_state(ints, extra={"secret_file": "/etc/ait-engine/engine.secret", "host": "127.0.0.1"})
+    tn.check(dict(VST), "k", now=VNOW)
+    cards = vault_cards(sent)
+    assert len(cards) == 3
+    for c in cards:
+        for bad in ("deadbeef", "n0nce", "/etc/", "engine.secret", "http", "127.0.0.1", "$", "BTCUSDT.2026", "intent_id"):
+            assert bad not in c
+
+
+def test_vault_sends_failing_once_then_back(monkeypatch):
+    sent, _h = vault_bot(monkeypatch)
+    iid, it = intent("BTCUSDT", "20261118T101500Z", "close", "futures", "pending")
+    it["made"] = VNOW.timestamp() - 47 * 60
+    vault_state({iid: it}, book={"BTCUSDT": {"content": "h", "as_of": "2026-11-19T09:30:00Z"}})
+    t = VNOW.timestamp()
+    os.utime(tn.VAULT_STATE, (t - 60, t - 60))                       # the feed is running (wrote a minute ago)
+    st, _ = tn.check(dict(VST), "k", now=VNOW)
+    fail = [c for c in vault_cards(sent) if "sends failing" in c]
+    assert len(fail) == 1 and "1 exit instruction waiting, the oldest for 47 min" in fail[0]
+    assert "no book accepted for 60 min (newest: bar of 19 Nov 09:30 UTC)" in fail[0] and st["vault_failing"]
+    os.utime(tn.VAULT_STATE, (t - 60, t - 60))
+    st, _ = tn.check(st, "k", now=VNOW)
+    assert len([c for c in vault_cards(sent) if "sends failing" in c]) == 1      # once
+    it["status"] = "sent"
+    vault_state({iid: it}, book={"BTCUSDT": {"content": "h", "as_of": "2026-11-19T10:15:00Z"}})
+    os.utime(tn.VAULT_STATE, (t - 60, t - 60))
+    st, _ = tn.check(st, "k", now=VNOW)
+    assert any("sends going through again" in c for c in vault_cards(sent)) and not st["vault_failing"]
+    assert any("Accepted by the vault" in c for c in vault_cards(sent))
+
+
+def test_vault_old_book_alone_is_not_failing_when_the_feed_is_not_running(monkeypatch):
+    sent, _h = vault_bot(monkeypatch)
+    vault_state({}, book={"BTCUSDT": {"content": "h", "as_of": "2026-11-19T06:00:00Z"}})
+    t = VNOW.timestamp() - 3 * 3600
+    os.utime(tn.VAULT_STATE, (t, t))                                  # feature off / feed stopped: the file is old
+    st, _ = tn.check(dict(VST), "k", now=VNOW)
+    assert vault_cards(sent) == [] and not st.get("vault_failing")
+
+
+def test_the_bot_never_imports_the_vault_feed():
+    src = open(tn.__file__, encoding="utf-8").read()
+    assert "import vault_feed" not in src and "vault_feed import" not in src and "from .vault_feed" not in src
