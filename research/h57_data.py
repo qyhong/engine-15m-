@@ -339,7 +339,8 @@ def fetch(t, first):
 # ------------------------------------------------------------------ Yahoo daily (scale and split check only)
 def yahoo_daily(t):
     """Yahoo's daily closes (split-adjusted) and split events. -> (Series of close by NY date midnight UTC, splits)."""
-    url = extdata.YF_URL + t.replace(".", "-") + "?interval=1d&range=max&events=split"
+    url = extdata.YF_URL + t.replace(".", "-") + "?interval=1d&period1=1420070400&period2=%d&events=split" % int(time.time())
+    # (range=max can come back at 3-month intervals; an explicit period gives daily bars)
     for i in range(4):
         st, body = http_get(url)
         if st == 200:
