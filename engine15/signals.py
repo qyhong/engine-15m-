@@ -61,7 +61,8 @@ GREEN, RED, WHITE, TICK, TARGET, FLAG, WARN, CHART, DISH = (
 NO_FILL_WHY = {"window": "the entry window passed without price trading at the entry",
                "target": "price reached Target 1 before the entry filled",
                "stop": "the stop traded before the entry filled",
-               "model": "the model closed its own trade before the entry filled"}
+               "model": "the model closed its own trade before the entry filled",
+               "levels": "the model's order gave no stop and targets"}           # S2 only (signals_early.py)
 WHY_SKIP = ("forecast", "kronos", "alphaprediction", "base rate", "all the evidence", "owner")
 
 
@@ -289,13 +290,13 @@ def step_bar(sig, bar):
             return _no_fill(sig, ts, "stop")                          # rule 2, also when the bar holds E
         if _reached(side, l, h, T1):
             return _no_fill(sig, ts, "target")
-        if ts <= sig["a_ms"]:
-            return []                                                 # bar A and the bars before it never fill
-        f["bars_after_a"] += 1
+        if ts < sig.get("first_ms", sig["a_ms"] + BAR_MS):
+            return []                                                 # S1: bar A and the bars before it never fill
+        f["bars_after_a"] += 1                                        # (S2, H56: the bars that open before the alert)
         if l <= E <= h:
             f.update(state=FILLED, fill_ms=ts)
             return [{"ev": "filled", "px": E, "bar_ms": ts}]
-        return _no_fill(sig, ts, "window") if f["bars_after_a"] >= WINDOW else []
+        return _no_fill(sig, ts, "window") if f["bars_after_a"] >= sig.get("window", WINDOW) else []
     if f["state"] not in (FILLED, T1_TAKEN):
         return []
     alert = f.get("exit_alert_ms")
@@ -506,7 +507,8 @@ def _deliver(send, text, reply_to=None):
 
 
 def _row(sig, now_ms, ev, **kw):
-    return dict({"t": _iso(now_ms), "id": sig.get("id"), "k": "%s|%s" % (sig["asset"], sig["opened_utc"]), "ev": ev,
+    return dict({"t": _iso(now_ms), "id": sig.get("id"), "k": sig.get("k") or "%s|%s" % (sig["asset"], sig["opened_utc"]),
+                 "ev": ev,
                  "asset": sig["asset"]}, **kw)
 
 
@@ -744,8 +746,8 @@ def _outcome(s):
     return "in trade" if "filled" in s else "waiting"
 
 
-def recap_card(log_path, now, st=None):
-    """The daily recap: yesterday's signals one line each, then the running record."""
+def recap_card(log_path, now, st=None, extra=None):
+    """The daily recap: yesterday's signals one line each, then the running record (extra: lines put before the foot)."""
     events = read_log(log_path)
     day = (now - timedelta(days=1)).strftime("%Y-%m-%d")
     by = {}
@@ -759,7 +761,7 @@ def recap_card(log_path, now, st=None):
          "<pre>%s</pre>" % _esc("\n".join(rows)) if rows else u"No signals yesterday.",
          u"<b>Running record</b>"]
     sb = scoreboard(events)
-    return "\n".join(L + [_live_line(sb, st)] + _record_lines(sb) + [FOOT])
+    return "\n".join(L + [_live_line(sb, st)] + _record_lines(sb) + [x for x in (extra or []) if x] + [FOOT])
 
 
 def open_card(st, now=None):

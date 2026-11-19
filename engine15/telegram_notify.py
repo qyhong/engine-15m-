@@ -27,6 +27,11 @@ SUBSCRIBER SIGNAL PREVIEW (H53, the signal book S1; the rules and the arithmetic
   on request. PREVIEW: every one of these goes to the owner's own chat only, under a first line "Subscriber preview".
   No subscriber channel exists. A failure in the signals code is logged once and never stops the alerts above.
 
+EARLY SIGNAL PREVIEW (H56, the early signal book S2; signals_early.py): the same entries announced at the model's decision
+  (side and limit price; stop and targets follow as a reply one bar later), under a first line "Early signal preview",
+  to the owner's chat only, beside the S1 preview; /early answers with its record and the paired comparison; one line in
+  the daily recap. Its own guard: a failure there never touches S1, the alerts or the summary.
+
 THE KEY: read from a file the owner places (TOKEN_FILE, chmod 600); never printed, logged or stored anywhere else.
 THE CHAT: the first chat that sends /start is locked in (state file); every other chat is ignored. No key file = it waits.
 """
@@ -488,9 +493,67 @@ def signals_check(st, tok, page, now, recap=False):
             if unread:
                 print(time.strftime("%Y-%m-%d %H:%M:%S"), "signals: bars not readable now, will retry (%s)" % unread, flush=True)
         if recap and os.path.exists(SIGNALS_STATE):                   # only once the preview has started
-            send(signals.recap_card(SIGNALS_LOG, now, signals.load_state(SIGNALS_STATE)))
+            send(signals.recap_card(SIGNALS_LOG, now, signals.load_state(SIGNALS_STATE), extra=[early_recap_line(now)]))
         return info
     return _signals_guard("check", work)
+
+
+# ------------------------------------------------------------------ the early signal preview (H56; signals_early.py)
+EARLY_HEAD = u"\U0001f9ea Early signal preview"                       # the first line of every early signal message
+EARLY_STATE = os.path.join(DATA_DIR, "signals_early_state.json")      # its own state and log (signals_early.py writes them)
+EARLY_LOG = os.path.join(DATA_DIR, "signals_early_log.jsonl")
+_EARLY_ERR = [None]                                                   # {piece: its last failure printed} (each printed once)
+
+
+def _early_send(tok, st, text, reply_to=None):
+    """One early signal message -> (delivered, message id). PREVIEW: the owner's own chat only, under the early line."""
+    chat = st.get("chat_id")
+    if not tok or chat is None:
+        return False, None
+    r = _send(tok, chat, EARLY_HEAD + u"\n" + text, reply_to)
+    ok = bool(isinstance(r, dict) and r.get("ok"))
+    return ok, ((r.get("result") or {}).get("message_id") if ok else None)
+
+
+def _early_guard(what, fn, default=None):
+    """Run one piece of early-signal code (imported here, so even a broken module stays inside). Whatever it raises is
+    printed once and swallowed: S1, the admin alerts and the summary never depend on it."""
+    errs = _EARLY_ERR[0] = _EARLY_ERR[0] or {}                        # the last failure of each piece, printed once
+    try:
+        out = fn()
+        errs.pop(what, None)
+        return out
+    except Exception as e:
+        tag = "%s: %s" % (what, type(e).__name__)
+        if errs.get(what) != tag:
+            errs[what] = tag
+            print(time.strftime("%Y-%m-%d %H:%M:%S"), "early signals failed (%s)" % tag, flush=True)
+        return default
+
+
+def early_check(st, tok, page, now):
+    def work():
+        from . import signals_early
+        return signals_early.run(page, now, lambda text, reply_to=None: _early_send(tok, st, text, reply_to),
+                                 BARS, LIVE, EARLY_STATE, EARLY_LOG)
+    return _early_guard("check", work)
+
+
+def early_command(st, tok):
+    def work():
+        from . import signals_early
+        return _early_send(tok, st, signals_early.record_card(EARLY_LOG, SIGNALS_LOG, signals.load_state(EARLY_STATE)))
+    return _early_guard("/early", work)
+
+
+def early_recap_line(now):
+    """The early signals' line in the daily recap; "" when the preview has not started or anything fails."""
+    def work():
+        if not os.path.exists(EARLY_STATE):
+            return ""
+        from . import signals_early
+        return signals_early.recap_line(EARLY_LOG, SIGNALS_LOG, now)
+    return _early_guard("recap", work, default="") or ""
 
 
 # ------------------------------------------------------------------ the loop
@@ -528,6 +591,8 @@ def check(st, tok, send=True, now=None):
             elif text.startswith("/record"):
                 _signals_guard("/record", lambda: _signal_send(tok, st, signals.record_card(
                     SIGNALS_LOG, signals.load_state(SIGNALS_STATE))))
+            elif text.startswith("/early"):
+                early_command(st, tok)                                # H56 early signal preview (own guard)
     page, score = _load(PAGE), _load(SCORE)
     c, v, net = counts(score, page)
     cur = {"c": c, "v": v, "net": net, "refits": refit_marks()}
@@ -567,6 +632,7 @@ def check(st, tok, send=True, now=None):
                 except Exception as e:
                     print(time.strftime("%Y-%m-%d %H:%M:%S"), "calibration failed: %s" % type(e).__name__, flush=True)
         signals_check(st, tok, page, now, recap=due)                  # last, and guarded: it cannot stop anything above
+        early_check(st, tok, page, now)                               # H56 early signal preview: after S1, its own guard
     elif due and st.get("chat_id") is None:
         pass                                                          # no chat yet: the summary waits
     st.update(cur, stale=stale, checked_utc=now.strftime("%Y-%m-%dT%H:%M:%SZ"))
