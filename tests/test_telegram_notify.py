@@ -26,6 +26,10 @@ def no_real_records(monkeypatch, tmp_path):
     monkeypatch.setattr(tn, "VAULT_STATE", str(tmp_path / "data" / "vault_feed_state.json"))   # never the real feed's file
     monkeypatch.setattr(tn, "_VAULT_ERR", [None])
 
+    monkeypatch.setattr(tn, "EARLY_STATE", str(tmp_path / "data" / "signals_early_state.json"))     # H56 early preview
+    monkeypatch.setattr(tn, "EARLY_LOG", str(tmp_path / "data" / "signals_early_log.jsonl"))
+    monkeypatch.setattr(tn, "_EARLY_ERR", [None])
+
 
 def page(gen="2026-11-17T00:00:00Z"):
     return {"generated_utc": gen, "version": "think15-v5.2.3",
@@ -621,3 +625,87 @@ def test_vault_old_book_alone_is_not_failing_when_the_feed_is_not_running(monkey
 def test_the_bot_never_imports_the_vault_feed():
     src = open(tn.__file__, encoding="utf-8").read()
     assert "import vault_feed" not in src and "vault_feed import" not in src and "from .vault_feed" not in src
+
+# ------------------------------------------------------------------ the early signal preview (H56; signals_early.py)
+PENDING = {"status": "FLAT", "trades": 0, "next_open": "ENTER -> LONG"}
+
+
+def early_bars(tmp_path, rows):
+    """Bars from 16 Nov 23:45 (the decision bar, close 100) on."""
+    with open(str(tmp_path / "data" / "btcusdt_15m.csv"), "w") as fh:
+        fh.write("ts_ms,open,high,low,close,volume,taker_buy\n")
+        for k, (o, h, l, c) in enumerate(rows):
+            fh.write("%d,%s,%s,%s,%s,1.0,\n" % (1794873600000 + 900000 * (k - 1), o, h, l, c))
+
+
+def run_to_early(monkeypatch, tmp_path):
+    calls, holder = signal_bot(monkeypatch, tmp_path)
+    st = {"chat_id": 42, "summary_day": "2026-11-16", "calib_week": "2026-W47"}
+    st, _ = tn.check(st, "k", now=datetime(2026, 11, 16, 23, 50, tzinfo=timezone.utc))   # both previews start, book flat
+    assert calls == [] and os.path.exists(tn.EARLY_STATE) and os.path.exists(tn.SIGNALS_STATE)
+    st["summary_day"] = "2026-11-17"
+    holder["page"] = signal_page(dict(PENDING), "2026-11-17 00:00")
+    early_bars(tmp_path, [(99.5, 100.4, 99.4, 100.0)])
+    st, _ = tn.check(st, "k", now=at17(0, 2))                        # the model decided at 00:00: the early card
+    return calls, holder, st
+
+
+def test_early_preview_goes_to_the_owner_chat_under_its_own_line(monkeypatch, tmp_path):
+    calls, holder, st = run_to_early(monkeypatch, tmp_path)
+    assert len(calls) == 1 and calls[0]["chat_id"] == 42 and "reply_to_message_id" not in calls[0]
+    t = calls[0]["text"]
+    assert t.startswith(u"\U0001f9ea Early signal preview\n") and not t.startswith(tn.SIGNALS_HEAD)
+    assert "BUY BTC" in t and "BTC-1117-01e" in t and "Limit order at <b>100.000</b>" in t and "<pre>" not in t
+    low = t.lower()
+    assert "b_targets" not in low and "shadow" not in low and "kronos" not in low and "edge" not in low
+    assert t.endswith("Paper signal from a model, not financial advice.</i>")
+    holder["page"] = signal_page(dict(LONG), "2026-11-17 00:15", "2026-11-17T00:15:30Z")   # the book filled: both speak
+    early_bars(tmp_path, [(99.5, 100.4, 99.4, 100.0), (101, 101.5, 100.5, 101)])
+    st, _ = tn.check(st, "k", now=at17(0, 16))
+    texts = [c["text"] for c in calls[1:]]
+    assert len(texts) == 2 and texts[0].startswith(tn.SIGNALS_HEAD) and "BTC-1117-01</code>" in texts[0]
+    assert texts[1].startswith(tn.EARLY_HEAD) and "Stop and targets" in texts[1] and calls[2]["reply_to_message_id"] == 701
+    st, _ = tn.check(st, "k", now=at17(0, 17))
+    assert len(calls) == 3                                           # nothing twice
+    assert "open" not in st and "seen" not in st
+
+
+def test_early_command_and_the_recap_line(monkeypatch, tmp_path):
+    calls, holder, st = run_to_early(monkeypatch, tmp_path)
+    holder["updates"] = [(99, "/early")]
+    st, _ = tn.check(st, "k", now=at17(0, 3))
+    assert len(calls) == 1                                           # a stranger gets no answer
+    holder["updates"] = [(42, "/early")]
+    st, _ = tn.check(st, "k", now=at17(0, 4))
+    t = calls[1]["text"]
+    assert t.startswith(tn.EARLY_HEAD + "\n") and u"Early signals · the record" in t and "Signals sent                 1" in t
+    assert "no paired result yet" in t
+    holder["page"] = signal_page(dict(PENDING), "2026-11-18 00:00", "2026-11-18T00:00:30Z")
+    st, _ = tn.check(st, "k", now=datetime(2026, 11, 18, 0, 1, tzinfo=timezone.utc))
+    recap = [c["text"] for c in calls if "daily recap" in c["text"]]
+    assert len(recap) == 1 and recap[0].startswith(tn.SIGNALS_HEAD)
+    assert u"\U0001f9ea Early signal preview: yesterday 1 sent; in all 1 sent" in recap[0]
+
+
+def test_an_exception_in_early_code_never_blocks_s1_or_the_alerts(monkeypatch, tmp_path, capsys):
+    from engine15 import signals_early
+
+    def boom(*a, **k):
+        raise RuntimeError("early signals are broken")
+    monkeypatch.setattr(signals_early, "run", boom)
+    monkeypatch.setattr(signals_early, "recap_line", boom)
+    calls, holder, st = run_to_fill(monkeypatch, tmp_path)           # S1 card and its fill, exactly as without S2
+    assert len(calls) == 2 and all(c["text"].startswith(tn.SIGNALS_HEAD) for c in calls)
+    open(tn.EARLY_STATE, "w").close()                                # the early preview "started": the recap asks it
+    monkeypatch.setattr(tn, "disk_free_gb", lambda path=None: 1.5)
+    holder["page"] = signal_page(dict(LONG), "2026-11-18 00:00", "2026-11-18T00:00:30Z")
+    st, _ = tn.check(st, "k", now=datetime(2026, 11, 18, 0, 1, tzinfo=timezone.utc))
+    texts = [c["text"] for c in calls[2:]]
+    assert any("Server disk low" in x for x in texts) and any("daily summary" in x for x in texts)
+    recap = [x for x in texts if "daily recap" in x]
+    assert len(recap) == 1 and "Early signal preview:" not in recap[0]
+    st, _ = tn.check(st, "k", now=datetime(2026, 11, 18, 0, 2, tzinfo=timezone.utc))
+    out = capsys.readouterr().out
+    assert out.count("early signals failed (check: RuntimeError)") == 1 and "early signals are broken" not in out
+    assert "signals failed (check" not in out.replace("early signals failed (check", "")      # S1 never failed
+    assert tn._early_guard("x", lambda: 7) == 7

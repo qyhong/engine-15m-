@@ -2917,3 +2917,25 @@ the rule lost even before costs, as it did on 2019-2026 history (-0.02R before c
 No code bug was found. No improved variant is proposed; any change would be a new registered hypothesis, only on the
 owner's word. `engine15/playbook3.py` RETIRED: no trade entered from **2026-11-19 04:00 UTC** counts; the live record
 before it is kept as is. The verdict rule (200 trades or 30 days) was not reached; retired early on the owner's word.
+### H56 note: implementation choice: side and E0 at the decision, stop and targets one bar later (19 Nov 2026, 03:56 UTC; decided from the code only, before any S2 code ran on live data and before any live S2 signal existed)
+- **S2 announces the side and E0 only; the stop and the two targets follow one bar later**, as a reply to the S2 card (the
+  same levels the S1 card shows). Why: the book sets them AT THE FILL, from the fill price. `shadows.run` -> `open_pos`
+  takes entry = the next bar's OPEN, stop = entry - side x stop_units x unit (unit at the decision bar), and
+  `live.plan_targets(side, entry, stop, readings of the decision bar)`; the day's-travel and 1.5R/2R targets and the
+  Fibonacci 0.5R-4R test all move with that open, which is unknown at the decision close. The bot reads only the page,
+  whose `b_targets` view carries `next_open` but neither the barrier unit nor the readings row; computing them would
+  duplicate the book's logic (or change `shadows.py`), which H56 excludes.
+- **The followable record uses the book's own levels**, from the page when the position appears, or from the book's
+  closed-trade file (stop0, target_1, target_2) when the trade closed inside its fill bar (S1 never signals those) or the
+  page first shows it with Target 1 already taken (the original stop is then no longer on the page). 1R = |E0 - S|.
+  Bars are run through the S1 state machine only once the levels are known, from bar A on.
+- **The window, as H56's text reads (nothing changed):** bar A = the 15-minute slot holding the send time; the limit lives
+  in the four slots A..A+3 (valid until A's open + 60 minutes); a bar may fill only if it opens at or after the send time.
+  The page is written after the decision close, so a page-driven alert always arrives after A's open: in practice bar A
+  never fills and A+1..A+3 can. A stop or Target 1 trading in bar A or any later bar before the fill voids, as in S1.
+- E0 = the close of the bar the page's shadow books have reached when the pending entry is first seen (the decision bar),
+  read from the engine's own bar file. A late-feed market (gold, silver, WTI, Brent fill one bar later) shows the same
+  pending on two pages: one signal.
+- Pairing with S1 on the entry's `opened_utc`; a no fill counts 0 for either side; an entry S1 never signalled counts S1 as
+  0 once the book's trade is closed. If the book's levels never become known (no position on the page and no closed-trade
+  row 30 minutes after the pending is gone), the S2 signal ends "no fill" (sent, not a trade).
