@@ -2872,3 +2872,35 @@ keep/skip on 99.7% (F1) and 92.4% (F2) of second-half signals, and neither would
   synthetic bars).
 - Plainly: this is history the engine's authors have lived through, one registered try with two variants. It rejects
   this filter on this data; it proves nothing about the signals going forward.
+
+## H56. EARLY SIGNALS (S2): the same Setups signals, published at the engine's decision instead of one bar after the fill (registered 19 Nov 2026, 03:48 UTC, before any S2 code existed or any S2 result was computed)
+
+**Prompted by:** the owner, 19 Nov 2026, choosing "Earlier signals" as the next build. S1 (H53, amended) can only announce a
+`b_targets` entry after its fill bar has closed, so a subscriber hears of it at least one full bar (15 minutes) after the
+book entered. The engine already knows the entry one bar earlier: at the close where `b_targets` decides it, the book holds
+a PENDING order for the next open (`shadows` state `pending`, shown on the page as `next_open`).
+
+**What S2 is.** Not a new trading rule: the same `b_targets` entries, announced at the decision close. A signal is issued
+when the `b_targets` view of a market shows a NEW pending entry (`next_open` -> LONG/SHORT, not an exit or a flip-to-flat).
+Levels: S2 uses the levels the engine would set for that entry at the decision close (`live.plan_targets` / the book's own
+stop rule, computed from the decision bar exactly as the book will when it fills), with the planned entry price E0 = that
+decision close. If those levels cannot be known before the fill without duplicating the book's logic, S2 announces the side
+and E0 only, and the stop/targets follow in the S1 card one bar later: say which in the implementation, decided before any
+live result.
+
+**Followable rules (fixed now), the same as S1 except the timing:** bar A = the bar in which the S2 alert is sent (the bar
+the book will fill at its open, or later). Entry: a limit at E0 for the four 15-minute bars after A's open (bar A INCLUDED,
+because the alert now arrives before or near A's open; a bar counts only from the alert time on: the first 15-minute bar
+that opens after the alert is the first that counts). After the fill: half at Target 1, the rest at Target 2, stop to entry
+after T1, same-bar = stop, gap through the stop at the open, the book's own exits followed one bar later as in S1. Costs:
+the market's fee a side. Every rule not restated here is S1's (H53 with its 17 Nov amendment).
+
+**Judged on live S2 signals only,** from the first signal sent by the deployed preview, beside S1 on the SAME entries:
+(1) S2's followable record through the scoreboard's rule (mean per filled trade, 90% range); (2) the paired comparison per
+signal: S2's result minus S1's result for the same `b_targets` entry, mean and 90% range; (3) fill rates of both. Interim
+reading at 30 filled S2 trades. S2 replaces S1 as the subscriber signal only if, at 100 paired signals over at least 60 days,
+S2's mean result per signal is higher than S1's with the paired 90% range above zero; the owner decides then. Counted as one
+variant. A pass is a reason to propose, not proof of an edge.
+
+**Preview only** until the owner says otherwise: S2 cards go to the owner's own Telegram chat beside the S1 preview,
+labelled as an early-signal preview; the vault feed and the website keep using S1/`b_targets` as today.
