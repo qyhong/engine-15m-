@@ -2904,3 +2904,16 @@ variant. A pass is a reason to propose, not proof of an edge.
 
 **Preview only** until the owner says otherwise: S2 cards go to the owner's own Telegram chat beside the S1 preview,
 labelled as an early-signal preview; the vault feed and the website keep using S1/`b_targets` as today.
+
+### H15 / P10: retired (owner, 19 Nov 2026)
+
+Owner: "Post-mortem, then retire", after the scoreboard verdict "behind: even the high end of the range is negative".
+Live record at the post-mortem (`research/out/p10_postmortem.md`, a replay on the server's bars that matched its page):
+120 trades, 41.7% won, -$2,018 (fees $1,188, 59% of it), -0.14R a trade before costs and -0.36R after; 1 of 6 markets
+positive (gold); the pass bar was above +0.05R after costs with 4 of 6 markets positive. Conclusion: there is no magnet.
+Price reached the round number before the equally distant stop only 42% of the time (a coin flip would give 50%), so
+the rule lost even before costs, as it did on 2019-2026 history (-0.02R before costs, every market negative after); the
+1R / 1R bracket then needs about 61% wins to cover a median 0.20R round trip, and the trigger fires about 15 times a day.
+No code bug was found. No improved variant is proposed; any change would be a new registered hypothesis, only on the
+owner's word. `engine15/playbook3.py` RETIRED: no trade entered from **2026-11-19 04:00 UTC** counts; the live record
+before it is kept as is. The verdict rule (200 trades or 30 days) was not reached; retired early on the owner's word.
