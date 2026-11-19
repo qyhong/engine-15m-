@@ -311,6 +311,12 @@ def fetch(t, first):
     hours = []
     for y, m in months((y0, m0), (2025, 11)):
         rows = hour_rows(t, y, m, 1000)
+        for p in range(4):                           # Dukascopy sometimes answers 503 for a while
+            if rows is not None:
+                break
+            log("%s %d-%02d: hourly file did not load; again after a pause" % (t, y, m))
+            time.sleep(120)
+            rows = hour_rows(t, y, m, 1000)
         if rows is None:
             raise RuntimeError("%s %d-%02d: hourly file did not load" % (t, y, m))
         hours += rows
