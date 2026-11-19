@@ -459,13 +459,20 @@ def report_stage():
                  "PASS" if P["PASS"] else "NO PASS", "yes" if P["pooled_halves_above_50_with_interval"] else "no",
                  len(P["tickers_above_50"]), P["tickers_tested"], P["tickers_needed"]))
     L.append("")
+    sides = res["pooled_sides"] = all_rows["side"].value_counts().to_dict()
+    tot = float(sum(sides.values())) or 1.0
+    L.append("How often a stance is taken at all: of %d replayed closes, %d LONG (%.2f%%), %d SHORT (%.2f%%), %d FLAT "
+             "(%.2f%%). The combined S&P odds on a single stock rarely clear the policy's 5-point bar." % (
+                 int(tot), sides.get("LONG", 0), 100 * sides.get("LONG", 0) / tot, sides.get("SHORT", 0),
+                 100 * sides.get("SHORT", 0) / tot, sides.get("FLAT", 0), 100 * sides.get("FLAT", 0) / tot))
+    L.append("")
     L.append("## Population and data")
     L.append("")
     L.append("- Five tested: %s; not testable (no Dukascopy CFD): %s." % (", ".join(probe["five_tested"]),
                                                                          ", ".join(probe["five_not_testable"]) or "none"))
     L.append("- Ten (largest S&P 500 companies, NVDA counted in the five): %s%s." % (
         ", ".join(probe["ten"]), ("; replaced (no usable CFD): " + ", ".join(probe["replaced"])) if probe["replaced"] else ""))
-    L.append("- Index model: %d weekly refits walked forward from the engine's birth, first in force %s (store %s.., copied %s)." % (
+    L.append("- Index model: %d refits (one every 672 index sessions, about five weeks of cash sessions, as the live S&P call refits) walked forward from the engine's birth, first in force %s (store %s.., copied %s)." % (
         res["index_store"]["refits"], res["index_store"]["first_refit_utc"], res["index_store"]["sig"][:10],
         res["index_store"]["updated_utc"]))
     L.append("")
@@ -545,13 +552,15 @@ def report_stage():
              "daily bars from the same bars (hourly candles before the minute data). CFD prices are not the exchange's "
              "prints (a quote-driven feed; minute volume is the CFD's), checked against Yahoo's daily closes (data.json).")
     L.append("- Stance: engine15/stocks.py's own functions at every cash-hours close where the S&P 500 has one, with the "
-             "S&P model as it stood then (weekly refits walked forward on the index store's rows, trust and cap as "
+             "S&P model as it stood then (refits every 672 index sessions walked forward on the index store's rows, trust and cap as "
              "leanprep.prepare_live forms them). Readings per calendar month from a window starting 60 days before it "
              "(the live store's situation), daily bars before the window.")
     L.append("- Grading: labels.triple_barrier on the stock's bars, 1.5 x atr1h, 26 bars; NEITHER not counted.")
     L.append("- Not a trading test: no costs, no positions; a stance's hit rate only.")
     with open(os.path.join(OUT, "report.md"), "w", encoding="utf-8") as fh:
         fh.write("\n".join(L) + "\n")
+    with open(os.path.join(OUT, "results.json"), "w", encoding="utf-8") as fh:        # with the side counts
+        json.dump(res, fh, indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o))
     log("report written: %s" % ("PASS" if P["PASS"] else "NO PASS"))
     return res
 
