@@ -15,7 +15,8 @@ cards (BTC and ETH only, APPLIES), fetched by the live step at most every MIN_GA
 (that needs a registered round). Also the data source of research/flows_study.py (hypothesis H39).
 
 Everything is kept as CSV under data/sources/ (written to a .tmp file and swapped in, only ever extended: a row once
-stored is never changed, later fetches only add rows). The Binance archive zips are kept under
+stored is never changed, later fetches only add rows; new rows after the last one are appended to a copy, so the stored
+bytes stay exactly as they were, see _store). The Binance archive zips are kept under
 data/raw/binance_metrics/<SYMBOL>/ and are only read as data. `update` fetches; `features` and `inputs` read files only,
 never the network.
 
@@ -38,7 +39,9 @@ Docs: docs/SOURCES_flows.md. No reading here is claimed to predict anything.
 import io
 import json
 import os
+import shutil
 import time
+import warnings
 import zipfile
 from collections import OrderedDict
 
@@ -143,13 +146,27 @@ def raw_dir_for(asset, raw_dir=None):
     return os.path.join(raw_dir or RAW_DIR, asset.upper())
 
 
-def load_source(kind, asset, src_dir=None):
-    """-> the stored rows of one file, sorted by time, unique; empty (with the right columns) when there is none."""
+def read_csv_exact(path, **kw):
+    """pd.read_csv that gives back every stored float bit for bit (the value to_csv wrote). pandas 3.0's default
+    parser lands some 17-digit values 1 ULP off; float_precision="round_trip" is exact there. pandas 3.1 made the
+    default exact and deprecated the argument (Pandas4Warning, silenced here); if a later pandas drops it, the
+    default is used."""
+    try:
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message=".*float_precision.*")
+            return pd.read_csv(path, float_precision="round_trip", **kw)
+    except TypeError:
+        return pd.read_csv(path, **kw)
+
+
+def load_source(kind, asset, src_dir=None, exact=False):
+    """-> the stored rows of one file, sorted by time, unique; empty (with the right columns) when there is none.
+    exact: read every float bit for bit (read_csv_exact; used to rewrite a file). The readings use the plain read."""
     cols, path = FILES[kind], path_for(kind, asset, src_dir)
     key = cols[0]
     if not os.path.exists(path) or os.path.getsize(path) == 0:
         return pd.DataFrame(dict((c, pd.Series(dtype=object if c == "date" else "float64")) for c in cols))
-    d = pd.read_csv(path, dtype={"date": str} if key == "date" else None)
+    d = (read_csv_exact if exact else pd.read_csv)(path, dtype={"date": str} if key == "date" else None)
     for c in cols:
         if c not in d:
             d[c] = np.nan
@@ -162,10 +179,7 @@ def load_source(kind, asset, src_dir=None):
     return d.drop_duplicates(key, keep="first").sort_values(key).reset_index(drop=True)
 
 
-def _write(path, frame):
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    tmp = path + ".tmp"
-    frame.to_csv(tmp, index=False)
+def _swap_in(tmp, path):
     for attempt in range(5):                                       # Windows: a reader may hold the file a moment
         try:
             os.replace(tmp, path)
@@ -176,8 +190,78 @@ def _write(path, frame):
             time.sleep(0.3 * (attempt + 1))
 
 
+def _write(path, frame, lineterminator=None):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    tmp = path + ".tmp"
+    frame.to_csv(tmp, index=False, lineterminator=lineterminator)
+    _swap_in(tmp, path)
+
+
+def _tail_layout(path, cols):
+    """-> the line ending of a stored file that can take appended rows, or None when it cannot: missing or empty, a
+    header other than cols, or a last line without its line ending (a cut file is rewritten, never appended to)."""
+    try:
+        size = os.path.getsize(path)
+        if size == 0:
+            return None
+        with open(path, "rb") as fh:
+            head = fh.readline()
+            fh.seek(max(0, size - 2))
+            end = fh.read()
+    except OSError:
+        return None
+    if head.rstrip(b"\r\n") != ",".join(cols).encode() or not end.endswith(b"\n"):
+        return None
+    return "\r\n" if end.endswith(b"\r\n") else "\n"
+
+
+def _append(path, text):
+    """Add text to the end of path atomically: the file is copied to path.tmp, the text added there, flushed and
+    synced, then swapped in. A reader or a crash only ever sees the old file or the new one, never a half line."""
+    tmp = path + ".tmp"
+    try:
+        shutil.copyfile(path, tmp)
+        with open(tmp, "ab") as fh:
+            fh.write(text.encode("utf-8"))
+            fh.flush()
+            os.fsync(fh.fileno())
+        _swap_in(tmp, path)
+    except BaseException:
+        try:
+            os.remove(tmp)
+        except OSError:
+            pass
+        raise
+
+
+def _store(path, cols, old, new, exact_old=None):
+    """Store new rows (keys not in old) beside old (the stored rows, sorted, unique). -> rows on disk.
+    When every new key sorts after the last stored key, the stored bytes are left exactly as they are and only the new
+    rows are appended, formatted as to_csv formats them in the whole table. Otherwise (a key in the middle, an unusual
+    file) the file is rewritten from old read bit for bit (exact_old(), when old came from a plain read), so an
+    untouched value is written back as it was."""
+    key = cols[0]
+    both = pd.concat([old, new], ignore_index=True) if len(old) else new.copy()
+    both = both.drop_duplicates(key, keep="first").sort_values(key)
+    if key == "ts_ms":
+        both["ts_ms"] = both["ts_ms"].astype("int64")
+    term = _tail_layout(path, cols) if len(old) else None
+    if (term is not None and old[key].is_monotonic_increasing and old[key].is_unique
+            and new[key].min() > old[key].iloc[-1]):
+        _append(path, both.iloc[len(old):].to_csv(header=False, index=False, lineterminator=term))
+        return len(both)
+    if len(old) and exact_old is not None:
+        old = exact_old()
+        both = pd.concat([old, new], ignore_index=True) if len(old) else new.copy()
+        both = both.drop_duplicates(key, keep="first").sort_values(key)
+        if key == "ts_ms":
+            both["ts_ms"] = both["ts_ms"].astype("int64")
+    _write(path, both, lineterminator=term)
+    return len(both)
+
+
 def _extend(kind, asset, src_dir, old, new):
-    """Append rows whose key is not stored yet. A stored row is NEVER changed. -> rows on disk."""
+    """Append rows whose key is not stored yet. A stored row is NEVER changed (not even its bytes). -> rows on disk."""
     key = FILES[kind][0]
     if new is None or not len(new):
         return len(old)
@@ -185,12 +269,8 @@ def _extend(kind, asset, src_dir, old, new):
     new = new[~new[key].isin(set(old[key]))] if len(old) else new
     if not len(new):
         return len(old)
-    both = pd.concat([old, new], ignore_index=True) if len(old) else new.copy()
-    both = both.drop_duplicates(key, keep="first").sort_values(key)
-    if key == "ts_ms":
-        both["ts_ms"] = both["ts_ms"].astype("int64")
-    _write(path_for(kind, asset, src_dir), both)
-    return len(both)
+    return _store(path_for(kind, asset, src_dir), FILES[kind], old, new,
+                  exact_old=lambda: load_source(kind, asset, src_dir, exact=True))
 
 
 def known_at(nominal_ms, first_seen_ms):
