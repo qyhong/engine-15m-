@@ -3257,3 +3257,86 @@ holding) and half-at-Target-1 only with moving-average trails or, in `b_targets`
 (+$1,018). H59 (registered separately, the same day, by the agent that runs it) reads this rule on history; it was
 started after the decision and cannot have informed it. Forward: the shadow `main` copy keeps hold-to-stop-or-flip
 on the S&P, `b_be_t1` and `b_targets` keep running, and the lines are read at 30 closed forward trades.
+
+## H60. EXITS BY REGIME, PER MARKET: flip exits in directional regimes, target exits in the others; and one exit rule per market instead of one for all (registered 20 Nov 2026, 11:50 UTC, before any number is computed)
+
+**Prompted by:** the owner, 20 Nov 2026, after the USDJPY post-mortem (`research/out/usdjpy_postmortem_20261120.md`):
+"Also test the idea of regime. If is momentum up or momebtum down. Using edge flip scoring to take profit is better. But
+other regime is better to follow TP level. Also treat all the assets at different condition and setup. Should not use
+one setup for all assets."
+
+**The regime** is the engine's own daily label, `ev["regime"]` (`indicators.regime_daily`, the last CLOSED daily bar
+joined to the 15-minute rows by `data.htf_on_15`): TREND_UP, TREND_DOWN, MOMENTUM_UP, MOMENTUM_DOWN, RANGE, TRANSITION.
+The owner's "momentum up or momentum down" is read two ways, both frozen here:
+
+- **directional** (primary reading): TREND_UP, TREND_DOWN, MOMENTUM_UP, MOMENTUM_DOWN. The label MOMENTUM needs a 5-day
+  move of 8% with expanding range, which USDJPY and the S&P 500 almost never make, so the literal reading alone would
+  leave those markets with one rule.
+- **momentum only** (literal reading): MOMENTUM_UP, MOMENTUM_DOWN.
+
+**The two exit modes** are the two the engine already has, unchanged:
+
+- **flip mode** = the main book's rule: out at the protective stop or when the odds flip (10 points), nothing else.
+- **target mode** = the Setups book's rule (`b_targets`): half at Target 1, the stop of the rest to the entry from the
+  next bar, the rest at Target 2 (targets from `live.plan_targets` at entry).
+
+**The five variants** (frozen; exit variants 17 to 21 counted on these entries, after H36's 15, `b_targets`/`b_trail`
+and H59's one):
+
+1. `rg_dir_entry` (PRIMARY): the mode is fixed for each trade by the regime at its entry decision bar: directional ->
+   flip mode, otherwise -> target mode.
+2. `rg_dir_aligned`: as 1, but flip mode only when the regime points the trade's way (TREND_UP or MOMENTUM_UP for a
+   long, TREND_DOWN or MOMENTUM_DOWN for a short); a directional regime against the trade is target mode.
+3. `rg_dir_live`: the mode follows the regime bar by bar: a target is acted on only in a bar whose regime is not
+   directional; a target reached while the regime is directional is passed by and is acted on later only if the bar
+   that reaches it again is in a non-directional regime. Once half is off at Target 1 the stop stays at the entry.
+4. `rg_mom_entry`: as 1 with "momentum only" in place of "directional".
+5. `rg_dir_entry_inv` (the CONTROL, the owner's idea turned round): directional -> target mode, otherwise -> flip mode.
+   If the idea holds, this must do worse than variant 1.
+
+Nothing else is varied: the flip bar stays 10 points (a lower bar would also change entries and is another
+hypothesis), no trail, no new target formula.
+
+**Frame: H59's "today" frame in every respect.** The main book's own entries (odds as the live step forms them:
+evidence store read-only, voices walked forward weekly by `leanprep.walk_forward_cached` with a private fits
+directory), sizing, fees per side, protective stop, flips, mandate, $10,000 per market, eight markets in five groups,
+halves split 2023-06-08, the same statistics (net P&L, return, Sharpe on daily marked equity, max drawdown, trades,
+win rate, average win / loss, each half, exit mix, gap to main). Window: each market's start to the last session of
+H59's "today" run (20 Nov 2026 03:45 UTC or the group's own), cut by H59's `prep_cut`, so that `main`, `be_t1`,
+`b_targets` and `half_be_t1` here must reproduce `research/out/h59_half_be/today_<group>.json` exactly. **If they do
+not, the difference is reported and no H60 number is presented as clean.**
+
+**Code:** `research/h60_regime_exits.py`, output `research/out/h60_regime_exits/` (`report.md`, `results.json`). The
+book runner is a copy of `engine15/shadows.run` kept inside the study with one added input, a per-trade / per-bar
+"targets active" switch; `engine15/shadows.py` (the money path, pinned by `tests/test_money_path_golden.py`) is NOT
+edited. The copy must reproduce `shadows.run` trade for trade with the switch always off (= `main`) and always on
+(= `b_targets`) on every market before any variant is read.
+
+**Three things are read, in this order.**
+
+*(a) The idea itself, on the two existing books (no new variant needed).* Every closed trade of `main` and of
+`b_targets` is put in the bucket of the regime at its entry decision bar. Per market and pooled, per bucket
+(directional / other; and the six labels): trades, net P&L, mean per trade, win rate, for each half. The owner's
+idea says: in the directional bucket `main` earns more per trade than `b_targets`, and in the other bucket
+`b_targets` earns more than `main`. **It is called supported only if both hold pooled in BOTH halves and in at least
+5 of 8 markets over the whole window.** (The two books do not hold the same trades after their first exit differs;
+the table compares what each rule earned from the entries it took in that regime, which is what a rule switch would
+get.)
+
+*(b) The five variants as whole books.* "Better than holding" is H36's test, unchanged: pooled net P&L above the main
+book's in BOTH halves, above it in at least 5 of the 8 markets over the whole window, and pooled max drawdown no worse.
+Read for variant 1 first. Variant 1 against its control (5): the idea needs 1 above 5 pooled in both halves.
+
+*(c) One rule per market.* Menu (frozen, 8 rules): `main`, `be_t1`, `half_be_t1`, `b_targets`, `rg_dir_entry`,
+`rg_dir_aligned`, `rg_dir_live`, `rg_mom_entry`. For each market the rule with the highest net P&L in the FIRST half
+(to 2023-06-08) is picked; ties go to the earlier name in the menu. Its SECOND-half result is then set beside the
+main book's second half. **"A rule per market helps" only if the picks, pooled, beat the main book's pooled second
+half AND do so in at least 5 of 8 markets.** Also reported, as description only: each market's best rule over the
+whole window and how far that pick agrees with the first-half pick.
+
+**Read this plainly.** In-sample history that this project has already read four times for exits (H36, H59): the
+second half is not untouched for `main`, `be_t1`, `b_targets` and `half_be_t1`, and five more variants on the same
+entries make 21 looked at. The numbers of these studies have moved by thousands of dollars between runs when the
+readings store was rebuilt. A pass is not proof of anything and gates nothing by itself; a fail does not stop the
+owner from choosing a rule. Whatever the owner adopts runs forward beside the `main` copy and is read at 30 closed
+forward trades per market, as agreed for the other exit books. Paper only; the vault's book is not touched.
