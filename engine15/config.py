@@ -17,12 +17,16 @@ ESTATE = os.environ.get("ENGINE15_ESTATE", os.path.join(os.path.dirname(ROOT), "
 LIBRARY_JSON = os.path.join(ESTATE, "research", "local", "library", "strategy_library.json")
 
 # Said once in the journal (each market group's next entry) after "version" changes (live.step_group).
-VERSION_NOTE = ("think15-v5.2.6: on the S&P 500 the main book now closes half the position at Target 1 and moves "
-                "the stop of the rest to the entry price; the rest runs until that stop or a flip. USDJPY keeps "
-                "v5.2.5's stop-to-entry rule at full size. Entries, sizing, flips and the other six markets are unchanged.")
+VERSION_NOTE = ("think15-v5.2.7: on USDJPY the main book now sells half the position at Target 1, moves the stop of "
+                "the rest to the entry price, and sells the rest at Target 2 (the Setups book's exit rule). The S&P 500 "
+                "keeps v5.2.6 (half at Target 1, the rest runs). Entries, sizing, flips, the 4-session mandate and "
+                "the other six markets are unchanged.")
 
 CFG = {
-    "version": "think15-v5.2.6",      # v5.2.6 (20 Nov 2026): the S&P 500 main book closes half at Target 1, stop of the rest to the
+    "version": "think15-v5.2.7",      # v5.2.7 (20 Nov 2026): USDJPY's main book sells half at Target 1 and the rest at Target 2
+                                      #   ("half_t1" and "t2_exit", below); owner, after the long of 10 Nov passed both targets and
+                                      #   closed at its entry: "Sell at target"; the mandate stays ("Still follow our rules").
+                                      # v5.2.6 (20 Nov 2026): the S&P 500 main book closes half at Target 1, stop of the rest to the
                                       #   entry ("half_t1", below); owner: "The snp 500 should close half of the profit now ... as
                                       #   TP1 already achieve", then chose "Rest runs, stop at entry". Other markets unchanged.
                                       # v5.2.5 (19 Nov 2026): the FX main book (USDJPY) moves its stop to the entry once Target 1
@@ -110,7 +114,20 @@ CFG = {
     # on the owner's call. This exact combination was not in H36's grid; its history read is H59 (registered the same
     # day, descriptive, gates nothing). The nearest H36 numbers on the S&P: holding +$6,816, stop-to-entry at full
     # size +$6,334, half at Target 1 with the rest out at Target 2 (b_targets) +$1,018.
-    "half_t1": ("SPX",),
+    # v5.2.7 (20 Nov 2026): USDJPY joins, with t2_exit below.
+    "half_t1": ("SPX", "USDJPY"),
+    # v5.2.7 (owner, 20 Nov 2026). The USDJPY long of 10 Nov traded through Target 1 and Target 2 on 11 Nov, went on to
+    # 160.19 and was closed at its entry nine days later (research/out/usdjpy_postmortem_20261120.md). Asked whether the
+    # open USDJPY long should sell at its targets, the owner: "1. Sell at target". Asked whether a trade that ended at a
+    # target should be exempt from the forced re-entry: "2. Still follow our rules. Our goal is to ace the directional
+    # setup at highest probability. 4 session (max 1 hour) flat is good enough to re-read the market condition and
+    # choose best probability option" (so the mandate is unchanged). Markets listed here (they must be in half_t1
+    # too): once Target 1 has traded, a bar that trades through Target 2 closes what is left AT Target 2 ("T2"). With
+    # be_t1 and half_t1 this is the Setups book's exit rule (b_targets) on the main book's own entries. Adopted on the
+    # owner's call, not on a passed test: on history b_targets earned less than holding on USDJPY (H36: +$2,939 against
+    # +$19,209; H59's re-run -$394 against +$7,288). The shadow "main" copy keeps holding as the forward comparison.
+    # H60 (registered the same day) reads exits by regime per market and may change this list later.
+    "t2_exit": ("USDJPY",),
     # v3 (owner, 10 Nov 2026): HOLD when risk is high and the edge is gone, instead of stepping
     # aside. In the replay the step-aside rule made about 770 exits and 1,000 forced re-entries a coin.
     "step_aside": False,

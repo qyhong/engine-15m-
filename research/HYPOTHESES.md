@@ -3340,3 +3340,14 @@ entries make 21 looked at. The numbers of these studies have moved by thousands 
 readings store was rebuilt. A pass is not proof of anything and gates nothing by itself; a fail does not stop the
 owner from choosing a rule. Whatever the owner adopts runs forward beside the `main` copy and is read at 30 closed
 forward trades per market, as agreed for the other exit books. Paper only; the vault's book is not touched.
+
+## Adoption note, think15-v5.2.7 (20 Nov 2026, ~12:15 UTC): USDJPY's main book sells at both targets. NOT a pass.
+
+The owner switched USDJPY's main book to the Setups book's exit rule: half closed at Target 1, the stop of the rest to
+the entry, the rest closed at Target 2 (docs/CHARTER.md, same date; "Sell at target"). The 4-session mandate stays
+("Still follow our rules"). A rule change on the owner's word after a post-mortem of one trade
+(`research/out/usdjpy_postmortem_20261120.md`), not on a test: the history numbers that exist for this rule on USDJPY
+are below holding (H36 `b_targets` +$2,939 against `main` +$19,209; H59's re-run -$394 against +$7,288), and the ten
+live days cannot rank the rules. H60 above was registered at 11:43 UTC, before this change was built, and had computed
+nothing when it was adopted, so it cannot have informed it. Forward: the shadow `main` copy keeps hold-to-stop-or-flip
+on USDJPY, `b_be_t1`, `b_targets` and `b_trail` keep running, and the lines are read at 30 closed forward trades.

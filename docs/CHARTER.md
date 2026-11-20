@@ -352,3 +352,16 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   any exit rule, and the shadow books (`main` copy, `b_be_t1`, `b_targets`) keep their own untouched records.
   The rule itself was not changed (USDJPY: stop to entry after Target 1, no half), and the open USDJPY long of
   20 Nov 11:00 UTC (158.868) was not touched. Paper only.
+- **USDJPY main book: half at Target 1, the rest at Target 2, stop to the entry after Target 1** (think15-v5.2.7, 20
+  Nov 2026). After the post-mortem of the trade above (`research/out/usdjpy_postmortem_20261120.md`: the main book
+  cannot take profit; the odds on USDJPY moved 1 point typically and never the 10 a flip needs; the Setups book banked
+  $304 on both targets and then lost $392 on three forced re-entries) two questions were put to the owner. Should the
+  open USDJPY long sell at its targets: "1. Sell at target". Should a trade that ended at a target be exempt from
+  the forced re-entry: "2. Still follow our rules. Our goal is to ace the directional setup at highest probability. 4
+  session (max 1 hour) flat is good enough to re-read the market condition and choose best probability option." So
+  the mandate is unchanged and `CFG["t2_exit"] = ("USDJPY",)` joins `half_t1` and `be_t1`: on USDJPY the main book now
+  exits exactly as the Setups book does (checked to the cent against `shadows.run` on random bars,
+  `tests/test_t2_exit.py`). It applies to the open long of 20 Nov (Target 1 159.586, Target 2 160.093). Adopted on
+  the owner's word; on history this rule earned less than holding on USDJPY (H36: +$2,939 against +$19,209). The
+  shadow `main` copy keeps holding as the forward comparison. The owner's further idea the same day (flip exits in
+  directional regimes, target exits in the others, and one rule per market) is H60, registered before any number.

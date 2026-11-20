@@ -89,7 +89,8 @@ def leverage(cfg, price, stop_dist):
     return float(min(cap, max(1.0, cfg.get("risk_per_trade", 0.02) / (stop_dist / price))))
 
 
-def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None, bias=None, guard=None, t1_of=None):
+def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None, bias=None, guard=None, t1_of=None,
+             t2_of=None):
     """One asset's paper book over sessions lo .. hi-1. -> dict of per-session arrays and trades.
     `state` (the dict a previous call returned under "state") resumes a book exactly where it
     stopped: the live engine advances one session at a time this way.
@@ -107,6 +108,10 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
     trade (reports.per_entry counts them once).
     state["half_due"] (set by live.adopt_be_t1 for a trade whose Target 1 traded before the rule existed): the half
     is closed at the next bar's OPEN instead, why_out "T1_LATE"; nothing is back-dated to the target's price.
+    The rest at Target 2 (v5.2.7; only with both rules above AND cfg["t2_exit"] exactly True AND t2_of given, the
+    planner of Target 2 with t1_of's arguments): once Target 1 has traded, a bar that trades through Target 2 closes
+    what is left AT Target 2, why_out "T2" (read after the stop check and after Target 1, so both targets may fill
+    in one bar, as in the Setups book, shadows.run). The book is then flat and the mandate counts from zero.
     -> also "parts": [(bar, price, quantity, net usd, tag)] for the halves closed in lo .. hi-1."""
     o, h, l, c = px["open"], px["high"], px["low"], px["close"]
     n = len(c)
@@ -124,7 +129,8 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
     # CFG["be_t1"]: the raw CFG holds the LIST of those markets there, and a list must never switch the rule on.
     be = cfg.get("be_t1") is True and t1_of is not None
     half = be and cfg.get("half_t1") is True                      # v5.2.6: half off at Target 1 (needs the rule above)
-    t1, t1_hit, stop0 = None, False, np.nan
+    t2x = half and cfg.get("t2_exit") is True and t2_of is not None   # v5.2.7: the rest out at Target 2 (needs both)
+    t1, t1_hit, stop0, t2 = None, False, np.nan, None
     part, half_due, parts = None, False, []                       # the half already closed; one owed at the next open
     fees_paid = [float((state or {}).get("fees", 0.0))]           # every fee this book has paid, across steps
     if state:
@@ -133,13 +139,14 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
         why_in, pending = state["why_in"], tuple(state["pending"]) if state["pending"] else None
         if be and pos != 0:
             t1, t1_hit = state.get("t1"), bool(state.get("t1_hit", False))
+            t2 = state.get("t2") if t2x else None
             stop0 = stop if state.get("stop0") is None else state["stop0"]
             if half:
                 part = dict(state["part"]) if state.get("part") else None
                 half_due = bool(state.get("half_due", False)) and part is None
 
     def close(i, price, why):
-        nonlocal pos, qty, eq, stop, t1, t1_hit, stop0, part, half_due
+        nonlocal pos, qty, eq, stop, t1, t1_hit, stop0, part, half_due, t2
         gross = qty * pos * (price - entry)
         fees = fee * qty * (entry + price)
         eq += gross - fees
@@ -147,7 +154,7 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
         trades.append((t_in, i, pos, entry, price, why_in, why, (gross - fees) / (qty * entry) * 100.0, eq,
                        qty, gross - fees, fees))                  # after a half at Target 1: the row of the rest
         pos, qty, stop = 0, 0.0, np.nan
-        t1, t1_hit, stop0 = None, False, np.nan
+        t1, t1_hit, stop0, t2 = None, False, np.nan, None
         part, half_due = None, False
 
     def take_half(i, price, tag):
@@ -183,9 +190,11 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
                 if q > 0:
                     pos, entry, qty, t_in, why_in = target, o[i], q, i, a
                     stop = entry - pos * cfg["stop_units"] * unit[i - 1]
-                    t1, t1_hit, stop0 = None, False, stop
+                    t1, t1_hit, stop0, t2 = None, False, stop, None
                     if be:
                         t1 = t1_of(i, pos, entry, stop)
+                    if t2x:
+                        t2 = t2_of(i, pos, entry, stop)
             pending = None
         if half_due:                                              # 1b. a half owed from before the rule: at this open
             if pos != 0 and part is None:
@@ -204,6 +213,9 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
             if half:                                              # the entry, live from the next bar, never looser;
                 take_half(i, float(t1), "T1")                     # under half_t1 half is closed at the target first
             stop = exits.be_stop(pos, entry, stop)
+        if t2x and pos != 0 and t1_hit and t2 is not None and exits.reached(pos, h[i], l[i], t2):
+            close(i, float(t2), "T2")                             # 2c. Target 2 traded: what is left goes AT Target 2
+            idle = 0
         pu = p_up[i]                                              # 3. the decision at this close
         a, target, why = policy.decide(pos, idle, None if pu != pu else pu, p_dn[i], bool(shock[i]),
                                        tide[i] if tide[i] == tide[i] else 0.0, cfg,
@@ -230,6 +242,8 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
                          stop0=None if (stop0 != stop0 or not pos) else float(stop0), be_t1=True)
     if half:
         end_state.update(half_t1=True, part=part if pos else None, half_due=bool(half_due and pos))
+    if t2x:
+        end_state.update(t2_exit=True, t2=None if (t2 is None or not pos) else float(t2))
     if pos != 0:                                                  # still open: mark it, charge nothing more
         trades.append((t_in, hi - 1, pos, entry, c[hi - 1], why_in, "OPEN", (pos * (c[hi - 1] - entry) / entry
                                                                              - fee) * 100.0, eq_arr[hi - 1],

@@ -84,13 +84,16 @@ def _half_fields(st):
     """The half closed at Target 1 (v5.2.6, markets in CFG["half_t1"]); {} for every other book."""
     if not st.get("half_t1"):
         return {}
+    # v5.2.7: what the book does at its targets, in words (the page shows targets for every market; only some trade them)
+    rest = {"targets_traded": "half at Target 1, the rest at Target 2" if st.get("t2_exit")
+            else "half at Target 1; the rest runs with its stop at the entry"}
     part = st.get("part")
     if not part:
-        return {"t1_half": "due at the next open (Target 1 traded before the rule)" if st.get("half_due")
-                else "half is closed at Target 1", "t1_half_closed": False}
-    return {"t1_half": "half closed%s" % (" at Target 1" if part.get("tag") == "T1" else " at the open after the rule began"),
+        return dict(rest, t1_half="due at the next open (Target 1 traded before the rule)" if st.get("half_due")
+                    else "half is closed at Target 1", t1_half_closed=False)
+    return dict(rest, **{"t1_half": "half closed%s" % (" at Target 1" if part.get("tag") == "T1" else " at the open after the rule began"),
             "t1_half_closed": True, "t1_half_price": round(part["qpx"] / part["q"], 5),
-            "t1_half_quantity": round(part["q"], 6), "t1_half_usd": round(part["pnl"], 2)}
+            "t1_half_quantity": round(part["q"], 6), "t1_half_usd": round(part["pnl"], 2)})
 
 
 def _target_fields(st, pos, qty, entry, stop):
@@ -163,21 +166,25 @@ def universes():
 def asset_cfg(a, cfg):
     """The asset's own fee: gold, silver, USDJPY and the S&P 500 trade far cheaper than crypto spot.
     be_t1 (v5.2.5): whether this market's main book moves its stop to the entry after Target 1 (CFG["be_t1"]).
-    half_t1 (v5.2.6): whether it also closes half there (CFG["half_t1"]; only markets that are in be_t1 too)."""
+    half_t1 (v5.2.6): whether it also closes half there (CFG["half_t1"]; only markets that are in be_t1 too).
+    t2_exit (v5.2.7): whether the rest is closed at Target 2 (CFG["t2_exit"]; only markets that are in half_t1 too)."""
     be = a in (CFG.get("be_t1") or ())
+    half = be and a in (CFG.get("half_t1") or ())
     return dict(cfg, cost_side=CFG.get("asset_cost", {}).get(a, cfg["cost_side"]),
                 leverage_cap=CFG.get("max_leverage", {}).get(a, 1.0),
                 fill_delay_bars=CFG.get("fill_delay", {}).get(a, 0),
-                be_t1=be, half_t1=be and a in (CFG.get("half_t1") or ()))
+                be_t1=be, half_t1=half, t2_exit=half and a in (CFG.get("t2_exit") or ()))
 
 
-def adopt_be_t1(old, px, times, lo, half=False):
+def adopt_be_t1(old, px, times, lo, half=False, t2=False):
     """A trade that was already running when its market came under the break-even rule (v5.2.5): give its state
     what backtest.run_book needs. t1 = the Target 1 planned at its entry; t1_hit = whether any bar from the entry
     bar to the last journaled one (lo - 1) traded through it; if so the stop goes to the entry now (never looser),
     live from bar lo. The past is not rewritten: bars before lo are not re-checked against the moved stop.
     half (v5.2.6, the market is in CFG["half_t1"]): a running trade whose Target 1 has already traded and that has
     no half closed yet gets half_due = True: run_book closes half at the next bar's open, at that open's price.
+    t2 (v5.2.7, the market is in CFG["t2_exit"]): the running trade gets the Target 2 planned at its entry; the
+    rest is closed there by run_book in the first bar from lo that trades it (never back-dated).
     -> a new state dict; `old` itself is returned when there is nothing to adopt."""
     if not old or not old.get("pos"):
         return old
@@ -187,6 +194,8 @@ def adopt_be_t1(old, px, times, lo, half=False):
         new = _adopt_stop(old, px, times, lo)
     if half and "half_due" not in new:
         new = dict(new, half_t1=True, half_due=bool(new.get("t1_hit")) and not new.get("part"))
+    if t2 and "t2" not in new:
+        new = dict(new, t2_exit=True, t2=new.get("target_2"))
     return new
 
 
@@ -589,15 +598,18 @@ def step_group(g, assets, state, log=print, fetch=True, gate=None):
         old = state["books"].get(a) or {}
         acfg = asset_cfg(a, cfg)
         acfg["risk_budget_usd"] = risk_budget(a, state)          # the total-risk cap across all main books
-        t1_of = None
+        t1_of = t2_of = None
         if acfg.get("be_t1"):                                    # v5.2.5: the stop to entry after Target 1 (CFG["be_t1"])
             old = adopt_be_t1(old, prep["px"][a], times, lo,     # a trade already running comes under the rule now
-                              half=bool(acfg.get("half_t1")))
+                              half=bool(acfg.get("half_t1")), t2=bool(acfg.get("t2_exit")))
+            if acfg.get("t2_exit"):                              # v5.2.7: the rest out at the Target 2 the page shows
+                t2_of = lambda i, side, entry, stop, ev=ev: plan_targets(
+                    int(side), float(entry), float(stop), ev.iloc[max(i - 1, 0)]).get("target_2")
             t1_of = lambda i, side, entry, stop, ev=ev: plan_targets(   # the same Target 1 the page shows (below)
                 int(side), float(entry), float(stop), ev.iloc[max(i - 1, 0)]).get("target_1")
         b = backtest.run_book(prep["px"][a], prep["odds"][a], ev["shock"].values, ev["tide"].values,
                               (cfg["barrier_atr"] * ev["atr1h"]).values, acfg, lo, n, state=old or None,
-                              bias=ev["htf_bias"].values, guard=ev["release_soon"].values, t1_of=t1_of)
+                              bias=ev["htf_bias"].values, guard=ev["release_soon"].values, t1_of=t1_of, t2_of=t2_of)
         books[a] = b
         tr = b["trades"]
         closed = tr[tr.why_out != "OPEN"]

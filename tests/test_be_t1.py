@@ -162,8 +162,8 @@ def test_a_running_trade_that_has_not_reached_target_1_keeps_its_stop():
 
 
 def test_only_usdjpy_and_the_sp500_are_under_the_rule():
-    assert CFG["be_t1"] == ("USDJPY", "SPX") and CFG["half_t1"] == ("SPX",) and CFG["version"] == "think15-v5.2.6"
-    assert live.asset_cfg("USDJPY", CFG)["be_t1"] is True and live.asset_cfg("USDJPY", CFG)["half_t1"] is False
+    assert CFG["be_t1"] == ("USDJPY", "SPX") and CFG["half_t1"] == ("SPX", "USDJPY")     # v5.2.7: USDJPY sells at targets
+    assert live.asset_cfg("USDJPY", CFG)["be_t1"] is True and live.asset_cfg("USDJPY", CFG)["half_t1"] is True
     assert live.asset_cfg("SPX", CFG)["be_t1"] is True and live.asset_cfg("SPX", CFG)["half_t1"] is True
     for a in ("BTCUSDT", "ETHUSDT", "XAUUSD", "XAGUSD", "WTI", "BRENT"):
         assert live.asset_cfg(a, CFG)["be_t1"] is False and live.asset_cfg(a, CFG)["half_t1"] is False
