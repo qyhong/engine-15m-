@@ -682,6 +682,8 @@ def vault_memory_lost(doc, mem, tok, chat, now, done):
             u"%s <b>VIP vault \u00b7 feed memory lost</b>" % WARN,
             u"%s: %s setup opened %s" % (_esc(_mk(sym[:20])), side, opened),
             u"The feed's record %s while this setup was open." % why,
+            (u"An exit that was due before now (a Target 1 taken meanwhile, or one still waiting) was <b>not sent</b>. "
+             u"Later exits for this setup will be sent.") if a.get("exits") == "later" else
             u"It will send <b>no exit</b> for this setup, and any exit that was still waiting is gone.",
             u"Members in it are covered only by their stop on the exchange.",
             u"What to do is in the engine's restore page."])

@@ -937,3 +937,12 @@ def test_vault_memory_lost_card_is_retried_and_a_garbled_alarm_is_no_card(monkey
         vault_state({}, extra=bad)
         tn.check(dict(VST), "k", now=VNOW)
     assert not [c for c in sent[n:] if "feed memory lost" in c]
+
+
+def test_vault_memory_lost_card_says_when_later_exits_still_go(monkeypatch):
+    sent, _h = vault_bot(monkeypatch)
+    vault_state({}, extra={"alarm": {"memory_lost": {"BTCUSDT": {"side": "SHORT", "opened_utc": "2026-11-15T03:15:00Z",
+                                                                "since": MADE, "why": "missing", "exits": "later"}}}})
+    tn.check(dict(VST), "k", now=VNOW)
+    card = [c for c in vault_cards(sent) if "feed memory lost" in c][0]
+    assert "Later exits for this setup will be sent" in card and "no exit</b> for this setup" not in card
