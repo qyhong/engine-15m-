@@ -6,8 +6,8 @@ The owner (17 Nov 2026), asked how to apply the S&P analytics to the top five st
 cards exactly as the S&P call has them), combined with the S&P group's LEARNED voices and trust. Nothing is
 refitted here and nothing of the index group is written: the voices are the index group's own weekly refit
 (read from data/evcache/index/fits/, the file whose answers match the S&P call's journal entry) and the trust is
-the trust that call used (its journal entry). Labelled with what the history test found (H57, no pass: MODEL
-below); every stance is graded live with the engine's own triple barrier so a hit rate builds up.
+the trust that call used (its journal entry). Labelled "not validated on single stocks"; every stance is graded
+live with the engine's own triple barrier so a hit rate builds up.
 
     tickers   MIND15_TOP5_FILE (default /var/lib/aitrading-top5/top5.json, the website's file; order kept,
               an empty list is valid); unreadable: the last list used (state), else MIND15_STOCKS, else
@@ -49,11 +49,7 @@ from .config import CFG, DATA_DIR, JOURNAL_DIR, OUT_DIR, voting_for
 
 SCHEMA = 1
 NOTE = "Paper model reading. Not a recommendation."
-# The label every stance carries. Until 20 Nov 2026: "...; not validated on single stocks". Since H57's verdict
-# (research/out/h57_stocks/report.md: no pass; 324 non-overlapping calls right 53.1%, interval 47.6-58.5%; FLAT on
-# 99.5% of closes) it says what the test found. Owner, 20 Nov 2026: "1. Ok" (update the label, keep the section).
-MODEL = ("S&P 500 model applied to single stocks. Tested on 2021-2025 history (13 large US stocks): calls were right "
-         "about as often as a coin toss, and the stance is FLAT almost all the time.")
+MODEL = "S&P 500 model applied to single stocks; not validated on single stocks"
 FILE = "stocks.json"
 WEB_ENV = "MIND15_SETUPS_WEB_DIR"
 WEB_MODE = 0o644

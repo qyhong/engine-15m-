@@ -83,9 +83,8 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   (env `MIND15_TOP5_FILE`; the website's single source of truth; fallbacks: last list, env `MIND15_STOCKS`, default five).
   Readings from each stock's Yahoo bars (`data/stocks/`) with the engine's own card code, market-wide cards copied from the
   S&P entry, mixed with the S&P call's own trust and refit voices (read only). Writes `stocks.json` (out/live + web dir);
-  every stance is logged (`data/stocks_log.jsonl`) and graded with `labels.triple_barrier` (26 bars). The label
-  (`stocks.MODEL`) states H57's finding since 20 Nov 2026 (history test, no pass: right about as often as a coin toss,
-  FLAT almost all the time; `research/out/h57_stocks/report.md`). No positions, stops or sizing.
+  every stance is logged (`data/stocks_log.jsonl`) and graded with `labels.triple_barrier` (26 bars). Labelled "S&P 500
+  model applied to single stocks; not validated on single stocks". No positions, stops or sizing.
 - **Research Python on the box (17 Nov 2026, owner approved):** `/data/venv-research` = scikit-learn 1.9.1, scipy 1.18.1,
   joblib, threadpoolctl, narwhals (installed `--no-deps`), and every engine package through a `.pth` pointing at
   `/data/venv` (numpy 2.4.5 shared). Research scripts that need sklearn/scipy run with it. Never install into `/data/venv`:

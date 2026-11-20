@@ -184,8 +184,7 @@ def test_empty_list_writes_an_empty_stocks_list(world):
     world.top5.write_text(json.dumps({"generated_utc": "2026-11-18T09:07:00Z", "tickers": []}))
     doc = _doc(stocks.run([], paths=world.paths, now=world.now))
     assert doc["stocks"] == [] and doc["tickers_source"] == "top5.json" and doc["tickers_as_of_utc"] == "2026-11-18T09:07:00Z"
-    assert doc["model"] == stocks.MODEL and "coin toss" in doc["model"] and "2021-2025" in doc["model"]   # H57's finding
-    assert "edge" not in doc["model"].lower()                           # subscriber-facing text never says "edge"
+    assert doc["model"] == "S&P 500 model applied to single stocks; not validated on single stocks"
     assert doc["note"] == "Paper model reading. Not a recommendation." and doc["schema"] == 1
     assert world.feed.calls == []
 
