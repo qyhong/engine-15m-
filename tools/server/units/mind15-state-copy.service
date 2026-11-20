@@ -1,0 +1,29 @@
+[Unit]
+Description=Mind 15: hourly copy of the engine's memory (vault feed state, shadow books) into data/state_copies
+RequiresMountsFor=/data
+
+[Service]
+Type=oneshot
+User=mind15
+Group=mind15
+WorkingDirectory=/data/mind15
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/data/venv/bin/python /data/mind15/tools/server/state_copies.py copy
+Nice=10
+# sandbox: it may write only under the engine's data folder; secrets and the vault's files are out of reach
+ReadWritePaths=/data/mind15/data
+InaccessiblePaths=-/data/mind15/secrets -/etc/mind15 -/etc/ait-engine -/etc/aitrading-auth -/var/lib/aitrading-auth -/etc/letsencrypt
+UMask=0002
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+PrivateNetwork=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictNamespaces=yes
+LockPersonality=yes

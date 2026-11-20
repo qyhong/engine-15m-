@@ -110,6 +110,12 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   step (history totals, yearly rows, monthly curve labelled "history replay with today's engine, in-sample, not a test",
   plus the live record since 11 Nov and a combined curve) and `b_trail_history_trades.json` (web dir only, when the CSV
   is newer). History: B trail -$47,444 (11,420 trades) vs main +$187,617 on the same span.
+- **Hourly copies of the engine's memory (20 Nov 2026):** timer `mind15-state-copy` (minute 8) runs
+  `tools/server/state_copies.py copy` as `mind15`: `vault_feed_state.json`, `shadow_state.json`, `live_state.json` and
+  `signals_state.json` into `data/state_copies/<stamp>/` with a manifest, 48 kept. Restore with the same tool
+  (`docs/RESTORE.md`); it refuses while the engine runs. If the feed's memory is lost while a setup is open the feed
+  logs `vault: ALARM ...` every step and the Telegram bot sends "feed memory lost" (it used to adopt silently).
+  `bash tools/server/check_drift.sh` (laptop, read-only) compares the box with `tools/server/`.
 - **Backups (17 Nov 2026):** `tools/backup_pull.py`, Windows scheduled task "Mind15 server backup" daily 12:00 SGT:
   one tar over ssh of journal, out/live, data (no evcache/raw), RL forward books and logs into `backup/server/`
   (git-ignored), 7 kept, taken in a gap between steps, rejected if a bar or state file is empty.

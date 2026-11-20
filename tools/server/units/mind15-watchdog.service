@@ -1,0 +1,6 @@
+[Unit]
+Description=Mind 15 engine watchdog (restarts a stuck engine; at most once per 45 minutes)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/mind15-watchdog

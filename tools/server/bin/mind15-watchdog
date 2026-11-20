@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Mind 15 engine watchdog (installed by tools/server/mind15_watchdog.sh). Restarts a stuck engine; never more than
+# once per 45 minutes.
+LOG=/data/mind15/live.log
+STAMP=/var/lib/mind15-watchdog.last
+systemctl is-active --quiet mind15 || exit 0
+[ -f "$LOG" ] || exit 0
+age=$(( $(date +%s) - $(stat -c %Y "$LOG") ))
+[ "$age" -gt 1800 ] || exit 0
+last=$(cat "$STAMP" 2>/dev/null || echo 0)
+if [ $(( $(date +%s) - last )) -lt 2700 ]; then
+  echo "mind15-watchdog: engine log silent for ${age}s, but restarted less than 45 min ago: not restarting again"
+  exit 0
+fi
+date +%s > "$STAMP"
+msg="watchdog: no engine output for $((age / 60)) min: restarting the engine ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
+echo "mind15-watchdog: $msg"
+echo "$msg" >> "$LOG"
+systemctl restart mind15

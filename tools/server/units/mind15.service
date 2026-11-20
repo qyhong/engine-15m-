@@ -1,0 +1,45 @@
+[Unit]
+Description=Mind 15 live loop (paper only; pushes page.json to the web box); own user + sandbox since 17 Nov 2026
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=mind15
+Group=mind15
+WorkingDirectory=/data/mind15
+Environment=ENGINE15_PUSH=1
+Environment=HOME=/var/lib/mind15
+Environment=XDG_CACHE_HOME=/var/lib/mind15/.cache
+Environment=MPLCONFIGDIR=/var/lib/mind15/.cache/matplotlib
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/data/mind15/run_live.sh
+Restart=always
+RestartSec=30
+StandardOutput=append:/data/mind15/live.log
+StandardError=append:/data/mind15/live.log
+# sandbox: the whole file system is read-only except the engine's own state; the bot key and the site's secrets are out of reach
+ReadWritePaths=/data/mind15/data /data/mind15/journal /data/mind15/out /data/mind15/research/out /var/lib/mind15 -/var/www/aitrading-m15
+InaccessiblePaths=-/data/mind15/secrets -/etc/aitrading-auth -/var/lib/aitrading-auth -/data/aitrading/backups -/etc/letsencrypt
+UMask=0002
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=yes
+RestrictRealtime=yes
+LockPersonality=yes
+RemoveIPC=yes
+
+[Install]
+WantedBy=multi-user.target
