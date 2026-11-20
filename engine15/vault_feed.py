@@ -232,7 +232,14 @@ def _content(book):
 
 
 # ------------------------------------------------------------------ positions -> exit intents
-EXITS_ONLY_IF_WINDOW_SEEN = True     # the guard of 18 Nov 2026 (vault live): see track()
+# The guard of 18 Nov 2026 ("exits only for a setup whose entry window this feed saw open") is OFF since 20 Nov 2026.
+# It assumed the vault joins a setup only inside its entry window. The vault's join rule (owner, 18 Nov: "Hybrid join
+# rule") also joins a setup long after its window, so the guard left joined members with NO exit: the two shorts of 15
+# Nov were joined on 19 Nov and BTC's Target 1 on 20 Nov sent nothing (found by the AI Trading Bot session). An exit
+# for a setup nobody joined closes nothing on the vault's side (its exits act on the vault's own quantity only, the
+# futures fix of 19 Nov), so every setup the book publishes now gets its exits. The switch and the `eligible` mark
+# stay in the code and in the tests; nothing sets it back to True without the owner's word.
+EXITS_ONLY_IF_WINDOW_SEEN = False
 
 def _pos_of(m):
     """The open position a setups market shows: {side, opened_utc, entry, target_1, t1_taken}; None when FLAT;
@@ -479,8 +486,11 @@ def _keep_bad(path, now):
 
 def memory_alarm(st, markets, syms, how, now, log):
     """Keep st["alarm"]["memory_lost"] true to the markets, after track(). how: read_state's word for this step.
-    A setup is entered when the memory was lost this step and the feed will send no exit for it (it never saw its
-    entry window open); it leaves when that setup is no longer the market's position. One line per setup per step."""
+    A setup is entered when the memory was lost this step while that setup was open; it leaves when that setup is no
+    longer the market's position. Its "exits" says what the loss costs: "none" (the guard is on and the feed never
+    saw its entry window: no exit at all; one line at EVERY step) or "later" (the guard is off: an exit that was
+    waiting, or a Target 1 taken while the memory was gone, was not sent, later exits are; no log line, because a
+    first start with a setup open looks the same: the state entry and the Telegram card carry it)."""
     lost = st.get("alarm", {}).get("memory_lost") if isinstance(st.get("alarm"), dict) else None
     lost = dict(lost) if isinstance(lost, dict) else {}
     seen = st.get("pos") if isinstance(st.get("pos"), dict) else {}
@@ -491,13 +501,15 @@ def memory_alarm(st, markets, syms, how, now, log):
         if isinstance(old, dict) and not (isinstance(cur, dict) and cur.get("side") == old.get("side")
                                           and cur.get("opened_utc") == old.get("opened_utc")):
             del lost[sym]                                        # the setup is over (or replaced): the alarm ends
-            _say(log, "vault: %s %s setup opened %s is over; the feed sent no exit for it (its memory was lost)"
-                 % (sym, old.get("side"), old.get("opened_utc")))
+            if old.get("exits", "none") == "none":
+                _say(log, "vault: %s %s setup opened %s is over; the feed sent no exit for it (its memory was lost)"
+                     % (sym, old.get("side"), old.get("opened_utc")))
             old = None
         blind = isinstance(cur, dict) and EXITS_ONLY_IF_WINDOW_SEEN and not cur.get("eligible")
-        if how != "ok" and blind and old is None:
-            old = lost[sym] = {"side": cur["side"], "opened_utc": cur["opened_utc"], "since": now, "why": how}
-        if isinstance(old, dict):
+        if how != "ok" and isinstance(cur, dict):               # a loss now: it replaces what an earlier one recorded
+            old = lost[sym] = {"side": cur["side"], "opened_utc": cur["opened_utc"], "since": now, "why": how,
+                               "exits": "none" if blind else "later"}
+        if isinstance(old, dict) and old.get("exits", "none") == "none":
             _say(log, "vault: ALARM %s %s setup opened %s is open and the feed's memory was %s: NO exit will be sent for "
                       "it (see docs/RESTORE.md)" % (sym, old.get("side"), old.get("opened_utc"), old.get("why")))
     if lost:

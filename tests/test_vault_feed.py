@@ -49,11 +49,10 @@ def bar(n):
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(ep("2026-11-18T10:00:00Z") + 900 * n))
 
 
-@pytest.fixture(autouse=True)
-def _exit_guard_off_by_default(monkeypatch):
-    """The exit mechanics below predate the guard (exits only for a setup whose entry window the feed saw open); the
-    guard has its own tests, which switch it back on."""
-    monkeypatch.setattr(vf, "EXITS_ONLY_IF_WINDOW_SEEN", False)
+def test_the_exit_guard_is_off_every_published_setup_gets_its_exits():
+    """20 Nov 2026: the guard (exits only for a setup whose entry window the feed saw open) left members the vault
+    had joined later with no exit. It is off; its own tests below switch it on to show what it did."""
+    assert vf.EXITS_ONLY_IF_WINDOW_SEEN is False
 
 
 def mkt(sym="BTCUSDT", side="LONG", entry=65000.0, stop=64000.0, t1=66000.0, t2=67000.0, price=65203.2,
@@ -1007,15 +1006,16 @@ def _lose(feed):
 
 def test_memory_lost_while_a_setup_is_open_is_an_alarm_every_step_until_it_is_over(feed, fake, monkeypatch):
     monkeypatch.setattr(vf, "EXITS_ONLY_IF_WINDOW_SEEN", True)
-    feed.step(mkt(window=True))
-    assert "alarm" not in feed.saved() and not [x for x in feed.new if "ALARM" in x]
+    feed.step(mkt(window=True))                                    # a first start with a setup open: on record, no line
+    assert feed.saved()["alarm"]["memory_lost"]["BTCUSDT"]["exits"] == "later"
+    assert not [x for x in feed.new if "ALARM" in x]
     _lose(feed)
     feed.step(mkt(at=bar(2), window=False), now=1000.0)           # the window is shut: the feed cannot know it saw it open
     alarm = "vault: ALARM BTCUSDT LONG setup opened %s is open and the feed's memory was missing: NO exit will be sent " \
             "for it (see docs/RESTORE.md)" % OPENED
     assert alarm in feed.new and "vault: BTCUSDT LONG sent (as_of %s)" % bar(2) in feed.new     # the book still goes
     assert feed.saved()["alarm"] == {"memory_lost": {"BTCUSDT": {"side": "LONG", "opened_utc": OPENED, "since": 1000.0,
-                                                                 "why": "missing"}}}
+                                                                 "why": "missing", "exits": "none"}}}
     feed.step(mkt(at=bar(3), t1_taken=True, price=66080.5), now=1900.0)
     assert alarm in feed.new and feed.saved()["alarm"]["memory_lost"]["BTCUSDT"]["since"] == 1000.0   # said again, kept
     feed.trade("BTCUSDT", "T1+T2", 66500.0)
@@ -1031,10 +1031,16 @@ def test_memory_lost_is_no_alarm_when_nothing_is_left_without_exits(feed, fake, 
     feed.step(mkt(side="FLAT"))                                    # a first start, flat: one line, the book
     assert feed.new == ["vault: BTCUSDT FLAT sent (as_of %s)" % bar(1)] and "alarm" not in feed.saved()
     _lose(feed)
-    feed.step(mkt(at=bar(2), window=True))                         # lost, but the entry window is open: joinable, exits follow
-    assert not [x for x in feed.new if "ALARM" in x] and "alarm" not in feed.saved()
+    feed.step(mkt(at=bar(2), window=True), now=500.0)              # lost while open, but exits will follow: on record
+    assert not [x for x in feed.new if "ALARM" in x]              # (the Telegram card says it; no log line)
+    assert feed.saved()["alarm"]["memory_lost"]["BTCUSDT"] == {"side": "LONG", "opened_utc": OPENED, "since": 500.0,
+                                                               "why": "missing", "exits": "later"}
     feed.step(mkt(at=bar(3), t1_taken=True, price=66080.5))
+    assert not [x for x in feed.new if "ALARM" in x]              # not repeated; the setup stays on record
     assert [b["intent"]["action"] for b in fake.ops("submit_intent")] == ["reduce", "reduce", "move_stop"]
+    feed.trade("BTCUSDT", "T1+T2", 66500.0)
+    feed.step(mkt(side="FLAT", at=bar(4), price=66990.0))
+    assert "alarm" not in feed.saved() and not [x for x in feed.new if "is over" in x]     # exits were sent: no such line
 
 
 def test_an_unreadable_memory_is_kept_aside_and_alarmed(feed, fake, monkeypatch):
@@ -1065,7 +1071,8 @@ def test_restore_drill_a_copy_put_back_resumes_the_exits_and_closes_nothing_else
     with open(feed.state, "wb") as fh:
         fh.write(copy)                                             # the restore (engine stopped between steps)
     feed.step(mkt(at=bar(4), t1_taken=True, price=66100.0))
-    assert not [x for x in feed.new if "ALARM" in x] and "alarm" not in feed.saved()
+    assert not [x for x in feed.new if "ALARM" in x]              # the "no exit" alarm is gone with the restore
+    assert feed.saved()["alarm"]["memory_lost"]["BTCUSDT"]["exits"] == "later"    # (the copy's own first-start note)
     got = [(b["intent"]["action"], b["intent"]["market"]) for b in fake.ops("submit_intent")]
     assert got == [("reduce", "spot"), ("reduce", "futures"), ("move_stop", "futures")]       # the half, late
     feed.trade("BTCUSDT", "T1+STOP_BE", 65500.0)
@@ -1074,3 +1081,23 @@ def test_restore_drill_a_copy_put_back_resumes_the_exits_and_closes_nothing_else
     assert got[3:] == [("close", "spot"), ("close", "futures")]
     assert all(b["intent"]["intent_id"].startswith("BTCUSDT.%s." % OPENED.replace("-", "").replace(":", ""))
                for b in fake.ops("submit_intent"))                 # every exit belongs to that one setup
+
+
+# ------------------------------------------------------------------ 20 Nov 2026: a setup joined long after its window
+def test_a_setup_first_seen_after_its_window_gets_target_1_and_the_close(feed, fake):
+    """The two shorts of 15 Nov: the feed first saw them days after their entry window, the vault joined them on 19 Nov.
+    With the guard off (the default) Target 1 and the exit reach the vault. A short has futures exits only."""
+    opened = "2026-11-15T03:15:00Z"
+    short = dict(sym="BTCUSDT", side="SHORT", entry=65203.2, stop=68063.6, t1=61265.79, t2=59297.08, opened=opened)
+    feed.step(mkt(price=61784.1, window=False, **short))           # first sight: past its window, nothing to send yet
+    assert not fake.ops("submit_intent") and feed.saved()["pos"]["BTCUSDT"]["eligible"] is False
+    feed.step(mkt(price=61220.0, at=bar(2), t1_taken=True, **short))
+    got = [b["intent"] for b in fake.ops("submit_intent")]
+    assert [(x["action"], x["market"]) for x in got] == [("reduce", "futures"), ("move_stop", "futures")]
+    assert got[0]["fraction"] == 0.5 and got[0]["reference_price"] == "61265.79"
+    assert got[1]["side"] == "SELL" and got[1]["stop_price"] == "65203.2"       # a short's stop is a SELL-side book: BUY to close
+    feed.trade("BTCUSDT", "T1+T2", 60281.4, side=-1, p_in=65203.2, stop0=68063.6, t1=61265.79, t2=59297.08, opened=opened)
+    feed.step(mkt(side="FLAT", at=bar(3), price=59290.0))
+    got = [b["intent"] for b in fake.ops("submit_intent")]
+    assert [(x["action"], x["market"]) for x in got][2:] == [("close", "futures")]
+    assert all(x["intent_id"].startswith("BTCUSDT.20261115T031500Z.") for x in got)
