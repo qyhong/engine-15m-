@@ -522,9 +522,15 @@ def headline(res):
             "tickers_above": len(res["pass"]["tickers_above_50"]), "PASS": res["pass"]["PASS"], "split": res["split_utc"]}
 
 
+def set_path(name):
+    """sets/<name>.csv, or the gzipped copy kept on the server after the run."""
+    p = os.path.join(SETS, "%s.csv" % name)
+    return p if os.path.exists(p) or not os.path.exists(p + ".gz") else p + ".gz"
+
+
 def report_stage():
     tick = list(TICKERS)
-    prim = pd.read_csv(os.path.join(SETS, "primary.csv"))
+    prim = pd.read_csv(set_path("primary"))
     res = h57.measure(prim, tick)
     with open(os.path.join(SETS, "primary.json"), encoding="utf-8") as fh:
         pinfo = json.load(fh)
@@ -534,14 +540,14 @@ def report_stage():
     # leave-one-ticker-out, pooled
     lo_parts = []
     for t in tick:
-        p = os.path.join(SETS, "loto_%s.csv" % t)
+        p = set_path("loto_%s" % t)
         if os.path.exists(p):
             lo_parts.append(pd.read_csv(p))
     loto = pd.concat(lo_parts, ignore_index=True) if len(lo_parts) == len(tick) else None
     if loto is not None:
         out["loto"] = h57.measure(loto, tick)
         out["loto_sides"], loto_sides = sides_line(loto)
-    e1p = os.path.join(SETS, "e1.csv")
+    e1p = set_path("e1")
     e1 = pd.read_csv(e1p) if os.path.exists(e1p) else None
     if e1 is not None:
         out["e1"] = h57.measure(e1, tick)
@@ -602,9 +608,9 @@ def report_stage():
                      ("Brier skill vs base", "brier_skill"), ("log-loss skill vs base", "logloss_skill")):
         L.append("| %s | %s | %s | %s | %s |" % (lab, cell(hp, key), cell(lo, key), cell(hs, key), cell(hrep, key)))
     L.append("| share of closes with a stance | %s | %s | %s | 0.48%% |" % (
-        "%.2f%%" % (100 * (1 - prim_sides.get("FLAT", 0) / float(len(prim)))),
-        "-" if loto is None else "%.2f%%" % (100 * (1 - loto_sides.get("FLAT", 0) / float(len(loto)))),
-        "%.2f%%" % (100 * (1 - h57_sides.get("FLAT", 0) / float(len(h57same))))))
+        "%.2f%%" % (100 * (1 - out["primary_sides"].get("FLAT", 0) / float(len(prim)))),
+        "-" if loto is None else "%.2f%%" % (100 * (1 - out["loto_sides"].get("FLAT", 0) / float(len(loto)))),
+        "%.2f%%" % (100 * (1 - out["h57_same_sides"].get("FLAT", 0) / float(len(h57same))))))
     L += ["", "Halves: H58 split at %s UTC; H57-same-dates split at %s UTC (each at its own median graded call)." % (
         res["split_utc"], out["h57_same_dates"]["split_utc"]), ""]
     L += ["## H58 primary: hit rate of LONG / SHORT calls (NEITHER not counted)", ""]

@@ -3152,3 +3152,45 @@ call ("not confirmed on history").
 
 **Where it runs:** the research server, `research/h58_stocks.py`, outputs under `research/out/h58_stocks/`, under
 `nice -n 10`, the heavy-job lock, never touching the live engine's files.
+
+### Verdicts, H58 (20 Nov 2026, 03:40 UTC): NO PASS
+
+Run on the research server (`research/h58_stocks.py`; report `research/out/h58_stocks/report.md`, numbers `results.json`,
+the primary's per-refit card choices and trust `refits_primary.json`). 13 tickers, 325,705 judged closes 2022-01-03 ..
+2025-11-10 (38 refits), nothing on or after the seal.
+
+| condition (fixed at registration) | required | result | met |
+|---|---|---|---|
+| pooled non-overlapping hit, first half (before 2023-03-14 15:45 UTC) | > 50% and Wilson 95% lower bound > 50% | 40.2% (31.6% .. 49.4%, n 112) | no |
+| pooled non-overlapping hit, second half | > 50% and Wilson 95% lower bound > 50% | 57.2% (49.8% .. 64.4%, n 173) | no |
+| tickers with full-period non-overlapping hit > 50% | >= 6 of 13 | 6 (MSFT, GOOGL, AVGO, META, BRK.B, JPM) | yes |
+| **H58** | both | | **NO PASS** |
+
+- Full period, pooled: 2,537 LONG/SHORT calls, 285 non-overlapping graded, 50.5% right (44.8% .. 56.3%; day-block
+  bootstrap 40.9% .. 60.0%). The halves point opposite ways (40% then 57%). Overlapping hit rate 47.0%.
+- Stance taken on 0.78% of closes (0.54% LONG, 0.24% SHORT); H57: 0.48%.
+- Probabilities: Brier skill against each ticker's own UP share negative on 12 of 13 tickers (MU +0.0005), pooled -0.0021;
+  log-loss skill pooled -0.0015; negative in both halves pooled.
+- Leave-one-ticker-out (check): 52.8% (47.2% .. 58.3%, n 307); halves 50.4% (lower 41.4%) and 54.2% (lower 47.1%); 7 of
+  13 tickers above 50%: does not meet the bar either.
+- E1 (exploratory, without the two stock-only cards): 50.7% (n 365), halves 39.8% and 55.6%: NO PASS; the two cards
+  changed little.
+- H57's own rows on the same dates (2022-01-03 on): 49.6% (n 133). The stocks' own model is not better than the borrowed
+  one on these numbers.
+- The two stock-only cards: strength against the S&P 500 rated at most 51.0% in its worse half and never made the top
+  ten. Own earnings date (10 megacaps only) voted at 26 of 38 refits, always "against" (near or just after a report the
+  next move was more often down in the training rows), but with 0.5% of the mean say it barely moved the odds.
+- Card choice was unstable: consecutive refits shared 6 to 10 of their 10 cards (8 most often). Only the Ultimate
+  Oscillator (37 of 38) and economic calendar (36) voted almost every time.
+- Reading: no evidence that a model rated and trained on stock history calls single-stock direction better than chance
+  on 2022-2025. Per the registration, the page's wording and whether to keep the section is the owner's call ("not
+  confirmed on history"). Nothing in the engine is changed by this verdict.
+
+Disclosed departures and details: the registration's heading says 02:50 UTC; its commit is 02:46 UTC. The prep stage (read-only copies of
+`data/spx_15m.csv` and `data/sources/earnings_megacap.csv`) ran at 02:49, after the registration commit and before the
+code commit (02:52). A smoke test of the walk on 2 tickers and 1-2 refits checked only that it ran (no hit rate printed).
+The relative-strength volatility uses at least 600 of the last 672 bars (`min_periods`), a detail the registration did
+not fix. OpenBLAS was limited to one thread (speed only; no effect on the numbers). The first report run failed on a
+formatting bug after the numbers were computed and before any were printed; fixed and re-run. The "all" voice uses the
+305 stock features only (the engine's other features are always zero on a stock). Variants: the primary, E1 and the
+registered leave-one-ticker-out check; nothing else was run.
