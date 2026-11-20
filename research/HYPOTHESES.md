@@ -3340,3 +3340,46 @@ entries make 21 looked at. The numbers of these studies have moved by thousands 
 readings store was rebuilt. A pass is not proof of anything and gates nothing by itself; a fail does not stop the
 owner from choosing a rule. Whatever the owner adopts runs forward beside the `main` copy and is read at 30 closed
 forward trades per market, as agreed for the other exit books. Paper only; the vault's book is not touched.
+
+### H60 results (20 Nov 2026, 11:51-11:57 UTC on the research server; `research/out/h60_regime_exits/report.md` + `results.json`, per-group `today_<group>.json`)
+
+- **Equivalence gate: passed on all 8 markets.** The study's copy of `shadows.run` with the switch always off gave
+  `main`'s trades and always on gave `b_targets`' trades (same rows, words, prices, sizes, fees, P&L within $0.000001,
+  same final equity and open position), e.g. USDJPY 98 / 721 trades, SPX 37 / 239.
+- **Reconciliation with H59's "today" run: reproduced exactly.** `main`, `be_t1`, `b_targets`, `half_be_t1` on all 8
+  markets to the cent and trade (pooled main +$339,325, 1,080 trades). The H60 numbers below are one clean run.
+- **(a) The idea on the two existing books: NOT SUPPORTED.** Per trade, pooled: in directional regimes `main` earned
+  more than `b_targets` in the first half (+$467 vs +$6) but not in the second (-$1,501 vs -$25, 36 main trades); in the
+  other regimes `b_targets` earned less than `main` in both halves (first -$5 vs +$160, second -$1 vs +$466). Both parts
+  held over the whole window in 1 of 8 markets (XAGUSD; 5 needed). 920 of main's 1,080 trades start on a RANGE or
+  TRANSITION day, and RANGE alone carries +$221,532 of main's money.
+- **(b) Variant 1 `rg_dir_entry`: NOT better than holding.** Pooled +$41,188 vs main +$339,325; halves vs main
+  -$127,865 / -$170,273; ahead of main in 2 of 8 markets (SPX, XAGUSD); max DD -36.7% vs -32.8%. **Against its control
+  (variant 5 `rg_dir_entry_inv`, +$232,932) variant 1 is behind in both halves (-$78,386 / -$113,359): the idea does
+  not hold.** No variant passes (aligned +$37,315; live -$43,404; momentum-only -$6,942; control +$232,932, 4 of 8).
+- **(c) One rule per market: does NOT help.** First-half picks: SPX `rg_dir_entry`, USDJPY `be_t1`, BTC `be_t1`, ETH
+  `main`, XAU `half_be_t1`, XAG `main`, WTI `be_t1`, BRENT `be_t1`. Second half, picks together +$137,211 vs main
+  +$186,970; ahead of main in 1 of 8 (SPX: +$9,153 vs +$7,007). The whole-window best rule agrees with the first-half
+  pick in 3 of 8 markets.
+- **USDJPY:** main +$6,965, `rg_dir_entry` +$1,403, control +$7,657, `be_t1` +$9,061 (best both on the first half and the
+  whole window, but -$7,743 vs main -$7,497 in the second half). MOMENTUM: 0 days of 2,067. Directional 19.5% of sessions,
+  2 of main's 98 trades. **S&P 500:** main +$6,320, `rg_dir_entry` +$9,268 (halves +$115 / +$9,153; 75 trades in target
+  mode, 13 in flip mode), control +$6,486. MOMENTUM: 5 days of 1,472 (0.4% of sessions); directional 20.6% of sessions,
+  1 of main's 37 trades. One market's line picked after the fact is a selection, and the pooled test fails.
+- Regime shares (sessions; full table in the report): directional 18.6% (BRENT) to 26.2% (ETH); MOMENTUM 0.0% USDJPY,
+  0.4% SPX, 0.6% XAU, 4.0% XAG, 7.3% WTI, 6.4% BRENT, 8.9% BTC, 12.5% ETH.
+
+Disclosed departures and details: the runner copy keeps every code line of `shadows.run` (two comments shortened); the
+switch replaces `use_targets` per trade, and per bar in `rg_dir_live`; with the switch on, a stop after Target 1 is
+worded `STOP_BE` as in `b_targets`. In `rg_dir_live` the regime of bar i is the label on row i - 1 (known before the bar
+trades; row i already holds the daily bar that bar i closes); the registration said "a bar whose regime", not which row.
+Halves in (a) and (c) are split by each trade's exit bar, as H59's half statistics are; no row in these windows lacked a
+label. Means in (a) are dollars per trade (ETH weighs most pooled); percent means are in results.json. (c)'s sums are
+per-market half results added (main's equals the pooled-curve second half, +$186,970). H59's cached refits
+(`fits_today`) were copied into H60's own folder on the server, so no refit was computed (all from the cache); the
+reconciliation then held exactly. The heavy-job lock was taken per group. Code on the server: this branch's
+`research/h60_regime_exits.py` as of commit 93c129c (the later edits change report wording only, no number) with the
+server's deployed engine15 at think15-v5.2.6 (`shadows.py` there predates main's held_share/PART comment edit; `run()`
+is identical). No smoke test was run; the five groups ran once each (fx first, then index, energy, metals, crypto, about
+6 minutes in all); the report was written once on the server and once more locally from the same group files after the
+wording edits. The live step stayed at 133-150 s during the runs.

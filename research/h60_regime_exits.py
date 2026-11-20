@@ -749,6 +749,13 @@ def write_report(groups, log=print):
           "(needs 5)." % ("a rule per market helps" if verdict_c["helps"] else "a rule per market does not help",
                           _f(verdict_c["picks_second_half_sum"]), _f(verdict_c["main_second_half_sum"]),
                           len(verdict_c["markets_beating"]))]
+    mp = table_a["POOLED"]["main"]
+    nd, no_ = mp["directional"]["all"]["trades"], mp["other"]["all"]["trades"]
+    L += ["", "**Why it comes out this way, in one line.** Most of the main book's trades start in a RANGE or "
+          "TRANSITION day (%d of %d pooled), and that is where holding made most of its money (RANGE alone $%s). "
+          "The owner's rule puts targets on exactly those trades, so it cuts the winners short where the main book "
+          "earns. Directional days are rarer (%d main trades), and there holding was ahead in the first half and behind "
+          "in the second." % (no_, nd + no_, _f(mp["RANGE"]["all"]["pnl_usd"]), nd)]
     L += ["", "How to read this: one history, read many times (21 exit rules on these same entries now). A pass would "
           "not prove anything and a fail does not stop the owner from choosing a rule. What the owner adopts is "
           "read forward at 30 closed trades per market.", ""]
@@ -839,7 +846,8 @@ def write_report(groups, log=print):
             L.append("| %s | %s |" % (a, " | ".join("$%s" % _f(B[k]["all"].get("pnl_usd")) for k in BOOKS)))
             L.append("| (halves) | %s |" % " | ".join("%s / %s" % (_f(B[k]["first_half"].get("pnl_usd")),
                                                                  _f(B[k]["second_half"].get("pnl_usd"))) for k in BOOKS))
-    L += ["", "Trades per variant by the mode they ran in (target / flip), whole window:", "",
+    L += ["", "Trades per variant by the mode they ran in (target / flip), whole window (`rg_dir_live` decides bar by bar, "
+          "so every trade counts as target-eligible there):", "",
           "| Market | " + " | ".join("`%s`" % k for k in VARIANTS) + " |", "|---|" + "---|" * len(VARIANTS)]
     for a in ORDER:
         if a in per:
@@ -881,7 +889,18 @@ def write_report(groups, log=print):
           "A trade's regime is the label on its decision bar (the bar before the fill). In `rg_dir_live` a target in "
           "a bar is acted on only if the label known before that bar opened (the previous row) is not directional; "
           "once half is off at Target 1 the stop stays at the entry. Sharpe on daily marked equity, sqrt(365). Pooled: "
-          "markets' daily equity summed. (c)'s sums are the per-market half results added up.", ""]
+          "markets' daily equity summed. (c)'s sums are the per-market half results added up.", "",
+          "## Details the registration did not fix (disclosed)", "",
+          "- The runner copy keeps every code line of `shadows.run` (two comments shortened); the switch replaces `use_targets` per trade (and per bar "
+          "in `rg_dir_live`). With the switch on, the stop word after Target 1 is `STOP_BE` as in `b_targets`.",
+          "- `rg_dir_live`: the regime of bar i is the label on row i - 1 (known before the bar trades); row i already "
+          "contains the daily bar that bar i closes.",
+          "- Halves in (a) and (c) are split by the trade's exit bar, as H59's half statistics are. A row with no label "
+          "would count as \"other\"; there were none in these windows.",
+          "- Means in (a) are dollars per trade, so ETH (the largest book) weighs most in the pooled line; the mean "
+          "percent per trade is in results.json.",
+          "- The refits were not recomputed: H59's cached refits (`fits_today`) were copied into this study's own folder "
+          "on the server before the run; the reconciliation above then held exactly.", ""]
     with open(os.path.join(OUT, "results.json"), "w", encoding="utf-8") as fh:
         json.dump(res, fh, indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o))
     with open(os.path.join(OUT, "report.md"), "w", encoding="utf-8") as fh:
