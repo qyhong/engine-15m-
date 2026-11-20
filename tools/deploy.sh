@@ -13,7 +13,8 @@
 #   3. reads the last receipt on the box and refuses a narrowed test run when a money file changed since then
 #      (no receipt yet = treated as changed);
 #   4. runs the tests on the laptop;
-#   5. waits until the engine on the box is asleep between steps with at least 2 minutes to spare;
+#   5. waits until the engine on the box is asleep between steps with more than 6 minutes to spare (and checks again,
+#      for 2 minutes, right before the restart), so the restart never lands on a close and no bar is skipped;
 #   6. unpacks the commit over /data/mind15 (code only: data, journal, outputs and secrets are not in git) and checks
 #      every engine file on the box against the commit; lists code files on the box that the commit does not have;
 #   7. restarts the engine and the Telegram bot and checks both are running and report the new version;
@@ -101,13 +102,19 @@ echo "== 4/6 waiting for a gap between steps on the box"
 # Asleep = the log's last line is "sleeping Ns until the next close" AND that sleep has not run out yet (the log's own
 # time + N). The last line alone is not enough: a long step prints nothing for minutes after waking up.
 GAP='l=$(tail -1 /data/mind15/live.log); rem=-1; case "$l" in sleeping*) s=${l#sleeping }; s=${s%%s*}; rem=$(( $(stat -c %Y /data/mind15/live.log) + s - $(date +%s) ));; esac; echo "$rem|$(systemctl is-active mind15)"'
-for i in $(seq 1 120); do
-  S=$("${SSH[@]}" "$GAP") || { echo "STOP: cannot reach the box"; exit 1; }
-  REM=${S%%|*}; ACT=${S#*|}
-  if [ "$ACT" != "active" ] || [ "$REM" -gt 120 ]; then break; fi
-  echo "   engine busy or too close to its next step (asleep for another ${REM}s; -1 = mid-step): waiting"; sleep 20
-  [ "$i" = 120 ] && { echo "STOP: no gap found in 40 minutes"; exit 1; }
-done
+# wait_gap N: until the engine is asleep with more than N seconds left (or is not running at all).
+wait_gap() {
+  for i in $(seq 1 120); do
+    S=$("${SSH[@]}" "$GAP") || { echo "STOP: cannot reach the box"; exit 1; }
+    REM=${S%%|*}; ACT=${S#*|}
+    if [ "$ACT" != "active" ] || [ "$REM" -gt "$1" ]; then return 0; fi
+    echo "   engine busy or too close to its next step (asleep for another ${REM}s; -1 = mid-step; need more than $1): waiting"; sleep 20
+  done
+  echo "STOP: no gap found in 40 minutes"; exit 1
+}
+# 20 Nov 2026: unpacking and checking take about 100 s, so a 2-minute margin put the restart 15 s before a close and the
+# engine missed that bar (the vault's book then aged 30 minutes, its limit). Start with 6 minutes in hand.
+wait_gap 360
 
 echo "== 5/6 unpacking the commit on the box"
 # tar may complain about the mode or time of a folder the service user owns: that is harmless, so its exit code is not
@@ -134,6 +141,8 @@ if [ -n "$EXTRA" ]; then
 fi
 
 echo "== 6/6 restarting the engine and the Telegram bot"
+# the restart itself needs room before the next close: with under 2 minutes left, let that step run first
+wait_gap 120
 "${SSH[@]}" "sudo systemctl restart mind15 mind15-telegram; sleep 8; a=\$(systemctl is-active mind15); b=\$(systemctl is-active mind15-telegram); v=\$(cd /data/mind15 && /data/venv/bin/python -c \"from engine15.config import CFG; print(CFG['version'])\"); echo \"engine: \$a   telegram bot: \$b   version on the box: \$v\"; [ \"\$a\" = active ] && [ \"\$b\" = active ] && [ \"\$v\" = '$WANT' ]" \
   || { echo "STOP: the box is not healthy after the restart. Check: ssh ... 'systemctl status mind15; tail -30 /data/mind15/live.log'"; exit 1; }
 
