@@ -1,0 +1,56 @@
+{
+ "first_month": {
+  "NVDA": "2017-01",
+  "ARGX": null,
+  "MU": "2017-11",
+  "T": "2017-01",
+  "DDOG": null,
+  "AAPL": "2017-01",
+  "MSFT": "2017-01",
+  "AMZN": "2017-01",
+  "GOOGL": "2017-01",
+  "AVGO": "2017-01",
+  "META": "2017-01",
+  "TSLA": "2017-01",
+  "BRK.B": "2017-11",
+  "JPM": "2017-01",
+  "LLY": "2017-05",
+  "WMT": "2017-11",
+  "ORCL": "2017-11",
+  "V": "2017-01",
+  "MA": "2017-05",
+  "XOM": "2017-01",
+  "NFLX": "2017-01",
+  "COST": "2017-11"
+ },
+ "five_tested": [
+  "NVDA",
+  "MU",
+  "T"
+ ],
+ "five_not_testable": [
+  "ARGX",
+  "DDOG"
+ ],
+ "ten": [
+  "AAPL",
+  "MSFT",
+  "AMZN",
+  "GOOGL",
+  "AVGO",
+  "META",
+  "TSLA",
+  "BRK.B",
+  "JPM",
+  "LLY"
+ ],
+ "replaced": [],
+ "rule": "first 15m month on or before 2024-11-11",
+ "probed_utc": "2026-11-19T10:04:50Z",
+ "requests": {
+  "requests": 8,
+  "fetched": 4,
+  "n404": 4,
+  "fails": 0
+ }
+}
