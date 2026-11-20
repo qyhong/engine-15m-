@@ -337,3 +337,14 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   "Rest runs, stop at entry". Target 1 had traded the day before, so the half is closed at the next S&P open at
   that open's price, not back-dated to the target. Adopted on the owner's word; this combination was not among
   H36's 15 variants, and its history read (H59) is descriptive and gates nothing. Paper only.
+- **USDJPY main book: one closed trade rewritten on the owner's word (20 Nov 2026).** The long of 10 Nov 17:00 UTC
+  (158.76401, 378.19 units) traded as high as 160.188 on 13 Nov and was closed whole at its entry on 20 Nov 09:45
+  UTC by the stop-to-entry rule (-12.01 USD, the fees). The owner: "It is a profitable trade and we never manage
+  it well. Backtrack the previous trade and take half profit it at 159.5." Done by hand on the box at 11:27 UTC,
+  between two steps: `out/live/trades_USDJPY.csv` now holds that trade as two rows with the same entry time, half
+  (189.097 units) at 159.5 in the first bar that traded it (11 Nov 13:45 UTC), tagged `T1_OWNER`, +133.16 USD, and
+  the rest at the entry as it happened, -6.00 USD; the book's realized equity went from 9,987.99 to 10,127.15.
+  The files as they were are kept beside them (`*.before-owner-half-20261120T112750Z`). `T1_OWNER` marks a fill
+  decided AFTER the fact: the engine did not take it at the time, so this trade is not evidence about any exit
+  rule, and the shadow books (`main` copy, `b_be_t1`, `b_targets`) keep their own untouched record of it. The
+  open USDJPY long of 20 Nov 11:00 UTC (158.868) was not changed. Paper only.
