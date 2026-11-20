@@ -1,7 +1,9 @@
 # Mind 15
 
-A 15-minute thinking engine for BTC and ETH. Paper only: it reads public market data and
-writes local files; it places no orders.
+A 15-minute thinking engine for eight markets (BTC, ETH, gold, silver, USDJPY, the S&P 500, WTI and Brent). The engine
+itself is paper only: it reads public market data, writes local files and holds no exchange key. One exception, by the
+owner's decision of 18 Nov 2026: it SENDS its BTC/ETH setups book to the site's VIP vault, which places real orders for
+opted-in accounts. Read CLAUDE.md, "The money path", before changing anything.
 
 Every 15 minutes it reads ten sources, turns them into odds for "up first / down first /
 neither", takes a side under a must-be-positioned mandate (at most 1 hour flat), journals

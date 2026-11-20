@@ -10,7 +10,8 @@ Beside the main books run, all forward and on paper: shadow books (`engine15/sha
 H5, the 4h/daily yardsticks, the 1h/4h swing minds, the H36 exit shadows), twelve strategy books
 (`engine15/playbook.py` to `playbook3.py`, H6-H17), the CPI book (H1), and forward books that are NOT passed:
 rules A/B (`playbook4`), the RL agents (`playbook5`, `playbook6`) and the BTC/ETH pair book (`playbook7`, H37 V4).
-Engine version think15-v5.1.1 (13 Nov 2026): four crypto reading-only cards from `engine15/sources/flows.py`.
+The engine version is `CFG["version"]` in `engine15/config.py` (think15-v5.2.6 on 20 Nov 2026); what each version changed
+is in `VERSION_NOTE` there and in THOUGHT_PROCESS.md "Now". It runs on the Singapore box, not on this laptop (HANDOFF.md).
 `out/live/scoreboard.json` judges every book on live trades only.
 Hypotheses are registered in `research/HYPOTHESES.md` before they are graded.
 
@@ -29,6 +30,37 @@ never from your own view of the market:
 - `py -3 -m engine15 postmortem [reading|trades] [--days N]` for look-backs.
 
 Quote the readings and the reason the entry gives. If the journal does not hold the answer, say so.
+
+## The money path (real orders follow this code)
+
+The site's VIP vault copies the paper book `b_targets` for BTC and ETH through `engine15/vault_feed.py` (owner, 18 Nov
+2026) and places real orders for opted-in accounts; on 20 Nov 2026 the AI Trading Bot session reported that it sizes
+real futures trades from it. So a change in any of these changes real entries, stops and exits:
+
+- `engine15/shadows.py`: `run()` under the `b_targets` rule (`{"targets": True}`), `asset_view`, `PART`. The same `run()`
+  serves a dozen research books: an edit for one of them must leave `b_targets` exactly as it was.
+- `engine15/live.py`: `plan_targets` (the two targets, set once at entry) and `asset_cfg` (fee, leverage cap).
+- `engine15/policy.py`: `decide` (entries, flips, the forced entry after `idle_max` flat sessions).
+- `engine15/backtest.py`: `leverage` (position size). `engine15/exits.py`: `PART`, `reached`, `be_stop`.
+- `engine15/setups.py` (the market entry of setups.json the feed reads) and `engine15/signals.py` (the entry window).
+- `engine15/vault_feed.py`: all of it (the book body, the exit intents, the state in `data/vault_feed_state.json`).
+- `engine15/config.py`: every constant the above read (`idle_max`, `stop_units`, `risk_per_trade`, fees, flip and edge
+  thresholds, the release guard, the higher-timeframe bias).
+
+The list as files is `tools/money_files.txt`. Rules for it:
+
+- `tests/test_money_path_golden.py` plays fixed bars through this chain and compares every trade, book body and exit
+  intent with a record. If it fails, your change alters what the vault is told. That needs the owner's word in this
+  project and a version bump; only then is the record rewritten (`--write-golden`). Never rewrite it to make a change pass.
+- A change here that keeps the golden test green (a new field behind a switch that is off, a comment) still deploys only
+  after the FULL test suite. `tools/deploy.sh` enforces this, refuses a commit that is not on `origin/main`, and writes
+  `/data/mind15/DEPLOYED.json` (the commit that is live). Deploy only with that script.
+- Do not add a key to the book or an intent until the AI Trading Bot session confirms the LIVE vault accepts it: the vault
+  refuses a body with any key it does not know, and a refused book means members get no update.
+- A restart is short, but a deploy that rebuilds the reading cache (a card or `CFG` change) takes about 15 minutes: the
+  book ages, the vault stops joining after 30 minutes, and exits wait. Do it when BTC and ETH are flat or far from an exit.
+- The feed's memory is `data/vault_feed_state.json`; the book's is `data/shadow_state.json`. Losing or rolling back either
+  while a setup is open loses exits or sends wrong ones: follow `docs/RESTORE.md`, never copy an old file in by hand.
 
 ## Rules
 

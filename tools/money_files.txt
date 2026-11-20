@@ -1,0 +1,17 @@
+# The money path: files whose behaviour reaches real orders through the VIP vault (CLAUDE.md, "The money path").
+# One path per line. tools/deploy.sh reads this list: when any of these changed since the last deploy, only the FULL
+# test suite may deploy. tests/test_money_files.py checks every path exists and that CLAUDE.md names it.
+engine15/shadows.py
+engine15/live.py
+engine15/policy.py
+engine15/backtest.py
+engine15/exits.py
+engine15/setups.py
+engine15/signals.py
+engine15/vault_feed.py
+engine15/config.py
+tests/test_money_path_golden.py
+tests/fixtures/money_path_bars.json
+tests/fixtures/money_path_golden.json
+tools/deploy.sh
+tools/money_files.txt

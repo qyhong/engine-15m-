@@ -243,7 +243,8 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
 - **Known gap:** when the Mac sleeps, the Windows VM and the loop pause (13-14 Nov: about 2 h and 3 h). The loop catches
   up every missed bar on waking; the page is stale meanwhile. The owner keeps the Mac awake; the weekly RL refits are
   due after Mon 16 Nov 00:00 UTC.
-- **Version history:** the folder became a local git repository (no remote, nothing pushed); data, caches, models and
+- **Version history:** the folder became a local git repository; since 20 Nov 2026 it has a private GitHub remote
+  (`origin`, branch `main`) and deploys go only from a pushed commit; data, caches, models and
   live outputs are ignored.
 - **H40 Deribit options flow** (owner: "Yes. Test them"; free history.deribit.com trades, dev data only to the seal,
   `research/out/options/study.md`): 6 inputs (put/call, taker and block flow, approximate 25-delta skew), 120 tests.

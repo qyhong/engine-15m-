@@ -3,7 +3,8 @@
 A 15-minute thinking engine. Paper only. First written for BTC and ETH (`think15-v1`); now version
 `think15-v5` on eight markets. The sections after "Now" describe the original design, which still holds.
 
-## Now (11 Nov 2026; updated 16 Nov 2026, engine think15-v5.2.2)
+## Now (11 Nov 2026; updated 16 Nov 2026 at think15-v5.2.2; the live version is `CFG["version"]`, v5.2.6 on 20 Nov 2026,
+and every later change is in `VERSION_NOTE` in engine15/config.py)
 
 - **Markets:** crypto (BTC, ETH), metals (gold, silver), USDJPY, S&P 500 (cash hours), oil (WTI, Brent).
   Each group is thought about separately (its own voices, trust and odds); each market has its own

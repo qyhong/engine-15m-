@@ -1,10 +1,16 @@
-# Mind 15: where things stand (updated 16 Nov 2026: think15-v5.2.2, trust cap, card pipeline, breakout studies)
+# Mind 15: where things stand (updated 20 Nov 2026: think15-v5.2.6; the vault feed is on the REAL-MONEY path)
 
 Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisions), then
 `THOUGHT_PROCESS.md` ("Now" section) and `CLAUDE.md`. This file is only the moving parts.
 
 ## Running
-- **Live loop**: terminal tab "Mind 15 live loop",
+- **REAL MONEY FOLLOWS THIS ENGINE (BTC and ETH).** The site's VIP vault copies the paper book `b_targets` through
+  `engine15/vault_feed.py` and places real orders for opted-in accounts. Read CLAUDE.md "The money path" before touching
+  `shadows.py`, `live.py`, `policy.py`, `backtest.py`, `exits.py`, `setups.py`, `signals.py`, `vault_feed.py` or `config.py`.
+  Deploy only with `bash tools/deploy.sh` (what is live: `/data/mind15/DEPLOYED.json`). Restore: `docs/RESTORE.md`.
+  Rebuild the box: `tools/server/REBUILD.md`.
+- **Live loop (it runs on the Singapore box, see below; NEVER start it on the laptop while the service runs)**. The
+  laptop command, for the record only:
   `$env:ENGINE15_PUSH = '1'; $env:ENGINE15_LEAN = '1'; py -3 -W ignore -u -m engine15 live` in this folder (lean step on). Steps after every 15-minute close for five market groups, writes the journal, pushes
   `out/live/page.json` to alphaprediction.ai/aitrading/mind15 (the AI Trading Bot session deploys the PAGE;
   this project pushes only the data). Asks Windows not to idle-sleep; a closed lid still sleeps the laptop.
@@ -36,8 +42,8 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   `/etc/logrotate.d/mind15` rotates `/data/mind15/*.log` weekly (copytruncate, 8 kept). Crash test: SIGKILL between
   steps, back in 30 s, next step on time. The Telegram bot warns when the data disk has under 3 GB free (it had
   6.5 GB free of 24 GB; the reading cache `data/evcache` is 13 GB and the S&P cache is not built yet).
-  Deploying code: commit on the laptop, `git archive HEAD | ssh ... "tar xf - -C /data/mind15"`, then
-  `sudo systemctl restart mind15` between steps (right after a "step done" line). Research runs on the box too
+  Deploying code: commit, `git push origin main`, then `bash tools/deploy.sh` and nothing else (never a hand-made
+  `git archive | ssh`: it leaves no receipt and skips the gates). Research runs on the box too
   (`nice -n 5 /data/venv/bin/python research/<study>.py`; outputs copied back with scp). The laptop keeps the code, the
   version history and a copy of the data, so it can take over again (its reading cache was deleted: a first laptop step
   would rebuild it). The candle-forecast feed runs on the same box since 16 Nov 11:35 UTC (AI Trading Bot's systemd
@@ -95,8 +101,9 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   + vault_ca.pem for mTLS). Calls `https://127.0.0.1:8443/v1/<op>` with mTLS + HMAC (caller "engine"), as the vault's
   VaultClient. Sends the BTC/ETH setups book (`submit_book`, as_of = price_bar_utc, once per bar, incl. after T1 with
   stop == entry) and exit-only intents (reduce 0.5 + futures move_stop at Target 1, close at the book's exit; never
-  `open`). State `data/vault_feed_state.json`. The vault runs on TESTNET; live only on the owner's yes in the AI Trading Bot
-  session. The Telegram unit cannot read /etc/ait-engine. VIP member: `helix2d`.
+  `open`). State `data/vault_feed_state.json` (hourly copies in `data/state_copies/`, `docs/RESTORE.md`). **The vault is LIVE on real
+  accounts**: the feed's exit guard dates from 18 Nov ("the vault live"), and on 20 Nov 2026 the AI Trading Bot session
+  reported that it sizes each setup at 2% of a member's USD-M futures balance. The vault itself belongs to that session. The Telegram unit cannot read /etc/ait-engine. VIP member: `helix2d`.
 - **B trail book (18 Nov 2026, owner's request):** `research/b_trail_history.py` replayed `b_trail` and the main rule with
   today's engine from 2020 to each group's live start (`research/out/b_trail_history/trades.csv`, `summary.json`, also on
   the box). `engine15/book_view.py` (guarded hook after the setups/vault/stocks hooks) writes `b_trail_book.json` every
@@ -110,7 +117,8 @@ Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisi
   (v5.1.1) throttles itself per source (`MIN_GAP_S`; last attempts in `data/sources/flows_state.json`) and keeps the
   Binance archive zips in `data/raw/binance_metrics/`. `cryptox` (v5.2.2) throttles each of its six feeds the same
   way and extends `options_hist`'s Deribit aggregates live (`options_hist` itself is not in MODULES).
-- **Version history**: this folder is a local git repository (no remote; nothing is pushed). Large data, caches,
+- **Version history**: a git repository with a private GitHub remote, `origin` = github.com/qyhong/engine-15m- (branch
+  `main`, first pushed 20 Nov 2026). `tools/deploy.sh` deploys only a commit that is on `origin/main`. Large data, caches,
   models and live outputs are ignored (`.gitignore`); commit code and docs after a change.
 - **Web answers**: `inbox.pull()` runs the AI Trading Bot's `pull_answers.py` before each step; answers are
   recorded per FORMAT.md (audit trail `data/owner_audit.jsonl`). The PIN lives only on the server.
