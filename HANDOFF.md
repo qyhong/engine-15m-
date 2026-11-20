@@ -184,8 +184,9 @@ crypto replay).
 - **Live since think15-v5.2.6 (20 Nov 2026), the S&P 500's main book only:** half at Target 1, then the rule above
   on the rest. `CFG["half_t1"] = ("SPX",)` (a market there must be in `be_t1` too); `run_book` closes
   `exits.PART` at Target 1 in the bar that reaches it, keeps the closed half in `state["part"]` (pnl, fees, q, qpx,
-  tag) and books ONE trade row when the rest closes (`why_out` `T1+STOP_BE`, `T1+FLIP`...; quantity = both halves,
-  exit = weighted average). Code that reads `why_out` takes the part after the last `+`. A trade already past
+  tag) and books it as a closed trade AT ONCE (its own row in `trades_SPX.csv`, `why_out` `T1`; owner: "It should
+  reflect on the close trade also"); the rest is a second row when it closes (`STOP_BE`, `FLIP`...). The two rows
+  share `time_in` and `side`; `reports.per_entry` counts them as one trade on the scoreboard. A trade already past
   Target 1 when the rule began: `live.adopt_be_t1(..., half=True)` sets `half_due`, and the half is closed at the
   next bar's open (`T1_LATE`). Journal: `half_closed`; open-trade view: `t1_half*`. Tests: `tests/test_half_t1.py`.
 

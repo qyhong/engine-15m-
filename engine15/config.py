@@ -104,7 +104,8 @@ CFG = {
     # 500 should close half of the profit now under mind 15 as TP1 already achieve"; for the other half the owner chose
     # "Rest runs, stop at entry" over closing it at Target 2 or keeping full size). Markets listed here (they must be
     # in be_t1 too): in the bar that trades through Target 1 half the position is closed AT Target 1, the stop of the
-    # rest goes to the entry, and the rest leaves at that stop or on a flip (backtest.run_book, exits.PART). A trade
+    # rest goes to the entry, and the rest leaves at that stop or on a flip (backtest.run_book, exits.PART). The half
+    # is a closed trade of its own at once ("T1"); the rest is a second row when it closes. A trade
     # already past its Target 1 when the rule began has its half closed at the next open (live.adopt_be_t1). Adopted
     # on the owner's call. This exact combination was not in H36's grid; its history read is H59 (registered the same
     # day, descriptive, gates nothing). The nearest H36 numbers on the S&P: holding +$6,816, stop-to-entry at full

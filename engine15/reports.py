@@ -127,6 +127,21 @@ IDEAS_MD = os.path.join(OUT, "ideas_queue.md")
 MIN_TRADES = 30
 
 
+def per_entry(rows):
+    """Results per TRADE from closed-trade rows [(key, pnl_usd)]: rows that share a key are one trade closed in parts
+    (think15-v5.2.6: the S&P 500's main book books the half closed at Target 1 and the rest as two rows with the same
+    entry time and side) and count once, with their results added. A row without a key (None / "") counts by itself."""
+    out, at = [], {}
+    for key, pnl in rows:
+        if key in (None, "") or key not in at:
+            if key not in (None, ""):
+                at[key] = len(out)
+            out.append(float(pnl))
+        else:
+            out[at[key]] += float(pnl)
+    return out
+
+
 def _stats(pnls):
     """Forward results of one book: count, net, mean per trade and a 90% range for that mean."""
     import math
@@ -182,12 +197,15 @@ def scoreboard(playbook_rows=None, log=print):
             with open(path, encoding="utf-8") as fh:
                 for r in csv.DictReader(fh):
                     try:
-                        out.append(float(r.get("pnl_usd") or "nan"))
+                        v = float(r.get("pnl_usd") or "nan")
                     except ValueError:
-                        pass
+                        continue
+                    if v == v:                                     # a trade closed in parts counts once (per_entry)
+                        t_in = (r.get("time_in") or "").strip()
+                        out.append(((t_in, r.get("side")) if t_in else None, v))
         except OSError:
             pass
-        return [x for x in out if x == x]
+        return per_entry(out)
     main = []
     for p in glob.glob(os.path.join(live_dir, "trades_*.csv")):
         main += pnl_of(p)

@@ -100,10 +100,13 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
     there is booked as "STOP_BE".
     Half at Target 1 (v5.2.6; only with the rule above AND cfg["half_t1"] exactly True): in the bar that trades
     through Target 1, half the position (exits.PART) is closed AT Target 1 (a limit, as the shadow books fill it)
-    and the stop of the rest goes to the entry; the rest leaves at that stop or on a flip. The trade is booked ONCE,
-    when the rest closes: both parts together, exit price = their quantity-weighted average, why_out "T1+<why>".
+    and the stop of the rest goes to the entry; the rest leaves at that stop or on a flip. The half is a closed
+    trade the moment it closes (owner, 20 Nov 2026: "It should reflect on the close trade also"): its own row,
+    why_out "T1", its own quantity, result and fees; the rest gets a second row when it closes (why_out as for any
+    exit: "STOP_BE", "FLIP" ...). Both rows carry the same entry (i_in, p_in), which is how they are told to be one
+    trade (reports.per_entry counts them once).
     state["half_due"] (set by live.adopt_be_t1 for a trade whose Target 1 traded before the rule existed): the half
-    is closed at the next bar's OPEN instead, tagged "T1_LATE"; nothing is back-dated to the target's price.
+    is closed at the next bar's OPEN instead, why_out "T1_LATE"; nothing is back-dated to the target's price.
     -> also "parts": [(bar, price, quantity, net usd, tag)] for the halves closed in lo .. hi-1."""
     o, h, l, c = px["open"], px["high"], px["low"], px["close"]
     n = len(c)
@@ -141,19 +144,15 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
         fees = fee * qty * (entry + price)
         eq += gross - fees
         fees_paid[0] += fees
-        if part is not None:                                      # half was closed earlier: one row for the whole trade
-            tot_q, pnl = part["q"] + qty, part["pnl"] + gross - fees
-            trades.append((t_in, i, pos, entry, (part["qpx"] + qty * price) / tot_q, why_in, part["tag"] + "+" + why,
-                           pnl / (tot_q * entry) * 100.0, eq, tot_q, pnl, part["fees"] + fees))
-        else:
-            trades.append((t_in, i, pos, entry, price, why_in, why, (gross - fees) / (qty * entry) * 100.0, eq,
-                           qty, gross - fees, fees))
+        trades.append((t_in, i, pos, entry, price, why_in, why, (gross - fees) / (qty * entry) * 100.0, eq,
+                       qty, gross - fees, fees))                  # after a half at Target 1: the row of the rest
         pos, qty, stop = 0, 0.0, np.nan
         t1, t1_hit, stop0 = None, False, np.nan
         part, half_due = None, False
 
     def take_half(i, price, tag):
-        """Close exits.PART of the position at `price` (the same arithmetic as close, for that share)."""
+        """Close exits.PART of the position at `price` (the same arithmetic as close, for that share) and book it
+        as a closed trade of its own at once."""
         nonlocal qty, eq, part
         q = qty * exits.PART
         gross = q * pos * (price - entry)
@@ -162,6 +161,8 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
         fees_paid[0] += fees
         part = {"pnl": float(gross - fees), "fees": float(fees), "qpx": float(q * price), "q": float(q), "tag": tag}
         parts.append((i, float(price), float(q), float(gross - fees), tag))
+        trades.append((t_in, i, pos, entry, price, why_in, tag, (gross - fees) / (q * entry) * 100.0, eq,
+                       q, gross - fees, fees))
         qty -= q
 
     p_up, p_dn = odds[:, labels.UP], odds[:, labels.DOWN]
@@ -263,7 +264,6 @@ def summarize(book, times, lo, hi, cost_rt):
     dd = float((eq / peak - 1.0).min())
     tr = book["trades"]
     closed = tr[tr.why_out != "OPEN"]
-    last_why = closed.why_out.astype(str).str.split("+").str[-1]    # "T1+STOP_BE" (half closed at Target 1) ends in a stop
     held = book["held"][lo:hi]
     act = book["act"][lo:hi]
     live = act != ACT_CODE[policy.WAIT]
@@ -284,8 +284,8 @@ def summarize(book, times, lo, hi, cost_rt):
         "time_long_pct": round(float((held[live] == 1).mean() * 100), 1) if live.any() else 0.0,
         "time_short_pct": round(float((held[live] == -1).mean() * 100), 1) if live.any() else 0.0,
         "time_flat_pct": round(float((held[live] == 0).mean() * 100), 1) if live.any() else 0.0,
-        "flips": int((last_why == policy.FLIP).sum()), "stops": int(last_why.isin(STOP_WORDS).sum()),
-        "step_asides": int((last_why == policy.STEP_ASIDE).sum()),
+        "flips": int((closed.why_out == policy.FLIP).sum()), "stops": int(closed.why_out.isin(STOP_WORDS).sum()),
+        "step_asides": int((closed.why_out == policy.STEP_ASIDE).sum()),
         "forced_entries": int((closed.why_in == policy.FORCED).sum()),
         "max_flat_sessions_in_a_row": int(max_flat_run(book["held"], book["act"], lo, hi)),
         "by_year_pct": by_year,

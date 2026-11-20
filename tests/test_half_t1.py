@@ -3,8 +3,9 @@
 
 The rule (backtest.run_book): in the bar that trades through Target 1 half the position is closed AT Target 1,
 the stop of the rest goes to the entry (live from the next bar), and the rest leaves at that stop or on a flip.
-The trade is booked once, when the rest closes ("T1+<why>"). A trade already past its Target 1 when the rule
-began has its half closed at the next open ("T1_LATE"). Off unless be_t1 AND half_t1 are exactly True.
+The half is a closed trade at once (its own row, why_out "T1"); the rest gets a second row when it closes. A trade
+already past its Target 1 when the rule began has its half closed at the next open ("T1_LATE"). Off unless be_t1
+AND half_t1 are exactly True.
 """
 import json
 import os
@@ -15,7 +16,7 @@ import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from engine15 import backtest, exits, labels, live  # noqa: E402
+from engine15 import backtest, exits, labels, live, reports  # noqa: E402
 from engine15.config import CFG  # noqa: E402
 
 HALF = dict(CFG, step_aside=False, be_t1=True, half_t1=True)
@@ -68,18 +69,22 @@ def test_half_is_closed_at_target_1_and_the_rest_at_the_entry():
     assert b["stop"][3] == 100.0 and b["held"][4] == 1            # the rest is still held, its stop at the entry
     assert abs(b["equity"][3] - (10000 + half_net + 50 * (101.2 - 100))) < 1e-9     # banked half + the rest marked
     c = _closed(b)
-    assert len(c) == 1                                             # ONE row for the whole trade
-    r = c.iloc[0]
-    assert r.why_out == "T1+STOP_BE" and r.i_out == 5 and r.qty == 100.0 and abs(r.p_out - 100.5) < 1e-9
-    assert abs(r.pnl_usd - (half_net + rest_net)) < 1e-9 and abs(r.fees_usd - FEE * 50 * 401) < 1e-9
-    assert abs(r.equity - (10000 + half_net + rest_net)) < 1e-9 and r.pnl_usd > 0     # a profit kept, where be_t1 alone keeps none
+    assert len(c) == 2                                             # the half is a closed trade of its own, then the rest
+    h, r = c.iloc[0], c.iloc[1]
+    assert h.why_out == "T1" and h.i_out == 3 and h.qty == 50.0 and h.p_out == 101.0 and abs(h.pnl_usd - half_net) < 1e-9
+    assert abs(h.equity - (10000 + half_net)) < 1e-9 and abs(h.fees_usd - FEE * 50 * 201) < 1e-9
+    assert r.why_out == "STOP_BE" and r.i_out == 5 and r.qty == 50.0 and r.p_out == 100.0 and abs(r.pnl_usd - rest_net) < 1e-9
+    assert (h.i_in, h.p_in, h.side) == (r.i_in, r.p_in, r.side)   # the same entry: one trade in two parts
+    assert abs(r.equity - (10000 + half_net + rest_net)) < 1e-9 and half_net + rest_net > 0     # a profit kept
+    first = _closed(_run(_px(LONG), 1, HALF, hi=4))               # the step in which Target 1 trades already shows it
+    assert list(first.why_out) == ["T1"] and first.qty.iloc[0] == 50.0
 
 
 def test_short_is_the_mirror():
     b = _run(_px(SHORT), -1, HALF)
     assert b["parts"][0][:3] == (3, 99.0, 50.0) and b["parts"][0][3] > 0
-    r = _closed(b).iloc[0]
-    assert r.why_out == "T1+STOP_BE" and abs(r.p_out - 99.5) < 1e-9 and r.pnl_usd > 0
+    c = _closed(b)
+    assert list(c.why_out) == ["T1", "STOP_BE"] and list(c.p_out) == [99.0, 100.0] and c.pnl_usd.sum() > 0
 
 
 def test_state_while_the_rest_runs_and_the_next_trade():
@@ -121,11 +126,16 @@ def test_off_unless_both_switches_are_exactly_true():
         assert b["state"] == want["state"]
 
 
-def test_summary_counts_a_split_trade_as_one_stop():
+def test_summary_and_scoreboard_counts():
     px = _px(LONG)
     b = _run(px, 1, HALF)
     s = backtest.summarize(b, pd.date_range("2026-11-10", periods=len(LONG), freq="15min", tz="UTC"), 1, len(LONG), 2 * FEE)
-    assert s["trades"] == 1 and s["stops"] == 1 and s["flips"] == 0 and s["win_rate_pct"] == 100.0
+    assert s["trades"] == 2 and s["stops"] == 1 and s["flips"] == 0 and s["win_rate_pct"] == 50.0    # rows, as booked
+    # the forward scoreboard counts a trade closed in parts ONCE: rows with the same entry time and side are added
+    rows = [(("2026-11-11 19:30", "-1"), 350.0), (("2026-11-11 19:30", "-1"), -3.0), (("2026-11-20 15:00", "1"), -200.0),
+            (None, 10.0), (None, 20.0), (("2026-11-11 19:30", "1"), 5.0)]
+    assert reports.per_entry(rows) == [347.0, -200.0, 10.0, 20.0, 5.0]
+    assert reports.per_entry([]) == []
 
 
 def _times(n):
@@ -142,10 +152,9 @@ def test_a_trade_already_past_target_1_gets_its_half_at_the_next_open():
     b = _run(px, -1, HALF, lo=5, hi=6, state=new)                  # bar 5 opens at 99.4: half out there, not at 99.0
     i, price, q, pnl, tag = b["parts"][0]
     assert (i, price, q, tag) == (5, 99.4, 50.0, "T1_LATE") and abs(pnl - (50 * 0.6 - FEE * 50 * 199.4)) < 1e-9
-    st = b["state"]                                                # bar 5's high (100.2) then took the rest at the entry
-    assert st["pos"] == 0 or st["qty"] == 50.0
-    r = _closed(b).iloc[0]
-    assert r.why_out == "T1_LATE+STOP_BE" and r.qty == 100.0 and abs(r.p_out - 99.7) < 1e-9
+    c = _closed(b)                                                 # bar 5's high (100.2) then took the rest at the entry
+    assert list(c.why_out) == ["T1_LATE", "STOP_BE"] and list(c.qty) == [50.0, 50.0] and list(c.p_out) == [99.4, 100.0]
+    assert b["state"]["pos"] == 0
 
 
 def test_adoption_leaves_other_cases_alone():

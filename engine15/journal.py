@@ -124,8 +124,7 @@ def entry(store, asset, i, raw=None, trade=None):
     e["action"] = ACTIONS[int(book["act"][i])]
     e["reason"] = book["reason"][i]
     tr = book["trades"]
-    # "STOP_BE": at the entry after Target 1; "T1+STOP_BE" / "T1_LATE+...": half was closed earlier (v5.2.6)
-    stopped = tr[(tr.i_out == i) & tr.why_out.astype(str).str.split("+").str[-1].isin(("STOP", "STOP_BE"))]
+    stopped = tr[(tr.i_out == i) & tr.why_out.isin(("STOP", "STOP_BE"))]   # "STOP_BE": at the entry after Target 1
     halves = [p for p in (book.get("parts") or []) if p[0] == i]
     e["half_closed"] = None if not halves else {"price": halves[0][1], "quantity": halves[0][2],
                                                 "pnl_usd": round(halves[0][3], 2), "tag": halves[0][4]}
