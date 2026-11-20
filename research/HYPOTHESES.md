@@ -3052,3 +3052,41 @@ about $13,000 in the second half. Picking the one market where one variant won i
 result. Forward, the comparison stays readable: the shadow `main` copy keeps hold-to-stop-or-flip on USDJPY, and
 `b_be_t1` keeps running; their USDJPY lines and the main book's own are read at 30 closed forward trades, as
 research/VERDICT_RULES.md says, and the owner decides then whether USDJPY keeps the rule.
+
+## H59. HALF AT TARGET 1 + STOP TO ENTRY ON THE REST, on the main book's own entries: the history read of the rule the owner adopted for the S&P 500 (registered 20 Nov 2026, 03:23 UTC, before any H59 code existed or any H59 number was computed)
+
+**Prompted by:** the owner, 20 Nov 2026, with the S&P 500 main book short from 7,626 and past its Target 1: "The snp 500
+should close half of the profit now under mind 15 as TP1 already achieve"; of three ways to treat the other half he
+chose: close half at Target 1, move the stop on the rest to the entry price, let the rest run until that stop or a flip.
+**The owner adopted this rule for the S&P 500 main book before this read.** This read gates nothing, changes no rule and
+moves no H36 line; it is shown to the owner beside the build.
+
+**The one variant:** `half_be_t1` = `{"half_t1": True, "be_t1": True}` in `engine15/shadows.run`: half the position off
+at Target 1 (`live.plan_targets` at entry; a limit at the target, filled when a bar reaches it, after the stop check),
+the stop on the rest to the entry price from the next bar (only ever tighter), the rest out at that stop, the original
+stop or a flip. It is the **16th exit variant counted on these entries** (H36's 15, plus b_targets and b_trail already
+counted). H36 ran `be_t1` (full size) and half-at-Target-1 only with moving-average trails, never this combination.
+
+**Frame: H36's in every respect.** Same entries (v5.1 odds as the live step forms them: evidence store read-only,
+voices walked forward weekly from the 2020-01-01 birth by `leanprep.walk_forward_cached` with a private fits directory),
+sizing, fees per side, protective stop, flips, mandate, $10,000 per market from the first session with odds, the same
+eight markets in five groups, the same halves split date 2023-06-08, the same statistics per market and pooled (net
+P&L, return, Sharpe on daily marked equity sqrt(365), max drawdown, trades, win rate, average win / loss, each half,
+the exit mix, the gap to main). Window, primary: each market's start to the same last stored session H36 used
+(13 Nov 2026; SPX 12 Nov 20:45 UTC) if the stored bars allow it. Secondary, reported beside it if it can be run:
+to today's last stored session. Compared on the same run against `main` (hold to stop or flip), H36's `be_t1` and
+`b_targets`. Code `research/h59_half_be.py` (imports `research/exit_study.py`'s machinery; H36's frozen outputs in
+`research/out/exits/` are not touched), output `research/out/h59_half_be/` (`report.md`, `results.json`).
+
+**Sanity check that decides whether the numbers can be trusted:** the re-run of `main` and `be_t1` over H36's window
+must reproduce H36's per-market numbers (e.g. SPX main +$6,816 / 36 trades, be_t1 +$6,334; USDJPY main +$19,209,
+be_t1 +$27,238). Any difference is reported with its size and cause; numbers that cannot be reconciled are not
+presented as clean.
+
+**What counts as better than holding** (exactly H36's): pooled net P&L above the main book's in BOTH halves, above it
+in at least 5 of the 8 markets over the whole window, and pooled max drawdown no worse than the main book's.
+
+**Read this plainly:** descriptive, in-sample, on history the project has already seen (H36 read these same entries
+on 13 Nov), one variant chosen after H36's results were known and after the owner had chosen the rule. A pass would
+not be proof and a fail does not reverse the owner's decision; the S&P 500 line is read first because that is the
+market switched, and picking one market's line after the fact is a selection.
