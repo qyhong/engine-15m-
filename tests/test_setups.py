@@ -26,7 +26,8 @@ import test_step_timing as timing  # noqa: E402
 from engine15 import export, live, setups, signals  # noqa: E402
 
 TOP = ["generated_utc", "version", "schema", "note", "book", "followable", "learning", "markets", "closed_setups"]
-MARKET = ["symbol", "short", "group", "side", "entry", "stop", "target_1", "target_2", "t1_taken", "opened_utc", "price",
+MARKET = ["symbol", "short", "group", "side", "entry", "stop", "target_1", "target_2", "t1_taken", "held_share",
+          "opened_utc", "price",
           "price_bar_utc", "unrealized_usd", "unrealized_pct", "market_open", "next_open_utc", "edge_with_position_pts",
           "hit_24h_30d_pct", "rr_now_t1", "rr_now_t2", "stop_dist_now_pct", "entry_window_open", "entry_valid_until_utc",
           "closed", "wins", "realized_usd", "closes", "closes_step_min", "closes_end_utc"]
@@ -1284,3 +1285,21 @@ def test_landing_has_no_levels_of_open_setups_and_the_near_rule():
     assert su.build_landing(doc, page)["board"][0]["state"] == "running"
     doc["markets"][0]["entry_window_open"] = True
     assert su.build_landing(doc, page)["board"][0]["state"] == "new"
+
+
+# ------------------------------------------------------------------ held_share (20 Nov 2026): the share still held
+def test_held_share_is_the_books_own_number_and_never_guessed():
+    page = make_page()
+    v = page["shadows"]["books"]["b_targets"]["assets"]
+    v["BTCUSDT"]["held_share"] = 1.0                              # before Target 1
+    v["ETHUSDT"]["held_share"] = 0.5                              # after Target 1
+    v["USDJPY"]["held_share"] = 1.7                               # not a share: left out
+    v["SPX"]["held_share"] = "0.5"                                # a text that is a number is read as the number
+    v["BRENT"]["held_share"] = 0                                  # nothing held is not a position
+    v["XAUUSD"]["held_share"] = 0.5                               # a FLAT book holds nothing, whatever the view says
+    m = by_symbol(setups.build(page))
+    assert m["BTCUSDT"]["held_share"] == 1.0 and m["ETHUSDT"]["held_share"] == 0.5 and m["SPX"]["held_share"] == 0.5
+    assert m["USDJPY"]["held_share"] is None and m["BRENT"]["held_share"] is None and m["XAUUSD"]["held_share"] is None
+    plain = by_symbol(setups.build(make_page()))                  # a view without the field: null, not 1.0 or 0.5
+    assert all(x["held_share"] is None for x in plain.values())
+    assert plain["ETHUSDT"]["t1_taken"] is True                   # even after Target 1

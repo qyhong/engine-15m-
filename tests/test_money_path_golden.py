@@ -249,6 +249,7 @@ def test_the_names_and_shares_the_vault_relies_on():
     assert shadows.PART == exits.PART == vf.REDUCE_FRACTION == 0.5        # the share closed at Target 1, everywhere
     assert vf.ACTIONS == ("close", "reduce", "move_stop")                 # exits only: never "open"
     assert vf.ALLOWED == ("BTCUSDT", "ETHUSDT")                           # the owner's two markets, no more
+    assert vf.SEND_CONTRACT_1 is False                                    # no key the live vault does not know
 
 
 # ------------------------------------------------------------------ writing the record (owner's word only)

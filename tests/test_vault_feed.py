@@ -964,3 +964,32 @@ def test_guard_exits_for_a_setup_seen_inside_its_window(feed, fake, monkeypatch)
     feed.step(mkt(at=bar(3), t1_taken=True, price=66080.5))
     acts = [b["intent"]["action"] for b in fake.ops("submit_intent")]
     assert acts == ["reduce", "reduce", "move_stop"]
+
+
+# ------------------------------------------------------------------ contract 1: schema + held_share (20 Nov 2026), OFF
+def test_contract_1_is_off_and_the_book_is_exactly_what_the_live_vault_takes():
+    """The live vault refuses a book with any key it does not know: with the switch off, held_share in setups.json
+    must not reach the book."""
+    assert vf.SEND_CONTRACT_1 is False
+    for m in (mkt(held_share=1.0), mkt(t1_taken=True, held_share=0.5), mkt(side="FLAT", held_share=0.5)):
+        body, why = vf.build_book(m, bar(1))
+        assert why is None and not set(body["book"]) - BOOK_KEYS
+        assert "held_share" not in body["book"] and "schema" not in body["book"]
+
+
+def test_contract_1_on_adds_schema_and_the_share_and_nothing_else(monkeypatch):
+    plain = dict((k, vf.build_book(m, bar(1))[0]["book"]) for k, m in
+                 (("open", mkt(held_share=1.0)), ("t1", mkt(t1_taken=True, held_share=0.5)), ("flat", mkt(side="FLAT"))))
+    monkeypatch.setattr(vf, "SEND_CONTRACT_1", True)
+    b = vf.build_book(mkt(held_share=1.0), bar(1))[0]["book"]
+    assert b == dict(plain["open"], schema=1, held_share=1.0) and isinstance(b["schema"], int)
+    b = vf.build_book(mkt(t1_taken=True, held_share=0.5), bar(1))[0]["book"]
+    assert b == dict(plain["t1"], schema=1, held_share=0.5) and isinstance(b["held_share"], float)
+    assert vf.build_book(mkt(side="FLAT", held_share=0.5), bar(1))[0]["book"] == dict(plain["flat"], schema=1)
+    for bad in (None, 0, 0.0, -0.5, 1.0000001, 2, True, "0.5", float("nan")):      # optional: a bad share is left out
+        b = vf.build_book(mkt(t1_taken=True, held_share=bad), bar(1))[0]["book"]
+        assert "held_share" not in b and b["schema"] == 1, bad
+    b = vf.build_book(mkt(t1_taken=True), bar(1))[0]["book"]     # setups.json from before the field existed
+    assert "held_share" not in b and b["schema"] == 1
+    assert json.loads(vf.encode({"book": vf.build_book(mkt(t1_taken=True, held_share=0.5), bar(1))[0]["book"]})
+                      .decode())["book"]["held_share"] == 0.5

@@ -23,6 +23,8 @@ Added to setups.json (schema 1, keys added only):
             price belongs to (price_bar_utc is that bar's CLOSE time, so closes_end_utc == price_bar_utc when the
             file holds it; the metals and energy markets that step one bar behind follow the page the same way).
             A bar file that cannot be read keeps the previous setups.json's closes for that market, else null.
+    markets[].held_share   (20 Nov 2026) the share of the setup's starting size the book still holds: 1.0 until Target 1
+            is taken, then 0.5 (shadows.held_share: qty / qty0). null when FLAT or when the book's view does not carry it.
     closed_setups   the setups book's last 30 closed trades across all markets, newest first by exit time, from
             out/live/shadow_trades_b_targets_<ASSET>.csv. opened_utc / closed_utc are the open times of the fill
             bar and of the exit bar (t_in_ms / t_out_ms, as the market's own opened_utc). `exit` is p_out, which
@@ -399,6 +401,12 @@ def _rr(sgn, price, stop, target):
     return None if reward <= 0 or risk <= 0 else _r(reward / risk)
 
 
+def _share(v):
+    """held_share as the book's view gives it: a number in (0, 1], else None (never guessed from t1_taken)."""
+    v = _num(v)
+    return round(v, 6) if v is not None and 0 < v <= 1 else None
+
+
 def _market(page, sym, asset, view, waiting, now_ms, bars=None, prev=None):
     asset = asset if isinstance(asset, dict) else {}
     view = view if isinstance(view, dict) else {}
@@ -412,7 +420,8 @@ def _market(page, sym, asset, view, waiting, now_ms, bars=None, prev=None):
         bar = _ms(_get(page, "shadows", "markets", group, "as_of_utc"))
     is_open, next_open = market_hours(sym, now_ms)
     m = {"symbol": sym, "short": asset.get("short") or sym, "group": group, "side": side,
-         "entry": None, "stop": None, "target_1": None, "target_2": None, "t1_taken": False, "opened_utc": None,
+         "entry": None, "stop": None, "target_1": None, "target_2": None, "t1_taken": False, "held_share": None,
+         "opened_utc": None,
          "price": _px(price), "price_bar_utc": _iso(bar), "unrealized_usd": None, "unrealized_pct": None,
          "market_open": is_open, "next_open_utc": next_open, "edge_with_position_pts": None,
          "hit_24h_30d_pct": _r(_get(page, "horizon_skill", "markets", sym, "24h", "d30", 0)),
@@ -430,6 +439,7 @@ def _market(page, sym, asset, view, waiting, now_ms, bars=None, prev=None):
     edge = _num(asset.get("edge_pts"))                            # P(up) - P(down), in points: positive favours LONG
     until = waiting.get((sym, str(view.get("opened_utc"))[:16].replace("T", " ")))
     m.update(entry=_px(entry), stop=_px(stop), target_1=_px(t1), target_2=_px(t2), t1_taken=taken, opened_utc=_iso(opened),
+             held_share=_share(view.get("held_share")),
              unrealized_usd=_r(view.get("unrealized_usd")),
              unrealized_pct=_r(100.0 * sgn * (price - entry) / entry) if price is not None and entry else None,
              edge_with_position_pts=None if edge is None else _r(sgn * edge),

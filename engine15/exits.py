@@ -21,7 +21,9 @@ next bar, never loosening an already tighter stop.
 """
 
 ARM_R = 1.0                     # "1r": arm after one stop distance in favour (b_trail's TRAIL_ARM_R)
-PART = 0.5                      # the share of a position closed at Target 1 (half; shadows.PART, the main book's half_t1)
+# THE share of a position closed at Target 1, declared once: shadows.PART (b_targets, the book the VIP vault copies),
+# signals.PART, vault_feed.REDUCE_FRACTION and the main book's half_t1 all ARE this name. Money path (CLAUDE.md).
+PART = 0.5
 MA_WORDS = {"ema": "EMA", "sma": "SMA"}
 ARM_WORDS = {"entry": "from entry", "1r": "after 1R", "t1": "after Target 1"}
 

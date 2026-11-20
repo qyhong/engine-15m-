@@ -58,7 +58,7 @@ TRADES_DIR = os.path.join(OUT_DIR, "live")
 
 # ---- the challengers' constants, declared once (from the hypothesis texts; none tuned here)
 H3_K, H3_BARS = 0.25, 4                 # research/HYPOTHESES.md H3
-PART = 0.5                              # b_targets: the share taken at Target 1
+PART = exits.PART                       # b_targets: the share taken at Target 1 (ONE constant: exits.PART)
 TRAIL_ARM_R, TRAIL_ATR = 1.0, 2.0       # b_trail: arm after 1R; the ATR trail distance
 PB_BARS, PB_RANGE_ATR1H = 8, 1.0        # a_pullback: bars a limit rests; how far from price it may sit
 PB_FIB_TFS = ("1h", "4h")               # fib.py draws legs on 1h, 4h and 1d (it has no 15m leg)
@@ -658,6 +658,18 @@ def _px(v):
     return round(v, 5 if abs(v) < 100 else 3 if abs(v) < 1000 else 2)
 
 
+def held_share(st):
+    """The share of the position's starting size still held: qty / qty0, in (0, 1] (1.0 until a part is closed, then
+    1 - PART). None when the book is flat or the state does not carry both sizes."""
+    st = st or {}
+    q, q0 = st.get("qty"), st.get("qty0")
+    if not st.get("pos") or not isinstance(q, (int, float)) or not isinstance(q0, (int, float)):
+        return None
+    if not (q0 > 0 and 0 < q <= q0 * (1 + 1e-9)):
+        return None
+    return round(min(1.0, q / q0), 6)
+
+
 def asset_view(st):
     """The compact page view of one challenger's book on one asset."""
     st = st or {}
@@ -672,6 +684,9 @@ def asset_view(st):
                  opened_by=st.get("why_in"), unrealized_usd=round(st["qty"] * pos * (mark - st["entry"]), 2) if mark else None)
         if st.get("t1") is not None:
             v.update(target_1=_px(st["t1"]), target_2=_px(st.get("t2")), t1_taken=bool(st.get("t1_hit")))
+            hs = held_share(st)                                  # 20 Nov 2026: what is left after Target 1, published
+            if hs is not None:
+                v["held_share"] = hs
         if st.get("trail_on"):
             v["trailing"] = True
         if st.get("trail_basis"):                                # H36 MA trail: its level for the page

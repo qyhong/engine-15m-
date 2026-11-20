@@ -40,12 +40,13 @@ import math
 import os
 from datetime import datetime, timedelta, timezone
 
+from . import exits
 from .config import CFG
 
 BOOK = "b_targets"                      # the signal source (shadows.py); fixed by H53
 BAR_MS = int(CFG.get("bar_ms", 900000))
 WINDOW = 4                              # H53 rule 1: the bars after bar A in which the limit may fill
-PART = 0.5                              # H53 rule 3: the share closed at Target 1 (shadows.PART)
+PART = exits.PART                       # H53 rule 3: the share closed at Target 1 (ONE constant: exits.PART)
 NOTIONAL = 10000.0                      # H53 rule 5: dollars a signal
 CSV_WAIT_MS = 30 * 60 * 1000            # how long a closed book trade may be missing from its file before going on without
 WAITING, FILLED, T1_TAKEN, CLOSED, NO_FILL = "WAITING", "FILLED", "T1_TAKEN", "CLOSED", "NO_FILL"

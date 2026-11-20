@@ -60,6 +60,7 @@ import ssl
 import time
 from decimal import ROUND_HALF_EVEN, Decimal, InvalidOperation
 
+from . import exits
 from .config import DATA_DIR
 
 ALLOWED = ("BTCUSDT", "ETHUSDT")                 # the owner's scope; anything else is ignored even if listed
@@ -74,7 +75,13 @@ TIMEOUT_S = 3.0                                  # per call; no retries inside a
 HEARTBEAT_S = 900
 STATE_PATH = os.path.join(DATA_DIR, "vault_feed_state.json")
 ACTIONS = ("close", "reduce", "move_stop")       # exits only: "open" is never built and never sent
-REDUCE_FRACTION = 0.5                            # the book's half at Target 1
+REDUCE_FRACTION = exits.PART                     # the book's half at Target 1 (ONE constant: exits.PART)
+# Contract 1 (20 Nov 2026): two OPTIONAL book keys, `schema` (the integer 1) and `held_share` (a number in (0, 1], the
+# share of the setup's starting size the book still holds). OFF: the live vault refuses a book with any key it does not
+# know, so this stays False until the AI Trading Bot session confirms the vault that accepts both is LIVE on the box.
+# Switching it on changes every book body: the owner's word, a version bump and a new golden record (CLAUDE.md).
+SEND_CONTRACT_1 = False
+BOOK_SCHEMA = 1
 REF_MAX_OFF = Decimal("0.015")                   # a book exit / T1 price further than this from the price now is replaced
                                                  # by the price now (the vault refuses a reference > 2% off its own price)
 INTENT_GIVE_UP_S = 86400                         # the vault refuses an intent older than a day at signing
@@ -146,6 +153,23 @@ def _rr(t2, stop, price, long):
 
 
 # ------------------------------------------------------------------ the book
+def _held_share(v):
+    """The market's held_share as a number in (0, 1], or None (then the key is left out; it is optional)."""
+    if isinstance(v, bool) or not isinstance(v, (int, float)) or v != v:
+        return None
+    return round(float(v), 6) if 0 < v <= 1 else None
+
+
+def _contract(b, m=None):
+    """Add the contract-1 keys to a book when the switch is on; otherwise the book is exactly what it always was."""
+    if SEND_CONTRACT_1:
+        b["schema"] = BOOK_SCHEMA
+        hs = _held_share(m.get("held_share")) if m is not None else None
+        if hs is not None:
+            b["held_share"] = hs
+    return b
+
+
 def build_book(m, as_of):
     """One market's submit_book body {"book": {...}} from its setups.json entry, or (None, short reason). Nothing is
     'fixed': a market whose levels are missing or out of order is not sent."""
@@ -159,7 +183,7 @@ def build_book(m, as_of):
         b = {"symbol": sym, "side": "FLAT", "t1_taken": False, "entry_window_open": False, "as_of_utc": as_of}
         if price is not None:
             b["price"] = price
-        return {"book": b}, None
+        return {"book": _contract(b)}, None
     lv = dict((k, dec_text(m.get(k))) for k in LEVELS)
     missing = [k for k in LEVELS if lv[k] is None]
     if missing:
@@ -192,7 +216,7 @@ def build_book(m, as_of):
             t = dec_text(theirs, places=2)
             if t is not None and abs(Decimal(t) - mine) <= max(Decimal("0.02"), mine / 100):
                 b["rr_now_t2"] = t
-    return {"book": b}, None
+    return {"book": _contract(b, m)}, None
 
 
 def _content(book):

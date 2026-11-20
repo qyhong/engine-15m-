@@ -729,3 +729,34 @@ def test_a_book_added_later_starts_flat_and_is_compared_over_its_own_time():
     assert row["vs_main_usd"] == pytest.approx(row["pnl_usd"] - (main_now - ls["main_eq"]), abs=0.02)
     assert "since_utc" not in [r for r in board["rows"] if r["book"] == "b_trail"][0]
 
+
+# ------------------------------------------------------------------ held_share (20 Nov 2026)
+def test_the_view_publishes_the_share_still_held():
+    px = up_after(bars(20), 5)                                   # entry 100 at bar 2, Target 1 = 106, Target 2 = 109
+    def upto(hi):
+        n = len(px["close"])
+        return shadows.run(px, np.tile(np.asarray(LONG, float), (n, 1)), np.zeros(n, bool), np.zeros(n), np.full(n, 2.0),
+                           CFG, 1, hi, rule={"targets": True}, aux=aux_for(n),
+                           times_ms=np.arange(n, dtype="int64") * 900000, row_of=_targets_row)["state"]
+
+    before = upto(5)
+    assert shadows.held_share(before) == 1.0 and shadows.asset_view(dict(before, mark=105.0))["held_share"] == 1.0
+    px["high"][5] = 106.5                                        # Target 1 trades: half is closed
+    after = upto(7)
+    assert after["t1_hit"] and after["qty"] == pytest.approx(after["qty0"] * shadows.PART)
+    assert shadows.held_share(after) == 0.5 and shadows.asset_view(dict(after, mark=106.0))["held_share"] == 0.5
+    px["high"][7] = 109.5                                        # Target 2: flat, nothing held, nothing published
+    flat = upto(8)
+    assert flat["pos"] == 0 and shadows.held_share(flat) is None and "held_share" not in shadows.asset_view(flat)
+    for bad in (None, {}, {"pos": 1, "qty": 1.0}, {"pos": 1, "qty": 2.0, "qty0": 1.0}, {"pos": 1, "qty": 0.0, "qty0": 1.0},
+                {"pos": 1, "qty": "1", "qty0": 1.0}, {"pos": 0, "qty": 1.0, "qty0": 1.0}):
+        assert shadows.held_share(bad) is None
+
+
+def test_one_constant_for_the_share_closed_at_target_1():
+    from engine15 import exits, signals, vault_feed
+    assert shadows.PART == signals.PART == vault_feed.REDUCE_FRACTION == exits.PART == 0.5
+    for mod, name in ((shadows, "shadows.py"), (signals, "signals.py"), (vault_feed, "vault_feed.py")):
+        with open(os.path.join(os.path.dirname(shadows.__file__), name), encoding="utf-8") as fh:
+            src = fh.read()
+        assert "= exits.PART" in src and "PART = 0.5" not in src and "REDUCE_FRACTION = 0.5" not in src, name
