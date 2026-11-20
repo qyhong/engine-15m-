@@ -993,3 +993,79 @@ def test_contract_1_on_adds_schema_and_the_share_and_nothing_else(monkeypatch):
     assert "held_share" not in b and b["schema"] == 1
     assert json.loads(vf.encode({"book": vf.build_book(mkt(t1_taken=True, held_share=0.5), bar(1))[0]["book"]})
                       .decode())["book"]["held_share"] == 0.5
+
+
+# ------------------------------------------------------------------ the feed's memory lost (20 Nov 2026): an alarm, never silent
+def _lose(feed):
+    os.remove(feed.state)
+
+
+def test_memory_lost_while_a_setup_is_open_is_an_alarm_every_step_until_it_is_over(feed, fake, monkeypatch):
+    monkeypatch.setattr(vf, "EXITS_ONLY_IF_WINDOW_SEEN", True)
+    feed.step(mkt(window=True))
+    assert "alarm" not in feed.saved() and not [x for x in feed.new if "ALARM" in x]
+    _lose(feed)
+    feed.step(mkt(at=bar(2), window=False), now=1000.0)           # the window is shut: the feed cannot know it saw it open
+    alarm = "vault: ALARM BTCUSDT LONG setup opened %s is open and the feed's memory was missing: NO exit will be sent " \
+            "for it (see docs/RESTORE.md)" % OPENED
+    assert alarm in feed.new and "vault: BTCUSDT LONG sent (as_of %s)" % bar(2) in feed.new     # the book still goes
+    assert feed.saved()["alarm"] == {"memory_lost": {"BTCUSDT": {"side": "LONG", "opened_utc": OPENED, "since": 1000.0,
+                                                                 "why": "missing"}}}
+    feed.step(mkt(at=bar(3), t1_taken=True, price=66080.5), now=1900.0)
+    assert alarm in feed.new and feed.saved()["alarm"]["memory_lost"]["BTCUSDT"]["since"] == 1000.0   # said again, kept
+    feed.trade("BTCUSDT", "T1+T2", 66500.0)
+    feed.step(mkt(side="FLAT", at=bar(4), price=66990.0))
+    assert "vault: BTCUSDT LONG setup opened %s is over; the feed sent no exit for it (its memory was lost)" % OPENED in feed.new
+    assert "alarm" not in feed.saved() and not fake.ops("submit_intent")
+    feed.step(mkt(side="FLAT", at=bar(5), price=66990.0))
+    assert not [x for x in feed.new if "ALARM" in x or "is over" in x]
+
+
+def test_memory_lost_is_no_alarm_when_nothing_is_left_without_exits(feed, fake, monkeypatch):
+    monkeypatch.setattr(vf, "EXITS_ONLY_IF_WINDOW_SEEN", True)
+    feed.step(mkt(side="FLAT"))                                    # a first start, flat: one line, the book
+    assert feed.new == ["vault: BTCUSDT FLAT sent (as_of %s)" % bar(1)] and "alarm" not in feed.saved()
+    _lose(feed)
+    feed.step(mkt(at=bar(2), window=True))                         # lost, but the entry window is open: joinable, exits follow
+    assert not [x for x in feed.new if "ALARM" in x] and "alarm" not in feed.saved()
+    feed.step(mkt(at=bar(3), t1_taken=True, price=66080.5))
+    assert [b["intent"]["action"] for b in fake.ops("submit_intent")] == ["reduce", "reduce", "move_stop"]
+
+
+def test_an_unreadable_memory_is_kept_aside_and_alarmed(feed, fake, monkeypatch):
+    monkeypatch.setattr(vf, "EXITS_ONLY_IF_WINDOW_SEEN", True)
+    feed.step(mkt(window=True))
+    with open(feed.state, "w", encoding="utf-8") as fh:
+        fh.write('{"pos": {"BTCUSDT": ')                           # cut off mid-write
+    feed.step(mkt(at=bar(2)), now=2000.0)
+    assert [x for x in feed.new if "ALARM" in x and "memory was unreadable" in x]
+    assert feed.saved()["alarm"]["memory_lost"]["BTCUSDT"]["why"] == "unreadable"
+    with open(feed.state + ".bad-2000", encoding="utf-8") as fh:
+        assert fh.read() == '{"pos": {"BTCUSDT": '                 # the bad file is kept, not overwritten unseen
+    assert vf.read_state(str(feed.tmp / "nope.json")) == ({}, "missing")
+    assert vf.read_state(feed.state)[1] == "ok" and vf.load_state(feed.state) == feed.saved()
+
+
+def test_restore_drill_a_copy_put_back_resumes_the_exits_and_closes_nothing_else(feed, fake, monkeypatch, tmp_path):
+    """docs/RESTORE.md as a test: the hourly copy from before the loss goes back; the exits of the open setup resume
+    (late where an event fell in the gap) and nothing is sent for any other setup."""
+    monkeypatch.setattr(vf, "EXITS_ONLY_IF_WINDOW_SEEN", True)
+    feed.step(mkt(window=True))
+    feed.step(mkt(at=bar(2)))
+    with open(feed.state, "rb") as fh:
+        copy = fh.read()                                           # the hourly copy
+    _lose(feed)
+    feed.step(mkt(at=bar(3), t1_taken=True, price=66080.5))        # Target 1 falls in the gap: alarm, no exit
+    assert [x for x in feed.new if "ALARM" in x] and not fake.ops("submit_intent")
+    with open(feed.state, "wb") as fh:
+        fh.write(copy)                                             # the restore (engine stopped between steps)
+    feed.step(mkt(at=bar(4), t1_taken=True, price=66100.0))
+    assert not [x for x in feed.new if "ALARM" in x] and "alarm" not in feed.saved()
+    got = [(b["intent"]["action"], b["intent"]["market"]) for b in fake.ops("submit_intent")]
+    assert got == [("reduce", "spot"), ("reduce", "futures"), ("move_stop", "futures")]       # the half, late
+    feed.trade("BTCUSDT", "T1+STOP_BE", 65500.0)
+    feed.step(mkt(side="FLAT", at=bar(5), price=64990.0))
+    got = [(b["intent"]["action"], b["intent"]["market"]) for b in fake.ops("submit_intent")]
+    assert got[3:] == [("close", "spot"), ("close", "futures")]
+    assert all(b["intent"]["intent_id"].startswith("BTCUSDT.%s." % OPENED.replace("-", "").replace(":", ""))
+               for b in fake.ops("submit_intent"))                 # every exit belongs to that one setup

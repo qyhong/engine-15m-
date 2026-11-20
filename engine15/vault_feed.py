@@ -44,6 +44,12 @@ and a resend with the SAME as_of is only a duplicate that refreshes nothing. In 
 State: data/vault_feed_state.json (atomic): per market the last sent book (content hash, as_of), the last seen position,
 and every intent made (its fixed body and whether the vault took it), so each intent is sent once and retried at the next
 step until the vault answers.
+
+THE MEMORY LOST (20 Nov 2026): when that file is missing or cannot be read while a market shows an open setup, the feed
+cannot know whether it saw the setup's entry window open, so it sends NO exit for that setup, and any exit that was
+still waiting is gone. That is never silent: one line "vault: ALARM ..." at every step while the setup stays open, and
+the state carries {"alarm": {"memory_lost": {symbol: {side, opened_utc, since, why}}}} for the Telegram bot's card. An
+unreadable file is kept beside the new one as vault_feed_state.json.bad-<unix time>. Restore: docs/RESTORE.md.
 """
 import calendar
 import csv
@@ -445,13 +451,57 @@ def client_tls(ca, cert, key):
     return ctx, None
 
 
-def load_state(path):
+def read_state(path):
+    """-> (the state, "ok" | "missing" | "unreadable"). Anything but "ok" gives an empty state: the memory is lost."""
     try:
         with io.open(path, encoding="utf-8") as fh:
             st = json.load(fh)
-        return st if isinstance(st, dict) else {}
+    except FileNotFoundError:
+        return {}, "missing"
     except Exception:
-        return {}
+        return {}, "unreadable"
+    return (st, "ok") if isinstance(st, dict) else ({}, "unreadable")
+
+
+def load_state(path):
+    return read_state(path)[0]
+
+
+def _keep_bad(path, now):
+    """An unreadable state file is moved aside (never overwritten unseen). Never raises."""
+    try:
+        os.replace(path, "%s.bad-%d" % (path, int(now)))
+    except OSError:
+        pass
+
+
+def memory_alarm(st, markets, syms, how, now, log):
+    """Keep st["alarm"]["memory_lost"] true to the markets, after track(). how: read_state's word for this step.
+    A setup is entered when the memory was lost this step and the feed will send no exit for it (it never saw its
+    entry window open); it leaves when that setup is no longer the market's position. One line per setup per step."""
+    lost = st.get("alarm", {}).get("memory_lost") if isinstance(st.get("alarm"), dict) else None
+    lost = dict(lost) if isinstance(lost, dict) else {}
+    seen = st.get("pos") if isinstance(st.get("pos"), dict) else {}
+    for sym in syms:
+        if sym not in markets:                                   # not in setups.json this step: nothing is concluded
+            continue
+        cur, old = seen.get(sym), lost.get(sym)
+        if isinstance(old, dict) and not (isinstance(cur, dict) and cur.get("side") == old.get("side")
+                                          and cur.get("opened_utc") == old.get("opened_utc")):
+            del lost[sym]                                        # the setup is over (or replaced): the alarm ends
+            _say(log, "vault: %s %s setup opened %s is over; the feed sent no exit for it (its memory was lost)"
+                 % (sym, old.get("side"), old.get("opened_utc")))
+            old = None
+        blind = isinstance(cur, dict) and EXITS_ONLY_IF_WINDOW_SEEN and not cur.get("eligible")
+        if how != "ok" and blind and old is None:
+            old = lost[sym] = {"side": cur["side"], "opened_utc": cur["opened_utc"], "since": now, "why": how}
+        if isinstance(old, dict):
+            _say(log, "vault: ALARM %s %s setup opened %s is open and the feed's memory was %s: NO exit will be sent for "
+                      "it (see docs/RESTORE.md)" % (sym, old.get("side"), old.get("opened_utc"), old.get("why")))
+    if lost:
+        st["alarm"] = {"memory_lost": lost}
+    else:
+        st.pop("alarm", None)
 
 
 def save_state(path, st):
@@ -563,7 +613,9 @@ def _run(setups_path, log, env, state_path, trades_dir, now):
     except Exception:
         _say(log, "vault: %s not sent (setups.json unreadable)" % tag)
         return done
-    st = load_state(state_path)
+    st, how = read_state(state_path)
+    if how == "unreadable":
+        _keep_bad(state_path, now)
     books = {}
     for sym in syms:
         m = markets.get(sym)
@@ -575,6 +627,7 @@ def _run(setups_path, log, env, state_path, trades_dir, now):
             _say(log, "vault: %s not sent (exit not queued: %s)" % (sym, why))    # every book sent was tracked first, so
             continue                                             # a close can never land on a newer setup's join
         books[sym] = build_book(m, m.get("price_bar_utc"))
+    memory_alarm(st, markets, syms, how, now, log)
     queue = st.setdefault("intents", {})
     for iid in list(queue):                                      # old finished ones go; stuck ones are given up
         it = queue[iid]

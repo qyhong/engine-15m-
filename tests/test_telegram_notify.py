@@ -901,3 +901,39 @@ def test_ranking_failure_is_guarded_and_printed_once(monkeypatch, capsys):
     out = capsys.readouterr().out
     assert out.count("ranking failed (weekly: RuntimeError)") == 1 and out.count("ranking failed (/ranking: RuntimeError)") == 1
     assert "ranking broke" not in out
+
+
+# ------------------------------------------------------------------ the feed's memory lost (vault_feed.memory_alarm)
+def test_vault_memory_lost_is_one_card_per_setup(monkeypatch):
+    sent, _h = vault_bot(monkeypatch)
+    lost = {"BTCUSDT": {"side": "LONG", "opened_utc": "2026-11-18T09:00:00Z", "since": MADE, "why": "missing"},
+            "ETHUSDT": {"side": "SHORT", "opened_utc": "2026-11-19T02:15:00Z", "since": MADE, "why": "unreadable"}}
+    vault_state({}, extra={"alarm": {"memory_lost": lost}})
+    st, _ = tn.check(dict(VST), "k", now=VNOW)
+    cards = [c for c in vault_cards(sent) if "feed memory lost" in c]
+    assert len(cards) == 2
+    assert "long setup opened 18 Nov 09:00 UTC" in cards[0] and "was missing" in cards[0] and "<b>no exit</b>" in cards[0]
+    assert "short setup opened 19 Nov 02:15 UTC" in cards[1] and "could not be read" in cards[1]
+    for c in cards:
+        assert "http" not in c and "$" not in c and "vault_feed" not in c and "stop on the exchange" in c
+    st, _ = tn.check(st, "k", now=VNOW)
+    assert len([c for c in vault_cards(sent) if "feed memory lost" in c]) == 2          # once each
+    lost["BTCUSDT"]["opened_utc"] = "2026-11-19T10:00:00Z"                               # another setup: its own card
+    vault_state({}, extra={"alarm": {"memory_lost": lost}})
+    st, _ = tn.check(st, "k", now=VNOW)
+    assert len([c for c in vault_cards(sent) if "feed memory lost" in c]) == 3
+
+
+def test_vault_memory_lost_card_is_retried_and_a_garbled_alarm_is_no_card(monkeypatch):
+    sent, holder = vault_bot(monkeypatch, ok=False)
+    vault_state({}, extra={"alarm": {"memory_lost": {"BTCUSDT": {"side": "LONG", "opened_utc": "2026-11-18T09:00:00Z"}}}})
+    st, _ = tn.check(dict(VST), "k", now=VNOW)
+    assert not [k for k in st.get("vault_alerted", {}) if k.startswith("memory_lost")]   # not delivered: not remembered
+    holder["ok"] = True
+    st, _ = tn.check(st, "k", now=VNOW)
+    assert [k for k in st["vault_alerted"] if k.startswith("memory_lost")]
+    n = len(sent)
+    for bad in ({"alarm": "x"}, {"alarm": {"memory_lost": ["BTCUSDT"]}}, {"alarm": {"memory_lost": {"BTCUSDT": 7}}}):
+        vault_state({}, extra=bad)
+        tn.check(dict(VST), "k", now=VNOW)
+    assert not [c for c in sent[n:] if "feed memory lost" in c]

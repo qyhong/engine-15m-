@@ -659,6 +659,39 @@ def vault_failing(doc, mtime, now_s):
     return out
 
 
+def vault_memory_lost(doc, mem, tok, chat, now, done):
+    """The feed lost its memory while a setup was open (vault_feed.memory_alarm): ONE card per setup. -> the keys to
+    remember {key: time}, only for cards that were delivered."""
+    out = {}
+    alarm = doc.get("alarm") if isinstance(doc.get("alarm"), dict) else {}
+    lost = alarm.get("memory_lost") if isinstance(alarm.get("memory_lost"), dict) else {}
+    for sym in sorted(k for k in lost if isinstance(k, str)):
+        a = lost[sym]
+        if not isinstance(a, dict):
+            continue
+        key = "memory_lost:%s:%s" % (sym[:20], str(a.get("opened_utc"))[:20])
+        if key in mem:
+            continue
+        try:
+            opened = datetime.strptime(str(a.get("opened_utc")), "%Y-%m-%dT%H:%M:%SZ").strftime("%d %b %H:%M UTC").lstrip("0")
+        except Exception:
+            opened = u"time unknown"
+        side = {"LONG": u"long", "SHORT": u"short"}.get(a.get("side"), u"side unknown")
+        why = u"could not be read" if a.get("why") == "unreadable" else u"was missing"
+        card = u"\n".join([
+            u"%s <b>VIP vault \u00b7 feed memory lost</b>" % WARN,
+            u"%s: %s setup opened %s" % (_esc(_mk(sym[:20])), side, opened),
+            u"The feed's record %s while this setup was open." % why,
+            u"It will send <b>no exit</b> for this setup, and any exit that was still waiting is gone.",
+            u"Members in it are covered only by their stop on the exchange.",
+            u"What to do is in the engine's restore page."])
+        r = _send(tok, chat, card)
+        if isinstance(r, dict) and r.get("ok"):
+            out[key] = now.timestamp()
+            done.append(card)
+    return out
+
+
 def vault_check(st, tok, chat, now):
     """The vault part of one check: a card per intent the first time it is final, and one card when sends fail for
     30 min (and one when they go through again). An id is remembered only once its card is delivered. Never raises.
@@ -693,6 +726,7 @@ def vault_check(st, tok, chat, now):
         cut = now_s - VAULT_MEMORY_S
         keep = sorted(((k, v) for k, v in mem.items() if isinstance(v, (int, float)) and v >= cut), key=lambda kv: -kv[1])
         st["vault_alerted"] = dict(keep[:VAULT_MEMORY_MAX])
+        st["vault_alerted"].update(vault_memory_lost(doc, st["vault_alerted"], tok, chat, now, done))
         lines = vault_failing(doc, mtime, now_s)
         if lines and not st.get("vault_failing"):
             card = u"\n".join([u"%s <b>VIP vault · sends failing</b>" % WARN] + lines +
