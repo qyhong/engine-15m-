@@ -365,3 +365,13 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   the owner's word; on history this rule earned less than holding on USDJPY (H36: +$2,939 against +$19,209). The
   shadow `main` copy keeps holding as the forward comparison. The owner's further idea the same day (flip exits in
   directional regimes, target exits in the others, and one rule per market) is H60, registered before any number.
+- **Vault feed: the exit guard is off; BTC's missed Target 1 exit sent once** (20 Nov 2026, owner: "Yes, both"). The
+  feed's guard of 18 Nov (`EXITS_ONLY_IF_WINDOW_SEEN`: exits only for a setup whose entry window the feed saw open)
+  assumed the vault joins only inside the entry window. Under the owner's hybrid join rule the vault also joins a
+  setup later: per the AI Trading Bot session it joined a member into the BTC and ETH shorts of 15 Nov on 19 Nov.
+  The guard marked both "not joinable", so no exit was ever sent: BTC's Target 1 of 20 Nov ~12:15 UTC produced no
+  reduce and no stop move, and no close would have followed. Found by the AI Trading Bot session; the fault was in
+  this project's feed. Put to the owner as: fix and send BTC's missed Target 1 exit once / fix only / leave it; the
+  owner chose both. The guard is now False (the switch stays in the code; only the owner turns it back on), and
+  the missed BTC pair (reduce 0.5, then the futures stop to the entry 65,203.2) is queued once by hand through the
+  feed's own track(). Exits stay exits only: nothing opens or adds, the markets stay BTC and ETH.
