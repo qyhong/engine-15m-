@@ -3053,6 +3053,148 @@ result. Forward, the comparison stays readable: the shadow `main` copy keeps hol
 `b_be_t1` keeps running; their USDJPY lines and the main book's own are read at 30 closed forward trades, as
 research/VERDICT_RULES.md says, and the owner decides then whether USDJPY keeps the rule.
 
+## H58. STOCKS' OWN MODEL ON HISTORY: do cards rated on stock history and voices trained on stock history call single-stock direction better than chance? (registered 20 Nov 2026, 02:50 UTC, before any H58 code existed or any H58 number was computed)
+
+**Prompted by:** H57's NO PASS (the S&P model borrowed for single stocks). The owner, 20 Nov 2026: "I think need to make
+sure the result proven. Rather change description or remove. If snp500 cannot apply a single stock. Recommend me a better
+option"; offered "give stocks a model of their own, as each market group got on 11 Nov (v5.1)", the owner: "Yes, build it".
+PAPER ONLY; research only; nothing in engine15/ is changed by this test.
+
+**What was already seen (disclosure).** H57's results (report and verdict above): the 13 tickers' bars, the borrowed
+model's hit rates per ticker and half, its Brier skill. No reading's direction accuracy on stocks, no card rating on stocks
+and no stock-trained voice has been looked at. The design below is written from the engine's own methods, not from H57's
+numbers.
+
+**Population and data (fixed now).** The 13 tickers H57 tested: NVDA, MU, T, AAPL, MSFT, AMZN, GOOGL, AVGO, META, TSLA,
+BRK.B, JPM, LLY. ARGX and DDOG (on the live page) have no 15-minute history: NOT TESTABLE, reported as such. Bars: H57's
+files on the research server (`research/out/h57_stocks/bars/`, Dukascopy CFD 15-minute cash-hours bars 2020-10-01 ..
+2025-11-10, daily bars before), not downloaded again. The S&P 500's 15-minute bars: the engine's `data/spx_15m.csv`,
+copied read-only into the H58 folder, rows before the seal. Every row whose bar opens at or after 2025-11-11 00:00 UTC
+(the sealed holdout) is dropped at load and never computed on.
+
+**Readings (per stock, per 15-minute close).**
+- The engine's own cards on the stock's bars exactly as `engine15/stocks.py` makes them live: `stocks.readings` on a
+  window of the stock's 15-minute bars starting 60 days before the close's calendar month, daily bars before the window
+  (H57's `month_readings`), only that month's rows kept. Rows from 2020-12-01 on (the first month with a full 60-day
+  window). The market-wide cards (`stocks.MARKET_VOICES`: macro, volx, rates, eqbreadth) and the release guard (`ec_next`)
+  from the S&P call's readings at the same close (H57's `spx_model.npz`, copied from the index store); a close with no
+  S&P row has no stance. Index-only and live-only cards (`stocks.SKIP_VOICES`) read nothing, as live.
+- Two stock-only readings, each its own new card and voice:
+  - **Strength against the S&P 500** (voice `stk_rs`): d = the stock's 15-minute log return minus the S&P 500's over the
+    same bar (bars joined on open time; a bar without an S&P bar is no read); rs_k = clip((sum of the last k d) /
+    (std of d over the last 672 bars x sqrt(k)), -3, 3) for k = 4 (an hour), 26 (a session), 130 (five sessions), the
+    scaling the engine's momentum readings use.
+  - **Own earnings date** (voice `stk_ern`), from the engine's existing megacap earnings file only
+    (`data/sources/earnings_megacap.csv`, copied read-only; 2018-2026, four reports a year for NVDA, AAPL, MSFT, AMZN,
+    GOOGL, META, AVGO, TSLA, BRK.B, JPM), with `equity_events`' own release times and KNOWN-AT rule (a backfilled date is
+    known 7 days before the report): ern_next = clip(1 - days to the next known report / 7, 0, 1); ern_last = clip(1 -
+    days since the last report / 5, 0, 1). MU, T and LLY are not in that file and no other clean free history of their
+    dates is used: for them this card reads nothing (0), stated, not filled in.
+
+**Grading (the engine's own, as H57):** `labels.triple_barrier` on the stock's consecutive 15-minute bars, unit = 1.5 x
+the stock's `atr1h` at the close, 26 bars; NEITHER not counted in hit rates.
+
+**The model (primary specification; one variant decides the verdict).** The engine's own model code and constants,
+the 13 stocks pooled as the engine pools a group's assets, WALKED FORWARD:
+- Timeline: the union of the 13 tickers' bar open times. Refits every 672 sessions of that timeline (`refit_every`, about
+  26 trading days, the cadence the live S&P call refits at); the first refit at the first session on or after 2022-01-03
+  00:00 UTC; each refit's model answers the sessions up to the next refit.
+- At each refit, ONLY rows whose grade was known by that refit's close (the ticker's 26th bar after the row has closed by
+  then, i.e. the engine's t <= s - horizon rule, per ticker), from 2020-12-01 on, with the required readings
+  (`stocks.REQUIRED`), are used, for both:
+  1. **Card rating and selection** (research/rate_cards.py's method, its own functions): every card that reads on a
+     stock (the 41 engine cards with an own or market voice, plus the two new cards) rated on those rows pooled: per
+     reading, the most extreme fifth, direction accuracy of its sign in the first and second half (split at the median
+     training row), steadiest reading per card, worse half; the top ten cards with a worse half above 50.5% vote (at
+     least the three best) (`rate_cards.choose_voting`). The owner's voice is not used (it never reads on a stock).
+  2. **Voice training**: one voice per engine voice that reads on a stock (40 own + 4 market) plus `stk_rs`, `stk_ern`,
+     "all" (every stock feature) and "base", each `model.fit_softmax` on the training rows subsampled every 16th row per
+     ticker (`train_step`), ridge `l2` 100, warm-started from the previous refit, `even_prior`, at least `min_train_rows`.
+- Trust: `model.trust_path`'s Hedge (eta 0.2, half-life 960 sessions, floor 0.02) on the walked-forward voices' graded
+  direction losses of all 13 tickers on the common timeline, a loss arriving at its grade's close; masked to the refit's
+  voting voices, renormalised, capped at 40% (`trust_cap`), then per row over the voices that speak, capped again
+  (`stocks.stance_odds`). Odds = the mix.
+- Stance: `stocks.decide` (policy.decide for a flat book, idle clock 0: 5 points, 10 in high risk, 15 against the
+  higher-timeframe bias, none in the hour before a high-impact US release), shock / tide / htf_bias from the stock's own
+  readings, the guard from the S&P call's `ec_next`.
+- Judged: every close from the first refit (2022-01-03) to the seal. No call is ever made by a model, a card choice or a
+  trust that saw the row's own outcome or any later row. (A clean single cut was considered; the walk-forward is chosen
+  because it is how the live engine itself learns, it judges almost four years instead of two, and card selection and
+  training are redone inside every training window, so selection never sees the judged rows.)
+
+**Measures (as H57, so the two sit side by side):** pooled and per-ticker hit rate of LONG / SHORT calls on
+NON-OVERLAPPING calls (per ticker, a call taken only once the previous taken call's grade is known; NEITHER blocks but is
+not counted), Wilson 95%; all calls beside without an interval; halves split at the median date of the pooled graded
+LONG / SHORT calls; day-block bootstrap (descriptive); Brier and log-loss skill of p = P(up) / (P(up) + P(down)) on every
+stance row graded up or down against the ticker's own UP share in the same half; the share of closes with a stance;
+H57's own rows restricted to the same judged dates (2022-01-03 on) beside, for a like-for-like comparison. Also: which
+cards voted at each refit, the two new cards' ratings at each refit, the voting voices' trust.
+
+**Pass bar (fixed now, H57's):** PASS only if (1) the pooled non-overlapping hit rate is above 50% with the Wilson 95%
+lower bound above 50% in BOTH halves, AND (2) at least 6 of the 13 tickers have a full-period non-overlapping hit rate
+above 50%.
+
+**Leave-tickers-out check (registered now; a check, not the verdict):** the same walk-forward 13 times, each time
+with one ticker left out of everything (card rating, voices, trust) and judged by that model. The 13 held-out sets are
+pooled and measured as above. Reading: if the primary passes but this check does not meet the same bar, the model is
+not shown to carry over to stocks it did not learn from, and the live page (whose list includes stocks with no history
+at all) may not say "tested on history" for an untrained ticker.
+
+**Variants (counted):** the primary decides. Exploratory, reported and labelled so, never the verdict: E1 = the primary
+without the two stock-only cards (to show what they add). Nothing else is planned; anything more tried is added to this
+count in the report. No tuning and re-grading after seeing a number: a fail is reported as a fail.
+
+**What a result changes.** PASS: a historical pass is not proof (research/VERDICT_RULES.md); it allows a PROPOSAL to the
+owner to run this model forward on paper on the page, labelled "tested on history, being checked live", confirmed only by
+forward graded calls; wiring it into `engine15/stocks.py` needs the owner's word and is described, not done. NO PASS: the
+stocks' own model is not supported on history either; the page's wording and whether to keep the section is the owner's
+call ("not confirmed on history").
+
+**Where it runs:** the research server, `research/h58_stocks.py`, outputs under `research/out/h58_stocks/`, under
+`nice -n 10`, the heavy-job lock, never touching the live engine's files.
+
+### Verdicts, H58 (20 Nov 2026, 03:40 UTC): NO PASS
+
+Run on the research server (`research/h58_stocks.py`; report `research/out/h58_stocks/report.md`, numbers `results.json`,
+the primary's per-refit card choices and trust `refits_primary.json`). 13 tickers, 325,705 judged closes 2022-01-03 ..
+2025-11-10 (38 refits), nothing on or after the seal.
+
+| condition (fixed at registration) | required | result | met |
+|---|---|---|---|
+| pooled non-overlapping hit, first half (before 2023-03-14 15:45 UTC) | > 50% and Wilson 95% lower bound > 50% | 40.2% (31.6% .. 49.4%, n 112) | no |
+| pooled non-overlapping hit, second half | > 50% and Wilson 95% lower bound > 50% | 57.2% (49.8% .. 64.4%, n 173) | no |
+| tickers with full-period non-overlapping hit > 50% | >= 6 of 13 | 6 (MSFT, GOOGL, AVGO, META, BRK.B, JPM) | yes |
+| **H58** | both | | **NO PASS** |
+
+- Full period, pooled: 2,537 LONG/SHORT calls, 285 non-overlapping graded, 50.5% right (44.8% .. 56.3%; day-block
+  bootstrap 40.9% .. 60.0%). The halves point opposite ways (40% then 57%). Overlapping hit rate 47.0%.
+- Stance taken on 0.78% of closes (0.54% LONG, 0.24% SHORT); H57: 0.48%.
+- Probabilities: Brier skill against each ticker's own UP share negative on 12 of 13 tickers (MU +0.0005), pooled -0.0021;
+  log-loss skill pooled -0.0015; negative in both halves pooled.
+- Leave-one-ticker-out (check): 52.8% (47.2% .. 58.3%, n 307); halves 50.4% (lower 41.4%) and 54.2% (lower 47.1%); 7 of
+  13 tickers above 50%: does not meet the bar either.
+- E1 (exploratory, without the two stock-only cards): 50.7% (n 365), halves 39.8% and 55.6%: NO PASS; the two cards
+  changed little.
+- H57's own rows on the same dates (2022-01-03 on): 49.6% (n 133). The stocks' own model is not better than the borrowed
+  one on these numbers.
+- The two stock-only cards: strength against the S&P 500 rated at most 51.0% in its worse half and never made the top
+  ten. Own earnings date (10 megacaps only) voted at 26 of 38 refits, always "against" (near or just after a report the
+  next move was more often down in the training rows), but with 0.5% of the mean say it barely moved the odds.
+- Card choice was unstable: consecutive refits shared 6 to 10 of their 10 cards (8 most often). Only the Ultimate
+  Oscillator (37 of 38) and economic calendar (36) voted almost every time.
+- Reading: no evidence that a model rated and trained on stock history calls single-stock direction better than chance
+  on 2022-2025. Per the registration, the page's wording and whether to keep the section is the owner's call ("not
+  confirmed on history"). Nothing in the engine is changed by this verdict.
+
+Disclosed departures and details: the registration's heading says 02:50 UTC; its commit is 02:46 UTC. The prep stage (read-only copies of
+`data/spx_15m.csv` and `data/sources/earnings_megacap.csv`) ran at 02:49, after the registration commit and before the
+code commit (02:52). A smoke test of the walk on 2 tickers and 1-2 refits checked only that it ran (no hit rate printed).
+The relative-strength volatility uses at least 600 of the last 672 bars (`min_periods`), a detail the registration did
+not fix. OpenBLAS was limited to one thread (speed only; no effect on the numbers). The first report run failed on a
+formatting bug after the numbers were computed and before any were printed; fixed and re-run. The "all" voice uses the
+305 stock features only (the engine's other features are always zero on a stock). Variants: the primary, E1 and the
+registered leave-one-ticker-out check; nothing else was run.
+
 ## Adoption note, think15-v5.2.6 (20 Nov 2026, ~04:00 UTC): half at Target 1 on the S&P 500's main book. NOT a pass.
 
 The owner switched the S&P 500's main book to: half closed at Target 1, the stop of the rest to the entry, the rest

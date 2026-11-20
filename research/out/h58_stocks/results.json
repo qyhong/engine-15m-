@@ -1,0 +1,5977 @@
+{
+ "registered": "research/HYPOTHESES.md H58 (20 Nov 2026, 02:50 UTC)",
+ "version": "think15-v5.2.5",
+ "primary": {
+  "split_utc": "2023-03-14 15:45",
+  "per_ticker": {
+   "NVDA": {
+    "full": {
+     "calls": 255,
+     "graded_all": 191,
+     "hit_all": 0.44502617801047123,
+     "neither_all": 64,
+     "nov_calls": 41,
+     "nov_graded": 31,
+     "nov_hits": 15,
+     "nov_hit": 0.4838709677419355,
+     "nov_lo": 0.31970251448435416,
+     "nov_hi": 0.651596046709453,
+     "prob": {
+      "rows": 19312,
+      "up_share": 0.5273405136702568,
+      "brier": 0.25002685425813514,
+      "brier_base": 0.2492524963122465,
+      "brier_skill": -0.003106720924947348,
+      "logloss": 0.6932014202872682,
+      "logloss_base": 0.6916514272762809,
+      "logloss_skill": -0.002241003126518537
+     },
+     "sides": {
+      "FLAT": 24797,
+      "LONG": 167,
+      "SHORT": 88
+     },
+     "rows": 25052,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 16:45"
+    },
+    "first": {
+     "calls": 131,
+     "graded_all": 93,
+     "hit_all": 0.27956989247311825,
+     "neither_all": 38,
+     "nov_calls": 17,
+     "nov_graded": 10,
+     "nov_hits": 2,
+     "nov_hit": 0.2,
+     "nov_lo": 0.05668215093776685,
+     "nov_hi": 0.5098375308778678,
+     "prob": {
+      "rows": 6045,
+      "up_share": 0.4901571546732837,
+      "brier": 0.250737903813963,
+      "brier_base": 0.24990311839587426,
+      "brier_skill": -0.003340436179617212,
+      "logloss": 0.6946250865057679,
+      "logloss_base": 0.6929534048350269,
+      "logloss_skill": -0.002412401265477593
+     },
+     "sides": {
+      "FLAT": 7637,
+      "SHORT": 88,
+      "LONG": 43
+     },
+     "rows": 7768
+    },
+    "second": {
+     "calls": 124,
+     "graded_all": 98,
+     "hit_all": 0.6020408163265306,
+     "neither_all": 26,
+     "nov_calls": 24,
+     "nov_graded": 21,
+     "nov_hits": 13,
+     "nov_hit": 0.6190476190476191,
+     "nov_lo": 0.4087865362145808,
+     "nov_hi": 0.7924898873599089,
+     "prob": {
+      "rows": 13267,
+      "up_share": 0.5442828069646491,
+      "brier": 0.24970287034579783,
+      "brier_base": 0.2480390330073316,
+      "brier_skill": -0.006707965751572065,
+      "logloss": 0.692552738423182,
+      "logloss_base": 0.6892201032311541,
+      "logloss_skill": -0.004835371424025681
+     },
+     "sides": {
+      "FLAT": 17160,
+      "LONG": 124
+     },
+     "rows": 17284
+    }
+   },
+   "MU": {
+    "full": {
+     "calls": 149,
+     "graded_all": 132,
+     "hit_all": 0.5075757575757576,
+     "neither_all": 17,
+     "nov_calls": 28,
+     "nov_graded": 21,
+     "nov_hits": 10,
+     "nov_hit": 0.47619047619047616,
+     "nov_lo": 0.28344005975415376,
+     "nov_hi": 0.6763046555309483,
+     "prob": {
+      "rows": 18999,
+      "up_share": 0.5132375388178325,
+      "brier": 0.2497013270436532,
+      "brier_base": 0.24982476756604638,
+      "brier_skill": 0.0004941084248604177,
+      "logloss": 0.6925499825194413,
+      "logloss_base": 0.6927966747386802,
+      "logloss_skill": 0.0003560817022281171
+     },
+     "sides": {
+      "FLAT": 24888,
+      "LONG": 84,
+      "SHORT": 65
+     },
+     "rows": 25037,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 70,
+     "graded_all": 65,
+     "hit_all": 0.49230769230769234,
+     "neither_all": 5,
+     "nov_calls": 12,
+     "nov_graded": 12,
+     "nov_hits": 4,
+     "nov_hit": 0.3333333333333333,
+     "nov_lo": 0.13812009012485987,
+     "nov_hi": 0.6093779130595061,
+     "prob": {
+      "rows": 6048,
+      "up_share": 0.4624669312169312,
+      "brier": 0.2507393517731555,
+      "brier_base": 0.24859126874772547,
+      "brier_skill": -0.008641023621831057,
+      "logloss": 0.6946267747502162,
+      "logloss_base": 0.690327066041598,
+      "logloss_skill": -0.006228509528495074
+     },
+     "sides": {
+      "FLAT": 7689,
+      "SHORT": 63,
+      "LONG": 7
+     },
+     "rows": 7759
+    },
+    "second": {
+     "calls": 79,
+     "graded_all": 67,
+     "hit_all": 0.5223880597014925,
+     "neither_all": 12,
+     "nov_calls": 16,
+     "nov_graded": 9,
+     "nov_hits": 6,
+     "nov_hit": 0.6666666666666666,
+     "nov_lo": 0.35420213352505864,
+     "nov_hi": 0.8794161825659264,
+     "prob": {
+      "rows": 12951,
+      "up_share": 0.5369469539031735,
+      "brier": 0.2492165788725444,
+      "brier_base": 0.24863492259727682,
+      "brier_skill": -0.002339398943605797,
+      "logloss": 0.6915801393095171,
+      "logloss_base": 0.6904145357301829,
+      "logloss_skill": -0.0016882662791877223
+     },
+     "sides": {
+      "FLAT": 17199,
+      "LONG": 77,
+      "SHORT": 2
+     },
+     "rows": 17278
+    }
+   },
+   "T": {
+    "full": {
+     "calls": 133,
+     "graded_all": 94,
+     "hit_all": 0.3404255319148936,
+     "neither_all": 39,
+     "nov_calls": 23,
+     "nov_graded": 14,
+     "nov_hits": 6,
+     "nov_hit": 0.42857142857142855,
+     "nov_lo": 0.21380798780428648,
+     "nov_hi": 0.6740935558247106,
+     "prob": {
+      "rows": 18890,
+      "up_share": 0.5235574377977766,
+      "brier": 0.2499688412583494,
+      "brier_base": 0.24944504712440388,
+      "brier_skill": -0.002099837779838909,
+      "logloss": 0.6930853059236914,
+      "logloss_base": 0.6920368638134514,
+      "logloss_skill": -0.0015150090480189338
+     },
+     "sides": {
+      "FLAT": 24772,
+      "LONG": 122,
+      "SHORT": 11
+     },
+     "rows": 24905,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 61,
+     "graded_all": 55,
+     "hit_all": 0.45454545454545453,
+     "neither_all": 6,
+     "nov_calls": 8,
+     "nov_graded": 5,
+     "nov_hits": 3,
+     "nov_hit": 0.6,
+     "nov_lo": 0.23072427940911855,
+     "nov_hi": 0.8823792268590028,
+     "prob": {
+      "rows": 5882,
+      "up_share": 0.4880992859571574,
+      "brier": 0.25019176053477893,
+      "brier_base": 0.24985837300527047,
+      "brier_skill": -0.0013343060130364126,
+      "logloss": 0.6935311193735363,
+      "logloss_base": 0.6928638998201497,
+      "logloss_skill": -0.0009629879021835208
+     },
+     "sides": {
+      "FLAT": 7696,
+      "LONG": 50,
+      "SHORT": 11
+     },
+     "rows": 7757
+    },
+    "second": {
+     "calls": 72,
+     "graded_all": 39,
+     "hit_all": 0.1794871794871795,
+     "neither_all": 33,
+     "nov_calls": 15,
+     "nov_graded": 9,
+     "nov_hits": 3,
+     "nov_hit": 0.3333333333333333,
+     "nov_lo": 0.12058381743407343,
+     "nov_hi": 0.6457978664749412,
+     "prob": {
+      "rows": 13008,
+      "up_share": 0.539591020910209,
+      "brier": 0.24986804089057896,
+      "brier_base": 0.2484325510632874,
+      "brier_skill": -0.005778187363723708,
+      "logloss": 0.6928837165393135,
+      "logloss_base": 0.6900089985816652,
+      "logloss_skill": -0.0041662035764133964
+     },
+     "sides": {
+      "FLAT": 17076,
+      "LONG": 72
+     },
+     "rows": 17148
+    }
+   },
+   "AAPL": {
+    "full": {
+     "calls": 149,
+     "graded_all": 86,
+     "hit_all": 0.23255813953488372,
+     "neither_all": 63,
+     "nov_calls": 27,
+     "nov_graded": 16,
+     "nov_hits": 6,
+     "nov_hit": 0.375,
+     "nov_lo": 0.18481232451546453,
+     "nov_hi": 0.6135895962338866,
+     "prob": {
+      "rows": 18668,
+      "up_share": 0.5218555817441611,
+      "brier": 0.25029044058782385,
+      "brier_base": 0.2495223335466243,
+      "brier_skill": -0.0030783097860698216,
+      "logloss": 0.6937288075270047,
+      "logloss_base": 0.6921915432001293,
+      "logloss_skill": -0.0022208655132773814
+     },
+     "sides": {
+      "FLAT": 24896,
+      "LONG": 110,
+      "SHORT": 39
+     },
+     "rows": 25045,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 15:30"
+    },
+    "first": {
+     "calls": 93,
+     "graded_all": 60,
+     "hit_all": 0.08333333333333333,
+     "neither_all": 33,
+     "nov_calls": 11,
+     "nov_graded": 6,
+     "nov_hits": 1,
+     "nov_hit": 0.16666666666666666,
+     "nov_lo": 0.030053369411815023,
+     "nov_hi": 0.5635028250257673,
+     "prob": {
+      "rows": 6044,
+      "up_share": 0.4900727994705493,
+      "brier": 0.2510416190958178,
+      "brier_base": 0.249901450689648,
+      "brier_skill": -0.004562472138610163,
+      "logloss": 0.6952329620402689,
+      "logloss_base": 0.6929500689879103,
+      "logloss_skill": -0.003294455335999702
+     },
+     "sides": {
+      "FLAT": 7670,
+      "LONG": 54,
+      "SHORT": 39
+     },
+     "rows": 7763
+    },
+    "second": {
+     "calls": 56,
+     "graded_all": 26,
+     "hit_all": 0.5769230769230769,
+     "neither_all": 30,
+     "nov_calls": 16,
+     "nov_graded": 10,
+     "nov_hits": 5,
+     "nov_hit": 0.5,
+     "nov_lo": 0.23659308901147935,
+     "nov_hi": 0.7634069109885206,
+     "prob": {
+      "rows": 12624,
+      "up_share": 0.5370722433460076,
+      "brier": 0.24993079840608148,
+      "brier_base": 0.24862564877329446,
+      "brier_skill": -0.005249456921385898,
+      "logloss": 0.6930086625746783,
+      "logloss_base": 0.6903959540971224,
+      "logloss_skill": -0.003784362382269091
+     },
+     "sides": {
+      "FLAT": 17226,
+      "LONG": 56
+     },
+     "rows": 17282
+    }
+   },
+   "MSFT": {
+    "full": {
+     "calls": 234,
+     "graded_all": 183,
+     "hit_all": 0.6010928961748634,
+     "neither_all": 51,
+     "nov_calls": 37,
+     "nov_graded": 26,
+     "nov_hits": 16,
+     "nov_hit": 0.6153846153846154,
+     "nov_lo": 0.42534849943440245,
+     "nov_hi": 0.775714056651308,
+     "prob": {
+      "rows": 18715,
+      "up_share": 0.5144536468073737,
+      "brier": 0.25010842648146847,
+      "brier_base": 0.24979109209396771,
+      "brier_skill": -0.0012703991356961541,
+      "logloss": 0.6933635772170371,
+      "logloss_base": 0.6927293065384041,
+      "logloss_skill": -0.0009156111523598298
+     },
+     "sides": {
+      "FLAT": 24808,
+      "LONG": 152,
+      "SHORT": 82
+     },
+     "rows": 25042,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 17:15"
+    },
+    "first": {
+     "calls": 128,
+     "graded_all": 103,
+     "hit_all": 0.49514563106796117,
+     "neither_all": 25,
+     "nov_calls": 16,
+     "nov_graded": 11,
+     "nov_hits": 6,
+     "nov_hit": 0.5454545454545454,
+     "nov_lo": 0.2800915357859759,
+     "nov_hi": 0.7872872851236217,
+     "prob": {
+      "rows": 5912,
+      "up_share": 0.4678619756427605,
+      "brier": 0.25029818180401875,
+      "brier_base": 0.24896714739041348,
+      "brier_skill": -0.005346225104623903,
+      "logloss": 0.6937429874592261,
+      "logloss_base": 0.6910800506056325,
+      "logloss_skill": -0.0038532972428590995
+     },
+     "sides": {
+      "FLAT": 7632,
+      "SHORT": 82,
+      "LONG": 46
+     },
+     "rows": 7760
+    },
+    "second": {
+     "calls": 106,
+     "graded_all": 80,
+     "hit_all": 0.7375,
+     "neither_all": 26,
+     "nov_calls": 21,
+     "nov_graded": 15,
+     "nov_hits": 10,
+     "nov_hit": 0.6666666666666666,
+     "nov_lo": 0.4171354755711991,
+     "nov_hi": 0.8482367565633053,
+     "prob": {
+      "rows": 12803,
+      "up_share": 0.5359681324689526,
+      "brier": 0.2500208037784366,
+      "brier_base": 0.24870629344669587,
+      "brier_skill": -0.00528539231365488,
+      "logloss": 0.6931883781737019,
+      "logloss_base": 0.6905575312524365,
+      "logloss_skill": -0.0038097432903150263
+     },
+     "sides": {
+      "FLAT": 17176,
+      "LONG": 106
+     },
+     "rows": 17282
+    }
+   },
+   "AMZN": {
+    "full": {
+     "calls": 173,
+     "graded_all": 130,
+     "hit_all": 0.5538461538461539,
+     "neither_all": 43,
+     "nov_calls": 35,
+     "nov_graded": 25,
+     "nov_hits": 9,
+     "nov_hit": 0.36,
+     "nov_lo": 0.20247880678156654,
+     "nov_hi": 0.554815023991343,
+     "prob": {
+      "rows": 19255,
+      "up_share": 0.5118151129576733,
+      "brier": 0.2503003039944662,
+      "brier_base": 0.24986040310579738,
+      "brier_skill": -0.0017605866443852758,
+      "logloss": 0.6937477875317859,
+      "logloss_base": 0.6928679607826778,
+      "logloss_skill": -0.0012698332134080115
+     },
+     "sides": {
+      "FLAT": 24858,
+      "LONG": 125,
+      "SHORT": 48
+     },
+     "rows": 25031,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 14:45"
+    },
+    "first": {
+     "calls": 90,
+     "graded_all": 70,
+     "hit_all": 0.6142857142857143,
+     "neither_all": 20,
+     "nov_calls": 12,
+     "nov_graded": 9,
+     "nov_hits": 2,
+     "nov_hit": 0.2222222222222222,
+     "nov_lo": 0.06322510654056959,
+     "nov_hi": 0.5474110333077882,
+     "prob": {
+      "rows": 5941,
+      "up_share": 0.4714694495876115,
+      "brier": 0.25068093803337943,
+      "brier_base": 0.24918600769316618,
+      "brier_skill": -0.005999254749704974,
+      "logloss": 0.6945092777898141,
+      "logloss_base": 0.6915183113490452,
+      "logloss_skill": -0.004325216544062149
+     },
+     "sides": {
+      "FLAT": 7668,
+      "LONG": 45,
+      "SHORT": 45
+     },
+     "rows": 7758
+    },
+    "second": {
+     "calls": 83,
+     "graded_all": 60,
+     "hit_all": 0.48333333333333334,
+     "neither_all": 23,
+     "nov_calls": 23,
+     "nov_graded": 16,
+     "nov_hits": 7,
+     "nov_hit": 0.4375,
+     "nov_lo": 0.23098652281405668,
+     "nov_hi": 0.6682144375606189,
+     "prob": {
+      "rows": 13314,
+      "up_share": 0.5298182364428421,
+      "brier": 0.25013045670400624,
+      "brier_base": 0.24911087277543878,
+      "brier_skill": -0.004092892121519531,
+      "logloss": 0.6934079938091672,
+      "logloss_base": 0.691367870545484,
+      "logloss_skill": -0.0029508505538065055
+     },
+     "sides": {
+      "FLAT": 17190,
+      "LONG": 80,
+      "SHORT": 3
+     },
+     "rows": 17273
+    }
+   },
+   "GOOGL": {
+    "full": {
+     "calls": 134,
+     "graded_all": 106,
+     "hit_all": 0.5188679245283019,
+     "neither_all": 28,
+     "nov_calls": 26,
+     "nov_graded": 17,
+     "nov_hits": 9,
+     "nov_hit": 0.5294117647058824,
+     "nov_lo": 0.3096323491502231,
+     "nov_hi": 0.7383489368862088,
+     "prob": {
+      "rows": 19143,
+      "up_share": 0.5249438437026589,
+      "brier": 0.24983291846854885,
+      "brier_base": 0.24937780466133733,
+      "brier_skill": -0.00182499724796914,
+      "logloss": 0.6928126254234981,
+      "logloss_base": 0.6919022731986947,
+      "logloss_skill": -0.001315723708486649
+     },
+     "sides": {
+      "FLAT": 24904,
+      "LONG": 89,
+      "SHORT": 45
+     },
+     "rows": 25038,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 16:45"
+    },
+    "first": {
+     "calls": 70,
+     "graded_all": 51,
+     "hit_all": 0.19607843137254902,
+     "neither_all": 19,
+     "nov_calls": 11,
+     "nov_graded": 7,
+     "nov_hits": 2,
+     "nov_hit": 0.2857142857142857,
+     "nov_lo": 0.08221892324928332,
+     "nov_hi": 0.6410655504689458,
+     "prob": {
+      "rows": 5959,
+      "up_share": 0.4559489847289814,
+      "brier": 0.25073110518057395,
+      "brier_base": 0.24805950805359245,
+      "brier_skill": -0.010769984782862396,
+      "logloss": 0.69460968593864,
+      "logloss_base": 0.6892611603351998,
+      "logloss_skill": -0.007759795432023431
+     },
+     "sides": {
+      "FLAT": 7690,
+      "SHORT": 45,
+      "LONG": 25
+     },
+     "rows": 7760
+    },
+    "second": {
+     "calls": 64,
+     "graded_all": 55,
+     "hit_all": 0.8181818181818182,
+     "neither_all": 9,
+     "nov_calls": 15,
+     "nov_graded": 10,
+     "nov_hits": 7,
+     "nov_hit": 0.7,
+     "nov_lo": 0.3967781453459709,
+     "nov_hi": 0.892208733443606,
+     "prob": {
+      "rows": 13184,
+      "up_share": 0.556128640776699,
+      "brier": 0.24942694952005384,
+      "brier_base": 0.2468495756845603,
+      "brier_skill": -0.010441070552161147,
+      "logloss": 0.6920003769700901,
+      "logloss_base": 0.6868330312045379,
+      "logloss_skill": -0.00752343805668465
+     },
+     "sides": {
+      "FLAT": 17214,
+      "LONG": 64
+     },
+     "rows": 17278
+    }
+   },
+   "AVGO": {
+    "full": {
+     "calls": 242,
+     "graded_all": 201,
+     "hit_all": 0.5771144278606966,
+     "neither_all": 41,
+     "nov_calls": 39,
+     "nov_graded": 33,
+     "nov_hits": 20,
+     "nov_hit": 0.6060606060606061,
+     "nov_lo": 0.43683440692015163,
+     "nov_hi": 0.753168926621936,
+     "prob": {
+      "rows": 19100,
+      "up_share": 0.5215183246073298,
+      "brier": 0.2496753167019152,
+      "brier_base": 0.2495369617060936,
+      "brier_skill": -0.0005544469038800681,
+      "logloss": 0.6924976216413602,
+      "logloss_base": 0.6922208178875146,
+      "logloss_skill": -0.00039987782322170595
+     },
+     "sides": {
+      "FLAT": 24792,
+      "LONG": 151,
+      "SHORT": 91
+     },
+     "rows": 25034,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 132,
+     "graded_all": 101,
+     "hit_all": 0.6237623762376238,
+     "neither_all": 31,
+     "nov_calls": 17,
+     "nov_graded": 13,
+     "nov_hits": 8,
+     "nov_hit": 0.6153846153846154,
+     "nov_lo": 0.3552289133643685,
+     "nov_hi": 0.8229029231436777,
+     "prob": {
+      "rows": 5872,
+      "up_share": 0.4885899182561308,
+      "brier": 0.24968833917960653,
+      "brier_base": 0.24986981003459813,
+      "brier_skill": 0.0007262616278711498,
+      "logloss": 0.6925231540781216,
+      "logloss_base": 0.6928867780251969,
+      "logloss_skill": 0.000524795621171581
+     },
+     "sides": {
+      "FLAT": 7631,
+      "SHORT": 91,
+      "LONG": 41
+     },
+     "rows": 7763
+    },
+    "second": {
+     "calls": 110,
+     "graded_all": 100,
+     "hit_all": 0.53,
+     "neither_all": 10,
+     "nov_calls": 22,
+     "nov_graded": 20,
+     "nov_hits": 12,
+     "nov_hit": 0.6,
+     "nov_lo": 0.3865814992347542,
+     "nov_hi": 0.7811934687282198,
+     "prob": {
+      "rows": 13228,
+      "up_share": 0.5361354702146961,
+      "brier": 0.2496695359346788,
+      "brier_base": 0.24869422779236275,
+      "brier_skill": -0.003921716040512058,
+      "logloss": 0.6924862876174214,
+      "logloss_base": 0.6905333579936169,
+      "logloss_skill": -0.0028281466799500166
+     },
+     "sides": {
+      "FLAT": 17161,
+      "LONG": 110
+     },
+     "rows": 17271
+    }
+   },
+   "META": {
+    "full": {
+     "calls": 213,
+     "graded_all": 150,
+     "hit_all": 0.7066666666666667,
+     "neither_all": 63,
+     "nov_calls": 33,
+     "nov_graded": 23,
+     "nov_hits": 12,
+     "nov_hit": 0.5217391304347826,
+     "nov_lo": 0.3296273720444183,
+     "nov_hi": 0.7076284270692741,
+     "prob": {
+      "rows": 18683,
+      "up_share": 0.5241128298453139,
+      "brier": 0.24990738139269814,
+      "brier_base": 0.24941857143685098,
+      "brier_skill": -0.0019597977529548505,
+      "logloss": 0.6929613550001099,
+      "logloss_base": 0.6919838722682365,
+      "logloss_skill": -0.0014125802219484562
+     },
+     "sides": {
+      "FLAT": 24823,
+      "LONG": 168,
+      "SHORT": 45
+     },
+     "rows": 25036,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 94,
+     "graded_all": 52,
+     "hit_all": 0.7307692307692307,
+     "neither_all": 42,
+     "nov_calls": 13,
+     "nov_graded": 8,
+     "nov_hits": 4,
+     "nov_hit": 0.5,
+     "nov_lo": 0.21521606069626764,
+     "nov_hi": 0.7847839393037324,
+     "prob": {
+      "rows": 5690,
+      "up_share": 0.47996485061511424,
+      "brier": 0.25078632333818834,
+      "brier_base": 0.24959859278912536,
+      "brier_skill": -0.004758562681747236,
+      "logloss": 0.6947197031869338,
+      "logloss_base": 0.692344151163099,
+      "logloss_skill": -0.003431172228210544
+     },
+     "sides": {
+      "FLAT": 7664,
+      "LONG": 50,
+      "SHORT": 44
+     },
+     "rows": 7758
+    },
+    "second": {
+     "calls": 119,
+     "graded_all": 98,
+     "hit_all": 0.6938775510204082,
+     "neither_all": 21,
+     "nov_calls": 20,
+     "nov_graded": 15,
+     "nov_hits": 8,
+     "nov_hit": 0.5333333333333333,
+     "nov_lo": 0.3011697987531101,
+     "nov_hi": 0.751904647673791,
+     "prob": {
+      "rows": 12993,
+      "up_share": 0.5434464711767875,
+      "brier": 0.24952246800319308,
+      "brier_base": 0.24811240414228455,
+      "brier_skill": -0.005683165522429423,
+      "logloss": 0.6921913248928964,
+      "logloss_base": 0.6893672237475612,
+      "logloss_skill": -0.004096657119818881
+     },
+     "sides": {
+      "FLAT": 17159,
+      "LONG": 118,
+      "SHORT": 1
+     },
+     "rows": 17278
+    }
+   },
+   "TSLA": {
+    "full": {
+     "calls": 211,
+     "graded_all": 156,
+     "hit_all": 0.23717948717948717,
+     "neither_all": 55,
+     "nov_calls": 29,
+     "nov_graded": 22,
+     "nov_hits": 9,
+     "nov_hit": 0.4090909090909091,
+     "nov_lo": 0.23255816086354597,
+     "nov_hi": 0.6126518167010261,
+     "prob": {
+      "rows": 19530,
+      "up_share": 0.5004096262160779,
+      "brier": 0.2501522488256481,
+      "brier_base": 0.2499998322063631,
+      "brier_skill": -0.0006096668863331267,
+      "logloss": 0.6934525640513238,
+      "logloss_base": 0.693146844972634,
+      "logloss_skill": -0.0004410596122701449
+     },
+     "sides": {
+      "FLAT": 24835,
+      "LONG": 127,
+      "SHORT": 84
+     },
+     "rows": 25046,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 124,
+     "graded_all": 87,
+     "hit_all": 0.2413793103448276,
+     "neither_all": 37,
+     "nov_calls": 13,
+     "nov_graded": 9,
+     "nov_hits": 3,
+     "nov_hit": 0.3333333333333333,
+     "nov_lo": 0.12058381743407343,
+     "nov_hi": 0.6457978664749412,
+     "prob": {
+      "rows": 6206,
+      "up_share": 0.4693844666451821,
+      "brier": 0.2506410236341925,
+      "brier_base": 0.24906268911739995,
+      "brier_skill": -0.006337097388555923,
+      "logloss": 0.6944311217217576,
+      "logloss_base": 0.6912713856322054,
+      "logloss_skill": -0.004570905371213074
+     },
+     "sides": {
+      "FLAT": 7645,
+      "LONG": 71,
+      "SHORT": 53
+     },
+     "rows": 7769
+    },
+    "second": {
+     "calls": 87,
+     "graded_all": 69,
+     "hit_all": 0.2318840579710145,
+     "neither_all": 18,
+     "nov_calls": 16,
+     "nov_graded": 13,
+     "nov_hits": 6,
+     "nov_hit": 0.46153846153846156,
+     "nov_lo": 0.23206067674961361,
+     "nov_hi": 0.7085620444143711,
+     "prob": {
+      "rows": 13324,
+      "up_share": 0.5148604022815971,
+      "brier": 0.2499245892292937,
+      "brier_base": 0.2497791684440291,
+      "brier_skill": -0.00058219741129939,
+      "logloss": 0.6929967753315165,
+      "logloss_base": 0.692705452402917,
+      "logloss_skill": -0.0004205581572787054
+     },
+     "sides": {
+      "FLAT": 17190,
+      "LONG": 56,
+      "SHORT": 31
+     },
+     "rows": 17277
+    }
+   },
+   "BRK.B": {
+    "full": {
+     "calls": 226,
+     "graded_all": 152,
+     "hit_all": 0.21052631578947367,
+     "neither_all": 74,
+     "nov_calls": 30,
+     "nov_graded": 21,
+     "nov_hits": 11,
+     "nov_hit": 0.5238095238095238,
+     "nov_lo": 0.32369534446905174,
+     "nov_hi": 0.7165599402458462,
+     "prob": {
+      "rows": 18764,
+      "up_share": 0.5289383926668088,
+      "brier": 0.2500310909401934,
+      "brier_base": 0.24916256942986154,
+      "brier_skill": -0.0034857623772270863,
+      "logloss": 0.6932102239050448,
+      "logloss_base": 0.6914713831112682,
+      "logloss_skill": -0.0025146966834008744
+     },
+     "sides": {
+      "FLAT": 24816,
+      "LONG": 180,
+      "SHORT": 46
+     },
+     "rows": 25042,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 15:00"
+    },
+    "first": {
+     "calls": 93,
+     "graded_all": 51,
+     "hit_all": 0.3137254901960784,
+     "neither_all": 42,
+     "nov_calls": 11,
+     "nov_graded": 8,
+     "nov_hits": 4,
+     "nov_hit": 0.5,
+     "nov_lo": 0.21521606069626764,
+     "nov_hi": 0.7847839393037324,
+     "prob": {
+      "rows": 5813,
+      "up_share": 0.5011181833820747,
+      "brier": 0.25013396012899347,
+      "brier_base": 0.24999874966592406,
+      "brier_skill": -0.0005408445572232523,
+      "logloss": 0.6934156811536019,
+      "logloss_base": 0.693144679889709,
+      "logloss_skill": -0.0003909735900100575
+     },
+     "sides": {
+      "FLAT": 7668,
+      "LONG": 47,
+      "SHORT": 46
+     },
+     "rows": 7761
+    },
+    "second": {
+     "calls": 133,
+     "graded_all": 101,
+     "hit_all": 0.15841584158415842,
+     "neither_all": 32,
+     "nov_calls": 19,
+     "nov_graded": 13,
+     "nov_hits": 7,
+     "nov_hit": 0.5384615384615384,
+     "nov_lo": 0.29143795558562896,
+     "nov_hi": 0.7679393232503864,
+     "prob": {
+      "rows": 12951,
+      "up_share": 0.5414253725581036,
+      "brier": 0.24998491855238592,
+      "brier_base": 0.2482839385084223,
+      "brier_skill": -0.006850946759513921,
+      "logloss": 0.6931180053129776,
+      "logloss_base": 0.689711120266629,
+      "logloss_skill": -0.004939582596597214
+     },
+     "sides": {
+      "FLAT": 17148,
+      "LONG": 133
+     },
+     "rows": 17281
+    }
+   },
+   "JPM": {
+    "full": {
+     "calls": 151,
+     "graded_all": 126,
+     "hit_all": 0.5714285714285714,
+     "neither_all": 25,
+     "nov_calls": 25,
+     "nov_graded": 18,
+     "nov_hits": 13,
+     "nov_hit": 0.7222222222222222,
+     "nov_lo": 0.4912734325899035,
+     "nov_hi": 0.8750024669953034,
+     "prob": {
+      "rows": 19165,
+      "up_share": 0.536029219932168,
+      "brier": 0.2501279703616919,
+      "brier_base": 0.2487018953110795,
+      "brier_skill": -0.0057340739153941556,
+      "logloss": 0.6934032056883588,
+      "logloss_base": 0.690548719734907,
+      "logloss_skill": -0.004133648896702979
+     },
+     "sides": {
+      "FLAT": 24889,
+      "LONG": 126,
+      "SHORT": 25
+     },
+     "rows": 25040,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 58,
+     "graded_all": 54,
+     "hit_all": 0.5740740740740741,
+     "neither_all": 4,
+     "nov_calls": 8,
+     "nov_graded": 6,
+     "nov_hits": 4,
+     "nov_hit": 0.6666666666666666,
+     "nov_lo": 0.29999331299474324,
+     "nov_hi": 0.9032285897864654,
+     "prob": {
+      "rows": 5930,
+      "up_share": 0.5050590219224284,
+      "brier": 0.25078761927691445,
+      "brier_base": 0.2499744062971884,
+      "brier_skill": -0.003253184963100786,
+      "logloss": 0.6947233760345635,
+      "logloss_base": 0.6930959922809027,
+      "logloss_skill": -0.0023479918680602285
+     },
+     "sides": {
+      "FLAT": 7704,
+      "LONG": 33,
+      "SHORT": 25
+     },
+     "rows": 7762
+    },
+    "second": {
+     "calls": 93,
+     "graded_all": 72,
+     "hit_all": 0.5694444444444444,
+     "neither_all": 21,
+     "nov_calls": 17,
+     "nov_graded": 12,
+     "nov_hits": 9,
+     "nov_hit": 0.75,
+     "nov_lo": 0.4676946629183366,
+     "nov_hi": 0.9110583323051143,
+     "prob": {
+      "rows": 13235,
+      "up_share": 0.5499055534567435,
+      "brier": 0.24983241176197368,
+      "brier_base": 0.2475094357341761,
+      "brier_skill": -0.00938540391766085,
+      "logloss": 0.6928116975543962,
+      "logloss_base": 0.6881577483468329,
+      "logloss_skill": -0.006762910420966106
+     },
+     "sides": {
+      "FLAT": 17185,
+      "LONG": 93
+     },
+     "rows": 17278
+    }
+   },
+   "LLY": {
+    "full": {
+     "calls": 267,
+     "graded_all": 149,
+     "hit_all": 0.46308724832214765,
+     "neither_all": 118,
+     "nov_calls": 32,
+     "nov_graded": 18,
+     "nov_hits": 8,
+     "nov_hit": 0.4444444444444444,
+     "nov_lo": 0.24559518003796732,
+     "nov_hi": 0.6628358450657309,
+     "prob": {
+      "rows": 18020,
+      "up_share": 0.5226415094339623,
+      "brier": 0.24991464310363706,
+      "brier_base": 0.24948736205055186,
+      "brier_skill": -0.0017126360612953473,
+      "logloss": 0.692976800780491,
+      "logloss_base": 0.6921215539764404,
+      "logloss_skill": -0.0012356887300171149
+     },
+     "sides": {
+      "FLAT": 24774,
+      "LONG": 158,
+      "SHORT": 109
+     },
+     "rows": 25041,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 147,
+     "graded_all": 82,
+     "hit_all": 0.25609756097560976,
+     "neither_all": 65,
+     "nov_calls": 16,
+     "nov_graded": 8,
+     "nov_hits": 2,
+     "nov_hit": 0.25,
+     "nov_lo": 0.07147921209795555,
+     "nov_hi": 0.5907245720727483,
+     "prob": {
+      "rows": 5452,
+      "up_share": 0.47248716067498164,
+      "brier": 0.25010830613267876,
+      "brier_base": 0.24924304367227573,
+      "brier_skill": -0.003471561122246225,
+      "logloss": 0.6933653221176351,
+      "logloss_base": 0.6916325030005412,
+      "logloss_skill": -0.0025054044012917664
+     },
+     "sides": {
+      "FLAT": 7616,
+      "SHORT": 109,
+      "LONG": 38
+     },
+     "rows": 7763
+    },
+    "second": {
+     "calls": 120,
+     "graded_all": 67,
+     "hit_all": 0.7164179104477612,
+     "neither_all": 53,
+     "nov_calls": 16,
+     "nov_graded": 10,
+     "nov_hits": 6,
+     "nov_hit": 0.6,
+     "nov_lo": 0.3126737679211953,
+     "nov_hi": 0.831819671473593,
+     "prob": {
+      "rows": 12568,
+      "up_share": 0.5443984723106302,
+      "brier": 0.24983063205698403,
+      "brier_base": 0.24802877565648218,
+      "brier_skill": -0.007264707071720666,
+      "logloss": 0.6928082601749762,
+      "logloss_base": 0.6891995344957712,
+      "logloss_skill": -0.005236111602781479
+     },
+     "sides": {
+      "FLAT": 17158,
+      "LONG": 120
+     },
+     "rows": 17278
+    }
+   }
+  },
+  "pooled": {
+   "full": {
+    "calls": 2537,
+    "graded_all": 1856,
+    "hit_all": 0.4703663793103448,
+    "neither_all": 681,
+    "nov_calls": 405,
+    "nov_graded": 285,
+    "nov_hits": 144,
+    "nov_hit": 0.5052631578947369,
+    "nov_lo": 0.447534494090637,
+    "nov_hi": 0.5628518265283601,
+    "prob": {
+     "rows": 246244,
+     "up_share": 0.5207883237764169,
+     "brier": 0.250003370549939,
+     "brier_base": 0.24949150800779532,
+     "brier_skill": -0.0020516231042528865,
+     "logloss": 0.6931541073589048,
+     "logloss_base": 0.6921297050243842,
+     "logloss_skill": -0.0014800727769437305
+    },
+    "boot_lo": 0.4086863233665559,
+    "boot_hi": 0.6000162337662337,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T",
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   },
+   "first": {
+    "calls": 1291,
+    "graded_all": 924,
+    "hit_all": 0.4134199134199134,
+    "neither_all": 367,
+    "nov_calls": 165,
+    "nov_graded": 112,
+    "nov_hits": 45,
+    "nov_hit": 0.4017857142857143,
+    "nov_lo": 0.3157058060860953,
+    "nov_hi": 0.49437945861569305,
+    "prob": {
+     "rows": 76794,
+     "up_share": 0.48016772143657055,
+     "brier": 0.250510231873856,
+     "brier_base": 0.24939850403743236,
+     "brier_skill": -0.004457636346755445,
+     "logloss": 0.6941684252931425,
+     "logloss_base": 0.6919432399587735,
+     "logloss_skill": -0.003215849517514746
+    },
+    "boot_lo": 0.2079175774720329,
+    "boot_hi": 0.5905601288475303,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T",
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   },
+   "second": {
+    "calls": 1246,
+    "graded_all": 932,
+    "hit_all": 0.526824034334764,
+    "neither_all": 314,
+    "nov_calls": 240,
+    "nov_graded": 173,
+    "nov_hits": 99,
+    "nov_hit": 0.5722543352601156,
+    "nov_lo": 0.4977484389211816,
+    "nov_hi": 0.6436211254227834,
+    "prob": {
+     "rows": 169450,
+     "up_share": 0.5391974033638242,
+     "brier": 0.24977366321143865,
+     "brier_base": 0.24837076933247434,
+     "brier_skill": -0.00564838560807579,
+     "logloss": 0.6926944229007056,
+     "logloss_base": 0.6898845160067526,
+     "logloss_skill": -0.004073010523873766
+    },
+    "boot_lo": 0.46540880503144655,
+    "boot_hi": 0.6666666666666666,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T",
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   }
+  },
+  "five": {
+   "full": {
+    "calls": 537,
+    "graded_all": 417,
+    "hit_all": 0.4412470023980815,
+    "neither_all": 120,
+    "nov_calls": 92,
+    "nov_graded": 66,
+    "nov_hits": 31,
+    "nov_hit": 0.4696969696969697,
+    "nov_lo": 0.3543042841158845,
+    "nov_hi": 0.5884231436316016,
+    "prob": {
+     "rows": 57201,
+     "up_share": 0.5214069684096432,
+     "brier": 0.2498995740162881,
+     "brier_base": 0.24950616087042898,
+     "brier_skill": -0.0015767672609230399,
+     "logloss": 0.6929467032984233,
+     "logloss_base": 0.692159101140816,
+     "logloss_skill": -0.0011378917886208928
+    },
+    "boot_lo": 0.3181818181818182,
+    "boot_hi": 0.6143131868131867,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T"
+    ]
+   },
+   "first": {
+    "calls": 262,
+    "graded_all": 213,
+    "hit_all": 0.38967136150234744,
+    "neither_all": 49,
+    "nov_calls": 37,
+    "nov_graded": 27,
+    "nov_hits": 9,
+    "nov_hit": 0.3333333333333333,
+    "nov_lo": 0.18643261409834963,
+    "nov_hi": 0.5217523963890075,
+    "prob": {
+     "rows": 17975,
+     "up_share": 0.48016689847009736,
+     "brier": 0.250559675301531,
+     "brier_base": 0.24944708173053154,
+     "brier_skill": -0.004460238874236966,
+     "logloss": 0.694267673200101,
+     "logloss_base": 0.692040438742111,
+     "logloss_skill": -0.003218358831802215
+    },
+    "boot_lo": 0.125,
+    "boot_hi": 0.5455278592375362,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T"
+    ]
+   },
+   "second": {
+    "calls": 275,
+    "graded_all": 204,
+    "hit_all": 0.4950980392156863,
+    "neither_all": 71,
+    "nov_calls": 55,
+    "nov_graded": 39,
+    "nov_hits": 22,
+    "nov_hit": 0.5641025641025641,
+    "nov_lo": 0.4097569153355321,
+    "nov_hi": 0.7069524622291739,
+    "prob": {
+     "rows": 39226,
+     "up_share": 0.5403048998113497,
+     "brier": 0.24959708789478083,
+     "brier_base": 0.24836627129191974,
+     "brier_skill": -0.004955651169777475,
+     "logloss": 0.6923413794320425,
+     "logloss_base": 0.6898760723846331,
+     "logloss_skill": -0.00357355059277209
+    },
+    "boot_lo": 0.37142857142857144,
+    "boot_hi": 0.7346938775510204,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T"
+    ]
+   }
+  },
+  "ten": {
+   "full": {
+    "calls": 2000,
+    "graded_all": 1439,
+    "hit_all": 0.4788047255038221,
+    "neither_all": 561,
+    "nov_calls": 313,
+    "nov_graded": 219,
+    "nov_hits": 113,
+    "nov_hit": 0.5159817351598174,
+    "nov_lo": 0.4500914099377288,
+    "nov_hi": 0.5813210571819053,
+    "prob": {
+     "rows": 189043,
+     "up_share": 0.5206011330755437,
+     "brier": 0.2500347775077283,
+     "brier_base": 0.24948707431601355,
+     "brier_skill": -0.00219531690455832,
+     "logloss": 0.6932168640844306,
+     "logloss_base": 0.6921208102900855,
+     "logloss_skill": -0.0015836162965332523
+    },
+    "boot_lo": 0.4148899401902147,
+    "boot_hi": 0.6160724864590387,
+    "tickers": [
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   },
+   "first": {
+    "calls": 1029,
+    "graded_all": 711,
+    "hit_all": 0.42053445850914206,
+    "neither_all": 318,
+    "nov_calls": 128,
+    "nov_graded": 85,
+    "nov_hits": 36,
+    "nov_hit": 0.4235294117647059,
+    "nov_lo": 0.32403542240207905,
+    "nov_hi": 0.5296364987516502,
+    "prob": {
+     "rows": 58819,
+     "up_share": 0.4801679729339159,
+     "brier": 0.2504951220349866,
+     "brier_base": 0.24938365876577762,
+     "brier_skill": -0.004456840815912688,
+     "logloss": 0.6941380952785626,
+     "logloss_base": 0.691913536153362,
+     "logloss_skill": -0.0032150825341092926
+    },
+    "boot_lo": 0.22387568735271013,
+    "boot_hi": 0.6076349483486103,
+    "tickers": [
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   },
+   "second": {
+    "calls": 971,
+    "graded_all": 728,
+    "hit_all": 0.5357142857142857,
+    "neither_all": 243,
+    "nov_calls": 185,
+    "nov_graded": 134,
+    "nov_hits": 77,
+    "nov_hit": 0.5746268656716418,
+    "nov_lo": 0.48998629458326143,
+    "nov_hi": 0.6551079329613212,
+    "prob": {
+     "rows": 130224,
+     "up_share": 0.5388638039071139,
+     "brier": 0.24982685112895933,
+     "brier_base": 0.24837212422971908,
+     "brier_skill": -0.00585704576852919,
+     "logloss": 0.6928007664556707,
+     "logloss_base": 0.689887059389856,
+     "logloss_skill": -0.004223455167272849
+    },
+    "boot_lo": 0.4583333333333333,
+    "boot_hi": 0.6692322834645669,
+    "tickers": [
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   }
+  },
+  "pass": {
+   "pooled_halves_above_50_with_interval": false,
+   "tickers_above_50": [
+    "MSFT",
+    "GOOGL",
+    "AVGO",
+    "META",
+    "BRK.B",
+    "JPM"
+   ],
+   "tickers_needed": 6,
+   "tickers_tested": 13,
+   "enough_tickers": true,
+   "PASS": false
+  }
+ },
+ "primary_sides": {
+  "FLAT": 323168,
+  "LONG": 1759,
+  "SHORT": 778
+ },
+ "loto": {
+  "split_utc": "2023-03-14 14:15",
+  "per_ticker": {
+   "NVDA": {
+    "full": {
+     "calls": 197,
+     "graded_all": 152,
+     "hit_all": 0.506578947368421,
+     "neither_all": 45,
+     "nov_calls": 34,
+     "nov_graded": 28,
+     "nov_hits": 15,
+     "nov_hit": 0.5357142857142857,
+     "nov_lo": 0.35812689108225854,
+     "nov_hi": 0.704684301314922,
+     "prob": {
+      "rows": 19312,
+      "up_share": 0.5273405136702568,
+      "brier": 0.24980744589121812,
+      "brier_base": 0.2492524963122465,
+      "brier_skill": -0.0022264554505260215,
+      "logloss": 0.6927619593537698,
+      "logloss_base": 0.6916514272762809,
+      "logloss_skill": -0.0016056239222439483
+     },
+     "sides": {
+      "FLAT": 24855,
+      "LONG": 112,
+      "SHORT": 85
+     },
+     "rows": 25052,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 16:45"
+    },
+    "first": {
+     "calls": 116,
+     "graded_all": 84,
+     "hit_all": 0.4880952380952381,
+     "neither_all": 32,
+     "nov_calls": 16,
+     "nov_graded": 12,
+     "nov_hits": 6,
+     "nov_hit": 0.5,
+     "nov_lo": 0.25378159616252394,
+     "nov_hi": 0.7462184038374761,
+     "prob": {
+      "rows": 6040,
+      "up_share": 0.4905629139072848,
+      "brier": 0.25018765454815495,
+      "brier_base": 0.2499109414060787,
+      "brier_skill": -0.001107247007751555,
+      "logloss": 0.693522216449268,
+      "logloss_base": 0.6929690527953511,
+      "logloss_skill": -0.0007982515982287719
+     },
+     "sides": {
+      "FLAT": 7646,
+      "SHORT": 85,
+      "LONG": 31
+     },
+     "rows": 7762
+    },
+    "second": {
+     "calls": 81,
+     "graded_all": 68,
+     "hit_all": 0.5294117647058824,
+     "neither_all": 13,
+     "nov_calls": 18,
+     "nov_graded": 16,
+     "nov_hits": 9,
+     "nov_hit": 0.5625,
+     "nov_lo": 0.3317855624393811,
+     "nov_hi": 0.7690134771859434,
+     "prob": {
+      "rows": 13272,
+      "up_share": 0.5440777576853526,
+      "brier": 0.2496344154295018,
+      "brier_base": 0.24805715127743125,
+      "brier_skill": -0.006358470795734039,
+      "logloss": 0.6924159713446673,
+      "logloss_base": 0.6892564345228085,
+      "logloss_skill": -0.004583978710400061
+     },
+     "sides": {
+      "FLAT": 17209,
+      "LONG": 81
+     },
+     "rows": 17290
+    }
+   },
+   "MU": {
+    "full": {
+     "calls": 121,
+     "graded_all": 90,
+     "hit_all": 0.5444444444444444,
+     "neither_all": 31,
+     "nov_calls": 25,
+     "nov_graded": 18,
+     "nov_hits": 7,
+     "nov_hit": 0.3888888888888889,
+     "nov_lo": 0.2030524646285427,
+     "nov_hi": 0.6138095855788537,
+     "prob": {
+      "rows": 18999,
+      "up_share": 0.5132375388178325,
+      "brier": 0.24951145372426772,
+      "brier_base": 0.24982476756604638,
+      "brier_skill": 0.001254134427227327,
+      "logloss": 0.6921701052282334,
+      "logloss_base": 0.6927966747386802,
+      "logloss_skill": 0.0009044060592282577
+     },
+     "sides": {
+      "FLAT": 24916,
+      "LONG": 78,
+      "SHORT": 43
+     },
+     "rows": 25037,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 31,
+     "graded_all": 28,
+     "hit_all": 0.6785714285714286,
+     "neither_all": 3,
+     "nov_calls": 8,
+     "nov_graded": 7,
+     "nov_hits": 2,
+     "nov_hit": 0.2857142857142857,
+     "nov_lo": 0.08221892324928332,
+     "nov_hi": 0.6410655504689458,
+     "prob": {
+      "rows": 6042,
+      "up_share": 0.46292618338298575,
+      "brier": 0.25011269550832393,
+      "brier_base": 0.248625532121448,
+      "brier_skill": -0.005981539281932902,
+      "logloss": 0.6933724471990258,
+      "logloss_base": 0.6903957203644742,
+      "logloss_skill": -0.004311624111719814
+     },
+     "sides": {
+      "FLAT": 7722,
+      "SHORT": 29,
+      "LONG": 2
+     },
+     "rows": 7753
+    },
+    "second": {
+     "calls": 90,
+     "graded_all": 62,
+     "hit_all": 0.4838709677419355,
+     "neither_all": 28,
+     "nov_calls": 17,
+     "nov_graded": 11,
+     "nov_hits": 5,
+     "nov_hit": 0.45454545454545453,
+     "nov_lo": 0.21271271487637833,
+     "nov_hi": 0.7199084642140241,
+     "prob": {
+      "rows": 12957,
+      "up_share": 0.5366983097939337,
+      "brier": 0.24923108767817156,
+      "brier_base": 0.24865323405826842,
+      "brier_skill": -0.0023239336584206516,
+      "logloss": 0.6916094391645204,
+      "logloss_base": 0.6904512250788886,
+      "logloss_skill": -0.0016774741553966521
+     },
+     "sides": {
+      "FLAT": 17194,
+      "LONG": 76,
+      "SHORT": 14
+     },
+     "rows": 17284
+    }
+   },
+   "T": {
+    "full": {
+     "calls": 202,
+     "graded_all": 164,
+     "hit_all": 0.5304878048780488,
+     "neither_all": 38,
+     "nov_calls": 35,
+     "nov_graded": 26,
+     "nov_hits": 13,
+     "nov_hit": 0.5,
+     "nov_lo": 0.32060593402470916,
+     "nov_hi": 0.6793940659752908,
+     "prob": {
+      "rows": 18890,
+      "up_share": 0.5235574377977766,
+      "brier": 0.24961937446631818,
+      "brier_base": 0.24944504712440388,
+      "brier_skill": -0.0006988607066924502,
+      "logloss": 0.6923855188069666,
+      "logloss_base": 0.6920368638134514,
+      "logloss_skill": -0.0005038098571714666
+     },
+     "sides": {
+      "FLAT": 24703,
+      "LONG": 122,
+      "SHORT": 80
+     },
+     "rows": 24905,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 126,
+     "graded_all": 98,
+     "hit_all": 0.6122448979591837,
+     "neither_all": 28,
+     "nov_calls": 15,
+     "nov_graded": 10,
+     "nov_hits": 6,
+     "nov_hit": 0.6,
+     "nov_lo": 0.3126737679211953,
+     "nov_hi": 0.831819671473593,
+     "prob": {
+      "rows": 5876,
+      "up_share": 0.4885976855003404,
+      "brier": 0.24950385790569152,
+      "brier_base": 0.24986998722405088,
+      "brier_skill": 0.001465279293551447,
+      "logloss": 0.6921537226669234,
+      "logloss_base": 0.6928871324655949,
+      "logloss_skill": 0.0010584837909480838
+     },
+     "sides": {
+      "FLAT": 7625,
+      "SHORT": 80,
+      "LONG": 46
+     },
+     "rows": 7751
+    },
+    "second": {
+     "calls": 76,
+     "graded_all": 66,
+     "hit_all": 0.4090909090909091,
+     "neither_all": 10,
+     "nov_calls": 20,
+     "nov_graded": 16,
+     "nov_hits": 7,
+     "nov_hit": 0.4375,
+     "nov_lo": 0.23098652281405668,
+     "nov_hi": 0.6682144375606189,
+     "prob": {
+      "rows": 13014,
+      "up_share": 0.5393422468111265,
+      "brier": 0.2496715317823042,
+      "brier_base": 0.24845218761585244,
+      "brier_skill": -0.0049077618440498405,
+      "logloss": 0.6924901779524172,
+      "logloss_base": 0.690048353557065,
+      "logloss_skill": -0.0035386279566715917
+     },
+     "sides": {
+      "FLAT": 17078,
+      "LONG": 76
+     },
+     "rows": 17154
+    }
+   },
+   "AAPL": {
+    "full": {
+     "calls": 131,
+     "graded_all": 77,
+     "hit_all": 0.24675324675324675,
+     "neither_all": 54,
+     "nov_calls": 31,
+     "nov_graded": 22,
+     "nov_hits": 4,
+     "nov_hit": 0.18181818181818182,
+     "nov_lo": 0.07306884532528965,
+     "nov_hi": 0.3851660761507122,
+     "prob": {
+      "rows": 18668,
+      "up_share": 0.5218555817441611,
+      "brier": 0.2501260149467724,
+      "brier_base": 0.2495223335466243,
+      "brier_skill": -0.0024193481664249727,
+      "logloss": 0.6933994653020078,
+      "logloss_base": 0.6921915432001293,
+      "logloss_skill": -0.0017450691412583819
+     },
+     "sides": {
+      "FLAT": 24914,
+      "LONG": 102,
+      "SHORT": 29
+     },
+     "rows": 25045,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 15:30"
+    },
+    "first": {
+     "calls": 65,
+     "graded_all": 41,
+     "hit_all": 0.14634146341463414,
+     "neither_all": 24,
+     "nov_calls": 10,
+     "nov_graded": 7,
+     "nov_hits": 1,
+     "nov_hit": 0.14285714285714285,
+     "nov_lo": 0.025679624057823897,
+     "nov_hi": 0.5131278321392249,
+     "prob": {
+      "rows": 6038,
+      "up_share": 0.4905597880092746,
+      "brier": 0.2502248188776093,
+      "brier_base": 0.24991088239757017,
+      "brier_skill": -0.0012561937160451286,
+      "logloss": 0.6935976643618628,
+      "logloss_base": 0.6929689347643128,
+      "logloss_skill": -0.0009072983881504015
+     },
+     "sides": {
+      "FLAT": 7692,
+      "LONG": 36,
+      "SHORT": 29
+     },
+     "rows": 7757
+    },
+    "second": {
+     "calls": 66,
+     "graded_all": 36,
+     "hit_all": 0.3611111111111111,
+     "neither_all": 30,
+     "nov_calls": 21,
+     "nov_graded": 15,
+     "nov_hits": 3,
+     "nov_hit": 0.2,
+     "nov_lo": 0.0704754929173392,
+     "nov_hi": 0.45185448924055305,
+     "prob": {
+      "rows": 12630,
+      "up_share": 0.5368171021377672,
+      "brier": 0.2500787799400904,
+      "brier_base": 0.24864450099017715,
+      "brier_skill": -0.005768391998220546,
+      "logloss": 0.6933047126556575,
+      "logloss_base": 0.6904337273748583,
+      "logloss_skill": -0.0041582344068202826
+     },
+     "sides": {
+      "FLAT": 17222,
+      "LONG": 66
+     },
+     "rows": 17288
+    }
+   },
+   "MSFT": {
+    "full": {
+     "calls": 232,
+     "graded_all": 204,
+     "hit_all": 0.6176470588235294,
+     "neither_all": 28,
+     "nov_calls": 30,
+     "nov_graded": 23,
+     "nov_hits": 15,
+     "nov_hit": 0.6521739130434783,
+     "nov_lo": 0.4489033522338618,
+     "nov_hi": 0.8118872415619854,
+     "prob": {
+      "rows": 18715,
+      "up_share": 0.5144536468073737,
+      "brier": 0.25008502587641485,
+      "brier_base": 0.24979109209396771,
+      "brier_skill": -0.0011767184329236624,
+      "logloss": 0.693316710081968,
+      "logloss_base": 0.6927293065384041,
+      "logloss_skill": -0.0008479553817337671
+     },
+     "sides": {
+      "FLAT": 24810,
+      "SHORT": 124,
+      "LONG": 108
+     },
+     "rows": 25042,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 17:15"
+    },
+    "first": {
+     "calls": 155,
+     "graded_all": 131,
+     "hit_all": 0.42748091603053434,
+     "neither_all": 24,
+     "nov_calls": 16,
+     "nov_graded": 12,
+     "nov_hits": 6,
+     "nov_hit": 0.5,
+     "nov_lo": 0.25378159616252394,
+     "nov_hi": 0.7462184038374761,
+     "prob": {
+      "rows": 5906,
+      "up_share": 0.46732136810023706,
+      "brier": 0.2502245905532811,
+      "brier_base": 0.24893210701715976,
+      "brier_skill": -0.0051921126270475515,
+      "logloss": 0.6935962243687245,
+      "logloss_base": 0.6910098714630568,
+      "logloss_skill": -0.003742859563194978
+     },
+     "sides": {
+      "FLAT": 7599,
+      "SHORT": 124,
+      "LONG": 31
+     },
+     "rows": 7754
+    },
+    "second": {
+     "calls": 77,
+     "graded_all": 73,
+     "hit_all": 0.958904109589041,
+     "neither_all": 4,
+     "nov_calls": 14,
+     "nov_graded": 11,
+     "nov_hits": 9,
+     "nov_hit": 0.8181818181818182,
+     "nov_lo": 0.5230194356457672,
+     "nov_hi": 0.9486323107214162,
+     "prob": {
+      "rows": 12809,
+      "up_share": 0.5361854945741276,
+      "brier": 0.2500206751088629,
+      "brier_base": 0.24869060998242581,
+      "brier_skill": -0.005348272403735255,
+      "logloss": 0.693187831061156,
+      "logloss_base": 0.6905261097191265,
+      "logloss_skill": -0.0038546280938052124
+     },
+     "sides": {
+      "FLAT": 17211,
+      "LONG": 77
+     },
+     "rows": 17288
+    }
+   },
+   "AMZN": {
+    "full": {
+     "calls": 186,
+     "graded_all": 121,
+     "hit_all": 0.4462809917355372,
+     "neither_all": 65,
+     "nov_calls": 38,
+     "nov_graded": 19,
+     "nov_hits": 7,
+     "nov_hit": 0.3684210526315789,
+     "nov_lo": 0.19149512641954003,
+     "nov_hi": 0.5896046699645555,
+     "prob": {
+      "rows": 19255,
+      "up_share": 0.5118151129576733,
+      "brier": 0.25026318176656215,
+      "brier_base": 0.24986040310579738,
+      "brier_skill": -0.0016120147720815048,
+      "logloss": 0.6936740322438688,
+      "logloss_base": 0.6928679607826778,
+      "logloss_skill": -0.0011633839444393779
+     },
+     "sides": {
+      "FLAT": 24845,
+      "LONG": 163,
+      "SHORT": 23
+     },
+     "rows": 25031,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 14:45"
+    },
+    "first": {
+     "calls": 62,
+     "graded_all": 42,
+     "hit_all": 0.5476190476190477,
+     "neither_all": 20,
+     "nov_calls": 7,
+     "nov_graded": 1,
+     "nov_hits": 0,
+     "nov_hit": 0.0,
+     "nov_lo": 0.0,
+     "nov_hi": 0.7934506882081973,
+     "prob": {
+      "rows": 5941,
+      "up_share": 0.4714694495876115,
+      "brier": 0.25050800365668974,
+      "brier_base": 0.24918600769316618,
+      "brier_skill": -0.0053052576096142,
+      "logloss": 0.6941650351056128,
+      "logloss_base": 0.6915183113490452,
+      "logloss_skill": -0.0038274095033061784
+     },
+     "sides": {
+      "FLAT": 7690,
+      "LONG": 56,
+      "SHORT": 6
+     },
+     "rows": 7752
+    },
+    "second": {
+     "calls": 124,
+     "graded_all": 79,
+     "hit_all": 0.3924050632911392,
+     "neither_all": 45,
+     "nov_calls": 31,
+     "nov_graded": 18,
+     "nov_hits": 7,
+     "nov_hit": 0.3888888888888889,
+     "nov_lo": 0.2030524646285427,
+     "nov_hi": 0.6138095855788537,
+     "prob": {
+      "rows": 13314,
+      "up_share": 0.5298182364428421,
+      "brier": 0.25015393684773624,
+      "brier_base": 0.24911087277543878,
+      "brier_skill": -0.004187147918018663,
+      "logloss": 0.6934549359541269,
+      "logloss_base": 0.691367870545484,
+      "logloss_skill": -0.0030187480465300176
+     },
+     "sides": {
+      "FLAT": 17155,
+      "LONG": 107,
+      "SHORT": 17
+     },
+     "rows": 17279
+    }
+   },
+   "GOOGL": {
+    "full": {
+     "calls": 189,
+     "graded_all": 150,
+     "hit_all": 0.6,
+     "neither_all": 39,
+     "nov_calls": 36,
+     "nov_graded": 29,
+     "nov_hits": 22,
+     "nov_hit": 0.7586206896551724,
+     "nov_lo": 0.5789239823169033,
+     "nov_hi": 0.877815776236967,
+     "prob": {
+      "rows": 19143,
+      "up_share": 0.5249438437026589,
+      "brier": 0.24938584139249603,
+      "brier_base": 0.24937780466133733,
+      "brier_skill": -3.222713091743934e-05,
+      "logloss": 0.6919182483775991,
+      "logloss_base": 0.6919022731986947,
+      "logloss_skill": -2.3088779330882048e-05
+     },
+     "sides": {
+      "FLAT": 24849,
+      "SHORT": 100,
+      "LONG": 89
+     },
+     "rows": 25038,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 16:45"
+    },
+    "first": {
+     "calls": 109,
+     "graded_all": 84,
+     "hit_all": 0.5238095238095238,
+     "neither_all": 25,
+     "nov_calls": 18,
+     "nov_graded": 16,
+     "nov_hits": 12,
+     "nov_hit": 0.75,
+     "nov_lo": 0.5050168327029684,
+     "nov_hi": 0.8981793257983292,
+     "prob": {
+      "rows": 5958,
+      "up_share": 0.4560255119167506,
+      "brier": 0.24993802818761163,
+      "brier_base": 0.24806624439781605,
+      "brier_skill": -0.007545499768980557,
+      "logloss": 0.6930225620142765,
+      "logloss_base": 0.6892746679840129,
+      "logloss_skill": -0.005437446353897313
+     },
+     "sides": {
+      "FLAT": 7645,
+      "SHORT": 100,
+      "LONG": 9
+     },
+     "rows": 7754
+    },
+    "second": {
+     "calls": 80,
+     "graded_all": 66,
+     "hit_all": 0.696969696969697,
+     "neither_all": 14,
+     "nov_calls": 18,
+     "nov_graded": 13,
+     "nov_hits": 10,
+     "nov_hit": 0.7692307692307693,
+     "nov_lo": 0.49743623839480355,
+     "nov_hi": 0.918204713457304,
+     "prob": {
+      "rows": 13185,
+      "up_share": 0.5560864618885096,
+      "brier": 0.24913632080658032,
+      "brier_base": 0.24685430879282874,
+      "brier_skill": -0.009244367760526728,
+      "logloss": 0.6914192342974077,
+      "logloss_base": 0.6868425374575979,
+      "logloss_skill": -0.006663385842045955
+     },
+     "sides": {
+      "FLAT": 17204,
+      "LONG": 80
+     },
+     "rows": 17284
+    }
+   },
+   "AVGO": {
+    "full": {
+     "calls": 224,
+     "graded_all": 188,
+     "hit_all": 0.5425531914893617,
+     "neither_all": 36,
+     "nov_calls": 38,
+     "nov_graded": 31,
+     "nov_hits": 18,
+     "nov_hit": 0.5806451612903226,
+     "nov_lo": 0.4076626236738884,
+     "nov_hi": 0.7358445703570756,
+     "prob": {
+      "rows": 19100,
+      "up_share": 0.5215183246073298,
+      "brier": 0.24963906470331323,
+      "brier_base": 0.2495369617060936,
+      "brier_skill": -0.0004091698340860095,
+      "logloss": 0.6924253134591095,
+      "logloss_base": 0.6922208178875146,
+      "logloss_skill": -0.00029541956310863426
+     },
+     "sides": {
+      "FLAT": 24810,
+      "LONG": 168,
+      "SHORT": 56
+     },
+     "rows": 25034,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 97,
+     "graded_all": 80,
+     "hit_all": 0.6125,
+     "neither_all": 17,
+     "nov_calls": 14,
+     "nov_graded": 11,
+     "nov_hits": 6,
+     "nov_hit": 0.5454545454545454,
+     "nov_lo": 0.2800915357859759,
+     "nov_hi": 0.7872872851236217,
+     "prob": {
+      "rows": 5867,
+      "up_share": 0.48900630645986026,
+      "brier": 0.24945638268890813,
+      "brier_base": 0.24987913870234554,
+      "brier_skill": 0.0016918419666116513,
+      "logloss": 0.6920595895478483,
+      "logloss_base": 0.6929054384842646,
+      "logloss_skill": 0.0012207278070534011
+     },
+     "sides": {
+      "FLAT": 7660,
+      "SHORT": 56,
+      "LONG": 41
+     },
+     "rows": 7757
+    },
+    "second": {
+     "calls": 127,
+     "graded_all": 108,
+     "hit_all": 0.49074074074074076,
+     "neither_all": 19,
+     "nov_calls": 24,
+     "nov_graded": 20,
+     "nov_hits": 12,
+     "nov_hit": 0.6,
+     "nov_lo": 0.3865814992347542,
+     "nov_hi": 0.7811934687282198,
+     "prob": {
+      "rows": 13233,
+      "up_share": 0.5359328950351394,
+      "brier": 0.2497200588375621,
+      "brier_base": 0.24870882705439357,
+      "brier_skill": -0.004065926389284824,
+      "logloss": 0.6925874612855565,
+      "logloss_base": 0.6905626072271122,
+      "logloss_skill": -0.0029321802791710816
+     },
+     "sides": {
+      "FLAT": 17150,
+      "LONG": 127
+     },
+     "rows": 17277
+    }
+   },
+   "META": {
+    "full": {
+     "calls": 237,
+     "graded_all": 161,
+     "hit_all": 0.7080745341614907,
+     "neither_all": 76,
+     "nov_calls": 46,
+     "nov_graded": 32,
+     "nov_hits": 16,
+     "nov_hit": 0.5,
+     "nov_lo": 0.33630882754048685,
+     "nov_hi": 0.6636911724595131,
+     "prob": {
+      "rows": 18683,
+      "up_share": 0.5241128298453139,
+      "brier": 0.2497391278507829,
+      "brier_base": 0.24941857143685098,
+      "brier_skill": -0.0012852146978681311,
+      "logloss": 0.6926250499300789,
+      "logloss_base": 0.6919838722682365,
+      "logloss_skill": -0.0009265789096222221
+     },
+     "sides": {
+      "FLAT": 24799,
+      "LONG": 174,
+      "SHORT": 63
+     },
+     "rows": 25036,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 97,
+     "graded_all": 67,
+     "hit_all": 0.6268656716417911,
+     "neither_all": 30,
+     "nov_calls": 12,
+     "nov_graded": 8,
+     "nov_hits": 4,
+     "nov_hit": 0.5,
+     "nov_lo": 0.21521606069626764,
+     "nov_hi": 0.7847839393037324,
+     "prob": {
+      "rows": 5686,
+      "up_share": 0.4795990151248681,
+      "brier": 0.25066205617642245,
+      "brier_base": 0.24958379981612466,
+      "brier_skill": -0.004320217742867172,
+      "logloss": 0.694472992701631,
+      "logloss_base": 0.6923145490747968,
+      "logloss_skill": -0.003117721026834719
+     },
+     "sides": {
+      "FLAT": 7655,
+      "SHORT": 63,
+      "LONG": 34
+     },
+     "rows": 7752
+    },
+    "second": {
+     "calls": 140,
+     "graded_all": 94,
+     "hit_all": 0.7659574468085106,
+     "neither_all": 46,
+     "nov_calls": 34,
+     "nov_graded": 24,
+     "nov_hits": 12,
+     "nov_hit": 0.5,
+     "nov_lo": 0.3142742569328851,
+     "nov_hi": 0.6857257430671149,
+     "prob": {
+      "rows": 12997,
+      "up_share": 0.543586981611141,
+      "brier": 0.2493353600228544,
+      "brier_base": 0.24810017503403006,
+      "brier_skill": -0.004978573629199845,
+      "logloss": 0.6918166016266974,
+      "logloss_base": 0.6893427034931443,
+      "logloss_skill": -0.003588778297089368
+     },
+     "sides": {
+      "FLAT": 17144,
+      "LONG": 140
+     },
+     "rows": 17284
+    }
+   },
+   "TSLA": {
+    "full": {
+     "calls": 214,
+     "graded_all": 155,
+     "hit_all": 0.34838709677419355,
+     "neither_all": 59,
+     "nov_calls": 25,
+     "nov_graded": 20,
+     "nov_hits": 12,
+     "nov_hit": 0.6,
+     "nov_lo": 0.3865814992347542,
+     "nov_hi": 0.7811934687282198,
+     "prob": {
+      "rows": 19530,
+      "up_share": 0.5004096262160779,
+      "brier": 0.2504612628812214,
+      "brier_base": 0.2499998322063631,
+      "brier_skill": -0.0018457239382361212,
+      "logloss": 0.6940709938495015,
+      "logloss_base": 0.693146844972634,
+      "logloss_skill": -0.0013332656472007098
+     },
+     "sides": {
+      "FLAT": 24832,
+      "LONG": 192,
+      "SHORT": 22
+     },
+     "rows": 25046,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 117,
+     "graded_all": 79,
+     "hit_all": 0.4810126582278481,
+     "neither_all": 38,
+     "nov_calls": 12,
+     "nov_graded": 8,
+     "nov_hits": 5,
+     "nov_hit": 0.625,
+     "nov_lo": 0.30574239265377096,
+     "nov_hi": 0.8631557152608771,
+     "prob": {
+      "rows": 6206,
+      "up_share": 0.4693844666451821,
+      "brier": 0.2511448067047082,
+      "brier_base": 0.24906268911739995,
+      "brier_skill": -0.008359813325258036,
+      "logloss": 0.6954396701949389,
+      "logloss_base": 0.6912713856322054,
+      "logloss_skill": -0.006029881533316184
+     },
+     "sides": {
+      "FLAT": 7646,
+      "LONG": 114,
+      "SHORT": 3
+     },
+     "rows": 7763
+    },
+    "second": {
+     "calls": 97,
+     "graded_all": 76,
+     "hit_all": 0.21052631578947367,
+     "neither_all": 21,
+     "nov_calls": 13,
+     "nov_graded": 12,
+     "nov_hits": 7,
+     "nov_hit": 0.5833333333333334,
+     "nov_lo": 0.31951131084242423,
+     "nov_hi": 0.8067396875653928,
+     "prob": {
+      "rows": 13324,
+      "up_share": 0.5148604022815971,
+      "brier": 0.2501428845437432,
+      "brier_base": 0.2497791684440291,
+      "brier_skill": -0.0014561506549159997,
+      "logloss": 0.6934334971968609,
+      "logloss_base": 0.692705452402917,
+      "logloss_skill": -0.0010510164044736925
+     },
+     "sides": {
+      "FLAT": 17186,
+      "LONG": 78,
+      "SHORT": 19
+     },
+     "rows": 17283
+    }
+   },
+   "BRK.B": {
+    "full": {
+     "calls": 242,
+     "graded_all": 158,
+     "hit_all": 0.379746835443038,
+     "neither_all": 84,
+     "nov_calls": 36,
+     "nov_graded": 25,
+     "nov_hits": 14,
+     "nov_hit": 0.56,
+     "nov_lo": 0.37067331734646203,
+     "nov_hi": 0.7333436123222912,
+     "prob": {
+      "rows": 18764,
+      "up_share": 0.5289383926668088,
+      "brier": 0.250115801572082,
+      "brier_base": 0.24916256942986154,
+      "brier_skill": -0.00382574374795408,
+      "logloss": 0.693378992460492,
+      "logloss_base": 0.6914713831112682,
+      "logloss_skill": -0.00275876832478672
+     },
+     "sides": {
+      "FLAT": 24800,
+      "SHORT": 130,
+      "LONG": 112
+     },
+     "rows": 25042,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 15:00"
+    },
+    "first": {
+     "calls": 141,
+     "graded_all": 86,
+     "hit_all": 0.32558139534883723,
+     "neither_all": 55,
+     "nov_calls": 13,
+     "nov_graded": 9,
+     "nov_hits": 5,
+     "nov_hit": 0.5555555555555556,
+     "nov_lo": 0.26665129180087416,
+     "nov_hi": 0.8112214802294544,
+     "prob": {
+      "rows": 5807,
+      "up_share": 0.5016359566040985,
+      "brier": 0.25013688860728905,
+      "brier_base": 0.24999732364598948,
+      "brier_skill": -0.0005582658216662928,
+      "logloss": 0.6934212941714921,
+      "logloss_base": 0.6931418278423738,
+      "logloss_skill": -0.0004031878006673928
+     },
+     "sides": {
+      "FLAT": 7614,
+      "SHORT": 125,
+      "LONG": 16
+     },
+     "rows": 7755
+    },
+    "second": {
+     "calls": 101,
+     "graded_all": 72,
+     "hit_all": 0.4444444444444444,
+     "neither_all": 29,
+     "nov_calls": 23,
+     "nov_graded": 16,
+     "nov_hits": 9,
+     "nov_hit": 0.5625,
+     "nov_lo": 0.3317855624393811,
+     "nov_hi": 0.7690134771859434,
+     "prob": {
+      "rows": 12957,
+      "up_share": 0.5411746546268427,
+      "brier": 0.2501063508957335,
+      "brier_base": 0.24830464781636022,
+      "brier_skill": -0.007256018343666959,
+      "logloss": 0.6933600339025094,
+      "logloss_base": 0.6897526334673695,
+      "logloss_skill": -0.005229991536249257
+     },
+     "sides": {
+      "FLAT": 17186,
+      "LONG": 96,
+      "SHORT": 5
+     },
+     "rows": 17287
+    }
+   },
+   "JPM": {
+    "full": {
+     "calls": 144,
+     "graded_all": 124,
+     "hit_all": 0.33064516129032256,
+     "neither_all": 20,
+     "nov_calls": 31,
+     "nov_graded": 25,
+     "nov_hits": 15,
+     "nov_hit": 0.6,
+     "nov_lo": 0.40739457217494224,
+     "nov_hi": 0.7659669772729795,
+     "prob": {
+      "rows": 19165,
+      "up_share": 0.536029219932168,
+      "brier": 0.2503675268607395,
+      "brier_base": 0.2487018953110795,
+      "brier_skill": -0.006697301392000421,
+      "logloss": 0.6938827221749672,
+      "logloss_base": 0.690548719734907,
+      "logloss_skill": -0.004828048108379779
+     },
+     "sides": {
+      "FLAT": 24896,
+      "LONG": 100,
+      "SHORT": 44
+     },
+     "rows": 25040,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 58,
+     "graded_all": 53,
+     "hit_all": 0.33962264150943394,
+     "neither_all": 5,
+     "nov_calls": 13,
+     "nov_graded": 10,
+     "nov_hits": 4,
+     "nov_hit": 0.4,
+     "nov_lo": 0.1681803285264069,
+     "nov_hi": 0.6873262320788047,
+     "prob": {
+      "rows": 5924,
+      "up_share": 0.5055705604321404,
+      "brier": 0.2512069689351963,
+      "brier_base": 0.24996896885647188,
+      "brier_skill": -0.0049526150561323146,
+      "logloss": 0.6955628513748799,
+      "logloss_base": 0.6930851169889162,
+      "logloss_skill": -0.0035749352067002693
+     },
+     "sides": {
+      "FLAT": 7698,
+      "SHORT": 36,
+      "LONG": 22
+     },
+     "rows": 7756
+    },
+    "second": {
+     "calls": 86,
+     "graded_all": 71,
+     "hit_all": 0.323943661971831,
+     "neither_all": 15,
+     "nov_calls": 18,
+     "nov_graded": 15,
+     "nov_hits": 11,
+     "nov_hit": 0.7333333333333333,
+     "nov_lo": 0.48049565748447975,
+     "nov_hi": 0.8910254675038264,
+     "prob": {
+      "rows": 13241,
+      "up_share": 0.5496563703647761,
+      "brier": 0.24999196196012158,
+      "brier_base": 0.24753424488219625,
+      "brier_skill": -0.009928796232193893,
+      "logloss": 0.6931310353401147,
+      "logloss_base": 0.6882075315743569,
+      "logloss_skill": -0.007154097477681809
+     },
+     "sides": {
+      "FLAT": 17198,
+      "LONG": 78,
+      "SHORT": 8
+     },
+     "rows": 17284
+    }
+   },
+   "LLY": {
+    "full": {
+     "calls": 120,
+     "graded_all": 66,
+     "hit_all": 0.42424242424242425,
+     "neither_all": 54,
+     "nov_calls": 17,
+     "nov_graded": 9,
+     "nov_hits": 4,
+     "nov_hit": 0.4444444444444444,
+     "nov_lo": 0.18877851977054566,
+     "nov_hi": 0.7333487081991259,
+     "prob": {
+      "rows": 18020,
+      "up_share": 0.5226415094339623,
+      "brier": 0.2496325582215022,
+      "brier_base": 0.24948736205055186,
+      "brier_skill": -0.0005819780599585211,
+      "logloss": 0.6924120951245829,
+      "logloss_base": 0.6921215539764404,
+      "logloss_skill": -0.00041978341300485944
+     },
+     "sides": {
+      "FLAT": 24921,
+      "LONG": 82,
+      "SHORT": 38
+     },
+     "rows": 25041,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 39,
+     "graded_all": 31,
+     "hit_all": 0.12903225806451613,
+     "neither_all": 8,
+     "nov_calls": 8,
+     "nov_graded": 4,
+     "nov_hits": 1,
+     "nov_hit": 0.25,
+     "nov_lo": 0.04558726029536886,
+     "nov_hi": 0.6993581599030918,
+     "prob": {
+      "rows": 5452,
+      "up_share": 0.47248716067498164,
+      "brier": 0.24927575882823186,
+      "brier_base": 0.24924304367227573,
+      "brier_skill": -0.0001312580502712546,
+      "logloss": 0.6916979089030612,
+      "logloss_base": 0.6916325030005412,
+      "logloss_skill": -9.456742162394782e-05
+     },
+     "sides": {
+      "FLAT": 7718,
+      "SHORT": 30,
+      "LONG": 9
+     },
+     "rows": 7757
+    },
+    "second": {
+     "calls": 81,
+     "graded_all": 35,
+     "hit_all": 0.6857142857142857,
+     "neither_all": 46,
+     "nov_calls": 9,
+     "nov_graded": 5,
+     "nov_hits": 3,
+     "nov_hit": 0.6,
+     "nov_lo": 0.23072427940911855,
+     "nov_hi": 0.8823792268590028,
+     "prob": {
+      "rows": 12568,
+      "up_share": 0.5443984723106302,
+      "brier": 0.2497873378437261,
+      "brier_base": 0.24802877565648218,
+      "brier_skill": -0.007090153884723227,
+      "logloss": 0.6927219091984,
+      "logloss_base": 0.6891995344957712,
+      "logloss_skill": -0.0051108199096592255
+     },
+     "sides": {
+      "FLAT": 17203,
+      "LONG": 73,
+      "SHORT": 8
+     },
+     "rows": 17284
+    }
+   }
+  },
+  "pooled": {
+   "full": {
+    "calls": 2439,
+    "graded_all": 1810,
+    "hit_all": 0.4977900552486188,
+    "neither_all": 629,
+    "nov_calls": 422,
+    "nov_graded": 307,
+    "nov_hits": 162,
+    "nov_hit": 0.5276872964169381,
+    "nov_lo": 0.4718455093657625,
+    "nov_hi": 0.5828447499747458,
+    "prob": {
+     "rows": 246244,
+     "up_share": 0.5207883237764169,
+     "brier": 0.24990619019630236,
+     "brier_base": 0.24949150800779532,
+     "brier_skill": -0.0016621094313722384,
+     "logloss": 0.6929596040897448,
+     "logloss_base": 0.6921297050243842,
+     "logloss_skill": -0.001199051361812975
+    },
+    "boot_lo": 0.44480797958421514,
+    "boot_hi": 0.6079626881876085,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T",
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   },
+   "first": {
+    "calls": 1213,
+    "graded_all": 904,
+    "hit_all": 0.47345132743362833,
+    "neither_all": 309,
+    "nov_calls": 162,
+    "nov_graded": 115,
+    "nov_hits": 58,
+    "nov_hit": 0.5043478260869565,
+    "nov_lo": 0.41431586982205826,
+    "nov_hi": 0.5940987020740914,
+    "prob": {
+     "rows": 76743,
+     "up_share": 0.4803565146006802,
+     "brier": 0.25020728758262506,
+     "brier_base": 0.2494002375342268,
+     "brier_skill": -0.0032359634312195684,
+     "logloss": 0.6935622156033734,
+     "logloss_base": 0.6919467115799092,
+     "logloss_skill": -0.0023347231751063013
+    },
+    "boot_lo": 0.37389061421670117,
+    "boot_hi": 0.633099520383693,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T",
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   },
+   "second": {
+    "calls": 1226,
+    "graded_all": 906,
+    "hit_all": 0.522075055187638,
+    "neither_all": 320,
+    "nov_calls": 260,
+    "nov_graded": 192,
+    "nov_hits": 104,
+    "nov_hit": 0.5416666666666666,
+    "nov_lo": 0.4710611141973901,
+    "nov_hi": 0.6106376236050993,
+    "prob": {
+     "rows": 169501,
+     "up_share": 0.5390941646361969,
+     "brier": 0.24976986582819502,
+     "brier_base": 0.24837938986663768,
+     "brier_skill": -0.005598193804662754,
+     "logloss": 0.6926867666705532,
+     "logloss_base": 0.6899017993403703,
+     "logloss_skill": -0.004036759047223226
+    },
+    "boot_lo": 0.4425261233019854,
+    "boot_hi": 0.6359452057563263,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T",
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   }
+  },
+  "five": {
+   "full": {
+    "calls": 520,
+    "graded_all": 406,
+    "hit_all": 0.5246305418719212,
+    "neither_all": 114,
+    "nov_calls": 94,
+    "nov_graded": 72,
+    "nov_hits": 35,
+    "nov_hit": 0.4861111111111111,
+    "nov_lo": 0.374326744458874,
+    "nov_hi": 0.5993024548009882,
+    "prob": {
+     "rows": 57201,
+     "up_share": 0.5214069684096432,
+     "brier": 0.24964702519234483,
+     "brier_base": 0.24950616087042898,
+     "brier_skill": -0.0005645725196701257,
+     "logloss": 0.6924410628928656,
+     "logloss_base": 0.692159101140816,
+     "logloss_skill": -0.00040736551984199565
+    },
+    "boot_lo": 0.3582089552238806,
+    "boot_hi": 0.6104076479076478,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T"
+    ]
+   },
+   "first": {
+    "calls": 273,
+    "graded_all": 210,
+    "hit_all": 0.5714285714285714,
+    "neither_all": 63,
+    "nov_calls": 39,
+    "nov_graded": 29,
+    "nov_hits": 14,
+    "nov_hit": 0.4827586206896552,
+    "nov_lo": 0.3138609003643046,
+    "nov_hi": 0.6556897823987706,
+    "prob": {
+     "rows": 17958,
+     "up_share": 0.4806214500501169,
+     "brier": 0.249938690766566,
+     "brier_base": 0.24946506270737429,
+     "brier_skill": -0.0018985747104285355,
+     "logloss": 0.6930240443101089,
+     "logloss_base": 0.692076445689604,
+     "logloss_skill": -0.0013692109107408257
+    },
+    "boot_lo": 0.28560267857142857,
+    "boot_hi": 0.6785714285714286,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T"
+    ]
+   },
+   "second": {
+    "calls": 247,
+    "graded_all": 196,
+    "hit_all": 0.4744897959183674,
+    "neither_all": 51,
+    "nov_calls": 55,
+    "nov_graded": 43,
+    "nov_hits": 21,
+    "nov_hit": 0.4883720930232558,
+    "nov_lo": 0.3461744744443934,
+    "nov_hi": 0.6324769163559194,
+    "prob": {
+     "rows": 39243,
+     "up_share": 0.5400708406594806,
+     "brier": 0.24951355602887965,
+     "brier_base": 0.24838496636546017,
+     "brier_skill": -0.004543711642188919,
+     "logloss": 0.6921742846065253,
+     "logloss_base": 0.6899135437027117,
+     "logloss_skill": -0.0032768466780350725
+    },
+    "boot_lo": 0.3157894736842105,
+    "boot_hi": 0.6538636363636363,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T"
+    ]
+   }
+  },
+  "ten": {
+   "full": {
+    "calls": 1919,
+    "graded_all": 1404,
+    "hit_all": 0.49002849002849,
+    "neither_all": 515,
+    "nov_calls": 328,
+    "nov_graded": 235,
+    "nov_hits": 127,
+    "nov_hit": 0.5404255319148936,
+    "nov_lo": 0.4765687881207976,
+    "nov_hi": 0.6029818899272836,
+    "prob": {
+     "rows": 189043,
+     "up_share": 0.5206011330755437,
+     "brier": 0.24998460884915583,
+     "brier_base": 0.24948707431601355,
+     "brier_skill": -0.001994229699098904,
+     "logloss": 0.6931165052974207,
+     "logloss_base": 0.6921208102900855,
+     "logloss_skill": -0.0014386144622899888
+    },
+    "boot_lo": 0.4545151515151515,
+    "boot_hi": 0.6208411343612334,
+    "tickers": [
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   },
+   "first": {
+    "calls": 940,
+    "graded_all": 694,
+    "hit_all": 0.4438040345821326,
+    "neither_all": 246,
+    "nov_calls": 123,
+    "nov_graded": 86,
+    "nov_hits": 44,
+    "nov_hit": 0.5116279069767442,
+    "nov_lo": 0.4077672075657904,
+    "nov_hi": 0.6144942296916179,
+    "prob": {
+     "rows": 58785,
+     "up_share": 0.48027558050523095,
+     "brier": 0.2502893401746602,
+     "brier_base": 0.24938043434532858,
+     "brier_skill": -0.003644655731383395,
+     "logloss": 0.693726619449328,
+     "logloss_base": 0.6919070796135588,
+     "logloss_skill": -0.0026297459433215487
+    },
+    "boot_lo": 0.37349397590361444,
+    "boot_hi": 0.6421445856019357,
+    "tickers": [
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   },
+   "second": {
+    "calls": 979,
+    "graded_all": 710,
+    "hit_all": 0.5352112676056338,
+    "neither_all": 269,
+    "nov_calls": 205,
+    "nov_graded": 149,
+    "nov_hits": 83,
+    "nov_hit": 0.5570469798657718,
+    "nov_lo": 0.47684982494538153,
+    "nov_hi": 0.6343765407568916,
+    "prob": {
+     "rows": 130258,
+     "up_share": 0.5387999201584548,
+     "brier": 0.24984708462054966,
+     "brier_base": 0.24837770982745938,
+     "brier_skill": -0.005915888322309604,
+     "logloss": 0.6928411628200308,
+     "logloss_base": 0.6898982611007892,
+     "logloss_skill": -0.004265703923569619
+    },
+    "boot_lo": 0.45687119675456395,
+    "boot_hi": 0.652781862745098,
+    "tickers": [
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   }
+  },
+  "pass": {
+   "pooled_halves_above_50_with_interval": false,
+   "tickers_above_50": [
+    "NVDA",
+    "MSFT",
+    "GOOGL",
+    "AVGO",
+    "TSLA",
+    "BRK.B",
+    "JPM"
+   ],
+   "tickers_needed": 6,
+   "tickers_tested": 13,
+   "enough_tickers": true,
+   "PASS": false
+  }
+ },
+ "loto_sides": {
+  "FLAT": 323266,
+  "LONG": 1602,
+  "SHORT": 837
+ },
+ "e1": {
+  "split_utc": "2023-03-14 17:00",
+  "per_ticker": {
+   "NVDA": {
+    "full": {
+     "calls": 265,
+     "graded_all": 199,
+     "hit_all": 0.4824120603015075,
+     "neither_all": 66,
+     "nov_calls": 49,
+     "nov_graded": 36,
+     "nov_hits": 15,
+     "nov_hit": 0.4166666666666667,
+     "nov_lo": 0.27140561953340225,
+     "nov_hi": 0.577997485461411,
+     "prob": {
+      "rows": 19312,
+      "up_share": 0.5273405136702568,
+      "brier": 0.24998378089602108,
+      "brier_base": 0.2492524963122465,
+      "brier_skill": -0.002933910771583559,
+      "logloss": 0.6931150778011872,
+      "logloss_base": 0.6916514272762809,
+      "logloss_skill": -0.002116167866045071
+     },
+     "sides": {
+      "FLAT": 24787,
+      "LONG": 177,
+      "SHORT": 88
+     },
+     "rows": 25052,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 16:45"
+    },
+    "first": {
+     "calls": 136,
+     "graded_all": 98,
+     "hit_all": 0.2653061224489796,
+     "neither_all": 38,
+     "nov_calls": 17,
+     "nov_graded": 10,
+     "nov_hits": 2,
+     "nov_hit": 0.2,
+     "nov_lo": 0.05668215093776685,
+     "nov_hi": 0.5098375308778678,
+     "prob": {
+      "rows": 6050,
+      "up_share": 0.4897520661157025,
+      "brier": 0.2508261214452684,
+      "brier_base": 0.24989497985110307,
+      "brier_skill": -0.0037261316522649857,
+      "logloss": 0.6948020470521787,
+      "logloss_base": 0.6929371255540374,
+      "logloss_skill": -0.002691328591537534
+     },
+     "sides": {
+      "FLAT": 7637,
+      "SHORT": 88,
+      "LONG": 48
+     },
+     "rows": 7773
+    },
+    "second": {
+     "calls": 129,
+     "graded_all": 101,
+     "hit_all": 0.693069306930693,
+     "neither_all": 28,
+     "nov_calls": 32,
+     "nov_graded": 26,
+     "nov_hits": 13,
+     "nov_hit": 0.5,
+     "nov_lo": 0.32060593402470916,
+     "nov_hi": 0.6793940659752908,
+     "prob": {
+      "rows": 13262,
+      "up_share": 0.5444880108580907,
+      "brier": 0.24959951303876382,
+      "brier_base": 0.24802081688989047,
+      "brier_skill": -0.006365175990748373,
+      "logloss": 0.6923454982529669,
+      "logloss_base": 0.6891835748422408,
+      "logloss_skill": -0.004587926245122498
+     },
+     "sides": {
+      "FLAT": 17150,
+      "LONG": 129
+     },
+     "rows": 17279
+    }
+   },
+   "MU": {
+    "full": {
+     "calls": 174,
+     "graded_all": 140,
+     "hit_all": 0.5071428571428571,
+     "neither_all": 34,
+     "nov_calls": 39,
+     "nov_graded": 29,
+     "nov_hits": 14,
+     "nov_hit": 0.4827586206896552,
+     "nov_lo": 0.3138609003643046,
+     "nov_hi": 0.6556897823987706,
+     "prob": {
+      "rows": 18999,
+      "up_share": 0.5132375388178325,
+      "brier": 0.24987414235065808,
+      "brier_base": 0.24982476756604638,
+      "brier_skill": -0.00019763766856573106,
+      "logloss": 0.6928958622240229,
+      "logloss_base": 0.6927966747386802,
+      "logloss_skill": -0.00014316969027028392
+     },
+     "sides": {
+      "FLAT": 24863,
+      "LONG": 109,
+      "SHORT": 65
+     },
+     "rows": 25037,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 75,
+     "graded_all": 70,
+     "hit_all": 0.45714285714285713,
+     "neither_all": 5,
+     "nov_calls": 13,
+     "nov_graded": 13,
+     "nov_hits": 4,
+     "nov_hit": 0.3076923076923077,
+     "nov_lo": 0.12680703567070326,
+     "nov_hi": 0.5763065701492199,
+     "prob": {
+      "rows": 6053,
+      "up_share": 0.4620849165702957,
+      "brier": 0.25085682223829675,
+      "brier_base": 0.24856244644851858,
+      "brier_skill": -0.009230580976975489,
+      "logloss": 0.6948622093274107,
+      "logloss_base": 0.690269311686084,
+      "logloss_skill": -0.006653776379117682
+     },
+     "sides": {
+      "FLAT": 7689,
+      "SHORT": 63,
+      "LONG": 12
+     },
+     "rows": 7764
+    },
+    "second": {
+     "calls": 99,
+     "graded_all": 70,
+     "hit_all": 0.5571428571428572,
+     "neither_all": 29,
+     "nov_calls": 26,
+     "nov_graded": 16,
+     "nov_hits": 10,
+     "nov_hit": 0.625,
+     "nov_lo": 0.38641040376611335,
+     "nov_hi": 0.8151876754845355,
+     "prob": {
+      "rows": 12946,
+      "up_share": 0.5371543333848293,
+      "brier": 0.24941468295317026,
+      "brier_base": 0.24861955551072898,
+      "brier_skill": -0.003198169350789426,
+      "logloss": 0.6919764817963383,
+      "logloss_base": 0.6903837451167882,
+      "logloss_skill": -0.002307030967654944
+     },
+     "sides": {
+      "FLAT": 17174,
+      "LONG": 97,
+      "SHORT": 2
+     },
+     "rows": 17273
+    }
+   },
+   "T": {
+    "full": {
+     "calls": 144,
+     "graded_all": 105,
+     "hit_all": 0.4,
+     "neither_all": 39,
+     "nov_calls": 35,
+     "nov_graded": 26,
+     "nov_hits": 15,
+     "nov_hit": 0.5769230769230769,
+     "nov_lo": 0.3894861361059128,
+     "nov_hi": 0.7445555679512275,
+     "prob": {
+      "rows": 18890,
+      "up_share": 0.5235574377977766,
+      "brier": 0.24989666300245555,
+      "brier_base": 0.24944504712440388,
+      "brier_skill": -0.0018104824419562515,
+      "logloss": 0.6929408727745064,
+      "logloss_base": 0.6920368638134514,
+      "logloss_skill": -0.0013063017424730372
+     },
+     "sides": {
+      "FLAT": 24761,
+      "LONG": 133,
+      "SHORT": 11
+     },
+     "rows": 24905,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 61,
+     "graded_all": 55,
+     "hit_all": 0.45454545454545453,
+     "neither_all": 6,
+     "nov_calls": 8,
+     "nov_graded": 5,
+     "nov_hits": 3,
+     "nov_hit": 0.6,
+     "nov_lo": 0.23072427940911855,
+     "nov_hi": 0.8823792268590028,
+     "prob": {
+      "rows": 5887,
+      "up_share": 0.4876847290640394,
+      "brier": 0.2503036576481444,
+      "brier_base": 0.24984833410177396,
+      "brier_skill": -0.0018223997690733906,
+      "logloss": 0.693755298543323,
+      "logloss_base": 0.6928438180859884,
+      "logloss_skill": -0.00131556410484035
+     },
+     "sides": {
+      "FLAT": 7701,
+      "LONG": 50,
+      "SHORT": 11
+     },
+     "rows": 7762
+    },
+    "second": {
+     "calls": 83,
+     "graded_all": 50,
+     "hit_all": 0.34,
+     "neither_all": 33,
+     "nov_calls": 27,
+     "nov_graded": 21,
+     "nov_hits": 12,
+     "nov_hit": 0.5714285714285714,
+     "nov_lo": 0.36546554224185784,
+     "nov_hi": 0.7553003119028359,
+     "prob": {
+      "rows": 13003,
+      "up_share": 0.5397985080366069,
+      "brier": 0.2497123995648511,
+      "brier_base": 0.2484160787580601,
+      "brier_skill": -0.005218345017246273,
+      "logloss": 0.6925721482877709,
+      "logloss_base": 0.689975984494507,
+      "logloss_skill": -0.003762687182751634
+     },
+     "sides": {
+      "FLAT": 17060,
+      "LONG": 83
+     },
+     "rows": 17143
+    }
+   },
+   "AAPL": {
+    "full": {
+     "calls": 154,
+     "graded_all": 89,
+     "hit_all": 0.24719101123595505,
+     "neither_all": 65,
+     "nov_calls": 30,
+     "nov_graded": 18,
+     "nov_hits": 7,
+     "nov_hit": 0.3888888888888889,
+     "nov_lo": 0.2030524646285427,
+     "nov_hi": 0.6138095855788537,
+     "prob": {
+      "rows": 18668,
+      "up_share": 0.5218555817441611,
+      "brier": 0.2503049791854712,
+      "brier_base": 0.2495223335466243,
+      "brier_skill": -0.0031365755029724163,
+      "logloss": 0.6937579303590148,
+      "logloss_base": 0.6921915432001293,
+      "logloss_skill": -0.002262938884869614
+     },
+     "sides": {
+      "FLAT": 24891,
+      "LONG": 113,
+      "SHORT": 41
+     },
+     "rows": 25045,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 15:30"
+    },
+    "first": {
+     "calls": 99,
+     "graded_all": 65,
+     "hit_all": 0.07692307692307693,
+     "neither_all": 34,
+     "nov_calls": 11,
+     "nov_graded": 6,
+     "nov_hits": 1,
+     "nov_hit": 0.16666666666666666,
+     "nov_lo": 0.030053369411815023,
+     "nov_hi": 0.5635028250257673,
+     "prob": {
+      "rows": 6049,
+      "up_share": 0.48966771367168127,
+      "brier": 0.2510930704149662,
+      "brier_base": 0.24989324385922965,
+      "brier_skill": -0.004801356520116595,
+      "logloss": 0.6953361559636139,
+      "logloss_base": 0.6929336530799768,
+      "logloss_skill": -0.0034671470680611716
+     },
+     "sides": {
+      "FLAT": 7669,
+      "LONG": 58,
+      "SHORT": 41
+     },
+     "rows": 7768
+    },
+    "second": {
+     "calls": 55,
+     "graded_all": 24,
+     "hit_all": 0.7083333333333334,
+     "neither_all": 31,
+     "nov_calls": 19,
+     "nov_graded": 12,
+     "nov_hits": 6,
+     "nov_hit": 0.5,
+     "nov_lo": 0.25378159616252394,
+     "nov_hi": 0.7462184038374761,
+     "prob": {
+      "rows": 12619,
+      "up_share": 0.5372850463586655,
+      "brier": 0.2499272025116288,
+      "brier_base": 0.24860982531803216,
+      "brier_skill": -0.005298974776686283,
+      "logloss": 0.6930013976161492,
+      "logloss_base": 0.690364248666534,
+      "logloss_skill": -0.0038199384668442526
+     },
+     "sides": {
+      "FLAT": 17222,
+      "LONG": 55
+     },
+     "rows": 17277
+    }
+   },
+   "MSFT": {
+    "full": {
+     "calls": 242,
+     "graded_all": 194,
+     "hit_all": 0.5670103092783505,
+     "neither_all": 48,
+     "nov_calls": 42,
+     "nov_graded": 31,
+     "nov_hits": 16,
+     "nov_hit": 0.5161290322580645,
+     "nov_lo": 0.34840395329054696,
+     "nov_hi": 0.6802974855156458,
+     "prob": {
+      "rows": 18715,
+      "up_share": 0.5144536468073737,
+      "brier": 0.2501023355053397,
+      "brier_base": 0.24979109209396771,
+      "brier_skill": -0.0012460148549049421,
+      "logloss": 0.6933514687976794,
+      "logloss_base": 0.6927293065384041,
+      "logloss_skill": -0.0008981318581484654
+     },
+     "sides": {
+      "FLAT": 24800,
+      "LONG": 165,
+      "SHORT": 77
+     },
+     "rows": 25042,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 17:15"
+    },
+    "first": {
+     "calls": 128,
+     "graded_all": 107,
+     "hit_all": 0.5233644859813084,
+     "neither_all": 21,
+     "nov_calls": 15,
+     "nov_graded": 11,
+     "nov_hits": 6,
+     "nov_hit": 0.5454545454545454,
+     "nov_lo": 0.2800915357859759,
+     "nov_hi": 0.7872872851236217,
+     "prob": {
+      "rows": 5917,
+      "up_share": 0.4683116444143992,
+      "brier": 0.25025535432400436,
+      "brier_base": 0.2489958481202805,
+      "brier_skill": -0.00505834219016954,
+      "logloss": 0.6936569632873955,
+      "logloss_base": 0.6911375302078344,
+      "logloss_skill": -0.0036453425974471987
+     },
+     "sides": {
+      "FLAT": 7637,
+      "SHORT": 77,
+      "LONG": 51
+     },
+     "rows": 7765
+    },
+    "second": {
+     "calls": 114,
+     "graded_all": 87,
+     "hit_all": 0.6206896551724138,
+     "neither_all": 27,
+     "nov_calls": 27,
+     "nov_graded": 20,
+     "nov_hits": 10,
+     "nov_hit": 0.5,
+     "nov_lo": 0.2992980068701797,
+     "nov_hi": 0.7007019931298203,
+     "prob": {
+      "rows": 12798,
+      "up_share": 0.5357868416940147,
+      "brier": 0.2500315891113688,
+      "brier_base": 0.24871930196156755,
+      "brier_skill": -0.00527617735918251,
+      "logloss": 0.6932102271274457,
+      "logloss_base": 0.6905835930728743,
+      "logloss_skill": -0.003803499070813121
+     },
+     "sides": {
+      "FLAT": 17163,
+      "LONG": 114
+     },
+     "rows": 17277
+    }
+   },
+   "AMZN": {
+    "full": {
+     "calls": 185,
+     "graded_all": 136,
+     "hit_all": 0.5588235294117647,
+     "neither_all": 49,
+     "nov_calls": 41,
+     "nov_graded": 29,
+     "nov_hits": 10,
+     "nov_hit": 0.3448275862068966,
+     "nov_lo": 0.19940718436625743,
+     "nov_hi": 0.5265489605014202,
+     "prob": {
+      "rows": 19255,
+      "up_share": 0.5118151129576733,
+      "brier": 0.25034679441125346,
+      "brier_base": 0.24986040310579738,
+      "brier_skill": -0.0019466522082338678,
+      "logloss": 0.693840848674395,
+      "logloss_base": 0.6928679607826778,
+      "logloss_skill": -0.0014041461675009526
+     },
+     "sides": {
+      "FLAT": 24846,
+      "LONG": 137,
+      "SHORT": 48
+     },
+     "rows": 25031,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 14:45"
+    },
+    "first": {
+     "calls": 95,
+     "graded_all": 70,
+     "hit_all": 0.6142857142857143,
+     "neither_all": 25,
+     "nov_calls": 13,
+     "nov_graded": 9,
+     "nov_hits": 2,
+     "nov_hit": 0.2222222222222222,
+     "nov_lo": 0.06322510654056959,
+     "nov_hi": 0.5474110333077882,
+     "prob": {
+      "rows": 5941,
+      "up_share": 0.4714694495876115,
+      "brier": 0.250742555443009,
+      "brier_base": 0.24918600769316618,
+      "brier_skill": -0.006246529507224485,
+      "logloss": 0.6946324721263375,
+      "logloss_base": 0.6915183113490452,
+      "logloss_skill": -0.004503367049264462
+     },
+     "sides": {
+      "FLAT": 7668,
+      "LONG": 50,
+      "SHORT": 45
+     },
+     "rows": 7763
+    },
+    "second": {
+     "calls": 90,
+     "graded_all": 66,
+     "hit_all": 0.5,
+     "neither_all": 24,
+     "nov_calls": 28,
+     "nov_graded": 20,
+     "nov_hits": 8,
+     "nov_hit": 0.4,
+     "nov_lo": 0.21880653127178018,
+     "nov_hi": 0.6134185007652458,
+     "prob": {
+      "rows": 13314,
+      "up_share": 0.5298182364428421,
+      "brier": 0.2501701971234617,
+      "brier_base": 0.24911087277543878,
+      "brier_skill": -0.004252421165807041,
+      "logloss": 0.6934876088570604,
+      "logloss_base": 0.691367870545484,
+      "logloss_skill": -0.0030660063938230397
+     },
+     "sides": {
+      "FLAT": 17178,
+      "LONG": 87,
+      "SHORT": 3
+     },
+     "rows": 17268
+    }
+   },
+   "GOOGL": {
+    "full": {
+     "calls": 144,
+     "graded_all": 108,
+     "hit_all": 0.5092592592592593,
+     "neither_all": 36,
+     "nov_calls": 32,
+     "nov_graded": 21,
+     "nov_hits": 11,
+     "nov_hit": 0.5238095238095238,
+     "nov_lo": 0.32369534446905174,
+     "nov_hi": 0.7165599402458462,
+     "prob": {
+      "rows": 19143,
+      "up_share": 0.5249438437026589,
+      "brier": 0.24980001298886348,
+      "brier_base": 0.24937780466133733,
+      "brier_skill": -0.0016930469337459453,
+      "logloss": 0.6927468109478077,
+      "logloss_base": 0.6919022731986947,
+      "logloss_skill": -0.0012206026513088553
+     },
+     "sides": {
+      "FLAT": 24894,
+      "LONG": 99,
+      "SHORT": 45
+     },
+     "rows": 25038,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 16:45"
+    },
+    "first": {
+     "calls": 75,
+     "graded_all": 52,
+     "hit_all": 0.21153846153846154,
+     "neither_all": 23,
+     "nov_calls": 11,
+     "nov_graded": 7,
+     "nov_hits": 2,
+     "nov_hit": 0.2857142857142857,
+     "nov_lo": 0.08221892324928332,
+     "nov_hi": 0.6410655504689458,
+     "prob": {
+      "rows": 5960,
+      "up_share": 0.45604026845637585,
+      "brier": 0.25071289560544247,
+      "brier_base": 0.24806754200261247,
+      "brier_skill": -0.010663844134845224,
+      "logloss": 0.6945733565702561,
+      "logloss_base": 0.6892772699139014,
+      "logloss_skill": -0.0076835359114864055
+     },
+     "sides": {
+      "FLAT": 7690,
+      "SHORT": 45,
+      "LONG": 30
+     },
+     "rows": 7765
+    },
+    "second": {
+     "calls": 69,
+     "graded_all": 56,
+     "hit_all": 0.7857142857142857,
+     "neither_all": 13,
+     "nov_calls": 21,
+     "nov_graded": 14,
+     "nov_hits": 9,
+     "nov_hit": 0.6428571428571429,
+     "nov_lo": 0.38764422924295516,
+     "nov_hi": 0.8365526834990504,
+     "prob": {
+      "rows": 13183,
+      "up_share": 0.5560949707957218,
+      "brier": 0.24938730113307858,
+      "brier_base": 0.24685335425142713,
+      "brier_skill": -0.010264988658288843,
+      "logloss": 0.6919210344242703,
+      "logloss_base": 0.6868406203053808,
+      "logloss_skill": -0.007396787506001923
+     },
+     "sides": {
+      "FLAT": 17204,
+      "LONG": 69
+     },
+     "rows": 17273
+    }
+   },
+   "AVGO": {
+    "full": {
+     "calls": 237,
+     "graded_all": 194,
+     "hit_all": 0.5515463917525774,
+     "neither_all": 43,
+     "nov_calls": 46,
+     "nov_graded": 38,
+     "nov_hits": 23,
+     "nov_hit": 0.6052631578947368,
+     "nov_lo": 0.4471786787542184,
+     "nov_hi": 0.7440192434476809,
+     "prob": {
+      "rows": 19100,
+      "up_share": 0.5215183246073298,
+      "brier": 0.24980684252170945,
+      "brier_base": 0.2495369617060936,
+      "brier_skill": -0.0010815264150476622,
+      "logloss": 0.692760851751183,
+      "logloss_base": 0.6922208178875146,
+      "logloss_skill": -0.0007801468111237053
+     },
+     "sides": {
+      "FLAT": 24797,
+      "LONG": 157,
+      "SHORT": 80
+     },
+     "rows": 25034,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 126,
+     "graded_all": 95,
+     "hit_all": 0.5473684210526316,
+     "neither_all": 31,
+     "nov_calls": 17,
+     "nov_graded": 13,
+     "nov_hits": 8,
+     "nov_hit": 0.6153846153846154,
+     "nov_lo": 0.3552289133643685,
+     "nov_hi": 0.8229029231436777,
+     "prob": {
+      "rows": 5877,
+      "up_share": 0.48817423855708697,
+      "brier": 0.24995247518562624,
+      "brier_base": 0.24986015136629536,
+      "brier_skill": -0.0003695019747089745,
+      "logloss": 0.6930522148024579,
+      "logloss_base": 0.6928674572098454,
+      "logloss_skill": -0.0002666564733122545
+     },
+     "sides": {
+      "FLAT": 7642,
+      "SHORT": 80,
+      "LONG": 46
+     },
+     "rows": 7768
+    },
+    "second": {
+     "calls": 111,
+     "graded_all": 99,
+     "hit_all": 0.5555555555555556,
+     "neither_all": 12,
+     "nov_calls": 29,
+     "nov_graded": 25,
+     "nov_hits": 15,
+     "nov_hit": 0.6,
+     "nov_lo": 0.40739457217494224,
+     "nov_hi": 0.7659669772729795,
+     "prob": {
+      "rows": 13223,
+      "up_share": 0.5363381985933601,
+      "brier": 0.24974211566957008,
+      "brier_base": 0.2486795353229895,
+      "brier_skill": -0.004272890188573353,
+      "logloss": 0.6926313546134425,
+      "logloss_base": 0.6905039214442474,
+      "logloss_skill": -0.003080986368253047
+     },
+     "sides": {
+      "FLAT": 17155,
+      "LONG": 111
+     },
+     "rows": 17266
+    }
+   },
+   "META": {
+    "full": {
+     "calls": 213,
+     "graded_all": 148,
+     "hit_all": 0.6283783783783784,
+     "neither_all": 65,
+     "nov_calls": 41,
+     "nov_graded": 30,
+     "nov_hits": 13,
+     "nov_hit": 0.43333333333333335,
+     "nov_lo": 0.27377485469947366,
+     "nov_hi": 0.6080269312687199,
+     "prob": {
+      "rows": 18683,
+      "up_share": 0.5241128298453139,
+      "brier": 0.24989683785097228,
+      "brier_base": 0.24941857143685098,
+      "brier_skill": -0.001917525272340681,
+      "logloss": 0.6929403015813967,
+      "logloss_base": 0.6919838722682365,
+      "logloss_skill": -0.0013821554973891814
+     },
+     "sides": {
+      "FLAT": 24823,
+      "LONG": 168,
+      "SHORT": 45
+     },
+     "rows": 25036,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 97,
+     "graded_all": 52,
+     "hit_all": 0.7307692307692307,
+     "neither_all": 45,
+     "nov_calls": 13,
+     "nov_graded": 8,
+     "nov_hits": 4,
+     "nov_hit": 0.5,
+     "nov_lo": 0.21521606069626764,
+     "nov_hi": 0.7847839393037324,
+     "prob": {
+      "rows": 5690,
+      "up_share": 0.47996485061511424,
+      "brier": 0.2508027301732429,
+      "brier_base": 0.24959859278912536,
+      "brier_skill": -0.004824295564578085,
+      "logloss": 0.6947524943144331,
+      "logloss_base": 0.692344151163099,
+      "logloss_skill": -0.0034785346959140817
+     },
+     "sides": {
+      "FLAT": 7666,
+      "LONG": 53,
+      "SHORT": 44
+     },
+     "rows": 7763
+    },
+    "second": {
+     "calls": 116,
+     "graded_all": 96,
+     "hit_all": 0.5729166666666666,
+     "neither_all": 20,
+     "nov_calls": 28,
+     "nov_graded": 22,
+     "nov_hits": 9,
+     "nov_hit": 0.4090909090909091,
+     "nov_lo": 0.23255816086354597,
+     "nov_hi": 0.6126518167010261,
+     "prob": {
+      "rows": 12993,
+      "up_share": 0.5434464711767875,
+      "brier": 0.24950012213376152,
+      "brier_base": 0.24811240414228455,
+      "brier_skill": -0.005593102030808428,
+      "logloss": 0.6921466914335498,
+      "logloss_base": 0.6893672237475612,
+      "logloss_skill": -0.004031911570844482
+     },
+     "sides": {
+      "FLAT": 17157,
+      "LONG": 115,
+      "SHORT": 1
+     },
+     "rows": 17273
+    }
+   },
+   "TSLA": {
+    "full": {
+     "calls": 205,
+     "graded_all": 150,
+     "hit_all": 0.24,
+     "neither_all": 55,
+     "nov_calls": 31,
+     "nov_graded": 24,
+     "nov_hits": 11,
+     "nov_hit": 0.4583333333333333,
+     "nov_lo": 0.27891333613001446,
+     "nov_hi": 0.6492513477492627,
+     "prob": {
+      "rows": 19530,
+      "up_share": 0.5004096262160779,
+      "brier": 0.25007668893920587,
+      "brier_base": 0.2499998322063631,
+      "brier_skill": -0.0003074271377083715,
+      "logloss": 0.693301085786654,
+      "logloss_base": 0.693146844972634,
+      "logloss_skill": -0.00022252256522370395
+     },
+     "sides": {
+      "FLAT": 24841,
+      "LONG": 130,
+      "SHORT": 75
+     },
+     "rows": 25046,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 128,
+     "graded_all": 88,
+     "hit_all": 0.23863636363636365,
+     "neither_all": 40,
+     "nov_calls": 13,
+     "nov_graded": 9,
+     "nov_hits": 3,
+     "nov_hit": 0.3333333333333333,
+     "nov_lo": 0.12058381743407343,
+     "nov_hi": 0.6457978664749412,
+     "prob": {
+      "rows": 6207,
+      "up_share": 0.4693088448525858,
+      "brier": 0.2505226888830419,
+      "brier_base": 0.24905805299571743,
+      "brier_skill": -0.005880700783241322,
+      "logloss": 0.6941936504812869,
+      "logloss_base": 0.6912621017459484,
+      "logloss_skill": -0.004240864250961041
+     },
+     "sides": {
+      "FLAT": 7646,
+      "LONG": 75,
+      "SHORT": 53
+     },
+     "rows": 7774
+    },
+    "second": {
+     "calls": 77,
+     "graded_all": 62,
+     "hit_all": 0.24193548387096775,
+     "neither_all": 15,
+     "nov_calls": 18,
+     "nov_graded": 15,
+     "nov_hits": 8,
+     "nov_hit": 0.5333333333333333,
+     "nov_lo": 0.3011697987531101,
+     "nov_hi": 0.751904647673791,
+     "prob": {
+      "rows": 13323,
+      "up_share": 0.51489904676124,
+      "brier": 0.24986890378185464,
+      "brier_base": 0.2497780184056064,
+      "brier_skill": -0.00036386458996018334,
+      "logloss": 0.6928852523362607,
+      "logloss_base": 0.6927031516467076,
+      "logloss_skill": -0.0002628841649128244
+     },
+     "sides": {
+      "FLAT": 17195,
+      "LONG": 55,
+      "SHORT": 22
+     },
+     "rows": 17272
+    }
+   },
+   "BRK.B": {
+    "full": {
+     "calls": 266,
+     "graded_all": 178,
+     "hit_all": 0.28651685393258425,
+     "neither_all": 88,
+     "nov_calls": 45,
+     "nov_graded": 32,
+     "nov_hits": 20,
+     "nov_hit": 0.625,
+     "nov_lo": 0.4525440722139633,
+     "nov_hi": 0.7706611278448665,
+     "prob": {
+      "rows": 18764,
+      "up_share": 0.5289383926668088,
+      "brier": 0.2499614576598732,
+      "brier_base": 0.24916256942986154,
+      "brier_skill": -0.0032062931115204307,
+      "logloss": 0.6930707123740818,
+      "logloss_base": 0.6914713831112682,
+      "logloss_skill": -0.0023129363005847114
+     },
+     "sides": {
+      "FLAT": 24776,
+      "LONG": 209,
+      "SHORT": 57
+     },
+     "rows": 25042,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 15:00"
+    },
+    "first": {
+     "calls": 109,
+     "graded_all": 57,
+     "hit_all": 0.2982456140350877,
+     "neither_all": 52,
+     "nov_calls": 12,
+     "nov_graded": 8,
+     "nov_hits": 4,
+     "nov_hit": 0.5,
+     "nov_lo": 0.21521606069626764,
+     "nov_hi": 0.7847839393037324,
+     "prob": {
+      "rows": 5818,
+      "up_share": 0.5006875214850464,
+      "brier": 0.2503064782376231,
+      "brier_base": 0.24999952731420755,
+      "brier_skill": -0.0012278060151280634,
+      "logloss": 0.6937611519214774,
+      "logloss_base": 0.6931462351880626,
+      "logloss_skill": -0.0008871385318105496
+     },
+     "sides": {
+      "FLAT": 7657,
+      "SHORT": 57,
+      "LONG": 52
+     },
+     "rows": 7766
+    },
+    "second": {
+     "calls": 157,
+     "graded_all": 121,
+     "hit_all": 0.2809917355371901,
+     "neither_all": 36,
+     "nov_calls": 33,
+     "nov_graded": 24,
+     "nov_hits": 16,
+     "nov_hit": 0.6666666666666666,
+     "nov_lo": 0.46706316684738447,
+     "nov_hi": 0.8202780976355061,
+     "prob": {
+      "rows": 12946,
+      "up_share": 0.5416344816931871,
+      "brier": 0.24980640361064194,
+      "brier_base": 0.24826656993413962,
+      "brier_skill": -0.006202339996523865,
+      "logloss": 0.6927604252362208,
+      "logloss_base": 0.6896763029020859,
+      "logloss_skill": -0.004471840370848135
+     },
+     "sides": {
+      "FLAT": 17119,
+      "LONG": 157
+     },
+     "rows": 17276
+    }
+   },
+   "JPM": {
+    "full": {
+     "calls": 154,
+     "graded_all": 124,
+     "hit_all": 0.5403225806451613,
+     "neither_all": 30,
+     "nov_calls": 35,
+     "nov_graded": 27,
+     "nov_hits": 19,
+     "nov_hit": 0.7037037037037037,
+     "nov_lo": 0.5151931688543231,
+     "nov_hi": 0.8414695961055739,
+     "prob": {
+      "rows": 19165,
+      "up_share": 0.536029219932168,
+      "brier": 0.250097685553158,
+      "brier_base": 0.2487018953110795,
+      "brier_skill": -0.005612302392519197,
+      "logloss": 0.6933426795044197,
+      "logloss_base": 0.690548719734907,
+      "logloss_skill": -0.0040459994923824905
+     },
+     "sides": {
+      "FLAT": 24886,
+      "LONG": 129,
+      "SHORT": 25
+     },
+     "rows": 25040,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 63,
+     "graded_all": 59,
+     "hit_all": 0.559322033898305,
+     "neither_all": 4,
+     "nov_calls": 8,
+     "nov_graded": 6,
+     "nov_hits": 4,
+     "nov_hit": 0.6666666666666666,
+     "nov_lo": 0.29999331299474324,
+     "nov_hi": 0.9032285897864654,
+     "prob": {
+      "rows": 5935,
+      "up_share": 0.5049705139005897,
+      "brier": 0.25096120050254905,
+      "brier_base": 0.2499752939915641,
+      "brier_skill": -0.0039440158074912635,
+      "logloss": 0.695070815733994,
+      "logloss_base": 0.6930977677291922,
+      "logloss_skill": -0.0028467095071826876
+     },
+     "sides": {
+      "FLAT": 7704,
+      "LONG": 38,
+      "SHORT": 25
+     },
+     "rows": 7767
+    },
+    "second": {
+     "calls": 91,
+     "graded_all": 65,
+     "hit_all": 0.5230769230769231,
+     "neither_all": 26,
+     "nov_calls": 27,
+     "nov_graded": 21,
+     "nov_hits": 15,
+     "nov_hit": 0.7142857142857143,
+     "nov_lo": 0.5004361911516968,
+     "nov_hi": 0.8618613712823846,
+     "prob": {
+      "rows": 13230,
+      "up_share": 0.5499622071050643,
+      "brier": 0.24971031131093302,
+      "brier_base": 0.2475037778611906,
+      "brier_skill": -0.008915150584004161,
+      "logloss": 0.6925674347181369,
+      "logloss_base": 0.688146394754653,
+      "logloss_skill": -0.0064245631411905535
+     },
+     "sides": {
+      "FLAT": 17182,
+      "LONG": 91
+     },
+     "rows": 17273
+    }
+   },
+   "LLY": {
+    "full": {
+     "calls": 279,
+     "graded_all": 156,
+     "hit_all": 0.46153846153846156,
+     "neither_all": 123,
+     "nov_calls": 38,
+     "nov_graded": 24,
+     "nov_hits": 11,
+     "nov_hit": 0.4583333333333333,
+     "nov_lo": 0.27891333613001446,
+     "nov_hi": 0.6492513477492627,
+     "prob": {
+      "rows": 18020,
+      "up_share": 0.5226415094339623,
+      "brier": 0.24979640104540823,
+      "brier_base": 0.24948736205055186,
+      "brier_skill": -0.0012386959897141558,
+      "logloss": 0.6927402685862978,
+      "logloss_base": 0.6921215539764404,
+      "logloss_skill": -0.000893939231198182
+     },
+     "sides": {
+      "FLAT": 24762,
+      "LONG": 167,
+      "SHORT": 112
+     },
+     "rows": 25041,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 155,
+     "graded_all": 86,
+     "hit_all": 0.27906976744186046,
+     "neither_all": 69,
+     "nov_calls": 16,
+     "nov_graded": 8,
+     "nov_hits": 2,
+     "nov_hit": 0.25,
+     "nov_lo": 0.07147921209795555,
+     "nov_hi": 0.5907245720727483,
+     "prob": {
+      "rows": 5455,
+      "up_share": 0.47277726856095326,
+      "brier": 0.25005833991329746,
+      "brier_base": 0.24925892289299756,
+      "brier_skill": -0.003207175137489804,
+      "logloss": 0.693265324864726,
+      "logloss_base": 0.6916642932159295,
+      "logloss_skill": -0.0023147524955386967
+     },
+     "sides": {
+      "FLAT": 7613,
+      "SHORT": 112,
+      "LONG": 43
+     },
+     "rows": 7768
+    },
+    "second": {
+     "calls": 124,
+     "graded_all": 70,
+     "hit_all": 0.6857142857142857,
+     "neither_all": 54,
+     "nov_calls": 22,
+     "nov_graded": 16,
+     "nov_hits": 9,
+     "nov_hit": 0.5625,
+     "nov_lo": 0.3317855624393811,
+     "nov_hi": 0.7690134771859434,
+     "prob": {
+      "rows": 12565,
+      "up_share": 0.5442896935933148,
+      "brier": 0.2496826822611396,
+      "brier_base": 0.24803842304141036,
+      "brier_skill": -0.006629050449392437,
+      "logloss": 0.6925123193623562,
+      "logloss_base": 0.6892188800940531,
+      "logloss_skill": -0.004778509938459186
+     },
+     "sides": {
+      "FLAT": 17149,
+      "LONG": 124
+     },
+     "rows": 17273
+    }
+   }
+  },
+  "pooled": {
+   "full": {
+    "calls": 2662,
+    "graded_all": 1921,
+    "hit_all": 0.4674648620510151,
+    "neither_all": 741,
+    "nov_calls": 504,
+    "nov_graded": 365,
+    "nov_hits": 185,
+    "nov_hit": 0.5068493150684932,
+    "nov_lo": 0.45575592972252676,
+    "nov_hi": 0.5578000301068403,
+    "prob": {
+     "rows": 246244,
+     "up_share": 0.5207883237764169,
+     "brier": 0.24999659864793966,
+     "brier_base": 0.24949150800779532,
+     "brier_skill": -0.0020244802886379976,
+     "logloss": 0.6931405457562902,
+     "logloss_base": 0.6921297050243842,
+     "logloss_skill": -0.0014604787579091116
+    },
+    "boot_lo": 0.42387181738366986,
+    "boot_hi": 0.5859303622320432,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T",
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   },
+   "first": {
+    "calls": 1347,
+    "graded_all": 954,
+    "hit_all": 0.40146750524109015,
+    "neither_all": 393,
+    "nov_calls": 167,
+    "nov_graded": 113,
+    "nov_hits": 45,
+    "nov_hit": 0.39823008849557523,
+    "nov_lo": 0.3127500104346582,
+    "nov_hi": 0.4904020537366166,
+    "prob": {
+     "rows": 76839,
+     "up_share": 0.48002967243196815,
+     "brier": 0.2505738482716121,
+     "brier_base": 0.24939724655984072,
+     "brier_skill": -0.004717781483161154,
+     "logloss": 0.6942958098034041,
+     "logloss_base": 0.6919407261860419,
+     "logloss_skill": -0.003403591562449737
+    },
+    "boot_lo": 0.2075309043591412,
+    "boot_hi": 0.5878918918918916,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T",
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   },
+   "second": {
+    "calls": 1315,
+    "graded_all": 967,
+    "hit_all": 0.532574974146846,
+    "neither_all": 348,
+    "nov_calls": 337,
+    "nov_graded": 252,
+    "nov_hits": 140,
+    "nov_hit": 0.5555555555555556,
+    "nov_lo": 0.4938271968614575,
+    "nov_hi": 0.6156155811872376,
+    "prob": {
+     "rows": 169405,
+     "up_share": 0.5392757002449751,
+     "brier": 0.24973476880919007,
+     "brier_base": 0.2483647196691276,
+     "brier_skill": -0.005516279211828845,
+     "logloss": 0.6926165391796473,
+     "logloss_base": 0.6898723915668046,
+     "logloss_skill": -0.003977761172048622
+    },
+    "boot_lo": 0.4767426798409447,
+    "boot_hi": 0.6337726038625069,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T",
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   }
+  },
+  "five": {
+   "full": {
+    "calls": 583,
+    "graded_all": 444,
+    "hit_all": 0.47072072072072074,
+    "neither_all": 139,
+    "nov_calls": 123,
+    "nov_graded": 91,
+    "nov_hits": 44,
+    "nov_hit": 0.4835164835164835,
+    "nov_lo": 0.38360857976418883,
+    "nov_hi": 0.5847596841218105,
+    "prob": {
+     "rows": 57201,
+     "up_share": 0.5214069684096432,
+     "brier": 0.24991859532701347,
+     "brier_base": 0.24950616087042898,
+     "brier_skill": -0.0016530030967798481,
+     "logloss": 0.6929847372528656,
+     "logloss_base": 0.692159101140816,
+     "logloss_skill": -0.0011928415167681283
+    },
+    "boot_lo": 0.36780436312456016,
+    "boot_hi": 0.5934151785714286,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T"
+    ]
+   },
+   "first": {
+    "calls": 272,
+    "graded_all": 223,
+    "hit_all": 0.3721973094170404,
+    "neither_all": 49,
+    "nov_calls": 38,
+    "nov_graded": 28,
+    "nov_hits": 9,
+    "nov_hit": 0.32142857142857145,
+    "nov_lo": 0.179332468369093,
+    "nov_hi": 0.5066115696450038,
+    "prob": {
+     "rows": 17990,
+     "up_share": 0.47976653696498056,
+     "brier": 0.2506654815078882,
+     "brier_base": 0.24943136516449138,
+     "brier_skill": -0.004947719155459662,
+     "logloss": 0.6944797543217921,
+     "logloss_base": 0.69200896666537,
+     "logloss_skill": -0.003570456129099231
+    },
+    "boot_lo": 0.125,
+    "boot_hi": 0.5185185185185185,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T"
+    ]
+   },
+   "second": {
+    "calls": 311,
+    "graded_all": 221,
+    "hit_all": 0.5701357466063348,
+    "neither_all": 90,
+    "nov_calls": 85,
+    "nov_graded": 63,
+    "nov_hits": 35,
+    "nov_hit": 0.5555555555555556,
+    "nov_lo": 0.4331963814527651,
+    "nov_hi": 0.671529040720191,
+    "prob": {
+     "rows": 39211,
+     "up_share": 0.5405115911351407,
+     "brier": 0.24957592407675366,
+     "brier_base": 0.24834957311281733,
+     "brier_skill": -0.0049380031081398545,
+     "logloss": 0.6922988236809091,
+     "logloss_base": 0.6898426018265745,
+     "logloss_skill": -0.0035605540275869263
+    },
+    "boot_lo": 0.4166666666666667,
+    "boot_hi": 0.6984126984126984,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T"
+    ]
+   }
+  },
+  "ten": {
+   "full": {
+    "calls": 2079,
+    "graded_all": 1477,
+    "hit_all": 0.4664861205145565,
+    "neither_all": 602,
+    "nov_calls": 381,
+    "nov_graded": 274,
+    "nov_hits": 141,
+    "nov_hit": 0.5145985401459854,
+    "nov_lo": 0.45562923624897705,
+    "nov_hi": 0.5731641628074896,
+    "prob": {
+     "rows": 189043,
+     "up_share": 0.5206011330755437,
+     "brier": 0.2500202010450678,
+     "brier_base": 0.24948707431601355,
+     "brier_skill": -0.0021368911817010172,
+     "logloss": 0.6931876905974341,
+     "logloss_base": 0.6921208102900855,
+     "logloss_skill": -0.0015414654370837777
+    },
+    "boot_lo": 0.42803987579167435,
+    "boot_hi": 0.596624492719026,
+    "tickers": [
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   },
+   "first": {
+    "calls": 1075,
+    "graded_all": 731,
+    "hit_all": 0.4103967168262654,
+    "neither_all": 344,
+    "nov_calls": 129,
+    "nov_graded": 85,
+    "nov_hits": 36,
+    "nov_hit": 0.4235294117647059,
+    "nov_lo": 0.32403542240207905,
+    "nov_hi": 0.5296364987516502,
+    "prob": {
+     "rows": 58849,
+     "up_share": 0.48011011232136486,
+     "brier": 0.25054583620818527,
+     "brier_base": 0.24938681658316036,
+     "brier_skill": -0.004647477524692745,
+     "logloss": 0.6942395783995432,
+     "logloss_base": 0.6919198652330415,
+     "logloss_skill": -0.0033525748906204633
+    },
+    "boot_lo": 0.22855889724310777,
+    "boot_hi": 0.6136363636363636,
+    "tickers": [
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   },
+   "second": {
+    "calls": 1004,
+    "graded_all": 746,
+    "hit_all": 0.5214477211796247,
+    "neither_all": 258,
+    "nov_calls": 252,
+    "nov_graded": 189,
+    "nov_hits": 105,
+    "nov_hit": 0.5555555555555556,
+    "nov_lo": 0.4843074704606921,
+    "nov_hi": 0.6245902744631658,
+    "prob": {
+     "rows": 130194,
+     "up_share": 0.5389034824953531,
+     "brier": 0.24978260865437163,
+     "brier_base": 0.24836928141252193,
+     "brier_skill": -0.00569042690711119,
+     "logloss": 0.6927122267107243,
+     "logloss_base": 0.6898813634511016,
+     "logloss_skill": -0.00410340590367797
+    },
+    "boot_lo": 0.4669973544973545,
+    "boot_hi": 0.6363738279657561,
+    "tickers": [
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   }
+  },
+  "pass": {
+   "pooled_halves_above_50_with_interval": false,
+   "tickers_above_50": [
+    "T",
+    "MSFT",
+    "GOOGL",
+    "AVGO",
+    "BRK.B",
+    "JPM"
+   ],
+   "tickers_needed": 6,
+   "tickers_tested": 13,
+   "enough_tickers": true,
+   "PASS": false
+  }
+ },
+ "e1_sides": {
+  "FLAT": 323043,
+  "LONG": 1893,
+  "SHORT": 769
+ },
+ "h57_same_dates": {
+  "split_utc": "2022-02-25 20:22",
+  "per_ticker": {
+   "NVDA": {
+    "full": {
+     "calls": 44,
+     "graded_all": 39,
+     "hit_all": 0.6666666666666666,
+     "neither_all": 5,
+     "nov_calls": 12,
+     "nov_graded": 11,
+     "nov_hits": 6,
+     "nov_hit": 0.5454545454545454,
+     "nov_lo": 0.2800915357859759,
+     "nov_hi": 0.7872872851236217,
+     "prob": {
+      "rows": 19312,
+      "up_share": 0.5273405136702568,
+      "brier": 0.2501161782889994,
+      "brier_base": 0.2492524963122465,
+      "brier_skill": -0.0034650885729583525,
+      "logloss": 0.6933795356382606,
+      "logloss_base": 0.6916514272762809,
+      "logloss_skill": -0.002498524970569349
+     },
+     "sides": {
+      "FLAT": 25008,
+      "LONG": 40,
+      "SHORT": 4
+     },
+     "rows": 25052,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 16:45"
+    },
+    "first": {
+     "calls": 34,
+     "graded_all": 29,
+     "hit_all": 0.7241379310344828,
+     "neither_all": 5,
+     "nov_calls": 7,
+     "nov_graded": 6,
+     "nov_hits": 4,
+     "nov_hit": 0.6666666666666666,
+     "nov_lo": 0.29999331299474324,
+     "nov_hi": 0.9032285897864654,
+     "prob": {
+      "rows": 746,
+      "up_share": 0.41823056300268097,
+      "brier": 0.24988509909771675,
+      "brier_base": 0.24331375917314144,
+      "brier_skill": -0.027007679084433578,
+      "logloss": 0.6929131810657563,
+      "logloss_base": 0.6797144441767714,
+      "logloss_skill": -0.019418061514008933
+     },
+     "sides": {
+      "FLAT": 952,
+      "LONG": 30,
+      "SHORT": 4
+     },
+     "rows": 986
+    },
+    "second": {
+     "calls": 10,
+     "graded_all": 10,
+     "hit_all": 0.5,
+     "neither_all": 0,
+     "nov_calls": 5,
+     "nov_graded": 5,
+     "nov_hits": 2,
+     "nov_hit": 0.4,
+     "nov_lo": 0.11762077314099711,
+     "nov_hi": 0.7692757205908813,
+     "prob": {
+      "rows": 18566,
+      "up_share": 0.5317246579769471,
+      "brier": 0.25012546327643326,
+      "brier_base": 0.24899354607624574,
+      "brier_skill": -0.004545970038279279,
+      "logloss": 0.6933982742201354,
+      "logloss_base": 0.6911329199334946,
+      "logloss_skill": -0.00327774039016826
+     },
+     "sides": {
+      "FLAT": 24056,
+      "LONG": 10
+     },
+     "rows": 24066
+    }
+   },
+   "MU": {
+    "full": {
+     "calls": 68,
+     "graded_all": 67,
+     "hit_all": 0.29850746268656714,
+     "neither_all": 1,
+     "nov_calls": 14,
+     "nov_graded": 14,
+     "nov_hits": 5,
+     "nov_hit": 0.35714285714285715,
+     "nov_lo": 0.16344731650094954,
+     "nov_hi": 0.6123557707570447,
+     "prob": {
+      "rows": 18999,
+      "up_share": 0.5132375388178325,
+      "brier": 0.24986693723296213,
+      "brier_base": 0.24982476756604638,
+      "brier_skill": -0.0001687969824872848,
+      "logloss": 0.6928810314087491,
+      "logloss_base": 0.6927966747386802,
+      "logloss_skill": -0.0001217625215952367
+     },
+     "sides": {
+      "FLAT": 24969,
+      "LONG": 68
+     },
+     "rows": 25037,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 32,
+     "graded_all": 31,
+     "hit_all": 0.45161290322580644,
+     "neither_all": 1,
+     "nov_calls": 8,
+     "nov_graded": 8,
+     "nov_hits": 3,
+     "nov_hit": 0.375,
+     "nov_lo": 0.13684428473912286,
+     "nov_hi": 0.694257607346229,
+     "prob": {
+      "rows": 793,
+      "up_share": 0.45775535939470363,
+      "brier": 0.2500915527219345,
+      "brier_base": 0.24821539034012927,
+      "brier_skill": -0.007558606173591276,
+      "logloss": 0.693328452322381,
+      "logloss_base": 0.6895737026262575,
+      "logloss_skill": -0.005445030287297037
+     },
+     "sides": {
+      "FLAT": 954,
+      "LONG": 32
+     },
+     "rows": 986
+    },
+    "second": {
+     "calls": 36,
+     "graded_all": 36,
+     "hit_all": 0.16666666666666666,
+     "neither_all": 0,
+     "nov_calls": 6,
+     "nov_graded": 6,
+     "nov_hits": 2,
+     "nov_hit": 0.3333333333333333,
+     "nov_lo": 0.09677141021353453,
+     "nov_hi": 0.7000066870052566,
+     "prob": {
+      "rows": 18206,
+      "up_share": 0.5156541799406789,
+      "brier": 0.24985715364058841,
+      "brier_base": 0.24975494665038492,
+      "brier_skill": -0.00040922909265361795,
+      "logloss": 0.6928615430650982,
+      "logloss_base": 0.6926569937611127,
+      "logloss_skill": -0.00029531110755809387
+     },
+     "sides": {
+      "FLAT": 24015,
+      "LONG": 36
+     },
+     "rows": 24051
+    }
+   },
+   "T": {
+    "full": {
+     "calls": 78,
+     "graded_all": 75,
+     "hit_all": 0.5333333333333333,
+     "neither_all": 3,
+     "nov_calls": 11,
+     "nov_graded": 10,
+     "nov_hits": 4,
+     "nov_hit": 0.4,
+     "nov_lo": 0.1681803285264069,
+     "nov_hi": 0.6873262320788047,
+     "prob": {
+      "rows": 18890,
+      "up_share": 0.5235574377977766,
+      "brier": 0.24995438098521625,
+      "brier_base": 0.24944504712440388,
+      "brier_skill": -0.0020418680053340132,
+      "logloss": 0.6930558992753136,
+      "logloss_base": 0.6920368638134514,
+      "logloss_skill": -0.0014725161550597221
+     },
+     "sides": {
+      "FLAT": 24827,
+      "LONG": 62,
+      "SHORT": 16
+     },
+     "rows": 24905,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 26,
+     "graded_all": 26,
+     "hit_all": 0.7692307692307693,
+     "neither_all": 0,
+     "nov_calls": 4,
+     "nov_graded": 4,
+     "nov_hits": 2,
+     "nov_hit": 0.5,
+     "nov_lo": 0.15003898774401986,
+     "nov_hi": 0.8499610122559802,
+     "prob": {
+      "rows": 781,
+      "up_share": 0.4647887323943662,
+      "brier": 0.25011236289180083,
+      "brier_base": 0.2487601666336045,
+      "brier_skill": -0.005435742693435053,
+      "logloss": 0.6933702144669306,
+      "logloss_base": 0.690665460168125,
+      "logloss_skill": -0.003916156887514122
+     },
+     "sides": {
+      "FLAT": 960,
+      "SHORT": 16,
+      "LONG": 10
+     },
+     "rows": 986
+    },
+    "second": {
+     "calls": 52,
+     "graded_all": 49,
+     "hit_all": 0.40816326530612246,
+     "neither_all": 3,
+     "nov_calls": 7,
+     "nov_graded": 6,
+     "nov_hits": 2,
+     "nov_hit": 0.3333333333333333,
+     "nov_lo": 0.09677141021353453,
+     "nov_hi": 0.7000066870052566,
+     "prob": {
+      "rows": 18109,
+      "up_share": 0.5260919984538075,
+      "brier": 0.24994756758475004,
+      "brier_base": 0.2493192076166865,
+      "brier_skill": -0.0025203030848293118,
+      "logloss": 0.6930423435756806,
+      "logloss_base": 0.6917849771481731,
+      "logloss_skill": -0.0018175682748862165
+     },
+     "sides": {
+      "FLAT": 23867,
+      "LONG": 52
+     },
+     "rows": 23919
+    }
+   },
+   "AAPL": {
+    "full": {
+     "calls": 75,
+     "graded_all": 63,
+     "hit_all": 0.47619047619047616,
+     "neither_all": 12,
+     "nov_calls": 14,
+     "nov_graded": 13,
+     "nov_hits": 4,
+     "nov_hit": 0.3076923076923077,
+     "nov_lo": 0.12680703567070326,
+     "nov_hi": 0.5763065701492199,
+     "prob": {
+      "rows": 18668,
+      "up_share": 0.5218555817441611,
+      "brier": 0.250163221018107,
+      "brier_base": 0.2495223335466243,
+      "brier_skill": -0.0025684573495821095,
+      "logloss": 0.6934737350140379,
+      "logloss_base": 0.6921915432001293,
+      "logloss_skill": -0.0018523656154201262
+     },
+     "sides": {
+      "FLAT": 24970,
+      "LONG": 75
+     },
+     "rows": 25045,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 15:30"
+    },
+    "first": {
+     "calls": 45,
+     "graded_all": 35,
+     "hit_all": 0.5142857142857142,
+     "neither_all": 10,
+     "nov_calls": 5,
+     "nov_graded": 4,
+     "nov_hits": 2,
+     "nov_hit": 0.5,
+     "nov_lo": 0.15003898774401986,
+     "nov_hi": 0.8499610122559802,
+     "prob": {
+      "rows": 725,
+      "up_share": 0.3406896551724138,
+      "brier": 0.25079626370989405,
+      "brier_base": 0.2246202140309156,
+      "brier_skill": -0.11653470188295567,
+      "logloss": 0.6947386695576842,
+      "logloss_base": 0.6414918627470524,
+      "logloss_skill": -0.08300464885495762
+     },
+     "sides": {
+      "FLAT": 935,
+      "LONG": 45
+     },
+     "rows": 980
+    },
+    "second": {
+     "calls": 30,
+     "graded_all": 28,
+     "hit_all": 0.42857142857142855,
+     "neither_all": 2,
+     "nov_calls": 9,
+     "nov_graded": 9,
+     "nov_hits": 2,
+     "nov_hit": 0.2222222222222222,
+     "nov_lo": 0.06322510654056959,
+     "nov_hi": 0.5474110333077882,
+     "prob": {
+      "rows": 17943,
+      "up_share": 0.5291757231232236,
+      "brier": 0.2501376424664966,
+      "brier_base": 0.24914877718023698,
+      "brier_skill": -0.003968975073653569,
+      "logloss": 0.6934226244113435,
+      "logloss_base": 0.6914437674951665,
+      "logloss_skill": -0.0028619202445712144
+     },
+     "sides": {
+      "FLAT": 24035,
+      "LONG": 30
+     },
+     "rows": 24065
+    }
+   },
+   "MSFT": {
+    "full": {
+     "calls": 31,
+     "graded_all": 26,
+     "hit_all": 0.4230769230769231,
+     "neither_all": 5,
+     "nov_calls": 10,
+     "nov_graded": 9,
+     "nov_hits": 3,
+     "nov_hit": 0.3333333333333333,
+     "nov_lo": 0.12058381743407343,
+     "nov_hi": 0.6457978664749412,
+     "prob": {
+      "rows": 18715,
+      "up_share": 0.5144536468073737,
+      "brier": 0.24993522439979732,
+      "brier_base": 0.24979109209396771,
+      "brier_skill": -0.000577011392285165,
+      "logloss": 0.6930178760109229,
+      "logloss_base": 0.6927293065384041,
+      "logloss_skill": -0.00041656888166130557
+     },
+     "sides": {
+      "FLAT": 25011,
+      "LONG": 31
+     },
+     "rows": 25042,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 17:15"
+    },
+    "first": {
+     "calls": 26,
+     "graded_all": 24,
+     "hit_all": 0.4583333333333333,
+     "neither_all": 2,
+     "nov_calls": 8,
+     "nov_graded": 8,
+     "nov_hits": 3,
+     "nov_hit": 0.375,
+     "nov_lo": 0.13684428473912286,
+     "nov_hi": 0.694257607346229,
+     "prob": {
+      "rows": 809,
+      "up_share": 0.3510506798516687,
+      "brier": 0.25258052699284883,
+      "brier_base": 0.22781410002734995,
+      "brier_skill": -0.10871331916034,
+      "logloss": 0.6983134404575345,
+      "logloss_base": 0.6480946259603644,
+      "logloss_skill": -0.07748685529177868
+     },
+     "sides": {
+      "FLAT": 960,
+      "LONG": 26
+     },
+     "rows": 986
+    },
+    "second": {
+     "calls": 5,
+     "graded_all": 2,
+     "hit_all": 0.0,
+     "neither_all": 3,
+     "nov_calls": 2,
+     "nov_graded": 1,
+     "nov_hits": 0,
+     "nov_hit": 0.0,
+     "nov_lo": 0.0,
+     "nov_hi": 0.7934506882081973,
+     "prob": {
+      "rows": 17906,
+      "up_share": 0.5218362560035742,
+      "brier": 0.2498157086063327,
+      "brier_base": 0.24952317792374631,
+      "brier_skill": -0.001172358756491132,
+      "logloss": 0.6927786203626871,
+      "logloss_base": 0.6921932330302037,
+      "logloss_skill": -0.0008456992997758483
+     },
+     "sides": {
+      "FLAT": 24051,
+      "LONG": 5
+     },
+     "rows": 24056
+    }
+   },
+   "AMZN": {
+    "full": {
+     "calls": 29,
+     "graded_all": 27,
+     "hit_all": 0.8148148148148148,
+     "neither_all": 2,
+     "nov_calls": 9,
+     "nov_graded": 8,
+     "nov_hits": 4,
+     "nov_hit": 0.5,
+     "nov_lo": 0.21521606069626764,
+     "nov_hi": 0.7847839393037324,
+     "prob": {
+      "rows": 19255,
+      "up_share": 0.5118151129576733,
+      "brier": 0.2501098595927904,
+      "brier_base": 0.24986040310579738,
+      "brier_skill": -0.0009983834328779473,
+      "logloss": 0.6933669978581681,
+      "logloss_base": 0.6928679607826778,
+      "logloss_skill": -0.0007202484509842844
+     },
+     "sides": {
+      "FLAT": 25002,
+      "LONG": 25,
+      "SHORT": 4
+     },
+     "rows": 25031,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 14:45"
+    },
+    "first": {
+     "calls": 3,
+     "graded_all": 3,
+     "hit_all": 1.0,
+     "neither_all": 0,
+     "nov_calls": 1,
+     "nov_graded": 1,
+     "nov_hits": 1,
+     "nov_hit": 1.0,
+     "nov_lo": 0.2065493117918027,
+     "nov_hi": 1.0,
+     "prob": {
+      "rows": 725,
+      "up_share": 0.3627586206896552,
+      "brier": 0.25158113165767765,
+      "brier_base": 0.2311648038049941,
+      "brier_skill": -0.08831936141068564,
+      "logloss": 0.6963114656974448,
+      "logloss_base": 0.6549889098305156,
+      "logloss_skill": -0.06308893974650931
+     },
+     "sides": {
+      "FLAT": 983,
+      "LONG": 3
+     },
+     "rows": 986
+    },
+    "second": {
+     "calls": 26,
+     "graded_all": 24,
+     "hit_all": 0.7916666666666666,
+     "neither_all": 2,
+     "nov_calls": 8,
+     "nov_graded": 7,
+     "nov_hits": 3,
+     "nov_hit": 0.42857142857142855,
+     "nov_lo": 0.15821985399244537,
+     "nov_hi": 0.7495416372469643,
+     "prob": {
+      "rows": 18530,
+      "up_share": 0.5176470588235295,
+      "brier": 0.2500522949815091,
+      "brier_base": 0.2496885813148789,
+      "brier_skill": -0.0014566692025517192,
+      "logloss": 0.6932517933690436,
+      "logloss_base": 0.6925242138164328,
+      "logloss_skill": -0.0010506196579052052
+     },
+     "sides": {
+      "FLAT": 24019,
+      "LONG": 22,
+      "SHORT": 4
+     },
+     "rows": 24045
+    }
+   },
+   "GOOGL": {
+    "full": {
+     "calls": 67,
+     "graded_all": 39,
+     "hit_all": 0.48717948717948717,
+     "neither_all": 28,
+     "nov_calls": 12,
+     "nov_graded": 9,
+     "nov_hits": 4,
+     "nov_hit": 0.4444444444444444,
+     "nov_lo": 0.18877851977054566,
+     "nov_hi": 0.7333487081991259,
+     "prob": {
+      "rows": 19143,
+      "up_share": 0.5249438437026589,
+      "brier": 0.24953234789250245,
+      "brier_base": 0.24937780466133733,
+      "brier_skill": -0.0006197152604459077,
+      "logloss": 0.6922112821735427,
+      "logloss_base": 0.6919022731986947,
+      "logloss_skill": -0.00044660783295213946
+     },
+     "sides": {
+      "FLAT": 24971,
+      "LONG": 65,
+      "SHORT": 2
+     },
+     "rows": 25038,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 16:45"
+    },
+    "first": {
+     "calls": 23,
+     "graded_all": 14,
+     "hit_all": 0.2857142857142857,
+     "neither_all": 9,
+     "nov_calls": 4,
+     "nov_graded": 3,
+     "nov_hits": 1,
+     "nov_hit": 0.3333333333333333,
+     "nov_lo": 0.06149194402093078,
+     "nov_hi": 0.7923404011921757,
+     "prob": {
+      "rows": 795,
+      "up_share": 0.39119496855345914,
+      "brier": 0.24957356286525859,
+      "brier_base": 0.23816146513191724,
+      "brier_skill": -0.04791748206209667,
+      "logloss": 0.6922927362148322,
+      "logloss_base": 0.6692796108322042,
+      "logloss_skill": -0.03438491926268705
+     },
+     "sides": {
+      "FLAT": 963,
+      "LONG": 23
+     },
+     "rows": 986
+    },
+    "second": {
+     "calls": 44,
+     "graded_all": 25,
+     "hit_all": 0.6,
+     "neither_all": 19,
+     "nov_calls": 8,
+     "nov_graded": 6,
+     "nov_hits": 3,
+     "nov_hit": 0.5,
+     "nov_lo": 0.18761630498040816,
+     "nov_hi": 0.8123836950195918,
+     "prob": {
+      "rows": 18348,
+      "up_share": 0.5307390451275343,
+      "brier": 0.2495305620900531,
+      "brier_base": 0.24905511110464745,
+      "brier_skill": -0.0019090191857409344,
+      "logloss": 0.6922077528535718,
+      "logloss_base": 0.6912562105458513,
+      "logloss_skill": -0.0013765406996764096
+     },
+     "sides": {
+      "FLAT": 24008,
+      "LONG": 42,
+      "SHORT": 2
+     },
+     "rows": 24052
+    }
+   },
+   "AVGO": {
+    "full": {
+     "calls": 79,
+     "graded_all": 66,
+     "hit_all": 0.5151515151515151,
+     "neither_all": 13,
+     "nov_calls": 19,
+     "nov_graded": 17,
+     "nov_hits": 10,
+     "nov_hit": 0.5882352941176471,
+     "nov_lo": 0.3600544248492146,
+     "nov_hi": 0.7838894332600814,
+     "prob": {
+      "rows": 19100,
+      "up_share": 0.5215183246073298,
+      "brier": 0.2500688548144771,
+      "brier_base": 0.2495369617060936,
+      "brier_skill": -0.002131520335692638,
+      "logloss": 0.6932847847019923,
+      "logloss_base": 0.6922208178875146,
+      "logloss_skill": -0.0015370338293563268
+     },
+     "sides": {
+      "FLAT": 24955,
+      "LONG": 79
+     },
+     "rows": 25034,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 48,
+     "graded_all": 48,
+     "hit_all": 0.375,
+     "neither_all": 0,
+     "nov_calls": 11,
+     "nov_graded": 11,
+     "nov_hits": 5,
+     "nov_hit": 0.45454545454545453,
+     "nov_lo": 0.21271271487637833,
+     "nov_hi": 0.7199084642140241,
+     "prob": {
+      "rows": 786,
+      "up_share": 0.3791348600508906,
+      "brier": 0.2526217107137179,
+      "brier_base": 0.23539161794508223,
+      "brier_skill": -0.07319756293384883,
+      "logloss": 0.698395467371874,
+      "logloss_base": 0.6636390099419974,
+      "logloss_skill": -0.05237253523254193
+     },
+     "sides": {
+      "FLAT": 938,
+      "LONG": 48
+     },
+     "rows": 986
+    },
+    "second": {
+     "calls": 31,
+     "graded_all": 18,
+     "hit_all": 0.8888888888888888,
+     "neither_all": 13,
+     "nov_calls": 8,
+     "nov_graded": 6,
+     "nov_hits": 5,
+     "nov_hit": 0.8333333333333334,
+     "nov_lo": 0.4364971749742326,
+     "nov_hi": 0.969946630588185,
+     "prob": {
+      "rows": 18314,
+      "up_share": 0.5276291361799716,
+      "brier": 0.24995929138012066,
+      "brier_base": 0.2492366308339486,
+      "brier_skill": -0.002899495727229251,
+      "logloss": 0.6930654444934892,
+      "logloss_base": 0.6916196643006502,
+      "logloss_skill": -0.002090426671573775
+     },
+     "sides": {
+      "FLAT": 24017,
+      "LONG": 31
+     },
+     "rows": 24048
+    }
+   },
+   "META": {
+    "full": {
+     "calls": 2,
+     "graded_all": 2,
+     "hit_all": 0.5,
+     "neither_all": 0,
+     "nov_calls": 2,
+     "nov_graded": 2,
+     "nov_hits": 1,
+     "nov_hit": 0.5,
+     "nov_lo": 0.09453120463920084,
+     "nov_hi": 0.9054687953607992,
+     "prob": {
+      "rows": 18683,
+      "up_share": 0.5241128298453139,
+      "brier": 0.25012611248517413,
+      "brier_base": 0.24941857143685098,
+      "brier_skill": -0.0028367616903870463,
+      "logloss": 0.6933994856900525,
+      "logloss_base": 0.6919838722682365,
+      "logloss_skill": -0.002045731813338003
+     },
+     "sides": {
+      "FLAT": 25034,
+      "LONG": 2
+     },
+     "rows": 25036,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 1,
+     "graded_all": 1,
+     "hit_all": 1.0,
+     "neither_all": 0,
+     "nov_calls": 1,
+     "nov_graded": 1,
+     "nov_hits": 1,
+     "nov_hit": 1.0,
+     "nov_lo": 0.2065493117918027,
+     "nov_hi": 1.0,
+     "prob": {
+      "rows": 699,
+      "up_share": 0.36337625178826893,
+      "brier": 0.2508634959556023,
+      "brier_base": 0.23133395142457752,
+      "brier_skill": -0.0844214366752476,
+      "logloss": 0.6948760390513443,
+      "logloss_base": 0.6553360649996397,
+      "logloss_skill": -0.06033541592392955
+     },
+     "sides": {
+      "FLAT": 985,
+      "LONG": 1
+     },
+     "rows": 986
+    },
+    "second": {
+     "calls": 1,
+     "graded_all": 1,
+     "hit_all": 0.0,
+     "neither_all": 0,
+     "nov_calls": 1,
+     "nov_graded": 1,
+     "nov_hits": 0,
+     "nov_hit": 0.0,
+     "nov_lo": 0.0,
+     "nov_hi": 0.7934506882081973,
+     "prob": {
+      "rows": 17984,
+      "up_share": 0.5303603202846975,
+      "brier": 0.25009745195104216,
+      "brier_base": 0.24907825095221056,
+      "brier_skill": -0.0040918907810507665,
+      "logloss": 0.6933420951874089,
+      "logloss_base": 0.6913025479619559,
+      "logloss_skill": -0.0029502961206577805
+     },
+     "sides": {
+      "FLAT": 24049,
+      "LONG": 1
+     },
+     "rows": 24050
+    }
+   },
+   "TSLA": {
+    "full": {
+     "calls": 88,
+     "graded_all": 81,
+     "hit_all": 0.6049382716049383,
+     "neither_all": 7,
+     "nov_calls": 12,
+     "nov_graded": 11,
+     "nov_hits": 7,
+     "nov_hit": 0.6363636363636364,
+     "nov_lo": 0.35380117262012434,
+     "nov_hi": 0.8483352901086686,
+     "prob": {
+      "rows": 19530,
+      "up_share": 0.5004096262160779,
+      "brier": 0.25038957023920705,
+      "brier_base": 0.2499998322063631,
+      "brier_skill": -0.00155895317770538,
+      "logloss": 0.6939262503583411,
+      "logloss_base": 0.693146844972634,
+      "logloss_skill": -0.0011244448292018205
+     },
+     "sides": {
+      "FLAT": 24958,
+      "LONG": 88
+     },
+     "rows": 25046,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 47,
+     "graded_all": 44,
+     "hit_all": 0.6590909090909091,
+     "neither_all": 3,
+     "nov_calls": 3,
+     "nov_graded": 3,
+     "nov_hits": 2,
+     "nov_hit": 0.6666666666666666,
+     "nov_lo": 0.2076595988078242,
+     "nov_hi": 0.9385080559790691,
+     "prob": {
+      "rows": 792,
+      "up_share": 0.39015151515151514,
+      "brier": 0.24964919247730616,
+      "brier_base": 0.23793331037649226,
+      "brier_skill": -0.049240192902269,
+      "logloss": 0.6924404896675977,
+      "logloss_base": 0.6688158131836227,
+      "logloss_skill": -0.03532314281194915
+     },
+     "sides": {
+      "FLAT": 939,
+      "LONG": 47
+     },
+     "rows": 986
+    },
+    "second": {
+     "calls": 41,
+     "graded_all": 37,
+     "hit_all": 0.5405405405405406,
+     "neither_all": 4,
+     "nov_calls": 9,
+     "nov_graded": 8,
+     "nov_hits": 5,
+     "nov_hit": 0.625,
+     "nov_lo": 0.30574239265377096,
+     "nov_hi": 0.8631557152608771,
+     "prob": {
+      "rows": 18738,
+      "up_share": 0.505069911409969,
+      "brier": 0.25042086382376383,
+      "brier_base": 0.24997429599829507,
+      "brier_skill": -0.0017864549780424177,
+      "logloss": 0.6939890490811007,
+      "logloss_base": 0.6930957716755717,
+      "logloss_skill": -0.0012888224716327557
+     },
+     "sides": {
+      "FLAT": 24019,
+      "LONG": 41
+     },
+     "rows": 24060
+    }
+   },
+   "BRK.B": {
+    "full": {
+     "calls": 93,
+     "graded_all": 80,
+     "hit_all": 0.525,
+     "neither_all": 13,
+     "nov_calls": 21,
+     "nov_graded": 16,
+     "nov_hits": 8,
+     "nov_hit": 0.5,
+     "nov_lo": 0.27999563470387406,
+     "nov_hi": 0.7200043652961259,
+     "prob": {
+      "rows": 18764,
+      "up_share": 0.5289383926668088,
+      "brier": 0.2502666361920519,
+      "brier_base": 0.24916256942986154,
+      "brier_skill": -0.004431110036779318,
+      "logloss": 0.693680900515458,
+      "logloss_base": 0.6914713831112682,
+      "logloss_skill": -0.003195385171615106
+     },
+     "sides": {
+      "FLAT": 24949,
+      "LONG": 93
+     },
+     "rows": 25042,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-10 15:00"
+    },
+    "first": {
+     "calls": 25,
+     "graded_all": 25,
+     "hit_all": 0.8,
+     "neither_all": 0,
+     "nov_calls": 4,
+     "nov_graded": 4,
+     "nov_hits": 2,
+     "nov_hit": 0.5,
+     "nov_lo": 0.15003898774401986,
+     "nov_hi": 0.8499610122559802,
+     "prob": {
+      "rows": 772,
+      "up_share": 0.49222797927461137,
+      "brier": 0.2500647141372565,
+      "brier_base": 0.24993959569384416,
+      "brier_skill": -0.0005005947259575372,
+      "logloss": 0.6932754909646737,
+      "logloss_base": 0.6930263670822564,
+      "logloss_skill": -0.0003594724447011366
+     },
+     "sides": {
+      "FLAT": 961,
+      "LONG": 25
+     },
+     "rows": 986
+    },
+    "second": {
+     "calls": 68,
+     "graded_all": 55,
+     "hit_all": 0.4,
+     "neither_all": 13,
+     "nov_calls": 17,
+     "nov_graded": 12,
+     "nov_hits": 6,
+     "nov_hit": 0.5,
+     "nov_lo": 0.25378159616252394,
+     "nov_hi": 0.7462184038374761,
+     "prob": {
+      "rows": 17992,
+      "up_share": 0.5305135615829257,
+      "brier": 0.25027530025531897,
+      "brier_base": 0.249068922559525,
+      "brier_skill": -0.00484354966246614,
+      "logloss": 0.693698295811879,
+      "logloss_base": 0.691283868080019,
+      "logloss_skill": -0.0034926718868268924
+     },
+     "sides": {
+      "FLAT": 23988,
+      "LONG": 68
+     },
+     "rows": 24056
+    }
+   },
+   "JPM": {
+    "full": {
+     "calls": 22,
+     "graded_all": 21,
+     "hit_all": 0.14285714285714285,
+     "neither_all": 1,
+     "nov_calls": 4,
+     "nov_graded": 3,
+     "nov_hits": 2,
+     "nov_hit": 0.6666666666666666,
+     "nov_lo": 0.2076595988078242,
+     "nov_hi": 0.9385080559790691,
+     "prob": {
+      "rows": 19165,
+      "up_share": 0.536029219932168,
+      "brier": 0.2501088862772511,
+      "brier_base": 0.2487018953110795,
+      "brier_skill": -0.00565733913853661,
+      "logloss": 0.6933654957994804,
+      "logloss_base": 0.690548719734907,
+      "logloss_skill": -0.004079040311094628
+     },
+     "sides": {
+      "FLAT": 25018,
+      "LONG": 20,
+      "SHORT": 2
+     },
+     "rows": 25040,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 14,
+     "graded_all": 14,
+     "hit_all": 0.14285714285714285,
+     "neither_all": 0,
+     "nov_calls": 2,
+     "nov_graded": 2,
+     "nov_hits": 1,
+     "nov_hit": 0.5,
+     "nov_lo": 0.09453120463920084,
+     "nov_hi": 0.9054687953607992,
+     "prob": {
+      "rows": 815,
+      "up_share": 0.5128834355828221,
+      "brier": 0.2511834850758817,
+      "brier_base": 0.24983401708758324,
+      "brier_skill": -0.005401458152215488,
+      "logloss": 0.6955184153454668,
+      "logloss_base": 0.6928151779915832,
+      "logloss_skill": -0.003901816010613457
+     },
+     "sides": {
+      "FLAT": 972,
+      "LONG": 12,
+      "SHORT": 2
+     },
+     "rows": 986
+    },
+    "second": {
+     "calls": 8,
+     "graded_all": 7,
+     "hit_all": 0.14285714285714285,
+     "neither_all": 1,
+     "nov_calls": 2,
+     "nov_graded": 1,
+     "nov_hits": 1,
+     "nov_hit": 1.0,
+     "nov_lo": 0.2065493117918027,
+     "nov_hi": 1.0,
+     "prob": {
+      "rows": 18350,
+      "up_share": 0.5370572207084469,
+      "brier": 0.2500611588646688,
+      "brier_base": 0.24862676239336548,
+      "brier_skill": -0.005769276233561271,
+      "logloss": 0.6932698756670564,
+      "logloss_base": 0.6903981854304623,
+      "logloss_skill": -0.0041594695600246645
+     },
+     "sides": {
+      "FLAT": 24046,
+      "LONG": 8
+     },
+     "rows": 24054
+    }
+   },
+   "LLY": {
+    "full": {
+     "calls": 35,
+     "graded_all": 32,
+     "hit_all": 0.90625,
+     "neither_all": 3,
+     "nov_calls": 12,
+     "nov_graded": 10,
+     "nov_hits": 8,
+     "nov_hit": 0.8,
+     "nov_lo": 0.4901624691221323,
+     "nov_hi": 0.9433178490622331,
+     "prob": {
+      "rows": 18020,
+      "up_share": 0.5226415094339623,
+      "brier": 0.2503142744790124,
+      "brier_base": 0.24948736205055186,
+      "brier_skill": -0.0033144461573688666,
+      "logloss": 0.6937758242487722,
+      "logloss_base": 0.6921215539764404,
+      "logloss_skill": -0.002390144134115646
+     },
+     "sides": {
+      "FLAT": 25006,
+      "LONG": 35
+     },
+     "rows": 25041,
+     "from_utc": "2022-01-03 14:30",
+     "to_utc": "2025-11-07 20:45"
+    },
+    "first": {
+     "calls": 16,
+     "graded_all": 15,
+     "hit_all": 0.8666666666666667,
+     "neither_all": 1,
+     "nov_calls": 5,
+     "nov_graded": 4,
+     "nov_hits": 3,
+     "nov_hit": 0.75,
+     "nov_lo": 0.3006418400969081,
+     "nov_hi": 0.954412739704631,
+     "prob": {
+      "rows": 735,
+      "up_share": 0.3904761904761905,
+      "brier": 0.24956247930557368,
+      "brier_base": 0.23800453514739228,
+      "brier_skill": -0.04856186522254191,
+      "logloss": 0.6922700216513806,
+      "logloss_base": 0.6689606161585174,
+      "logloss_skill": -0.03484421194586407
+     },
+     "sides": {
+      "FLAT": 970,
+      "LONG": 16
+     },
+     "rows": 986
+    },
+    "second": {
+     "calls": 19,
+     "graded_all": 17,
+     "hit_all": 0.9411764705882353,
+     "neither_all": 2,
+     "nov_calls": 7,
+     "nov_graded": 6,
+     "nov_hits": 5,
+     "nov_hit": 0.8333333333333334,
+     "nov_lo": 0.4364971749742326,
+     "nov_hi": 0.969946630588185,
+     "prob": {
+      "rows": 17285,
+      "up_share": 0.5282614984090251,
+      "brier": 0.25034624262783955,
+      "brier_base": 0.2492012877076767,
+      "brier_skill": -0.004594498410080083,
+      "logloss": 0.6938398546166682,
+      "logloss_base": 0.6915489042979993,
+      "logloss_skill": -0.003312781358528083
+     },
+     "sides": {
+      "FLAT": 24036,
+      "LONG": 19
+     },
+     "rows": 24055
+    }
+   }
+  },
+  "pooled": {
+   "full": {
+    "calls": 711,
+    "graded_all": 618,
+    "hit_all": 0.5275080906148867,
+    "neither_all": 93,
+    "nov_calls": 152,
+    "nov_graded": 133,
+    "nov_hits": 66,
+    "nov_hit": 0.49624060150375937,
+    "nov_lo": 0.4125744383896909,
+    "nov_hi": 0.5801178347841324,
+    "prob": {
+     "rows": 246244,
+     "up_share": 0.5207883237764169,
+     "brier": 0.2500726289192924,
+     "brier_base": 0.24949150800779532,
+     "brier_skill": -0.0023292212073162677,
+     "logloss": 0.6932924974585002,
+     "logloss_base": 0.6921297050243842,
+     "logloss_skill": -0.0016800209927054777
+    },
+    "boot_lo": 0.3798395779500431,
+    "boot_hi": 0.5934448462929474,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T",
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   },
+   "first": {
+    "calls": 340,
+    "graded_all": 309,
+    "hit_all": 0.5631067961165048,
+    "neither_all": 31,
+    "nov_calls": 63,
+    "nov_graded": 59,
+    "nov_hits": 30,
+    "nov_hit": 0.5084745762711864,
+    "nov_lo": 0.3843514296708263,
+    "nov_hi": 0.6315616318303229,
+    "prob": {
+     "rows": 9973,
+     "up_share": 0.41000701895116815,
+     "brier": 0.2506644150994534,
+     "brier_base": 0.23898300605243392,
+     "brier_skill": -0.04887966403961186,
+     "logloss": 0.6944760041972575,
+     "logloss_base": 0.6708505086413129,
+     "logloss_skill": -0.03521722835657348
+    },
+    "boot_lo": 0.29993243243243245,
+    "boot_hi": 0.6194823008849556,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T",
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   },
+   "second": {
+    "calls": 371,
+    "graded_all": 309,
+    "hit_all": 0.4919093851132686,
+    "neither_all": 62,
+    "nov_calls": 89,
+    "nov_graded": 74,
+    "nov_hits": 36,
+    "nov_hit": 0.4864864864864865,
+    "nov_lo": 0.37611789566084763,
+    "nov_hi": 0.5981888551536523,
+    "prob": {
+     "rows": 236271,
+     "up_share": 0.5254644031641632,
+     "brier": 0.2500476496218977,
+     "brier_base": 0.249283915809936,
+     "brier_skill": -0.003063710747162496,
+     "logloss": 0.6932425416335972,
+     "logloss_base": 0.6917141602106782,
+     "logloss_skill": -0.00220955636133513
+    },
+    "boot_lo": 0.3491718426501035,
+    "boot_hi": 0.6290673211781205,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T",
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   }
+  },
+  "five": {
+   "full": {
+    "calls": 190,
+    "graded_all": 181,
+    "hit_all": 0.47513812154696133,
+    "neither_all": 9,
+    "nov_calls": 37,
+    "nov_graded": 35,
+    "nov_hits": 15,
+    "nov_hit": 0.42857142857142855,
+    "nov_lo": 0.2798456807626357,
+    "nov_hi": 0.5914258897702688,
+    "prob": {
+     "rows": 57201,
+     "up_share": 0.5214069684096432,
+     "brier": 0.24997996245549794,
+     "brier_base": 0.24950616087042898,
+     "brier_skill": -0.0018989574582690683,
+     "logloss": 0.6931070828358172,
+     "logloss_base": 0.692159101140816,
+     "logloss_skill": -0.0013696008525190262
+    },
+    "boot_lo": 0.2727272727272727,
+    "boot_hi": 0.5666666666666667,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T"
+    ]
+   },
+   "first": {
+    "calls": 92,
+    "graded_all": 86,
+    "hit_all": 0.6395348837209303,
+    "neither_all": 6,
+    "nov_calls": 19,
+    "nov_graded": 18,
+    "nov_hits": 9,
+    "nov_hit": 0.5,
+    "nov_lo": 0.2903102136885988,
+    "nov_hi": 0.7096897863114012,
+    "prob": {
+     "rows": 2320,
+     "up_share": 0.44741379310344825,
+     "brier": 0.25003217269564104,
+     "brier_base": 0.24682265475160822,
+     "brier_skill": -0.013003336129184362,
+     "logloss": 0.6932089798557651,
+     "logloss_base": 0.6867709680731894,
+     "logloss_skill": -0.009374321399517438
+    },
+    "boot_lo": 0.2495192307692308,
+    "boot_hi": 0.6470588235294118,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T"
+    ]
+   },
+   "second": {
+    "calls": 98,
+    "graded_all": 95,
+    "hit_all": 0.3263157894736842,
+    "neither_all": 3,
+    "nov_calls": 18,
+    "nov_graded": 17,
+    "nov_hits": 6,
+    "nov_hit": 0.35294117647058826,
+    "nov_lo": 0.1730972029668777,
+    "nov_hi": 0.5869963668509622,
+    "prob": {
+     "rows": 54881,
+     "up_share": 0.5245349027896722,
+     "brier": 0.2499777553572831,
+     "brier_base": 0.24935358805231422,
+     "brier_skill": -0.0025031414620666492,
+     "logloss": 0.6931027753143385,
+     "logloss_base": 0.6918536683201171,
+     "logloss_skill": -0.0018054496946651177
+    },
+    "boot_lo": 0.1875,
+    "boot_hi": 0.5833333333333334,
+    "tickers": [
+     "NVDA",
+     "MU",
+     "T"
+    ]
+   }
+  },
+  "ten": {
+   "full": {
+    "calls": 521,
+    "graded_all": 437,
+    "hit_all": 0.5491990846681922,
+    "neither_all": 84,
+    "nov_calls": 115,
+    "nov_graded": 98,
+    "nov_hits": 51,
+    "nov_hit": 0.5204081632653061,
+    "nov_lo": 0.4226080622599415,
+    "nov_hi": 0.6166686728137607,
+    "prob": {
+     "rows": 189043,
+     "up_share": 0.5206011330755437,
+     "brier": 0.2501006681188158,
+     "brier_base": 0.24948707431601355,
+     "brier_skill": -0.002459421212439361,
+     "logloss": 0.693348600577008,
+     "logloss_base": 0.6921208102900855,
+     "logloss_skill": -0.0017739537211831635
+    },
+    "boot_lo": 0.4,
+    "boot_hi": 0.625,
+    "tickers": [
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   },
+   "first": {
+    "calls": 248,
+    "graded_all": 223,
+    "hit_all": 0.5336322869955157,
+    "neither_all": 25,
+    "nov_calls": 44,
+    "nov_graded": 41,
+    "nov_hits": 21,
+    "nov_hit": 0.5121951219512195,
+    "nov_lo": 0.3648450854451409,
+    "nov_hi": 0.6574557054958319,
+    "prob": {
+     "rows": 7653,
+     "up_share": 0.3986671893375147,
+     "brier": 0.25085607881000416,
+     "brier_base": 0.23660642366878248,
+     "brier_skill": -0.06022514063764084,
+     "logloss": 0.6948601014757446,
+     "logloss_base": 0.666024235822555,
+     "logloss_skill": -0.043295520046018554
+    },
+    "boot_lo": 0.2857142857142857,
+    "boot_hi": 0.6458639705882352,
+    "tickers": [
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   },
+   "second": {
+    "calls": 273,
+    "graded_all": 214,
+    "hit_all": 0.5654205607476636,
+    "neither_all": 59,
+    "nov_calls": 71,
+    "nov_graded": 57,
+    "nov_hits": 30,
+    "nov_hit": 0.5263157894736842,
+    "nov_lo": 0.3991801612354585,
+    "nov_hi": 0.6501283210915861,
+    "prob": {
+     "rows": 181390,
+     "up_share": 0.525745630960913,
+     "brier": 0.25006879669249865,
+     "brier_base": 0.2492628359139442,
+     "brier_skill": -0.003233377232507717,
+     "logloss": 0.6932848290549944,
+     "logloss_base": 0.6916719509127337,
+     "logloss_skill": -0.0023318541978352147
+    },
+    "boot_lo": 0.37699795081967213,
+    "boot_hi": 0.6744412564180005,
+    "tickers": [
+     "AAPL",
+     "MSFT",
+     "AMZN",
+     "GOOGL",
+     "AVGO",
+     "META",
+     "TSLA",
+     "BRK.B",
+     "JPM",
+     "LLY"
+    ]
+   }
+  },
+  "pass": {
+   "pooled_halves_above_50_with_interval": false,
+   "tickers_above_50": [
+    "NVDA",
+    "AVGO",
+    "TSLA",
+    "JPM",
+    "LLY"
+   ],
+   "tickers_needed": 6,
+   "tickers_tested": 13,
+   "enough_tickers": false,
+   "PASS": false
+  }
+ },
+ "h57_same_sides": {
+  "FLAT": 324994,
+  "LONG": 683,
+  "SHORT": 28
+ },
+ "card_votes": {
+  "Ultimate Oscillator (15m, 1h, daily)": 37,
+  "News and economic events": 36,
+  "Mass Index (1h to daily)": 31,
+  "Linear-regression channel (1h to daily)": 29,
+  "Intraday levels (VWAP and opening range)": 27,
+  "Own earnings date": 26,
+  "Elder-Ray (1h to daily)": 21,
+  "Trade setups": 21,
+  "Chaikin money flow and OBV (1h to daily)": 18,
+  "Timeframe strength": 18,
+  "Regime": 17,
+  "Trend quality and squeeze": 15,
+  "Time and session": 14,
+  "Stock-market breadth": 14,
+  "Moving averages (SMA and EMA 5-200)": 12,
+  "Market structure": 9,
+  "Aroon and Vortex (1h to daily)": 8,
+  "Volatility gauges": 6,
+  "Kaufman adaptive average (KAMA)": 6,
+  "Daily range budget and range breaks": 4,
+  "Support and resistance": 2,
+  "Money Flow Index (15m to daily)": 2,
+  "Fibonacci retracement": 2,
+  "RSI divergence (15m to 4h)": 2,
+  "StochRSI (15m to daily)": 1,
+  "Rates and the dollar": 1,
+  "Williams %R (15m to daily)": 1
+ },
+ "trust_share": {
+  "trend": 0.06719114260621492,
+  "regime": 0.026188134890312288,
+  "levels": 0.007706958207187591,
+  "momentum": 0.0,
+  "meanrev": 0.0,
+  "pullback": 0.0,
+  "strategies": 0.0,
+  "risk": 0.0,
+  "clock": 0.06691773504582704,
+  "structure": 0.0190980195540529,
+  "setups": 0.01434674534056489,
+  "intraday": 0.08849437739749026,
+  "trendq": 0.03267973429953456,
+  "candles": 0.0,
+  "fib": 0.00486264079224413,
+  "mavg": 0.05872228376443396,
+  "ribbon": 0.0,
+  "mavg_sr": 0.0,
+  "ichimoku": 0.0,
+  "hull": 0.0,
+  "kama": 0.01275606001282526,
+  "supertrend": 0.0,
+  "stochrsi": 0.003002785410792657,
+  "psar": 0.0,
+  "mfi": 0.005381989778015024,
+  "vprofile": 0.0,
+  "heikin": 0.0,
+  "aroon": 0.019120889019395796,
+  "cci": 0.0,
+  "adr": 0.0075986945888428655,
+  "willr": 0.0015808985638597031,
+  "cmf": 0.06158730005991206,
+  "elder": 0.048154287847163746,
+  "pivots": 0.0,
+  "rsidiv": 0.00347460554103307,
+  "fisher": 0.0,
+  "ultosc": 0.1146634555818994,
+  "trix": 0.0,
+  "linreg": 0.07644038042770894,
+  "mass": 0.07810876608984169,
+  "macro": 0.1310954934142249,
+  "volx": 0.013995938980169305,
+  "rates": 0.001535512312468069,
+  "eqbreadth": 0.029917452289407547,
+  "stk_rs": 0.0,
+  "stk_ern": 0.005377718184577414,
+  "all": 0.0,
+  "base": 0.0
+ }
+}
