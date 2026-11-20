@@ -3042,7 +3042,7 @@ AAPL, MSFT, AMZN, GOOGL, AVGO, META, TSLA, BRK.B, JPM, LLY), Dukascopy 15-minute
   history"; per the registration the page should say the stance showed no edge on history (wording: the owner's call).
   Nothing in the engine is changed by this verdict; the page's live record keeps building.
 
-### Adoption note, think15-v5.2.5 (19 Nov 2026, ~21:30 UTC): H36's `be_t1` on USDJPY's main book. NOT a pass.
+## Adoption note, think15-v5.2.5 (19 Nov 2026, ~21:30 UTC): H36's `be_t1` on USDJPY's main book. NOT a pass.
 
 The owner switched USDJPY's main book to break-even after Target 1 (docs/CHARTER.md, same date). This is a rule
 change on the owner's word, as v5.2's trust cap was; it is not a verdict on H36 and no H36 line is moved. What the
