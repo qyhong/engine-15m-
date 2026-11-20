@@ -375,3 +375,10 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   owner chose both. The guard is now False (the switch stays in the code; only the owner turns it back on), and
   the missed BTC pair (reduce 0.5, then the futures stop to the entry 65,203.2) is queued once by hand through the
   feed's own track(). Exits stay exits only: nothing opens or adds, the markets stay BTC and ETH.
+- **Vault feed: the "share held" field stays off** (21 Nov 2026 Singapore time, 20 Nov ~17:55 UTC; owner: "Leave it
+  off"). The AI Trading Bot session reported a second vault package live since 20 Nov 17:48 UTC with late fill
+  switched on by the owner there: the vault now READS `held_share`, and joins or tops up a setup whose Target 1 is
+  taken only if the book states it; without it the vault skips with a `t1_no_share` line. Put to the owner as:
+  switch the field on (new version, new golden record, a restart of about 15 minutes) / leave it off. The owner
+  chose to leave it off: `SEND_CONTRACT_1` stays False, so the vault joins only setups that have not reached
+  Target 1. Turning it on later needs the owner's word in this project.
