@@ -3090,3 +3090,18 @@ in at least 5 of the 8 markets over the whole window, and pooled max drawdown no
 on 13 Nov), one variant chosen after H36's results were known and after the owner had chosen the rule. A pass would
 not be proof and a fail does not reverse the owner's decision; the S&P 500 line is read first because that is the
 market switched, and picking one market's line after the fact is a selection.
+
+### H59 results (20 Nov 2026, ~04:15 UTC; `research/out/h59_half_be/report.md` + `results.json`): NOT better than holding
+
+- **Reconciliation: H36 is reproduced exactly only on SPX** (main +$6,816 / 36 trades, be_t1 +$6,334 / 42, to the cent). On
+  the other seven markets the main book itself differs from H36 (e.g. USDJPY main +$7,288 / 98 trades vs H36 +$19,209 / 120;
+  XAUUSD +$22,717 / 115 vs +$17,712 / 134), so the entries differ, not the exit. Bars over H36's window are byte-identical and
+  the code is identical; the inferred cause is that the evidence store on the server (rebuilt since, layout 2) is not the one
+  H36 read on 13 Nov. The non-SPX absolute numbers here are not H36's; the four books are one consistent run on today's store.
+- **SPX, H36's window:** main +$6,816 (36 trades, win 22%, DD -31.0%, halves -$688 / +$7,503); be_t1 +$6,334; b_targets +$724;
+  **half_be_t1 +$4,528** (42 trades, win 43%, DD -21.7%, Sharpe 0.57 vs 0.55, halves -$463 / +$4,991): $2,288 less than holding.
+  To the store's last session (19 Nov): main +$6,320, be_t1 +$5,851, half_be_t1 +$4,438.
+- **Pooled, H36's window:** main +$316,391 (DD -32.8%); half_be_t1 +$101,170 (DD -15.6%, Sharpe 0.81 vs 0.90), behind main in
+  both halves (-$78,560 / -$136,661) and in 8 of 8 markets. be_t1 +$144,648. To 20 Nov: main +$339,325, half_be_t1 +$107,974.
+  Fails "better than hold" (drawdown passes; halves and markets fail). The owner's S&P 500 rule stands on his word; this
+  read does not move it.

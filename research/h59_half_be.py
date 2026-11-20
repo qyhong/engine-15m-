@@ -272,6 +272,20 @@ def section(kind, groups, mid, L, res):
             L.append("| %s | `%s` | $%+d | $%+d | %+.2f | %d | %d | %+d |" % (
                 x["asset"], x["book"], x["h36_pnl"], x["pnl"], x["diff_usd"], x["h36_trades"], x["trades"], x["diff_trades"]))
         L.append("")
+        if not clean:
+            ok = sorted(set(x["asset"] for x in rec if x["book"] == "main" and abs(x["diff_usd"]) < 1 and not x["diff_trades"]))
+            L += ["**What reproduces and what does not (20 Nov 2026 run).** The main book reproduces H36 exactly only on "
+                  "%s (main and be_t1 to the cent and trade; b_targets there differs by a few hundred dollars and 2 trades, "
+                  "so Target 2 has moved while Target 1 has not). On the other seven markets the MAIN book itself differs "
+                  "(different trade counts), so the entries differ, not the exit code. Checked: the 15m bars over H36's window "
+                  "are byte-identical to the local copy H36 read (USDJPY, SPX, XAUUSD hashed); exit_study.py, shadows.py, "
+                  "leanprep.py and evcache.py are identical on the server and in the repo; the trust cap (v5.2) is not applied "
+                  "by this frame. The daily equity first departs from H36's on XAUUSD 2020-02-24 and USDJPY 2020-10-30 (SPX: "
+                  "never). Inferred, not proven: the evidence store H36 read on 13 Nov (local, layout 1) is not the store on "
+                  "the server now (rebuilt at version changes since, layout 2), and some readings the voting cards learn "
+                  "from differ, which changes the odds and so the entries. The comparison between the four books below is "
+                  "one consistent run on today's store; the absolute numbers of the seven non-SPX markets are NOT H36's." %
+                  (", ".join(ok) or "none"), ""]
     if "SPX" in per:
         r = per["SPX"]
         L += ["### S&P 500 (SPX) first: %s to %s UTC, buy and hold %+.2f%%, fee %.3f%% a side" % (
