@@ -86,6 +86,8 @@ REDUCE_FRACTION = exits.PART                     # the book's half at Target 1 (
 # share of the setup's starting size the book still holds). OFF: the live vault refuses a book with any key it does not
 # know, so this stays False until the AI Trading Bot session confirms the vault that accepts both is LIVE on the box.
 # Switching it on changes every book body: the owner's word, a version bump and a new golden record (CLAUDE.md).
+# `held_share` is sent ONLY together with t1_taken true: the reviewed vault update refuses a WHOLE book that carries
+# held_share while t1_taken is not true (AI Trading Bot session, 20 Nov 2026). Before Target 1 the key is left out.
 SEND_CONTRACT_1 = False
 BOOK_SCHEMA = 1
 REF_MAX_OFF = Decimal("0.015")                   # a book exit / T1 price further than this from the price now is replaced
@@ -170,7 +172,7 @@ def _contract(b, m=None):
     """Add the contract-1 keys to a book when the switch is on; otherwise the book is exactly what it always was."""
     if SEND_CONTRACT_1:
         b["schema"] = BOOK_SCHEMA
-        hs = _held_share(m.get("held_share")) if m is not None else None
+        hs = _held_share(m.get("held_share")) if (m is not None and m.get("t1_taken") is True) else None
         if hs is not None:
             b["held_share"] = hs
     return b

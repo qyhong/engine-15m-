@@ -981,8 +981,13 @@ def test_contract_1_on_adds_schema_and_the_share_and_nothing_else(monkeypatch):
     plain = dict((k, vf.build_book(m, bar(1))[0]["book"]) for k, m in
                  (("open", mkt(held_share=1.0)), ("t1", mkt(t1_taken=True, held_share=0.5)), ("flat", mkt(side="FLAT"))))
     monkeypatch.setattr(vf, "SEND_CONTRACT_1", True)
-    b = vf.build_book(mkt(held_share=1.0), bar(1))[0]["book"]
-    assert b == dict(plain["open"], schema=1, held_share=1.0) and isinstance(b["schema"], int)
+    b = vf.build_book(mkt(held_share=1.0), bar(1))[0]["book"]     # before Target 1: the vault refuses a book that
+    assert b == dict(plain["open"], schema=1) and isinstance(b["schema"], int)   # carries held_share: left out
+    for not_taken in (False, None, 1, "true"):                  # only exactly True counts as taken
+        m = mkt(held_share=0.5)
+        m["t1_taken"] = not_taken
+        out, _why = vf.build_book(m, bar(1))
+        assert out is None or "held_share" not in out["book"], not_taken
     b = vf.build_book(mkt(t1_taken=True, held_share=0.5), bar(1))[0]["book"]
     assert b == dict(plain["t1"], schema=1, held_share=0.5) and isinstance(b["held_share"], float)
     assert vf.build_book(mkt(side="FLAT", held_share=0.5), bar(1))[0]["book"] == dict(plain["flat"], schema=1)
