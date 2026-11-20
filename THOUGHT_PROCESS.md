@@ -16,6 +16,10 @@ A 15-minute thinking engine. Paper only. First written for BTC and ETH (`think15
   target", then "Stop to entry after T1"), not a passed test: on 2020-2026 history it was the only one of 15
   exit variants ahead of holding on USDJPY (+$27,238 against +$19,209, H36), and behind holding on the eight
   markets pooled. No profit is taken at the targets; the other seven markets are unchanged.
+- **Exits (think15-v5.2.6, 20 Nov 2026):** the S&P 500's main book closes half the position at Target 1, moves
+  the stop of the rest to the entry, and lets the rest run to that stop or a flip (`CFG["half_t1"]`; one trade
+  row, `T1+<why>`). The owner's call ("close half ... as TP1 already achieve", then "Rest runs, stop at entry").
+  Not in H36's grid; its history read is H59, descriptive. Six markets still hold to the stop or a flip.
 - **Fills:** decision at a bar's close, fill at the next open; gold, silver and oil one bar later (their
   live bars arrive ~10 minutes late). Futures rolls are smoothed (data/rolls.csv).
 - **v5 decision rules:** a higher-timeframe bias (1h, 4h and daily trend one way and price on that side of

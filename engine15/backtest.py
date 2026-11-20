@@ -97,7 +97,14 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
     t1_of(i, side, entry, stop) -> Target 1 of a trade filled at bar i's open (None: that trade has no target and
     keeps its entry stop). Once a bar trades through Target 1 (read after that bar's stop check) the stop moves to
     the entry price, live from the next bar and never looser (exits.be_stop, the b_be_t1 shadow's rule); a stop-out
-    there is booked as "STOP_BE"."""
+    there is booked as "STOP_BE".
+    Half at Target 1 (v5.2.6; only with the rule above AND cfg["half_t1"] exactly True): in the bar that trades
+    through Target 1, half the position (exits.PART) is closed AT Target 1 (a limit, as the shadow books fill it)
+    and the stop of the rest goes to the entry; the rest leaves at that stop or on a flip. The trade is booked ONCE,
+    when the rest closes: both parts together, exit price = their quantity-weighted average, why_out "T1+<why>".
+    state["half_due"] (set by live.adopt_be_t1 for a trade whose Target 1 traded before the rule existed): the half
+    is closed at the next bar's OPEN instead, tagged "T1_LATE"; nothing is back-dated to the target's price.
+    -> also "parts": [(bar, price, quantity, net usd, tag)] for the halves closed in lo .. hi-1."""
     o, h, l, c = px["open"], px["high"], px["low"], px["close"]
     n = len(c)
     act = np.zeros(n, dtype=np.int8)
@@ -113,7 +120,9 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
     # v5.2.5: the stop to entry after Target 1. Only on exactly True, which live.asset_cfg sets for the markets in
     # CFG["be_t1"]: the raw CFG holds the LIST of those markets there, and a list must never switch the rule on.
     be = cfg.get("be_t1") is True and t1_of is not None
+    half = be and cfg.get("half_t1") is True                      # v5.2.6: half off at Target 1 (needs the rule above)
     t1, t1_hit, stop0 = None, False, np.nan
+    part, half_due, parts = None, False, []                       # the half already closed; one owed at the next open
     fees_paid = [float((state or {}).get("fees", 0.0))]           # every fee this book has paid, across steps
     if state:
         pos, idle, qty, entry, eq = state["pos"], state["idle"], state["qty"], state["entry"], state["eq"]
@@ -122,17 +131,38 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
         if be and pos != 0:
             t1, t1_hit = state.get("t1"), bool(state.get("t1_hit", False))
             stop0 = stop if state.get("stop0") is None else state["stop0"]
+            if half:
+                part = dict(state["part"]) if state.get("part") else None
+                half_due = bool(state.get("half_due", False)) and part is None
 
     def close(i, price, why):
-        nonlocal pos, qty, eq, stop, t1, t1_hit, stop0
+        nonlocal pos, qty, eq, stop, t1, t1_hit, stop0, part, half_due
         gross = qty * pos * (price - entry)
         fees = fee * qty * (entry + price)
         eq += gross - fees
         fees_paid[0] += fees
-        trades.append((t_in, i, pos, entry, price, why_in, why, (gross - fees) / (qty * entry) * 100.0, eq,
-                       qty, gross - fees, fees))
+        if part is not None:                                      # half was closed earlier: one row for the whole trade
+            tot_q, pnl = part["q"] + qty, part["pnl"] + gross - fees
+            trades.append((t_in, i, pos, entry, (part["qpx"] + qty * price) / tot_q, why_in, part["tag"] + "+" + why,
+                           pnl / (tot_q * entry) * 100.0, eq, tot_q, pnl, part["fees"] + fees))
+        else:
+            trades.append((t_in, i, pos, entry, price, why_in, why, (gross - fees) / (qty * entry) * 100.0, eq,
+                           qty, gross - fees, fees))
         pos, qty, stop = 0, 0.0, np.nan
         t1, t1_hit, stop0 = None, False, np.nan
+        part, half_due = None, False
+
+    def take_half(i, price, tag):
+        """Close exits.PART of the position at `price` (the same arithmetic as close, for that share)."""
+        nonlocal qty, eq, part
+        q = qty * exits.PART
+        gross = q * pos * (price - entry)
+        fees = fee * q * (entry + price)
+        eq += gross - fees
+        fees_paid[0] += fees
+        part = {"pnl": float(gross - fees), "fees": float(fees), "qpx": float(q * price), "q": float(q), "tag": tag}
+        parts.append((i, float(price), float(q), float(gross - fees), tag))
+        qty -= q
 
     p_up, p_dn = odds[:, labels.UP], odds[:, labels.DOWN]
     for i in range(lo, hi):
@@ -156,6 +186,10 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
                     if be:
                         t1 = t1_of(i, pos, entry, stop)
             pending = None
+        if half_due:                                              # 1b. a half owed from before the rule: at this open
+            if pos != 0 and part is None:
+                take_half(i, o[i], "T1_LATE")
+            half_due = False
         held[i] = pos
         stop_why = "STOP_BE" if (be and t1_hit) else "STOP"       # after Target 1 the stop sits at the entry
         if pos == 1 and l[i] <= stop:                             # 2. the protective stop
@@ -166,7 +200,9 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
             idle = 0
         if be and pos != 0 and t1 is not None and not t1_hit and exits.reached(pos, h[i], l[i], t1):
             t1_hit = True                                         # 2b. Target 1 traded in this bar: the stop goes to
-            stop = exits.be_stop(pos, entry, stop)                # the entry, live from the next bar, never looser
+            if half:                                              # the entry, live from the next bar, never looser;
+                take_half(i, float(t1), "T1")                     # under half_t1 half is closed at the target first
+            stop = exits.be_stop(pos, entry, stop)
         pu = p_up[i]                                              # 3. the decision at this close
         a, target, why = policy.decide(pos, idle, None if pu != pu else pu, p_dn[i], bool(shock[i]),
                                        tide[i] if tide[i] == tide[i] else 0.0, cfg,
@@ -191,6 +227,8 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
     if be:                                                        # only books under the rule carry these (others unchanged)
         end_state.update(t1=None if (t1 is None or not pos) else float(t1), t1_hit=bool(t1_hit and pos),
                          stop0=None if (stop0 != stop0 or not pos) else float(stop0), be_t1=True)
+    if half:
+        end_state.update(half_t1=True, part=part if pos else None, half_due=bool(half_due and pos))
     if pos != 0:                                                  # still open: mark it, charge nothing more
         trades.append((t_in, hi - 1, pos, entry, c[hi - 1], why_in, "OPEN", (pos * (c[hi - 1] - entry) / entry
                                                                              - fee) * 100.0, eq_arr[hi - 1],
@@ -198,7 +236,7 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
     tr = pd.DataFrame(trades, columns=["i_in", "i_out", "side", "p_in", "p_out", "why_in", "why_out",
                                        "pnl_pct", "equity", "qty", "pnl_usd", "fees_usd"])
     return {"act": act, "held": held, "idle": idle_arr, "stop": stop_arr, "equity": eq_arr,
-            "reason": reason, "trades": tr, "state": end_state}
+            "reason": reason, "trades": tr, "state": end_state, "parts": parts}
 
 
 def max_flat_run(held, act, lo, hi):
@@ -225,6 +263,7 @@ def summarize(book, times, lo, hi, cost_rt):
     dd = float((eq / peak - 1.0).min())
     tr = book["trades"]
     closed = tr[tr.why_out != "OPEN"]
+    last_why = closed.why_out.astype(str).str.split("+").str[-1]    # "T1+STOP_BE" (half closed at Target 1) ends in a stop
     held = book["held"][lo:hi]
     act = book["act"][lo:hi]
     live = act != ACT_CODE[policy.WAIT]
@@ -245,8 +284,8 @@ def summarize(book, times, lo, hi, cost_rt):
         "time_long_pct": round(float((held[live] == 1).mean() * 100), 1) if live.any() else 0.0,
         "time_short_pct": round(float((held[live] == -1).mean() * 100), 1) if live.any() else 0.0,
         "time_flat_pct": round(float((held[live] == 0).mean() * 100), 1) if live.any() else 0.0,
-        "flips": int((closed.why_out == policy.FLIP).sum()), "stops": int(closed.why_out.isin(STOP_WORDS).sum()),
-        "step_asides": int((closed.why_out == policy.STEP_ASIDE).sum()),
+        "flips": int((last_why == policy.FLIP).sum()), "stops": int(last_why.isin(STOP_WORDS).sum()),
+        "step_asides": int((last_why == policy.STEP_ASIDE).sum()),
         "forced_entries": int((closed.why_in == policy.FORCED).sum()),
         "max_flat_sessions_in_a_row": int(max_flat_run(book["held"], book["act"], lo, hi)),
         "by_year_pct": by_year,

@@ -3052,3 +3052,13 @@ about $13,000 in the second half. Picking the one market where one variant won i
 result. Forward, the comparison stays readable: the shadow `main` copy keeps hold-to-stop-or-flip on USDJPY, and
 `b_be_t1` keeps running; their USDJPY lines and the main book's own are read at 30 closed forward trades, as
 research/VERDICT_RULES.md says, and the owner decides then whether USDJPY keeps the rule.
+
+## Adoption note, think15-v5.2.6 (20 Nov 2026, ~04:00 UTC): half at Target 1 on the S&P 500's main book. NOT a pass.
+
+The owner switched the S&P 500's main book to: half closed at Target 1, the stop of the rest to the entry, the rest
+out at that stop or on a flip (docs/CHARTER.md, same date). A rule change on the owner's word. When it was made,
+no history number existed for this exact rule: H36 had `be_t1` at full size (S&P +$6,334 against +$6,816 for
+holding) and half-at-Target-1 only with moving-average trails or, in `b_targets`, with the rest out at Target 2
+(+$1,018). H59 (registered separately, the same day, by the agent that runs it) reads this rule on history; it was
+started after the decision and cannot have informed it. Forward: the shadow `main` copy keeps hold-to-stop-or-flip
+on the S&P, `b_be_t1` and `b_targets` keep running, and the lines are read at 30 closed forward trades.

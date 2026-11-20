@@ -124,7 +124,11 @@ def entry(store, asset, i, raw=None, trade=None):
     e["action"] = ACTIONS[int(book["act"][i])]
     e["reason"] = book["reason"][i]
     tr = book["trades"]
-    stopped = tr[(tr.i_out == i) & tr.why_out.isin(("STOP", "STOP_BE"))]   # "STOP_BE": at the entry after Target 1
+    # "STOP_BE": at the entry after Target 1; "T1+STOP_BE" / "T1_LATE+...": half was closed earlier (v5.2.6)
+    stopped = tr[(tr.i_out == i) & tr.why_out.astype(str).str.split("+").str[-1].isin(("STOP", "STOP_BE"))]
+    halves = [p for p in (book.get("parts") or []) if p[0] == i]
+    e["half_closed"] = None if not halves else {"price": halves[0][1], "quantity": halves[0][2],
+                                                "pnl_usd": round(halves[0][3], 2), "tag": halves[0][4]}
     e["stopped_at"] = float(stopped.p_out.iloc[0]) if len(stopped) else None
     e["position"] = SIDE[0 if len(stopped) else int(book["held"][i])]
     e["idle_sessions"] = int(book["idle"][i])
@@ -313,6 +317,10 @@ def render(e):
         lines.append("- New version: %s" % e["version_note"])
     if e.get("stopped_at"):
         lines.append("- Stopped out this session at %.2f." % e["stopped_at"])
+    if e.get("half_closed"):
+        hc = e["half_closed"]
+        lines.append("- Half the position closed at %.2f (%s): %+.2f USD banked; the stop of the rest is the entry." % (
+            hc["price"], "Target 1" if hc["tag"] == "T1" else "the open, Target 1 having traded earlier", hc["pnl_usd"]))
     tr = " · ".join("%s %s%s" % (tf, lab, "" if sc is None else " (%+.2f)" % sc) for tf, (sc, lab) in e["trend"].items())
     lines.append("- Read: %s. Structure: %s. Regime: %s. Risk: %s." % (
         tr, e["structure"], e["regime"], "HIGH (last hour %sx normal)" % e["risk"]["shock_ratio"] if e["risk"]["high"] else "normal"))

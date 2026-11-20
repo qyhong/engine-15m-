@@ -329,3 +329,10 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   holding. The owner's earlier idea the same evening (close a profitable trade when the odds lean against it) was
   not adopted: on USDJPY the odds leaned against the open long in 327 of 646 bars, by a median 0.9 points.
   Still paper only; nothing about the vault changes (it carries BTC and ETH setups only).
+- **S&P 500 main book: half at Target 1, stop of the rest to the entry, the rest runs** (think15-v5.2.6, 20 Nov
+  2026). The owner, of the S&P short from 7,626 that was past Target 1 (7,251) with its stop still above the entry:
+  "The snp 500 should close half of the profit now under mind 15 as TP1 already achieve"; of three ways to treat
+  the other half (run with the stop at entry; close at Target 2; no half, stop to entry only) the owner chose
+  "Rest runs, stop at entry". Target 1 had traded the day before, so the half is closed at the next S&P open at
+  that open's price, not back-dated to the target. Adopted on the owner's word; this combination was not among
+  H36's 15 variants, and its history read (H59) is descriptive and gates nothing. Paper only.

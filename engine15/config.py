@@ -17,11 +17,15 @@ ESTATE = os.environ.get("ENGINE15_ESTATE", os.path.join(os.path.dirname(ROOT), "
 LIBRARY_JSON = os.path.join(ESTATE, "research", "local", "library", "strategy_library.json")
 
 # Said once in the journal (each market group's next entry) after "version" changes (live.step_group).
-VERSION_NOTE = ("think15-v5.2.5: on USDJPY the main book now moves its stop to the entry price once Target 1 has "
-                "traded (break-even after Target 1). Entries, sizing, flips and every other market are unchanged.")
+VERSION_NOTE = ("think15-v5.2.6: on the S&P 500 the main book now closes half the position at Target 1 and moves "
+                "the stop of the rest to the entry price; the rest runs until that stop or a flip. USDJPY keeps "
+                "v5.2.5's stop-to-entry rule at full size. Entries, sizing, flips and the other six markets are unchanged.")
 
 CFG = {
-    "version": "think15-v5.2.5",      # v5.2.5 (19 Nov 2026): the FX main book (USDJPY) moves its stop to the entry once Target 1
+    "version": "think15-v5.2.6",      # v5.2.6 (20 Nov 2026): the S&P 500 main book closes half at Target 1, stop of the rest to the
+                                      #   entry ("half_t1", below); owner: "The snp 500 should close half of the profit now ... as
+                                      #   TP1 already achieve", then chose "Rest runs, stop at entry". Other markets unchanged.
+                                      # v5.2.5 (19 Nov 2026): the FX main book (USDJPY) moves its stop to the entry once Target 1
                                       #   trades ("be_t1", below); owner: "Follow the target", then chose "Stop to entry after T1".
                                       #   The first change to a main-book EXIT rule. Every other market unchanged.
                                       # v5.2.4 (17 Nov 2026): card batch 4, five reading-only cards for every market (sources/osc5.py:
@@ -94,7 +98,18 @@ CFG = {
     # holding, the only variant ahead of holding there; pooled over all eight markets it made less than holding, which
     # is why the list is USDJPY alone. Adopted on the owner's call, not on a passed test. The shadow books are
     # unchanged: their "main" copy keeps hold-to-stop-or-flip, so the old rule stays on the forward record beside it.
-    "be_t1": ("USDJPY",),
+    # v5.2.6 (20 Nov 2026): the S&P 500 joins the list, with half_t1 below.
+    "be_t1": ("USDJPY", "SPX"),
+    # v5.2.6 (owner, 20 Nov 2026, of the S&P short that was past Target 1 with its stop still above the entry: "The snp
+    # 500 should close half of the profit now under mind 15 as TP1 already achieve"; for the other half the owner chose
+    # "Rest runs, stop at entry" over closing it at Target 2 or keeping full size). Markets listed here (they must be
+    # in be_t1 too): in the bar that trades through Target 1 half the position is closed AT Target 1, the stop of the
+    # rest goes to the entry, and the rest leaves at that stop or on a flip (backtest.run_book, exits.PART). A trade
+    # already past its Target 1 when the rule began has its half closed at the next open (live.adopt_be_t1). Adopted
+    # on the owner's call. This exact combination was not in H36's grid; its history read is H59 (registered the same
+    # day, descriptive, gates nothing). The nearest H36 numbers on the S&P: holding +$6,816, stop-to-entry at full
+    # size +$6,334, half at Target 1 with the rest out at Target 2 (b_targets) +$1,018.
+    "half_t1": ("SPX",),
     # v3 (owner, 10 Nov 2026): HOLD when risk is high and the edge is gone, instead of stepping
     # aside. In the replay the step-aside rule made about 770 exits and 1,000 forced re-entries a coin.
     "step_aside": False,
