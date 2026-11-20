@@ -472,7 +472,7 @@ def report_stage():
                                                                          ", ".join(probe["five_not_testable"]) or "none"))
     L.append("- Ten (largest S&P 500 companies, NVDA counted in the five): %s%s." % (
         ", ".join(probe["ten"]), ("; replaced (no usable CFD): " + ", ".join(probe["replaced"])) if probe["replaced"] else ""))
-    L.append("- Index model: %d refits (one every 672 index sessions, about five weeks of cash sessions, as the live S&P call refits) walked forward from the engine's birth, first in force %s (store %s.., copied %s)." % (
+    L.append("- Index model: %d refits (one every 672 index sessions, about five weeks of cash sessions, as the live S&P call refits) walked forward from the engine's birth, first in force %s (index store %s.., last written %s; copied 19 Nov 2026 10:07 UTC)." % (
         res["index_store"]["refits"], res["index_store"]["first_refit_utc"], res["index_store"]["sig"][:10],
         res["index_store"]["updated_utc"]))
     L.append("")

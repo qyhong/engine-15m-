@@ -1,0 +1,336 @@
+{
+ "NVDA": {
+  "ticker": "NVDA",
+  "instrument": "NVDAUSUSD",
+  "first_month": "2017-01",
+  "bars15": 33252,
+  "first15_utc": "2020-10-01 13:30",
+  "last15_utc": "2025-11-10 20:45",
+  "days15": 1284,
+  "daily": 2211,
+  "daily_from_hourly": 927,
+  "first_daily": "2017-01-26",
+  "scale_fix": 1.0,
+  "splits": [
+   {
+    "date": "2021-07-20",
+    "ratio": 4.0,
+    "source_already_adjusted": false,
+    "pre_post_ratio_jump": 0.25
+   },
+   {
+    "date": "2024-06-10",
+    "ratio": 10.0,
+    "source_already_adjusted": false,
+    "pre_post_ratio_jump": 0.1
+   }
+  ],
+  "yahoo_close_ratio_after_fix": {
+   "median": 1.0003,
+   "p05": 0.9997,
+   "p95": 1.0011
+  },
+  "bars_per_day15_median": 26.0,
+  "minute_days_missing": []
+ },
+ "MU": {
+  "ticker": "MU",
+  "instrument": "MUUSUSD",
+  "first_month": "2017-11",
+  "bars15": 33244,
+  "first15_utc": "2020-10-01 13:30",
+  "last15_utc": "2025-11-10 20:45",
+  "days15": 1284,
+  "daily": 2016,
+  "daily_from_hourly": 732,
+  "first_daily": "2017-11-02",
+  "scale_fix": 1.0,
+  "splits": [],
+  "yahoo_close_ratio_after_fix": {
+   "median": 1.0003,
+   "p05": 0.9998,
+   "p95": 1.001
+  },
+  "bars_per_day15_median": 26.0,
+  "minute_days_missing": []
+ },
+ "T": {
+  "ticker": "T",
+  "instrument": "TUSUSD",
+  "first_month": "2017-01",
+  "bars15": 33108,
+  "first15_utc": "2020-10-01 13:30",
+  "last15_utc": "2025-11-10 20:45",
+  "days15": 1284,
+  "daily": 2211,
+  "daily_from_hourly": 927,
+  "first_daily": "2017-01-26",
+  "scale_fix": 1.0,
+  "splits": [
+   {
+    "date": "2022-04-11",
+    "ratio": 1.324,
+    "source_already_adjusted": false,
+    "pre_post_ratio_jump": 0.7549
+   }
+  ],
+  "yahoo_close_ratio_after_fix": {
+   "median": 1.0004,
+   "p05": 0.9997,
+   "p95": 1.0011
+  },
+  "bars_per_day15_median": 26.0,
+  "minute_days_missing": []
+ },
+ "AAPL": {
+  "ticker": "AAPL",
+  "instrument": "AAPLUSUSD",
+  "first_month": "2017-01",
+  "bars15": 33247,
+  "first15_utc": "2020-10-01 13:30",
+  "last15_utc": "2025-11-10 20:45",
+  "days15": 1284,
+  "daily": 2211,
+  "daily_from_hourly": 927,
+  "first_daily": "2017-01-26",
+  "scale_fix": 1.0,
+  "splits": [
+   {
+    "date": "2020-08-31",
+    "ratio": 4.0,
+    "source_already_adjusted": false,
+    "pre_post_ratio_jump": 0.2498
+   }
+  ],
+  "yahoo_close_ratio_after_fix": {
+   "median": 1.0001,
+   "p05": 0.9995,
+   "p95": 1.001
+  },
+  "bars_per_day15_median": 26.0,
+  "minute_days_missing": []
+ },
+ "MSFT": {
+  "ticker": "MSFT",
+  "instrument": "MSFTUSUSD",
+  "first_month": "2017-01",
+  "bars15": 33245,
+  "first15_utc": "2020-10-01 13:30",
+  "last15_utc": "2025-11-10 20:45",
+  "days15": 1284,
+  "daily": 2211,
+  "daily_from_hourly": 927,
+  "first_daily": "2017-01-26",
+  "scale_fix": 1.0,
+  "splits": [],
+  "yahoo_close_ratio_after_fix": {
+   "median": 1.0002,
+   "p05": 0.9995,
+   "p95": 1.0011
+  },
+  "bars_per_day15_median": 26.0,
+  "minute_days_missing": []
+ },
+ "AMZN": {
+  "ticker": "AMZN",
+  "instrument": "AMZNUSUSD",
+  "first_month": "2017-01",
+  "bars15": 33284,
+  "first15_utc": "2020-10-01 13:30",
+  "last15_utc": "2025-11-10 20:45",
+  "days15": 1284,
+  "daily": 2211,
+  "daily_from_hourly": 927,
+  "first_daily": "2017-01-26",
+  "scale_fix": 1.0,
+  "splits": [
+   {
+    "date": "2022-06-06",
+    "ratio": 20.0,
+    "source_already_adjusted": false,
+    "pre_post_ratio_jump": 0.05
+   }
+  ],
+  "yahoo_close_ratio_after_fix": {
+   "median": 1.0002,
+   "p05": 0.9997,
+   "p95": 1.0011
+  },
+  "bars_per_day15_median": 26.0,
+  "minute_days_missing": []
+ },
+ "GOOGL": {
+  "ticker": "GOOGL",
+  "instrument": "GOOGLUSUSD",
+  "first_month": "2017-01",
+  "bars15": 33244,
+  "first15_utc": "2020-10-01 13:30",
+  "last15_utc": "2025-11-10 20:45",
+  "days15": 1284,
+  "daily": 2211,
+  "daily_from_hourly": 927,
+  "first_daily": "2017-01-26",
+  "scale_fix": 1.0,
+  "splits": [
+   {
+    "date": "2022-07-18",
+    "ratio": 20.0,
+    "source_already_adjusted": false,
+    "pre_post_ratio_jump": 0.05
+   }
+  ],
+  "yahoo_close_ratio_after_fix": {
+   "median": 1.0002,
+   "p05": 0.9997,
+   "p95": 1.001
+  },
+  "bars_per_day15_median": 26.0,
+  "minute_days_missing": []
+ },
+ "AVGO": {
+  "ticker": "AVGO",
+  "instrument": "AVGOUSUSD",
+  "first_month": "2017-01",
+  "bars15": 33239,
+  "first15_utc": "2020-10-01 13:30",
+  "last15_utc": "2025-11-10 20:45",
+  "days15": 1284,
+  "daily": 2211,
+  "daily_from_hourly": 927,
+  "first_daily": "2017-01-26",
+  "scale_fix": 1.0,
+  "splits": [
+   {
+    "date": "2024-07-15",
+    "ratio": 10.0,
+    "source_already_adjusted": false,
+    "pre_post_ratio_jump": 0.1
+   }
+  ],
+  "yahoo_close_ratio_after_fix": {
+   "median": 1.0003,
+   "p05": 0.9997,
+   "p95": 1.0013
+  },
+  "bars_per_day15_median": 26.0,
+  "minute_days_missing": []
+ },
+ "META": {
+  "ticker": "META",
+  "instrument": "FBUSUSD",
+  "first_month": "2017-01",
+  "bars15": 33243,
+  "first15_utc": "2020-10-01 13:30",
+  "last15_utc": "2025-11-10 20:45",
+  "days15": 1284,
+  "daily": 2211,
+  "daily_from_hourly": 927,
+  "first_daily": "2017-01-26",
+  "scale_fix": 1.0,
+  "splits": [],
+  "yahoo_close_ratio_after_fix": {
+   "median": 1.0002,
+   "p05": 0.9997,
+   "p95": 1.001
+  },
+  "bars_per_day15_median": 26.0,
+  "minute_days_missing": []
+ },
+ "TSLA": {
+  "ticker": "TSLA",
+  "instrument": "TSLAUSUSD",
+  "first_month": "2017-01",
+  "bars15": 33253,
+  "first15_utc": "2020-10-01 13:30",
+  "last15_utc": "2025-11-10 20:45",
+  "days15": 1284,
+  "daily": 2211,
+  "daily_from_hourly": 927,
+  "first_daily": "2017-01-26",
+  "scale_fix": 1.0,
+  "splits": [
+   {
+    "date": "2020-08-31",
+    "ratio": 5.0,
+    "source_already_adjusted": false,
+    "pre_post_ratio_jump": 0.2001
+   },
+   {
+    "date": "2022-08-25",
+    "ratio": 3.0,
+    "source_already_adjusted": false,
+    "pre_post_ratio_jump": 0.3334
+   }
+  ],
+  "yahoo_close_ratio_after_fix": {
+   "median": 1.0003,
+   "p05": 0.9998,
+   "p95": 1.0017
+  },
+  "bars_per_day15_median": 26.0,
+  "minute_days_missing": []
+ },
+ "BRK.B": {
+  "ticker": "BRK.B",
+  "instrument": "BRKBUSUSD",
+  "first_month": "2017-11",
+  "bars15": 33246,
+  "first15_utc": "2020-10-01 13:30",
+  "last15_utc": "2025-11-10 20:45",
+  "days15": 1284,
+  "daily": 2014,
+  "daily_from_hourly": 730,
+  "first_daily": "2017-11-06",
+  "scale_fix": 1.0,
+  "splits": [],
+  "yahoo_close_ratio_after_fix": {
+   "median": 1.0003,
+   "p05": 0.9997,
+   "p95": 1.0012
+  },
+  "bars_per_day15_median": 26.0,
+  "minute_days_missing": []
+ },
+ "JPM": {
+  "ticker": "JPM",
+  "instrument": "JPMUSUSD",
+  "first_month": "2017-01",
+  "bars15": 33247,
+  "first15_utc": "2020-10-01 13:30",
+  "last15_utc": "2025-11-10 20:45",
+  "days15": 1284,
+  "daily": 2211,
+  "daily_from_hourly": 927,
+  "first_daily": "2017-01-26",
+  "scale_fix": 1.0,
+  "splits": [],
+  "yahoo_close_ratio_after_fix": {
+   "median": 1.0002,
+   "p05": 0.9997,
+   "p95": 1.0009
+  },
+  "bars_per_day15_median": 26.0,
+  "minute_days_missing": []
+ },
+ "LLY": {
+  "ticker": "LLY",
+  "instrument": "LLYUSUSD",
+  "first_month": "2017-05",
+  "bars15": 33248,
+  "first15_utc": "2020-10-01 13:30",
+  "last15_utc": "2025-11-10 20:45",
+  "days15": 1284,
+  "daily": 2138,
+  "daily_from_hourly": 854,
+  "first_daily": "2017-05-11",
+  "scale_fix": 1.0,
+  "splits": [],
+  "yahoo_close_ratio_after_fix": {
+   "median": 1.0004,
+   "p05": 0.9998,
+   "p95": 1.002
+  },
+  "bars_per_day15_median": 26.0,
+  "minute_days_missing": []
+ }
+}

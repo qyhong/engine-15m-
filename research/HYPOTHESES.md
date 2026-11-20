@@ -3014,3 +3014,30 @@ the page already builds is unaffected either way.
 - Daily bars for days before the minute downloads (which start 2020-10-01, 60 days before the index model's first odds
   in 2021) are built from Dukascopy's hourly candles of the cash-session hours (09:00-16:00 New York hour buckets), not
   from 15-minute bars; from 2020-10-01 on they are built from the 15-minute bars as registered.
+
+### Verdicts, H57 (20 Nov 2026, 01:52 UTC): NO PASS
+
+Run on the research server (`research/h57_data.py`, `research/h57_stocks.py`; report `research/out/h57_stocks/report.md`,
+numbers `results.json`). 13 tickers tested (NVDA, MU, T of the five; ARGX and DDOG NOT TESTABLE: no Dukascopy CFD; the ten
+AAPL, MSFT, AMZN, GOOGL, AVGO, META, TSLA, BRK.B, JPM, LLY), Dukascopy 15-minute cash-hours bars 2020-10-01 .. 2025-11-10
+(1,284 days each, none missing; closes within 0.1% of Yahoo's daily closes after the split adjustments), stances from
+2021-01-12 (the index model's first refit in force) to the seal: 408,523 replayed closes.
+
+| condition (fixed at registration) | required | result | met |
+|---|---|---|---|
+| pooled non-overlapping hit, first half (before 2021-10-01 19:30 UTC) | > 50% and Wilson 95% lower bound > 50% | 55.4% (47.6% .. 63.0%, n 157) | no |
+| pooled non-overlapping hit, second half | > 50% and Wilson 95% lower bound > 50% | 50.9% (43.4% .. 58.4%, n 167) | no |
+| tickers with full-period non-overlapping hit > 50% | >= 6 of 13 | 7 (MSFT, GOOGL, AVGO, META, TSLA, BRK.B, LLY) | yes |
+| **H57** | both | | **NO PASS** |
+
+- Full period, pooled: 1,942 LONG/SHORT calls, 324 non-overlapping graded, 53.1% right (47.6% .. 58.5%; day-block
+  bootstrap 46.7% .. 58.8%). The five: 45.1% (n 71); the ten: 55.3% (n 253, 49.2% .. 61.3%). The overlapping hit rate
+  (57.7%) is inflated by clustered calls and carries no interval.
+- The stance is almost never taken: 99.52% of closes FLAT, 0.46% LONG, 0.02% SHORT (the combined S&P odds on a stock
+  rarely reach the 5-point bar; live since 17 Nov every logged stance has been FLAT too). Half of all graded calls fall
+  before Oct 2021, so the "second half" covers four years with 167 non-overlapping calls.
+- Probabilities: the two-way P(up) / (P(up) + P(down)) is WORSE than each ticker's own constant UP share on every one of
+  the 13 tickers (Brier skill -0.0001 to -0.0058; pooled -0.0029; log-loss skill pooled -0.0021), in both halves pooled.
+- Reading: no evidence that the stances carry information on these stocks. A pass would only have allowed "tested on
+  history"; per the registration the page should say the stance showed no edge on history (wording: the owner's call).
+  Nothing in the engine is changed by this verdict; the page's live record keeps building.
