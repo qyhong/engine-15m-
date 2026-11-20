@@ -3258,7 +3258,7 @@ holding) and half-at-Target-1 only with moving-average trails or, in `b_targets`
 started after the decision and cannot have informed it. Forward: the shadow `main` copy keeps hold-to-stop-or-flip
 on the S&P, `b_be_t1` and `b_targets` keep running, and the lines are read at 30 closed forward trades.
 
-## H60. EXITS BY REGIME, PER MARKET: flip exits in directional regimes, target exits in the others; and one exit rule per market instead of one for all (registered 20 Nov 2026, 11:50 UTC, before any number is computed)
+## H60. EXITS BY REGIME, PER MARKET: flip exits in directional regimes, target exits in the others; and one exit rule per market instead of one for all (registered 20 Nov 2026, 11:43 UTC, before any number is computed)
 
 **Prompted by:** the owner, 20 Nov 2026, after the USDJPY post-mortem (`research/out/usdjpy_postmortem_20261120.md`):
 "Also test the idea of regime. If is momentum up or momebtum down. Using edge flip scoring to take profit is better. But
