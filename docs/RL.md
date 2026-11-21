@@ -521,3 +521,22 @@ funding both sides), BTC and ETH each $10,000 per book, go-live `REGISTERED` in 
   (last 6 months) under 0.5 -> the seed holds the trend reference (W = -10 x |a - mom_signal|, the formula of
   `phase5.oos_w(fallback="trend")`, through the same policy and risk manager). Each record carries `mode` per seed
   ("model" / "trend"). The trend fallback was chosen with hindsight (the pattern was visible in Phase 4's results).
+
+## Health readings (21 Nov 2026; they decide nothing)
+
+After the audit of 21 Nov 2026 (docs/CHARTER.md) the forward books carry two readings on the page, and the Telegram
+bot reports them. No decision of any book uses them.
+
+- **Who earned it** (`forward5.agent_split`, page field `split`). The book is the mean of three seeds, so its position
+  is exactly the sum of the seeds on their own model and the seeds a 'do no harm' model keeps on the fallback (flat in
+  Phase 5, the daily 30-day momentum position in Phase 6). The gross result is split along that line bar by bar;
+  fees, spread, slippage and funding are the whole book's and are not split. agent + fallback - costs = the book's
+  net result (checked in `tests/test_rl_health.py`).
+- **Input drift** (`forward5.input_drift`, journal field `dz`, page field `input_drift`). For each new decision: the
+  share of the model's inputs more than 3 training standard deviations from their training mean (seed 0's own mean
+  and deviation for the coin). The page shows the last week's mean and the week before. Records written before
+  21 Nov 2026 have no `dz`.
+- **Telegram** (`telegram_notify.rl_fallback_update`, `rl_weekly_update`, `/rl`): one card when every seed of a book
+  on a coin is on the fallback and one line when an agent is back; one weekly card when a new model is in use. The
+  weekly card says "drifting" when the reading is above 5% and more than twice the week before: a flag to look,
+  not a tested threshold.

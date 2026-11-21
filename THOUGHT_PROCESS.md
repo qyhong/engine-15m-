@@ -37,6 +37,9 @@ and every later change is in `VERSION_NOTE` in engine15/config.py)
   best profit a close has shown, live from the next bar, never looser. After its own exit it is flat until the
   hold copy's next entry. H61's `floor_33pct_3r`, the one variant that passed on history, weakly; forward data
   points only (the owner: "Add shadow"). It started as a copy of the hold copy's book, running trades included.
+- **RL health readings (21 Nov 2026, no version change):** the three RL paper books now show how much of their
+  result came from the agents and how much from the 'do no harm' fallback, and an input-drift reading; the
+  Telegram bot says when no agent trades a coin (docs/RL.md, "Health readings"). No decision changed.
 - **Fills:** decision at a bar's close, fill at the next open; gold, silver and oil one bar later (their
   live bars arrive ~10 minutes late). Futures rolls are smoothed (data/rolls.csv).
 - **v5 decision rules:** a higher-timeframe bias (1h, 4h and daily trend one way and price on that side of

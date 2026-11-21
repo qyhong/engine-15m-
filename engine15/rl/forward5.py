@@ -660,6 +660,11 @@ def advance(asset, cfg, reg_ms, journal_path, models, bars, fund, readings, now_
                      "at": round(float(now_s), 1), "lag_s": round(float(now_s) - close_ms[i] / 1000.0, 1)})
         if fallback != "rule":
             recs[-1]["mode"] = [fallback if f_ else "model" for f_ in recs[-1]["fb"]]
+        try:                                                      # a reading for the weekly drift check; never decides
+            recs[-1]["dz"] = round(float(input_drift(mdl, seeds[0], asset,
+                                                     feats[mdl["columns"]].values[rel[j]:rel[j] + 1])[0]), 4)
+        except Exception:
+            pass
     # the policy state after each record (needed to resume): recompute 'since' per record cheaply
     since_run = dict((s, state[s][1]) for s in seeds)
     ip_prev = dict((s, state[s][0]) for s in seeds)
@@ -675,6 +680,97 @@ def advance(asset, cfg, reg_ms, journal_path, models, bars, fund, readings, now_
         for r in recs:
             fh.write(json.dumps(r) + "\n")
     return recs
+
+
+# ---------------------------------------------------------------- health readings (21 Nov 2026; they decide nothing)
+DRIFT_Z = 3.0                            # an input this many training standard deviations from its training mean
+WEEK_BARS = 7 * 96
+
+
+def input_drift(model, seed, asset, rows):
+    """Per row: the share of the model's inputs more than DRIFT_Z training standard deviations away from the training
+    mean (that seed's own mu / sd for the coin; a missing input counts as at the mean, as the model reads it)."""
+    st = model["seeds"][str(seed)]["stats"][asset]
+    x = (np.asarray(rows, dtype=np.float32) - np.asarray(st["mu"], np.float32)) / np.asarray(st["sd"], np.float32)
+    x = np.nan_to_num(x, nan=0.0, posinf=0.0, neginf=0.0)
+    return (np.abs(x) > DRIFT_Z).mean(axis=1)
+
+
+def drift_view(journal):
+    """The recorded drift readings, for the page: the last week's mean and the week before it (percent of inputs)."""
+    dz = [r["dz"] for r in journal if r.get("dz") is not None]
+    if not dz:
+        return None
+    last, before = dz[-WEEK_BARS:], dz[-2 * WEEK_BARS:-WEEK_BARS]
+    return {"z": DRIFT_Z, "last_7d_pct": round(100.0 * float(np.mean(last)), 2), "decisions_7d": len(last),
+            "week_before_pct": round(100.0 * float(np.mean(before)), 2) if len(before) >= WEEK_BARS // 2 else None,
+            "note": "share of the model's inputs more than %g training standard deviations from their training mean" % DRIFT_Z}
+
+
+def agent_split(cfg, B, journal, stake=None):
+    """The book's forward result split by WHO held the exposure: seeds on their own model ("agent") and seeds a 'do no
+    harm' model keeps on the fallback (flat in Phase 5, the daily momentum position in Phase 6). Exact for the gross
+    part: the book is the mean of the seeds, so its position is the sum of the two parts; fees, spread, slippage and
+    funding are charged on the net book and are not split. agent + fallback - costs = the book's net result.
+    -> dict, or None when the parts do not add up to the book (never guessed)."""
+    from . import backtest
+    stake = float(cfg["phase5"]["forward"]["stake_usd"] if stake is None else stake)
+    lo, n, ex = int(B["lo"]), int(B["n"]), B["exec"]
+    if n <= lo:
+        return None
+    by_t = dict((r["t"], r) for r in journal)
+    fb = np.zeros(ex.shape)
+    cur = np.zeros(ex.shape[0])
+    for i in range(lo, n):
+        r = by_t.get(int(B["open_ms"][i]))
+        if r is not None:
+            cur = np.asarray(r["fb"], dtype=float)
+        fb[:, i] = cur
+    d = int(CostModel.from_cfg(cfg["costs"]).delay_bars)
+    pos_f = backtest.positions((ex * fb).mean(axis=0), d)[lo:]
+    pos_m = backtest.positions((ex * (1.0 - fb)).mean(axis=0), d)[lo:]
+    fr = B["frame"]
+    if not np.allclose(pos_f + pos_m, fr["pos"].values, atol=1e-9):
+        return None
+    o = B["bars"]["open"].values.astype(float)
+    c = B["bars"]["close"].values.astype(float)
+    r_px = (np.append(o[1:], c[-1]) / o - 1.0)[lo:]
+    eq = np.asarray(B["equity"], dtype=float)
+    prev = np.concatenate([[stake], eq[:-1]])                     # the equity each bar's return applies to
+    costs = (fr["fee"] + fr["spread"] + fr["slippage"] + fr["funding"]).values
+    a_usd, f_usd, c_usd = prev * pos_m * r_px, prev * pos_f * r_px, prev * costs
+    on_model = 1.0 - fb[:, lo:]
+    w = slice(max(0, len(eq) - WEEK_BARS), None)
+    return {"agent_gross_usd": round(float(a_usd.sum()), 2), "fallback_gross_usd": round(float(f_usd.sum()), 2),
+            "costs_usd": round(float(c_usd.sum()), 2), "net_usd": round(float(eq[-1] - stake), 2),
+            "agent_seed_bars_pct": round(100.0 * float(on_model.mean()), 1),
+            "all_fallback_bars_pct": round(100.0 * float((on_model.max(axis=0) == 0).mean()), 1),
+            "last_7d": {"agent_gross_usd": round(float(a_usd[w].sum()), 2),
+                        "fallback_gross_usd": round(float(f_usd[w].sum()), 2), "costs_usd": round(float(c_usd[w].sum()), 2),
+                        "agent_seed_bars_pct": round(100.0 * float(on_model[:, w].mean()), 1)},
+            "note": "gross result by who held the exposure (seeds on their model / seeds on the fallback); costs are the "
+                    "whole book's and are not split"}
+
+
+def health_fields(cfg, B, journal, stake=None):
+    """-> the page fields of one book on one coin: {"split": ..., "input_drift": ...} (either may be missing)."""
+    out = {}
+    sp = agent_split(cfg, B, journal, stake)
+    if sp is not None:
+        out["split"] = sp
+    dv = drift_view(journal)
+    if dv is not None:
+        out["input_drift"] = dv
+    return out
+
+
+def sum_splits(states):
+    """A book's split over its coins (the page's book-level line), or None."""
+    parts = [s["split"] for s in (states or {}).values() if isinstance(s, dict) and s.get("split")]
+    if not parts:
+        return None
+    keys = ("agent_gross_usd", "fallback_gross_usd", "costs_usd", "net_usd")
+    return dict(dict((k, round(sum(p[k] for p in parts), 2)) for k in keys), coins=len(parts))
 
 
 def risk_and_book(cfg, bars, fund, journal, reg_ms, seeds=None, stake=None):

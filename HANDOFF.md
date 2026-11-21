@@ -186,7 +186,14 @@ crypto replay).
   Logs: `research/out/rl/forward5/update.log`, `research/out/rl/forward6/update.log`.
 - `engine15/playbook7.py` (`p7_rvbear`, H37 V4 BTC/ETH pair book, go-live 2026-11-13 11:30 UTC): no model and no refit;
   it recomputes from bars and funding each step (tests: `tests/test_playbook7.py`).
-- The RL loop (`research/rl_loop/`) is ON HOLD after round 3 (owner, 14 Nov 2026); proposals in `loop_state.json`.
+- The RL loop (`research/rl_loop/`) is ON HOLD after round 4 (put on hold by the owner on 14 Nov 2026 after round 3;
+  round 4 ran on 17 Nov at the owner's request: no pass, no round 5 proposed); notes in `loop_state.json`.
+- RL health readings (21 Nov 2026; they decide nothing): each RL book's page state carries `split` (the gross result
+  by who held the exposure: seeds on their model / seeds on the 'do no harm' fallback; costs are the whole book's)
+  and `input_drift` (from the `dz` field each new decision record carries: the share of the model's inputs more than
+  3 training standard deviations from their training mean). Code: `engine15/rl/forward5.py` (`agent_split`,
+  `input_drift`, `drift_view`). The Telegram bot sends one card when no seed agent trades a coin, one weekly card
+  when a new model is in use, and answers `/rl` (`telegram_notify.rl_fallback_update`, `rl_weekly_update`).
 
 ## Exits study H36 (13 Nov 2026)
 - `research/exit_study.py --group <g>` (one group at a time, ~1-5 min each, peak well under 1.5 GB; reads

@@ -259,6 +259,10 @@ def step(bars=None, now_ms=None, funding=None, readings=None, journal_dir=None, 
                 mdl = dict((m["id"], m) for _, m in models[book]).get(journal[-1]["m"])
                 LAST_STATE.setdefault(book, {})[asset] = _state(book, asset, B, journal, tr, mdl,
                                                                 upd if facts["models"] == "phase6" else "phase5's refit")
+                try:                                              # who earned it, and the drift reading (page only)
+                    LAST_STATE[book][asset].update(f5.health_fields(cfg, B, journal, STAKE))
+                except Exception as e:
+                    log("playbook6 %s %s health fields failed: %r" % (book, asset, e))
             except Exception as e:
                 log("playbook6 %s %s failed: %r" % (book, asset, e))
                 continue
@@ -304,6 +308,7 @@ def page_block(rows):
                                                               "why_out", "r", "pnl_usd", "pnl_pct", "text"))
                                 for r in closed[-5:]],
                      "totals": _totals(closed), "by_asset": per, "books": dict(LAST_STATE.get(book, {})),
+                     "split": p5._sum_splits(LAST_STATE.get(book, {})),
                      "pass_rule": ("No forward verdict before 30 closed forward trades per coin; then, after fees, against "
                                    "spot and perp buy-and-hold since go-live, against the RL book p5_rlq and against each "
                                    "other (p6_mtrend vs the control p6_p4trend). A forward pass would still not make it a "

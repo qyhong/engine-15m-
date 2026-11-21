@@ -3522,3 +3522,20 @@ tests `tests/test_h61.py`. No engine file is edited.
   trade. The floor is set from the closes since the entry; a fill can only happen from the first forward bar.
 - Read it at 30 closed forward trades against the hold copy on the same trades, not before. Nothing follows from
   it for the main book without a new registration.
+
+## Forward paper book from RL Phase 4: p5_rlq (go-live 2026-11-12 04:30 UTC; NOT passed) - block written after the fact, 21 Nov 2026
+
+**This block was missing.** The book went live on 12 Nov 2026 with its rule fixed in `configs/rl/phase5.yaml`
+(`forward.pass_rule`) and in `engine15/playbook5.py` (`REGISTERED`, `NOT_PASSED`), but nothing was written here. It
+is added on 21 Nov 2026 by the RL audit, from those two files, and changes nothing.
+
+**Status: NOT passed.** `p5_rlq` is the Phase 4 primary Q agent (pooled BTC+ETH, refit weekly), BTC and ETH, $10,000
+each, decided at a 15m close, filled at the next open, 0.10% a side, perp funding, mean of seeds 0/1/2 through the
+Phase 3 risk manager; a seed whose model fails its 'do no harm' check stays flat. History (seen): after fees it
+trailed buy-and-hold (BTC Sharpe 0.48 against 0.64).
+
+**Graded forward on:** no verdict before 30 closed forward trades per coin; then, after fees, against spot and perp
+buy-and-hold since go-live. A forward pass would not make it a passed rule in history.
+
+**State on 21 Nov 2026 (not a verdict):** 2 closed trades on BTC, 5 on ETH. Since the refit of 16 Nov all three
+BTC seeds are on the fallback, so the BTC book has been flat.

@@ -49,6 +49,14 @@ WEEKLY RANKING (owner, 19 Nov 2026): with the first daily summary of each ISO we
   unranked. "This week": 30 trades reached, verdict changed, retired, best and worst mover, against the snapshot stored at
   the previous weekly card (rank_prev, rank_prev_utc). Its own guard: a failure there never stops the rest.
 
+RL HEALTH (owner, 21 Nov 2026, after the RL audit: "Yes, start them"): read only, from the page's RL book states.
+  NO AGENT TRADING: one card when every seed agent of an RL book on a coin is on its 'do no harm' fallback (flat for the
+  Phase 4 book, the 30-day momentum position for the Phase 6 books), so the results there are the fallback's and not the
+  agent's; one line when an agent is back. WEEKLY CHECK: one card when the books start using a new weekly model, and on
+  /rl: per book and coin, how many of the 3 seed agents trade, the past week's result split into agent and fallback, and
+  the input drift reading (the share of the model's inputs more than 3 training standard deviations from their training
+  mean; marked as drifting when it is above RL_DRIFT_PCT and more than twice the week before). Its own guard.
+
 THE KEY: read from a file the owner places (TOKEN_FILE, chmod 600); never printed, logged or stored anywhere else.
 THE CHAT: the first chat that sends /start is locked in (state file); every other chat is ignored. No key file = it waits.
 """
@@ -1092,6 +1100,115 @@ def ranking_command(st, tok, chat, now):
                                                                          st.get("rank_prev"), st.get("rank_prev_utc"), now)))
 
 
+# ------------------------------------------------------------------ RL health (read only; owner, 21 Nov 2026)
+RL_MODS = ("playbook5", "playbook6")
+RL_DRIFT_PCT = 5.0                       # the weekly card says "drifting" above this AND above twice the week before
+
+
+def rl_states(page):
+    """-> {"book|coin": that book's page state} for the RL forward books (empty on a page shaped unexpectedly)."""
+    out = {}
+    pb = (page or {}).get("playbook") if isinstance(page, dict) else None
+    for mod in RL_MODS:
+        books = pb.get(mod) if isinstance(pb, dict) else None
+        for bk, b in (books.items() if isinstance(books, dict) else ()):
+            states = b.get("books") if isinstance(b, dict) else None
+            for coin, v in (states.items() if isinstance(states, dict) else ()):
+                if isinstance(v, dict) and isinstance(v.get("seed_fallback"), list) and v["seed_fallback"]:
+                    out["%s|%s" % (bk, coin)] = v
+    return out
+
+
+def _rl_label(key):
+    book, coin = key.split("|")
+    return u"<b>%s</b> \u00b7 %s" % (_esc(NAMES.get(book, book)), _esc(coin.replace("USDT", "")))
+
+
+def _rl_agents(v):
+    fb = [bool(x) for x in v["seed_fallback"]]
+    return len(fb) - sum(fb), len(fb)
+
+
+def rl_fallback_update(prev, page):
+    """-> (state {"book|coin": every seed on the fallback}, one card or None). A book missing from this page keeps its
+    last state and gets no card. The first sight of a book already without an agent is news and gets the card."""
+    prev = dict(prev or {})
+    cur, gone, back = dict(prev), [], []
+    for k, v in sorted(rl_states(page).items()):
+        n, tot = _rl_agents(v)
+        cur[k] = (n == 0)
+        if n == 0 and not prev.get(k):
+            holds = (u"holds the 30-day momentum position (%s)" % _esc(str(v.get("book_position") or "?"))
+                     if v.get("fallback_rule") else u"stays flat")
+            gone.append(u"%s: all %d seed agents failed their own check at the last refit. The book %s." % (
+                _rl_label(k), tot, holds))
+        elif n > 0 and prev.get(k):
+            back.append(u"%s: %d of %d seed agents trade again." % (_rl_label(k), n, tot))
+    parts = []
+    if gone:
+        parts.append(u"%s <b>RL: no agent is trading</b>\n%s\nResults there are the fallback's, not the agent's."
+                     % (WARN, u"\n".join(gone)))
+    if back:
+        parts.append(u"%s <b>RL: agent back</b>\n%s" % (OK, u"\n".join(back)))
+    return cur, (u"\n\n".join(parts) + u"\n<i>paper only</i>") if parts else None
+
+
+def _rl_snapshot(states):
+    return dict((k, {"agents": _rl_agents(v)[0], "drift": (v.get("input_drift") or {}).get("last_7d_pct")})
+                for k, v in states.items())
+
+
+def rl_health_card(page, prev_week=None, head=u"RL weekly check"):
+    """The weekly card (also /rl): per book and coin, agents trading, the week's split, the drift reading."""
+    states = rl_states(page)
+    if not states:
+        return u"%s <b>%s</b>\nThe page has no RL book state yet." % (BRAIN, head)
+    prev_week = prev_week or {}
+    lines, book0 = [u"%s <b>%s</b>" % (BRAIN, head)], None
+    for k, v in sorted(states.items()):
+        book, coin = k.split("|")
+        if book != book0:
+            lines.append(u"<b>%s</b>" % _esc(NAMES.get(book, book)))
+            book0 = book
+        n, tot = _rl_agents(v)
+        was = (prev_week.get(k) or {}).get("agents")
+        row = u"%s \u00b7 agents %d/%d%s \u00b7 %s" % (_esc(coin.replace("USDT", "")), n, tot,
+                                                      u"" if was is None or was == n else u" (was %d/%d)" % (was, tot),
+                                                      _esc(str(v.get("book_position") or "?")))
+        wk = (v.get("split") or {}).get("last_7d")
+        if isinstance(wk, dict):
+            row += u"\n   week: agent %s \u00b7 fallback %s \u00b7 costs %s" % (
+                _usd(wk.get("agent_gross_usd") or 0.0), _usd(wk.get("fallback_gross_usd") or 0.0),
+                _usd(-(wk.get("costs_usd") or 0.0)))
+        d = (v.get("input_drift") or {}).get("last_7d_pct")
+        if d is not None:
+            d0 = (prev_week.get(k) or {}).get("drift")
+            if d0 is None:
+                d0 = (v.get("input_drift") or {}).get("week_before_pct")
+            flag = u" %s drifting" % WARN if (d > RL_DRIFT_PCT and d0 is not None and d > 2.0 * d0) else u""
+            row += u"\n   inputs off-range %.1f%%%s%s" % (d, u"" if d0 is None else u" (was %.1f%%)" % d0, flag)
+        lines.append(row)
+    lines.append(u"<i>paper only \u00b7 none of these books has passed</i>")
+    return u"\n".join(lines)
+
+
+def rl_weekly_update(prev_models, prev_week, page):
+    """-> (models {"book|coin": model id}, the week's snapshot, a card or None). The card goes out when a book starts
+    using a new model (the weekly refit reached the books); the first sight only stores the baseline."""
+    states = rl_states(page)
+    models = dict(prev_models or {})
+    cur = dict((k, v.get("model")) for k, v in states.items() if v.get("model"))
+    if not cur:
+        return models, prev_week, None
+    if not prev_models:
+        return cur, _rl_snapshot(states), None
+    changed = any(prev_models.get(k) is not None and prev_models.get(k) != m for k, m in cur.items())
+    models.update(cur)
+    if not changed:
+        return models, prev_week, None
+    return models, _rl_snapshot(states), rl_health_card(page, prev_week, head=u"RL weekly check \u00b7 new models in use")
+
+
 # ------------------------------------------------------------------ the loop
 def check(st, tok, send=True, now=None):
     """One check: learn the chat from /start, send alerts, send the daily summary once a day. -> the new state."""
@@ -1131,10 +1248,24 @@ def check(st, tok, send=True, now=None):
                 early_command(st, tok)                                # H56 early signal preview (own guard)
             elif text.startswith("/ranking"):
                 ranking_command(st, tok, chat, now)                   # the weekly ranking on request (own guard)
+            elif text.startswith("/rl"):
+                try:                                                  # the RL weekly card on request (state not changed)
+                    _send(tok, chat, rl_health_card(_load(PAGE), st.get("rl_week"), head=u"RL check"))
+                except Exception as e:
+                    _send(tok, chat, u"%s The RL check could not be read (%s)." % (WARN, type(e).__name__))
     page, score = _load(PAGE), _load(SCORE)
     c, v, net = counts(score, page)
     cur = {"c": c, "v": v, "net": net, "refits": refit_marks()}
     ev = events(st, cur, page, now)
+    try:                                                              # RL health, from the page already in hand
+        st["rl_fb"], card = rl_fallback_update(st.get("rl_fb"), page)
+        if card:
+            ev.append(card)
+        st["rl_models"], st["rl_week"], card = rl_weekly_update(st.get("rl_models"), st.get("rl_week"), page)
+        if card:
+            ev.append(card)
+    except Exception as e:                                            # a page shaped unexpectedly never stops the other alerts
+        print(time.strftime("%Y-%m-%d %H:%M:%S"), "rl health failed: %s" % type(e).__name__, flush=True)
     try:                                                              # data health, from the page already in hand
         st["health"], gone, back = livecheck.health_update(st.get("health"), (page or {}).get("assets"))
         feeds = health_alert(gone, back)                              # one message, whatever the number of cards

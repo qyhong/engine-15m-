@@ -407,3 +407,45 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   trade at equal size (H61). It is a follower, not a rule of `shadows.run`: the vault's book cannot be changed by
   it, and an error in it is logged and skipped. No version change (no constant moved), so no reading rebuild.
   Not built: the Telegram alert at a 25% give-back (no answer yet).
+- **RL audit, 21 Nov 2026 (owner: "audit again RL from day 1 until now"), and what followed.** The history in one
+  place, since this file had only Phase 1, the Lab decision, rounds 2-4 and the hold; details and numbers are in
+  `docs/RL.md`, `research/rl_loop/LOOP_RL.md` and `docs/RL_NEXT.md`.
+  - 11 Nov: Phase 1 (benchmarks; the "momentum -100%" above was the every-bar rule, replaced the same day by the
+    frozen daily 30-day rule: +237.7%, Sharpe 0.63, against buy-and-hold +249.3%, 0.64). Phase 2 (PPO): -99.6%, no.
+    Phase 3 (linear Q agent, 15m): -53%, no. Phase 4 (pooled BTC+ETH, 18 Mind 15 readings): +79%, Sharpe 0.48
+    against 0.64; something before fees, not after.
+  - 12 Nov 04:30 UTC: `p5_rlq` (the Phase 4 primary) goes live forward, labelled NOT passed. Phase 5 (trade-less
+    variants): none beats buy-and-hold on BTC. Phase 6 (missed-opportunity reward, momentum fallback): 1 of 8
+    variants passed its own bar, which was against Phase 4, not against buy-and-hold; the fallback was chosen with
+    hindsight and the control (Phase 4 + fallback) is ahead of it on BTC in history.
+  - 13 Nov 03:00 UTC: `p6_mtrend` and its control `p6_p4trend` go live forward, both NOT passed. Loop rounds 1-3
+    the same day and round 4 on 17 Nov: no pass (best p 0.036 against a bar of 0.002 after 25 variants).
+  - Verdict rule for all three books: nothing before 30 closed forward trades PER COIN.
+  **Found on 21 Nov** (the server's own records):
+  - Since the refit of 16 Nov every BTC seed is on its 'do no harm' fallback: `p5_rlq` BTC is flat and both Phase 6
+    books hold the 30-day momentum short. The BTC results since then are the fallback's, and on BTC the Phase 6 book
+    and its control hold the same position.
+  - Closed trades per coin after 8 to 9 days: 0 to 5. A verdict by the 30-per-coin rule is months away.
+  - Late decisions (more than 15 minutes after the close; `p5_rlq`, BTC record): by day, 184 of 461 on 12-16 Nov (the laptop), 20 of 430
+    on 17-21 Nov (the server), all on 17, 19 and 20 Nov, days with deploys that rebuilt the reading cache (not
+    matched minute by minute). Nothing to fix in the RL code; fewer rebuild deploys is the cure.
+  - The refit of Mon 23 Nov will be the first on the server; the code loads there, the run itself is unproven.
+  - Of the Lab items of 11 Nov only the Books rows exist in this project; there was no drift monitor.
+  - Record gaps, now closed: HANDOFF said the loop stopped after round 3; this file had no entry for Phases 2-6 or
+    the go-lives; `p5_rlq` had no block in research/HYPOTHESES.md (added, marked as written after the fact).
+  **Owner's decisions the same day:** the RL exit chooser (RL_NEXT's R1) -> "Not now"; four housekeeping tasks ->
+  "Yes, start them": (2) the record gaps above; (3) each RL book's result split into agent and fallback on the
+  page; (5) the lateness measured (above); (6) a Telegram card when no seed agent trades a coin, and a weekly card
+  with the split and an input-drift reading (`/rl` on request). None of this changes a decision of any book: the
+  only change in the decision path is one extra field (`dz`) written with each new decision record. Still open, each
+  needing the owner's word: a momentum-only yardstick book, an interim time-based read, the page's Lab block, tests
+  of the untested inputs, the exit-and-join learner and the book allocator.
+- **The deploy gate stays on the laptop** (21 Nov 2026). The laptop's VM stalled during two full test runs (one
+  timing test failed, then the run froze for hours); the owner: "Move to sg box and test it there". Done once, by
+  hand, in a scratch copy of commit 65da08d under /tmp on the box (never over the live tree): 1,229 passed, 107
+  skipped, 7 failed and 4 errors. Nine of the eleven named a missing file or module (the bar histories under
+  `data/` are not in git; the box has no `stable_baselines3`); the other two (test_lean's rebuild test and
+  playbook3's release-calendar test) were not traced, and the commit touches neither module. The box also has no
+  `cryptography` and no vault worktree, so the vault-feed certificate tests skip there. The box therefore cannot run the whole suite, and using
+  it as the gate would weaken the money-path check. `tools/deploy.sh` is unchanged; the deploy runs from the
+  laptop with the app's keep-awake on.

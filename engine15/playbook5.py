@@ -275,6 +275,10 @@ def step(bars=None, now_ms=None, funding=None, readings=None, journal_dir=None, 
                 rows.append(_row(asset, t, B))
             mend = dict((m["id"], m["data_end_utc"]) for _, m in models).get(journal[-1]["m"])
             LAST_STATE.setdefault(BOOK, {})[asset] = _state(asset, B, journal, tr, mend, upd)
+            try:                                                  # who earned it, and the drift reading (page only)
+                LAST_STATE[BOOK][asset].update(f5.health_fields(cfg, B, journal, STAKE))
+            except Exception as e:
+                log("playbook5 %s health fields failed: %r" % (asset, e))
         except Exception as e:
             log("playbook5 %s failed: %r" % (asset, e))
             continue
@@ -306,6 +310,14 @@ def rule_text():
                 NOT_PASSED, DETAIL, REGISTERED))
 
 
+def _sum_splits(states):
+    from .rl import forward5 as f5
+    try:
+        return f5.sum_splits(states)
+    except Exception:
+        return None
+
+
 def page_block(rows):
     out = {}
     for book, facts in BOOKS.items():
@@ -325,6 +337,7 @@ def page_block(rows):
                                                               "why_out", "r", "pnl_usd", "pnl_pct", "text"))
                                 for r in closed[-5:]],
                      "totals": _totals(closed), "by_asset": per, "books": dict(LAST_STATE.get(book, {})),
+                     "split": _sum_splits(LAST_STATE.get(book, {})),
                      "pass_rule": ("No forward verdict before 30 closed forward trades per coin; then, after fees, against "
                                    "spot and perp buy-and-hold since go-live (configs/rl/phase5.yaml). A forward pass "
                                    "would still not make it a passed rule in history."),
