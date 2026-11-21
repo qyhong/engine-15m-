@@ -3539,3 +3539,55 @@ buy-and-hold since go-live. A forward pass would not make it a passed rule in hi
 
 **State on 21 Nov 2026 (not a verdict):** 2 closed trades on BTC, 5 on ETH. Since the refit of 16 Nov all three
 BTC seeds are on the fallback, so the BTC book has been flat.
+
+## H62. The Setups book with the main book's stop where it is wider (registered 21 Nov 2026, 14:05 UTC, before any H62 code existed or any H62 number was computed)
+
+**Prompted by:** the owner, in the site session, 21 Nov 2026 (relayed by that session, not yet confirmed in this
+project): "Should follow the main book stop loss where is wider", then, from four options, "Setups trades, main-book
+stop". That evening the member's ETH short, copied from the Setups book (`b_targets`), was stopped at the book's stop
+1,680.76 (the bar's high was 1,681.99) while the main book's ETH stop, 1,693.44, held.
+
+**Known before registering (the live journal, read today; these are facts, not results of this study):**
+- The 1,693.44 stop belonged to a main-book trade opened 21 Nov 07:00 UTC, 11.5 hours after the Setups trade (20 Nov
+  19:30 UTC, entry 1,596.99). At the Setups entry the main book held an older short with its stop at 2,146.83.
+- The Setups book and the main book set their entry stop by the same formula (2 barriers from the entry). The main
+  book's stop is "wider" only when its trade was entered elsewhere or earlier.
+- The vault refuses a stop that moves away from price (`stop_not_tighter`), by design. It sizes a member's trade to lose
+  2% of the wallet at the stop the book states at the join.
+
+**What is tested.** `b_targets` unchanged in entries, Target 1, Target 2, the half at Target 1 and the stop to the entry
+after Target 1. Only the stop before Target 1 changes. "The main book" is the main book under today's live rules
+(think15-v5.2.8: the trailing stop and wait-for-a-signal on six markets, the target rules on USDJPY and the S&P 500),
+run on the same bars; its position and the stop in force for a bar are those known at that bar's open. A main-book
+stop counts only while the main book holds the SAME side and its stop is FURTHER from price than the Setups book's own.
+- **A, `wide_entry` (PRIMARY: the owner's choice in the form the vault can follow).** At the Setups fill the book
+  carries the main book's stop if it counts, else its own. Never moved afterwards except to the entry at Target 1.
+- **B, `wide_follow`.** At every bar before Target 1 the stop is the main book's if it counts, else the book's own: it
+  can move out mid-trade and back in. Not something the vault accepts today; replayed because it is the only form that
+  would have changed the ETH trade above.
+- **C, `wide_entry_tighten`.** As A at the fill; afterwards the stop moves IN to the book's own stop (or to a nearer
+  main-book stop that still counts) when the main book leaves, turns or tightens. It never moves out.
+- In all three the position is sized on the stop carried at the fill (`backtest.leverage`, as the vault sizes on the
+  stated stop); the targets are planned from the book's OWN stop, as now.
+
+**Data and method.** All eight markets, each from its first decided session to the last stored row at or before
+2026-11-21 13:45 UTC, on the research server, reading the engine's evidence store and the cached weekly fits read-only.
+The Setups book is run by a copy of `shadows.run` reduced to the targets rule. GATE (must pass or nothing is read):
+with no wide stop that copy reproduces `shadows.run_challenger("b_targets")` on every market, every trade and the marked
+equity at every bar. The main book is `backtest.run_book` with `live.asset_cfg` and the live step's own target and
+trail wiring; the total-risk cap across books is left out (it needs the other books' live state), and that is said.
+Halves split at 2023-06-08. The sealed holdout (2025-11-11 onward) is part of the second half: every rule here was
+fixed before any number, and the holdout is reported separately as well.
+
+**Read-outs, fixed now.** For the current rule, A, B and C, per market and pooled:
+1. Net result, trades, share won, worst fall of the equity, worst single trade, in both halves and in the holdout.
+2. How often the stop at the fill was the main book's, and how far the carried stop was from the entry against the
+   book's own (median and largest ratio), since that ratio is how much smaller a member's position would be.
+3. For B and C: stop moves per trade, out and in.
+4. The forward period (from 2026-11-11) as its own slice, and the ETH trade of 20 Nov if the replay contains it.
+
+**Pass bar for A (PRIMARY), fixed now.** A is "not worse than the current rule" only if, pooled over the eight markets,
+its net result is at least the current rule's in BOTH halves, its worst fall is not deeper, AND it is at least the
+current rule's on BTC and ETH taken together (the two markets the vault copies) in both halves. Anything else is "not
+shown to be better". B and C are descriptive and can pass nothing. Whatever the result, the Setups book changes only on
+the owner's word in this project, with a version and a new golden record; a history replay is not a forward result.
