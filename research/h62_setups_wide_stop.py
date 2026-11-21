@@ -298,11 +298,22 @@ def _stats(ex, b, times, lo, n, mid_i, hold_i, fwd_i):
     return out
 
 
+def group_end(g, assets):
+    """The group's last stored session at or before END (the registered cut), as prep_cut wants it."""
+    from engine15 import evcache
+    st = evcache.AssetStore(os.path.join(evcache.CACHE_DIR, g, assets[0]))
+    if not st.load():
+        raise RuntimeError("no evidence store for %s/%s" % (g, assets[0]))
+    full = pd.DatetimeIndex(pd.to_datetime(st.times_ms(), unit="ms", utc=True))
+    k = int(full.searchsorted(pd.Timestamp(END, tz="UTC"), side="right"))
+    return str(full[k - 1])[:16]
+
+
 def run_group(g, assets, fits_root, log=print):
     import exit_study as ex
     import h59_half_be as h59
     t0 = time.time()
-    prep = h59.prep_cut(g, assets, os.path.join(fits_root, g), END, log=log)
+    prep = h59.prep_cut(g, assets, os.path.join(fits_root, g), group_end(g, assets), log=log)
     times = prep["times"]
     tms = data.to_ms(times)
     n = len(times)
