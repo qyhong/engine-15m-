@@ -3591,3 +3591,36 @@ its net result is at least the current rule's in BOTH halves, its worst fall is 
 current rule's on BTC and ETH taken together (the two markets the vault copies) in both halves. Anything else is "not
 shown to be better". B and C are descriptive and can pass nothing. Whatever the result, the Setups book changes only on
 the owner's word in this project, with a version and a new golden record; a history replay is not a forward result.
+
+### H62 results (21 Nov 2026, 13:50 UTC runs, 14:52 UTC report, on the research server; `research/out/h62_setups_wide_stop/report.md` + `results.json`; per-group files stay on the server)
+
+**Gate:** passed on 8 of 8 markets (the reduced copy reproduced `b_targets`, every trade and the marked equity).
+
+**Verdict for A (PRIMARY): NOT SHOWN TO BE BETTER than the current rule.** Checks: pooled first half yes (+1,546 against
+-4,982), pooled second half NO (-21,903 against -16,593), worst fall not deeper NO (-64.4% against -60.6%), BTC+ETH
+first half yes (-1,873 against -2,983), BTC+ETH second half NO (-5,371 against -2,153).
+
+| Book | Pooled net | 1st half | 2nd half | Holdout | Forward | Trades | Worst fall | BTC+ETH net | BTC+ETH 1st / 2nd | BTC+ETH sum of R (all / 1st / 2nd) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| current rule | -21,575 | -4,982 | -16,593 | -1,273 | +4,134 | 5,964 | -60.6% | -5,136 | -2,983 / -2,153 | -8.6 / +46.1 / -54.7 |
+| A wide_entry | -20,357 | +1,546 | -21,903 | -2,103 | +3,612 | 5,699 | -64.4% | -7,244 | -1,873 / -5,371 | -12.6 / +36.9 / -49.5 |
+| B wide_follow | -13,272 | -1,718 | -11,555 | +1,846 | +4,622 | 5,683 | -61.7% | +375 | -7,531 / +7,906 | -6.9 / +23.6 / -30.4 |
+| C wide_entry_tighten | -18,203 | +2,617 | -20,820 | -459 | +3,885 | 5,733 | -64.3% | -4,778 | -288 / -4,490 | +0.8 / +46.6 / -45.8 |
+
+- **How often it applies.** The stop carried at the fill was the main book's on 8.5% of trades pooled and 13.6% on BTC
+  and ETH (largest ratio to the book's own stop: 47.5x pooled, 3.9x on BTC and ETH). B moved a stop out 540 times and
+  back in 458 times (306 / 270 on BTC and ETH); C moved in 254 times (158).
+- **The member's view (sum of R, each trade over its own risk at the carried stop), BTC and ETH:** current -8.6, A -12.6,
+  B -6.9, C +0.8 over about 2,000 trades. No variant separates from the current rule; B is better in one half and worse
+  in the other; B's worst trade is -2.3R against -1.4R (a stop that moved out after the position was sized).
+- **Per market** A is better on SPX, BTC, gold and WTI and worse on ETH (+1,611 against +4,059), silver and Brent;
+  USDJPY is unchanged (its main book runs the same target rule from the same entries).
+- **The ETH trade of 20 Nov in the replay** is not the live trade: the replay enters at 19:00 UTC at 1,616.66 (live:
+  19:30 at 1,596.99) and its main book, run under today's rules over all history, carried no wider stop at that fill
+  (1.0x in A, B and C), where the live main book, which got its trailing stop only this week, held a short with its
+  stop at 2,146.83. All four books are stopped at 13:30 UTC on 21 Nov. The replay cannot speak to that one trade.
+- **Not in the replay:** the main book's total-risk cap across books. A history replay is not a forward result.
+
+**Reading.** The owner's rule in the form the vault can follow (A) fails the registered bar: worse in the second half
+pooled and on BTC and ETH, with a deeper worst fall. Nothing here supports changing the Setups book's stop. No engine
+code was changed by this study. The Setups book changes only on the owner's word in this project.
