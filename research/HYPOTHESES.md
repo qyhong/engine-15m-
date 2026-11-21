@@ -3540,7 +3540,7 @@ buy-and-hold since go-live. A forward pass would not make it a passed rule in hi
 **State on 21 Nov 2026 (not a verdict):** 2 closed trades on BTC, 5 on ETH. Since the refit of 16 Nov all three
 BTC seeds are on the fallback, so the BTC book has been flat.
 
-## H62. The Setups book with the main book's stop where it is wider (registered 21 Nov 2026, 14:05 UTC, before any H62 code existed or any H62 number was computed)
+## H62. The Setups book with the main book's stop where it is wider (registered 21 Nov 2026, 13:46 UTC, before any H62 code existed or any H62 number was computed)
 
 **Prompted by:** the owner, in the site session, 21 Nov 2026 (relayed by that session, not yet confirmed in this
 project): "Should follow the main book stop loss where is wider", then, from four options, "Setups trades, main-book
