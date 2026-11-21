@@ -3394,3 +3394,87 @@ are below holding (H36 `b_targets` +$2,939 against `main` +$19,209; H59's re-run
 live days cannot rank the rules. H60 above was registered at 11:43 UTC, before this change was built, and had computed
 nothing when it was adopted, so it cannot have informed it. Forward: the shadow `main` copy keeps hold-to-stop-or-flip
 on USDJPY, `b_be_t1`, `b_targets` and `b_trail` keep running, and the lines are read at 30 closed forward trades.
+
+
+## H61. A WIDE PROFIT FLOOR FOR THE MAIN BOOK'S BIG WINNERS: a stop that leaves a winner room and bites only on a real reversal, with no re-entry of its own (registered 21 Nov 2026, 01:35 UTC, before any H61 code existed or any H61 number was computed)
+
+**Prompted by:** the owner, in the site-coordination session, 21 Nov 2026 ~01:30 UTC, relayed by that session: "Lets
+monitor all assets for minds15. As currently all are in profit. It is crucial to see what is the optimal way to capture
+the profit." That session read `page.json` (01:17 UTC): six main-book shorts 2 to 10 R in open profit, nothing banked,
+every stop still the entry stop. It asked for this study and named the three rule families below.
+
+**The gap this fills.** H36, H59 and H60 tested only TIGHT exits on these entries (15m / 1h moving-average trails armed
+at 1R or Target 1, the 1R ATR trail `b_trail`, break-even and targets), and every one of them lets the book re-enter on
+its own clock after the exit, so a trail exit is followed by a forced entry four sessions later. No study has tested a
+WIDE floor that arms only on a large winner, and none has held the book flat after such an exit.
+
+**The six rules** (frozen; exit variants 22 to 27 counted on these entries). R = |entry - entry stop| of the trade.
+"Open profit" is read at 15-minute CLOSES only; a level set at the close of bar i is a stop order from bar i + 1,
+filled like the book's own stop (at the level, or at the bar's open if the bar opens through it); a level only ever
+tightens and is never looser than the entry stop.
+
+1. `floor_50pct_5r` (PRIMARY): once a close shows open profit of at least 5R, the stop sits at
+   entry + 50% of the best close's open profit (it locks half of the peak, and moves up with every better close).
+2. `floor_50pct_3r`: the same, armed at 3R.
+3. `floor_33pct_5r`: armed at 5R, locks one third of the peak.
+4. `floor_33pct_3r`: armed at 3R, locks one third of the peak.
+5. `chandelier_4h_3atr_3r`: once a close shows 3R, the stop trails 3 x ATR(14, Wilder) of the 4-hour chart (last
+   CLOSED 4h bar, joined by `data.htf_on_15`) behind the best close since entry.
+6. `swing_4h_5r`: once a close shows 5R, the stop trails the last CONFIRMED 4-hour swing against the trade (swing low
+   for a long, swing high for a short; the engine's own definition, `sources/structure.swings` with 3 bars either
+   side, known only after the third later 4h bar closes). A swing on the wrong side of the close is not used.
+
+In all six the main book's own exits stay: the entry stop until a rule arms, and the flip.
+
+**No re-entry of its own.** Each rule is an OVERLAY on the main book's own trades: it takes every main trade at the
+main book's fill, bar and price; it leaves either at its own level or, if that never fills, exactly where the main
+book left; after an exit at its own level it stays FLAT until the main book's next entry. The size of each trade is
+the main book's size scaled by (this book's equity / the main book's equity) at the entry, which is exact because the
+main book's size is equity x a leverage that does not depend on equity. Fees per side as the main book's.
+
+**Frame: H60's frame in every respect** (which is H59's "today" frame): the main book's entries with the odds as the
+live step forms them (evidence store read-only, voices walked weekly with a private fits directory), $10,000 per
+market, eight markets in five groups, the window cut at the last session of H59's "today" run per group (20 Nov 2026
+03:45 UTC or the group's own), halves split 2023-06-08, the same statistics (`exit_study.seg_stats`). `main` is
+`shadows.run` under the main rule, as in H36 / H59 / H60 (hold to the stop or the flip; it does NOT include the
+half-at-Target-1 rules the live book has had for USDJPY and the S&P 500 since v5.2.6 / v5.2.7).
+
+**Gates before any variant is read.** (i) The overlay with a rule that never arms must reproduce `main` on every
+market: every trade's P&L and the marked equity at every bar within $0.000001. (ii) `main` here is set beside H60's
+`today_<group>.json`; the readings store was rebuilt at the v5.2.7 deploy (20 Nov, after H60), so if the numbers
+differ the difference is reported; the comparison inside H61 (rules against the `main` of the same run) stays like
+for like either way.
+
+**Three things are read, in this order.**
+
+*(a) Whole books, H36's test unchanged.* A rule is "better than holding" only if its pooled net P&L is above the main
+book's in BOTH halves, above it in at least 5 of the 8 markets over the whole window, and its pooled max drawdown is
+no worse. Read for rule 1 first. Reported for each rule: whole window, each half, markets beating main, pooled and
+per-market max drawdown, trades that armed and trades the rule closed.
+
+*(b) The same question at equal size.* The pooled dollars are dominated by compounding in one market (ETH was
+$240,638 of the main book's $339,325 in H60), so one long hold decides (a). So, per trade that ARMED the rule: the R
+the rule ended with minus the R the main book ended with on the same entry (both on the entry risk; no compounding).
+"The rule helps per trade" only if the mean difference is above zero pooled in BOTH halves and in at least 5 of the
+markets that had an armed trade. Also reported: how many armed trades the rule improved, how many it cut short, and
+the worst give-back of each side (the largest R the main book lost from the peak close; the largest R the rule left
+on the table).
+
+*(c) Today's open trades (description only, not a test).* For each open main-book trade on the live book at the time
+of the run: whether each rule would be armed, the level it would have now, the dollars that level locks at the live
+size against the open profit, and whether it would already have closed the trade (when, where, and what the trade
+has done since).
+
+**What follows from the result.** If rule 1 (or another of the six) passes (a), it is proposed to the owner as a
+FORWARD shadow book beside the main book, read at 30 closed forward trades like the other exit books. If none passes
+(a) but one passes (b), that is said plainly, with the same proposal as a shadow only. If none passes either, no
+shadow is proposed. Nothing here changes the main book, the Setups book or the vault's feed: any change to a book is
+the owner's decision in this project.
+
+**Read this plainly.** In-sample history that this project has now read five times for exits; 27 exit variants on the
+same entries. A floor armed at 5R acts on a handful of trades per market, so its whole-window number rests on very
+few events and the second half is not untouched. A pass is not proof; a fail does not stop the owner from choosing a
+rule. Paper only.
+
+**Code:** `research/h61_profit_floor.py`, output `research/out/h61_profit_floor/` (`report.md`, `results.json`),
+tests `tests/test_h61.py`. No engine file is edited.
