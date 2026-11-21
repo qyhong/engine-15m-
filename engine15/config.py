@@ -17,13 +17,16 @@ ESTATE = os.environ.get("ENGINE15_ESTATE", os.path.join(os.path.dirname(ROOT), "
 LIBRARY_JSON = os.path.join(ESTATE, "research", "local", "library", "strategy_library.json")
 
 # Said once in the journal (each market group's next entry) after "version" changes (live.step_group).
-VERSION_NOTE = ("think15-v5.2.7: on USDJPY the main book now sells half the position at Target 1, moves the stop of "
-                "the rest to the entry price, and sells the rest at Target 2 (the Setups book's exit rule). The S&P 500 "
-                "keeps v5.2.6 (half at Target 1, the rest runs). Entries, sizing, flips, the 4-session mandate and "
-                "the other six markets are unchanged.")
+VERSION_NOTE = ("think15-v5.2.8: on BTC, ETH, gold, silver, WTI and Brent the main book now trails its stop. Once a "
+                "trade is one entry-stop distance in profit the stop follows the tighter of the last confirmed 15-minute "
+                "swing and 2 x ATR(15m) behind the close, and never loosens. After a trailing-stop exit there is no "
+                "forced entry: the book stays flat until one side clears the entry bar. USDJPY and the S&P 500 keep "
+                "their target rules; entries, sizing and flips are unchanged.")
 
 CFG = {
-    "version": "think15-v5.2.7",      # v5.2.7 (20 Nov 2026): USDJPY's main book sells half at Target 1 and the rest at Target 2
+    "version": "think15-v5.2.8",      # v5.2.8 (21 Nov 2026): the trailing stop on six main books ("trail_stop" and
+                                      #   "trail_wait_signal", below); owner: "Update minds 15 with tight trailing stop".
+                                      # v5.2.7 (20 Nov 2026): USDJPY's main book sells half at Target 1 and the rest at Target 2
                                       #   ("half_t1" and "t2_exit", below); owner, after the long of 10 Nov passed both targets and
                                       #   closed at its entry: "Sell at target"; the mandate stays ("Still follow our rules").
                                       # v5.2.6 (20 Nov 2026): the S&P 500 main book closes half at Target 1, stop of the rest to the
@@ -128,6 +131,23 @@ CFG = {
     # +$19,209; H59's re-run -$394 against +$7,288). The shadow "main" copy keeps holding as the forward comparison.
     # H60 (registered the same day) reads exits by regime per market and may change this list later.
     "t2_exit": ("USDJPY",),
+    # v5.2.8 (owner, 21 Nov 2026). With six main-book shorts 2 to 10 R in open profit and nothing banked, the owner in
+    # the site-coordination session, after seeing the B trail shadow book's forward lead (+$11,534 against the main
+    # book's +$9,850, about $11k of it banked) AND its history (2020-26: -$47k against +$329k): "Update minds 15 with
+    # tight trailing stop". Confirmed in this project by prompt the same day: which markets -> "Six markets" (USDJPY and
+    # the S&P 500 keep the target rules above); how the book comes back after a trail exit -> "Wait for a signal".
+    # Markets listed in trail_stop (never one that is in be_t1): the B trail book's exit on the main book's own
+    # trades (exits.trail_step; constants exits.TRAIL_ARM_R = 1.0 and exits.TRAIL_ATR = 2.0): once a bar has gone one
+    # entry-stop distance in favour, the stop is the tighter of the last confirmed 15m swing and 2 x ATR(15m) behind
+    # the close, live from the next bar, never looser; a stop-out there is "TRAIL". A trade already running comes
+    # under the rule at the first step. Adopted on the owner's call, not on a passed test: every tight trail lost
+    # against holding on history (H36). The shadow "main" copy keeps holding as the forward comparison.
+    "trail_stop": ("BTCUSDT", "ETHUSDT", "XAUUSD", "XAGUSD", "WTI", "BRENT"),
+    # Markets listed here (they must be in trail_stop too): after a "TRAIL" exit the forced entry of the mandate is
+    # off; the book stays flat until one side clears the entry bar (theta_enter, or the counter-bias bar). An exit at
+    # the entry stop or on a flip keeps the 4-session mandate. A NEW rule: no book has run it forward (the B trail
+    # shadow re-enters by the mandate), and no study has read a tight trail without the forced re-entry.
+    "trail_wait_signal": ("BTCUSDT", "ETHUSDT", "XAUUSD", "XAGUSD", "WTI", "BRENT"),
     # v3 (owner, 10 Nov 2026): HOLD when risk is high and the edge is gone, instead of stepping
     # aside. In the replay the step-aside rule made about 770 exits and 1,000 forced re-entries a coin.
     "step_aside": False,

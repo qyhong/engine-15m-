@@ -90,7 +90,7 @@ def leverage(cfg, price, stop_dist):
 
 
 def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None, bias=None, guard=None, t1_of=None,
-             t2_of=None):
+             t2_of=None, trail_aux=None):
     """One asset's paper book over sessions lo .. hi-1. -> dict of per-session arrays and trades.
     `state` (the dict a previous call returned under "state") resumes a book exactly where it
     stopped: the live engine advances one session at a time this way.
@@ -112,6 +112,14 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
     planner of Target 2 with t1_of's arguments): once Target 1 has traded, a bar that trades through Target 2 closes
     what is left AT Target 2, why_out "T2" (read after the stop check and after Target 1, so both targets may fill
     in one bar, as in the Setups book, shadows.run). The book is then flat and the mandate counts from zero.
+    The trailing stop (v5.2.8; only where cfg["trail_stop"] is exactly True AND trail_aux is given AND the market is
+    not under be_t1): trail_aux = {"atr15", "sw_lo", "sw_hi"}, per-session arrays (ATR(14) of the 15m chart; the last
+    confirmed 15m swing low / high). At each close exits.trail_step (the B trail shadow book's rule) arms the trail
+    once the trade has gone one entry-stop distance in favour and then moves the stop to the tighter of the swing and
+    2 x ATR(15m) behind the close, live from the next bar, never looser; a stop-out there is booked as "TRAIL".
+    With cfg["trail_wait"] exactly True as well, a "TRAIL" exit switches the forced entry off: the book stays flat
+    until one side clears the entry bar (policy.ENTER); a FORCED decision is turned into IDLE with the reason
+    "wait_for_signal_after_trail" (state["wait_signal"]). An exit at the entry stop or on a flip keeps the mandate.
     -> also "parts": [(bar, price, quantity, net usd, tag)] for the halves closed in lo .. hi-1."""
     o, h, l, c = px["open"], px["high"], px["low"], px["close"]
     n = len(c)
@@ -130,6 +138,13 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
     be = cfg.get("be_t1") is True and t1_of is not None
     half = be and cfg.get("half_t1") is True                      # v5.2.6: half off at Target 1 (needs the rule above)
     t2x = half and cfg.get("t2_exit") is True and t2_of is not None   # v5.2.7: the rest out at Target 2 (needs both)
+    # v5.2.8: the trailing stop. Only on exactly True (live.asset_cfg sets it for the markets in CFG["trail_stop"];
+    # the raw CFG holds the LIST there), with its arrays, and never together with the Target 1 rules.
+    trail = cfg.get("trail_stop") is True and trail_aux is not None and not be
+    wait_rule = trail and cfg.get("trail_wait") is True          # no forced entry after a "TRAIL" exit
+    trail_on, wait_sig = False, False
+    if trail:
+        t_atr, t_lo, t_hi = trail_aux["atr15"], trail_aux["sw_lo"], trail_aux["sw_hi"]
     t1, t1_hit, stop0, t2 = None, False, np.nan, None
     part, half_due, parts = None, False, []                       # the half already closed; one owed at the next open
     fees_paid = [float((state or {}).get("fees", 0.0))]           # every fee this book has paid, across steps
@@ -144,9 +159,14 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
             if half:
                 part = dict(state["part"]) if state.get("part") else None
                 half_due = bool(state.get("half_due", False)) and part is None
+        if trail:
+            wait_sig = wait_rule and pos == 0 and bool(state.get("wait_signal", False))
+            if pos != 0:                                          # a trade already running: its entry stop is the
+                stop0 = stop if state.get("stop0") is None else state["stop0"]   # stop it has (never moved before)
+                trail_on = bool(state.get("trail_on", False))
 
     def close(i, price, why):
-        nonlocal pos, qty, eq, stop, t1, t1_hit, stop0, part, half_due, t2
+        nonlocal pos, qty, eq, stop, t1, t1_hit, stop0, part, half_due, t2, trail_on
         gross = qty * pos * (price - entry)
         fees = fee * qty * (entry + price)
         eq += gross - fees
@@ -156,6 +176,7 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
         pos, qty, stop = 0, 0.0, np.nan
         t1, t1_hit, stop0, t2 = None, False, np.nan, None
         part, half_due = None, False
+        trail_on = False
 
     def take_half(i, price, tag):
         """Close exits.PART of the position at `price` (the same arithmetic as close, for that share) and book it
@@ -191,6 +212,7 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
                     pos, entry, qty, t_in, why_in = target, o[i], q, i, a
                     stop = entry - pos * cfg["stop_units"] * unit[i - 1]
                     t1, t1_hit, stop0, t2 = None, False, stop, None
+                    trail_on, wait_sig = False, False             # a new trade: the entry stop; the wait is over
                     if be:
                         t1 = t1_of(i, pos, entry, stop)
                     if t2x:
@@ -201,13 +223,15 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
                 take_half(i, o[i], "T1_LATE")
             half_due = False
         held[i] = pos
-        stop_why = "STOP_BE" if (be and t1_hit) else "STOP"       # after Target 1 the stop sits at the entry
+        stop_why = "STOP_BE" if (be and t1_hit) else "TRAIL" if trail_on else "STOP"   # where the stop sits now
         if pos == 1 and l[i] <= stop:                             # 2. the protective stop
             close(i, min(o[i], stop), stop_why)
             idle = 0
+            wait_sig = wait_rule and stop_why == "TRAIL"
         elif pos == -1 and h[i] >= stop:
             close(i, max(o[i], stop), stop_why)
             idle = 0
+            wait_sig = wait_rule and stop_why == "TRAIL"
         if be and pos != 0 and t1 is not None and not t1_hit and exits.reached(pos, h[i], l[i], t1):
             t1_hit = True                                         # 2b. Target 1 traded in this bar: the stop goes to
             if half:                                              # the entry, live from the next bar, never looser;
@@ -216,11 +240,16 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
         if t2x and pos != 0 and t1_hit and t2 is not None and exits.reached(pos, h[i], l[i], t2):
             close(i, float(t2), "T2")                             # 2c. Target 2 traded: what is left goes AT Target 2
             idle = 0
+        if trail and pos != 0:                                    # 2d. the trailing stop, set at this close for the
+            trail_on, stop = exits.trail_step(pos, entry, stop, stop0, trail_on, h[i], l[i], c[i], t_atr[i],   # bars
+                                              t_lo[i] if pos == 1 else t_hi[i])                              # after
         pu = p_up[i]                                              # 3. the decision at this close
         a, target, why = policy.decide(pos, idle, None if pu != pu else pu, p_dn[i], bool(shock[i]),
                                        tide[i] if tide[i] == tide[i] else 0.0, cfg,
                                        bias=0 if bias is None or bias[i] != bias[i] else int(bias[i]),
                                        guard=False if guard is None else bool(guard[i]))
+        if wait_sig and pos == 0 and a == policy.FORCED:          # v5.2.8: after a trail exit only a signal enters
+            a, target, why = policy.IDLE, 0, "wait_for_signal_after_trail"
         if a == policy.IDLE:
             idle += 1
         elif a == policy.STEP_ASIDE:
@@ -231,7 +260,7 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
             delay = int(cfg.get("fill_delay_bars", 0) or 0)       # bars a late feed adds before a fill is possible
             if not (delay and pending is not None and pending[1] == target):   # an order already waiting keeps its place
                 pending = (a, target, why) if not delay else (a, target, why, delay)
-        act[i], idle_arr[i], stop_arr[i], reason[i] = ACT_CODE[a], idle, stop, why
+        act[i], idle_arr[i], stop_arr[i], reason[i] = ACT_CODE[a], min(idle, 127), stop, why   # (an int8 array)
         eq_arr[i] = eq + (qty * pos * (c[i] - entry) if pos else 0.0)
     end_state = {"pos": int(pos), "idle": int(idle), "qty": float(qty), "entry": float(entry),
                  "stop": None if stop != stop else float(stop), "eq": float(eq), "why_in": why_in,
@@ -244,6 +273,10 @@ def run_book(px, odds, shock, tide, unit, cfg, lo, hi, cost_mult=1.0, state=None
         end_state.update(half_t1=True, part=part if pos else None, half_due=bool(half_due and pos))
     if t2x:
         end_state.update(t2_exit=True, t2=None if (t2 is None or not pos) else float(t2))
+    if trail:                                                     # only books under the rule carry these
+        end_state.update(trail_stop=True, trail_on=bool(trail_on and pos), trail_wait=bool(wait_rule),
+                         wait_signal=bool(wait_sig and not pos),
+                         stop0=None if (stop0 != stop0 or not pos) else float(stop0))
     if pos != 0:                                                  # still open: mark it, charge nothing more
         trades.append((t_in, hi - 1, pos, entry, c[hi - 1], why_in, "OPEN", (pos * (c[hi - 1] - entry) / entry
                                                                              - fee) * 100.0, eq_arr[hi - 1],

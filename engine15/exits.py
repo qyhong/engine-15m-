@@ -21,6 +21,10 @@ next bar, never loosening an already tighter stop.
 """
 
 ARM_R = 1.0                     # "1r": arm after one stop distance in favour (b_trail's TRAIL_ARM_R)
+# THE trailing stop, declared once: armed after TRAIL_ARM_R stop distances in favour, then the tighter of the last
+# confirmed 15m swing and TRAIL_ATR x ATR(15m) behind the close. shadows.TRAIL_ARM_R / TRAIL_ATR (the B trail
+# shadow book) ARE these names, and the main book reads them through trail_step below (v5.2.8, CFG["trail_stop"]).
+TRAIL_ARM_R, TRAIL_ATR = 1.0, 2.0
 # THE share of a position closed at Target 1, declared once: shadows.PART (b_targets, the book the VIP vault copies),
 # signals.PART, vault_feed.REDUCE_FRACTION and the main book's half_t1 all ARE this name. Money path (CLAUDE.md).
 PART = 0.5
@@ -90,3 +94,25 @@ def trail_from_history(pos, entry, stop0, t1, arm, high, low, close, ma, i_in, i
             if out:
                 return dict(armed=armed, level=level, t1_hit=t1_hit, stop=stop, exit_row=i, exit_why="TRAIL_MA")
     return dict(armed=armed, level=level, t1_hit=t1_hit, stop=stop, exit_row=None, exit_why=None)
+
+
+def trail_step(pos, entry, stop, stop0, trail_on, high, low, close, atr15, swing):
+    """THE TRAILING STOP, one bar, read at its close for the bars that follow (the B trail shadow book's rule,
+    shadows.run step 2c, and the main book's since v5.2.8). `swing` = the last confirmed 15m swing low for a long,
+    swing high for a short. Armed once a bar's high / low has gone TRAIL_ARM_R entry-stop distances in favour; then
+    the stop is the tighter of close -/+ TRAIL_ATR x ATR(15m) and the swing (only a swing on the stop side of the
+    close counts), and it never loosens. -> (trail_on, stop)."""
+    if stop0 != stop0:
+        return trail_on, stop
+    R = abs(entry - stop0)
+    if not trail_on and R > 0 and pos * ((high if pos == 1 else low) - entry) >= TRAIL_ARM_R * R:
+        trail_on = True
+    if trail_on:
+        cands = [close - pos * TRAIL_ATR * atr15]
+        if swing == swing and pos * (close - swing) > 0:
+            cands.append(swing)
+        cands = [x for x in cands if x == x]
+        if cands:
+            tight = max(cands) if pos == 1 else min(cands)
+            stop = max(stop, tight) if pos == 1 else min(stop, tight)
+    return trail_on, stop

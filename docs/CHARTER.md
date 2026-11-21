@@ -382,3 +382,17 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   switch the field on (new version, new golden record, a restart of about 15 minutes) / leave it off. The owner
   chose to leave it off: `SEND_CONTRACT_1` stays False, so the vault joins only setups that have not reached
   Target 1. Turning it on later needs the owner's word in this project.
+- **think15-v5.2.8: a tight trailing stop on six main books; no forced entry after a trail exit** (21 Nov 2026).
+  The owner, in the site-coordination session, with six main-book shorts 2 to 10 R in open profit and nothing
+  banked: "Lets monitor all assets for minds15. As currently all are in profit. It is crucial to see what is the
+  optimal way to capture the profit." Shown the B trail shadow book's forward lead (+$11,534 against the main
+  book's +$9,850) and its 2020-26 history (-$47k against +$329k), the owner there: "Update minds 15 with tight
+  trailing stop" (relayed by that session). Confirmed in this project by prompt: markets -> "Six markets" (BTC,
+  ETH, gold, silver, WTI, Brent; USDJPY and the S&P 500 keep their target rules of 20 Nov); how the book comes
+  back after a trail exit -> "Wait for a signal" (no forced entry; flat until one side clears the entry bar).
+  The trail is the B trail book's: armed at 1R, then the tighter of the last confirmed 15m swing and 2 x ATR(15m),
+  never looser. A stop-out at the entry stop and a flip keep the 4-session mandate. Trades already running come
+  under the rule at the first step. Not a passed test: every tight trail lost against holding on history (H36),
+  and the wait-for-a-signal re-entry is new. The vault's book (`b_targets`) is not touched; the golden money-path
+  test is unchanged and green. The wide profit floor the coordination session asked for is H61 (registered
+  before any number; results in research/HYPOTHESES.md).

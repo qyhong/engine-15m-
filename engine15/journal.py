@@ -124,7 +124,8 @@ def entry(store, asset, i, raw=None, trade=None):
     e["action"] = ACTIONS[int(book["act"][i])]
     e["reason"] = book["reason"][i]
     tr = book["trades"]
-    stopped = tr[(tr.i_out == i) & tr.why_out.isin(("STOP", "STOP_BE"))]   # "STOP_BE": at the entry after Target 1
+    stopped = tr[(tr.i_out == i) & tr.why_out.isin(("STOP", "STOP_BE", "TRAIL"))]   # "STOP_BE": at the entry after
+    e["stopped_why"] = str(stopped.why_out.iloc[0]) if len(stopped) else None        # Target 1; "TRAIL": the trailing stop
     halves = [p for p in (book.get("parts") or []) if p[0] == i]
     e["half_closed"] = None if not halves else {"price": halves[0][1], "quantity": halves[0][2],
                                                 "pnl_usd": round(halves[0][3], 2), "tag": halves[0][4]}
@@ -300,6 +301,9 @@ def _sentence(e, cfg):
     if a == policy.FORCED:
         return ("ENTER %s at the next open BY MANDATE: flat for %d sessions, the limit. Neither side cleared the "
                 "%.0f-pt bar; %s is the better of the two (%.1f pts)." % (better, cfg["idle_max"], bar, better.lower(), abs(edge)))
+    if a == policy.IDLE and why == "wait_for_signal_after_trail":
+        return ("WAIT FOR A SIGNAL: flat since the trailing stop closed the last trade. No forced entry after a trailing-stop "
+                "exit; the better side leads by only %.1f pts against a %.0f-pt bar." % (abs(edge), bar))
     if a == policy.IDLE:
         return "SIT OUT, session %d of %d: the better side leads by only %.1f pts against a %.0f-pt bar%s." % (
             e["idle_sessions"], cfg["idle_max"], abs(edge), bar, " (risk is high)" if e["risk"]["high"] else "")
@@ -315,7 +319,8 @@ def render(e):
     if e.get("version_note"):
         lines.append("- New version: %s" % e["version_note"])
     if e.get("stopped_at"):
-        lines.append("- Stopped out this session at %.2f." % e["stopped_at"])
+        lines.append(("- Trailing stop hit this session at %.2f." if e.get("stopped_why") == "TRAIL"
+                      else "- Stopped out this session at %.2f.") % e["stopped_at"])
     if e.get("half_closed"):
         hc = e["half_closed"]
         lines.append("- Half the position closed at %.2f (%s): %+.2f USD banked; the stop of the rest is the entry." % (
@@ -354,6 +359,10 @@ def render(e):
                          t.get("opened_utc") or "earlier", t.get("opened_by") or "-", t["stop_price"], t["stop_distance_pct"] or 0,
                          format(t["risk_to_stop_usd"] or 0, ",.0f"), t["mark_price"], t["unrealized_usd"], t["unrealized_pct"],
                          t["entry_fee_usd"], t["exit_fee_est_usd"]))
+    elif t and t.get("wait_signal"):
+        lines.append("- Trade: none open (flat %d sessions, waiting for a signal after a trailing-stop exit). Realised so far "
+                     "%+.2f USD; fees paid $%.2f.%s" % (t["idle_sessions"], t["realized_usd"], t["fees_paid_usd"],
+                                                      " Next open: %s." % t["next_open"] if t.get("next_open") else ""))
     elif t:
         lines.append("- Trade: none open (idle %d of %d sessions). Realised so far %+.2f USD; fees paid $%.2f.%s" % (
             t["idle_sessions"], t["idle_max"], t["realized_usd"], t["fees_paid_usd"],

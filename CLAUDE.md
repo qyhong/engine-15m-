@@ -10,7 +10,7 @@ Beside the main books run, all forward and on paper: shadow books (`engine15/sha
 H5, the 4h/daily yardsticks, the 1h/4h swing minds, the H36 exit shadows), twelve strategy books
 (`engine15/playbook.py` to `playbook3.py`, H6-H17), the CPI book (H1), and forward books that are NOT passed:
 rules A/B (`playbook4`), the RL agents (`playbook5`, `playbook6`) and the BTC/ETH pair book (`playbook7`, H37 V4).
-The engine version is `CFG["version"]` in `engine15/config.py` (think15-v5.2.7 on 20 Nov 2026); what each version changed
+The engine version is `CFG["version"]` in `engine15/config.py` (think15-v5.2.8 on 21 Nov 2026); what each version changed
 is in `VERSION_NOTE` there and in THOUGHT_PROCESS.md "Now". It runs on the Singapore box, not on this laptop (HANDOFF.md).
 `out/live/scoreboard.json` judges every book on live trades only.
 Hypotheses are registered in `research/HYPOTHESES.md` before they are graded.

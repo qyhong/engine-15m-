@@ -59,7 +59,7 @@ TRADES_DIR = os.path.join(OUT_DIR, "live")
 # ---- the challengers' constants, declared once (from the hypothesis texts; none tuned here)
 H3_K, H3_BARS = 0.25, 4                 # research/HYPOTHESES.md H3
 PART = exits.PART                       # b_targets: the share taken at Target 1 (ONE constant: exits.PART)
-TRAIL_ARM_R, TRAIL_ATR = 1.0, 2.0       # b_trail: arm after 1R; the ATR trail distance
+TRAIL_ARM_R, TRAIL_ATR = exits.TRAIL_ARM_R, exits.TRAIL_ATR   # b_trail: arm after 1R; the ATR trail distance (1.0, 2.0)
 PB_BARS, PB_RANGE_ATR1H = 8, 1.0        # a_pullback: bars a limit rests; how far from price it may sit
 PB_FIB_TFS = ("1h", "4h")               # fib.py draws legs on 1h, 4h and 1d (it has no 15m leg)
 PB_MA_TFS = ("15m", "1h")

@@ -1,9 +1,12 @@
-# Mind 15: where things stand (updated 20 Nov 2026: think15-v5.2.7; the vault feed is on the REAL-MONEY path)
+# Mind 15: where things stand (updated 21 Nov 2026: think15-v5.2.8; the vault feed is on the REAL-MONEY path)
 
-Main-book exit rules by market (config.py `be_t1`, `half_t1`, `t2_exit`): USDJPY sells half at Target 1 and the rest
-at Target 2 with the stop to the entry after Target 1 (v5.2.7); the S&P 500 sells half at Target 1 and lets the rest
-run with its stop at the entry (v5.2.6); the other six hold to the stop or a flip. The 4-session mandate is
-unchanged everywhere. H60 (exits by regime, per market) is registered and running; it may change this table.
+Main-book exit rules by market (config.py `be_t1`, `half_t1`, `t2_exit`, `trail_stop`, `trail_wait_signal`): USDJPY
+sells half at Target 1 and the rest at Target 2 with the stop to the entry after Target 1 (v5.2.7); the S&P 500 sells
+half at Target 1 and lets the rest run with its stop at the entry (v5.2.6); the other six (BTC, ETH, gold, silver,
+WTI, Brent) trail their stop once a trade is 1R in profit (the tighter of the last confirmed 15m swing and 2 x
+ATR(15m), never looser; exit word `TRAIL`) and, after a trail exit, stay flat until one side clears the entry bar:
+no forced entry (v5.2.8, owner 21 Nov 2026). Everywhere else the 4-session mandate is unchanged, including after an
+exit at the entry stop or on a flip. The vault copies the Setups book (`b_targets`), which v5.2.8 does not touch. H60 (exits by regime, per market) is registered and running; it may change this table.
 
 Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisions), then
 `THOUGHT_PROCESS.md` ("Now" section) and `CLAUDE.md`. This file is only the moving parts.

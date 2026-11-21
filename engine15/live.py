@@ -58,7 +58,11 @@ def open_trade(asset, st, mark, close_time, cfg):
             "fees_paid_usd": round(st.get("fees", 0.0), 2),
             "next_open": None if not pend else "%s -> %s" % (pend[0], {1: "LONG", -1: "SHORT", 0: "FLAT"}[int(pend[1])])}
     if st["pos"] == 0:
-        return dict(base, status="FLAT", idle_sessions=st["idle"], idle_max=cfg["idle_max"], equity_marked=round(st["eq"], 2))
+        flat = dict(base, status="FLAT", idle_sessions=st["idle"], idle_max=cfg["idle_max"], equity_marked=round(st["eq"], 2))
+        if st.get("wait_signal"):                                # v5.2.8: flat after a trailing-stop exit
+            flat.update(wait_signal=True, waiting_for="a signal: after a trailing-stop exit there is no forced entry; "
+                        "the book enters when one side clears the entry bar")
+        return flat
     pos, qty, entry, stop = st["pos"], st["qty"], st["entry"], st["stop"]
     unreal = qty * pos * (mark - entry)
     opened = st.get("t_in_ms")
@@ -70,14 +74,37 @@ def open_trade(asset, st, mark, close_time, cfg):
                 leverage_cap=CFG.get("max_leverage", {}).get(asset, 1.0),
                 stop_price=None if stop is None else round(stop, 2),
                 stop_basis=("the entry price: Target 1 has traded (break-even rule)" if st.get("t1_hit")
-                            else "the entry stop; it moves to the entry price once Target 1 trades") if st.get("be_t1") else None,
-                **_half_fields(st),
+                            else "the entry stop; it moves to the entry price once Target 1 trades") if st.get("be_t1")
+                else _trail_basis(st),
+                **_half_fields(st), **_trail_fields(st, pos, qty, entry, stop),
                 stop_distance_pct=None if stop is None else round(abs(stop - entry) / entry * 100, 2),
-                risk_to_stop_usd=None if stop is None else round(qty * abs(stop - entry), 2),
+                # what a stop-out would lose: 0 once the stop sits at or beyond the entry (break-even, the trail)
+                risk_to_stop_usd=None if stop is None else round(qty * max(0.0, pos * (entry - stop)), 2),
                 mark_price=round(mark, 2), unrealized_usd=round(unreal, 2), unrealized_pct=round(pos * (mark - entry) / entry * 100, 3),
-                **_target_fields(st, pos, qty, entry, stop),
+                # R of the targets is counted on the ENTRY stop: a trailed stop is not the trade's risk
+                **_target_fields(st, pos, qty, entry, st["stop0"] if (st.get("trail_stop") and st.get("stop0") is not None)
+                                 else stop),
                 entry_fee_usd=round(fee * qty * entry, 2), exit_fee_est_usd=round(fee * qty * mark, 2),
                 net_if_closed_now_usd=round(unreal - fee * qty * (entry + mark), 2), equity_marked=round(st["eq"] + unreal, 2))
+
+
+def _trail_basis(st):
+    """Where the stop of a book under the trailing-stop rule sits, in words (v5.2.8); None for every other book."""
+    if not st.get("trail_stop"):
+        return None
+    return ("trailing: the tighter of the last confirmed 15-minute swing and 2 x ATR(15m) behind the close; it never loosens"
+            if st.get("trail_on") else "the entry stop; it starts trailing once the trade is 1R in profit")
+
+
+def _trail_fields(st, pos, qty, entry, stop):
+    """The trailing stop of a main book (v5.2.8, markets in CFG["trail_stop"]); {} for every other book."""
+    if not st.get("trail_stop"):
+        return {}
+    locks = None if (stop is None or not st.get("trail_on")) else round(qty * pos * (stop - entry), 2)
+    return {"targets_traded": "no: the trade leaves at its trailing stop or on a flip",
+            "trail_on": bool(st.get("trail_on")), "stop_locks_usd": locks,
+            "after_trail_exit": "flat until one side clears the entry bar (no forced entry)" if st.get("trail_wait")
+            else "the 4-session mandate"}
 
 
 def _half_fields(st):
@@ -167,13 +194,17 @@ def asset_cfg(a, cfg):
     """The asset's own fee: gold, silver, USDJPY and the S&P 500 trade far cheaper than crypto spot.
     be_t1 (v5.2.5): whether this market's main book moves its stop to the entry after Target 1 (CFG["be_t1"]).
     half_t1 (v5.2.6): whether it also closes half there (CFG["half_t1"]; only markets that are in be_t1 too).
-    t2_exit (v5.2.7): whether the rest is closed at Target 2 (CFG["t2_exit"]; only markets that are in half_t1 too)."""
+    t2_exit (v5.2.7): whether the rest is closed at Target 2 (CFG["t2_exit"]; only markets that are in half_t1 too).
+    trail_stop (v5.2.8): whether the stop trails after 1R (CFG["trail_stop"]; never a market that is in be_t1).
+    trail_wait (v5.2.8): whether a trail exit switches the forced entry off (CFG["trail_wait_signal"])."""
     be = a in (CFG.get("be_t1") or ())
     half = be and a in (CFG.get("half_t1") or ())
+    trail = (not be) and a in (CFG.get("trail_stop") or ())
     return dict(cfg, cost_side=CFG.get("asset_cost", {}).get(a, cfg["cost_side"]),
                 leverage_cap=CFG.get("max_leverage", {}).get(a, 1.0),
                 fill_delay_bars=CFG.get("fill_delay", {}).get(a, 0),
-                be_t1=be, half_t1=half, t2_exit=half and a in (CFG.get("t2_exit") or ()))
+                be_t1=be, half_t1=half, t2_exit=half and a in (CFG.get("t2_exit") or ()),
+                trail_stop=trail, trail_wait=trail and a in (CFG.get("trail_wait_signal") or ()))
 
 
 def adopt_be_t1(old, px, times, lo, half=False, t2=False):
@@ -229,7 +260,8 @@ def risk_budget(asset, state):
     for a in every:
         b = books.get(a) or {}
         if a != asset and b.get("pos") and b.get("stop") is not None:
-            used += float(b["qty"]) * abs(float(b["entry"]) - float(b["stop"]))
+            # what a stop-out would LOSE: nothing once the stop sits at or beyond the entry (break-even, the trail)
+            used += float(b["qty"]) * max(0.0, int(b["pos"]) * (float(b["entry"]) - float(b["stop"])))
     return cap / 100.0 * total - used
 
 
@@ -607,9 +639,15 @@ def step_group(g, assets, state, log=print, fetch=True, gate=None):
                     int(side), float(entry), float(stop), ev.iloc[max(i - 1, 0)]).get("target_2")
             t1_of = lambda i, side, entry, stop, ev=ev: plan_targets(   # the same Target 1 the page shows (below)
                 int(side), float(entry), float(stop), ev.iloc[max(i - 1, 0)]).get("target_1")
+        trail_aux = None
+        if acfg.get("trail_stop"):                               # v5.2.8: the trailing stop (CFG["trail_stop"]), on the
+            from . import shadows                                # very arrays the B trail shadow book reads
+            ax = shadows.aux_from_ev(ev, prep["px"][a])
+            trail_aux = {"atr15": ax["atr15"], "sw_lo": ax["sw_lo"], "sw_hi": ax["sw_hi"]}
         b = backtest.run_book(prep["px"][a], prep["odds"][a], ev["shock"].values, ev["tide"].values,
                               (cfg["barrier_atr"] * ev["atr1h"]).values, acfg, lo, n, state=old or None,
-                              bias=ev["htf_bias"].values, guard=ev["release_soon"].values, t1_of=t1_of, t2_of=t2_of)
+                              bias=ev["htf_bias"].values, guard=ev["release_soon"].values, t1_of=t1_of, t2_of=t2_of,
+                              trail_aux=trail_aux)
         books[a] = b
         tr = b["trades"]
         closed = tr[tr.why_out != "OPEN"]

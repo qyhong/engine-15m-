@@ -21,6 +21,16 @@ and every later change is in `VERSION_NOTE` in engine15/config.py)
   the stop of the rest to the entry, and lets the rest run to that stop or a flip (`CFG["half_t1"]`; the half
   is a closed trade at once, `T1`, the rest a second row). The owner's call ("close half ... as TP1 already achieve", then "Rest runs, stop at entry").
   Not in H36's grid; its history read is H59, descriptive. Six markets still hold to the stop or a flip.
+- **Exits (think15-v5.2.7, 20 Nov 2026):** USDJPY's main book sells half at Target 1 and the rest at Target 2
+  (`CFG["t2_exit"]`; the owner: "Sell at target").
+- **Exits (think15-v5.2.8, 21 Nov 2026):** on BTC, ETH, gold, silver, WTI and Brent the main book trails its stop
+  (`CFG["trail_stop"]`, `exits.trail_step`, the B trail shadow book's rule): once a bar has gone one entry-stop
+  distance in favour, the stop is the tighter of the last confirmed 15m swing and 2 x ATR(15m) behind the close,
+  live from the next bar, never looser; a stop-out there is `TRAIL`. After a `TRAIL` exit the forced entry is off
+  (`CFG["trail_wait_signal"]`): the book stays flat until one side clears the entry bar; an exit at the entry stop
+  or on a flip keeps the 4-session mandate. The owner's call ("Update minds 15 with tight trailing stop"; "Six
+  markets"; "Wait for a signal"), not a passed test: every tight trail lost against holding on history (H36), and
+  the wait-for-a-signal re-entry has never run. The shadow `main` copy keeps holding as the forward comparison.
 - **Fills:** decision at a bar's close, fill at the next open; gold, silver and oil one bar later (their
   live bars arrive ~10 minutes late). Futures rolls are smoothed (data/rolls.csv).
 - **v5 decision rules:** a higher-timeframe bias (1h, 4h and daily trend one way and price on that side of
