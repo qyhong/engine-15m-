@@ -3512,3 +3512,13 @@ tests `tests/test_h61.py`. No engine file is edited.
   By the registration, `floor_33pct_3r` may be proposed to the owner as a forward SHADOW book only; nothing else
   follows. The owner's separate decision of the same day (v5.2.8, a TIGHT trail on six main books) was made before
   these numbers and does not rest on them.
+
+### H61 follow-up: `floor_33pct_3r` runs as a forward shadow book (21 Nov 2026)
+
+- The owner, asked in the Mind 15 project: "Add shadow". The book is `f_floor_33_3r` (`engine15/floor_book.py`),
+  this study's overlay one step at a time; `tests/test_floor_book.py` holds the two equal trade for trade on
+  planted and random bars. The constants are the registered ones (arm at 3R, lock a third).
+- One thing the study did not have: the book starts as a copy of the hold copy's book while that copy is in a
+  trade. The floor is set from the closes since the entry; a fill can only happen from the first forward bar.
+- Read it at 30 closed forward trades against the hold copy on the same trades, not before. Nothing follows from
+  it for the main book without a new registration.

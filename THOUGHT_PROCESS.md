@@ -31,6 +31,12 @@ and every later change is in `VERSION_NOTE` in engine15/config.py)
   or on a flip keeps the 4-session mandate. The owner's call ("Update minds 15 with tight trailing stop"; "Six
   markets"; "Wait for a signal"), not a passed test: every tight trail lost against holding on history (H36), and
   the wait-for-a-signal re-entry has never run. The shadow `main` copy keeps holding as the forward comparison.
+- **A profit-floor shadow book (21 Nov 2026, no version change):** `f_floor_33_3r` (`engine15/floor_book.py`)
+  takes every trade of the shadow `main` copy (the hold rule) at that copy's fill and adds one exit: once a
+  15-minute close has shown 3 entry-stop distances of open profit, a stop rests at the entry plus a third of the
+  best profit a close has shown, live from the next bar, never looser. After its own exit it is flat until the
+  hold copy's next entry. H61's `floor_33pct_3r`, the one variant that passed on history, weakly; forward data
+  points only (the owner: "Add shadow"). It started as a copy of the hold copy's book, running trades included.
 - **Fills:** decision at a bar's close, fill at the next open; gold, silver and oil one bar later (their
   live bars arrive ~10 minutes late). Futures rolls are smoothed (data/rolls.csv).
 - **v5 decision rules:** a higher-timeframe bias (1h, 4h and daily trend one way and price on that side of

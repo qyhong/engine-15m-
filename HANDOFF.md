@@ -6,7 +6,11 @@ half at Target 1 and lets the rest run with its stop at the entry (v5.2.6); the 
 WTI, Brent) trail their stop once a trade is 1R in profit (the tighter of the last confirmed 15m swing and 2 x
 ATR(15m), never looser; exit word `TRAIL`) and, after a trail exit, stay flat until one side clears the entry bar:
 no forced entry (v5.2.8, owner 21 Nov 2026). Everywhere else the 4-session mandate is unchanged, including after an
-exit at the entry stop or on a flip. The vault copies the Setups book (`b_targets`), which v5.2.8 does not touch. H60 (exits by regime, per market) is registered and running; it may change this table.
+exit at the entry stop or on a flip. The vault copies the Setups book (`b_targets`), which v5.2.8 does not touch.
+Since 21 Nov 2026 a follower book runs beside the shadow books (`engine15/floor_book.py`, `shadows.FOLLOWERS`,
+book name `f_floor_33_3r`): the hold copy's trades with a third of the best closed profit locked once 3R up (H61).
+It started as a copy of the hold copy's book, is not a rule of `shadows.run`, and a failure in it is logged and
+skipped. No version change: no constant of the main book moved. H60 (exits by regime, per market) is registered and running; it may change this table.
 
 Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisions), then
 `THOUGHT_PROCESS.md` ("Now" section) and `CLAUDE.md`. This file is only the moving parts.

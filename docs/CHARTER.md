@@ -396,3 +396,14 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   and the wait-for-a-signal re-entry is new. The vault's book (`b_targets`) is not touched; the golden money-path
   test is unchanged and green. The wide profit floor the coordination session asked for is H61 (registered
   before any number; results in research/HYPOTHESES.md).
+- **A profit-floor shadow book beside the main book** (21 Nov 2026). Asked whether to run H61's one passing
+  variant forward on paper, the owner in this project: "Add shadow" (and, relayed from the site-coordination
+  session, "Lock a third once 3× up: Ok"). Book `f_floor_33_3r` (`engine15/floor_book.py`): the hold copy's
+  trades on all eight markets; once a close shows 3R of open profit a stop locks a third of the best closed
+  profit; flat after its own exit until the hold copy's next entry. It started as a copy of the hold copy's book
+  (its equity and its running trades, at its size), with the floor set from the closes since each entry and able
+  to fill only from the first bar after the start. Its scoreboard row compares it with the hold copy on the same
+  markets. Forward data points, not a passed rule: on history it beat holding only weakly and no floor helped per
+  trade at equal size (H61). It is a follower, not a rule of `shadows.run`: the vault's book cannot be changed by
+  it, and an error in it is logged and skipped. No version change (no constant moved), so no reading rebuild.
+  Not built: the Telegram alert at a 25% give-back (no answer yet).

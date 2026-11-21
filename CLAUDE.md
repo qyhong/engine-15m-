@@ -7,7 +7,8 @@ energy (WTI, BRENT). Each market has its own $10,000 paper book. Read, in order:
 (the design; its "Now" section lists what changed since it was first written), `HANDOFF.md` (moving parts).
 
 Beside the main books run, all forward and on paper: shadow books (`engine15/shadows.py`: v4, H3, A, B,
-H5, the 4h/daily yardsticks, the 1h/4h swing minds, the H36 exit shadows), twelve strategy books
+H5, the 4h/daily yardsticks, the 1h/4h swing minds, the H36 exit shadows, and the H61 profit-floor follower in
+`engine15/floor_book.py`, which copies the hold copy's trades and is not a rule of `run()`), twelve strategy books
 (`engine15/playbook.py` to `playbook3.py`, H6-H17), the CPI book (H1), and forward books that are NOT passed:
 rules A/B (`playbook4`), the RL agents (`playbook5`, `playbook6`) and the BTC/ETH pair book (`playbook7`, H37 V4).
 The engine version is `CFG["version"]` in `engine15/config.py` (think15-v5.2.8 on 21 Nov 2026); what each version changed

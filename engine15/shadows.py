@@ -94,6 +94,14 @@ CHALLENGERS = OrderedDict([
     ("b_sma20_1h_t1", {"title": "SMA trail: SMA20 on 1h after Target 1 (history: -$25k vs hold +$329k)",
                        "rule": {"ma_trail": "1h sma20", "ma_arm": "t1"}, "cfg": {}}),
 ])
+# Books that FOLLOW another book's trades and add an exit of their own (engine15/floor_book.py). They are not rules
+# of run(): they read the followed book's result after it ran, and a failure in one never stops the books above.
+from . import floor_book  # noqa: E402  (floor_book imports nothing from here)
+
+FOLLOWERS = OrderedDict([
+    # H61 (registered 21 Nov 2026): the one floor variant that passed on history, weakly. The owner: "Add shadow".
+    (floor_book.NAME, {"title": floor_book.TITLE, "follows": "main"}),
+])
 TARGET_COLS = ["fib_1h_dir", "fib_1h_t1_px", "fib_1h_t2_px", "fib_4h_dir", "fib_4h_t1_px", "fib_4h_t2_px",
                "reach_24h_med_pct"]
 TRADE_COLS = ["t_in_ms", "t_out_ms", "i_in", "i_out", "side", "p_in", "p_out", "why_in", "why_out", "pnl_pct",
@@ -635,6 +643,7 @@ def advance(prep, group, assets, n, sst, cfg=None, start_lo=None, main_books=Non
         for a in assets:
             aux = aux_from_ev(prep["ev"][a], prep["px"][a])
             main_before = (sst["books"].get("main") or {}).get(a) or {}
+            main_run = None
             for name in CHALLENGERS:
                 books = sst["books"].setdefault(name, {})
                 if late and books.get(a) is None and name != "main":
@@ -647,6 +656,21 @@ def advance(prep, group, assets, n, sst, cfg=None, start_lo=None, main_books=Non
                 books[a] = b["state"]
                 if len(b["trades"]):
                     closed[(name, a)] = b["trades"]
+                if name == "main":
+                    main_run = b
+            for name in FOLLOWERS:                               # after every book above; never in their way
+                try:
+                    fbooks = sst["books"].get(name) or {}
+                    fee = asset_cfg(a, dict(cfg or prep["cfg"]))["cost_side"]
+                    rows, fst = floor_book.follow(main_before, main_run, prep["px"][a], data.to_ms(times), lo, n, fee,
+                                                  state=fbooks.get(a))
+                    if fst.get("copied_ms") is not None and "copied_utc" not in fst:
+                        fst["copied_utc"] = str(times[lo] + pd.Timedelta(milliseconds=CFG["bar_ms"]))[:16]
+                    sst["books"].setdefault(name, {})[a] = fst
+                    if rows:
+                        closed[(name, a)] = pd.DataFrame(rows, columns=TRADE_COLS)
+                except Exception as e:
+                    (log or (lambda *_: None))("%s: follower book %s failed on %s: %r" % (group, name, a, e))
         g["last_ms"] = _ms(times[n - 1])
     return summary(group, assets, sst, prep, n, main_books), closed
 
@@ -695,6 +719,15 @@ def asset_view(st):
         if st.get("be_t1") or st.get("half_t1"):                 # H36: where the stop stands and why
             moved = bool(st.get("t1_hit")) and bool(st.get("be_t1"))
             v["stop_basis"] = "break-even (Target 1 traded)" if moved else "the entry stop (2 barriers)"
+    if st.get("floor") is not None:                              # the profit-floor follower (floor_book.py)
+        v["floor_armed"] = bool(st["floor"].get("armed"))
+        if pos:
+            v["stop_basis"] = ("the floor: a third of the best closed profit" if v["floor_armed"]
+                               else "the entry stop (the floor arms at 3R)")
+        elif st.get("wait_main"):
+            v["waiting_for"] = "the hold copy's next entry"
+        if st.get("copied_utc"):
+            v["copied_from_main_utc"] = st["copied_utc"]
     if st.get("order"):
         o = st["order"]
         v.update(status="WAITING " + {1: "LONG", -1: "SHORT"}[o["side"]], limit=_px(o["limit"]), limit_basis=o["basis"],
@@ -733,15 +766,21 @@ def summary(group, assets, sst, prep=None, n=None, main_books=None):
             ls = (late.get(name) or {}).get(a)
             if ls:                                               # joined after the group's start
                 out["books"][name]["assets"][a].update(started_utc=ls["utc"], main_equity_at_start=ls["main_eq"])
+    for name, spec in FOLLOWERS.items():
+        if any(sst["books"].get(name, {}).get(a) for a in assets):
+            out["books"][name] = {"title": spec["title"], "follows": spec["follows"],
+                                  "assets": dict((a, asset_view(sst["books"].get(name, {}).get(a))) for a in assets)}
     return out
 
 
 def scoreboard(groups):
     """Across market groups: each challenger's total equity against the fresh main copy, the main
     book's own change and buy-and-hold over the same time. groups: {group: summary}."""
-    rows, names = [], list(CHALLENGERS)
+    rows, names = [], list(CHALLENGERS) + list(FOLLOWERS)
+    titles = dict((k, v["title"]) for k, v in list(CHALLENGERS.items()) + list(FOLLOWERS.items()))
     assets = dict((a, r) for s in groups.values() for a, r in s["assets"].items())
     main_since = {}                                              # books that joined late: main's change since then
+    same_assets = {}                                             # followers: against the followed book, same assets only
     for name in names:
         eq = tr = fees = wins = 0.0
         k = 0
@@ -749,21 +788,33 @@ def scoreboard(groups):
         for s in groups.values():
             for a, v in s["books"].get(name, {}).get("assets", {}).items():
                 eq, tr, fees, wins, k = eq + v["equity"], tr + v["trades"], fees + v["fees_usd"], wins + v["wins"], k + 1
+                if name in FOLLOWERS:
+                    f_eq = s["books"].get(FOLLOWERS[name]["follows"], {}).get("assets", {}).get(a, {}).get("equity")
+                    if f_eq is not None:
+                        same_assets[name] = same_assets.get(name, 0.0) + v["equity"] - f_eq
+                    if v.get("copied_from_main_utc"):
+                        starts.append(v["copied_from_main_utc"])
                 if v.get("main_equity_at_start") is not None:
                     m_now = s["books"].get("main", {}).get("assets", {}).get(a, {}).get("equity")
                     since += (m_now - v["main_equity_at_start"]) if m_now is not None else 0.0
                     starts.append(v["started_utc"])
         if not k:
             continue
-        rows.append({"book": name, "title": CHALLENGERS[name]["title"], "assets": k, "equity": round(eq, 2),
+        rows.append({"book": name, "title": titles[name], "assets": k, "equity": round(eq, 2),
                      "pnl_usd": round(eq - START_EQUITY * k, 2), "return_pct": round((eq / (START_EQUITY * k) - 1) * 100, 2),
                      "trades": int(tr), "win_rate_pct": round(100.0 * wins / tr, 1) if tr else None, "fees_usd": round(fees, 2)})
-        if starts:
+        if name in FOLLOWERS:                                    # a copy of the followed book when it started: its
+            rows[-1]["follows"] = FOLLOWERS[name]["follows"]     # P&L includes that book's until then; vs_main is
+            if starts:                                           # what its own exit has changed since
+                rows[-1]["since_utc"] = min(starts)
+        elif starts:
             rows[-1]["since_utc"] = min(starts)
             main_since[name] = since
     base = next((r for r in rows if r["book"] == "main"), None)
     for r in rows:
-        if r["book"] in main_since:                              # same time only: P&L since it started minus main's
+        if r["book"] in FOLLOWERS:
+            r["vs_main_usd"] = None if r["book"] not in same_assets else round(same_assets[r["book"]], 2)
+        elif r["book"] in main_since:                            # same time only: P&L since it started minus main's
             r["vs_main_usd"] = round(r["pnl_usd"] - main_since[r["book"]], 2)
         else:
             r["vs_main_usd"] = None if base is None else round(r["equity"] - base["equity"], 2)

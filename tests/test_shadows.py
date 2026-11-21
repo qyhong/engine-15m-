@@ -367,7 +367,7 @@ def test_two_steps_equal_one_long_step(tmp_path):
             pd.testing.assert_frame_equal(c_one[key][cols].reset_index(drop=True), joined[cols], check_dtype=False)
         else:
             assert not len(joined)
-    assert set(view["books"]) == set(shadows.CHALLENGERS)
+    assert set(view["books"]) == set(shadows.CHALLENGERS) | set(shadows.FOLLOWERS)
     # through the files: state written atomically, trades journaled, a third step with nothing new is a no-op
     path = str(tmp_path / "shadow_state.json")
     shadows.save_state(two, path)
@@ -376,7 +376,7 @@ def test_two_steps_equal_one_long_step(tmp_path):
     view2 = shadows.step(prep, "crypto", ["BTCUSDT"], 700, path=path, out_dir=str(tmp_path), log=lambda *_: None)
     assert shadows.load_state(path)["books"] == two["books"]
     board = shadows.scoreboard({"crypto": view2})
-    assert [r["book"] for r in board["rows"]] == list(shadows.CHALLENGERS)
+    assert [r["book"] for r in board["rows"]] == list(shadows.CHALLENGERS) + list(shadows.FOLLOWERS)
     assert board["buy_and_hold"]["assets"] == 1
 
 
