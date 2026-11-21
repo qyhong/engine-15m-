@@ -3478,3 +3478,37 @@ rule. Paper only.
 
 **Code:** `research/h61_profit_floor.py`, output `research/out/h61_profit_floor/` (`report.md`, `results.json`),
 tests `tests/test_h61.py`. No engine file is edited.
+
+### H61 note: implementation choices (21 Nov 2026, written with the code, before any number was read)
+
+- Reading (b) counts only armed trades the main book has CLOSED; a trade still open at the window's end has no
+  main-book result and is left out (it appears in (c) if it is a live trade).
+- R in (b) is on prices before fees (the same fee per side applies to both books).
+- The 4-hour bars are built from the 15-minute sessions the store holds (for the S&P 500, cash hours only), as
+  the engine's own 4h readings are.
+
+### H61 results (21 Nov 2026, 01:39-01:40 UTC on the research server; `research/out/h61_profit_floor/report.md` + `results.json`)
+
+- **Gates: passed.** The overlay that never arms reproduced `main` on all 8 markets (every trade and the marked
+  equity at every bar), and `main` reproduced H60's run exactly (pooled +339325, 1080 trades, max DD -32.8%).
+- **(a) Whole books.**
+  - `floor_50pct_5r`: +457871 (+118545 vs main; first half -1442, second half +119987; 5 of 8 markets; max DD -23.8%; better than holding: no). Per armed trade (189, 150 closed by the rule): -0.71R on average (first half -0.42R, second -1.03R; 111 better, 39 worse).
+  - `floor_50pct_3r`: +300397 (-38928 vs main; first half -39165, second half +237; 4 of 8 markets; max DD -15.2%; better than holding: no). Per armed trade (267, 234 closed by the rule): -1.04R on average (first half -0.49R, second -1.70R; 165 better, 69 worse).
+  - `floor_33pct_5r`: +340166 (+841 vs main; first half -871, second half +1712; 5 of 8 markets; max DD -29.6%; better than holding: no). Per armed trade (189, 125 closed by the rule): -1.19R on average (first half -0.26R, second -2.24R; 92 better, 33 worse).
+  - `floor_33pct_3r`: +393294 (+53968 vs main; first half +4875, second half +49093; 5 of 8 markets; max DD -27.0%; better than holding: YES). Per armed trade (267, 209 closed by the rule): -1.26R on average (first half -0.29R, second -2.43R; 150 better, 59 worse).
+  - `chandelier_4h_3atr_3r`: +125289 (-214037 vs main; first half -89319, second half -124718; 2 of 8 markets; max DD -14.2%; better than holding: no). Per armed trade (267, 260 closed by the rule): -1.94R on average (first half -1.20R, second -2.82R; 167 better, 93 worse).
+  - `swing_4h_5r`: +177559 (-161767 vs main; first half -45457, second half -116309; 2 of 8 markets; max DD -20.6%; better than holding: no). Per armed trade (189, 184 closed by the rule): -2.53R on average (first half -1.49R, second -3.70R; 118 better, 66 worse).
+  The PRIMARY rule, `floor_50pct_5r`, did NOT pass: it was $1442 behind the main book in the first half, although
+  far ahead in the second, with a smaller drawdown. One rule passed, `floor_33pct_3r`. It is one of four floor
+  variants, the pass was not predicted for it, and the four floors disagree market by market (gold: every floor
+  ended near zero against the main book's +$26,565; WTI and Brent: every floor far ahead), so the pass is weak.
+  The two 4-hour trails (chandelier, swing) were far behind holding.
+- **(b) Equal size: NO rule helps per trade.** Every rule's mean R per armed trade is below the main book's in
+  both halves. Each floor improved more trades than it hurt (`floor_50pct_5r`: 111 better, 39 worse), but the few
+  it cut short were the very long holds (the most left on the table in one trade: 224R), which is where the main
+  book's profit is. Per market the primary rule helped in 6 of 8 (not USDJPY, not gold).
+- **Verdict.** A wide floor is NOT shown to be better than holding: the primary rule fails (a) narrowly and (b)
+  clearly; the whole-book gains come from compounding in WTI, Brent and BTC and are offset by gold and USDJPY.
+  By the registration, `floor_33pct_3r` may be proposed to the owner as a forward SHADOW book only; nothing else
+  follows. The owner's separate decision of the same day (v5.2.8, a TIGHT trail on six main books) was made before
+  these numbers and does not rest on them.

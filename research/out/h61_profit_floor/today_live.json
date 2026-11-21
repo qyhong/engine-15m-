@@ -1,0 +1,475 @@
+{
+ "page_generated_utc": "2026-11-21T01:32:48Z",
+ "version": "think15-v5.2.7",
+ "assets": {
+  "SPX": {
+   "status": "SHORT",
+   "opened_utc": "2026-11-11 19:30",
+   "entry": 7626.25,
+   "stop": 7626.25,
+   "qty": 0.785255,
+   "skipped": "this market has its own exit rule on the live book (half at Target 1)"
+  },
+  "USDJPY": {
+   "status": "LONG",
+   "opened_utc": "2026-11-20 11:00",
+   "entry": 158.87,
+   "stop": 158.26,
+   "qty": 326.177387,
+   "skipped": "this market has its own exit rule on the live book (half at Target 1)"
+  },
+  "BTCUSDT": {
+   "status": "SHORT",
+   "opened_utc": "2026-11-11 18:30",
+   "entry": 74466.4,
+   "stop": 75945.69,
+   "qty": 0.130549,
+   "last_bar": "2026-11-21 01:15",
+   "last_close": 58988.14,
+   "r_usd": 193.12,
+   "open_r": 10.46,
+   "open_net_usd": 2003.25,
+   "entry_gap": 0.0,
+   "rules": {
+    "floor_50pct_5r": {
+     "armed": true,
+     "armed_utc": "2026-11-14 03:30",
+     "peak_r": 11.04,
+     "closed": false,
+     "level": 66301.43,
+     "level_r": 5.52,
+     "locks_usd": 1047.55,
+     "away_pct": 12.4
+    },
+    "floor_50pct_3r": {
+     "armed": true,
+     "armed_utc": "2026-11-13 03:00",
+     "peak_r": 11.04,
+     "closed": false,
+     "level": 66301.43,
+     "level_r": 5.52,
+     "locks_usd": 1047.55,
+     "away_pct": 12.4
+    },
+    "floor_33pct_5r": {
+     "armed": true,
+     "armed_utc": "2026-11-14 03:30",
+     "peak_r": 11.04,
+     "closed": false,
+     "level": 69023.08666666667,
+     "level_r": 3.68,
+     "locks_usd": 691.89,
+     "away_pct": 17.01
+    },
+    "floor_33pct_3r": {
+     "armed": true,
+     "armed_utc": "2026-11-13 03:00",
+     "peak_r": 11.04,
+     "closed": false,
+     "level": 69023.08666666667,
+     "level_r": 3.68,
+     "locks_usd": 691.89,
+     "away_pct": 17.01
+    },
+    "chandelier_4h_3atr_3r": {
+     "armed": true,
+     "armed_utc": "2026-11-13 03:00",
+     "peak_r": 8.36,
+     "closed": true,
+     "closed_utc": "2026-11-15 09:00",
+     "closed_px": 66052.5579510864,
+     "closed_r": 5.69,
+     "banked_usd": 1080.07,
+     "vs_open_now_usd": -923.17
+    },
+    "swing_4h_5r": {
+     "armed": true,
+     "armed_utc": "2026-11-14 03:30",
+     "peak_r": 11.04,
+     "closed": false,
+     "level": 64080.8,
+     "level_r": 7.02,
+     "locks_usd": 1337.74,
+     "away_pct": 8.63
+    }
+   }
+  },
+  "ETHUSDT": {
+   "status": "SHORT",
+   "opened_utc": "2026-11-10 13:15",
+   "entry": 2097.55,
+   "stop": 2146.83,
+   "qty": 4.767467,
+   "last_bar": "2026-11-21 01:15",
+   "last_close": 1620.98,
+   "r_usd": 234.94,
+   "open_r": 9.67,
+   "open_net_usd": 2254.3,
+   "entry_gap": 0.0,
+   "rules": {
+    "floor_50pct_5r": {
+     "armed": true,
+     "armed_utc": "2026-11-14 15:00",
+     "peak_r": 10.22,
+     "closed": false,
+     "level": 1845.79,
+     "level_r": 5.11,
+     "locks_usd": 1181.46,
+     "away_pct": 13.87
+    },
+    "floor_50pct_3r": {
+     "armed": true,
+     "armed_utc": "2026-11-13 03:45",
+     "peak_r": 10.22,
+     "closed": false,
+     "level": 1845.79,
+     "level_r": 5.11,
+     "locks_usd": 1181.46,
+     "away_pct": 13.87
+    },
+    "floor_33pct_5r": {
+     "armed": true,
+     "armed_utc": "2026-11-14 15:00",
+     "peak_r": 10.22,
+     "closed": false,
+     "level": 1929.71,
+     "level_r": 3.41,
+     "locks_usd": 780.97,
+     "away_pct": 19.05
+    },
+    "floor_33pct_3r": {
+     "armed": true,
+     "armed_utc": "2026-11-13 03:45",
+     "peak_r": 10.22,
+     "closed": false,
+     "level": 1929.71,
+     "level_r": 3.41,
+     "locks_usd": 780.97,
+     "away_pct": 19.05
+    },
+    "chandelier_4h_3atr_3r": {
+     "armed": true,
+     "armed_utc": "2026-11-13 03:45",
+     "peak_r": 7.79,
+     "closed": true,
+     "closed_utc": "2026-11-16 14:30",
+     "closed_px": 1854.0930310611245,
+     "closed_r": 4.94,
+     "banked_usd": 1141.83,
+     "vs_open_now_usd": -1112.47
+    },
+    "swing_4h_5r": {
+     "armed": true,
+     "armed_utc": "2026-11-14 15:00",
+     "peak_r": 7.79,
+     "closed": true,
+     "closed_utc": "2026-11-16 14:30",
+     "closed_px": 1845.18,
+     "closed_r": 5.12,
+     "banked_usd": 1184.37,
+     "vs_open_now_usd": -1069.93
+    }
+   }
+  },
+  "XAUUSD": {
+   "status": "SHORT",
+   "opened_utc": "2026-11-10 16:45",
+   "entry": 4029.2,
+   "stop": 4085.66,
+   "qty": 3.542055,
+   "last_bar": "2026-11-20 21:45",
+   "last_close": 3539.0,
+   "r_usd": 199.98,
+   "open_r": 8.68,
+   "open_net_usd": 1730.95,
+   "entry_gap": 0.0,
+   "rules": {
+    "floor_50pct_5r": {
+     "armed": true,
+     "armed_utc": "2026-11-18 12:45",
+     "peak_r": 9.25,
+     "closed": false,
+     "level": 3768.0,
+     "level_r": 4.63,
+     "locks_usd": 919.66,
+     "away_pct": 6.47
+    },
+    "floor_50pct_3r": {
+     "armed": true,
+     "armed_utc": "2026-11-12 15:00",
+     "peak_r": 9.25,
+     "closed": false,
+     "level": 3768.0,
+     "level_r": 4.63,
+     "locks_usd": 919.66,
+     "away_pct": 6.47
+    },
+    "floor_33pct_5r": {
+     "armed": true,
+     "armed_utc": "2026-11-18 12:45",
+     "peak_r": 9.25,
+     "closed": false,
+     "level": 3855.0666666666666,
+     "level_r": 3.08,
+     "locks_usd": 611.2,
+     "away_pct": 8.93
+    },
+    "floor_33pct_3r": {
+     "armed": true,
+     "armed_utc": "2026-11-12 15:00",
+     "peak_r": 9.25,
+     "closed": false,
+     "level": 3855.0666666666666,
+     "level_r": 3.08,
+     "locks_usd": 611.2,
+     "away_pct": 8.93
+    },
+    "chandelier_4h_3atr_3r": {
+     "armed": true,
+     "armed_utc": "2026-11-12 15:00",
+     "peak_r": 9.25,
+     "closed": false,
+     "level": 3640.1012922483296,
+     "level_r": 6.89,
+     "locks_usd": 1372.78,
+     "away_pct": 2.86
+    },
+    "swing_4h_5r": {
+     "armed": true,
+     "armed_utc": "2026-11-18 12:45",
+     "peak_r": 9.25,
+     "closed": false,
+     "level": 3894.0,
+     "level_r": 2.39,
+     "locks_usd": 473.27,
+     "away_pct": 10.03
+    }
+   }
+  },
+  "XAGUSD": {
+   "status": "SHORT",
+   "opened_utc": "2026-11-11 06:15",
+   "entry": 52.95,
+   "stop": 54.09,
+   "qty": 183.85922,
+   "last_bar": "2026-11-20 21:45",
+   "last_close": 41.08,
+   "r_usd": 209.6,
+   "open_r": 10.41,
+   "open_net_usd": 2177.22,
+   "entry_gap": 0.0094,
+   "rules": {
+    "floor_50pct_5r": {
+     "armed": true,
+     "armed_utc": "2026-11-16 05:45",
+     "peak_r": 10.77,
+     "closed": false,
+     "level": 46.8125,
+     "level_r": 5.38,
+     "locks_usd": 1122.93,
+     "away_pct": 13.95
+    },
+    "floor_50pct_3r": {
+     "armed": true,
+     "armed_utc": "2026-11-13 15:00",
+     "peak_r": 10.77,
+     "closed": false,
+     "level": 46.8125,
+     "level_r": 5.38,
+     "locks_usd": 1122.93,
+     "away_pct": 13.95
+    },
+    "floor_33pct_5r": {
+     "armed": true,
+     "armed_utc": "2026-11-16 05:45",
+     "peak_r": 10.77,
+     "closed": false,
+     "level": 48.858333333333334,
+     "level_r": 3.59,
+     "locks_usd": 746.68,
+     "away_pct": 18.93
+    },
+    "floor_33pct_3r": {
+     "armed": true,
+     "armed_utc": "2026-11-13 15:00",
+     "peak_r": 10.77,
+     "closed": false,
+     "level": 48.858333333333334,
+     "level_r": 3.59,
+     "locks_usd": 746.68,
+     "away_pct": 18.93
+    },
+    "chandelier_4h_3atr_3r": {
+     "armed": true,
+     "armed_utc": "2026-11-13 15:00",
+     "peak_r": 10.77,
+     "closed": false,
+     "level": 43.6246130366806,
+     "level_r": 8.18,
+     "locks_usd": 1709.23,
+     "away_pct": 6.19
+    },
+    "swing_4h_5r": {
+     "armed": true,
+     "armed_utc": "2026-11-16 05:45",
+     "peak_r": 10.77,
+     "closed": false,
+     "level": 47.92,
+     "level_r": 4.41,
+     "locks_usd": 919.25,
+     "away_pct": 16.65
+    }
+   }
+  },
+  "WTI": {
+   "status": "SHORT",
+   "opened_utc": "2026-11-12 21:00",
+   "entry": 88.93,
+   "stop": 91.37,
+   "qty": 109.208581,
+   "last_bar": "2026-11-20 21:45",
+   "last_close": 83.62,
+   "r_usd": 266.47,
+   "open_r": 2.18,
+   "open_net_usd": 572.36,
+   "entry_gap": 0.0,
+   "rules": {
+    "floor_50pct_5r": {
+     "armed": false,
+     "armed_utc": null,
+     "peak_r": 3.27,
+     "closed": false,
+     "level": null,
+     "level_r": null,
+     "locks_usd": null,
+     "away_pct": null
+    },
+    "floor_50pct_3r": {
+     "armed": true,
+     "armed_utc": "2026-11-20 08:30",
+     "peak_r": 3.27,
+     "closed": false,
+     "level": 84.945,
+     "level_r": 1.63,
+     "locks_usd": 427.6,
+     "away_pct": 1.58
+    },
+    "floor_33pct_5r": {
+     "armed": false,
+     "armed_utc": null,
+     "peak_r": 3.27,
+     "closed": false,
+     "level": null,
+     "level_r": null,
+     "locks_usd": null,
+     "away_pct": null
+    },
+    "floor_33pct_3r": {
+     "armed": true,
+     "armed_utc": "2026-11-20 08:30",
+     "peak_r": 3.27,
+     "closed": false,
+     "level": 86.27333333333334,
+     "level_r": 1.09,
+     "locks_usd": 282.48,
+     "away_pct": 3.17
+    },
+    "chandelier_4h_3atr_3r": {
+     "armed": true,
+     "armed_utc": "2026-11-20 08:30",
+     "peak_r": 3.27,
+     "closed": false,
+     "level": 84.5971089260447,
+     "level_r": 1.78,
+     "locks_usd": 465.61,
+     "away_pct": 1.17
+    },
+    "swing_4h_5r": {
+     "armed": false,
+     "armed_utc": null,
+     "peak_r": 3.27,
+     "closed": false,
+     "level": null,
+     "level_r": null,
+     "locks_usd": null,
+     "away_pct": null
+    }
+   }
+  },
+  "BRENT": {
+   "status": "SHORT",
+   "opened_utc": "2026-11-12 19:15",
+   "entry": 95.62,
+   "stop": 98.35,
+   "qty": 101.562973,
+   "last_bar": "2026-11-20 21:45",
+   "last_close": 89.87,
+   "r_usd": 277.27,
+   "open_r": 2.11,
+   "open_net_usd": 576.45,
+   "entry_gap": 0.0,
+   "rules": {
+    "floor_50pct_5r": {
+     "armed": false,
+     "armed_utc": null,
+     "peak_r": 2.87,
+     "closed": false,
+     "level": null,
+     "level_r": null,
+     "locks_usd": null,
+     "away_pct": null
+    },
+    "floor_50pct_3r": {
+     "armed": false,
+     "armed_utc": null,
+     "peak_r": 2.87,
+     "closed": false,
+     "level": null,
+     "level_r": null,
+     "locks_usd": null,
+     "away_pct": null
+    },
+    "floor_33pct_5r": {
+     "armed": false,
+     "armed_utc": null,
+     "peak_r": 2.87,
+     "closed": false,
+     "level": null,
+     "level_r": null,
+     "locks_usd": null,
+     "away_pct": null
+    },
+    "floor_33pct_3r": {
+     "armed": false,
+     "armed_utc": null,
+     "peak_r": 2.87,
+     "closed": false,
+     "level": null,
+     "level_r": null,
+     "locks_usd": null,
+     "away_pct": null
+    },
+    "chandelier_4h_3atr_3r": {
+     "armed": false,
+     "armed_utc": null,
+     "peak_r": 2.87,
+     "closed": false,
+     "level": null,
+     "level_r": null,
+     "locks_usd": null,
+     "away_pct": null
+    },
+    "swing_4h_5r": {
+     "armed": false,
+     "armed_utc": null,
+     "peak_r": 2.87,
+     "closed": false,
+     "level": null,
+     "level_r": null,
+     "locks_usd": null,
+     "away_pct": null
+    }
+   }
+  }
+ }
+}
