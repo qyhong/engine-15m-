@@ -449,3 +449,10 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   `cryptography` and no vault worktree, so the vault-feed certificate tests skip there. The box therefore cannot run the whole suite, and using
   it as the gate would weaken the money-path check. `tools/deploy.sh` is unchanged; the deploy runs from the
   laptop with the app's keep-awake on.
+- **Give-back alert on the main books** (21 Nov 2026). Suggested by the site-coordination session with the profit
+  study; the owner there "Yes" (relayed), and in this project, asked "Build the Telegram alert for a trade giving
+  back 25% of its peak profit?": "Yes". `telegram_notify.giveback_update`: one Telegram card when an open main-book
+  trade is 25% or more below its best open profit. The best is the best the bot has seen at its checks (15-minute
+  marks; for a trade already running, the best since the alert went live); measured on price, so closing half at a
+  target is not a give-back; only when the best was worth at least 1% of the book's equity (my choice, to keep small
+  wobbles quiet); once per best. An alert only: it reads the page and changes no stop, book or setting.

@@ -57,6 +57,13 @@ RL HEALTH (owner, 21 Nov 2026, after the RL audit: "Yes, start them"): read only
   the input drift reading (the share of the model's inputs more than 3 training standard deviations from their training
   mean; marked as drifting when it is above RL_DRIFT_PCT and more than twice the week before). Its own guard.
 
+GIVE-BACK (owner, 21 Nov 2026: "Yes"): one card when an open MAIN-book trade has given back GIVEBACK_PCT (25%) or more of
+  its best open profit. Read only, from the page: the best is the best the bot has SEEN at its checks (the page moves once
+  a close, so it is a best of 15-minute marks, and for a trade already running when this started, the best since then).
+  Measured on price (mark against entry), so closing half at a target is not a give-back. Only when that best was worth
+  at least GIVEBACK_MIN_PEAK_PCT (1%) of the book's equity; once per best: a new, higher best can alert again. An alert
+  only: no stop, book or setting changes. Its own guard.
+
 THE KEY: read from a file the owner places (TOKEN_FILE, chmod 600); never printed, logged or stored anywhere else.
 THE CHAT: the first chat that sends /start is locked in (state file); every other chat is ignored. No key file = it waits.
 """
@@ -1100,6 +1107,63 @@ def ranking_command(st, tok, chat, now):
                                                                          st.get("rank_prev"), st.get("rank_prev_utc"), now)))
 
 
+# ------------------------------------------------------------------ give-back (read only; owner, 21 Nov 2026)
+GIVEBACK_PCT = 25.0                      # alert when the open profit is this share (or more) below its best
+GIVEBACK_MIN_PEAK_PCT = 1.0              # ... and the best was at least this share of the book's realized equity
+
+
+def giveback_update(prev, page):
+    """-> (state {asset: {"id", "peak" (price units), "peak_utc", "alerted_peak"}}, [cards]). A flat book drops its
+    entry (the next trade starts a new best); a page without assets, or an asset missing from it, changes nothing."""
+    prev = prev if isinstance(prev, dict) else {}
+    assets = (page or {}).get("assets") if isinstance(page, dict) else None
+    if not isinstance(assets, dict):
+        return prev, []
+    cur, cards = dict(prev), []
+    seen = str(page.get("generated_utc") or "")[:16].replace("T", " ")
+    for a, v in sorted(assets.items()):
+        t = v.get("trade") if isinstance(v, dict) else None
+        if not isinstance(t, dict):
+            continue
+        side = {"LONG": 1, "SHORT": -1}.get(t.get("status"))
+        try:
+            entry, mark, qty = float(t["entry_price"]), float(t["mark_price"]), float(t["quantity"])
+        except (KeyError, TypeError, ValueError):
+            entry = mark = qty = None
+        if side is None or entry is None:
+            cur.pop(a, None)                                          # flat (or not readable as a trade)
+            continue
+        tid = "%s|%s" % (t.get("opened_utc"), t.get("status"))
+        now_px = side * (mark - entry)                                # open profit per unit, in price
+        old = prev.get(a)
+        st = dict(old) if isinstance(old, dict) and old.get("id") == tid else {"id": tid, "peak": now_px, "peak_utc": seen,
+                                                                             "alerted_peak": None}
+        if now_px > st["peak"]:
+            st["peak"], st["peak_utc"] = now_px, seen
+        peak = float(st["peak"])
+        try:
+            eq = float(t.get("equity_realized") or 0.0)
+        except (TypeError, ValueError):
+            eq = 0.0
+        big = peak > 0 and eq > 0 and peak * qty >= GIVEBACK_MIN_PEAK_PCT / 100.0 * eq
+        new_best = st.get("alerted_peak") is None or peak > float(st["alerted_peak"])
+        if big and new_best and now_px <= (1.0 - GIVEBACK_PCT / 100.0) * peak:
+            st["alerted_peak"] = peak
+            back = 100.0 * (1.0 - now_px / peak)
+            name = v.get("short") or a
+            lock = t.get("stop_locks_usd")
+            tail = u"" if not isinstance(lock, (int, float)) else u" \u00b7 the stop locks %s" % _usd(lock)
+            cards.append(
+                u"%s <b>Give-back</b> \u00b7 %s %s\n"
+                u"Open profit <b>%s</b>, %.0f%% below its best <b>%s</b> (seen %s UTC).\n"
+                u"Stop %s%s\n"
+                u"<i>paper only \u00b7 an alert, nothing changes</i>" % (
+                    WARN, _esc(str(name)), "long" if side == 1 else "short", _usd(now_px * qty), back, _usd(peak * qty),
+                    _esc(str(st.get("peak_utc") or "?")), _esc(str(t.get("stop_price"))), tail))
+        cur[a] = st
+    return cur, cards
+
+
 # ------------------------------------------------------------------ RL health (read only; owner, 21 Nov 2026)
 RL_MODS = ("playbook5", "playbook6")
 RL_DRIFT_PCT = 5.0                       # the weekly card says "drifting" above this AND above twice the week before
@@ -1257,6 +1321,11 @@ def check(st, tok, send=True, now=None):
     c, v, net = counts(score, page)
     cur = {"c": c, "v": v, "net": net, "refits": refit_marks()}
     ev = events(st, cur, page, now)
+    try:                                                              # give-back on open main trades (alert only)
+        st["giveback"], cards = giveback_update(st.get("giveback"), page)
+        ev.extend(cards)
+    except Exception as e:
+        print(time.strftime("%Y-%m-%d %H:%M:%S"), "give-back check failed: %s" % type(e).__name__, flush=True)
     try:                                                              # RL health, from the page already in hand
         st["rl_fb"], card = rl_fallback_update(st.get("rl_fb"), page)
         if card:

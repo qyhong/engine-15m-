@@ -194,6 +194,8 @@ crypto replay).
   3 training standard deviations from their training mean). Code: `engine15/rl/forward5.py` (`agent_split`,
   `input_drift`, `drift_view`). The Telegram bot sends one card when no seed agent trades a coin, one weekly card
   when a new model is in use, and answers `/rl` (`telegram_notify.rl_fallback_update`, `rl_weekly_update`).
+- Give-back alert (21 Nov 2026, owner "Yes"): `telegram_notify.giveback_update` sends one card when an open
+  main-book trade is 25% or more below the best open profit the bot has seen for it (state key `giveback`). Alert only.
 
 ## Exits study H36 (13 Nov 2026)
 - `research/exit_study.py --group <g>` (one group at a time, ~1-5 min each, peak well under 1.5 GB; reads
