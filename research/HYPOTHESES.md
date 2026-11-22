@@ -5432,3 +5432,179 @@ the queue before it started (moved to `/data/research_queue/held/`). H80, H83, H
 decisions and are not affected; H86 shuffles the stop unit within a month, which leaks future volatility (not
 direction); its size was not measured and H86 will be read with that caveat. Corrected versions of H81 and H82 need a
 fresh registration, with the disclosure that this audit saw the numbers above.
+
+## H81b. Side placebo without look-ahead: does the book pick a better side than its own recent mix? (registered 22 Nov 2026, about 15:00 UTC, before any H81b number was computed; replaces the void H81; code `research/queue/placebo.py` study `H81b`, tests `tests/test_queue_placebo.py`)
+
+**Prompted by:** the H81 audit (above): H81 permuted sides within a calendar month, so a trade could get the side of a
+LATER trade, and the book's later sides follow the month's move. H81 is void. The owner asked for a causal version that
+uses no information the book did not have at the moment of the trade.
+
+**DISCLOSURE (read this first).** The H81 audit already computed, on this same data and window, descriptive numbers
+that bear directly on this question: the book's own side earns -0.003R a trade pooled under the exits machinery,
+against -0.040R for a fair coin; ETH +0.060R against -0.011R; BTC -0.082R against -0.071R; sides taken from earlier
+trades of the same month -0.063R; sides at the share of the previous 10 trades -0.014R. The expected value of the coin
+cell below and, closely, of the main cell are therefore already known. **H81b is partly a confirmation of a number
+already seen, not a blind test**: what it adds is the registered p-value (how far the real side is from what chance
+would give with the same mix), the halves and the market groups, under a design fixed before it runs. Its result must
+be read with that in mind.
+
+**Common part:** as the H80-H89 family (the book `b_targets` as the engine runs it, the engine-challenger check, THE
+HOLDOUT IS NOT TOUCHED: every group ends at its last session at or before 2025-11-10 23:45 UTC, `CUT` in the script;
+halves split at 2023-06-08, here by the REAL entry bar; pooled / vault (BTC+ETH) / others, each for the whole window and
+both halves, plus per market, descriptive; the +1-corrected p-values; the job contract).
+
+**Scored as H81 (unchanged and reused as it is):** every real closed trade keeps its real entry bar and entry price and
+is scored under the exits machinery alone (`machine_r`: stop at 2 units from the entry, Target 1 and Target 2 from
+`live.plan_targets` at the decision row for the trade's side, half off at Target 1 and the stop to the entry, else out
+at the close of the last bar opening before entry + 30 days). The replay gate of H81 runs on every market (each real
+trade replayed with its own side and window gives its own R, exit and exit bar, or the run stops). Both sides of every
+trade are scored once; the run checks that the real side's outcome equals the real trade's machinery R.
+
+**Scrambled (exactly):** on each market, take the book's real closed trades in entry order. The book holds one
+position at a time, so every earlier trade is closed when trade j opens (the run checks this: entry bars strictly
+increasing and each exit at or before the next entry, else it stops). For trade j, p_j = the long share of the book's
+previous 20 trades on that market (all earlier trades while fewer than 20 exist; 0.5 for the first trade). The placebo
+side of trade j is long when u_j < p_j, else short, u_j uniform on [0, 1), independent across trades. p_j reads only
+the sides of trades entered before trade j (never its own side or a later one; asserted on planted data in the tests).
+**Second cell, a fair coin:** long when u'_j < 0.5. Both cells come from the same draw: draw k uses
+`numpy.random.default_rng([20261122812, k]).random((2, T))` over all T trades concatenated in the fixed market order
+(row 0 the main cell, row 1 the coin).
+**Real:** the same machinery on the real sides (identical to H81's real statistic).
+**Primary statistic:** the pooled mean R per trade over the eight markets, whole window, main cell; p_upper = (1 +
+draws at least as good as the real) / (1 + draws), p_lower beside it. The number of trades is fixed, so the mean R and
+the sum of R give the same p-value. Secondary, with their own p-values, NOT used for the conclusion: every other cell
+(pooled / vault / others x whole / first half / second half, per market), and the coin cell in the same cells.
+The exact expectation of each placebo cell (closed form) is reported beside the draws, descriptive.
+**Draws:** 200,000; seed 20261122812. **Conclusion wording, fixed now:** "the book's choice of side IS / is NOT
+distinguishable from a side drawn from the long share of its own previous 20 trades at p = x" (IS when the primary
+p_upper <= 0.05). Secondary line: "... from a fair coin at p = x". A low p_lower is reported as such ("the real side is
+WORSE than the placebo at p = y"), never turned into a pass. Never "proven".
+**What a "not distinguishable" says:** on this history the book's side adds nothing measurable, per trade, over a
+side drawn at random with its own recent long/short mix. A "distinguishable" says the side carries something on this
+history; it is not a forward result, and the disclosure above applies.
+
+**Changed from the brief, and why:**
+- The proposal is kept as it is (N = 20; fewer at the start; 0.5 for the first trade; plus a fair coin). Made precise:
+  "previous trades" are the book's closed trades on the same market entered before trade j (all of them are closed at
+  trade j's entry, checked in the run); the main cell is the primary test and the coin cell is a registered secondary
+  line, so the family counts one primary test for H81b, not two.
+- Draws: the brief asked for as many draws as fit in 1 to 2 CPU hours. Both outcomes of every trade are precomputed, so
+  a draw is one vectorised pass (0.0005 s on the server for all 5,162 trades) and 1 to 2 hours would be millions of draws. The count
+  is set at 200,000 by memory and need instead (two cells x 200,000 draws x 8 markets x 15 numbers is about 0.4 GB; p
+  resolution 5e-6): the study takes about 0.05 CPU hours, nearly all of it loading the five groups.
+- Halves by the real entry bar (the placebo moves no trade in time).
+
+**Random-walk check (registration aid, synthetic data only; `placebo.py --rw-check 120`, unit test
+`test_random_walk_check_causal_placebos_find_nothing_and_old_designs_tilt` on 16 walks).** 120 driftless random walks
+(hourly bars, about 3% a day, two years each), a one-position toy book on each (entry by a causal rule at the close
+before entry: 3-day momentum, 3-day reversal, or a coin; out by the same machinery, `replay_trade`, Target 1 1.5R and
+Target 2 2R with no readings; the next entry 0-23 bars after the exit, so, as in the real book, when it enters next
+depends on how the trade ended), about 400 trades a walk, 400 placebo draws a walk. Placebo minus real mean R a trade
+(SE over walks), and the share of walks with p_upper <= 0.05 / >= 0.95 (5% each expected for a sound test):
+
+| design | momentum | reversal | coin |
+|---|---|---|---|
+| H81 within-month permutation (void) | +0.054 (0.005); 0% / 24% | -0.084 (0.005); 48% / 0% | +0.007 (0.005); 1% / 9% |
+| **H81b main: previous 20 trades' long share** | +0.002 (0.006); 7.5% / 5.0% | -0.006 (0.006); 10.0% / 8.3% | +0.006 (0.005); 2.5% / 6.7% |
+| **H81b coin** | +0.005 (0.006); 6.7% / 3.3% | -0.009 (0.006); 8.3% / 6.7% | +0.007 (0.005); 1.7% / 9.2% |
+
+The causal placebo finds no difference for any rule (every gap within 1.6 SE of zero) and does not reproduce the old
+design's tilt (placebo "better" than a momentum rule, "worse" than a reversal rule). The tail shares are close to 5%
+(the SE of a share over 120 walks is about 2 points); the reversal rule's are a little high in both tails. Why that can
+happen: the main cell's spread is p(1 - p) per trade, and a real side that tends to go AGAINST its own recent majority
+(as a reversal rule does) varies more than that, a side that goes WITH it (as a momentum rule, and the reactive real
+book, do) varies less; so for a book like this one the main cell's p-value is, if anything, a little conservative. The
+coin cell has no such effect (spread 1 per trade either way).
+
+## H82b. Entry-time placebo without look-ahead: does the exact entry bar matter, given the side? (registered 22 Nov 2026, about 15:00 UTC, before any H82b number was computed; replaces H82, which was withdrawn before it ran; code `research/queue/placebo.py` study `H82b`)
+
+**DISCLOSURE.** In the H81 audit's sampled probe of H82's own draw (each real trade moved to 4 random bars of its month,
+same side, the machinery), placebo bars AFTER the real entry earned -0.024R a trade pooled (BTC -0.109R, ETH -0.039R,
+BTC+ETH -0.074R), against -0.003R for the real trades (BTC -0.082R, ETH +0.060R). Those bars ran up to the end of the
+month, not the window below, so they are not this study's number, but they are close to it in spirit: H82b too is
+partly a confirmation of a number already seen, not a blind test.
+
+**Common part and scoring:** as H81b (same book, gates, cut, halves by the real entry bar, cells, p-values, `machine_r`
+with the 30-day cap, the replay gate).
+
+**Scrambled (exactly):** each real closed trade keeps its SIDE (chosen at its real decision) and is moved to a bar
+drawn uniformly from a window that starts AT its real entry bar. Drawable bars: the market's bars from its first
+tradeable bar to the end of the window whose bar before has a finite, positive stop unit (as H82), plus every real
+entry bar. With pos_j the position of trade j's real entry among the drawable bars, the window is the L_j drawable bars
+pos_j, pos_j + 1, ..., pos_j + L_j - 1, where L_j = the median of the book's previous 20 entry gaps on that market (the
+gap from trade m-1 to trade m, m <= j, counted in drawable bars; the gap that ends at trade j is known at its entry and
+counts; fewer than 20 at the start), truncated to an integer, at least 1; L for the first trade is 1 (it stays at its
+real bar); a window is cut at the data end. The offset is floor(u_j x L_j), u_j uniform on [0, 1); draw k uses
+`numpy.random.default_rng([20261122822, k]).random(T)`. Entry price by the real trade's own convention: the close of the
+bar before when the real trade was an early entry (BTC and ETH entries from flat, booked at the deciding close), else the
+bar's open (flips, the other markets, the markets with a fill delay). Every placebo bar is at or after the real entry
+bar (so the side was already decided; on the markets with a fill delay the decision was even earlier), and the window's
+length reads only earlier entries (both asserted in the run and on planted data in the tests: scrambling every price
+and stop unit before a trade's decision row leaves its whole window of outcomes unchanged). Offset 0 is the real trade
+(checked in the run to 1e-12). A placebo trade may still be open at the next real entry: this is a trade-level test,
+as H82 was, not a book; the share of windows that reach past the next real entry is reported per market.
+Every outcome of every window is computed once with `machine_r`; a draw is then a table lookup.
+**Real:** the real trades under the same machinery (the same real statistic as H81b). **Primary statistic, secondary
+cells, p-values:** as H81b (one cell, no coin). The exact expectation (the mean over each window) is reported beside.
+**Draws:** 200,000; seed 20261122822. **Conclusion wording, fixed now:** "the book's entry timing IS / is NOT
+distinguishable from the same trades, same sides, entered at random bars at or after the real entry within the median
+of its previous 20 entry gaps, at p = x". If not, the exact entry bar adds nothing measurable over entering the same
+side at a random moment of the next typical gap. A low p_lower ("entering later would have done better") is reported as
+such, not as a pass. Never "proven".
+
+**Changed from the brief, and why:**
+- **The window does NOT run to the next real entry.** The brief drew the bar from the real decision to the next real
+  entry. The next real entry comes after the real trade has ended, and when it ends depends on where the price goes
+  after the entry (a stop-out comes soon, a winner runs); a window that ends there makes every placebo bar a function of
+  the trade's own future. The random-walk check below shows the size: on driftless walks that window makes the placebo
+  lose about 0.08R a trade against the real toy book for every rule, the coin included, with p_upper <= 0.05 in 53% to
+  60% of walks; the real book would have looked better than its placebo for nothing. The registered window keeps the
+  brief's idea (about one typical gap between entries) but takes its length from the book's PREVIOUS entries.
+- So placebo trades may overlap the next real decision (they keep a side the book may already have changed: stale but
+  not future information).
+- Draws: the brief asked for 8 to 12 CPU hours. Every window's outcomes are computed once (58 s on the
+  server for the eight markets), after which a draw is a lookup (0.0003 s).
+  200,000 draws resolve p to 5e-6; the study takes about 0.05 CPU hours in all.
+- Halves by the real entry bar; entry price by the real trade's own convention (the brief's "close of the bar before
+  for markets with the early entry" would price a BTC or ETH flip at a close the book did not use).
+
+**Random-walk check** (as under H81b, same walks and toy books; placebo minus real mean R a trade (SE); share of walks
+with p_upper <= 0.05 / >= 0.95):
+
+| design | momentum | reversal | coin |
+|---|---|---|---|
+| H82 random bar of the month (withdrawn) | +0.066 (0.005); 0% / 27% | -0.087 (0.006); 43% / 0% | +0.008 (0.006); 1% / 8% |
+| brief's window, to the next real entry | -0.081 (0.004); 53% / 0% | -0.078 (0.004); 54% / 0% | -0.077 (0.004); 60% / 1% |
+| **H82b: previous 20 entry gaps' median** | +0.002 (0.004); 5.0% / 4.2% | +0.001 (0.004); 5.8% / 5.8% | +0.002 (0.005); 5.0% / 6.7% |
+
+The registered window finds no difference for any rule and its tail shares are at 5%; it reproduces neither the old
+design's tilt nor the brief window's.
+
+**Queue commands** (as the family: the working directory at a code snapshot with `engine15/`, `research/` and a `data`
+link): `/data/venv-research/bin/python research/queue/placebo.py --study H81b --fits-dir
+/data/mind15/research/out/h60_regime_exits/fits_today --out /data/research_queue/out/H81b`, and the same with `H82b`.
+`--estimate` prints 0.05 (H81b) and 0.05 (H82b) CPU hours; `--smoke` runs SPX to 2022 into
+`<out>/smoke`. Peak memory 2.98 GB resident (the crypto load, the family loader; the draws need under 0.5 GB after it is freed). Smoke runs for this
+registration (server, 22 Nov 2026, about 14:46 UTC, SPX to 2022, labelled SMOKE): only that the runs finish, the gates
+pass and the files of the job contract are written was looked at; no statistic of H81b or H82b was read.
+
+**The existing ids are unchanged.** The new code adds study ids and functions only; the one shared function touched,
+`real_books_for`, now also runs the replay gate for H81b and H82b (the H81 and H82 path is as it was). Checked on the
+server: `--smoke` of H80, H81, H83, H84, H85 and H86 with the code before this change (78d162d) and after it gives the
+same `results.json` (all but the run time) and the same `report.md`, byte for byte. The script's fingerprint covers its
+own text, so a job of an older id resumed with the NEW file would start its draws afresh (and reproduce the same draws,
+each draw being seeded on its own); the running jobs use their own snapshot and are not affected.
+
+### Ledger of the family H80-H89, updated with H81b and H82b (22 Nov 2026, about 15:00 UTC)
+
+- H81 is void (design flaw) and H82 was withdrawn before it ran: neither counts as a test.
+- **Tests that can come out "distinguishable":** 7 primary placebo p-values, as before: H80, H83, H84, H85, H86, and
+  now H81b and H82b in place of H81 and H82. If none of the parts did anything and the seven were independent, the chance
+  that at least one shows p <= 0.05 is about 30%; they are not independent (the same trades and markets run through all
+  of them, and H81b and H82b share their real statistic).
+- **Secondary p-values:** H81b and H82b report 17 secondary cells and 8 per-market ones each, and H81b the coin cell in
+  all of them as well: about 75 more looks; some will look significant by chance and none decides a conclusion.
+- **Not blind:** H81b and H82b were registered after the H81 audit had seen descriptive numbers on the same data (the
+  disclosures above). A "distinguishable" from either is weaker evidence than one from a blind test; a primary p well
+  below 0.01 that agrees across halves and market groups would be worth a forward test, and only that. Nothing here
+  can make a rule "proven", and nothing in the engine, the books or the vault changes, whatever these studies say.
