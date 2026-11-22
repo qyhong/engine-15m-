@@ -1,4 +1,4 @@
-# Mind 15: where things stand (updated 21 Nov 2026: think15-v5.2.8; the vault feed is on the REAL-MONEY path)
+# Mind 15: where things stand (updated 22 Nov 2026: think15-v5.2.9; the vault feed is on the REAL-MONEY path)
 
 Main-book exit rules by market (config.py `be_t1`, `half_t1`, `t2_exit`, `trail_stop`, `trail_wait_signal`): USDJPY
 sells half at Target 1 and the rest at Target 2 with the stop to the entry after Target 1 (v5.2.7); the S&P 500 sells
@@ -7,6 +7,9 @@ WTI, Brent) trail their stop once a trade is 1R in profit (the tighter of the la
 ATR(15m), never looser; exit word `TRAIL`) and, after a trail exit, stay flat until one side clears the entry bar:
 no forced entry (v5.2.8, owner 21 Nov 2026). Everywhere else the 4-session mandate is unchanged, including after an
 exit at the entry stop or on a flip. The vault copies the Setups book (`b_targets`), which v5.2.8 does not touch.
+v5.2.9 (owner 22 Nov 2026, "Cut the 15-minute delay") changes WHEN that book shows a new BTC or ETH entry from flat:
+in the step that decides it, booked at that close's price (`CFG["early_entry"]`), so `opened_utc` equals the book's
+`as_of_utc` on its first post. Flips still appear one bar after the decision; exits are as they were.
 Since 21 Nov 2026 a follower book runs beside the shadow books (`engine15/floor_book.py`, `shadows.FOLLOWERS`,
 book name `f_floor_33_3r`): the hold copy's trades with a third of the best closed profit locked once 3R up (H61).
 It started as a copy of the hold copy's book, is not a rule of `shadows.run`, and a failure in it is logged and
@@ -194,6 +197,12 @@ crypto replay).
   3 training standard deviations from their training mean). Code: `engine15/rl/forward5.py` (`agent_split`,
   `input_drift`, `drift_view`). The Telegram bot sends one card when no seed agent trades a coin, one weekly card
   when a new model is in use, and answers `/rl` (`telegram_notify.rl_fallback_update`, `rl_weekly_update`).
+- Paper desk (22 Nov 2026, owner "Study first, then paper desk"): `engine15/paper_desk.py`, called by
+  `reports.scoreboard` inside a try/except. Three forward paper wallets (2% rule, 100% per coin, 3x book) on the Setups
+  book's BTC and ETH trades from `paper_desk.START_UTC` (23 Nov 2026 00:00 UTC). It keeps NO state: every step it
+  reads the book's closed-trade files, `data/shadow_state.json`, the tail of the two bar files and the funding files
+  and walks them again (H63's rules; `tests/test_paper_desk.py` holds its walk to H63's numbers). Its output is the
+  `paper_desk` block of `out/live/scoreboard.json`. To restart the desk from a new date, change START_UTC.
 - Give-back alert (21 Nov 2026, owner "Yes"): `telegram_notify.giveback_update` sends one card when an open
   main-book trade is 25% or more below the best open profit the bot has seen for it (state key `giveback`). Alert only.
 

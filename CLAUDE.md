@@ -11,7 +11,9 @@ H5, the 4h/daily yardsticks, the 1h/4h swing minds, the H36 exit shadows, and th
 `engine15/floor_book.py`, which copies the hold copy's trades and is not a rule of `run()`), twelve strategy books
 (`engine15/playbook.py` to `playbook3.py`, H6-H17), the CPI book (H1), and forward books that are NOT passed:
 rules A/B (`playbook4`), the RL agents (`playbook5`, `playbook6`) and the BTC/ETH pair book (`playbook7`, H37 V4).
-The engine version is `CFG["version"]` in `engine15/config.py` (think15-v5.2.8 on 21 Nov 2026); what each version changed
+The paper desk (`engine15/paper_desk.py`, 22 Nov 2026) walks three paper wallets through the Setups book's BTC and ETH
+trades at three sizes; it is read only and lives in `scoreboard.json`.
+The engine version is `CFG["version"]` in `engine15/config.py` (think15-v5.2.9 on 22 Nov 2026); what each version changed
 is in `VERSION_NOTE` there and in THOUGHT_PROCESS.md "Now". It runs on the Singapore box, not on this laptop (HANDOFF.md).
 `out/live/scoreboard.json` judges every book on live trades only.
 Hypotheses are registered in `research/HYPOTHESES.md` before they are graded.
@@ -38,10 +40,12 @@ The site's VIP vault copies the paper book `b_targets` for BTC and ETH through `
 2026) and places real orders for opted-in accounts; on 20 Nov 2026 the AI Trading Bot session reported that it sizes
 real futures trades from it. So a change in any of these changes real entries, stops and exits:
 
-- `engine15/shadows.py`: `run()` under the `b_targets` rule (`{"targets": True}`), `asset_view`, `PART`. The same `run()`
+- `engine15/shadows.py`: `run()` under the `b_targets` rule (`{"targets": True, "early": True}`), `asset_view`, `PART`. The same `run()`
   serves a dozen research books: an edit for one of them must leave `b_targets` exactly as it was.
 - `engine15/live.py`: `plan_targets` (the two targets, set once at entry) and `asset_cfg` (fee, leverage cap).
 - `engine15/policy.py`: `decide` (entries, flips, the forced entry after `idle_max` flat sessions).
+  Since v5.2.9 a BTC or ETH entry from flat is booked in `shadows.run` at the close that decides it (`CFG["early_entry"]`):
+  the vault identifies a setup by its entry and `opened_utc`, so neither may change after the first post.
 - `engine15/backtest.py`: `leverage` (position size). `engine15/exits.py`: `PART`, `reached`, `be_stop`.
 - `engine15/setups.py` (the market entry of setups.json the feed reads) and `engine15/signals.py` (the entry window).
 - `engine15/vault_feed.py`: all of it (the book body, the exit intents, the state in `data/vault_feed_state.json`).

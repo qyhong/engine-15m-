@@ -23,6 +23,13 @@ and every later change is in `VERSION_NOTE` in engine15/config.py)
   Not in H36's grid; its history read is H59, descriptive. Six markets still hold to the stop or a flip.
 - **Exits (think15-v5.2.7, 20 Nov 2026):** USDJPY's main book sells half at Target 1 and the rest at Target 2
   (`CFG["t2_exit"]`; the owner: "Sell at target").
+- **The Setups book's entry (think15-v5.2.9, 22 Nov 2026):** on BTC and ETH the Setups book books a new entry from flat
+  at the close that decides it, at that close's price, where it used to fill at the next bar's open one step later
+  (owner: "Cut the 15-minute delay"). The same moment, closed bars only; the setup is on the page, in the signal and in
+  the book the vault reads about 15 minutes sooner. H64 found the delay cost nothing on average, so this makes a
+  member's fill match the book's and is not expected to change results. Flips and exits keep their timing; the main
+  books and every other market are untouched. Beside it runs the paper desk (`engine15/paper_desk.py`): three forward
+  paper wallets on the same trades at three sizes (2% rule, 100% per coin, 3x book).
 - **Exits (think15-v5.2.8, 21 Nov 2026):** on BTC, ETH, gold, silver, WTI and Brent the main book trails its stop
   (`CFG["trail_stop"]`, `exits.trail_step`, the B trail shadow book's rule): once a bar has gone one entry-stop
   distance in favour, the stop is the tighter of the last confirmed 15m swing and 2 x ATR(15m) behind the close,

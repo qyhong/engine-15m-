@@ -463,3 +463,26 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   and on BTC and ETH, deeper worst fall); the forms that move the stop mid-trade did not separate from the current rule
   either. Asked in this project "Keep the Setups book's stop as it is?", the owner: "Keep as is". No engine change; the
   study file and its checks stay in the repo.
+- **Three sizes studied; the owner keeps their plan** (H63, H64, 22 Nov 2026). The site session relayed two owner
+  decisions made there: "Study first, then paper desk" (the owner wants VIP accounts to be able to run much larger than
+  the 2% rule) and "Cut the 15-minute delay". H63 walked one $10,000 wallet through the Setups book's BTC and ETH
+  history at three sizes: every size loses on the replay and a larger one loses faster (the 3x book halved before it
+  doubled 54 times against 24 from 81 month-starts); the eleven forward days are up at every size and too short to
+  judge. H64: over 2,075 entries the bar of delay cost a member nothing on average (+0.001% of price). I recommended
+  keeping the 2% rule, adding the paper desk, and leaving the delay. The owner, in this project: "No. I want stick to my
+  plan". So both are built as the owner decided; larger real sizes are the site session's vault build, not this project's.
+- **The Setups book's early entry, think15-v5.2.9** (22 Nov 2026; owner: "Cut the 15-minute delay", "I want stick to my
+  plan"). On BTC and ETH the Setups book (`b_targets` only) books a new entry from flat at the close that decides it, at
+  that close's price, instead of at the next bar's open one step later (`CFG["early_entry"]`, `shadows.run`). It is the
+  same moment and uses closed bars only; the setup reaches the page, the signal and the vault's book in the deciding
+  step. Flips and exits keep their timing. A money-path change: new golden record (the same 152 trades at the same
+  prices; 68 setups now posted in their deciding step; 15 setups that end inside their entry bar are now posted and then
+  closed by intent). On the stored history the paper record barely moves (BTC 1,061 of 1,062 trades the same, ETH 1,010
+  of 1,013; `research/check_early_entry.py`). Known and accepted with it: a setup that ends inside its first bar is now
+  joined by members (about 1 in 200), and the signal's "bar A" is now the entry bar itself (the followable entry window
+  starts one bar sooner).
+- **The paper desk** (22 Nov 2026; owner: "Study first, then paper desk"). `engine15/paper_desk.py`: three forward PAPER
+  wallets of $10,000 on the Setups book's BTC and ETH trades from 23 Nov 2026 00:00 UTC, one wallet across both coins
+  each: the 2% rule, 100% per coin, the 3x book; H63's rules; finish lines +100% and -50%. Read only, recomputed at
+  every step, shown as the `paper_desk` block of `scoreboard.json` (the page's `scoreboard_all`). It models the book's
+  trades at three sizes, not the vault. A first read at 30 closed trades.
