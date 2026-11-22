@@ -531,3 +531,26 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   reads (`research/forward_reads.py`, read only, prints "due" or "not due"), and the B trail second check
   (`research/b_trail_second_check.py`, which refuses to grade before 60 trades and 10 Dec; its status note proposes
   precise wording for that check, not yet approved).
+- **Five studies on turning long and on statistics, 22 Nov 2026 evening** (the owner: "Deploy a study to find how this
+  15minds engine can confluence mean reversion and turn long when sharp rebound happen. With stasticially proven edge",
+  "Double the workload", and a claim of their own: "within 30 days after price drop below daily ema200 and the price
+  drop movement bigger than 20%. Then when price rally back and rise above ema10 has higher probability than 60% of
+  winning rate"). Each by an Opus 5.5 agent on its own branch, registered before any number:
+  - **H70, a long on a sharp rebound from an oversold state:** 18 candidates (three oversold states, three triggers,
+    with and without the engine's odds). All 18 lost per trade after fees in the discovery period, so none was selected
+    and the later periods were never opened. Before fees the best beat a random long by about 0.03R.
+  - **H71, the engine's own readings in oversold states:** the odds, seven voices and four card readings. Nothing
+    passed confirmation (funding against its norm failed narrowly, and it is a general funding effect, not a rebound
+    signal). The engine's long bar is almost never reached in an oversold state, and no confirmed signal is being
+    thrown away.
+  - **H74, the owner's EMA200 / EMA10 claim:** not supported. Under the primary reading the pattern won 10 of 28
+    (22 independent episodes, 95% range 20% to 57%) against 51% for the same trade at other EMA10 crosses. Telling 60%
+    from 50% needs about 150 episodes; eight years hold 22.
+  - **H72, the trend filter and the wait chosen on 2020-2023 and judged later:** on BTC and ETH both beat the current
+    rule month by month in 2023-06 to 2025-11 (p about 0.011), by losing less; in the last year no difference; on the
+    other six markets the filter was worse. Not a blind test: the ideas came from all the data. A reason to keep the
+    two shadow books running, not to change the Setups book.
+  - **H73, a member wallet at realistic fees:** at 100% per coin and 0.05% a side the current rule ends at $6,198 from
+    $10,000 (worst fall -94.6%); the fee of H63 was double the real one and mattered sevenfold; every size still ends
+    below its start. The site session inferred the member's taker fee from the wallet: about 0.05% a fill.
+  No engine code was changed by any of the five.
