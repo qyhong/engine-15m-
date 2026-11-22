@@ -3810,3 +3810,61 @@ the second half AND on BTC and ETH and on the other six markets, with at least 1
 Anything else is "not consistent". A consistent cell is a candidate for a registered forward shadow book and nothing
 more: ten slices are looked at here, so some will look good by chance, and a history replay is a warm-up, not a
 forward result. No engine code is changed by this.
+
+### H65 results (22 Nov 2026, about 10:30 UTC on the research server; `research/out/h65_setups_postmortem/report.md` + `results.json`)
+
+5,964 closed trades on eight markets, 2020-02-05 to 2026-11-20. Overall the book is flat in R: mean +0.004R a trade
+(sum +21.7R; first half +28.7, second half -7.1); BTC and ETH -8.6R (BTC -66.9, ETH +58.3), the other six +30.3R.
+Cells below: trades, mean R, sum of R.
+
+**Consistent cells (same sign in both halves and on BTC+ETH and on the other six, 100+ trades in each part):**
+- **Side.** Long 3,331, +0.055, +183.8R (positive); short 2,633, -0.062, -162.2R (negative). Most of these markets rose
+  over the period, so part of this is the markets' own drift and not something the rule found.
+- **The market's own 30-day move.** With it 4,493, +0.031, +139.3R (positive); against it 1,470, -0.079, -116.5R
+  (negative). On BTC and ETH: with +89.6R over 1,508, against -98.2R over 567 (-0.173R a trade).
+- **Higher-timeframe bias with the trade:** 1,451, +0.036, +52.6R (positive). With no bias (4,499 trades): -26.1R, not consistent.
+- **Tide with the trade:** 5,388, +0.011, +60.0R (positive); against it 461, -0.051 (not consistent).
+- **Stop distance.** The tightest third per market 2,623, -0.031, -81.9R (negative); the middle third +80.8R and the
+  widest third +22.7R (both positive).
+- **After a stop, the next trade on the other side:** 1,141, -0.030, -34.3R (negative).
+- Target 1 distance, middle third: -0.014 (negative, small).
+
+**Not consistent:** the entry word (ENTER -5.6R, FORCED -1.5R over 4,461 trades: the forced entry is neither the
+problem nor a help; FLIP +28.9R but too few in a part), the lead in the odds (the top third +69.7R in all, but -3.7R in
+the second half), Target 1 distance low and high, what the previous trade ended at.
+
+**Exits (facts).** STOP 3,207 trades, -3,394.5R; T1+T2 1,572, +2,925.2R; T1 then the entry 894, +548.7R; FLIP 270,
+-85.3R. Of the trades stopped at the entry stop, 43% had been at least 0.5R in open profit first and 16% at least 1R.
+42% of trades took Target 1; of those 63% went on to Target 2 and 36% came back to the entry.
+
+**The live record beside it (29 closed trades, 11 to 20 Nov 2026): +27.25R, 22 wins.** 24 of the 29 are shorts in
+falling markets and the 5 USDJPY longs are with a rising market: every live trade so far is WITH its market's 30-day
+move, the cell that is positive on history. The live record has not yet met the other cell.
+
+**Reading.** On history the Setups rule makes its money with the market's own direction and gives it back against it;
+the entries' own signal (the lead in the odds) does not hold up across halves. The one cell that is large, consistent
+and simple is the 30-day move. Ten slices were looked at, so this is a candidate for a registered test and a forward
+shadow book, not a finding to trade on. No engine code was changed.
+
+## H66. BTC and ETH: how a Setups short has turned long, and what the book did in a sudden rally (registered 22 Nov 2026, before any H66 code existed or any H66 number was computed)
+
+**Prompted by:** the owner, in this project, 22 Nov 2026: "under what circumstance for btc and eth will turn long. Can
+simulate the possible. Also how can we manage if sudden rally long". The Setups book is short both coins. A description
+of the replay under the current rule (the server's `b_targets`, to 2026-11-21 13:45 UTC), BTC and ETH; nothing passes.
+
+**Known before registering:** the rule (`policy.decide`): a short flips to long when the up side leads by 10 points, or
+when the higher-timeframe bias is up and the short's own lead is under 5 points; from flat a long needs a 5-point lead
+(10 when risk is high, 15 against the bias), and after 4 flat sessions the forced entry goes with the bias, else the
+tide, else the leading side. H65: after a stop the next trade on the other side has been slightly negative.
+
+**A. How a short has turned long.** Every short followed by a long as the next trade, by path: (1) a flip; (2) the
+short ended at its stop; (3) the short ended at a target or at the entry after Target 1. For each path: how many, the
+median hours from the short's exit to the long's entry, the long's entry word, share won and mean R of that long. And,
+of all shorts that ended at their stop, the share whose next trade was a short again, with that next short's mean R.
+**B. Sudden rallies while short.** An episode starts at the first bar where the book holds a short and the close 96
+bars (24 hours) later is at least 5% higher; the next episode is looked for after those 96 bars. Also at 8%. For each
+episode: the market's move; the book's own marked equity change over the same 96 bars (paper, 1x) and the sum of R of
+the trades closed inside them; how many stop-outs; how many NEW shorts were opened inside the episode; what the book
+holds at the end (long, short, flat); hours to the first long (within the 96 bars, else "none"). Read-outs: episodes,
+medians, the worst book result, the share that ended long; both halves. **C. The mirror** (sudden drops of 5% and 8%
+while long) by the same rules, as a yardstick.
