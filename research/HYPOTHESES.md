@@ -4179,7 +4179,7 @@ were "expected"; in fact none were raised (with their files absent those cards r
 four should not be added on the strength of this study; `kp_chg24` and `cg_open` duplicate the past-return inputs the
 agents already have.
 
-## H72. OUT-OF-SAMPLE TEST of the H67 trend filter and the H68 wait after a stop-out: parameters chosen on the first part only, paired monthly test on the later parts (registered 22 Nov 2026, about 11:40 UTC, before any H72 code was run or any H72 number was computed)
+## H72. OUT-OF-SAMPLE TEST of the H67 trend filter and the H68 wait after a stop-out: parameters chosen on the first part only, paired monthly test on the later parts (registered 22 Nov 2026, 11:25 UTC, before any H72 code was run or any H72 number was computed)
 
 **Prompted by:** H67 and H68 both "survived as a rule" on history, but both ideas were found by looking at that same
 whole history (H65), so those replays validate nothing; and H67 showed that the 20-day and 45-day versions each lose one
