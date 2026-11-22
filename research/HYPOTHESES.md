@@ -4261,3 +4261,51 @@ is and is not new; (5) the p-value and interval definitions, the seed and the mo
 by more than month-to-month noise would explain. It does not say the idea was found out of sample (it was not), and it
 does not promise the difference will continue. A fail is a complete answer. Nothing here changes the Setups book or the
 vault; the forward shadow books `b_trend30` and `b_wait_stop` stay the live test.
+
+### H72 results (22 Nov 2026, run 11:28-11:32 UTC on the research server after the live page showed think15-v5.2.9 at 11:27 UTC; `research/out/h72_trend_filter_oos/report.md`, `choice.json`, `results.json`, `sensitivity.json`, `run.log`)
+
+**Choice (CHOICE period, books run only to 2023-06-08).** Sum of R, eight markets / BTC + ETH: current +25.2 / +46.9;
+N=10 -0.9 / +43.6; 15 +19.7 / +62.2; 20 +61.3 / +81.8; 30 +77.9 / +108.3; 45 +15.9 / +61.6; 60 +21.8 / +43.7;
+90 -22.2 / +15.5. Qualified: 20 and 30. **Chosen N = 30**, the length already known to win among 20/30/45; none of the
+four lengths never computed before (10, 15, 60, 90) came close on CHOICE.
+
+**Verdicts by the registered pass rule (TEST 2023-06-08 to 2025-11-10, 30 months; Holm over m = 3).**
+Paired monthly difference against the current rule, BTC + ETH, mean R per month [95% month-clustered interval], one-sided p:
+- **A, trend filter N=30: PASS.** +2.65 [+0.37, +5.05], p 0.0114 (Holm 0.034; below 0.05/3 too); 21 of 30 months up.
+  Eight markets +0.80 [-2.46, +4.07] (guard >= 0 met by the point estimate only). Holdout (13 months): +0.17
+  [-2.14, +2.48], p 0.44: above zero by a hair, i.e. no real difference in the holdout.
+- **B, wait after a stop-out: PASS.** +2.29 [+0.34, +4.21], p 0.0116 (Holm 0.034; below 0.05/3 too); 21 of 30 up.
+  Eight markets +0.93 [-2.33, +4.11], with the book flat 68% of bars in TEST (other six 82%). Holdout +0.08 [-3.50, +3.44],
+  p 0.48: no real difference.
+- **C, both: PASS** by the Holm rule (p 0.0177, Holm 0.034) but NOT below the stricter 0.05/3 bar first written.
+  +2.63 [+0.17, +5.07]; eight markets +2.11 [-1.72, +5.89]; flat 76%. Holdout -0.16 [-3.32, +3.11]: does not hold.
+
+**Per book (BTC + ETH; trades, mean R per trade [95% interval], sum of R, worst fall of the summed equity).**
+TEST: current 778, -0.083 [-0.191, +0.036], -64.8R, -64.5%; A 668, +0.022 [-0.090, +0.137], +14.7R, -58.5%;
+B 645, +0.006 [-0.098, +0.112], +4.0R, -45.6%; C 465, +0.031 [-0.098, +0.150], +14.2R, -54.5%.
+HOLDOUT: current 305, +0.040 [-0.161, +0.280], +12.3R, -26.9%; A 284, +0.051, +14.5R, -25.9%; B 208, +0.064, +13.3R,
+-30.4%; C 182, +0.056, +10.2R, -39.4%. No book's mean R per trade has an interval clear of zero in TEST or HOLDOUT.
+Eight markets TEST: current -28.1R, fall -28.3%; A -4.0R, fall -39.8% (deeper); B -0.1R, -19.8%; C +35.3R, -19.1%.
+The other six in TEST: A -1.84 R/month against the current rule [-3.83, +0.16] (worse), B -1.36, C -0.52.
+
+**Descriptive only (not used for any choice): every length, BTC + ETH mean monthly difference in TEST.** N=10 +0.86
+(p 0.15), 15 +0.23 (0.42), 20 +1.29 (0.16), 30 +2.65 (0.011), 45 +2.77 (0.011), 60 +2.78 (0.003), 90 +2.51 (0.040).
+All seven are above the current rule on BTC + ETH in TEST, but on eight markets 10, 15 and 20 days are below it (-1.31,
+-3.56, -1.69) and 30-90 above. In the HOLDOUT no length's BTC + ETH difference has an interval clear of zero (10 and
+90 days are below zero). On CHOICE only 30 days was clearly above the current rule on BTC + ETH (+1.50, p 0.013).
+
+**Deviations.** None from the registered design. Notes: (1) the choice stage's CHOICE sums differ from the full-run
+CHOICE sums (eight markets, N=30: +77.9R vs +86.3R; current +25.2R vs +29.6R) because the choice runs stop at the TEST
+start and leave out trades still open there, as registered; the choice would be the same on either set. (2) The run
+checked that the engine's own `b_wait_stop` gives the very book the script ran (it did on all eight markets). (3)
+pandas printed a future-deprecation warning on concatenation; no effect on numbers.
+
+**Reading.** Both changes, with the filter's length frozen on 2020-2023, beat the current rule on BTC + ETH month by
+month in 2023-2025 by more than month-to-month noise would usually give (each p about 0.011, Holm 0.034). Three things
+limit this: (a) the ideas, and the direction of these TEST totals, were already seen on all the data (H65, H67, H68), so
+this is a significance check on a known difference, not a blind test; (b) in TEST the current rule lost 64.8R on BTC +
+ETH, and every filter length and the wait gain mainly by losing less in that stretch; no book's own mean R per trade is
+clearly above zero; (c) in the one-year holdout none of the three differs from the current rule (intervals of about
+plus or minus 2.5 to 3.5R a month around zero), and on the other six markets the filter was worse in TEST. A pass here
+is a reason to keep the forward shadow books `b_trend30` and `b_wait_stop` running, not evidence of an edge. Nothing
+reaches the Setups book or the vault without the owner's word.
