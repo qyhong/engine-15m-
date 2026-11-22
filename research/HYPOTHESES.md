@@ -4178,3 +4178,103 @@ were "expected"; in fact none were raised (with their files absent those cards r
 **For a round 5:** none of the four is registered as a candidate input by this rule. If a round 5 is ever run, these
 four should not be added on the strength of this study; `kp_chg24` and `cg_open` duplicate the past-return inputs the
 agents already have.
+
+## H74. The owner's daily pattern: after a fall below the daily EMA200 with a drop of more than 20%, does the first close back above the daily EMA10 win more than 60% of the time? BTC and ETH (registered 22 Nov 2026, about 11:40 UTC, before any H74 code was run and before any H74 outcome was computed)
+
+**Prompted by:** the owner, 22 Nov 2026 (their words): "within 30 days after price drop below daily ema200 and the price
+drop movement bigger than 20%. Then when price rally back and rise above ema10 has higher probability than 60% of winning
+rate. Asset class btc and eth. Check is this statiscally correct". Research only: nothing in the engine, the books or the
+vault changes, whatever the result.
+
+**Known before registering (no outcome numbers).** The stored 15-minute bars (`data/btcusdt_15m.csv`, `data/ethusdt_15m.csv`
+on the server) start 2019-01-01. BTCUSDT and ETHUSDT list on Binance spot in August 2017. Nothing about how often the
+pattern occurs, or how it turned out, has been looked at.
+
+**Data.** Daily UTC candles for BTCUSDT and ETHUSDT fetched from the engine's own public klines host
+(`https://data-api.binance.vision/api/v3/klines`, interval `1d`, paged by `startTime`, limit 1000, a generic client),
+from the listing day to the last complete UTC day (21 Nov 2026), into a scratch folder on the research server. Check: the
+fetched daily closes are compared with daily closes built from the stored 15-minute bars (UTC days with all 96 bars) on
+every overlapping day; the largest absolute and relative difference is reported. If the fetch fails, daily bars from the
+stored 15-minute bars only (2019 onward) are used and this is said. Closes only, except the "largest fall" read-out (daily lows).
+
+**Indicators.** EMA200 and EMA10 on daily closes, alpha = 2/(N+1), seeded with the simple average of the first N closes,
+defined from the N-th close onward (no value before).
+
+**Breakdown day B.** A daily close below the EMA200 when the previous close was at or above it (both EMA200 values defined).
+Breakdowns are walked in time order; a breakdown is COUNTED only if it is more than 30 days after the previous counted
+breakdown (so windows never overlap). The chain of counted breakdowns is the same for every reading.
+**The window:** the 30 calendar days B+1 to B+30.
+
+**"Drop bigger than 20%", two readings.** For a day d in [B, B+30], with L(d) = the lowest daily close from B to d:
+- **D1 (PRIMARY):** L(d) <= 0.80 x P, where P = the highest daily close of the 60 days B-60 to B-1 (the fall from the recent peak).
+- **D2:** some day k in [B, d] has close(k) <= 0.80 x EMA200(k) (a close at least 20% below its own day's EMA200).
+The drop day d* is the first d in [B, B+30] where the condition holds. No d* in the window: no event.
+
+**Entry.** The first day t in [max(B+1, d*), B+30] with close(t) > EMA10(t) and close(t-1) <= EMA10(t-1). Long at close(t).
+One entry per counted breakdown. Price is NOT required to be below the EMA200 at entry (the claim does not ask it).
+No such t: "window closed with no entry" (reported descriptively).
+
+**"Winning", three readings** (all on closes; result = exit/entry - 1):
+- **W1 (PRIMARY):** close(t+10) > close(t). **W2:** close(t+5) > close(t).
+- **W3:** hold until the first day u > t with close(u) < EMA10(u); exit at close(u); win if the result minus a fee of
+  0.05% per side (0.10% in all) is > 0. Days held = u - t. A trade not exited by the last complete day is left out of W3
+  counts and listed as open.
+- W1 and W2 also reported after the same 0.10% fee (descriptive; the tests use the no-fee W1/W2 above, as the claim does).
+- An event whose horizon passes the last complete day is left out of that reading and listed.
+**Readings:** 2 x 3 = 6 (D1W1, D1W2, D1W3, D2W1, D2W2, D2W3). The claim's primary reading is **D1W1**.
+
+**Samples.** BTC alone, ETH alone, pooled. **Clusters (pooled):** events sorted by entry day; any two events (either coin)
+whose entry days are within 10 calendar days of each other are in the same cluster (single linkage). The number of clusters
+is the number of independent episodes reported. Per-coin events are treated as independent (their windows never overlap).
+
+**The test, per reading and sample.**
+- Wins / events, win rate, 95% Wilson interval, exact one-sided binomial p against "true win rate <= 60%".
+- **Pooled:** because events in one cluster are not independent, the pooled Wilson interval and binomial p are computed on
+  ONE event per cluster, the one with the earliest entry day (BTC first on a tie), a choice that does not look at outcomes.
+  Also reported: the pooled win rate on all events with a 95% cluster-bootstrap percentile interval (clusters resampled,
+  10,000 replicates, seed 20261122).
+- **Baseline (the same trade at other times):** every day with an EMA10 up-cross (close(t) > EMA10(t), close(t-1) <=
+  EMA10(t-1)), EMA200 defined, outcome horizon inside the data, EXCLUDING any cross that lies inside a qualifying window of
+  that D reading on or after its drop day d* (so neither the event entries nor later crosses "preceded by such a drop" are in
+  it). Same win definition. **Difference** = event win rate - baseline win rate, 95% bootstrap percentile interval: events
+  resampled (individually per coin, by cluster pooled), baseline crosses resampled in calendar-month blocks (both coins'
+  crosses of a month together when pooled), 10,000 replicates, seed 20261122. For the pooled difference the event side uses
+  all events (cluster bootstrap).
+- **Drift baseline (descriptive, W1/W2):** the share of all days (EMA200 defined, horizon inside the data) on which close(t+N)
+  > close(t), N = 10 or 5.
+- **Multiplicity:** 6 readings. Holm correction across the 6 readings, done separately within BTC, ETH and pooled. The answer
+  to the owner is the POOLED verdict of D1W1; the other 17 cells are reported with the same rule.
+- **Conclusion words, fixed now:**
+  - **"supported"**: Holm-adjusted one-sided p against 60% < 0.05 AND the difference with the cross baseline > 0 with its 95%
+    interval excluding zero;
+  - **"not supported"**: the upper end of the 95% Wilson interval (pooled: one event per cluster) < 60%;
+  - otherwise **"too few cases to tell"**, with the number of independent cases needed to tell a true 60% from 50% at 80%
+    power (one-sided alpha 0.05, and alpha 0.05/6 for the Holm worst case) by the normal approximation:
+    n = ((z_a x sqrt(0.5 x 0.5) + z_b x sqrt(0.6 x 0.4)) / 0.10)^2, z_b = 0.842.
+  - Plain wording to the owner: "the data support the claim" / "the data do not support the claim" / "too few cases to tell".
+    A sample win rate above 60% is not "above 60%" unless the rule above says so. "Proven" is never used.
+
+**Descriptive read-outs (pass nothing).** Every event: coin, B, peak P and drop size (D1: 1 - L/P at entry; D2: deepest close
+below its EMA200), d*, entry day, entry close, results under W1, W2, W3 (with and without fee), days held under W3, the largest
+fall below the entry from t+1 to the W3 exit (daily lows). Average and median result per win definition, the worst case.
+Results for the first and second half of events (by entry order; first half = the first ceil(n/2)) and for entries in
+2017-2019 against 2020 onward. Windows that closed with no entry (drop met, no cross): count, and the change from close(B)
+and from close(d*) to close(B+30).
+
+**Addition, descriptive only (the 15-minute engine's version).** The same 6 readings with "rise above EMA10" replaced by:
+the first 4-hour close above the 4-hour EMA10 (previous 4-hour close at or below it), 4-hour bars built from the stored
+15-minute bars (2019 onward; EMA10 seeded the same way), among 4-hour bars closing after the close of day max(B, d*) - so
+from 00:00 UTC of day max(B+1, d*+1) at the earliest -  and closing by the end of day B+30. Breakdowns and drops stay on the
+daily chart. W1/W2: the close of the 4-hour bar 10 / 5 days (60 / 30 bars) later above the entry close; W3: hold to the first
+4-hour close below the 4-hour EMA10, fee as above. Baseline: all 4-hour EMA10 up-crosses outside the qualifying windows (same
+exclusion). Reported with the same columns, Wilson intervals and p-values, but marked descriptive: no conclusion word.
+
+**Changes from the brief made before registering:** (1) D2 reads "some close from B to d at least 20% below its own day's
+EMA200" (the brief's "that lowest close ... below the EMA200 of its own day" mixes the lowest close with its day; the deepest
+close relative to its EMA200 is the reading that matches "20% below the EMA200"). (2) The pooled interval and p use one event
+per cluster (an exact test needs independent cases; a bootstrap p with few clusters is unreliable); the cluster bootstrap is
+reported beside it. (3) The "supported" rule uses the cross baseline (the same trade at other times); the all-days drift is
+descriptive. (4) Clustering links any two events within 10 days, of either coin (conservative). (5) The counted-breakdown chain
+is shared by all readings. (6) The 4-hour entry may not come before the close of day d*.
+**Computed** by `research/h74_ema200_drop_ema10.py` on the research server in `/data/mind15_h74`; output
+`research/out/h74_ema200_drop_ema10/` (results.json, report.md, events.csv, the fetched daily candles).
