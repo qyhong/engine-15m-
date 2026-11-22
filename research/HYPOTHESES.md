@@ -4280,3 +4280,52 @@ deletes unused fits and writes refits); (2) each stage cuts the walk at its own 
 (3) "top third" is shown with the bottom third too, since several readings point to a rebound at the low end (StochRSI,
 stretch, funding); (4) the calm state is "neither oversold nor the overbought mirror"; (5) the descriptive read-out adds
 the 15-point bar and stays out of the holdout; (6) 4,000 bootstrap draws.
+
+### H71 results (22 Nov 2026, 11:28 to 11:40 UTC on the research server; `research/out/h71_voices_at_rebounds/report.md` + `discovery.json`, `selection.json`, `confirmation.json`, `holdout.json`)
+
+**Verdict by the registered rule: nothing confirmed. None of the engine's own readings carried information about the
+next 24 hours after an oversold state that passed confirmation; the holdout was not opened.**
+
+The walk reused every cached fit (discovery 174, confirmation 301, 0 refits), so the odds and voices are the same
+out-of-sample weekly walk the other replay studies use. Oversold bars: discovery (2020-02-05 to 2023-06-07) BTC 9,435 and
+ETH 11,669 in 41 months; confirmation (2023-06-08 to 2025-11-10) BTC 5,324 and ETH 6,429 in 30 months. Base rate of a
+sharp rebound (+5% in 24 hours) in the oversold state: discovery BTC 10.0%, ETH 17.8% (calm 6.5%, 11.4%); confirmation
+5.8%, 9.2% (calm 2.9%, 5.4%).
+
+**Discovery (12 readings, oversold, partial IC with the 24-hour return).** Two qualified and were selected:
+`lead` +0.120 [+0.059, +0.174] (BTC +0.143, ETH +0.108; raw IC only +0.041 [-0.024, +0.101]) and `fund_z` -0.088
+[-0.169, -0.018] (BTC -0.145, ETH -0.060; raw -0.125). Nearest misses: `v_regime` -0.074 [-0.146, +0.004], `stretch_4h`
++0.075 [-0.047, +0.172], `v_meanrev` +0.051 [-0.025, +0.131]. The mean-reversion voices (`v_meanrev`, `v_pullback`)
+and `k_1h` showed nothing that excluded zero at 24 hours.
+**Confirmation (Bonferroni, p < 0.025 one-sided):**
+- `lead`: BTC +0.064, ETH +0.071, pooled +0.068 [-0.120, +0.222], p = 0.21. FAILED.
+- `fund_z`: BTC -0.085, ETH -0.071, pooled -0.076 [-0.154, +0.021], p = 0.026. FAILED, narrowly (threshold 0.025).
+  Raw IC -0.155 [-0.237, -0.056]; much of it is what past price already says. In discovery the same negative sign was
+  there in the calm state too (-0.059 [-0.101, -0.015]), so funding is not an oversold-specific rebound signal.
+Hit rates (descriptive): the engine's lead in its top third did NOT raise the share of sharp rebounds (discovery BTC 9.3%
+against 10.0% base; confirmation 3.8% against 5.8%); low funding (bottom third) did on ETH (22.2% against 17.8%;
+16.7% against 9.2%) but much less or not on BTC (14.1% against 10.0%; 5.1% against 5.8%).
+
+**Descriptive read-out: the engine's own odds in the oversold state.** The combined odds led UP by 5 points or more in
+0.1% of oversold bars in discovery (28 bars in 3 months) and 0.2% in confirmation (27 bars in 2 months), and never by 15
+points. They led DOWN by 5 points or more in 62% (discovery) and 53% (confirmation) of oversold bars, 73% and 56% when the
+higher-timeframe bias was down. What followed did not differ much by the lead: discovery mean 24-hour return +0.17% when
+the odds led down against +0.71% in between (rebound rate 14.3% in both); confirmation with the bias down, +1.08% and a
+14.0% rebound rate when the odds led down, against +0.32% and 12.1% in between. So in an oversold state the engine's odds
+almost never reach its own long bar (5 points from flat, 15 against a down bias); the 15-point bar against the bias was
+never met in five and a half years of oversold bars. The odds point down in most oversold bars, and the bars where they
+point down were followed by no worse 24 hours than the rest.
+
+**Reading.** In this test the engine's evidence did not carry confirmed information about a rebound after an oversold
+state, and so there is no confirmed information that the combining step throws away. The engine stays out of longs in
+oversold states mainly because its odds lean down there and its long bar is rarely or never reached, not because a
+reading that pointed to a rebound was overruled. Low funding came closest (p 0.026 against 0.025). It would need its own
+registered forward test before anyone relies on it, and it is largely past price. Nothing here is evidence of an
+advantage. No engine code was changed.
+
+**Deviations and notes.** (1) A read-out-only mode for the confirmation period (`--stage readout-confirmation`) and the
+report formatter `research/h71_report.py` were added after discovery's numbers. The mode was not used, because
+confirmation ran with its two readings and computed the read-out as registered. (2) Discovery starts 2020-02-05 00:00,
+the first bar with odds on or after 2020-02-01. (3) The run shared the box with two other research processes (H70, H72)
+started minutes earlier; each H71 stage ran as one process, niced, for about 20 seconds. (4) The odds are the replay
+frame without the v5.2 trust cap (as registered).

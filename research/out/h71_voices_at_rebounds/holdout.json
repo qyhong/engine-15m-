@@ -1,0 +1,6 @@
+{
+ "stage": "holdout",
+ "not_opened": true,
+ "why": "nothing to carry from the previous stage",
+ "passed": []
+}
