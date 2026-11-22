@@ -64,6 +64,18 @@ GIVE-BACK (owner, 21 Nov 2026: "Yes"): one card when an open MAIN-book trade has
   at least GIVEBACK_MIN_PEAK_PCT (1%) of the book's equity; once per best: a new, higher best can alert again. An alert
   only: no stop, book or setting changes. Its own guard.
 
+SETUPS MOVING AGAINST (owner, 22 Nov 2026: "A Telegram alert when price moves sharply against an open Setups trade."): for
+  each open trade of the Setups book (the shadow book b_targets, which member accounts copy on BTC and ETH), from the page:
+  R = |entry - the stop the trade started with|; the price is the market's last close (page shadows markets).
+    card A "moving against": the price is ADVERSE_A_R (0.5) R or more on the losing side of the entry (half way to the stop)
+    card B "close to the stop": the price is within 1 - ADVERSE_B_R (0.25) R of the stop, or past it (three quarters of the way)
+  Each card once per trade. A trade first seen already within 0.25R of the stop gets card B only (A is then marked as sent:
+  one card, not two, in the same minute). After Target 1 the stop is at the entry: no card for that trade any more. A new
+  trade (another opened_utc or side) starts fresh; a FLAT market drops its state; a garbled or partial page, or a market
+  with no price, changes nothing and forgets nothing. R comes from the first stop this bot saw for the trade, kept in its
+  state (the page shows the current stop, which equals the entry stop until Target 1). These thresholds are a first
+  setting chosen by the engine author, not by the owner. An alert only: no stop, book or setting changes. Its own guard.
+
 THE KEY: read from a file the owner places (TOKEN_FILE, chmod 600); never printed, logged or stored anywhere else.
 THE CHAT: the first chat that sends /start is locked in (state file); every other chat is ignored. No key file = it waits.
 """
@@ -1164,6 +1176,102 @@ def giveback_update(prev, page):
     return cur, cards
 
 
+# ------------------------------------------------------------------ Setups moving against (read only; owner, 22 Nov 2026)
+# First setting, chosen by the engine author (not the owner): shares of R = |entry - the trade's starting stop|.
+ADVERSE_BOOK = "b_targets"               # the Setups book (member accounts copy it on BTC and ETH)
+ADVERSE_A_R = 0.5                        # card A: the price this far (in R) on the losing side of the entry
+ADVERSE_B_R = 0.75                       # card B: this far, i.e. within 0.25 R of the stop (or past it)
+ADVERSE_MEMBERS = ("BTCUSDT", "ETHUSDT")  # the markets member accounts follow
+_ADV_EPS = 1e-9
+
+
+def _adv_px(v):
+    """A price for the card: 65,203.20 / 3,050.50 / 31.2540."""
+    return "{:,.2f}".format(v) if abs(v) >= 100 else "{:,.4f}".format(v)
+
+
+def _adv_prices(page):
+    """-> {market: (last close, 'HH:MM' of that close or None)} from page["shadows"]["markets"][group]["assets"]."""
+    out = {}
+    groups = page["shadows"].get("markets") if isinstance(page.get("shadows"), dict) else None
+    for g in (groups.values() if isinstance(groups, dict) else ()):
+        rows = g.get("assets") if isinstance(g, dict) else None
+        for a, r in (rows.items() if isinstance(rows, dict) else ()):
+            px = _num(r.get("price")) if isinstance(r, dict) else None
+            if px is not None and px > 0:
+                out[a] = (px, str(g.get("as_of_utc"))[11:16] if g.get("as_of_utc") else None)
+    return out
+
+
+def _adv_card(kind, a, side, entry, stop0, price, frac, at):
+    name = _esc(_mk(a))
+    head = u"moving against" if kind == "A" else u"close to the stop"
+    if frac >= 1.0 - _ADV_EPS:
+        where = u"at or past its stop"
+    elif kind == "B":
+        where = u"three quarters of the way to its stop or more (%.0f%%)" % (100.0 * frac)
+    else:
+        where = u"half way to its stop or more (%.0f%%)" % (100.0 * frac)
+    gap = abs(stop0 - price) / price * 100.0
+    L = [u"%s <b>Setups book · %s</b>" % (WARN, head),
+         u"%s %s · entry %s" % (name, "long" if side == 1 else "short", _adv_px(entry)),
+         u"Price now <b>%s</b>%s: %s." % (_adv_px(price), u" (close of %s UTC)" % _esc(at) if at else u"", where),
+         u"Stop %s, %.1f%% from the price." % (_adv_px(stop0), gap)]
+    if a in ADVERSE_MEMBERS:
+        L.append(u"Member accounts following this book hold the same stop.")
+    L.append(u"<i>paper book · information only: the book's stop is in place and nothing was changed</i>")
+    return u"\n".join(L)
+
+
+def adverse_update(prev, page):
+    """-> (state {market: {"id", "entry", "stop0", "a", "b", "t1"}}, [cards]) for the Setups book's open trades.
+    A FLAT market drops its entry; a page without the book, a market missing from it, a view that cannot be read, or a
+    market with no price changes nothing. R comes from stop0, the first stop seen for the trade."""
+    prev = prev if isinstance(prev, dict) else {}
+    if not isinstance(page, dict) or not isinstance(page.get("shadows"), dict):
+        return prev, []
+    books = page["shadows"].get("books")
+    book = books.get(ADVERSE_BOOK) if isinstance(books, dict) else None
+    views = book.get("assets") if isinstance(book, dict) else None
+    if not isinstance(views, dict):
+        return prev, []
+    prices = _adv_prices(page)
+    cur, cards = dict(prev), []
+    for a, v in sorted(views.items()):
+        if not isinstance(v, dict):
+            continue
+        status = v.get("status")
+        if status == "FLAT":
+            cur.pop(a, None)
+            continue
+        side = {"LONG": 1, "SHORT": -1}.get(status)
+        entry, stop = _num(v.get("entry")), _num(v.get("stop"))
+        if side is None or entry is None or stop is None or not v.get("opened_utc"):
+            continue                                                  # not readable as an open trade: nothing changes
+        tid = "%s|%s" % (v.get("opened_utc"), status)
+        old = prev.get(a)
+        st = dict(old) if isinstance(old, dict) and old.get("id") == tid else {
+            "id": tid, "entry": entry, "stop0": stop, "a": False, "b": False, "t1": False}
+        if v.get("t1_taken") is True:
+            st["t1"] = True                                           # the stop sits at the entry: no card any more
+        cur[a] = st
+        if st["t1"] or (st["a"] and st["b"]) or a not in prices:
+            continue
+        e0, s0 = float(st["entry"]), float(st["stop0"])
+        R = abs(e0 - s0)
+        if R <= 0 or side * (e0 - s0) <= 0:                           # a stop not on the losing side: cannot be measured
+            continue
+        price, at = prices[a]
+        frac = side * (e0 - price) / R                                # share of the way from the entry to the stop
+        if frac >= ADVERSE_B_R - _ADV_EPS and not st["b"]:
+            st["a"] = st["b"] = True                                  # B covers A: one card, not two
+            cards.append(_adv_card("B", a, side, e0, s0, price, frac, at))
+        elif frac >= ADVERSE_A_R - _ADV_EPS and not st["a"]:
+            st["a"] = True
+            cards.append(_adv_card("A", a, side, e0, s0, price, frac, at))
+    return cur, cards
+
+
 # ------------------------------------------------------------------ RL health (read only; owner, 21 Nov 2026)
 RL_MODS = ("playbook5", "playbook6")
 RL_DRIFT_PCT = 5.0                       # the weekly card says "drifting" above this AND above twice the week before
@@ -1326,6 +1434,11 @@ def check(st, tok, send=True, now=None):
         ev.extend(cards)
     except Exception as e:
         print(time.strftime("%Y-%m-%d %H:%M:%S"), "give-back check failed: %s" % type(e).__name__, flush=True)
+    try:                                                              # Setups trade moving against (alert only)
+        st["adverse"], cards = adverse_update(st.get("adverse"), page)
+        ev.extend(cards)
+    except Exception as e:
+        print(time.strftime("%Y-%m-%d %H:%M:%S"), "setups adverse check failed: %s" % type(e).__name__, flush=True)
     try:                                                              # RL health, from the page already in hand
         st["rl_fb"], card = rl_fallback_update(st.get("rl_fb"), page)
         if card:
