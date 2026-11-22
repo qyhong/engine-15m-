@@ -3627,3 +3627,62 @@ code was changed by this study. The Setups book changes only on the owner's word
 
 **Owner's decision (this project, 22 Nov 2026 local, after the results):** "Keep as is". The Setups book's stop is
 unchanged. H62 is closed.
+
+## H63. One member wallet on the Setups book's BTC and ETH trades under three sizings (registered 22 Nov 2026, before any H63 code existed or any H63 number was computed)
+
+**Prompted by:** the site session, 22 Nov 2026, relaying an owner decision made there ("Study first, then paper desk";
+not yet confirmed in this project): the owner wants VIP accounts to be able to run much larger than today's 2% rule,
+and accepted evidence first. This is a description, not a hypothesis with a pass bar: nothing can "pass". No engine
+code is changed. The "paper desk" (forward paper wallets) is a separate engine change that needs the owner's word here.
+
+**Known before registering:** H62's replay of the current rule (BTC and ETH, each its own $10,000 paper book at full
+size): net -5,136, worst fall -77.5%; BTC -9,196 (worst fall -98.0%), ETH +4,059 (-76.2%); forward slice +1,829.
+
+**The trades.** The CURRENT Setups rule (`b_targets`) on BTCUSDT and ETHUSDT, from the replay H62 used (same store,
+same cached fits, same end: the last stored session at or before 2026-11-21 13:45 UTC; first decided session 2020-02-05).
+The book's entries, stops, targets and exits do not depend on its size, so each trade is taken as prices and bars: the
+entry at an open, the stop it starts with, half closed at Target 1 if it was reached, the rest at its exit. GATE (must
+pass or nothing is read): walked with the paper book's own sizing, one coin at a time, the walk reproduces the replay's
+marked equity at every bar on both coins.
+
+**The wallet.** ONE wallet, 10,000 at the start, both coins. Wallet = the realised balance; equity = the wallet plus the
+open result at each 15-minute close. In a bar: funding first, then fills at the open (closes before entries, BTC before
+ETH), then stops and targets inside the bar. A setup already open when a wallet starts is not joined.
+- **Fees:** as the paper book counts them, 0.10% of the notional per side (`cost_side`; a member's real futures fee is lower).
+- **Funding:** the stored Binance funding series (`data/<coin>_funding.csv`), paid or received on the open notional at
+  each funding time at that bar's open price. The paper book counts no funding; the wallet does. The final wallet
+  without funding is given beside it.
+- **Daily loss brake** (my model of the vault's brake as the site session described it, not the vault's code): the day
+  is the UTC day. Budget = brake% of the wallet at the day's start, less what the wallet has lost since the day's start
+  (a gain adds nothing), less the other coin's open risk (its loss at its stop now; zero after Target 1). A new trade's
+  loss at its stop may not exceed the budget: it is trimmed to fit, and not joined if the budget is zero or less. The
+  brake closes nothing.
+- **S1 "2% rule":** sized to lose 2% of the wallet at the stop; the notional capped at the wallet less the other coin's
+  open notional (1x); brake 5%.
+- **S2 "100% per coin":** notional = 1.0 x the wallet at the entry; brake 15%.
+- **S3 "3x book":** notional = 1.5 x the wallet at the entry; brake 15%.
+- **Wipe-out (all three):** in any bar, with each open position at its worst price of that bar (low for a long, high for
+  a short; both coins at once, which is the cautious reading), if the equity is at or below 0.5% of the open notional
+  (an assumed maintenance margin; the exchange's tiers at these sizes are near it), the wallet is wiped out and the run
+  ends there. Positions closed inside that bar count at their exit price. Reported also with closes only, if it differs.
+
+**Not modelled, and said:** the member's fill against the book's (slippage, the vault's join window), a trade the vault
+would refuse, exchange limits, the vault's own rounding. So this is the book's trades at three sizes, not a simulation
+of the vault.
+
+**Read-outs, fixed now, for S1, S2, S3:**
+- (a) The final wallet from 10,000 over the whole replay, the worst fall of the equity, the lowest equity, trades
+  joined / trimmed / not joined, fees and funding paid, the final wallet without funding, and whether and when it was
+  wiped out.
+- (b) From EVERY month-start (the first bar of each calendar month, UTC) as a fresh 10,000 wallet, walked for 365 days:
+  how often the equity reached +100% (20,000) at a close before -50% (5,000), how often -50% or a wipe-out came first,
+  how often neither within 365 days, and the median days to either. Month-starts with less than 365 days of data and no
+  line reached are counted apart as unfinished.
+- (c) The worst single UTC day (equity at the day's last close against the day before) and the longest run of losing
+  joined trades, from the run in (a).
+- (d) The forward record alone: the LIVE Setups book's closed BTC and ETH trades since it started (11 Nov 2026, from
+  `out/live/shadow_trades_b_targets_*.csv`) plus its open trades, one 10,000 wallet, marked at the last stored bar.
+  About eleven days and a dozen trades: too short to judge, and the report says so.
+
+A history replay is a warm-up, not a forward result; the first half and the second half of (b) are shown apart
+(month-starts before and from 2023-06-08).
