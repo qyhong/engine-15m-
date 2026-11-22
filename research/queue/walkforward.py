@@ -55,9 +55,9 @@ FAMILY = ["H90", "H91", "H92", "H93", "H94", "H95", "H96", "H97", "H98", "H99", 
 CURRENT = {"stop_units": 2.0, "idle_max": 4, "theta_enter": 0.05, "theta_enter_shock": 0.10, "theta_flip": 0.10,
            "theta_counter": 0.15, "htf_bias": True, "trend_tiebreak": True, "step_aside": False, "release_guard": True}
 # measured on the research server (22 Nov 2026, nice 19, one thread): seconds per group load and per book run
-PREP_S = {"choice": {"crypto": 60.0, "metals": 60.0, "fx": 40.0, "index": 30.0, "energy": 60.0},
-          "test": {"crypto": 90.0, "metals": 90.0, "fx": 60.0, "index": 45.0, "energy": 90.0}}
-RUN_S = {"choice": 20.0, "test": 15.0}
+PREP_S = {"choice": {"crypto": 15.0, "metals": 10.0, "fx": 7.0, "index": 2.0, "energy": 9.0},     # measured x 1.5
+          "test": {"crypto": 26.0, "metals": 17.0, "fx": 11.0, "index": 3.0, "energy": 15.0}}
+RUN_S = {"choice": 4.0, "test": 5.0}    # an unmasked book ~0.4 s, a volatility-masked one up to ~4.7 s (crypto, test)
 
 
 class HoldoutError(RuntimeError):
@@ -277,11 +277,98 @@ def fits_overlay(fits_root, g, out):
         return src
 
 
+def book_columns():
+    """The evidence columns the Setups book reads (shadows.book_inputs, shadows.aux_from_ev, plan_targets via row_of)."""
+    cols = ["shock", "tide", "atr1h", "htf_bias", "release_soon", "atr15", "sw_lo_15m", "sw_hi_15m", "sw_lo_1h", "sw_hi_1h",
+            "reach_1h_med_pct", "reach_4h_med_pct"] + list(shadows.TARGET_COLS)
+    for tf in shadows.PB_FIB_TFS:
+        cols += ["fib_%s_dir" % tf, "fib_%s_broken" % tf, "fib_%s_r500_px" % tf, "fib_%s_entry_px" % tf]
+    cols += ["ma_%s_%s_px" % (tf, m) for tf in shadows.PB_MA_TFS for m in shadows.PB_MAS]
+    return list(dict.fromkeys(cols))
+
+
+def prep_cut_lean(group, assets, fits_dir, end, log=print):
+    """research/h59_half_be.prep_cut, line for line, with two memory savings and nothing else changed: the evidence frame
+    keeps only the book's columns (book_columns), and the "which voices speak" mask is computed in row chunks instead of
+    materialising the whole feature matrix (h59 peaks near 3 GB on crypto; this stays well under). The tests and the smoke
+    check compare its odds and books with h59.prep_cut."""
+    import gc as _gc
+    from engine15 import evcache, labels, leanprep, model
+    from engine15.config import voting_for
+    stores = {}
+    for a in assets:
+        st = evcache.AssetStore(os.path.join(evcache.CACHE_DIR, group, a))
+        if not st.load():
+            raise RuntimeError("no evidence store for %s/%s" % (group, a))
+        stores[a] = st
+    ns = set(st.meta["n"] for st in stores.values())
+    if len(ns) != 1:
+        raise RuntimeError("stores of %s disagree on rows: %s" % (group, ns))
+    full = pd.DatetimeIndex(pd.to_datetime(stores[assets[0]].times_ms(), unit="ms", utc=True))
+    for a in assets[1:]:
+        assert np.array_equal(stores[a].times_ms(), stores[assets[0]].times_ms())
+    n = int(full.searchsorted(pd.Timestamp(end, tz="UTC"), side="right"))
+    if str(full[n - 1])[:16] != end:
+        raise RuntimeError("%s: the store has no session at %s (last <= it: %s)" % (group, end, full[n - 1]))
+    times = full[:n]
+    cfg = dict(CFG, assets=tuple(assets), birth=CFG["birth"], voting=voting_for(group))
+    if group in CFG.get("group_horizon", {}):
+        cfg["horizon"] = CFG["group_horizon"][group]
+    keep = book_columns()
+    ev, X, ready, y, res, px = {}, {}, {}, {}, {}, {}
+    for a in assets:
+        st = stores[a]
+        f = st.frame(full)
+        ev[a] = f[[c for c in keep if c in f.columns]].iloc[:n]
+        del f
+        X[a] = st.X()[:n]
+        ready[a] = st.ready()[:n]
+        b = data.load(a).reindex(times)
+        if b["close"].isna().any():
+            raise RuntimeError("%s: %d stored sessions have no bar" % (a, int(b["close"].isna().sum())))
+        px[a] = dict((k, b[k].values.astype(float)) for k in ("open", "high", "low", "close"))
+        unit = (cfg["barrier_atr"] * ev[a]["atr1h"]).values
+        y[a], res[a] = labels.triple_barrier(px[a]["open"], px[a]["high"], px[a]["low"], unit, cfg["horizon"])
+    birth_idx = int(times.searchsorted(pd.Timestamp(cfg["birth"], tz="UTC")))
+    floor_idx = int(times.searchsorted(pd.Timestamp(cfg.get("train_floor", cfg["birth"]), tz="UTC")))
+    t0 = time.time()
+    probs, models, frep = leanprep.walk_forward_cached(X, ready, y, cfg, birth_idx, min(floor_idx, birth_idx), n, fits_dir)
+    log("%s: %d sessions to %s; voices walked from %s: %d refits, %d from the cache (%.0fs)" % (
+        group, n, str(times[-1])[:16], cfg["birth"], frep["refits"], frep["reused"], time.time() - t0))
+    del models
+    lo = birth_idx
+    trust = leanprep.trust_tail(probs, y, res, cfg, lo, n)
+    if cfg.get("voting"):
+        votes = np.array([1.0 if v in cfg["voting"] else 0.0 for v in model.VOICE_NAMES])
+        trust = trust * votes
+        trust = trust / trust.sum(axis=1, keepdims=True)
+    odds = {}
+    for a in assets:
+        speaks = np.zeros((n - lo, len(model.VOICE_NAMES)), dtype=bool)
+        for r0 in range(lo, n, 20000):                           # chunks of rows: the same values as h59's one block
+            r1 = min(n, r0 + 20000)
+            Xa = np.asarray(X[a][r0:r1])
+            for j, v in enumerate(model.VOICE_NAMES):
+                if model._COLS[v]:
+                    speaks[r0 - lo:r1 - lo, j] = np.abs(Xa[:, model._COLS[v]]).sum(axis=1) > 0
+            del Xa
+        w = trust * speaks
+        tot = w.sum(axis=1, keepdims=True)
+        w = np.where(tot > 0, w / np.where(tot > 0, tot, 1.0), trust)
+        o = np.full((n, 3), np.nan)
+        o[lo:] = model.mix(probs[a].arr, w)
+        odds[a] = o
+        del speaks, w
+        probs[a] = None
+    del probs, trust, X
+    _gc.collect()
+    return {"cfg": cfg, "assets": list(assets), "times": times, "ev": ev, "px": px, "odds": odds, "birth_idx": birth_idx}
+
+
 def load_prep(g, assets, fits_root, limit, out, log=print):
     """THE ONLY LOADER. The group's inputs up to the last stored session at or before `limit` (never after DATA_END)."""
-    import h59_half_be as h59
     end = last_session(g, assets, limit)
-    prep = h59.prep_cut(g, assets, fits_overlay(fits_root, g, out), end, log=log)
+    prep = prep_cut_lean(g, assets, fits_overlay(fits_root, g, out), end, log=log)
     if prep["times"][-1] > wall(limit):
         raise HoldoutError("loaded past the limit")
     return prep

@@ -4359,6 +4359,17 @@ lowest close of the 60 days B-60 to B-1 (the mirror of H74's primary drop readin
 [max(B+1, d*), B+30] with close(t) < EMA10(t) and close(t-1) >= EMA10(t-1); short at close(t). One entry per breakout.
 Only D1 (H74's primary reading) is mirrored, to keep the count of tests down.
 
+### Addendum before any study number (22 Nov 2026, about 12:00 UTC; code only, no study number computed)
+- **Loader.** On the research server `h59_half_be.prep_cut` peaks at about 3.1 GB of memory on the crypto group, over the
+  queue's 3 GB limit. `walkforward.py` therefore loads through `prep_cut_lean`, a line-for-line copy that keeps only the
+  37 evidence columns the Setups book reads and computes the "which voices speak" mask in row chunks (peak about 1.7 GB).
+  Checked on the server for all eight markets at the full cut (2025-11-10 23:45): the odds and the kept columns equal
+  `prep_cut`'s exactly, and the current-setting book on the lean load equals `run_challenger("b_targets")` on `prep_cut`'s
+  load (every trade and the equity). Only equality was printed; no study number was looked at.
+- **Timing** (server, nice 19, one thread): a group load 1-17 s (crypto test period the longest), an unmasked book run
+  about 0.4 s, a volatility- or tight-stop-masked run up to about 5 s. Estimated CPU time per Part A study 3-10 minutes
+  (`--estimate`, with a 1.5x margin), Part B about a minute each. This family is far short of 72 queue hours on its own.
+
 ### Changes from the brief, made before registering
 - H92's grid: 0.15 replaced by 0.02 (the reason is under H92).
 - H101: the brief's own H101 was H72's work; it is the kitchen-sink control as the brief proposed instead.

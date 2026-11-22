@@ -80,11 +80,12 @@ def test_guard_mask_blocks_entries_and_flips_but_keeps_open_positions():
     m[k:] = True
     b0, b1 = run(guard), run(wf.merge_guard(guard, m, n))
     t1 = b1["trades"]
-    assert (t1.i_in <= k).all()                                  # nothing opened from a decision at or after bar k
+    last = k + int(cfg.get("fill_delay_bars", 0) or 0)           # an order decided before k still fills (late feed: later)
+    assert (t1.i_in <= last).all()                               # nothing opened from a decision at or after bar k
     assert np.array_equal(b0["held"][:k], b1["held"][:k])        # identical before the mask
     if b1["held"][k] != 0:                                       # a position open at k is kept until its stop/target
         assert (t1.i_out >= k).any() or b1["state"]["pos"] != 0
-    assert not t1.why_in.astype(str).str.contains("FLIP").loc[t1.i_in > k].any()
+    assert not t1.why_in.astype(str).str.contains("FLIP").loc[t1.i_in > last].any()
 
 
 # ------------------------------------------------------------------ the holdout wall
