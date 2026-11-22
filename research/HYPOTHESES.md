@@ -4272,3 +4272,53 @@ other six markets per stage (trades, mean R, excess), with their own fees.
 **Read-outs.** `research/out/h70_rebound_long/`: `stage1.json`, `selection_stage1.json`, and as the stages are reached
 `stage2.json`, `selection_stage2.json`, `stage3.json`, `results.json` (all merged) and `report.md`; skipped events
 counted by reason. A study that finds nothing is a complete answer.
+
+### H70 results (22 Nov 2026, Stage 1 run 11:28 UTC on the research server, 12 s; `research/out/h70_rebound_long/report.md` + `results.json`)
+
+**Verdict by the registered rule: NOTHING TO CONFIRM.** No candidate met the Stage 1 selection rule, so Stage 2 was not
+run, and the holdout (2025-11-11 onward) was not opened: it stays sealed for this question. Stage 3 refused to run, as it
+was built to, without a Stage 2 selection.
+
+**Why nothing qualified.** All 18 candidates lost money per trade after fees in Stage 1 (mean R from -0.05 to -0.25, every
+one below zero; 5 of 18 have a 95% interval that reaches above zero, none has a point value above it). The rule needs mean
+R above zero first. Most candidates did beat the matched baseline (random long entries in the same coin and month with the
+same trade), which lost -0.256R a trade on BTC and -0.182R on ETH: 10 of 18 have an excess interval above zero, the best
+O2-R1-C0 (24-hour return -6% or worse within the last 4 hours, then a 15m close back above its EMA20; no odds filter),
++0.160R [+0.081, +0.252], p 0.0006, positive on both coins.
+
+Stage 1, BTC and ETH pooled, 2020-02-05 to 2023-06-06 (41 months). Each cell: trades, share won, mean R [95%], excess
+over the baseline [95%].
+
+| Candidate | No odds filter (C0) | With the odds filter (C1) |
+|---|---|---|
+| O1-R1 | 780, 49%, -0.124 [-0.196, -0.046], +0.130 [+0.054, +0.206] | 569, 48%, -0.162 [-0.241, -0.076], +0.092 [+0.011, +0.177] |
+| O1-R2 | 1273, 46%, -0.221 [-0.276, -0.159], +0.035 [-0.020, +0.093] | 601, 46%, -0.247 [-0.327, -0.158], +0.010 [-0.076, +0.098] |
+| O1-R3 | 378, 46%, -0.171 [-0.265, -0.064], +0.088 [-0.012, +0.201] | 292, 46%, -0.167 [-0.278, -0.042], +0.091 [-0.026, +0.222] |
+| O2-R1 | 531, 51%, -0.053 [-0.147, +0.055], +0.160 [+0.081, +0.252] | 369, 52%, -0.051 [-0.146, +0.046], +0.144 [+0.063, +0.227] |
+| O2-R2 | 801, 48%, -0.122 [-0.188, -0.048], +0.091 [+0.029, +0.160] | 390, 50%, -0.086 [-0.178, +0.019], +0.106 [+0.013, +0.213] |
+| O2-R3 | 309, 48%, -0.090 [-0.194, +0.024], +0.116 [+0.015, +0.224] | 240, 50%, -0.056 [-0.174, +0.076], +0.138 [+0.023, +0.268] |
+| O3-R1 | 774, 50%, -0.113 [-0.175, -0.050], +0.139 [+0.067, +0.209] | 593, 49%, -0.151 [-0.218, -0.087], +0.100 [+0.023, +0.175] |
+| O3-R2 | 1253, 47%, -0.208 [-0.259, -0.151], +0.049 [-0.005, +0.104] | 723, 47%, -0.248 [-0.319, -0.171], +0.008 [-0.071, +0.085] |
+| O3-R3 | 510, 46%, -0.175 [-0.259, -0.085], +0.079 [-0.014, +0.179] | 424, 46%, -0.181 [-0.285, -0.074], +0.074 [-0.042, +0.192] |
+
+The engine's odds filter (C1) made the excess smaller in 6 of 9 pairs (larger in O1-R3, O2-R2 and O2-R3, by +0.003, +0.015 and
++0.022R).
+
+**Post hoc, descriptive, not registered (Stage 1 data only; `research/h70_posthoc_fees.py`, `posthoc_fees_stage1.json`).**
+The same trades WITHOUT fees: the baseline is about zero (BTC -0.014R, ETH +0.022R; median stop 0.97% / 1.22% of price, so
+the 0.20% round trip costs about 0.21R / 0.16R a trade), and the candidates range from -0.073R to +0.038R (best O2-R1-C1
++0.038, O2-R1-C0 +0.026, O2-R2-C1 +0.026). So most of the "excess" is not a better direction: the oversold entries have
+WIDER stops (median 1.15% to 3.4% of price against about 1% for a random bar), so the same fee is a smaller part of R. Before
+fees the best rebound entry made about +0.03R a trade more than a random entry; after fees it still lost.
+
+**Deviations:** none from the registered rule. Notes: (1) the registration's heading says "about 11:30 UTC"; it was
+committed at 11:19 UTC (commit ecf42cd), before any H70 code existed. (2) The post-hoc fee read above was not registered;
+it uses only Stage 1 data and changes no verdict. (3) Stages 2 and 3 and the descriptive read-outs (rallies, frequency, what
+the book held, the other six markets) exist in the script but were not run, because their precondition (a Stage 1
+selection) was not met.
+
+**Reading.** Out of an oversold state, these rebound triggers picked better long entries than a random bar in the same
+month, but not good enough to pay a 0.20% round trip with a stop at the rebound's low and a 24-hour exit, and adding the
+engine's own odds mostly made them worse (6 of 9 pairs), not better. Nothing here supports adding a rebound long to the Setups book. A different
+trade shape (wider stop, longer hold, a lower-cost venue) would be a NEW question with its own registration and a fresh
+discovery period; it could not reuse this Stage 1 as if it had not been seen.

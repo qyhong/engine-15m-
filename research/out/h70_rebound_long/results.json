@@ -1,0 +1,1643 @@
+{
+ "stage1": {
+  "stage": 1,
+  "period": [
+   null,
+   "2023-06-07 23:45"
+  ],
+  "data_cut": "2023-06-07 23:45",
+  "candidates": [
+   "O1-R1-C0",
+   "O1-R1-C1",
+   "O1-R2-C0",
+   "O1-R2-C1",
+   "O1-R3-C0",
+   "O1-R3-C1",
+   "O2-R1-C0",
+   "O2-R1-C1",
+   "O2-R2-C0",
+   "O2-R2-C1",
+   "O2-R3-C0",
+   "O2-R3-C1",
+   "O3-R1-C0",
+   "O3-R1-C1",
+   "O3-R2-C0",
+   "O3-R2-C1",
+   "O3-R3-C0",
+   "O3-R3-C1"
+  ],
+  "months": 41,
+  "bootstrap": {
+   "draws": 5000,
+   "seed": 20261122
+  },
+  "per_coin": {
+   "BTCUSDT": {
+    "first_decided": "2020-02-05 00:00",
+    "first_bar": "2020-02-05 00:15",
+    "last_bar": "2023-06-06 23:45",
+    "eligible_bars": 103659,
+    "baseline_mean_r_all_bars": -0.25602048220776735,
+    "reading_source": {
+     "atr15": "store",
+     "atr1h": "store",
+     "bias_ema50_1h_px": "store",
+     "sw_hi_15m": "store"
+    },
+    "fee_side": 0.001
+   },
+   "ETHUSDT": {
+    "first_decided": "2020-02-05 00:00",
+    "first_bar": "2020-02-05 00:15",
+    "last_bar": "2023-06-06 23:45",
+    "eligible_bars": 108461,
+    "baseline_mean_r_all_bars": -0.18206127240251485,
+    "reading_source": {
+     "atr15": "store",
+     "atr1h": "store",
+     "bias_ema50_1h_px": "store",
+     "sw_hi_15m": "store"
+    },
+    "fee_side": 0.001
+   }
+  },
+  "results": {
+   "O1-R1-C0": {
+    "pooled": {
+     "n": 780,
+     "won_pct": 49.48717948717949,
+     "mean_r": {
+      "obs": -0.12448295312920092,
+      "lo": -0.19553414033819122,
+      "hi": -0.04631111832260086,
+      "p": 0.9998000399920016
+     },
+     "sum_r": -97.09670344077671,
+     "excess": {
+      "obs": 0.1298722172867086,
+      "lo": 0.05438677040682993,
+      "hi": 0.20640443838377423,
+      "p": 0.0011997600479904018
+     },
+     "median_bars": 40.0,
+     "mean_pct": -0.2302843852229363,
+     "longest_losing_run": 19,
+     "deepest_fall_r": -103.08814771741883
+    },
+    "per_coin": {
+     "BTCUSDT": {
+      "n": 387,
+      "won_pct": 47.54521963824289,
+      "mean_r": {
+       "obs": -0.17421549809969955,
+       "lo": -0.24854401986499244,
+       "hi": -0.09091404988369374,
+       "p": 1.0
+      },
+      "sum_r": -67.42139776458372,
+      "excess": {
+       "obs": 0.12022965814622864,
+       "lo": 0.04373601722314707,
+       "hi": 0.20385823489487856,
+       "p": 0.003599280143971206
+      },
+      "median_bars": 41.0,
+      "mean_pct": -0.2900696003346509,
+      "longest_losing_run": 11,
+      "deepest_fall_r": -70.4807926664829
+     },
+     "ETHUSDT": {
+      "n": 393,
+      "won_pct": 51.399491094147585,
+      "mean_r": {
+       "obs": -0.07550968365443507,
+       "lo": -0.16268927174479056,
+       "hi": 0.02325672228766303,
+       "p": 0.9538092381523695
+      },
+      "sum_r": -29.675305676192984,
+      "excess": {
+       "obs": 0.13936756178382248,
+       "lo": 0.04730986316338268,
+       "hi": 0.2349520735220976,
+       "p": 0.0027994401119776045
+      },
+      "median_bars": 38.0,
+      "mean_pct": -0.17141192148697296,
+      "longest_losing_run": 8,
+      "deepest_fall_r": -41.98143501921595
+     }
+    },
+    "skips": {
+     "BTCUSDT": {
+      "events": 960,
+      "while_open": 553,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 1,
+      "stop_over_8pct": 19,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     },
+     "ETHUSDT": {
+      "events": 941,
+      "while_open": 517,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 31,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     }
+    }
+   },
+   "O1-R1-C1": {
+    "pooled": {
+     "n": 569,
+     "won_pct": 48.33040421792619,
+     "mean_r": {
+      "obs": -0.16184665559884603,
+      "lo": -0.24069006062306803,
+      "hi": -0.07645691010396978,
+      "p": 1.0
+     },
+     "sum_r": -92.09074703574339,
+     "excess": {
+      "obs": 0.09230653496706182,
+      "lo": 0.010750821950233934,
+      "hi": 0.17697987548316196,
+      "p": 0.016196760647870425
+     },
+     "median_bars": 39.0,
+     "mean_pct": -0.25038280410134733,
+     "longest_losing_run": 13,
+     "deepest_fall_r": -98.0821913123856
+    },
+    "per_coin": {
+     "BTCUSDT": {
+      "n": 286,
+      "won_pct": 45.10489510489511,
+      "mean_r": {
+       "obs": -0.24976826377754224,
+       "lo": -0.3278672008809897,
+       "hi": -0.16394732214328597,
+       "p": 1.0
+      },
+      "sum_r": -71.43372344037708,
+      "excess": {
+       "obs": 0.045605108371160046,
+       "lo": -0.03516677712202112,
+       "hi": 0.13312786303041962,
+       "p": 0.14317136572685463
+      },
+      "median_bars": 38.5,
+      "mean_pct": -0.41047163806347114,
+      "longest_losing_run": 7,
+      "deepest_fall_r": -74.49311834227626
+     },
+     "ETHUSDT": {
+      "n": 283,
+      "won_pct": 51.590106007067135,
+      "mean_r": {
+       "obs": -0.07299301623804351,
+       "lo": -0.18512968143200864,
+       "hi": 0.04813432101689912,
+       "p": 0.8922215556888622
+      },
+      "sum_r": -20.657023595366315,
+      "excess": {
+       "obs": 0.13950302968942188,
+       "lo": 0.02363555947105357,
+       "hi": 0.2577818384352019,
+       "p": 0.011397720455908818
+      },
+      "median_bars": 39.0,
+      "mean_pct": -0.08859691536223986,
+      "longest_losing_run": 6,
+      "deepest_fall_r": -35.20656069432468
+     }
+    },
+    "skips": {
+     "BTCUSDT": {
+      "events": 645,
+      "while_open": 350,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 1,
+      "stop_over_8pct": 8,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     },
+     "ETHUSDT": {
+      "events": 623,
+      "while_open": 332,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 8,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     }
+    }
+   },
+   "O1-R2-C0": {
+    "pooled": {
+     "n": 1273,
+     "won_pct": 45.64021995286724,
+     "mean_r": {
+      "obs": -0.2214287533017656,
+      "lo": -0.27607144130974753,
+      "hi": -0.1589503878093982,
+      "p": 1.0
+     },
+     "sum_r": -281.8788029531476,
+     "excess": {
+      "obs": 0.03471561076271658,
+      "lo": -0.020049944293521475,
+      "hi": 0.09331471927124635,
+      "p": 0.1195760847830434
+     },
+     "median_bars": 22.0,
+     "mean_pct": -0.3597490112677493,
+     "longest_losing_run": 12,
+     "deepest_fall_r": -284.30740676270614
+    },
+    "per_coin": {
+     "BTCUSDT": {
+      "n": 650,
+      "won_pct": 44.61538461538462,
+      "mean_r": {
+       "obs": -0.2671048760567927,
+       "lo": -0.32263217212241635,
+       "hi": -0.2033362765758768,
+       "p": 1.0
+      },
+      "sum_r": -173.61816943691525,
+      "excess": {
+       "obs": 0.02937851894027375,
+       "lo": -0.02799263133076438,
+       "hi": 0.09157534187374104,
+       "p": 0.17356528694261147
+      },
+      "median_bars": 22.0,
+      "mean_pct": -0.37917489876374505,
+      "longest_losing_run": 9,
+      "deepest_fall_r": -175.2136428825955
+     },
+     "ETHUSDT": {
+      "n": 623,
+      "won_pct": 46.70947030497592,
+      "mean_r": {
+       "obs": -0.17377308750599094,
+       "lo": -0.25065808465656275,
+       "hi": -0.09123047477396196,
+       "p": 1.0
+      },
+      "sum_r": -108.26063351623236,
+      "excess": {
+       "obs": 0.040284005120000424,
+       "lo": -0.0422062828053603,
+       "hi": 0.12391748706499672,
+       "p": 0.1775644871025795
+      },
+      "median_bars": 22.0,
+      "mean_pct": -0.3394812313762609,
+      "longest_losing_run": 7,
+      "deepest_fall_r": -111.52728638582087
+     }
+    },
+    "skips": {
+     "BTCUSDT": {
+      "events": 1323,
+      "while_open": 664,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 1,
+      "stop_over_8pct": 8,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     },
+     "ETHUSDT": {
+      "events": 1228,
+      "while_open": 586,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 1,
+      "stop_over_8pct": 18,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     }
+    }
+   },
+   "O1-R2-C1": {
+    "pooled": {
+     "n": 601,
+     "won_pct": 46.089850249584025,
+     "mean_r": {
+      "obs": -0.2474753813482826,
+      "lo": -0.3266881926947378,
+      "hi": -0.15760015831151386,
+      "p": 1.0
+     },
+     "sum_r": -148.73270419031786,
+     "excess": {
+      "obs": 0.010205002738163198,
+      "lo": -0.07562039774912209,
+      "hi": 0.09786178924444779,
+      "p": 0.3957208558288342
+     },
+     "median_bars": 20.0,
+     "mean_pct": -0.22976386381926847,
+     "longest_losing_run": 12,
+     "deepest_fall_r": -151.12071925661766
+    },
+    "per_coin": {
+     "BTCUSDT": {
+      "n": 301,
+      "won_pct": 45.84717607973422,
+      "mean_r": {
+       "obs": -0.3102553643570405,
+       "lo": -0.3963782510836631,
+       "hi": -0.2115722568747021,
+       "p": 1.0
+      },
+      "sum_r": -93.38686467146917,
+      "excess": {
+       "obs": -0.01067942001231467,
+       "lo": -0.09740628214573777,
+       "hi": 0.0863857645987801,
+       "p": 0.5668866226754649
+      },
+      "median_bars": 20.0,
+      "mean_pct": -0.270801657228351,
+      "longest_losing_run": 7,
+      "deepest_fall_r": -93.38686467146917
+     },
+     "ETHUSDT": {
+      "n": 300,
+      "won_pct": 46.33333333333333,
+      "mean_r": {
+       "obs": -0.1844861317294956,
+       "lo": -0.3040509956837862,
+       "hi": -0.05605747420008897,
+       "p": 0.9986002799440112
+      },
+      "sum_r": -55.34583951884868,
+      "excess": {
+       "obs": 0.031159040231142642,
+       "lo": -0.09519266007630753,
+       "hi": 0.16086782407652905,
+       "p": 0.3063387322535493
+      },
+      "median_bars": 19.5,
+      "mean_pct": -0.18858927776548903,
+      "longest_losing_run": 8,
+      "deepest_fall_r": -63.358907679706235
+     }
+    },
+    "skips": {
+     "BTCUSDT": {
+      "events": 531,
+      "while_open": 229,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 1,
+      "stop_over_8pct": 0,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     },
+     "ETHUSDT": {
+      "events": 501,
+      "while_open": 199,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 1,
+      "stop_over_8pct": 1,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     }
+    }
+   },
+   "O1-R3-C0": {
+    "pooled": {
+     "n": 378,
+     "won_pct": 45.5026455026455,
+     "mean_r": {
+      "obs": -0.17056791600569404,
+      "lo": -0.265169074824571,
+      "hi": -0.06420617616320153,
+      "p": 1.0
+     },
+     "sum_r": -64.47467225015235,
+     "excess": {
+      "obs": 0.08788675907961968,
+      "lo": -0.0122736355734232,
+      "hi": 0.201269521910438,
+      "p": 0.060387922415516895
+     },
+     "median_bars": 53.0,
+     "mean_pct": -0.4655486072196539,
+     "longest_losing_run": 8,
+     "deepest_fall_r": -66.36668667878689
+    },
+    "per_coin": {
+     "BTCUSDT": {
+      "n": 189,
+      "won_pct": 43.91534391534391,
+      "mean_r": {
+       "obs": -0.17597780109148742,
+       "lo": -0.2883311396958188,
+       "hi": -0.0424311890274552,
+       "p": 0.9992001599680064
+      },
+      "sum_r": -33.259804406291124,
+      "excess": {
+       "obs": 0.12279220986863972,
+       "lo": 0.00940518100201601,
+       "hi": 0.25347693372291963,
+       "p": 0.02979404119176165
+      },
+      "median_bars": 53.0,
+      "mean_pct": -0.33889543822048257,
+      "longest_losing_run": 6,
+      "deepest_fall_r": -34.34395743531442
+     },
+     "ETHUSDT": {
+      "n": 189,
+      "won_pct": 47.08994708994709,
+      "mean_r": {
+       "obs": -0.16515803091990072,
+       "lo": -0.29978861994132655,
+       "hi": -0.023283754431338982,
+       "p": 0.994001199760048
+      },
+      "sum_r": -31.214867843861228,
+      "excess": {
+       "obs": 0.052981308290599646,
+       "lo": -0.09544769548424668,
+       "hi": 0.2085212892680768,
+       "p": 0.2485502899420116
+      },
+      "median_bars": 53.0,
+      "mean_pct": -0.5922017762188253,
+      "longest_losing_run": 11,
+      "deepest_fall_r": -36.950060277433536
+     }
+    },
+    "skips": {
+     "BTCUSDT": {
+      "events": 291,
+      "while_open": 94,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 8,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     },
+     "ETHUSDT": {
+      "events": 312,
+      "while_open": 105,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 18,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     }
+    }
+   },
+   "O1-R3-C1": {
+    "pooled": {
+     "n": 292,
+     "won_pct": 45.54794520547945,
+     "mean_r": {
+      "obs": -0.16664552943194147,
+      "lo": -0.27823243637747325,
+      "hi": -0.041759753901278694,
+      "p": 0.9992001599680064
+     },
+     "sum_r": -48.66049459412691,
+     "excess": {
+      "obs": 0.0907084889459806,
+      "lo": -0.026320045036350697,
+      "hi": 0.2219896760531132,
+      "p": 0.08618276344731053
+     },
+     "median_bars": 58.5,
+     "mean_pct": -0.4470495391979779,
+     "longest_losing_run": 9,
+     "deepest_fall_r": -50.561814462656656
+    },
+    "per_coin": {
+     "BTCUSDT": {
+      "n": 146,
+      "won_pct": 41.78082191780822,
+      "mean_r": {
+       "obs": -0.19977910301243829,
+       "lo": -0.34958235197086485,
+       "hi": -0.019392007181672177,
+       "p": 0.9966006798640272
+      },
+      "sum_r": -29.16774903981599,
+      "excess": {
+       "obs": 0.10169521092713103,
+       "lo": -0.04547589567520618,
+       "hi": 0.2766155917328889,
+       "p": 0.11597680463907219
+      },
+      "median_bars": 52.0,
+      "mean_pct": -0.5216031116250521,
+      "longest_losing_run": 7,
+      "deepest_fall_r": -30.251902068839296
+     },
+     "ETHUSDT": {
+      "n": 146,
+      "won_pct": 49.31506849315068,
+      "mean_r": {
+       "obs": -0.13351195585144465,
+       "lo": -0.2740166674451679,
+       "hi": 0.013677838554906951,
+       "p": 0.9668066386722656
+      },
+      "sum_r": -19.492745554310922,
+      "excess": {
+       "obs": 0.07972176696483022,
+       "lo": -0.07740177120456997,
+       "hi": 0.2392957518715082,
+       "p": 0.16636672665466906
+      },
+      "median_bars": 61.0,
+      "mean_pct": -0.37249596677090346,
+      "longest_losing_run": 8,
+      "deepest_fall_r": -25.8140026115126
+     }
+    },
+    "skips": {
+     "BTCUSDT": {
+      "events": 215,
+      "while_open": 67,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 2,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     },
+     "ETHUSDT": {
+      "events": 229,
+      "while_open": 74,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 9,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     }
+    }
+   },
+   "O2-R1-C0": {
+    "pooled": {
+     "n": 531,
+     "won_pct": 51.03578154425612,
+     "mean_r": {
+      "obs": -0.05256448284692531,
+      "lo": -0.1466859469872537,
+      "hi": 0.05508433392019086,
+      "p": 0.856628674265147
+     },
+     "sum_r": -27.911740391717352,
+     "excess": {
+      "obs": 0.16049432325693008,
+      "lo": 0.08114914260520137,
+      "hi": 0.2524774796035233,
+      "p": 0.0005998800239952009
+     },
+     "median_bars": 40.0,
+     "mean_pct": -0.15279042921895508,
+     "longest_losing_run": 11,
+     "deepest_fall_r": -51.8466195914171
+    },
+    "per_coin": {
+     "BTCUSDT": {
+      "n": 204,
+      "won_pct": 49.50980392156863,
+      "mean_r": {
+       "obs": -0.10385594295997538,
+       "lo": -0.22911674394958023,
+       "hi": 0.05082703713259432,
+       "p": 0.9438112377524495
+      },
+      "sum_r": -21.186612363834982,
+      "excess": {
+       "obs": 0.16162738106248328,
+       "lo": 0.05480639139600056,
+       "hi": 0.295887776510024,
+       "p": 0.01199760047990402
+      },
+      "median_bars": 46.0,
+      "mean_pct": -0.29265735535410475,
+      "longest_losing_run": 5,
+      "deepest_fall_r": -27.166481685606673
+     },
+     "ETHUSDT": {
+      "n": 327,
+      "won_pct": 51.98776758409785,
+      "mean_r": {
+       "obs": -0.02056614075805005,
+       "lo": -0.11924837731448092,
+       "hi": 0.09083395466588917,
+       "p": 0.6496700659868027
+      },
+      "sum_r": -6.725128027882366,
+      "excess": {
+       "obs": 0.15978746150667666,
+       "lo": 0.061016545712471185,
+       "hi": 0.2636698989621777,
+       "p": 0.001999600079984003
+      },
+      "median_bars": 38.0,
+      "mean_pct": -0.06553399823555897,
+      "longest_losing_run": 6,
+      "deepest_fall_r": -27.9710439501734
+     }
+    },
+    "skips": {
+     "BTCUSDT": {
+      "events": 552,
+      "while_open": 326,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 22,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     },
+     "ETHUSDT": {
+      "events": 887,
+      "while_open": 517,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 43,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     }
+    }
+   },
+   "O2-R1-C1": {
+    "pooled": {
+     "n": 369,
+     "won_pct": 51.76151761517615,
+     "mean_r": {
+      "obs": -0.050617282474456564,
+      "lo": -0.14600797298699353,
+      "hi": 0.045881906658128316,
+      "p": 0.8488302339532093
+     },
+     "sum_r": -18.677777233074472,
+     "excess": {
+      "obs": 0.143732289780033,
+      "lo": 0.06330146002211076,
+      "hi": 0.22731962762632923,
+      "p": 0.0007998400319936012
+     },
+     "median_bars": 41.0,
+     "mean_pct": -0.0919379589188315,
+     "longest_losing_run": 6,
+     "deepest_fall_r": -33.85621126334329
+    },
+    "per_coin": {
+     "BTCUSDT": {
+      "n": 140,
+      "won_pct": 50.0,
+      "mean_r": {
+       "obs": -0.10963694728721816,
+       "lo": -0.26730663882601313,
+       "hi": 0.04849095068449922,
+       "p": 0.9098180363927214
+      },
+      "sum_r": -15.349172620210545,
+      "excess": {
+       "obs": 0.1343940615122376,
+       "lo": -0.0013566745683426713,
+       "hi": 0.2797384685483194,
+       "p": 0.03439312137572485
+      },
+      "median_bars": 47.0,
+      "mean_pct": -0.27136271270110796,
+      "longest_losing_run": 4,
+      "deepest_fall_r": -19.55969643874314
+     },
+     "ETHUSDT": {
+      "n": 229,
+      "won_pct": 52.838427947598255,
+      "mean_r": {
+       "obs": -0.014535391322549916,
+       "lo": -0.12384908634126657,
+       "hi": 0.08683631182905505,
+       "p": 0.6026794641071785
+      },
+      "sum_r": -3.328604612863927,
+      "excess": {
+       "obs": 0.1494412502930956,
+       "lo": 0.04491639291352447,
+       "hi": 0.2480319434596853,
+       "p": 0.0021995600879824036
+      },
+      "median_bars": 38.0,
+      "mean_pct": 0.01775403029304051,
+      "longest_losing_run": 5,
+      "deepest_fall_r": -21.18477096964135
+     }
+    },
+    "skips": {
+     "BTCUSDT": {
+      "events": 337,
+      "while_open": 189,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 8,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     },
+     "ETHUSDT": {
+      "events": 564,
+      "while_open": 321,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 14,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     }
+    }
+   },
+   "O2-R2-C0": {
+    "pooled": {
+     "n": 801,
+     "won_pct": 48.18976279650437,
+     "mean_r": {
+      "obs": -0.12217820844517689,
+      "lo": -0.18773390035779133,
+      "hi": -0.04769687829532653,
+      "p": 0.9998000399920016
+     },
+     "sum_r": -97.86474496458666,
+     "excess": {
+      "obs": 0.09134118091796169,
+      "lo": 0.02855470857699738,
+      "hi": 0.15981442959611866,
+      "p": 0.004799040191961607
+     },
+     "median_bars": 22.0,
+     "mean_pct": -0.24267864724615862,
+     "longest_losing_run": 8,
+     "deepest_fall_r": -111.44031353759951
+    },
+    "per_coin": {
+     "BTCUSDT": {
+      "n": 305,
+      "won_pct": 46.22950819672131,
+      "mean_r": {
+       "obs": -0.16972871817065674,
+       "lo": -0.2508925341162686,
+       "hi": -0.07283524468831055,
+       "p": 1.0
+      },
+      "sum_r": -51.7672590420503,
+      "excess": {
+       "obs": 0.09752720850791856,
+       "lo": 0.01406581090185506,
+       "hi": 0.1866818825797517,
+       "p": 0.015796840631873626
+      },
+      "median_bars": 25.0,
+      "mean_pct": -0.4472323770816682,
+      "longest_losing_run": 6,
+      "deepest_fall_r": -55.46713392680688
+     },
+     "ETHUSDT": {
+      "n": 496,
+      "won_pct": 49.395161290322584,
+      "mean_r": {
+       "obs": -0.09293847968253299,
+       "lo": -0.17383333744343907,
+       "hi": 0.001491093915158592,
+       "p": 0.989002199560088
+      },
+      "sum_r": -46.097485922536364,
+      "excess": {
+       "obs": 0.08753727282333094,
+       "lo": 0.005774782856091497,
+       "hi": 0.17855104352192608,
+       "p": 0.029994001199760048
+      },
+      "median_bars": 22.0,
+      "mean_pct": -0.11689459966585539,
+      "longest_losing_run": 7,
+      "deepest_fall_r": -60.83450912989615
+     }
+    },
+    "skips": {
+     "BTCUSDT": {
+      "events": 695,
+      "while_open": 379,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 11,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     },
+     "ETHUSDT": {
+      "events": 1071,
+      "while_open": 554,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 21,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     }
+    }
+   },
+   "O2-R2-C1": {
+    "pooled": {
+     "n": 390,
+     "won_pct": 50.0,
+     "mean_r": {
+      "obs": -0.08555636407884616,
+      "lo": -0.178244606492689,
+      "hi": 0.018567963847902626,
+      "p": 0.9634073185362927
+     },
+     "sum_r": -33.366981990750006,
+     "excess": {
+      "obs": 0.10565706123317985,
+      "lo": 0.012869685391792052,
+      "hi": 0.2130159396280475,
+      "p": 0.02659468106378724
+     },
+     "median_bars": 24.0,
+     "mean_pct": 0.0012085245560386198,
+     "longest_losing_run": 8,
+     "deepest_fall_r": -46.08976286149311
+    },
+    "per_coin": {
+     "BTCUSDT": {
+      "n": 141,
+      "won_pct": 52.4822695035461,
+      "mean_r": {
+       "obs": -0.10011916868196546,
+       "lo": -0.23752455519385401,
+       "hi": 0.05725051070172099,
+       "p": 0.9182163567286543
+      },
+      "sum_r": -14.116802784157132,
+      "excess": {
+       "obs": 0.14203785079473805,
+       "lo": 0.0015562172506176416,
+       "hi": 0.30735546152382975,
+       "p": 0.041991601679664065
+      },
+      "median_bars": 27.0,
+      "mean_pct": -0.07048153075622497,
+      "longest_losing_run": 3,
+      "deepest_fall_r": -26.418071249966783
+     },
+     "ETHUSDT": {
+      "n": 249,
+      "won_pct": 48.59437751004016,
+      "mean_r": {
+       "obs": -0.07730995665298343,
+       "lo": -0.20357512514120268,
+       "hi": 0.06178836837696153,
+       "p": 0.870625874825035
+      },
+      "sum_r": -19.25017920659288,
+      "excess": {
+       "obs": 0.08505589124049023,
+       "lo": -0.04585951973002405,
+       "hi": 0.22719838579360593,
+       "p": 0.11737652469506099
+      },
+      "median_bars": 20.0,
+      "mean_pct": 0.04180409804611562,
+      "longest_losing_run": 7,
+      "deepest_fall_r": -37.52699688344933
+     }
+    },
+    "skips": {
+     "BTCUSDT": {
+      "events": 270,
+      "while_open": 129,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 0,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     },
+     "ETHUSDT": {
+      "events": 467,
+      "while_open": 217,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 1,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     }
+    }
+   },
+   "O2-R3-C0": {
+    "pooled": {
+     "n": 309,
+     "won_pct": 47.896440129449836,
+     "mean_r": {
+      "obs": -0.0904815851109755,
+      "lo": -0.19375061113544378,
+      "hi": 0.02426061019115728,
+      "p": 0.9550089982003599
+     },
+     "sum_r": -27.958809799291426,
+     "excess": {
+      "obs": 0.11565512945110884,
+      "lo": 0.015192205431402043,
+      "hi": 0.22417086298628713,
+      "p": 0.01919616076784643
+     },
+     "median_bars": 57.0,
+     "mean_pct": -0.3202081220767239,
+     "longest_losing_run": 6,
+     "deepest_fall_r": -34.05865735753448
+    },
+    "per_coin": {
+     "BTCUSDT": {
+      "n": 118,
+      "won_pct": 44.91525423728814,
+      "mean_r": {
+       "obs": -0.13292158717295605,
+       "lo": -0.2809931767353248,
+       "hi": 0.028387899871936212,
+       "p": 0.9588082383523295
+      },
+      "sum_r": -15.684747286408813,
+      "excess": {
+       "obs": 0.1274575950480387,
+       "lo": -0.03181009527383455,
+       "hi": 0.2958594596473276,
+       "p": 0.07158568286342731
+      },
+      "median_bars": 64.0,
+      "mean_pct": -0.35955044101481914,
+      "longest_losing_run": 4,
+      "deepest_fall_r": -22.24582637171156
+     },
+     "ETHUSDT": {
+      "n": 191,
+      "won_pct": 49.73821989528796,
+      "mean_r": {
+       "obs": -0.0642621073972912,
+       "lo": -0.18473182903117094,
+       "hi": 0.06151242794201402,
+       "p": 0.8498300339932013
+      },
+      "sum_r": -12.274062512882619,
+      "excess": {
+       "obs": 0.10836355384672289,
+       "lo": 0.0018303189390031186,
+       "hi": 0.22336832541117757,
+       "p": 0.03179364127174565
+      },
+      "median_bars": 52.0,
+      "mean_pct": -0.2959023962406232,
+      "longest_losing_run": 5,
+      "deepest_fall_r": -20.975049098279083
+     }
+    },
+    "skips": {
+     "BTCUSDT": {
+      "events": 222,
+      "while_open": 88,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 16,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     },
+     "ETHUSDT": {
+      "events": 354,
+      "while_open": 132,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 31,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     }
+    }
+   },
+   "O2-R3-C1": {
+    "pooled": {
+     "n": 240,
+     "won_pct": 49.583333333333336,
+     "mean_r": {
+      "obs": -0.055947131027849546,
+      "lo": -0.17371400939172948,
+      "hi": 0.07620687374280663,
+      "p": 0.8200359928014397
+     },
+     "sum_r": -13.427311446683882,
+     "excess": {
+      "obs": 0.13782038392406032,
+      "lo": 0.022615560180065067,
+      "hi": 0.2681526051050154,
+      "p": 0.019596080783843232
+     },
+     "median_bars": 63.5,
+     "mean_pct": -0.23558590138822166,
+     "longest_losing_run": 5,
+     "deepest_fall_r": -22.1544169975837
+    },
+    "per_coin": {
+     "BTCUSDT": {
+      "n": 91,
+      "won_pct": 42.857142857142854,
+      "mean_r": {
+       "obs": -0.1732346737635844,
+       "lo": -0.34283163125639066,
+       "hi": 0.020893852094176414,
+       "p": 0.9764047190561888
+      },
+      "sum_r": -15.764355312486177,
+      "excess": {
+       "obs": 0.07570478318542492,
+       "lo": -0.0901013788541546,
+       "hi": 0.2723448911963643,
+       "p": 0.21675664867026595
+      },
+      "median_bars": 66.0,
+      "mean_pct": -0.6497086708300853,
+      "longest_losing_run": 3,
+      "deepest_fall_r": -22.14528262747205
+     },
+     "ETHUSDT": {
+      "n": 149,
+      "won_pct": 53.691275167785236,
+      "mean_r": {
+       "obs": 0.015684858159746892,
+       "lo": -0.11379851400309368,
+       "hi": 0.15295826968866275,
+       "p": 0.40771845630873826
+      },
+      "sum_r": 2.3370438658022845,
+      "excess": {
+       "obs": 0.17575675752953565,
+       "lo": 0.05173833815700629,
+       "hi": 0.31131224961928766,
+       "p": 0.0057988402319536095
+      },
+      "median_bars": 59.0,
+      "mean_pct": 0.01733471619036643,
+      "longest_losing_run": 5,
+      "deepest_fall_r": -9.006925068907806
+     }
+    },
+    "skips": {
+     "BTCUSDT": {
+      "events": 156,
+      "while_open": 63,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 2,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     },
+     "ETHUSDT": {
+      "events": 251,
+      "while_open": 92,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 10,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     }
+    }
+   },
+   "O3-R1-C0": {
+    "pooled": {
+     "n": 774,
+     "won_pct": 49.87080103359173,
+     "mean_r": {
+      "obs": -0.11262951328103406,
+      "lo": -0.17479956531204452,
+      "hi": -0.05011037728341245,
+      "p": 0.9998000399920016
+     },
+     "sum_r": -87.17524327952037,
+     "excess": {
+      "obs": 0.13873304164619968,
+      "lo": 0.06693518396767509,
+      "hi": 0.20947130738773875,
+      "p": 0.0001999600079984003
+     },
+     "median_bars": 36.0,
+     "mean_pct": -0.16628187046704584,
+     "longest_losing_run": 17,
+     "deepest_fall_r": -90.71177727770768
+    },
+    "per_coin": {
+     "BTCUSDT": {
+      "n": 385,
+      "won_pct": 46.493506493506494,
+      "mean_r": {
+       "obs": -0.2087320982287456,
+       "lo": -0.28479819556888347,
+       "hi": -0.1282816370505431,
+       "p": 1.0
+      },
+      "sum_r": -80.36185781806707,
+      "excess": {
+       "obs": 0.08091610873681039,
+       "lo": -0.007322040053714317,
+       "hi": 0.16960385918440454,
+       "p": 0.03459308138372325
+      },
+      "median_bars": 34.0,
+      "mean_pct": -0.3117278566557103,
+      "longest_losing_run": 9,
+      "deepest_fall_r": -82.24171078397372
+     },
+     "ETHUSDT": {
+      "n": 389,
+      "won_pct": 53.213367609254504,
+      "mean_r": {
+       "obs": -0.01751512972095964,
+       "lo": -0.09418682614977013,
+       "hi": 0.06588448149569914,
+       "p": 0.6662667466506699
+      },
+      "sum_r": -6.813385461453301,
+      "excess": {
+       "obs": 0.19595545596526107,
+       "lo": 0.11096030571192136,
+       "hi": 0.2803228666289061,
+       "p": 0.0001999600079984003
+      },
+      "median_bars": 37.0,
+      "mean_pct": -0.022331472825308504,
+      "longest_losing_run": 8,
+      "deepest_fall_r": -21.80917876661789
+     }
+    },
+    "skips": {
+     "BTCUSDT": {
+      "events": 1280,
+      "while_open": 873,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 2,
+      "stop_over_8pct": 20,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     },
+     "ETHUSDT": {
+      "events": 1274,
+      "while_open": 853,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 32,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     }
+    }
+   },
+   "O3-R1-C1": {
+    "pooled": {
+     "n": 593,
+     "won_pct": 48.735244519392914,
+     "mean_r": {
+      "obs": -0.15057874314970232,
+      "lo": -0.21772234339667054,
+      "hi": -0.08679005635838077,
+      "p": 1.0
+     },
+     "sum_r": -89.29319468777348,
+     "excess": {
+      "obs": 0.10040832955497636,
+      "lo": 0.022986722382060846,
+      "hi": 0.17505547493802837,
+      "p": 0.003199360127974405
+     },
+     "median_bars": 33.0,
+     "mean_pct": -0.1916709645581365,
+     "longest_losing_run": 11,
+     "deepest_fall_r": -95.17879473834961
+    },
+    "per_coin": {
+     "BTCUSDT": {
+      "n": 291,
+      "won_pct": 45.70446735395189,
+      "mean_r": {
+       "obs": -0.2611547113750397,
+       "lo": -0.3507803988111621,
+       "hi": -0.17094463187113038,
+       "p": 1.0
+      },
+      "sum_r": -75.99602101013656,
+      "excess": {
+       "obs": 0.032178470603842164,
+       "lo": -0.06839456485559117,
+       "hi": 0.13194114529327394,
+       "p": 0.24575084983003398
+      },
+      "median_bars": 32.0,
+      "mean_pct": -0.34672345421986345,
+      "longest_losing_run": 7,
+      "deepest_fall_r": -80.1990893267494
+     },
+     "ETHUSDT": {
+      "n": 302,
+      "won_pct": 51.65562913907284,
+      "mean_r": {
+       "obs": -0.044030376416016266,
+       "lo": -0.1343401471986801,
+       "hi": 0.046140711068004034,
+       "p": 0.8334333133373325
+      },
+      "sum_r": -13.29717367763691,
+      "excess": {
+       "obs": 0.16615299496815536,
+       "lo": 0.06665607182191283,
+       "hi": 0.2600891137996449,
+       "p": 0.0003999200159968006
+      },
+      "median_bars": 34.0,
+      "mean_pct": -0.04226608213574398,
+      "longest_losing_run": 6,
+      "deepest_fall_r": -25.52121290067513
+     }
+    },
+    "skips": {
+     "BTCUSDT": {
+      "events": 916,
+      "while_open": 615,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 2,
+      "stop_over_8pct": 8,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     },
+     "ETHUSDT": {
+      "events": 909,
+      "while_open": 600,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 7,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     }
+    }
+   },
+   "O3-R2-C0": {
+    "pooled": {
+     "n": 1253,
+     "won_pct": 46.52833200319234,
+     "mean_r": {
+      "obs": -0.20789896682134473,
+      "lo": -0.25928080054926395,
+      "hi": -0.15053131987930596,
+      "p": 1.0
+     },
+     "sum_r": -260.49740542714494,
+     "excess": {
+      "obs": 0.04850305490999512,
+      "lo": -0.004505542954055155,
+      "hi": 0.10387025383371055,
+      "p": 0.04299140171965607
+     },
+     "median_bars": 22.0,
+     "mean_pct": -0.30642370053933593,
+     "longest_losing_run": 12,
+     "deepest_fall_r": -262.3798997840514
+    },
+    "per_coin": {
+     "BTCUSDT": {
+      "n": 625,
+      "won_pct": 44.64,
+      "mean_r": {
+       "obs": -0.27192478500039724,
+       "lo": -0.3367242072102197,
+       "hi": -0.20292945122081216,
+       "p": 1.0
+      },
+      "sum_r": -169.95299062524828,
+      "excess": {
+       "obs": 0.02424550258152194,
+       "lo": -0.03994582964128587,
+       "hi": 0.08738401855057007,
+       "p": 0.22475504899020196
+      },
+      "median_bars": 22.0,
+      "mean_pct": -0.3859930863049299,
+      "longest_losing_run": 9,
+      "deepest_fall_r": -171.8354849821546
+     },
+     "ETHUSDT": {
+      "n": 628,
+      "won_pct": 48.40764331210191,
+      "mean_r": {
+       "obs": -0.14417900446161885,
+       "lo": -0.20562087698077983,
+       "hi": -0.07280394585147555,
+       "p": 1.0
+      },
+      "sum_r": -90.54441480189666,
+      "excess": {
+       "obs": 0.07264472721142144,
+       "lo": 0.005098825235259431,
+       "hi": 0.144403248141903,
+       "p": 0.022195560887822437
+      },
+      "median_bars": 22.0,
+      "mean_pct": -0.22723442330446927,
+      "longest_losing_run": 7,
+      "deepest_fall_r": -96.17609265209377
+     }
+    },
+    "skips": {
+     "BTCUSDT": {
+      "events": 1568,
+      "while_open": 931,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 3,
+      "stop_over_8pct": 9,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     },
+     "ETHUSDT": {
+      "events": 1480,
+      "while_open": 833,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 19,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     }
+    }
+   },
+   "O3-R2-C1": {
+    "pooled": {
+     "n": 723,
+     "won_pct": 46.61134163208852,
+     "mean_r": {
+      "obs": -0.24781231971664727,
+      "lo": -0.31920308218884125,
+      "hi": -0.17136375072821813,
+      "p": 1.0
+     },
+     "sum_r": -179.16830715513598,
+     "excess": {
+      "obs": 0.007772348725018722,
+      "lo": -0.07111362194512746,
+      "hi": 0.08481605021465187,
+      "p": 0.41291741651669667
+     },
+     "median_bars": 20.0,
+     "mean_pct": -0.24262193628081064,
+     "longest_losing_run": 12,
+     "deepest_fall_r": -180.72319185755788
+    },
+    "per_coin": {
+     "BTCUSDT": {
+      "n": 360,
+      "won_pct": 46.111111111111114,
+      "mean_r": {
+       "obs": -0.33207373443546945,
+       "lo": -0.4231815791854799,
+       "hi": -0.23144911403389717,
+       "p": 1.0
+      },
+      "sum_r": -119.546544396769,
+      "excess": {
+       "obs": -0.03438323424254951,
+       "lo": -0.12764092056123996,
+       "hi": 0.0660355286984259,
+       "p": 0.7590481903619276
+      },
+      "median_bars": 20.5,
+      "mean_pct": -0.28974972038039964,
+      "longest_losing_run": 7,
+      "deepest_fall_r": -119.54654439676898
+     },
+     "ETHUSDT": {
+      "n": 363,
+      "won_pct": 47.107438016528924,
+      "mean_r": {
+       "obs": -0.16424728032607985,
+       "lo": -0.25900421258043965,
+       "hi": -0.0698095122386924,
+       "p": 0.999000199960008
+      },
+      "sum_r": -59.621762758366984,
+      "excess": {
+       "obs": 0.04957953844492108,
+       "lo": -0.05078839935881338,
+       "hi": 0.145586968475765,
+       "p": 0.14917016596680663
+      },
+      "median_bars": 19.0,
+      "mean_pct": -0.19588363800022643,
+      "longest_losing_run": 8,
+      "deepest_fall_r": -65.60461149145306
+     }
+    },
+    "skips": {
+     "BTCUSDT": {
+      "events": 773,
+      "while_open": 408,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 5,
+      "stop_over_8pct": 0,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     },
+     "ETHUSDT": {
+      "events": 749,
+      "while_open": 385,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 1,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     }
+    }
+   },
+   "O3-R3-C0": {
+    "pooled": {
+     "n": 510,
+     "won_pct": 46.07843137254902,
+     "mean_r": {
+      "obs": -0.1751014872898731,
+      "lo": -0.25856957899024474,
+      "hi": -0.0853051766130523,
+      "p": 1.0
+     },
+     "sum_r": -89.30175851783528,
+     "excess": {
+      "obs": 0.07939805101670101,
+      "lo": -0.014235443613622695,
+      "hi": 0.179017555366886,
+      "p": 0.057588482303539294
+     },
+     "median_bars": 47.0,
+     "mean_pct": -0.35709402208516383,
+     "longest_losing_run": 7,
+     "deepest_fall_r": -92.67733576982164
+    },
+    "per_coin": {
+     "BTCUSDT": {
+      "n": 256,
+      "won_pct": 42.1875,
+      "mean_r": {
+       "obs": -0.2662484158706937,
+       "lo": -0.37357609393039637,
+       "hi": -0.14927664627926263,
+       "p": 1.0
+      },
+      "sum_r": -68.15959446289759,
+      "excess": {
+       "obs": 0.027653718571644358,
+       "lo": -0.09024745025757819,
+       "hi": 0.1483166908213184,
+       "p": 0.32793441311737653
+      },
+      "median_bars": 43.5,
+      "mean_pct": -0.42246428508174555,
+      "longest_losing_run": 11,
+      "deepest_fall_r": -70.72731031527269
+     },
+     "ETHUSDT": {
+      "n": 254,
+      "won_pct": 50.0,
+      "mean_r": {
+       "obs": -0.08323686635802247,
+       "lo": -0.1981834254040933,
+       "hi": 0.032837747208831806,
+       "p": 0.9162167566486703
+      },
+      "sum_r": -21.1421640549377,
+      "excess": {
+       "obs": 0.13154981915030142,
+       "lo": 0.007240807353310188,
+       "hi": 0.25281554240870024,
+       "p": 0.016996600679864027
+      },
+      "median_bars": 50.0,
+      "mean_pct": -0.29120903260829406,
+      "longest_losing_run": 6,
+      "deepest_fall_r": -31.213633184857148
+     }
+    },
+    "skips": {
+     "BTCUSDT": {
+      "events": 470,
+      "while_open": 203,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 11,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     },
+     "ETHUSDT": {
+      "events": 517,
+      "while_open": 235,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 28,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     }
+    }
+   },
+   "O3-R3-C1": {
+    "pooled": {
+     "n": 424,
+     "won_pct": 46.22641509433962,
+     "mean_r": {
+      "obs": -0.181030004999567,
+      "lo": -0.28505753280936047,
+      "hi": -0.07414374395867109,
+      "p": 0.9998000399920016
+     },
+     "sum_r": -76.75672211981642,
+     "excess": {
+      "obs": 0.07385534964935438,
+      "lo": -0.04163620929323284,
+      "hi": 0.19184538651440786,
+      "p": 0.10757848430313938
+     },
+     "median_bars": 47.0,
+     "mean_pct": -0.35456445980099444,
+     "longest_losing_run": 7,
+     "deepest_fall_r": -78.64873654845093
+    },
+    "per_coin": {
+     "BTCUSDT": {
+      "n": 215,
+      "won_pct": 41.3953488372093,
+      "mean_r": {
+       "obs": -0.29211540406546793,
+       "lo": -0.4338068333489328,
+       "hi": -0.14096262164587764,
+       "p": 1.0
+      },
+      "sum_r": -62.80481187407561,
+      "excess": {
+       "obs": 0.005678614981028676,
+       "lo": -0.14424477689076642,
+       "hi": 0.15908512560421562,
+       "p": 0.46870625874825034
+      },
+      "median_bars": 42.0,
+      "mean_pct": -0.5044951210170149,
+      "longest_losing_run": 10,
+      "deepest_fall_r": -63.88896490309887
+     },
+     "ETHUSDT": {
+      "n": 209,
+      "won_pct": 51.196172248803826,
+      "mean_r": {
+       "obs": -0.0667555514150278,
+       "lo": -0.2014771390792672,
+       "hi": 0.05268860914539305,
+       "p": 0.8412317536492702
+      },
+      "sum_r": -13.951910245740807,
+      "excess": {
+       "obs": 0.14398931115026356,
+       "lo": -0.0013043941059040266,
+       "hi": 0.27398786582356943,
+       "p": 0.013997200559888023
+      },
+      "median_bars": 52.0,
+      "mean_pct": -0.20032956907638,
+      "longest_losing_run": 5,
+      "deepest_fall_r": -23.23711380175133
+     }
+    },
+    "skips": {
+     "BTCUSDT": {
+      "events": 376,
+      "while_open": 158,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 3,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     },
+     "ETHUSDT": {
+      "events": 397,
+      "while_open": 177,
+      "entry_at_or_below_stop": 0,
+      "stop_under_0.3pct": 0,
+      "stop_over_8pct": 11,
+      "no_reading": 0,
+      "entries_window_past_period_end": "not taken by construction (deciding bars limited to period end - 96)"
+     }
+    }
+   }
+  },
+  "qualified": []
+ },
+ "stage2": {
+  "stage": 2,
+  "skipped": "nothing to confirm (Stage 1 selected none)"
+ },
+ "selection_stage1": {
+  "selected": [],
+  "qualified": [],
+  "rule": "registered H70 Stage 1"
+ }
+}
