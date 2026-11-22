@@ -1,0 +1,937 @@
+{
+ "end": "2026-11-21 13:45",
+ "turns": {
+  "BTCUSDT": {
+   "short_to_long": {
+    "stop": {
+     "n": 137,
+     "median_hours_to_the_turn": 1.25,
+     "entry_words": {
+      "FORCED": 90,
+      "ENTER": 47
+     },
+     "won_pct": 43.06569343065693,
+     "mean_r": -0.07900007048281203,
+     "sum_r": -10.82300965614525
+    },
+    "target": {
+     "n": 22,
+     "median_hours_to_the_turn": 1.25,
+     "entry_words": {
+      "FORCED": 14,
+      "ENTER": 8
+     },
+     "won_pct": 31.818181818181817,
+     "mean_r": -0.22266937894048516,
+     "sum_r": -4.8987263366906735
+    },
+    "flip or other": {
+     "n": 34,
+     "median_hours_to_the_turn": 0.0,
+     "entry_words": {
+      "FLIP": 34
+     },
+     "won_pct": 58.82352941176471,
+     "mean_r": 0.2611417701257941,
+     "sum_r": 8.878820184276998
+    },
+    "after_a_stop": {
+     "stopped": 282,
+     "next_same_side": 145,
+     "next_same_side_pct": 51.41843971631206,
+     "next_same_side_mean_r": -0.05412890405512697,
+     "next_same_side_won_pct": 38.62068965517241
+    }
+   },
+   "long_to_short": {
+    "flip or other": {
+     "n": 25,
+     "median_hours_to_the_turn": 0.0,
+     "entry_words": {
+      "FLIP": 25
+     },
+     "won_pct": 40.0,
+     "mean_r": -0.10992480126516037,
+     "sum_r": -2.7481200316290093
+    },
+    "stop": {
+     "n": 135,
+     "median_hours_to_the_turn": 1.0,
+     "entry_words": {
+      "ENTER": 93,
+      "FORCED": 42
+     },
+     "won_pct": 41.48148148148148,
+     "mean_r": -0.09064185624375264,
+     "sum_r": -12.236650592906607
+    },
+    "target": {
+     "n": 33,
+     "median_hours_to_the_turn": 0.5,
+     "entry_words": {
+      "ENTER": 27,
+      "FORCED": 6
+     },
+     "won_pct": 36.36363636363637,
+     "mean_r": -0.24245655319103881,
+     "sum_r": -8.00106625530428
+    },
+    "after_a_stop": {
+     "stopped": 287,
+     "next_same_side": 152,
+     "next_same_side_pct": 52.961672473867594,
+     "next_same_side_mean_r": -0.21511055575517535,
+     "next_same_side_won_pct": 35.526315789473685
+    }
+   }
+  },
+  "ETHUSDT": {
+   "short_to_long": {
+    "stop": {
+     "n": 112,
+     "median_hours_to_the_turn": 1.25,
+     "entry_words": {
+      "FORCED": 79,
+      "ENTER": 33
+     },
+     "won_pct": 48.214285714285715,
+     "mean_r": 0.08531980344152561,
+     "sum_r": 9.555817985450869
+    },
+    "flip or other": {
+     "n": 28,
+     "median_hours_to_the_turn": 0.0,
+     "entry_words": {
+      "FLIP": 28
+     },
+     "won_pct": 50.0,
+     "mean_r": 0.3992241592673697,
+     "sum_r": 11.178276459486352
+    },
+    "target": {
+     "n": 25,
+     "median_hours_to_the_turn": 1.25,
+     "entry_words": {
+      "FORCED": 18,
+      "ENTER": 7
+     },
+     "won_pct": 52.0,
+     "mean_r": 0.6438987464798005,
+     "sum_r": 16.097468661995013
+    },
+    "after_a_stop": {
+     "stopped": 252,
+     "next_same_side": 140,
+     "next_same_side_pct": 55.55555555555556,
+     "next_same_side_mean_r": -0.04737195367794357,
+     "next_same_side_won_pct": 37.857142857142854
+    }
+   },
+   "long_to_short": {
+    "flip or other": {
+     "n": 31,
+     "median_hours_to_the_turn": 0.0,
+     "entry_words": {
+      "FLIP": 31
+     },
+     "won_pct": 48.38709677419355,
+     "mean_r": -0.05646577913757791,
+     "sum_r": -1.750439153264915
+    },
+    "stop": {
+     "n": 113,
+     "median_hours_to_the_turn": 0.75,
+     "entry_words": {
+      "ENTER": 83,
+      "FORCED": 30
+     },
+     "won_pct": 46.017699115044245,
+     "mean_r": 0.05526013168213571,
+     "sum_r": 6.244394880081336
+    },
+    "target": {
+     "n": 22,
+     "median_hours_to_the_turn": 0.5,
+     "entry_words": {
+      "ENTER": 21,
+      "FORCED": 1
+     },
+     "won_pct": 31.818181818181817,
+     "mean_r": -0.33126752982630275,
+     "sum_r": -7.28788565617866
+    },
+    "after_a_stop": {
+     "stopped": 250,
+     "next_same_side": 137,
+     "next_same_side_pct": 54.800000000000004,
+     "next_same_side_mean_r": 0.08276148802923457,
+     "next_same_side_won_pct": 43.06569343065693
+    }
+   }
+  }
+ },
+ "rallies": {
+  "BTCUSDT": {
+   "5%": {
+    "episodes": 193,
+    "median_move_pct": 5.362761346893796,
+    "median_book_pct": -4.624924045319756,
+    "mean_book_pct": -4.2459546470177,
+    "worst_book_pct": -17.769611089538863,
+    "best_book_pct": 2.3252990366463555,
+    "book_lost_in_pct_of_episodes": 91.70984455958549,
+    "median_sum_r_closed": 0.0,
+    "mean_sum_r_closed": -0.40291817953849407,
+    "worst_sum_r_closed": -3.322250208652732,
+    "median_stop_outs": 0.0,
+    "max_stop_outs": 3,
+    "mean_new_same_side": 0.37305699481865284,
+    "episodes_with_a_new_same_side_trade_pct": 27.461139896373055,
+    "turned_within_24h_pct": 30.05181347150259,
+    "median_hours_to_turn": 15.75,
+    "ends": {
+     "long": 53,
+     "short": 124,
+     "flat": 16
+    },
+    "worst": [
+     {
+      "time": "2020-03-12 23:15",
+      "half": 1,
+      "move_pct": 9.440943368849531,
+      "book_pct": -17.769611089538863,
+      "sum_r_closed": 0.5612096361481571,
+      "stop_outs": 1,
+      "new_same_side": 2,
+      "holds_at_end": "short",
+      "hours_to_other_side": null
+     },
+     {
+      "time": "2022-05-12 03:00",
+      "half": 1,
+      "move_pct": 6.463019270795822,
+      "book_pct": -15.329443132611098,
+      "sum_r_closed": 3.868398005258417,
+      "stop_outs": 1,
+      "new_same_side": 2,
+      "holds_at_end": "short",
+      "hours_to_other_side": null
+     },
+     {
+      "time": "2020-03-19 07:30",
+      "half": 1,
+      "move_pct": 16.63345750671401,
+      "book_pct": -15.219616844796679,
+      "sum_r_closed": 0.0,
+      "stop_outs": 0,
+      "new_same_side": 0,
+      "holds_at_end": "short",
+      "hours_to_other_side": null
+     }
+    ]
+   },
+   "8%": {
+    "episodes": 70,
+    "median_move_pct": 8.482912708464742,
+    "median_book_pct": -6.373614573347252,
+    "mean_book_pct": -6.31623840401767,
+    "worst_book_pct": -20.189485268718087,
+    "best_book_pct": 3.590320846225903,
+    "book_lost_in_pct_of_episodes": 90.0,
+    "median_sum_r_closed": 0.0,
+    "mean_sum_r_closed": -0.2624538799890814,
+    "worst_sum_r_closed": -3.1073389120956607,
+    "median_stop_outs": 1.0,
+    "max_stop_outs": 3,
+    "mean_new_same_side": 0.5,
+    "episodes_with_a_new_same_side_trade_pct": 37.142857142857146,
+    "turned_within_24h_pct": 35.714285714285715,
+    "median_hours_to_turn": 15.0,
+    "ends": {
+     "long": 23,
+     "short": 42,
+     "flat": 5
+    },
+    "worst": [
+     {
+      "time": "2020-03-19 09:45",
+      "half": 1,
+      "move_pct": 20.793488190820476,
+      "book_pct": -20.189485268718087,
+      "sum_r_closed": 0.0,
+      "stop_outs": 0,
+      "new_same_side": 0,
+      "holds_at_end": "short",
+      "hours_to_other_side": null
+     },
+     {
+      "time": "2021-01-28 19:00",
+      "half": 1,
+      "move_pct": 8.006632429080973,
+      "book_pct": -18.6918840299258,
+      "sum_r_closed": -3.1073389120956607,
+      "stop_outs": 3,
+      "new_same_side": 1,
+      "holds_at_end": "long",
+      "hours_to_other_side": 5.5
+     },
+     {
+      "time": "2020-03-12 23:15",
+      "half": 1,
+      "move_pct": 9.440943368849531,
+      "book_pct": -17.769611089538863,
+      "sum_r_closed": 0.5612096361481571,
+      "stop_outs": 1,
+      "new_same_side": 2,
+      "holds_at_end": "short",
+      "hours_to_other_side": null
+     }
+    ]
+   }
+  },
+  "ETHUSDT": {
+   "5%": {
+    "episodes": 312,
+    "median_move_pct": 5.393338240316536,
+    "median_book_pct": -4.358118423967683,
+    "mean_book_pct": -4.0364053355393095,
+    "worst_book_pct": -41.337800509850965,
+    "best_book_pct": 7.399402003433964,
+    "book_lost_in_pct_of_episodes": 93.58974358974359,
+    "median_sum_r_closed": 0.0,
+    "mean_sum_r_closed": -0.23828196276454813,
+    "worst_sum_r_closed": -3.2041969835286466,
+    "median_stop_outs": 0.0,
+    "max_stop_outs": 3,
+    "mean_new_same_side": 0.28205128205128205,
+    "episodes_with_a_new_same_side_trade_pct": 21.474358974358974,
+    "turned_within_24h_pct": 23.397435897435898,
+    "median_hours_to_turn": 15.25,
+    "ends": {
+     "long": 72,
+     "short": 225,
+     "flat": 15
+    },
+    "worst": [
+     {
+      "time": "2020-03-12 23:00",
+      "half": 1,
+      "move_pct": 12.269433465085644,
+      "book_pct": -41.337800509850965,
+      "sum_r_closed": 0.6082553187804471,
+      "stop_outs": 1,
+      "new_same_side": 2,
+      "holds_at_end": "short",
+      "hours_to_other_side": null
+     },
+     {
+      "time": "2020-03-19 07:15",
+      "half": 1,
+      "move_pct": 16.178697627460892,
+      "book_pct": -18.554612118873028,
+      "sum_r_closed": 0.0,
+      "stop_outs": 0,
+      "new_same_side": 0,
+      "holds_at_end": "short",
+      "hours_to_other_side": null
+     },
+     {
+      "time": "2021-05-19 12:15",
+      "half": 1,
+      "move_pct": 7.429149950512648,
+      "book_pct": -16.426732083338713,
+      "sum_r_closed": 1.5907909235638238,
+      "stop_outs": 0,
+      "new_same_side": 1,
+      "holds_at_end": "short",
+      "hours_to_other_side": null
+     }
+    ]
+   },
+   "8%": {
+    "episodes": 128,
+    "median_move_pct": 8.56562524688802,
+    "median_book_pct": -5.983264861525339,
+    "mean_book_pct": -5.837749036901032,
+    "worst_book_pct": -41.337800509850965,
+    "best_book_pct": 6.41729432858944,
+    "book_lost_in_pct_of_episodes": 89.0625,
+    "median_sum_r_closed": 0.0,
+    "mean_sum_r_closed": -0.19346765171514552,
+    "worst_sum_r_closed": -3.2069880828598136,
+    "median_stop_outs": 0.0,
+    "max_stop_outs": 3,
+    "mean_new_same_side": 0.4609375,
+    "episodes_with_a_new_same_side_trade_pct": 33.59375,
+    "turned_within_24h_pct": 23.4375,
+    "median_hours_to_turn": 11.75,
+    "ends": {
+     "long": 29,
+     "short": 94,
+     "flat": 5
+    },
+    "worst": [
+     {
+      "time": "2020-03-12 23:00",
+      "half": 1,
+      "move_pct": 12.269433465085644,
+      "book_pct": -41.337800509850965,
+      "sum_r_closed": 0.6082553187804471,
+      "stop_outs": 1,
+      "new_same_side": 2,
+      "holds_at_end": "short",
+      "hours_to_other_side": null
+     },
+     {
+      "time": "2020-03-19 09:30",
+      "half": 1,
+      "move_pct": 21.22854561878953,
+      "book_pct": -26.35951473517666,
+      "sum_r_closed": -1.007173903420569,
+      "stop_outs": 1,
+      "new_same_side": 1,
+      "holds_at_end": "short",
+      "hours_to_other_side": null
+     },
+     {
+      "time": "2021-05-19 12:30",
+      "half": 1,
+      "move_pct": 19.02983536550178,
+      "book_pct": -21.035379643057905,
+      "sum_r_closed": 1.5907909235638238,
+      "stop_outs": 0,
+      "new_same_side": 1,
+      "holds_at_end": "short",
+      "hours_to_other_side": null
+     }
+    ]
+   }
+  },
+  "both": {
+   "5%": {
+    "all": {
+     "episodes": 505,
+     "median_move_pct": 5.374482499059097,
+     "median_book_pct": -4.471816966609154,
+     "mean_book_pct": -4.116490517945902,
+     "worst_book_pct": -41.337800509850965,
+     "best_book_pct": 7.399402003433964,
+     "book_lost_in_pct_of_episodes": 92.87128712871288,
+     "median_sum_r_closed": 0.0,
+     "mean_sum_r_closed": -0.3012023386801354,
+     "worst_sum_r_closed": -3.322250208652732,
+     "median_stop_outs": 0.0,
+     "max_stop_outs": 3,
+     "mean_new_same_side": 0.31683168316831684,
+     "episodes_with_a_new_same_side_trade_pct": 23.762376237623762,
+     "turned_within_24h_pct": 25.940594059405942,
+     "median_hours_to_turn": 15.5,
+     "ends": {
+      "long": 125,
+      "short": 349,
+      "flat": 31
+     }
+    },
+    "h1": {
+     "episodes": 330,
+     "median_move_pct": 5.4172491578545205,
+     "median_book_pct": -4.639385651097749,
+     "mean_book_pct": -4.358896179461252,
+     "worst_book_pct": -41.337800509850965,
+     "best_book_pct": 7.399402003433964,
+     "book_lost_in_pct_of_episodes": 92.12121212121212,
+     "median_sum_r_closed": 0.0,
+     "mean_sum_r_closed": -0.24694000620719123,
+     "worst_sum_r_closed": -3.2041969835286466,
+     "median_stop_outs": 0.0,
+     "max_stop_outs": 3,
+     "mean_new_same_side": 0.27575757575757576,
+     "episodes_with_a_new_same_side_trade_pct": 20.606060606060606,
+     "turned_within_24h_pct": 26.969696969696972,
+     "median_hours_to_turn": 14.75,
+     "ends": {
+      "long": 85,
+      "short": 227,
+      "flat": 18
+     }
+    },
+    "h2": {
+     "episodes": 175,
+     "median_move_pct": 5.32635652576785,
+     "median_book_pct": -3.979936045270327,
+     "mean_book_pct": -3.6593826990883858,
+     "worst_book_pct": -12.217076241186165,
+     "best_book_pct": 2.400254931129364,
+     "book_lost_in_pct_of_episodes": 94.28571428571428,
+     "median_sum_r_closed": 0.0,
+     "mean_sum_r_closed": -0.4035255942005444,
+     "worst_sum_r_closed": -3.322250208652732,
+     "median_stop_outs": 0.0,
+     "max_stop_outs": 3,
+     "mean_new_same_side": 0.3942857142857143,
+     "episodes_with_a_new_same_side_trade_pct": 29.714285714285715,
+     "turned_within_24h_pct": 24.0,
+     "median_hours_to_turn": 17.25,
+     "ends": {
+      "long": 40,
+      "short": 122,
+      "flat": 13
+     }
+    }
+   },
+   "8%": {
+    "all": {
+     "episodes": 198,
+     "median_move_pct": 8.54172428602662,
+     "median_book_pct": -6.275422822576421,
+     "mean_book_pct": -6.006911944467519,
+     "worst_book_pct": -41.337800509850965,
+     "best_book_pct": 6.41729432858944,
+     "book_lost_in_pct_of_episodes": 89.39393939393939,
+     "median_sum_r_closed": 0.0,
+     "mean_sum_r_closed": -0.21785672231704206,
+     "worst_sum_r_closed": -3.2069880828598136,
+     "median_stop_outs": 0.0,
+     "max_stop_outs": 3,
+     "mean_new_same_side": 0.47474747474747475,
+     "episodes_with_a_new_same_side_trade_pct": 34.84848484848485,
+     "turned_within_24h_pct": 27.77777777777778,
+     "median_hours_to_turn": 12.75,
+     "ends": {
+      "long": 52,
+      "short": 136,
+      "flat": 10
+     }
+    },
+    "h1": {
+     "episodes": 147,
+     "median_move_pct": 8.547870055190199,
+     "median_book_pct": -6.7346288211520555,
+     "mean_book_pct": -6.488263028121973,
+     "worst_book_pct": -41.337800509850965,
+     "best_book_pct": 6.41729432858944,
+     "book_lost_in_pct_of_episodes": 90.47619047619048,
+     "median_sum_r_closed": 0.0,
+     "mean_sum_r_closed": -0.1700109048132133,
+     "worst_sum_r_closed": -3.1073389120956607,
+     "median_stop_outs": 0.0,
+     "max_stop_outs": 3,
+     "mean_new_same_side": 0.41496598639455784,
+     "episodes_with_a_new_same_side_trade_pct": 30.612244897959183,
+     "turned_within_24h_pct": 27.89115646258503,
+     "median_hours_to_turn": 10.25,
+     "ends": {
+      "long": 38,
+      "short": 101,
+      "flat": 8
+     }
+    },
+    "h2": {
+     "episodes": 51,
+     "median_move_pct": 8.46481587017287,
+     "median_book_pct": -5.285985767913948,
+     "mean_book_pct": -4.619488232757626,
+     "worst_book_pct": -14.63326655379269,
+     "best_book_pct": 4.148511501842278,
+     "book_lost_in_pct_of_episodes": 86.27450980392157,
+     "median_sum_r_closed": 0.0,
+     "mean_sum_r_closed": -0.3557652551221956,
+     "worst_sum_r_closed": -3.2069880828598136,
+     "median_stop_outs": 1.0,
+     "max_stop_outs": 3,
+     "mean_new_same_side": 0.6470588235294118,
+     "episodes_with_a_new_same_side_trade_pct": 47.05882352941176,
+     "turned_within_24h_pct": 27.450980392156865,
+     "median_hours_to_turn": 12.75,
+     "ends": {
+      "long": 14,
+      "short": 35,
+      "flat": 2
+     }
+    }
+   }
+  }
+ },
+ "drops": {
+  "BTCUSDT": {
+   "5%": {
+    "episodes": 125,
+    "median_move_pct": -5.3878247553790555,
+    "median_book_pct": -3.4620305138354457,
+    "mean_book_pct": -3.099724082111197,
+    "worst_book_pct": -8.967396133957406,
+    "best_book_pct": 10.875093498312616,
+    "book_lost_in_pct_of_episodes": 85.6,
+    "median_sum_r_closed": 0.0,
+    "mean_sum_r_closed": -0.3881292098183364,
+    "worst_sum_r_closed": -3.3886420487895426,
+    "median_stop_outs": 1.0,
+    "max_stop_outs": 3,
+    "mean_new_same_side": 0.344,
+    "episodes_with_a_new_same_side_trade_pct": 28.799999999999997,
+    "turned_within_24h_pct": 45.6,
+    "median_hours_to_turn": 14.5,
+    "ends": {
+     "long": 65,
+     "short": 53,
+     "flat": 7
+    },
+    "worst": [
+     {
+      "time": "2021-01-29 10:00",
+      "half": 1,
+      "move_pct": -6.996608751659828,
+      "book_pct": -8.967396133957406,
+      "sum_r_closed": -1.0212967979796308,
+      "stop_outs": 1,
+      "new_same_side": 1,
+      "holds_at_end": "long",
+      "hours_to_other_side": 10.0
+     },
+     {
+      "time": "2021-01-16 11:15",
+      "half": 1,
+      "move_pct": -7.013583036132564,
+      "book_pct": -7.7343527484948105,
+      "sum_r_closed": -1.028439698299035,
+      "stop_outs": 1,
+      "new_same_side": 0,
+      "holds_at_end": "short",
+      "hours_to_other_side": 20.5
+     },
+     {
+      "time": "2024-03-04 19:15",
+      "half": 2,
+      "move_pct": -5.68500954426151,
+      "book_pct": -7.552254320102958,
+      "sum_r_closed": -0.6779876079390779,
+      "stop_outs": 1,
+      "new_same_side": 2,
+      "holds_at_end": "long",
+      "hours_to_other_side": null
+     }
+    ]
+   },
+   "8%": {
+    "episodes": 33,
+    "median_move_pct": -8.614588719921578,
+    "median_book_pct": -2.1679284802513354,
+    "mean_book_pct": -2.3400186380594215,
+    "worst_book_pct": -12.387070217138396,
+    "best_book_pct": 6.350242013252694,
+    "book_lost_in_pct_of_episodes": 60.60606060606061,
+    "median_sum_r_closed": -1.0255046735825808,
+    "mean_sum_r_closed": -0.5218785792630691,
+    "worst_sum_r_closed": -2.161584296175703,
+    "median_stop_outs": 1.0,
+    "max_stop_outs": 2,
+    "mean_new_same_side": 0.42424242424242425,
+    "episodes_with_a_new_same_side_trade_pct": 33.33333333333333,
+    "turned_within_24h_pct": 87.87878787878788,
+    "median_hours_to_turn": 16.0,
+    "ends": {
+     "long": 7,
+     "short": 25,
+     "flat": 1
+    },
+    "worst": [
+     {
+      "time": "2024-03-14 04:30",
+      "half": 2,
+      "move_pct": -8.144034537752631,
+      "book_pct": -12.387070217138396,
+      "sum_r_closed": -2.143089039593944,
+      "stop_outs": 2,
+      "new_same_side": 3,
+      "holds_at_end": "long",
+      "hours_to_other_side": 15.5
+     },
+     {
+      "time": "2024-03-04 19:45",
+      "half": 2,
+      "move_pct": -8.892896489087043,
+      "book_pct": -10.848210629967515,
+      "sum_r_closed": -1.7121780528116104,
+      "stop_outs": 2,
+      "new_same_side": 2,
+      "holds_at_end": "long",
+      "hours_to_other_side": null
+     },
+     {
+      "time": "2021-01-29 11:30",
+      "half": 1,
+      "move_pct": -8.538349198719509,
+      "book_pct": -10.476466346318547,
+      "sum_r_closed": -1.0212967979796308,
+      "stop_outs": 1,
+      "new_same_side": 1,
+      "holds_at_end": "long",
+      "hours_to_other_side": 8.5
+     }
+    ]
+   }
+  },
+  "ETHUSDT": {
+   "5%": {
+    "episodes": 226,
+    "median_move_pct": -5.403197942674204,
+    "median_book_pct": -4.869934520621366,
+    "mean_book_pct": -3.692181441203539,
+    "worst_book_pct": -14.342153194751772,
+    "best_book_pct": 15.706833761705985,
+    "book_lost_in_pct_of_episodes": 87.61061946902655,
+    "median_sum_r_closed": 0.0,
+    "mean_sum_r_closed": -0.36943041823634615,
+    "worst_sum_r_closed": -3.2455001846497513,
+    "median_stop_outs": 0.0,
+    "max_stop_outs": 3,
+    "mean_new_same_side": 0.3407079646017699,
+    "episodes_with_a_new_same_side_trade_pct": 27.43362831858407,
+    "turned_within_24h_pct": 32.30088495575221,
+    "median_hours_to_turn": 15.5,
+    "ends": {
+     "long": 147,
+     "short": 68,
+     "flat": 11
+    },
+    "worst": [
+     {
+      "time": "2021-05-11 23:45",
+      "half": 1,
+      "move_pct": -8.392097665001375,
+      "book_pct": -14.342153194751772,
+      "sum_r_closed": -1.6344550240263915,
+      "stop_outs": 2,
+      "new_same_side": 2,
+      "holds_at_end": "long",
+      "hours_to_other_side": 18.75
+     },
+     {
+      "time": "2020-09-03 13:45",
+      "half": 1,
+      "move_pct": -6.524751529051986,
+      "book_pct": -12.096729026532794,
+      "sum_r_closed": -1.0262855417969765,
+      "stop_outs": 1,
+      "new_same_side": 0,
+      "holds_at_end": "short",
+      "hours_to_other_side": 10.0
+     },
+     {
+      "time": "2022-08-14 07:30",
+      "half": 1,
+      "move_pct": -5.722619626362935,
+      "book_pct": -11.880633588480183,
+      "sum_r_closed": -3.190497824611123,
+      "stop_outs": 3,
+      "new_same_side": 2,
+      "holds_at_end": "long",
+      "hours_to_other_side": 10.75
+     }
+    ]
+   },
+   "8%": {
+    "episodes": 83,
+    "median_move_pct": -8.381297399783316,
+    "median_book_pct": -4.913343472654875,
+    "mean_book_pct": -4.036653560552686,
+    "worst_book_pct": -14.342153194751772,
+    "best_book_pct": 15.646882914552496,
+    "book_lost_in_pct_of_episodes": 77.10843373493977,
+    "median_sum_r_closed": -0.5310608326668026,
+    "mean_sum_r_closed": -0.42501637254149166,
+    "worst_sum_r_closed": -3.220731643753803,
+    "median_stop_outs": 1.0,
+    "max_stop_outs": 3,
+    "mean_new_same_side": 0.3855421686746988,
+    "episodes_with_a_new_same_side_trade_pct": 28.915662650602407,
+    "turned_within_24h_pct": 50.602409638554214,
+    "median_hours_to_turn": 16.0,
+    "ends": {
+     "long": 41,
+     "short": 39,
+     "flat": 3
+    },
+    "worst": [
+     {
+      "time": "2021-05-11 23:45",
+      "half": 1,
+      "move_pct": -8.392097665001375,
+      "book_pct": -14.342153194751772,
+      "sum_r_closed": -1.6344550240263915,
+      "stop_outs": 2,
+      "new_same_side": 2,
+      "holds_at_end": "long",
+      "hours_to_other_side": 18.75
+     },
+     {
+      "time": "2021-01-04 05:45",
+      "half": 1,
+      "move_pct": -8.702429485878726,
+      "book_pct": -11.382357452030444,
+      "sum_r_closed": -0.7443187770034403,
+      "stop_outs": 1,
+      "new_same_side": 2,
+      "holds_at_end": "long",
+      "hours_to_other_side": null
+     },
+     {
+      "time": "2020-02-16 03:15",
+      "half": 1,
+      "move_pct": -8.881639236098382,
+      "book_pct": -9.64976058429805,
+      "sum_r_closed": -1.0335597137566643,
+      "stop_outs": 1,
+      "new_same_side": 1,
+      "holds_at_end": "long",
+      "hours_to_other_side": null
+     }
+    ]
+   }
+  },
+  "both": {
+   "5%": {
+    "all": {
+     "episodes": 351,
+     "median_move_pct": -5.401243691272795,
+     "median_book_pct": -4.116738538417907,
+     "mean_book_pct": -3.4811923532076907,
+     "worst_book_pct": -14.342153194751772,
+     "best_book_pct": 15.706833761705985,
+     "book_lost_in_pct_of_episodes": 86.8945868945869,
+     "median_sum_r_closed": 0.0,
+     "mean_sum_r_closed": -0.37608953204759626,
+     "worst_sum_r_closed": -3.3886420487895426,
+     "median_stop_outs": 0.0,
+     "max_stop_outs": 3,
+     "mean_new_same_side": 0.3418803418803419,
+     "episodes_with_a_new_same_side_trade_pct": 27.92022792022792,
+     "turned_within_24h_pct": 37.03703703703704,
+     "median_hours_to_turn": 15.25,
+     "ends": {
+      "long": 212,
+      "short": 121,
+      "flat": 18
+     }
+    },
+    "h1": {
+     "episodes": 243,
+     "median_move_pct": -5.435974616517614,
+     "median_book_pct": -4.187879194594457,
+     "mean_book_pct": -3.3869989974423,
+     "worst_book_pct": -14.342153194751772,
+     "best_book_pct": 15.706833761705985,
+     "book_lost_in_pct_of_episodes": 85.59670781893004,
+     "median_sum_r_closed": 0.0,
+     "mean_sum_r_closed": -0.24195891237988718,
+     "worst_sum_r_closed": -3.190497824611123,
+     "median_stop_outs": 0.0,
+     "max_stop_outs": 3,
+     "mean_new_same_side": 0.27983539094650206,
+     "episodes_with_a_new_same_side_trade_pct": 23.868312757201647,
+     "turned_within_24h_pct": 36.21399176954733,
+     "median_hours_to_turn": 14.625,
+     "ends": {
+      "long": 153,
+      "short": 80,
+      "flat": 10
+     }
+    },
+    "h2": {
+     "episodes": 108,
+     "median_move_pct": -5.324793293951274,
+     "median_book_pct": -3.907329262685816,
+     "mean_book_pct": -3.693127403679821,
+     "worst_book_pct": -10.185899850537595,
+     "best_book_pct": 1.6398033598301165,
+     "book_lost_in_pct_of_episodes": 89.81481481481481,
+     "median_sum_r_closed": -1.0346198255522152,
+     "mean_sum_r_closed": -0.6778834262999417,
+     "worst_sum_r_closed": -3.3886420487895426,
+     "median_stop_outs": 1.0,
+     "max_stop_outs": 3,
+     "mean_new_same_side": 0.48148148148148145,
+     "episodes_with_a_new_same_side_trade_pct": 37.03703703703704,
+     "turned_within_24h_pct": 38.88888888888889,
+     "median_hours_to_turn": 17.0,
+     "ends": {
+      "long": 59,
+      "short": 41,
+      "flat": 8
+     }
+    }
+   },
+   "8%": {
+    "all": {
+     "episodes": 116,
+     "median_move_pct": -8.392695768310421,
+     "median_book_pct": -4.343797148022727,
+     "mean_book_pct": -3.5539901774296023,
+     "worst_book_pct": -14.342153194751772,
+     "best_book_pct": 15.646882914552496,
+     "book_lost_in_pct_of_episodes": 72.41379310344827,
+     "median_sum_r_closed": -0.6274399260359724,
+     "mean_sum_r_closed": -0.4525720003157336,
+     "worst_sum_r_closed": -3.220731643753803,
+     "median_stop_outs": 1.0,
+     "max_stop_outs": 3,
+     "mean_new_same_side": 0.39655172413793105,
+     "episodes_with_a_new_same_side_trade_pct": 30.17241379310345,
+     "turned_within_24h_pct": 61.206896551724135,
+     "median_hours_to_turn": 16.0,
+     "ends": {
+      "long": 48,
+      "short": 64,
+      "flat": 4
+     }
+    },
+    "h1": {
+     "episodes": 92,
+     "median_move_pct": -8.442345743756917,
+     "median_book_pct": -4.394299762967979,
+     "mean_book_pct": -3.6139379465492723,
+     "worst_book_pct": -14.342153194751772,
+     "best_book_pct": 15.646882914552496,
+     "book_lost_in_pct_of_episodes": 73.91304347826086,
+     "median_sum_r_closed": -0.5754794931229337,
+     "mean_sum_r_closed": -0.4127713140622779,
+     "worst_sum_r_closed": -2.161584296175703,
+     "median_stop_outs": 1.0,
+     "max_stop_outs": 2,
+     "mean_new_same_side": 0.29347826086956524,
+     "episodes_with_a_new_same_side_trade_pct": 26.08695652173913,
+     "turned_within_24h_pct": 61.95652173913043,
+     "median_hours_to_turn": 17.25,
+     "ends": {
+      "long": 37,
+      "short": 52,
+      "flat": 3
+     }
+    },
+    "h2": {
+     "episodes": 24,
+     "median_move_pct": -8.18376001146372,
+     "median_book_pct": -4.018234894362616,
+     "mean_book_pct": -3.3241903958041967,
+     "worst_book_pct": -12.387070217138396,
+     "best_book_pct": 4.3156336464927225,
+     "book_lost_in_pct_of_episodes": 66.66666666666666,
+     "median_sum_r_closed": -0.8923566288416906,
+     "mean_sum_r_closed": -0.6051412976206475,
+     "worst_sum_r_closed": -3.220731643753803,
+     "median_stop_outs": 1.0,
+     "max_stop_outs": 3,
+     "mean_new_same_side": 0.7916666666666666,
+     "episodes_with_a_new_same_side_trade_pct": 45.83333333333333,
+     "turned_within_24h_pct": 58.333333333333336,
+     "median_hours_to_turn": 13.0,
+     "ends": {
+      "long": 11,
+      "short": 12,
+      "flat": 1
+     }
+    }
+   }
+  }
+ }
+}

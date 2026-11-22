@@ -3868,3 +3868,31 @@ the trades closed inside them; how many stop-outs; how many NEW shorts were open
 holds at the end (long, short, flat); hours to the first long (within the 96 bars, else "none"). Read-outs: episodes,
 medians, the worst book result, the share that ended long; both halves. **C. The mirror** (sudden drops of 5% and 8%
 while long) by the same rules, as a yardstick.
+
+### H66 results (22 Nov 2026, about 10:45 UTC on the research server; `research/out/h66_turns_and_rallies/results.json`)
+
+**A. How a short has turned long (next trade a long), BTC / ETH, 2020-02 to 2026-11:**
+
+| Path | BTC: times, median hours, the long's mean R | ETH: times, median hours, the long's mean R |
+|---|---|---|
+| A flip (up side leads by 10 points, or the bias turns up) | 34, 0, +0.26 | 28, 0, +0.40 |
+| The short was stopped, then a long | 137, 1.25, -0.08 (90 forced, 47 on a signal) | 112, 1.25, +0.09 (79 forced, 33 on a signal) |
+| The short ended at a target, then a long | 22, 1.25, -0.22 | 25, 1.25, +0.64 |
+
+About 28 turns a year on BTC and 24 on ETH; seven in ten came after a stop-out. After a stopped short the next trade was
+a short AGAIN 51% of the time on BTC (145 of 282, mean -0.05R, 39% won) and 56% on ETH (140 of 252, -0.05R, 38% won).
+
+**B. Sudden rallies while short (the close 24 hours later at least 5% higher), both coins: 505 episodes** (330 in the
+first half, 175 in the second). Median rally +5.4%. The paper book (1x) lost in 93% of them: median -4.5%, mean -4.1%,
+worst -41% (ETH, 12 Mar 2020), best +7.4%. Median stop-outs inside the 24 hours: 0 (the stop is usually further than
+the move; the loss is the open short marked against the rally); at most 3. In 24% of the episodes the book opened a NEW
+short inside the rally. It turned long within the 24 hours in 26% (median 15.5 hours when it did); at the end it was
+still short in 349 of 505, long in 125, flat in 31. Second half alone: median -4.0%, a new short in 30%, long within 24
+hours in 24%. **At 8%: 198 episodes**, median book -6.3%, a new short in 35%, long within 24 hours in 28%.
+
+**C. The mirror, sudden drops while long:** 351 episodes at 5% (median book -4.1%, lost in 87%, turned short within 24
+hours in 37%); 116 at 8% (median -4.3%, turned short within 24 hours in 61%). The book has turned short in a drop more
+readily than it has turned long in a rally.
+
+**Reading.** The book does not chase a rally: in three of four sudden rallies it did not turn long within a day, and in
+one of four it sold again into the move. What bounds the loss is the stop, not a turn. Nothing here was changed.
