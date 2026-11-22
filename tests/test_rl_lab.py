@@ -51,7 +51,7 @@ def test_block_shape_and_values(monkeypatch, tmp_path):
         b = blk["books"][book]
         assert b["not_passed"] is True and b["kind"] == ("agent" if book == BOOK6 else "control")
         assert b["interim_read_utc"] == "2027-01-08 03:00" and b["fallback_kind"] == "momentum"
-        assert b["started_utc"] == str(reg)[:16] and b["split"] == pb["playbook6"][book]["split"]
+        assert b["started_utc"] == p6.BOOKS[book]["registered"] and b["split"] == pb["playbook6"][book]["split"]
         for a, c in b["coins"].items():
             st = pb["playbook6"][book]["books"][a]
             for k in COIN_KEYS:
@@ -77,7 +77,7 @@ def test_block_shape_and_values(monkeypatch, tmp_path):
     assert c["seed_modes"][0] == {"seed": 0, "mode": "model", "since_utc": later["first_decision_utc"]}
     assert c["seed_modes"][1]["since_utc"] == str(reg + pd.Timedelta("15min"))[:16]
     y = blk["momentum_yardstick"]
-    assert y["book"] == "p8_mom" and y["not_a_hypothesis"] is True and y["started_utc"] == str(reg8)[:16]
+    assert y["book"] == "p8_mom" and y["not_a_hypothesis"] is True and y["started_utc"] == p8.BOOKS["p8_mom"]["registered"]
     assert set(y["coins"]) == {"BTCUSDT", "ETHUSDT"} and set(y["coins"]["BTCUSDT"]["same_days"]) == {BOOK6, BOOK4}
 
 
@@ -106,6 +106,7 @@ def test_a_failure_never_stops_the_page(monkeypatch, tmp_path):
     out = export.merge({"crypto": frag}, ["crypto"])
     assert out["rl_lab"] is None and "learning" in out
     # a broken playbook block or missing folders give a block, not an exception
+    monkeypatch.undo()
     blk = rl_lab.block({"playbook6": {"p6_mtrend": {"books": {"BTCUSDT": "not a dict"}}}},
                        {"forward5": str(tmp_path), "forward6": str(tmp_path), "forward8": str(tmp_path)},
                        {"phase5": str(tmp_path), "phase6": str(tmp_path)}, log=lambda *_: None)
