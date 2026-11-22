@@ -284,7 +284,28 @@ def analyse(args):
 
 # ------------------------------------------------------------------ toy: random walk, causal rules, same machinery
 def toy(args):
-    rng = np.random.default_rng(2026)
+    allr = {}
+    for seed in range(args.seeds):
+        one = toy_one(seed)
+        for rule, v in one.items():
+            allr.setdefault(rule, []).append(v)
+    out = {}
+    for rule, vv in allr.items():
+        gap = np.array([v["month_perm_median"] - v["real_mean_r"] for v in vv])
+        gap_c = np.array([v["earlier_donor_perm_median"] - v["real_mean_r"] for v in vv])
+        out[rule] = {"walks": len(vv), "real_mean_r": float(np.mean([v["real_mean_r"] for v in vv])),
+                     "month_perm_median_mean": float(np.mean([v["month_perm_median"] for v in vv])),
+                     "gap_perm_minus_real_mean": float(gap.mean()), "gap_se": float(gap.std(ddof=1) / np.sqrt(len(gap))),
+                     "gap_earlier_donors_minus_real_mean": float(gap_c.mean()),
+                     "gap_earlier_se": float(gap_c.std(ddof=1) / np.sqrt(len(gap_c))),
+                     "share_of_walks_p_upper_ge_0.95": float(np.mean([v["p_upper_vs_300"] >= 0.95 for v in vv])),
+                     "share_of_walks_p_upper_le_0.05": float(np.mean([v["p_upper_vs_300"] <= 0.05 for v in vv]))}
+    json.dump(out, open(os.path.join(args.out, "audit_toy.json"), "w"), indent=1)
+    print(json.dumps(out, indent=1))
+
+
+def toy_one(seed):
+    rng = np.random.default_rng([2026, seed])
     years, per_day = 6, 96
     nbar = years * 365 * per_day
     ret = rng.standard_normal(nbar) * 0.003                    # ~ 3% a day, no drift: a martingale (log price)
@@ -293,7 +314,6 @@ def toy(args):
     hi = np.maximum(op, close) * np.exp(np.abs(rng.standard_normal(nbar)) * 0.001)
     lo_ = np.minimum(op, close) * np.exp(-np.abs(rng.standard_normal(nbar)) * 0.001)
     px = {"open": op, "high": hi, "low": lo_, "close": close}
-    unit = np.full(nbar, 0.012 * 30000)
     unit = close * 0.012                                        # a stop unit ~ 1.2% of price (2 units = 2.4%)
     tms = np.arange(nbar, dtype="int64") * 900000
     month = (tms // (30 * P.DAY_MS)).astype("int64")
@@ -337,20 +357,68 @@ def toy(args):
                      "month_perm_q05_q95": [float(np.quantile(perm, .05)), float(np.quantile(perm, .95))],
                      "p_upper_vs_300": float((np.sum(np.array(perm) >= real) + 1) / 301),
                      "earlier_donor_perm_median": float(np.median(caus))}
-        P.log("toy %s: %s" % (rule, out[rule]))
-    json.dump(out, open(os.path.join(args.out, "audit_toy.json"), "w"), indent=1)
+    P.log("toy walk %d: %s" % (seed, dict((r, round(v["month_perm_median"] - v["real_mean_r"], 3)) for r, v in out.items())))
+    return out
+
+
+def h82probe(args, K=4):
+    """H82's draw, sampled: each real trade moved to K random bars of its month (placebo.py's own rule for the bars and
+    the entry price), same side, machine_r. Split by whether the drawn bar is BEFORE or AFTER the real entry: the side
+    was chosen at the real entry, so a bar before it carries the book's later information."""
+    rows = []
+    for g, assets in P.GROUPS:
+        prep = P.load_group(g, assets, args.fits_dir, args.out, P.CUT)
+        for a in assets:
+            ctx = P.market_ctx(prep, a)
+            cur = P.run_book(ctx, P.RULE_CURRENT)
+            s = P.real_slots(cur["trades"])
+            unit, px = ctx["inp"]["unit"], ctx["inp"]["px"]
+            r_ = np.arange(ctx["lo"] + 1, ctx["n"] - 1)
+            r_ = r_[np.isfinite(unit[r_ - 1]) & (unit[r_ - 1] > 0)]
+            vbm = dict((int(m), r_[ctx["month"][r_] == m]) for m in np.unique(ctx["month"][r_]))
+            early = ctx["cfg"].get("early_fill") is True and not int(ctx["cfg"].get("fill_delay_bars", 0) or 0)
+            rng = np.random.default_rng([82, P.MARKETS.index(a)])
+            for j in range(len(s["side"])):
+                ir, sd = int(s["i_in"][j]), int(s["side"][j])
+                bars = vbm.get(int(ctx["month"][ir]), np.array([ir]))
+                own = P.machine_r(ctx, sd, ir, float(px["close"][ir - 1] if early else px["open"][ir]))
+                for _k in range(K):
+                    i0 = int(bars[int(rng.integers(len(bars)))])
+                    p = px["close"][i0 - 1] if early else px["open"][i0]
+                    rows.append({"market": a, "j": j, "i_real": ir, "i0": i0, "before": bool(i0 < ir),
+                                 "days_from_real": float((ctx["tms"][i0] - ctx["tms"][ir]) / P.DAY_MS),
+                                 "r": float(P.machine_r(ctx, sd, i0, float(p))), "r_real_mach": float(own)})
+            P.log("h82probe %s done" % a)
+            del cur
+        del prep
+    d = pd.DataFrame(rows)
+    d.to_csv(os.path.join(args.out, "audit_h82probe.csv"), index=False)
+    d = d[np.isfinite(d.r)]
+    out = {}
+    for name, sub in (("BTCUSDT", d[d.market == "BTCUSDT"]), ("ETHUSDT", d[d.market == "ETHUSDT"]),
+                      ("vault", d[d.market.isin(P.VAULT)]), ("pooled", d)):
+        b, af = sub[sub.before], sub[~sub.before]
+        far_b, far_a = sub[sub.days_from_real < -7], sub[sub.days_from_real > 7]
+        se = lambda x: float(x.std() / np.sqrt(max(1, len(x))))  # noqa: E731
+        out[name] = {"draws": int(len(sub)), "placebo_mean": float(sub.r.mean()),
+                     "real_machine_mean": float(sub.drop_duplicates(["market", "j"]).r_real_mach.mean()),
+                     "bars_before_real_mean": float(b.r.mean()), "se_before": se(b.r), "n_before": int(len(b)),
+                     "bars_after_real_mean": float(af.r.mean()), "se_after": se(af.r), "n_after": int(len(af)),
+                     "more_than_7d_before_mean": float(far_b.r.mean()), "more_than_7d_after_mean": float(far_a.r.mean())}
+    json.dump(out, open(os.path.join(args.out, "audit_h82probe.json"), "w"), indent=1)
     print(json.dumps(out, indent=1))
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=("extract", "analyse", "toy"))
+    ap.add_argument("cmd", choices=("extract", "analyse", "toy", "h82probe"))
     ap.add_argument("--fits-dir")
     ap.add_argument("--out", required=True)
     ap.add_argument("--sides")
+    ap.add_argument("--seeds", type=int, default=12)
     a = ap.parse_args(argv)
     t0 = time.time()
-    {"extract": extract, "analyse": analyse, "toy": toy}[a.cmd](a)
+    {"extract": extract, "analyse": analyse, "toy": toy, "h82probe": h82probe}[a.cmd](a)
     P.log("%s done in %.0fs" % (a.cmd, time.time() - t0))
 
 
