@@ -4944,3 +4944,218 @@ every RL book stays labelled NOT passed whatever it shows.
 range or significance is computed); not that a fallback-decided result is the agent's; not that a book is ahead in
 history or will be ahead later; nothing pooled across coins or books as a single claim; no comparison outside the stated
 windows; and nothing about the momentum rule itself beyond these same days.
+## H80-H89, common part. QUEUE FAMILY: placebo, permutation and bootstrap tests of the Setups book and its two variants (registered 22 Nov 2026, about 12:00 UTC, before any H80-H89 number was computed; code `research/queue/placebo.py`, tests `tests/test_queue_placebo.py`)
+
+**Prompted by:** the owner, 22 Nov 2026: "Queue at least 20 studies for SG box so it will have always have min 72 hours
+queue tasks backlog to clear"; this family is the placebo half of that queue (another family holds walk-forward rule
+variants and chart-pattern claims). The owner keeps asking for "statistically proven". What statistics can say first is
+whether each PART of the Setups rule does anything at all, against the same rule with that part scrambled. Research
+only: nothing in the engine, the books or the vault changes, whatever any study says.
+
+**Known before registering (H65, H67, H68, to 2026-11-21, holdout included):** the Setups book (`b_targets`) is flat
+per trade (+0.004R over 5,963 trades); its results line up with each market's own 30-day move; the lead in the odds did
+not hold up across halves; the 30-day filter (H67) and the wait after a stop-out (H68) looked better on the very history
+they were found on. No placebo of any of these has been computed. The smoke and timing runs for this registration
+(server, 22 Nov 2026, 11:39-11:55 UTC) ran on a tiny slice (SPX, 2021-01 to 2022-12, labelled SMOKE) or printed seconds and
+memory only. The smoke outputs were read only to test the code; one of them (H81) showed a flaw in the first design,
+which was changed before this registration (see H81). None of their numbers is a result or will be reported.
+
+**Common to every study of the family (H80 to H89):**
+
+- **The book.** `b_targets` as the engine runs it from think15-v5.2.9 (rule `{"targets": True, "early": True}`), the
+  30-day filter `b_trend30` and the wait `b_wait_stop`, each run by the engine's own `shadows.run` (asset fee, leverage
+  cap, fill delay and early entry from `shadows.asset_cfg`), eight markets, cached fits and the evidence store read only.
+  Every run checks that the real book it computed is the engine's own challenger (`run_challenger("b_targets")`, and
+  `"b_trend30"` for H83), trade for trade; a failed check stops the run.
+- **THE HOLDOUT IS NOT TOUCHED.** Every market group ends at its last stored session at or before **2025-11-10 23:45
+  UTC**, set in one place (`CUT` in the script) and checked again on what was loaded. Nothing from 2025-11-11 onward is
+  read.
+- **Halves** split at 2023-06-08 by entry bar. Every read-out is given for all eight markets ("pooled"), BTC+ETH
+  ("vault") and the other six ("others"), each for the whole window and both halves, plus per market (descriptive).
+- **R** is the book's own `r_mult` (net of fees, over the risk at the entry stop), except in H81 and H82, where real and
+  placebo trades alike are scored by the exits machinery alone (see H81); "mean R" is the pooled sum of R over the
+  pooled number of closed trades.
+- **Placebo p-value** (H80-H86): p = (1 + number of draws at least as good as the real book) / (1 + number of draws).
+  "At least as good" = the draw's statistic is greater than or equal to the real one. A draw with no closed trade in a
+  cell has no mean R and is never counted as at least as good. The lower-tail share (draws at most as good, same
+  correction) is reported beside it, so a part that HURTS the book is seen too.
+- **Primary statistic** (one per placebo study): the pooled mean R per trade over the whole window. Secondary, reported
+  with their own p-values and NOT used for the conclusion: the sum of R and the mean R for pooled / vault / others in
+  each half, and per market.
+- **Conclusion wording, fixed now** (H80-H86): "the real book IS distinguishable from its placebo at p = x" when the
+  primary p <= 0.05, else "the real book is NOT distinguishable from its placebo at p = x". Never "proven". A
+  distinguishable result says that the scrambled part carries something on this history; it is not a forward result,
+  and for H83 and H84 the rule under test was found on a history that contains this whole window.
+- **Draws.** Fixed seeds: study seed 20261122xx (xx = the study number, e.g. 2026112280); draw k uses
+  `numpy.random.default_rng([seed, k])` for anything common to all markets and `[seed, k, market index]` (or
+  `[seed, k, 100 + group index]`) for anything per market or group, so draw k is reproducible on its own. Draw counts
+  were set from timing runs on the research server so each heavy study takes roughly 8 to 16 hours of one processor.
+- **Job contract.** `research/queue/placebo.py --study H8x --fits-dir <fits_today> --out <folder>`; resumable (finished
+  draws are written as one line per batch, at least once a minute; a torn last line is dropped; draws written by another
+  version of the script, seed or draw count are never counted, so an edited script starts afresh), `progress.json`, and
+  on success `results.json`, `report.md` (conclusion first) and an empty `DONE`. `--estimate` prints the CPU hours;
+  `--smoke` runs a few draws on SPX to the end of 2022 in seconds, into `<out>/smoke`.
+
+## H80. Odds placebo: do the engine's odds matter to the Setups book? (registered 22 Nov 2026 with the family, before any H80 number was computed)
+
+**Scrambled:** each market's odds (P(up first), P(flat), P(down first)) over its window are replaced by the same odds
+shifted circularly in TIME: row t takes the odds in force at t - delta, wrapped round the window, delta = 30 days + u x
+(window - 60 days - 7 days), u uniform on [0, 1) and COMMON to all eight markets in a draw (so the odds of BTC and ETH
+stay as related to each other as they are, and the dependence between the markets' books is kept). Every row's source
+is at least 30 days away both ways round the circle (the 7-day margin covers closed hours and weekends). The odds keep
+their own behaviour (levels, persistence, their share of strong leads) and lose their link to the price at that moment.
+Everything else is real: prices, the higher-timeframe bias, the tide, the shock flag, the release guard, the stop unit,
+the targets. Note: the forced entry after four flat sessions goes with the bias, else the tide, so the odds act through
+ENTER and FLIP decisions and the side of a forced entry when there is neither bias nor tide.
+**Real:** `b_targets`. **Draws:** 10,000. **Conclusions:** "the Setups book IS / is NOT distinguishable from the same
+book run on time-shifted odds at p = x". If it is not, the odds add nothing measurable to this book's mean R on this
+history.
+
+## H81. Side placebo: does the book pick the right side, given when it trades? (registered 22 Nov 2026 with the family, before any H81 number was computed)
+
+**Scrambled:** the sides of the real book's closed trades are permuted within each market and calendar month (entry
+month), so each market-month keeps exactly its number of longs and shorts. Every trade keeps its entry bar and entry
+price and is scored under **the exits machinery alone**: the stop at 2 units from the entry (`stop_units` x `unit` of
+the bar before the entry, as the book sets it), Target 1 and Target 2 from `live.plan_targets` at the decision row for
+the trade's side, half off at Target 1 with the stop moved to the entry, in the engine's order inside a bar; else out
+at the close of the last bar opening before entry + 30 days. R does not depend on size, so each trade is scored alone.
+The REAL statistic is the same machinery on the real sides (the book's own R, which also has flips and steps aside, is
+shown beside it).
+**Changed from the brief, and why:** the brief kept "the real book's exits". A first version ended each placebo trade
+at the real trade's last bar; a smoke run showed why that is wrong. A real stop-out is a move of at least 1R in the
+OTHER side's favour, so a flipped trade closed at that bar is closed at a good moment chosen by the real trade's loss,
+which flatters the flip. The machinery ends a trade only by what happens to that trade itself.
+**Done** by the trade replay `replay_trade` / `machine_r` in the script. **Gates (checked in the run, every market):**
+replayed with its own side AND the real trade's own window, every real trade gives its own R (to 1e-9), its own kind of
+exit and its own exit bar (this ties the replay to the book); any mismatch stops the run. Tests: where a real trade
+ended at its own stop or Target 2 within 30 days, the machinery gives its R exactly; on random-walk bars with
+uninformative odds, flipping a side has no built-in advantage (mean difference within noise).
+Each trade has only two possible sides, so both outcomes are computed once and a draw is a permutation: this study is
+light by nature: **draws 100,000** (about 0.1 hour; more draws would buy only resolution). The number of trades is
+fixed, so the mean R and the sum of R give the same p-value. **Conclusions:** "the book's choice of side IS / is NOT
+distinguishable from a random side with the same monthly long/short share at p = x".
+
+## H82. Entry-time placebo: what does the exit machinery earn by itself? (registered 22 Nov 2026 with the family, before any H82 number was computed)
+
+**Scrambled:** each real closed trade is moved to a bar drawn uniformly from the bars of the same market and calendar
+month (bars with a stop unit; with replacement, so placebo trades may overlap: it is a trade-level test, not a book).
+It keeps its side. The entry is at the close of the bar before (BTC, ETH: the early entry) or at the bar's open (the
+others); it is scored under the exits machinery alone, exactly as in H81 (same code, same gate, 30-day cap).
+**Real:** the real trades (real bars and sides) under the same machinery, the book's own R beside it. **Draws:**
+100,000. **Conclusions:** "the book's entry timing IS / is NOT distinguishable from random entry bars in the same month
+with the same sides and exits at p = x". If not, what the book's entries earn is what its exits earn at any bar of the
+month.
+
+## H83. Trend-filter placebo (for H67): does the filter help because of WHICH entries it blocks? (registered 22 Nov 2026 with the family, before any H83 number was computed)
+
+**Changed from the brief:** the brief asked for "a random filter that blocks the same share of entries per month".
+A filter drawn afresh at each close would block a forced entry once and let it through at the next close, so it would
+block far fewer entries than the real filter (which keeps blocking while the 30-day move stays against the side), and
+matching the share of blocked DECISIONS per month would not match the share of blocked ENTRIES. **Scrambled instead:**
+the 30-day move series itself (`shadows.trend_move`, 30 days, as the engine computes it) is shifted circularly in time
+as in H80, with at least 60 days (two whole lookbacks) between a row and its source, u common to all markets. The
+placebo filter then blocks entries as often, in spells as long, and with the same tilt towards blocking shorts as the
+real one (most markets rose), but at the wrong moments. Passed to the engine's own `shadows.run` as `aux["trend_move"]`
+under the `b_trend30` rule (no copy of the loop). The placebo books' trade counts and share of flat bars are reported
+beside the real filter book's, so it is seen that both trade about as little.
+**Real:** `b_trend30` (with the real move; gate: equal to the engine's challenger). **Draws:** 10,000.
+**Conclusions:** "the 30-day filter book IS / is NOT distinguishable from the same book with a time-shifted filter at
+p = x". If not, its better mean R on history is what any filter of that shape and tilt gives (trading less, leaning
+long), not its timing. The filter was found on this history: a distinguishable result is still not a forward result.
+
+## H84. Wait-after-stop placebo (for H68): does it matter that the wait follows a STOP? (registered 22 Nov 2026 with the family, before any H84 number was computed)
+
+**Changed from the brief:** the brief asked for "waits of the same lengths placed after random exits". The real wait
+has no length of its own: it lasts until a signal clears the entry bar. **Scrambled instead:** the TRIGGER. Exactly
+the H68 rule (no forced entry until `policy.decide` returns ENTER), but switched on after each exit that leaves the book
+flat (any exit but a flip) with probability p, independently, instead of after exactly the exits at the entry stop;
+p for a market is the share of such exits that ended at "STOP" in that market's real `b_wait_stop` book over the window
+(so the placebo switches the wait on about as often). The waits then end the same way (at a signal), so their lengths
+come from the same mechanism. Reported beside: the real and placebo books' trade counts, share of flat bars, stop-outs
+followed by a wait ("episodes") and sessions withheld.
+**Done** by a research-side copy of the Setups loop (`run_setups_copy`, the `b_targets` path of `shadows.run` with one
+hook: which exit switches the wait on). **Gate (checked in the run, every market, before any draw):** with no wait the
+copy gives `b_targets`, and with the hook "the exit word is STOP" it gives `b_wait_stop` (and the same wait counters),
+trade for trade and bar for bar, against the engine's own `shadows.run`; any mismatch stops the run.
+**Real:** `b_wait_stop`. **Draws:** 11,000. **Conclusions:** "the wait-after-stop book IS / is NOT distinguishable from
+the same wait switched on after random exits at p = x". If not, what the wait does on history comes from waiting for a
+signal at all (and, on gold, silver and SPX, from hardly trading), not from what follows a stop-out.
+
+## H85. Higher-timeframe placebo: do the bias and the trend tiebreak matter to the book? (registered 22 Nov 2026 with the family, before any H85 number was computed)
+
+**Scrambled:** the higher-timeframe bias (`htf_bias`) and the tide (the 4h/daily trend used as the tiebreak) shifted
+TOGETHER in time as in H80 (at least 30 days, u common to all markets; the two keep their relation to each other and
+lose their link to the moment). Odds, prices and everything else real. The bias decides the side of forced entries (most
+entries), raises the bar against it, and forces a flip when a position fights it without an edge, so this tests most of
+what decides the side. **Real:** `b_targets`. **Draws:** 13,000. **Conclusions:** "the Setups book IS / is NOT
+distinguishable from the same book run on time-shifted bias and tide at p = x".
+
+## H86. Stop-size placebo: does volatility-scaled stop sizing matter? (registered 22 Nov 2026 with the family, before any H86 number was computed)
+
+**Scrambled:** the stop unit (`unit` = 1.5 x ATR of the 1-hour chart, which sets the stop at 2 units and through it the
+size of R, the targets' fallback distances and Target 1's eligibility band) shuffled across bars within each calendar
+month, one permutation per market group and draw (BTC and ETH share their bars' clock, so they share it): each month
+keeps its own stop sizes (their typical size and spread), but a stop no longer fits the volatility of its moment.
+Entries, sides and the odds are real; only the stop and what follows from it change.
+**Real:** `b_targets`. **Draws:** 10,000. **Conclusions:** "the Setups book IS / is NOT distinguishable from the same
+book with stops of the month's typical sizes at random at p = x". Read with care either way: R is measured against the
+stop, so a different stop changes the unit in which the result is counted; the sum of R and the per-half cells are
+shown beside the primary.
+
+## H87. Block bootstrap of the real books: what can a year look like? (registered 22 Nov 2026 with the family, before any H87 number was computed)
+
+**Done:** the per-month sums of R (entry month) of each market under the current rule, `b_trend30` and `b_wait_stop`
+(each the engine's own run), months kept together across markets (so their dependence is kept). A 12-month path is four
+blocks of three consecutive months drawn with replacement from the window (circular moving blocks, so a month's
+neighbours come along); **20,000 paths** per book and slice; seed 2026112287. Sensitivity: one-month blocks. Read-outs
+for pooled / vault / others, whole window and each half: quantiles (5, 25, 50, 75, 95%) of the 12-month sum of R, of the
+worst fall inside the year (largest drop of the cumulative R from its running peak, month resolution, in R), and the
+chance of a losing 12 months (sum of R below 0). No p-value; a description of history as if the future were like it.
+The two variants were found on this history, so their figures are flattered. Light (under 0.1 hour).
+
+## H88. Costs surface: where does the Setups book break even? (registered 22 Nov 2026 with the family, before any H88 number was computed)
+
+**Done:** every closed trade of the three books (one engine run each), with its fee replaced by f a side for all
+markets alike, f in {0.02, 0.05, 0.10, 0.15}%, crossed with an entry slip s in {0, 0.02, 0.05, 0.10}% of the entry
+price against the trade (16 cells). Both are exact on the book's own trades: fees enter R linearly and change nothing
+else in the path (R does not depend on size, and no rule reads equity), so R(f) = R before fees - (f / the market's fee)
+x the trade's fees in R; a member's slipped fill keeps the setup's stop and targets (as the vault places them) and costs
+s x entry price / stop distance in R. (The slip's own tiny extra fee is left out.) **Gate (in the run, every market):**
+the post-hoc fee at 0.15% equals a replay with `cost_side` 0.0015, trade for trade, to 1e-9 R. Read-outs per cell: mean R
+and sum of R for pooled / vault / others, both halves, and a month-clustered 95% interval of the mean (calendar months
+resampled, 5,000 replicates, seed 2026112288); the break-even fee at no slip and the break-even slip at each fee (mean R
+is linear in both, so these are exact). Light (under 0.1 hour).
+
+## H89. Year by year: is the result one or two years? (registered 22 Nov 2026 with the family, before any H89 number was computed)
+
+**Done:** the three books' closed trades (one engine run each), mean R per trade with a month-clustered 95% interval
+(10,000 replicates, seed 2026112289) for each calendar year alone (2020 to 2025; 2025 ends at the cut) and for the
+window with each year left out, pooled / vault / others. **Fixed now:** a result "rests on one year" when leaving out
+that one year turns the sign of the whole window's mean R; "on two years" when two different years each do so; else
+"no single year turns it". Descriptive, no bar. Light (under 0.1 hour).
+
+### Ledger of the family H80-H89 (the end of the registration)
+
+- **Tests that can come out "distinguishable":** 7 primary placebo p-values (H80 to H86). If none of the parts did
+  anything and the seven were independent, the chance that at least one would show p <= 0.05 is about 30%; one of the
+  seven looking significant by chance would be unremarkable. They are not independent (the same trades and markets run
+  through all of them).
+- **Secondary p-values:** each placebo study also reports 17 secondary cells (two statistics in three slices and three
+  periods, minus the primary) and 8 per-market ones, about 175 in all. At the 5% level some 9 of them will look
+  significant by chance; none of them decides a conclusion.
+- **Intervals:** H88 and H89 report about 260 month-clustered intervals (16 cost cells in three slices for three books;
+  the whole window and six years alone and left out, in three slices for three books); some will exclude zero by
+  chance. H87 gives no p-value.
+- **So:** one or two "significant" results in this family are expected by chance. A single p near 0.05 is not news; a
+  primary p well below 0.01 that agrees across halves and market groups would be worth a forward test, and only that.
+  Nothing here can make a rule "proven": these are placebo comparisons on history, the variants were found on it, and
+  the holdout (2025-11-11 onward) is kept for later.
+
+**Queue commands** (run with the working directory at a code snapshot that has `engine15/`, `research/` and a `data`
+link; xx = 80 .. 89): `/data/venv-research/bin/python research/queue/placebo.py --study H8x --fits-dir
+/data/mind15/research/out/h60_regime_exits/fits_today --out /data/research_queue/out/H8x`. Estimated CPU hours from the
+timing runs (seconds per draw over the eight markets, one processor, research server, 22 Nov 2026: H80 4.17, H82
+0.41, H83 4.36, H84 3.79, H85 3.21, H86 4.26; loading the five groups about 66 s; peak memory 2.9 GB resident, of which
+1.7 GB not file-backed, in the crypto load): H80 11.7 h (10,000 draws), H81 0.1 h (100,000), H82 11.4 h (100,000), H83
+12.2 h (10,000), H84 11.7 h (11,000), H85 11.6 h (13,000), H86 11.9 h (10,000), H87, H88, H89 under 0.1 h each:
+**about 70.6 CPU hours** in all. `--estimate` prints these figures.
