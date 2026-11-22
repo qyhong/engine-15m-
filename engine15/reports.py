@@ -95,7 +95,8 @@ PLAYBOOK_MODULES = ("playbook", "playbook2", "playbook3",     # strategy books (
                     "playbook4",                            # the loop's round-2 rules, forward, NOT passed (12 Nov 2026)
                     "playbook5",                            # the RL agent (Phase 4 primary), forward, NOT passed (12 Nov 2026)
                     "playbook6",                            # RL Phase 6 primary + its control, forward, NOT passed (13 Nov 2026)
-                    "playbook7")                            # H37 V4 BTC/ETH pair book, forward, NOT passed (13 Nov 2026)
+                    "playbook7",                            # H37 V4 BTC/ETH pair book, forward, NOT passed (13 Nov 2026)
+                    "playbook8")                            # the momentum yardstick for playbook6 (not a hypothesis; 22 Nov 2026)
 PLAYBOOK_JSON = os.path.join(ROOT, "out", "live", "playbook.json")
 
 

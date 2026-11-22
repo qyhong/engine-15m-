@@ -4863,3 +4863,84 @@ exclusion was applied to the windows of ALL breakdowns with the drop met (counte
 preceded by such a drop"; the registration's text did not say counted or not. (3) 4-hour bars with fewer than 16 stored
 15-minute bars were dropped and 4-hour entries need 3 days of 4-hour EMA history; not in the registration. (4) With 2
 events (BTC D2) the bootstrap difference intervals are degenerate; the verdict there rests on the Wilson interval.
+## Forward yardstick p8_mom: the Phase 6 books' momentum fallback rule alone (registered 22 Nov 2026, about 11:00 UTC, before any p8_mom code existed or any p8_mom number was computed). A YARDSTICK, NOT A HYPOTHESIS
+
+**Prompted by:** the owner, 22 Nov 2026: "Run all above" (task 4 of the RL audit of 21 Nov 2026: "Add a momentum-only
+paper book as the plain yardstick for the Phase 6 books").
+
+**What it is for.** Since the refit of 16 Nov every BTC seed of both Phase 6 books (`p6_mtrend`, `p6_p4trend`) is on its
+'do no harm' fallback, the daily 30-day momentum rule, so most of their BTC result is that rule's, not an agent's. This
+book trades ONLY that fallback rule, with the same code, fees and decision times, so that the momentum rule's result is
+never credited to an agent: a Phase 6 book is read beside it over the same days. It is not a hypothesis: it has no pass
+rule, it is never called passed or failed, and nothing about it is graded. It has no proven advantage.
+
+**The rule (the very same functions, called, not copied).** `engine15/playbook8.py`, book id `p8_mom`, BTC and ETH,
+$10,000 each, from **2026-11-23 00:00 UTC** (`REGISTERED`); it starts flat and its first decision is at the first 15m
+close after that. Each step calls `engine15/rl/forward5.advance` with `fallback="trend"` and one stand-in "model" (no
+weights, no training) whose every seed (0, 1, 2) carries the 'do no harm' flag on both coins. So every decision goes
+through `forward5.model_w` -> `forward5.trend_w`: W = -10 x |a - ref|, ref = features3's `mom_signal` =
+`rl.benchmarks.momentum(close, 30, True)`: the sign of the trailing 30-day (2,880-bar) log return, decided once a day at
+the close of the bar ending 00:00 UTC, long (+1) or short (-1), held until the next 00:00 UTC decision. Then exactly as
+the Phase 6 books: `qagent.q_from_w` (the round-trip cost band), `policy3.decide` (minimum hold 4 bars), each seed through
+the Phase 3 risk manager (`forward5.risk_and_book`: 60%-a-year vol target, the drawdown brake), the book holds the mean of
+the three seeds (identical here), decided at a 15m close and filled at the next open, 0.10% a side, half spread 0.5 bp,
+volatility slippage, perp funding both sides; spot buy-and-hold beside it. Decision times: every 15m close that the
+evidence store's readings cover, the same closes the Phase 6 books decide (`advance` decides no bar the readings do not
+cover). The configuration is the Phase 6 books' (`forward6.load_cfg()`). Record: `research/out/rl/forward8/
+decisions_p8_mom_<asset>.jsonl` (append-only, its own state). A trade = one run of same-sign exposure, as the RL books.
+
+**Known differences, stated now.** It starts later than the Phase 6 books (13 Nov 03:00 UTC), so it is compared with them
+over the same days only: a Phase 6 book's return from its equity marked at 2026-11-23 00:00 UTC to the end of the window,
+against this book's return over the same window (both net of costs; buy-and-hold over that window beside them). Its risk
+manager starts fresh at its start; a Phase 6 seed carries its own policy state and drawdown brake from before, so even
+when every Phase 6 seed is on the fallback the two books need not hold exactly the same size. If the book goes live after
+2026-11-23 00:00 UTC, the closes in between are decided at its first live step from closed bars only (no fitted part, so
+the same decisions a live step would have taken); they count in `late_decisions`.
+
+**Shown:** on the scoreboard (strategy row `p8_mom`), in `playbook8`'s page block like the other strategy books, and in
+the page's `rl_lab` block beside the Phase 6 books.
+
+## Interim read of the RL forward books at 8 weeks: time-based, NOT a verdict (registered 22 Nov 2026, about 11:00 UTC, before any interim-read code existed or any interim number was computed)
+
+**Prompted by:** the owner, 22 Nov 2026: "Run all above" (task 7 of the RL audit of 21 Nov 2026: "Register an interim,
+time-based read (for example at 8 weeks), since 30 trades per coin is far off").
+
+**When.** 8 weeks (56 days) after each book's own start, all UTC:
+
+| Book | Start (go-live) | Interim read date (window end) |
+|---|---|---|
+| `p5_rlq` (Phase 4 primary) | 2026-11-12 04:30 | **2027-01-07 04:30** |
+| `p6_mtrend` (Phase 6 primary) | 2026-11-13 03:00 | **2027-01-08 03:00** |
+| `p6_p4trend` (Phase 6 control) | 2026-11-13 03:00 | **2027-01-08 03:00** |
+
+`research/rl_interim_read.py` refuses to print any comparison for a book before its read date, and on or after it prints
+the read-outs below for the window start -> read date only (closes at or before the read date; later bars never enter,
+so a later run gives the same numbers). It reads the books' own records (`research/out/rl/forward5`, `forward6`,
+`forward8`) and the engine's bar and funding files, read only, and rebuilds each book with `forward5.risk_and_book`.
+
+**Read-outs, per book and coin (BTC, ETH), net of all costs:**
+1. The book's return over its window against spot buy-and-hold over the same days (both from $10,000; as on the page).
+2. For `p6_mtrend` and `p6_p4trend` also: against the momentum yardstick `p8_mom` over the SAME days only. The yardstick
+   starts 2026-11-23 00:00 UTC, later than the RL books, so this comparison runs from 2026-11-23 00:00 UTC to the read
+   date (2027-01-08 03:00 UTC): the Phase 6 book's return from its equity marked at 2026-11-23 00:00 UTC, the yardstick's
+   return from its $10,000, and buy-and-hold over that window beside them.
+3. The book's gross result over its window split into the agent-decided part and the fallback-decided part, with the
+   costs (which are the whole book's and are not split), by `forward5.agent_split` (agent + fallback - costs = net), and
+   the share of seed-bars on a model.
+4. Closed trades per coin, against the 30 the verdict needs.
+
+**The only words allowed for the outcome.** Each line says "interim" and, per comparison, exactly one of "ahead of",
+"behind" or "level with" the yardstick (buy-and-hold, or the momentum yardstick), with both returns and the difference in
+percentage points. "Level with" = the two returns differ by less than 1.0 percentage point; otherwise "ahead of" or
+"behind". Template: `Interim read (8 weeks; not a verdict): <book> <coin> <+x.xx%> vs <yardstick> <+y.yy%> over <start>
+to <end> UTC: <ahead of | behind | level with> <yardstick> by <d.dd> points.` No other verdict word (passed, failed,
+works, beats, proven, significant, edge) is used.
+
+**It changes no decision.** The 30-closed-trades-per-coin rule still decides every RL book's verdict. The interim read
+does not stop, start, resize or relabel any book, does not change a model, a refit, a fallback flag or a pass rule, and
+every RL book stays labelled NOT passed whatever it shows.
+
+**What is NOT concluded from it.** Not that any agent has or lacks skill (8 weeks are a handful of trades per coin; no
+range or significance is computed); not that a fallback-decided result is the agent's; not that a book is ahead in
+history or will be ahead later; nothing pooled across coins or books as a single claim; no comparison outside the stated
+windows; and nothing about the momentum rule itself beyond these same days.
