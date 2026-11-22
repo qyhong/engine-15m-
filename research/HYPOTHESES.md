@@ -3975,3 +3975,46 @@ one half to the current rule (and 20 days has the deeper fall), so the result de
 (H65), so the replay cannot validate it: it shows only that the pattern holds up when made a rule. The test is the
 forward shadow book `b_trend30`, first read at 30 closed trades against `b_targets` over the same days. Nothing reaches
 the Setups book or the vault without the owner's word.
+
+## H68. The Setups rule that waits for a real signal after a stop-out (registered 22 Nov 2026, before any H68 code was run on history or any H68 number was computed)
+
+**Prompted by:** H65 slice 9 and H66 (after a trade stopped at its entry stop, the next trade lost a little whichever way
+it went: on BTC and ETH the next same-side trade after a stopped short averaged -0.05R, and "after a stop, the other
+side" was negative in both halves and both market groups; on 21 Nov 2026 the live ETH short was stopped at 13:15 UTC and
+the forced rule sold again an hour later) and the owner, in this project, 22 Nov 2026: "After a stop-out, wait for a
+real signal instead of a forced re-entry."
+
+**What must be said first.** Like H67, the idea was FOUND on this same history. The replay below cannot validate it; it
+only checks that the pattern survives when it is made a rule. The test is the forward shadow book.
+
+**The rule, `b_wait_stop`.** `b_targets` as it runs from think15-v5.2.9 (rule `{"targets": True, "early": True}`, the
+early entry on BTC and ETH included) plus one key, `"wait_after_stop": True`. After a trade ends at its ENTRY STOP (the
+exit word is exactly "STOP": a losing stop-out; not "STOP_BE" after Target 1, not a target, not a flip, not a step
+aside), the forced entry is switched off: the book stays flat until one side clears the normal entry bar by itself
+(`policy.decide` returns ENTER), however many sessions that takes; the idle count goes on. Once a trade is entered the
+switch is cleared. After any other kind of exit the 4-session forced entry works as today. This mirrors the main
+book's wait after a trailing-stop exit (v5.2.8, `wait_sig` in `engine15/backtest.py`). The switch lives in the book's
+saved state under a key written only for a book whose rule asks for it, so every other book's state is unchanged, and
+a bar-by-bar run equals the whole run. It is a shadow book; the Setups book and the vault are not touched.
+
+**Replay.** As H67: all eight markets, each from its first decided session to the last stored session at or before
+2026-11-21 13:45 UTC, the engine's own `shadows.run` for both books, in a scratch copy of the code on the research
+server, the evidence store and cached fits read only. Halves split at 2023-06-08; the holdout (2025-11-11 onward) and
+the forward slice (2026-11-11 onward) shown apart. Descriptive only (no bar, not a live book): one book with both the
+H67 30-day trend filter and this wait.
+
+**Read-outs, fixed now.** As H67 (for the current rule and the new rule, per market and pooled, BTC and ETH apart:
+trades, share won, mean R, sum of R, paper net, worst fall of the marked equity, share of bars flat; first half, second
+half, holdout, forward slice), plus: how many forced entries the new rule withheld (stop-outs after which at least one
+forced entry was withheld, and sessions withheld); the median and the longest wait from a stop-out to the next entry;
+and what the withheld forced entries would have made, read in the current rule's own record: the trades of the current
+rule whose entry word is FORCED and whose previous trade on that market ended at "STOP" (count, mean R, sum of R).
+
+**Bar for the replay, fixed now.** "Survives as a rule" only if ALL hold: (1) pooled over eight markets the new rule's
+sum of R is above the current rule's in BOTH halves; (2) the same on BTC and ETH together in BOTH halves; (3) its pooled
+mean R per trade is above zero in BOTH halves; (4) its pooled worst fall (the eight books' equity summed) is not deeper
+than the current rule's. Anything else is "does not survive as a rule".
+
+**Forward.** `b_wait_stop` is added as a shadow book whatever the replay says (the owner asked for it), starting flat at
+its first live bar. First read at 30 closed trades against `b_targets` over the same days; nothing reaches the Setups
+book or the vault without the owner's word in this project.
