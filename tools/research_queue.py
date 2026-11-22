@@ -268,8 +268,8 @@ def cmd_start(a):
         print("runner already running (pid %d)" % pid)
         return
     q = shlex.quote
-    ssh("%s; %s; (cd %s && exec nohup setsid %s runner.py --workers %d) >> runner.out 2>&1 < /dev/null &"
-        % (mkdirs_cmd(), _rm_cmd(_remote_path("STOP")), q(QROOT), PY, a.workers), timeout=60)
+    ssh("%s; %s; (cd %s && exec nohup setsid %s runner.py --workers %d) >> %s 2>&1 < /dev/null &"
+        % (mkdirs_cmd(), _rm_cmd(_remote_path("STOP")), q(QROOT), PY, a.workers, q(_remote_path("runner.out"))), timeout=60)
     time.sleep(4)
     pid = runner_alive()
     if not pid:

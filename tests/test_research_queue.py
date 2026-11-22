@@ -181,11 +181,11 @@ class QueueTest(unittest.TestCase):
     def test_crash_recovery_requeues_running_job(self):
         p = subprocess.Popen([PY, "-c", "pass"])
         p.wait()
+        r = self.runner()
         job = self.add("crashed", SLEEP_JOB)
         os.remove(os.path.join(self.root, "jobs", "crashed.json"))
         R.write_json(os.path.join(self.root, "running", "crashed.json"),
                      dict(job, pid=p.pid, started_utc="2026-11-22T00:00:00Z"))
-        r = self.runner()
         r.recover()
         self.assertEqual(self.where("crashed"), ["jobs"])
         back = R.read_json(os.path.join(self.root, "jobs", "crashed.json"))
@@ -230,8 +230,9 @@ class QueueTest(unittest.TestCase):
         r = self.runner()
         r.tick()
         self.assertEqual(len(r.procs), 2)
-        r.procs["old"]["job"]["started_utc"] = "2026-11-22T03:00:00Z"
-        r.procs["new"]["job"]["started_utc"] = "2026-11-22T04:00:00Z"
+        now = R.utc_now()                                                       # recent: not over time
+        r.procs["old"]["job"]["started_utc"] = R.iso(now - timedelta(minutes=10))
+        r.procs["new"]["job"]["started_utc"] = R.iso(now - timedelta(minutes=5))
         self.env.mem = 1.2
         self.assertTrue(self.tick_until(r, lambda: self.where("new") == ["jobs"]))
         self.assertEqual(self.where("old"), ["running"])
