@@ -4258,3 +4258,47 @@ months only (the partial first and last months are not months); (2) the bootstra
 interpretation of "100% at 2x" is written down (S2 = 1.0x notional per coin); (4) the month-start table is also shown by
 half, as in H63; (5) an entry booked at the last close (beyond the cut) is dropped rather than walked; (6) the trade
 counts are cross-checked against H63, H67 and H68.
+
+### H73 results (22 Nov 2026, 11:28-11:30 UTC on the research server; `research/out/h73_wallet_real_fees/report.md` + `results.json` + `run.log`)
+
+**Gate:** passed for all three books on both coins (the paper-sizing walk reproduced each engine book's marked equity at
+every one of 238,079 bars; largest relative gap 6e-15). Replay 2020-02-05 to 2026-11-21 13:45 UTC (run after the live
+page showed think15-v5.2.9, generated 11:27 UTC). Trades (closed + open): `b_targets` 2,075, `b_trend30` 1,816,
+`b_wait_stop` 1,763; one ETH entry booked at the last close was dropped in `b_targets` and in `b_trend30`.
+
+**Primary cells: 100% per coin (S2), fee 0.05% per side.** `*` = found on this same history: cannot show an advantage.
+
+| Book | Final from 10,000 | Worst fall | Lowest | Worst UTC day | Fees | Funding paid | Final without funding | Month-starts: +100% first / -50% first / neither / unfinished | Fresh wallet: 1st half / 2nd half / holdout |
+|---|---|---|---|---|---|---|---|---|---|
+| current rule | 6,198 | -94.6% | 2,832 | -19.4% | 26,920 | 14,156 | 12,278 | 21 / 25 / 26 / 9 (halves 17-8, 4-17) | 17,860 / 3,657 / 18,876 |
+| 30-day filter * | 245,417 | -74.8% | 8,910 | -19.4% | 197,760 | 66,658 | 555,892 | 37 / 6 / 30 / 8 (halves 28-0, 9-6) | 155,562 / 16,689 / 19,966 |
+| wait after stop * | 65,262 | -80.2% | 6,508 | -19.4% | 71,139 | 13,203 | 106,557 | 30 / 5 / 36 / 10 (halves 27-5, 3-0) | 58,860 / 11,516 / 17,086 |
+
+No wallet in any of the 27 cells met the wipe-out rule. The worst day (-19.4%) is beyond the 15% brake: the modelled
+brake only trims new entries, it closes nothing.
+
+**Monthly statistic (80 complete months; 10,000 bootstrap draws, seed 73; treats months as exchangeable, which they are
+not):** current rule mean month +1.64% (90% interval -2.57% to +6.10%), median month -1.92%, 12-month paths ending above
+start 43.6%, falling below half at a month-end 33.9%. `b_trend30` * +5.84% (+1.76% to +10.08%), median +0.27%, 72.6% /
+10.0%. `b_wait_stop` * +4.25% (+0.59% to +8.01%), median +1.66%, 66.6% / 11.1%.
+
+**Fee levels, current rule (final from 10,000 at 0.10% / 0.05% / 0.02%; month-starts +100% first vs -50% first):**
+S1 2% rule 3,251 / 8,561 / 15,327 (0-4, 1-1, 3-0); S2 100% per coin 861 / 6,198 / 20,287 (16-37, 21-25, 28-13); S3 3x
+book 104 / 1,616 / 8,467 (24-54, 32-38, 42-25). Worst falls S1 -86.7 / -74.5 / -65.6%, S2 -98.6 / -94.6 / -90.0%, S3
+-99.9 / -99.1 / -97.8%. Second-half fresh wallets lose at every size and fee on the current rule (S2: 1,267 / 3,657 /
+6,908).
+
+**Reproduction check (current rule, 0.10%, against H63):** close. Finals S1 3,251 vs 3,208, S2 861 vs 847, S3 104 vs
+100; worst falls, worst days and the month-start counts identical; joined within 4, fees 1.5-4.6% higher. Trades 2,075 vs
+2,076. The differences are consistent with the v5.2.9 entry at the deciding close (and the one entry at the cut that is
+dropped); that attribution was not checked trade by trade.
+
+**Deviations:** none from the registration.
+
+**Reading.** At a standard taker fee the current rule at the member's size still lost on history (10,000 to 6,198) with
+a 94.6% worst fall; halving the fee from H63's 0.10% to 0.05% lifts the final about sevenfold but does not turn it
+positive, and funding (14,156) cost about as much again; only at the maker-like 0.02% bound does it end above its start,
+still with a 90% fall. The second half loses at every size and fee. The two variants end far higher and halve far less
+often from a month-start, but both were found on this same history, so these numbers cannot show an advantage; their
+second halves are much weaker than their first, and their worst falls are still 75-80% at the member's size. Not
+modelled: the member's actual fee rate (not available), slippage, the vault's join window and account-value reading.
