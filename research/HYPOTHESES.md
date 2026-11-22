@@ -4178,3 +4178,86 @@ were "expected"; in fact none were raised (with their files absent those cards r
 **For a round 5:** none of the four is registered as a candidate input by this rule. If a round 5 is ever run, these
 four should not be added on the strength of this study; `kp_chg24` and `cg_open` duplicate the past-return inputs the
 agents already have.
+
+## H72. OUT-OF-SAMPLE TEST of the H67 trend filter and the H68 wait after a stop-out: parameters chosen on the first part only, paired monthly test on the later parts (registered 22 Nov 2026, about 11:40 UTC, before any H72 code was run or any H72 number was computed)
+
+**Prompted by:** H67 and H68 both "survived as a rule" on history, but both ideas were found by looking at that same
+whole history (H65), so those replays validate nothing; and H67 showed that the 20-day and 45-day versions each lose one
+half to the current rule. The owner asked for statistical backing. This study is the honest out-of-sample version that
+is still possible: choose the parameter on the first part, freeze it, test on the later parts, with paired trade-level
+statistics instead of totals.
+
+**What cannot be undone, said first.**
+- The IDEAS (filter entries by the market's own trend; wait after a stop-out) were chosen after seeing ALL the data, the
+  test period and the holdout included, in pooled form (H65, H66). No split now can make the ideas themselves
+  out-of-sample.
+- Several later-period totals are ALREADY KNOWN. H67 and H68 published, for the 30-day filter, the wait, and both
+  together, the sum of R in the second half (2023-06-08 on) and in the holdout (2025-11-11 on); the TEST-period totals
+  follow from those by subtraction. On BTC + ETH: 30-day filter second half +29.2R vs current -52.5R, holdout +14.5R vs
+  +12.3R; wait +17.3R vs -52.5R, holdout +13.3R vs +12.3R; both +24.4R in the second half. For the 20-day and 45-day
+  filters H67's results file holds BTC + ETH second half -8.1R and +36.9R, holdout +17.9R and +18.5R. So for those books
+  the direction of the TEST difference in totals is known before this study; what is new is (a) whether a length chosen
+  by a fixed rule on the first part alone is the one that gets tested, (b) whether the difference is large against its
+  own month-to-month noise (a paired, month-clustered test), and (c) mean R per trade and worst fall by period.
+- The CHOICE-period sums of R for 20, 30 and 45 days are also known (H67 first half, pooled: +66.2R, +86.3R, +22.3R vs
+  current +29.6R; BTC + ETH +79.6R, +106.1R, +59.4R vs +44.7R). Among those three the choice rule below would pick 30;
+  10, 15, 60 and 90 days have never been computed on any period.
+
+**Books.** The engine's own `shadows.run`, called exactly as `research/h67_trend_filter.py` and
+`research/h68_wait_after_stop.py` call it: the current rule (`CHALLENGERS["b_targets"]["rule"]`, think15-v5.2.9, the
+early entry on BTC and ETH included); the rule plus `trend_days`: N; the rule plus `wait_after_stop`: True; and the rule
+plus both. All eight markets; BTC + ETH also apart (what members follow). Inputs as H67/H68: the evidence store and the
+cached fits (`fits_today`, voices walked forward) read only, each market from its first decided session to the last
+stored session at or before 2026-11-21 13:45 UTC.
+
+**Periods (trades belong to the period of their ENTRY time).** CHOICE: first decided session (2020-02) to 2023-06-07;
+TEST: 2023-06-08 to 2025-11-10; HOLDOUT: 2025-11-11 to the end above (about one year: short).
+
+**Part A, the trend filter's length.** Grid fixed now: N in {10, 15, 20, 30, 45, 60, 90} days. Choice rule fixed now:
+on CHOICE, the N with the largest pooled eight-market sum of R among those whose BTC + ETH sum of R on CHOICE is also
+above the current rule's BTC + ETH sum of R on CHOICE; exact ties go to the longer N. An N qualifies only if it also
+beats the current rule's pooled eight-market sum of R on CHOICE. If no N qualifies, Part A stops with "nothing to test".
+For the choice the books are run ONLY on bars before 2023-06-08 (the code passes the TEST start as the end of the run,
+so no later bar is read); a trade still open at that cut is not counted in the choice. The chosen N and every CHOICE
+number behind it are written to `choice.json` before any later number is computed.
+
+**Part B, wait after a stop-out.** No parameter: tested as it is on TEST and HOLDOUT (its CHOICE numbers shown beside).
+Its primary comparison is BTC + ETH only (H68: on gold, silver and SPX it mostly stops trading); the eight-market figure
+is shown beside it with the share of bars flat.
+
+**Part C, both together:** the trend filter with Part A's chosen N plus the wait. If Part A stops, Part C is not run
+(it would be Part B again).
+
+**Statistics, fixed now.** The comparison is PAIRED in time. Both books are run over the whole history in one pass (the
+state carries across period boundaries, as it would live). For each market and each calendar month (partial months at a
+period's start and end count as their own month of that period; every calendar month of the period counts, a month
+without trades as 0): d = (new book's sum of R over trades entered that month) - (current rule's). Pooled d for a set
+of markets = sum over those markets. Test: mean monthly d above zero, one-sided, month-clustered bootstrap (resample
+whole calendar months of the period with replacement, 10,000 draws, numpy default_rng seed 72); p = (1 + number of
+draws with mean <= 0) / (1 + 10,000); 95% interval = 2.5th and 97.5th percentiles of the draws. Also, per book and
+period: trades, share won, mean R per trade with a month-clustered 95% interval (same resampling, the ratio of sums),
+sum of R, share of bars flat, and the worst fall of the marked equity (the set's books summed; peak reset at the
+period's start; in percent of the peak).
+
+**Pass rule on TEST, fixed now, for each frozen rule (A: filter N*; B: wait; C: both).** PASS only if BOTH: (1) on BTC +
+ETH pooled the mean monthly d is above zero with a Holm-adjusted one-sided p below 0.05, the Holm correction taken over
+the frozen rules actually tested in TEST (3, or 1 if Part A stops); (2) the pooled eight-market mean monthly d is not
+negative (point estimate >= 0). The raw p and whether it is below 0.05/3 (the stricter all-at-once bar) are shown too.
+**"Holds in the holdout":** BTC + ETH mean monthly d above zero in the holdout (point estimate), with its interval and
+p shown; the holdout is one year, so this is a weak check and is not a pass/fail on its own.
+
+**One registered descriptive table, not used for any choice:** all seven N against the current rule on CHOICE, TEST and
+HOLDOUT (sum of R, mean monthly d with its interval, BTC + ETH and eight markets), so the owner can see how sensitive
+the result is to the length. The script computes it only after `choice.json` and the frozen rules' results are written.
+
+**Changes from the design as first written (before registering):** (1) the CHOICE runs stop at the TEST start, so the
+choice cannot read later bars; (2) the pass threshold is stated as Holm-adjusted p < 0.05 over the rules actually tested
+(the first draft said both "p below 0.05/3" and "Holm"; Holm equals 0.05/3 for the smallest p and is looser for the
+others; both are reported); (3) the eight-market guard in the pass rule applies to Part B too, with B's eight-market
+figure read beside its share of bars flat; (4) the already-known totals above are written down so a reader can see what
+is and is not new; (5) the p-value and interval definitions, the seed and the month rule are fixed here.
+
+**What a result can mean.** A pass says: a rule frozen on 2020-2023 beat the current rule month by month on 2023-2025
+by more than month-to-month noise would explain. It does not say the idea was found out of sample (it was not), and it
+does not promise the difference will continue. A fail is a complete answer. Nothing here changes the Setups book or the
+vault; the forward shadow books `b_trend30` and `b_wait_stop` stay the live test.
