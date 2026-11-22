@@ -3748,3 +3748,26 @@ cost in R; for all, per coin, per half (2023-06-08), per entry word (ENTER, FORC
 already closed inside their entry bar (the member is told of a trade that is over) and that reached Target 1 inside it;
 and the same cost on the live record's trades (too few to judge). Descriptive: nothing passes or fails. A positive mean
 says the delay has cost members on average; a mean near zero says it adds noise, not a cost.
+
+### H64 results (22 Nov 2026, about 06:20 UTC on the research server; `research/out/h64_entry_delay/results.json`)
+
+Cost of entering at the next bar's open instead of the book's entry, in percent of price (positive = worse for the member):
+
+| Slice | Trades | Mean | Median | Worse / better | 5th .. 95th percentile | Sum in R | t |
+|---|---|---|---|---|---|---|---|
+| All | 2,075 | +0.001% | -0.006% | 49.1% / 50.7% | -0.81% .. +0.87% | +0.7 | 0.06 |
+| BTC | 1,062 | +0.019% | -0.003% | 49.3% / 50.5% | -0.64% .. +0.75% | +0.1 | 0.86 |
+| ETH | 1,013 | -0.018% | -0.011% | 48.9% / 51.0% | -1.03% .. +0.96% | +0.6 | -0.63 |
+| First half | 992 | +0.025% | -0.014% | 49.2% / 50.6% | -1.03% .. +1.10% | +10.8 | 0.74 |
+| Second half | 1,083 | -0.021% | -0.004% | 49.0% / 50.9% | -0.65% .. +0.63% | -10.1 | -1.32 |
+| ENTER | 745 | +0.005% | -0.029% | 48.3% / 51.7% | -1.22% .. +1.09% | -0.1 | 0.11 |
+| FORCED | 1,212 | +0.003% | +0.004% | 50.3% / 49.6% | -0.62% .. +0.71% | +1.3 | 0.22 |
+| FLIP | 118 | -0.044% | -0.061% | 41.5% / 56.8% | -1.03% .. +1.02% | -0.5 | -0.77 |
+| Live record | 13 | +0.015% | +0.059% | 69% / 31% | -0.90% .. +0.45% | -0.0 | 0.11 |
+
+0.5% of trades were already closed inside their entry bar (11 of 2,075) and 0.4% reached Target 1 inside it.
+
+**Reading.** Over 2,075 entries the one-bar delay has cost a member nothing on average (+0.001% of price, under one R
+in total); it is as often a better price as a worse one. What it adds is noise: in nine entries of ten the member's
+price is within about 0.8% of the book's, either way. So sending the setup a bar earlier would make the member's entry
+match the book's more closely, and would not have improved results. No engine code was changed by this measurement.
