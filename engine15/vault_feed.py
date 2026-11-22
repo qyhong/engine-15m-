@@ -685,10 +685,19 @@ def _run(setups_path, log, env, state_path, trades_dir, now):
                 it["status"] = "refused"
                 it["why"] = _why(status, out)                    # the vault's code, kept for the Telegram card
             _say(log, "vault: %s not sent (%s)" % (label, _why(status, out)))
-    # 2. the books
+    # 2. the books. v5.2.9 (22 Nov 2026): never a market's book while an exit for that market is still unsent. The
+    # vault's exits go by symbol, not by setup: an exit that lands AFTER the book of the next setup would close, halve
+    # or move the stop of the NEW position (the AI Trading Bot session, from the vault's code). Since the early entry
+    # a new setup can follow an ended one in the very next post, so the book waits a step instead; the vault follows a
+    # book up to 30 minutes old and the member's resting stop is in place meanwhile. A refused or given-up exit does
+    # not hold the book: it will never be sent.
+    unsent = set((it.get("body") or {}).get("symbol") for it in queue.values() if it.get("status") == "pending")
     held = st.setdefault("book", {})
     for sym in syms:
         if sym not in books:
+            continue
+        if sym in unsent:
+            _say(log, "vault: %s book held (an exit for it is not sent yet)" % sym)
             continue
         body, why = books[sym]
         if body is None:

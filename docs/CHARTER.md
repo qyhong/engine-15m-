@@ -486,3 +486,18 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   each: the 2% rule, 100% per coin, the 3x book; H63's rules; finish lines +100% and -50%. Read only, recomputed at
   every step, shown as the `paper_desk` block of `scoreboard.json` (the page's `scoreboard_all`). It models the book's
   trades at three sizes, not the vault. A first read at 30 closed trades.
+- **The feed holds a market's book while an exit for it is unsent** (v5.2.9, 22 Nov 2026). Found by the independent
+  review of the early entry and confirmed by the site session from the vault's code: the vault's exits go by symbol, so
+  an exit that reached it after the next setup's book would close, halve or move the stop of the NEW position, and
+  since the early entry a new setup can follow an ended one in the very next post (also on the same side).
+  `vault_feed._run` now sends no book for a symbol while an exit intent for it is still pending; a refused or given-up
+  exit does not hold it. The same review: the entry arithmetic is sound; the paper desk now leaves out a trade it
+  cannot place (a row written twice counts once) instead of stopping; the early-signal preview S2 no longer fires for
+  BTC and ETH entries from flat because the signal itself now goes out in that step.
+- **Post-mortem of the Setups book and the rally study** (H65, H66, 22 Nov 2026; owner: "Audit from beginning to now
+  and see any post mortem. How can we play the rules better", "under what circumstance for btc and eth will turn long.
+  Can simulate the possible. Also how can we manage if sudden rally long"). On history the book is flat in R and makes
+  its money with a market's own 30-day move (+139R over 4,493 trades) and loses against it (-117R over 1,470); every
+  live trade so far is with that move. In 505 sudden rallies while short it turned long within a day in 26% and sold
+  again into the move in 24%. Candidates put to the owner, none built: a 30-day trend filter, waiting for a signal
+  after a stop-out, skipping unusually tight stops, a Telegram alert on a sharp move against an open Setups trade.

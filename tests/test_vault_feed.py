@@ -750,6 +750,51 @@ def test_exits_are_retried_until_the_vault_answers(feed, fake):
     assert len(fake.ops("submit_intent")) == 6
 
 
+def test_a_markets_book_waits_while_an_exit_for_it_is_unsent(feed, fake):
+    # v5.2.9: the vault's exits go by symbol, so the next setup's book must never overtake the old setup's exit
+    eth = dict(mkt(sym="ETHUSDT", entry=3000.0, stop=2950.0, t1=3050.0, t2=3100.0, price=3001.0))
+    feed.step(mkt(), eth)
+    feed.trade("BTCUSDT", "STOP", 64000.0)
+    again = mkt(entry=64100.0, stop=63100.0, t1=65100.0, t2=66100.0, price=64100.0, opened="2026-11-18T10:15:00Z", at=bar(2))
+    fake.replies = [(503, {"ok": False, "error": "busy"})] * 2      # both closes of the ended setup fail
+    n_books = len(fake.ops("submit_book"))
+    feed.step(again, dict(eth, price_bar_utc=again["price_bar_utc"]))
+    sent = fake.ops("submit_book")[n_books:]
+    assert [b["book"]["symbol"] for b in sent] == ["ETHUSDT"]       # the other market is not held
+    assert any("BTCUSDT book held (an exit for it is not sent yet)" in ln for ln in feed.new)
+    assert [i["status"] for i in feed.saved()["intents"].values()] == ["pending"] * 2
+    assert feed.saved()["book"]["BTCUSDT"]["as_of"] != again["price_bar_utc"]
+    start = len(fake.got)
+    feed.step(dict(again, price_bar_utc="2026-11-18T10:45:00Z", price=64150.0))    # the next step: exits, THEN the book
+    kinds = [op for op, _b in fake.got[start:]]
+    assert kinds == ["submit_intent", "submit_intent", "submit_book"]
+    bk = fake.ops("submit_book")[-1]["book"]
+    assert (bk["side"], bk["entry"], bk["opened_utc"]) == ("LONG", "64100", "2026-11-18T10:15:00Z")
+
+
+def test_a_new_setup_on_the_same_side_right_after_an_ended_one_is_closed_first(feed, fake):
+    feed.step(mkt())
+    feed.trade("BTCUSDT", "T1+T2", 66500.0)
+    again = mkt(entry=67010.0, stop=66010.0, t1=68010.0, t2=69010.0, price=67010.0, opened="2026-11-18T10:15:00Z", at=bar(2))
+    start = len(fake.got)
+    feed.step(again)                                               # no FLAT book in between: the same side, a new setup
+    got = fake.got[start:]
+    assert [op for op, _b in got] == ["submit_intent", "submit_intent", "submit_book"]
+    assert [b["intent"]["intent_id"] for op, b in got[:2]] == ["BTCUSDT.20261118T090000Z.close.spot",
+                                                               "BTCUSDT.20261118T090000Z.close.futures"]     # the OLD setup's
+    assert got[2][1]["book"]["opened_utc"] == "2026-11-18T10:15:00Z" and got[2][1]["book"]["side"] == "LONG"
+    assert feed.saved()["pos"]["BTCUSDT"]["opened_utc"] == "2026-11-18T10:15:00Z"
+
+
+def test_a_refused_exit_does_not_hold_the_book(feed, fake):
+    feed.step(mkt())
+    feed.trade("BTCUSDT", "STOP", 64000.0)
+    fake.replies = [(400, {"ok": False, "error": "reference_off_intent"})] * 2
+    feed.step(mkt(side="FLAT", price=64000.0, at=bar(2)))
+    assert [i["status"] for i in feed.saved()["intents"].values()] == ["refused"] * 2
+    assert fake.ops("submit_book")[-1]["book"]["side"] == "FLAT"
+
+
 def test_exits_queued_while_the_secret_is_unreadable_go_later(feed, fake):
     feed.step(mkt(), **feed.bad_secret())
     feed.step(mkt(side="FLAT", price=64000.0, at=bar(2)), **feed.bad_secret())

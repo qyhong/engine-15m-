@@ -49,6 +49,7 @@ BAR_MS = int(CFG.get("bar_ms", 900000))
 START_W = 10000.0
 UP, DOWN = 2.0, 0.5                              # the finish lines, x the starting wallet
 MAINT = 0.005                                    # assumed maintenance margin, share of the open notional (H63)
+BARS_CAP = 1 << 27                               # how far back the tail read of a bar file may go (decades of bars)
 PART = exits.PART
 IN_BAR = ("STOP", "STOP_BE", "T2")               # exits filled inside a bar; anything else is filled at an open
 SIZINGS = OrderedDict([
@@ -251,17 +252,21 @@ def read_trades(live_dir, coin):
     path = os.path.join(live_dir, "shadow_trades_%s_%s.csv" % (BOOK, coin))
     if not os.path.exists(path):
         return []
-    out = []
+    keep = {}
     with io.open(path, encoding="utf-8", newline="") as fh:
         for r in csv.DictReader(fh):
-            t_in = int(float(r["t_in_ms"]))
-            if t_in < START_MS or str(r.get("why_out")) == "OPEN":
-                continue
-            t1 = r.get("target_1")
-            out.append({"t_in_ms": t_in, "t_out_ms": int(float(r["t_out_ms"])), "side": int(float(r["side"])),
-                        "p_in": float(r["p_in"]), "p_out": float(r["p_out"]), "stop0": float(r["stop0"]),
-                        "why_out": str(r["why_out"]), "t1": float(t1) if t1 not in (None, "", "nan") else None})
-    return out
+            try:
+                t_in = int(float(r["t_in_ms"]))
+                if t_in < START_MS or str(r.get("why_out")) == "OPEN":
+                    continue
+                t1 = r.get("target_1")
+                row = {"t_in_ms": t_in, "t_out_ms": int(float(r["t_out_ms"])), "side": int(float(r["side"])),
+                       "p_in": float(r["p_in"]), "p_out": float(r["p_out"]), "stop0": float(r["stop0"]),
+                       "why_out": str(r["why_out"]), "t1": float(t1) if t1 not in (None, "", "nan") else None}
+            except (KeyError, TypeError, ValueError):
+                continue                                          # a garbled line is not a trade
+            keep[(t_in, row["side"])] = row                       # the engine may write a row twice after a crash
+    return [keep[k] for k in sorted(keep)]                        # (shadows.step: the file before the state): once here
 
 
 def read_px(data_dir):
@@ -269,7 +274,7 @@ def read_px(data_dir):
     or None when a bar file cannot be read or holds no bar of the desk yet."""
     rows = {}
     for a in COINS:
-        got = signals.read_bars(signals.bar_path(data_dir, a), START_MS - 1)
+        got = signals.read_bars(signals.bar_path(data_dir, a), START_MS - 1, cap=BARS_CAP)
         if not got:
             return None
         rows[a] = dict((b[0], b) for b in got)
@@ -309,35 +314,55 @@ def live_setups(times_ms, px, live_dir, state):
         if int(ms) not in at:
             raise RuntimeError("no stored bar at %s" % _iso(ms))
         return at[int(ms)]
-    setups, waiting = [], 0
+    setups, waiting, left_out = [], 0, 0
     for a in COINS:
+        mine = []
         for t in read_trades(live_dir, a):
             if t["t_in_ms"] > times_ms[last] or t["t_out_ms"] > times_ms[last]:
                 waiting += 1                                      # booked, its bars not in the file yet: the next step
                 continue
-            setups.append(setup_of(a, t["side"], t["p_in"], t["stop0"], ix(t["t_in_ms"]), ix(t["t_out_ms"]), t["p_out"],
-                                   t["why_out"], t["t1"], px[a]))
+            try:
+                mine.append(setup_of(a, t["side"], t["p_in"], t["stop0"], ix(t["t_in_ms"]), ix(t["t_out_ms"]), t["p_out"],
+                                     t["why_out"], t["t1"], px[a]))
+            except (RuntimeError, TypeError, ValueError):
+                left_out += 1                                     # no bar at its entry or exit (a gap in a bar file),
+                continue                                          # or a row that does not add up: said, not walked
         b = ((state.get("books") or {}).get(BOOK) or {}).get(a) or {}
-        if b.get("pos") and b.get("t_in_ms") is not None and int(b["t_in_ms"]) >= START_MS:
-            if int(b["t_in_ms"]) > times_ms[last]:
-                waiting += 1                                      # an early entry: its first bar has not closed yet
+        try:
+            if b.get("pos") and b.get("t_in_ms") is not None and int(b["t_in_ms"]) >= START_MS:
+                if int(b["t_in_ms"]) > times_ms[last]:
+                    waiting += 1                                  # an early entry: its first bar has not closed yet
+                else:
+                    mine.append(setup_of(a, b["pos"], b["entry"], b["stop0"], ix(b["t_in_ms"]), None, None, None,
+                                         b.get("t1"), px[a], t1_hit=b.get("t1_hit"), last=last))
+        except (RuntimeError, TypeError, ValueError, KeyError):
+            left_out += 1
+        mine.sort(key=lambda s: s["i_in"])
+        ok = []
+        for s in mine:                                            # one trade at a time per coin: a trade that starts
+            prev = ok[-1] if ok else None                         # before the one before it ended cannot be walked
+            if prev is not None and (prev["i_out"] is None or s["i_in"] < prev["i_out"]):
+                left_out += 1
                 continue
-            setups.append(setup_of(a, b["pos"], b["entry"], b["stop0"], ix(b["t_in_ms"]), None, None, None, b.get("t1"),
-                                   px[a], t1_hit=b.get("t1_hit"), last=last))
+            ok.append(s)
+        setups += ok
     setups.sort(key=lambda s: (s["i_in"], ORDER[s["coin"]]))
-    return setups, waiting
+    return setups, waiting, left_out
 
 
 # ------------------------------------------------------------------ the block
-def block(live_dir=None, data_dir=None, state_path=None):
+def block(live_dir=None, data_dir=None, state_path=None, now=None):
     """The "paper_desk" block of scoreboard.json. Never raises for a missing input: it says what it could not read."""
     out = {"started_utc": START_UTC, "start_wallet": START_W, "line_up": UP * START_W, "line_down": DOWN * START_W,
            "note": NOTE, "wallets": []}
     got = read_px(data_dir or data.DATA_DIR)
     if got is None:
-        out["status"] = "no bar of the desk yet (it starts %s UTC)" % START_UTC[:16].replace("T", " ")
+        begun = (time.time() if now is None else now) * 1000 >= START_MS + 2 * BAR_MS   # its first bar should have closed
+        out["status"] = ("the bar files could not be read at this step" if begun else
+                         "no bar of the desk yet (it starts %s UTC)" % START_UTC[:16].replace("T", " "))
         for key, sz in SIZINGS.items():
-            out["wallets"].append({"key": key, "title": sz["title"], "equity": START_W, "pct": 0.0, "status": "not started"})
+            out["wallets"].append({"key": key, "title": sz["title"], "equity": None if begun else START_W,
+                                   "pct": None if begun else 0.0, "status": "not read" if begun else "not started"})
         return out
     times_ms, px = got
     try:
@@ -345,7 +370,7 @@ def block(live_dir=None, data_dir=None, state_path=None):
             state = json.load(fh)
     except (OSError, ValueError):
         state = {}
-    setups, waiting = live_setups(times_ms, px, live_dir or LIVE_DIR, state)
+    setups, waiting, left_out = live_setups(times_ms, px, live_dir or LIVE_DIR, state)
     fee = float(CFG.get("asset_cost", {}).get(COINS[0], CFG["cost_side"]))
     fund = dict((a, funding_bars(a, times_ms, data_dir or data.DATA_DIR)) for a in COINS)
     if any(v is None for v in fund.values()):
@@ -353,7 +378,10 @@ def block(live_dir=None, data_dir=None, state_path=None):
         fund = dict((a, v) for a, v in fund.items() if v is not None)
     ctx = context(setups, px, times_ms, fee, fund)
     n = len(times_ms)
-    out.update(as_of_utc=_iso(times_ms[-1] + BAR_MS), trades=len(setups), entries_waiting_for_their_bar=waiting, status="running")
+    out.update(as_of_utc=_iso(times_ms[-1] + BAR_MS), trades=len(setups), entries_waiting_for_their_bar=waiting,
+               trades_left_out=left_out, status="running")
+    if left_out:
+        out["status"] = "running; %d trade(s) left out (no bar at their entry or exit, or an unreadable row)" % left_out
     words = {None: "running", "up": "reached +100%", "down": "reached -50%", "wiped": "wiped out"}
     for key, sz in SIZINGS.items():
         r = walk(ctx, 0, n, member_sizer(sz), lines=(UP * START_W, DOWN * START_W))

@@ -74,7 +74,7 @@ def write_bars(d, coin, bars):
     with open(os.path.join(d, "%s_15m.csv" % coin.lower()), "w", newline="") as fh:
         w = csv.writer(fh)
         w.writerow(["ts_ms", "open", "high", "low", "close", "volume", "taker_buy"])
-        for i, (o, h, l, c) in enumerate(bars):
+        for i, o, h, l, c in bars:
             w.writerow([T0 + (i - 2) * BAR, o, h, l, c, 1.0, 0.5])    # two bars before the desk starts, then its own
 
 
@@ -96,6 +96,9 @@ def flat(n, **over):
 def planted(tmp_path, btc_bars, eth_bars, btc_trades=(), eth_trades=(), state=None, funding=True):
     d, lv = str(tmp_path / "data"), str(tmp_path / "live")
     os.makedirs(d), os.makedirs(lv)
+    if not isinstance(btc_bars[0], list):                          # bars as (i, o, h, l, c) keep their own times when
+        btc_bars = [[i] + list(b) for i, b in enumerate(btc_bars)]   # a bar is taken out of the list
+        eth_bars = [[i] + list(b) for i, b in enumerate(eth_bars)]
     write_bars(d, B, btc_bars), write_bars(d, E, eth_bars)
     write_trades(lv, B, btc_trades), write_trades(lv, E, eth_trades)
     if funding:
@@ -114,7 +117,8 @@ def trade(i_in, i_out, side=-1, p_in=100.0, p_out=104.0, stop0=104.0, why="STOP"
 
 
 def test_before_its_first_bar_the_desk_says_so_and_needs_no_file(tmp_path):
-    out = desk.block(live_dir=str(tmp_path), data_dir=str(tmp_path), state_path=str(tmp_path / "none.json"))
+    out = desk.block(live_dir=str(tmp_path), data_dir=str(tmp_path), state_path=str(tmp_path / "none.json"),
+                     now=(desk.START_MS - 60000) / 1000.0)
     assert out["status"].startswith("no bar of the desk yet") and [w["status"] for w in out["wallets"]] == ["not started"] * 3
     assert [w["equity"] for w in out["wallets"]] == [10000.0] * 3 and out["started_utc"] == desk.START_UTC
 
@@ -170,6 +174,38 @@ def test_funding_is_counted_and_a_finish_line_stops_a_wallet(tmp_path):
     assert w["S3"]["equity"] == 20515.0                             # it stops at the close that crossed the line
     assert w["S2"]["status"] == "running" and w["S2"]["equity"] == 17010.0 and w["S2"]["ended_utc"] is None
     assert w["S1"]["status"] == "running" and 10000 < w["S1"]["equity"] < 20000
+
+
+def test_a_row_written_twice_counts_once_and_a_trade_without_its_bar_is_left_out_not_fatal(tmp_path):
+    n = 12
+    btc = flat(n, b3=(100.0, 104.5, 100.0, 104.0))
+    # the engine wrote the same closed trade twice (a crash between the file and the state): one trade
+    out = planted(tmp_path / "a", btc, flat(n), btc_trades=[trade(1, 3), trade(1, 3)])
+    assert out["trades"] == 1 and out["trades_left_out"] == 0 and all(w["joined"] == 1 for w in out["wallets"])
+    # a second trade that starts while the first is still open, and one whose exit bar is not in the file: both are
+    # left out and said; the desk goes on with the rest
+    odd = dict(trade(2, 5), side=1, stop0=96.0, p_out=96.0)
+    eth = [[i] + list(b) for i, b in enumerate(flat(n)) if i != 6 + 2]     # ETH has no bar 6: the common times lose it
+    btc = [[i] + list(b) for i, b in enumerate(btc)]
+    out = planted(tmp_path / "b", btc, eth, btc_trades=[trade(1, 3), odd, trade(4, 6)])
+    assert out["trades"] == 1 and out["trades_left_out"] == 2 and out["status"].startswith("running; 2 trade(s) left out")
+    assert all(w["joined"] == 1 and w["status"] == "running" for w in out["wallets"])
+    # an open trade whose state does not add up (Target 1 marked taken, no Target 1 price): left out, not a crash
+    state = {B: {"pos": -1, "entry": 100.0, "stop0": 104.0, "t_in_ms": T0 + BAR, "t1": None, "t1_hit": True},
+             E: {"pos": 1, "entry": 100.0, "stop0": None, "t_in_ms": T0 + BAR}}
+    out = planted(tmp_path / "c", flat(n), flat(n), state=state)
+    assert out["trades"] == 0 and out["trades_left_out"] == 2
+
+
+def test_bar_files_that_cannot_be_read_after_the_start_are_said_not_called_not_started(tmp_path):
+    d = str(tmp_path)
+    late = (desk.START_MS + 10 * BAR) / 1000.0
+    out = desk.block(live_dir=d, data_dir=d, state_path=os.path.join(d, "none.json"), now=late)
+    assert out["status"] == "the bar files could not be read at this step"
+    assert [w["status"] for w in out["wallets"]] == ["not read"] * 3 and out["wallets"][0]["equity"] is None
+    early = (desk.START_MS - 3600000) / 1000.0
+    out = desk.block(live_dir=d, data_dir=d, state_path=os.path.join(d, "none.json"), now=early)
+    assert out["status"].startswith("no bar of the desk yet") and out["wallets"][0]["equity"] == 10000.0
 
 
 def test_the_scoreboard_carries_the_block_and_survives_a_desk_that_fails(tmp_path, monkeypatch):

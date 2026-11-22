@@ -7,6 +7,11 @@ shows the order the book will fill at the next open), the tail of the engine's 1
 closed-trade files, and keeps two files of its own: data/signals_early_state.json (atomic) and
 data/signals_early_log.jsonl (append only).
 
+SINCE think15-v5.2.9 (22 Nov 2026): on BTC and ETH the book itself books a new entry from flat at the decision close
+(CFG["early_entry"]), so there is no pending order to see and S1 (signals.py) is issued in that step with its levels.
+S2 therefore no longer fires for those entries; it still fires for BTC and ETH flips and for every other market, and
+its BTC and ETH record from that date is flips only. Nothing below was changed.
+
 A SIGNAL is issued when a market's b_targets view shows a NEW pending entry (`next_open` "... -> LONG" / "... -> SHORT",
 never an exit or a flip to flat). It carries the side and E0 = the decision close (the close of the bar the page's shadow
 books have reached, read from the engine's own bar file).

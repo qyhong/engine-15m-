@@ -143,3 +143,109 @@ def test_a_decision_at_the_last_bar_opens_the_position_without_the_next_bar():
         b = run(inp, RULE, btc(), i, i + 1, st)                    # every call ends at its own last bar
         st = json.loads(json.dumps(b["state"]))
     assert st["pos"] in (-1, 0, 1)
+
+
+# ---------------------------------------------------------------- the points of the independent review (22 Nov 2026)
+def test_a_pending_entry_saved_by_the_old_rule_fills_at_the_next_open_once():
+    # the engine is restarted on a state the old code saved: a pending ENTER must fill at the next open, not again
+    inp = list(random_inputs(seed=3))
+    px = dict(inp[0])
+    px["open"] = px["open"] * 1.0005
+    px["high"] = np.maximum(px["high"], px["open"])
+    inp[0] = px
+    inp = tuple(inp)
+    n = len(px["close"])
+    st, k = None, None
+    for i in range(1, n):
+        b = run(inp, OLD, btc(), i, i + 1, st)
+        st = json.loads(json.dumps(b["state"]))
+        if st["pending"] and st["pos"] == 0 and st["pending"][0] in (policy.ENTER, policy.FORCED):
+            k = i
+            break
+    assert k is not None
+    nxt = run(inp, RULE, btc(), k + 1, k + 2, st)["state"]          # the new rule takes over at the next bar
+    side = int(st["pending"][1])
+    assert nxt["entry"] == px["open"][k + 1] or nxt["pos"] != side   # filled at that open (or already stopped in the bar)
+    both = run(inp, RULE, btc(), k + 1, n, st)
+    first = both["trades"].iloc[0]
+    assert first.p_in == px["open"][k + 1] and first.t_in_ms == (k + 1) * BAR and first.side == side
+    assert (both["trades"].t_in_ms.values[1:] > first.t_in_ms).all()   # one entry there, not two
+
+
+def test_the_first_bar_after_an_early_entry_stops_at_its_open_when_it_gaps_through_the_stop():
+    inp = list(random_inputs(seed=3))
+    base = run(tuple(inp), RULE, btc())
+    t = base["trades"].iloc[0]
+    i = int(t.i_in)                                                # the first bar the trade is held in
+    px = dict((k, v.copy()) for k, v in inp[0].items())
+    gap = t.stop0 - t.side * 0.5                                   # that bar opens beyond the stop
+    px["open"][i] = gap
+    px["high"][i], px["low"][i] = max(px["high"][i], gap), min(px["low"][i], gap)
+    inp[0] = px
+    got = run(tuple(inp), RULE, btc())["trades"].iloc[0]
+    assert got.p_in == t.p_in == px["close"][i - 1] and got.i_in == i and got.i_out == i
+    assert got.why_out == "STOP" and got.p_out == gap and got.t_in_ms == got.t_out_ms   # in at the close, out at the open
+
+
+def test_a_step_of_several_bars_is_the_bars_one_at_a_time():
+    # the catch-up after a restart: several bars in one call, a deciding bar sometimes the last of the call
+    inp = random_inputs(seed=17)
+    n = len(inp[0]["close"])
+    one, st = [], None
+    for i in range(1, n):
+        b = run(inp, RULE, btc(), i, i + 1, st)
+        st = json.loads(json.dumps(b["state"]))
+        one += [t for t in b["trades"].itertuples() if t.why_out != "OPEN"]
+    many, st2 = [], None
+    for lo in range(1, n, 7):
+        b = run(inp, RULE, btc(), lo, min(lo + 7, n), st2)
+        st2 = json.loads(json.dumps(b["state"]))
+        many += [t for t in b["trades"].itertuples() if t.why_out != "OPEN"]
+    assert len(one) == len(many) > 30
+    for a, b in zip(one, many):
+        assert (a.t_in_ms, a.t_out_ms, a.side, a.why_in, a.why_out) == (b.t_in_ms, b.t_out_ms, b.side, b.why_in, b.why_out)
+        assert abs(a.p_in - b.p_in) < 1e-12 and abs(a.pnl_usd - b.pnl_usd) < 1e-9
+    for k in ("pos", "entry", "stop", "t_in_ms", "t1", "t2", "t1_hit", "idle", "pending"):
+        assert st[k] == st2[k], k
+
+
+def test_an_exit_and_a_new_entry_can_share_one_close():
+    # a trade stopped (or at Target 2) inside a bar and a new one decided at that bar's close: the state goes from one
+    # setup straight to the next, with no flat step between (the feed then closes the old one before it posts the new)
+    inp = random_inputs(seed=3)
+    n = len(inp[0]["close"])
+    st, seen, same_side = None, 0, 0
+    for i in range(1, n):
+        b = run(inp, RULE, btc(), i, i + 1, st)
+        new = json.loads(json.dumps(b["state"]))
+        closed = [t for t in b["trades"].itertuples() if t.why_out != "OPEN"]
+        if st and st["pos"] and closed and new["pos"] and new["t_in_ms"] == i * BAR + BAR and closed[-1].why_in != "x":
+            if closed[-1].why_out.split("+")[-1] in ("STOP", "STOP_BE", "T2"):
+                seen += 1
+                same_side += int(new["pos"] == st["pos"])
+                assert new["t_in_ms"] != st["t_in_ms"] and new["entry"] == inp[0]["close"][i]
+                # the OLD setup's row is written in this step (a flip that filled and was stopped inside this same
+                # bar can add a second row: a setup no step ever showed, as before v5.2.9)
+                assert any(t.t_in_ms == st["t_in_ms"] for t in closed)
+        st = new
+    assert seen >= 3 and same_side >= 1
+
+
+def test_the_signal_is_issued_in_the_entry_bar_and_the_preview_no_longer_fires_for_these_entries():
+    from engine15 import signals, signals_early
+    inp = random_inputs(seed=3)
+    n = len(inp[0]["close"])
+    st = None
+    for i in range(1, n):
+        prev = st
+        st = json.loads(json.dumps(run(inp, RULE, btc(), i, i + 1, st)["state"]))
+        if st["pos"] and st["t_in_ms"] == i * BAR + BAR and (not prev or not prev["pos"]):
+            break
+    view = shadows.asset_view(dict(st, mark=inp[0]["close"][i]))
+    assert signals_early.pending_entry(view) is None                # S2 keyed on a pending order: there is none now
+    now_ms = st["t_in_ms"] + 150000                                 # the Telegram unit reads the page 2.5 minutes later
+    sig, why = signals.build_signal("BTCUSDT", view, now_ms)
+    assert why is None and sig["f_ms"] == st["t_in_ms"] == sig["a_ms"]      # bar A is the entry bar itself
+    assert sig["follow"]["last_bar_ms"] == st["t_in_ms"] - BAR and sig["valid_until_ms"] == st["t_in_ms"] + 5 * BAR
+    assert sig["entry"] == float(view["entry"]) and sig["follow"]["state"] == signals.WAITING
+

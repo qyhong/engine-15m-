@@ -13,6 +13,8 @@ result under H53's fixed rules. Only the followable record is judged.
 THE FOLLOWABLE RULES, as implemented (H53; nothing here is tuned):
   bar A   the engine bar during which the alert was sent (the wall clock of the send). The book's fill bar F has closed by
           the time the page can show the position, so A is F+1 or later; bars F .. A never fill.
+          (Since think15-v5.2.9, 22 Nov 2026, a BTC or ETH entry from flat is on the page in the step that decides
+          it, so there A is F itself and the four bars are F+1 .. F+4, one bar sooner. The rules are unchanged.)
   1 entry a limit at E, filled at E on the first of the FOUR bars after bar A whose range holds E (low <= E <= high).
           The four bars are also the four 15-minute slots after A (the card's "valid until"): where the market shut in
           between, a bar that opens after that time does not fill.
