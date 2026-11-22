@@ -605,3 +605,9 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   and ETH is supported (H102 to H106); the current rule's 12-month results lose 54% of the time on history (H87), break
   even at 0.086% a side on BTC and ETH in R (H88), and rest on single years (H89). H81 (side placebo) gave a
   surprising result and is under audit for an artefact before it is read. H101 queued after its siblings finished.
+- **H81 void, H82 withdrawn** (22 Nov 2026). An Opus 5.5 agent audited H81's surprising result (the book's side choice
+  "worse than random"): an artefact of the placebo's design. Permuting sides within a month gives trades the side of a
+  later trade, and the book's later sides follow the month's move, so the placebo trades on information the book did
+  not have yet. The scoring itself is sound. Against side choices with no future information the book is about as good
+  as a coin. H82 had the same flaw and was taken out of the queue before it ran. Recorded under "Audit of H81" in
+  `research/HYPOTHESES.md`.

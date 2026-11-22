@@ -5413,3 +5413,22 @@ none of five common daily patterns is supported on BTC and ETH. The current rule
 and rests on single years; its break-even fee on BTC and ETH (0.086% a side in R, before funding and slippage) is above
 the member's 0.05%. Nothing here changes a book. The six heavy placebo studies (H80, H82 to H86) are still running or
 queued.
+
+**Audit of H81, and H82 withdrawn (22 Nov 2026, about 14:40 UTC; `research/out/queue/H81/audit.md`, script
+`research/queue/h81_audit.py`).** H81 is VOID: its result is an artefact of the placebo's design, not of the trade
+scoring and not a fact about the book. The scoring (`machine_r`, `replay_trade`) is sound: own-side and flipped
+trades score symmetrically (own + opposite equals about minus two fees in R), no stop or target on the wrong side in
+5,162 trades, no look-ahead, fees the same; a recomputation matched H81's saved outcomes exactly. The flaw: permuting
+sides WITHIN a calendar month hands a trade the side of a trade entered LATER in that month. The book reacts to price
+(stop-outs, flips, the higher-timeframe bias), so its later sides carry the month's direction (the month's long share
+correlates 0.63 to 0.77 with the same month's move and 0.03 with the next month's). Sides taken only from later
+trades of the month earn +0.223R a trade pooled, only from earlier trades -0.063R; on 12 driftless random walks the
+same permutation makes a causal momentum rule "lose" and a reversal rule "win" by 0.045R. Against side choices that use
+no future information the book is about as good as a coin (pooled -0.003R against -0.040R for a coin; ETH +0.060R
+against -0.011R, BTC -0.082R against -0.071R); these comparisons are descriptive, not registered tests.
+H82 has the same flaw (a trade moved to an earlier bar of its month keeps a side chosen later: in a sampled probe of
+H82's own draw, placebo bars before the real entry earned +0.211R a trade, bars after -0.024R), so it was WITHDRAWN from
+the queue before it started (moved to `/data/research_queue/held/`). H80, H83, H84 and H85 do not take sides from later
+decisions and are not affected; H86 shuffles the stop unit within a month, which leaks future volatility (not
+direction); its size was not measured and H86 will be read with that caveat. Corrected versions of H81 and H82 need a
+fresh registration, with the disclosure that this audit saw the numbers above.
