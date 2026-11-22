@@ -245,7 +245,8 @@ def test_the_bars_are_the_ones_that_were_made():
 
 def test_the_names_and_shares_the_vault_relies_on():
     assert setups.BOOK == "b_targets"
-    assert shadows.CHALLENGERS["b_targets"]["rule"] == {"targets": True} and shadows.CHALLENGERS["b_targets"]["cfg"] == {}
+    assert shadows.CHALLENGERS["b_targets"]["rule"] == {"targets": True, "early": True}      # v5.2.9: the early entry
+    assert shadows.CHALLENGERS["b_targets"]["cfg"] == {} and CFG["early_entry"] == ("BTCUSDT", "ETHUSDT")
     assert shadows.PART == exits.PART == vf.REDUCE_FRACTION == 0.5        # the share closed at Target 1, everywhere
     assert vf.ACTIONS == ("close", "reduce", "move_stop")                 # exits only: never "open"
     assert vf.ALLOWED == ("BTCUSDT", "ETHUSDT")                           # the owner's two markets, no more

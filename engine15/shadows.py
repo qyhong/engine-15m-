@@ -71,7 +71,7 @@ CHALLENGERS = OrderedDict([
     ("main", {"title": "Main rule (v5), fresh copy", "rule": {}, "cfg": {}}),
     ("v4", {"title": "v4: no higher-timeframe bias (H4)", "rule": {}, "cfg": {"htf_bias": False}}),
     ("h3_flip_limit", {"title": "H3: limit on flip exits", "rule": {"flip_limit": True}, "cfg": {}}),
-    ("b_targets", {"title": "B: half at Target 1, rest at Target 2", "rule": {"targets": True}, "cfg": {}}),
+    ("b_targets", {"title": "B: half at Target 1, rest at Target 2", "rule": {"targets": True, "early": True}, "cfg": {}}),
     ("b_trail", {"title": "B: trailing swing / 2 ATR stop after 1R", "rule": {"trail": True}, "cfg": {}}),
     ("a_pullback", {"title": "A: wait up to 8 bars for a pullback fill", "rule": {"pullback": True}, "cfg": {}}),
     # Y, the charter's yardstick (11 Nov 2026): the same engine and odds, deciding only at 4h / daily closes
@@ -191,6 +191,13 @@ def run(px, odds, shock, tide, unit, cfg, lo, hi, state=None, bias=None, guard=N
         return run_swing(px, odds, unit, cfg, lo, hi, state=state, guard=guard, rule=rule, aux=aux, times_ms=times_ms)
     flip_limit, use_targets, trail, pullback = (bool(rule.get(k)) for k in ("flip_limit", "targets", "trail", "pullback"))
     be_t1, half_t1 = bool(rule.get("be_t1")), bool(rule.get("half_t1"))          # H36: break-even / half at Target 1
+    # v5.2.9 (owner, 22 Nov 2026, "Cut the 15-minute delay"): a new entry from flat is booked AT THE CLOSE THAT DECIDES
+    # IT, at that close's price, instead of at the next bar's open one step later. It is the same moment (a close is the
+    # next bar's open time) and uses closed bars only; the position is then in the book's state, and so on the page, in
+    # setups.json and in the vault's book, in the step that decided it. Only where the rule asks ("early") AND config
+    # names the market (CFG["early_entry"] -> asset_cfg's "early_fill", exactly True: a cfg that did not come through
+    # asset_cfg never has it) AND fills are not delayed. Flips and exits keep their timing.
+    early = bool(rule.get("early")) and cfg.get("early_fill") is True and not int(cfg.get("fill_delay_bars", 0) or 0)
     ma_key, ma_arm = rule.get("ma_trail"), rule.get("ma_arm", "1r")              # H36: the moving-average trail
     ma_arr = aux["ma"][ma_key] if ma_key else None
     need_t1 = use_targets or be_t1 or half_t1 or (ma_key is not None and ma_arm == "t1")
@@ -280,11 +287,11 @@ def run(px, odds, shock, tide, unit, cfg, lo, hi, state=None, bias=None, guard=N
                    g["why_in"], g["i_in"], g["t_in_ms"], gross - fees, fees, g.get("t1"), g.get("t2"))
         leg = None
 
-    def open_pos(i, side, price, why, k_dec):
+    def open_pos(i, side, price, why, k_dec, at_ms=None):
         nonlocal pos, entry, qty, t_in, t_in_ms, why_in, stop, stop0, qty0, trail_on, ma_on, trail_px
         from .backtest import leverage as _lev                    # the main book's own sizing rule
         pos, entry, qty, t_in, why_in = side, price, eq * _lev(cfg, price, cfg["stop_units"] * unit[i - 1]) / price, i, why
-        t_in_ms = tms(i)
+        t_in_ms = tms(i) if at_ms is None else at_ms              # an early entry: bar i may not be in the data yet
         stop = entry - pos * cfg["stop_units"] * unit[i - 1]
         stop0, qty0, trail_on = stop, qty, False
         ma_on, trail_px = False, None
@@ -422,6 +429,12 @@ def run(px, odds, shock, tide, unit, cfg, lo, hi, state=None, bias=None, guard=N
                 lim = pullback_limit(aux, i, target, c[i])
             if lim is not None:
                 order = {"side": int(target), "limit": lim[0], "basis": lim[1], "left": PB_BARS, "a": a, "why": why}
+            elif (early and pos == 0 and target != 0 and pending is None and leg is None
+                  and a in (policy.ENTER, policy.FORCED)):
+                # v5.2.9: held from the next bar on (bar i + 1), entered at this close's price; the stop and the targets
+                # come from this bar's own readings, exactly what the fill one bar later used. held[i] stays flat.
+                open_pos(i + 1, target, c[i], a, i,
+                         at_ms=None if times_ms is None else int(times_ms[i]) + CFG["bar_ms"])
             elif not (a == policy.STEP_ASIDE and pos == 0):
                 delay = int(cfg.get("fill_delay_bars", 0) or 0)   # same late-feed rule as the main book
                 if not (delay and pending is not None and pending[1] == target):
@@ -468,7 +481,8 @@ def book_inputs(prep, a):
 def asset_cfg(a, cfg):
     return dict(cfg, cost_side=CFG.get("asset_cost", {}).get(a, cfg["cost_side"]),
                 leverage_cap=CFG.get("max_leverage", {}).get(a, 1.0),
-                fill_delay_bars=CFG.get("fill_delay", {}).get(a, 0))
+                fill_delay_bars=CFG.get("fill_delay", {}).get(a, 0),
+                early_fill=a in (CFG.get("early_entry") or ()))   # v5.2.9: only a rule that asks for it uses this
 
 
 def daily_close_mask(asset, times):

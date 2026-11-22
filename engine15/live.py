@@ -203,6 +203,7 @@ def asset_cfg(a, cfg):
     return dict(cfg, cost_side=CFG.get("asset_cost", {}).get(a, cfg["cost_side"]),
                 leverage_cap=CFG.get("max_leverage", {}).get(a, 1.0),
                 fill_delay_bars=CFG.get("fill_delay", {}).get(a, 0),
+                early_fill=a in (CFG.get("early_entry") or ()),    # v5.2.9: the Setups book's early entry (shadows.run)
                 be_t1=be, half_t1=half, t2_exit=half and a in (CFG.get("t2_exit") or ()),
                 trail_stop=trail, trail_wait=trail and a in (CFG.get("trail_wait_signal") or ()))
 

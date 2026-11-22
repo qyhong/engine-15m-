@@ -17,14 +17,15 @@ ESTATE = os.environ.get("ENGINE15_ESTATE", os.path.join(os.path.dirname(ROOT), "
 LIBRARY_JSON = os.path.join(ESTATE, "research", "local", "library", "strategy_library.json")
 
 # Said once in the journal (each market group's next entry) after "version" changes (live.step_group).
-VERSION_NOTE = ("think15-v5.2.8: on BTC, ETH, gold, silver, WTI and Brent the main book now trails its stop. Once a "
-                "trade is one entry-stop distance in profit the stop follows the tighter of the last confirmed 15-minute "
-                "swing and 2 x ATR(15m) behind the close, and never loosens. After a trailing-stop exit there is no "
-                "forced entry: the book stays flat until one side clears the entry bar. USDJPY and the S&P 500 keep "
-                "their target rules; entries, sizing and flips are unchanged.")
+VERSION_NOTE = ("think15-v5.2.9: on BTC and ETH the Setups book now books a new entry from flat at the close that "
+                "decides it, at that close's price, instead of at the next bar's open one step later. It is the same "
+                "moment; the setup is now on the page, in the signal and in the book the vault reads in that same step, "
+                "about 15 minutes sooner. Flips, stops, targets, sizing and every other market and book are unchanged.")
 
 CFG = {
-    "version": "think15-v5.2.8",      # v5.2.8 (21 Nov 2026): the trailing stop on six main books ("trail_stop" and
+    "version": "think15-v5.2.9",      # v5.2.9 (22 Nov 2026): the Setups book's early entry on BTC and ETH ("early_entry",
+                                      #   below); owner: "Cut the 15-minute delay", then "I want stick to my plan".
+                                      # v5.2.8 (21 Nov 2026): the trailing stop on six main books ("trail_stop" and
                                       #   "trail_wait_signal", below); owner: "Update minds 15 with tight trailing stop".
                                       # v5.2.7 (20 Nov 2026): USDJPY's main book sells half at Target 1 and the rest at Target 2
                                       #   ("half_t1" and "t2_exit", below); owner, after the long of 10 Nov passed both targets and
@@ -76,6 +77,12 @@ CFG = {
     # honest fills (11 Nov 2026): these markets' live bars arrive ~10 minutes after they close, so a decision
     # at a bar's close can only be acted on one bar later; their orders fill one open later than the others
     "fill_delay": {"XAUUSD": 1, "XAGUSD": 1, "WTI": 1, "BRENT": 1},
+    # v5.2.9 (22 Nov 2026, the owner: "Cut the 15-minute delay"): on these markets the Setups book (shadows.py, the
+    # b_targets rule only) books a new entry from flat at the close that decides it, at that close's price, so the setup
+    # reaches the page, the signal and the vault's book in the deciding step instead of one bar later. H64: over 2,075
+    # replay entries the bar of delay cost nothing on average; this makes a member's fill match the book's, no more.
+    # Never a market in "fill_delay" (shadows.run refuses it there). Flips and exits keep their timing.
+    "early_entry": ("BTCUSDT", "ETHUSDT"),
     # total-risk cap (11 Nov 2026, the owner's list item 5): what all open main-book trades would lose if every
     # stop were hit at once may not exceed this share of the books' total equity; a new entry that would go over
     # is shrunk to fit (or skipped when nothing is left). With ~2% risk a trade, it binds only when most books

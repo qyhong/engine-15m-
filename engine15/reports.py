@@ -226,6 +226,11 @@ def scoreboard(playbook_rows=None, log=print):
     out = {"generated_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "min_trades": MIN_TRADES, "rows": rows,
            "note": "Forward results only. A book is judged once it has %d trades: ahead if the low end of its 90%% range "
                    "per trade is above zero, behind if the high end is below zero." % MIN_TRADES}
+    try:                                                           # the paper desk (paper_desk.py; owner, 22 Nov 2026):
+        from . import paper_desk                                   # three forward paper wallets on the Setups book's BTC
+        out["paper_desk"] = paper_desk.block()                     # and ETH trades. Read only; it never stops the scoreboard
+    except Exception as e:
+        log("paper desk: %r" % (e,))
     tmp = SCOREBOARD_JSON + ".tmp"
     with open(tmp, "w", encoding="utf-8") as fh:
         json.dump(out, fh)

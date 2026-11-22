@@ -16,12 +16,31 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-18T03:00:00Z",
+     "as_of_utc": "2026-11-18T02:30:00Z",
+     "entry": "64254.5",
+     "entry_window_open": false,
+     "opened_utc": "2026-11-18T02:30:00Z",
+     "price": "64254.5",
+     "rr_now_t2": "2",
+     "side": "LONG",
+     "stop": "63740.46",
+     "symbol": "BTCUSDT",
+     "t1_taken": false,
+     "target_1": "64903.47",
+     "target_2": "65282.58"
+    }
+   },
+   "i": 9
+  },
+  {
+   "body": {
+    "book": {
+     "as_of_utc": "2026-11-18T02:45:00Z",
      "entry": "63755.86",
      "entry_window_open": false,
      "opened_utc": "2026-11-18T02:45:00Z",
-     "price": "63982.56",
-     "rr_now_t2": "4.4",
+     "price": "63755.86",
+     "rr_now_t2": "2",
      "side": "SHORT",
      "stop": "64265.9",
      "symbol": "BTCUSDT",
@@ -30,17 +49,23 @@
      "target_2": "62735.78"
     }
    },
-   "i": 11
+   "i": 10
   },
   {
    "body": {
     "book": {
      "as_of_utc": "2026-11-18T03:15:00Z",
+     "entry": "64106.56",
      "entry_window_open": false,
+     "opened_utc": "2026-11-18T03:15:00Z",
      "price": "64106.56",
-     "side": "FLAT",
+     "rr_now_t2": "2",
+     "side": "SHORT",
+     "stop": "64619.42",
      "symbol": "BTCUSDT",
-     "t1_taken": false
+     "t1_taken": false,
+     "target_1": "63574.48",
+     "target_2": "63080.84"
     }
    },
    "i": 12
@@ -48,12 +73,25 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-18T04:30:00Z",
+     "as_of_utc": "2026-11-18T03:30:00Z",
+     "entry_window_open": false,
+     "price": "64761.94",
+     "side": "FLAT",
+     "symbol": "BTCUSDT",
+     "t1_taken": false
+    }
+   },
+   "i": 13
+  },
+  {
+   "body": {
+    "book": {
+     "as_of_utc": "2026-11-18T04:15:00Z",
      "entry": "64261.15",
      "entry_window_open": false,
      "opened_utc": "2026-11-18T04:15:00Z",
-     "price": "64373.33",
-     "rr_now_t2": "2.99",
+     "price": "64261.15",
+     "rr_now_t2": "2.12",
      "side": "SHORT",
      "stop": "64775.23",
      "symbol": "BTCUSDT",
@@ -62,30 +100,17 @@
      "target_2": "63171.92"
     }
    },
-   "i": 17
+   "i": 16
   },
   {
    "body": {
     "book": {
      "as_of_utc": "2026-11-18T05:15:00Z",
-     "entry_window_open": false,
-     "price": "64634.73",
-     "side": "FLAT",
-     "symbol": "BTCUSDT",
-     "t1_taken": false
-    }
-   },
-   "i": 20
-  },
-  {
-   "body": {
-    "book": {
-     "as_of_utc": "2026-11-18T05:30:00Z",
      "entry": "64634.73",
      "entry_window_open": false,
      "opened_utc": "2026-11-18T05:15:00Z",
-     "price": "65025.32",
-     "rr_now_t2": "0.71",
+     "price": "64634.73",
+     "rr_now_t2": "2",
      "side": "LONG",
      "stop": "64117.65",
      "symbol": "BTCUSDT",
@@ -94,7 +119,7 @@
      "target_2": "65668.89"
     }
    },
-   "i": 21
+   "i": 20
   },
   {
    "body": {
@@ -207,12 +232,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-18T08:45:00Z",
+     "as_of_utc": "2026-11-18T08:30:00Z",
      "entry": "66157.02",
      "entry_window_open": false,
      "opened_utc": "2026-11-18T08:30:00Z",
-     "price": "65834.97",
-     "rr_now_t2": "5.72",
+     "price": "66157.02",
+     "rr_now_t2": "1.63",
      "side": "LONG",
      "stop": "65627.76",
      "symbol": "BTCUSDT",
@@ -221,7 +246,7 @@
      "target_2": "67020.97"
     }
    },
-   "i": 34
+   "i": 33
   },
   {
    "body": {
@@ -296,12 +321,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-18T12:00:00Z",
+     "as_of_utc": "2026-11-18T11:45:00Z",
      "entry": "65403.57",
      "entry_window_open": false,
      "opened_utc": "2026-11-18T11:45:00Z",
-     "price": "65523.59",
-     "rr_now_t2": "1.93",
+     "price": "65403.57",
+     "rr_now_t2": "2.61",
      "side": "LONG",
      "stop": "64880.35",
      "symbol": "BTCUSDT",
@@ -310,7 +335,7 @@
      "target_2": "66767.23"
     }
    },
-   "i": 47
+   "i": 46
   },
   {
    "body": {
@@ -347,12 +372,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-18T13:45:00Z",
+     "as_of_utc": "2026-11-18T13:30:00Z",
      "entry": "65627.88",
      "entry_window_open": false,
      "opened_utc": "2026-11-18T13:30:00Z",
-     "price": "65478.71",
-     "rr_now_t2": "3.54",
+     "price": "65627.88",
+     "rr_now_t2": "2.25",
      "side": "LONG",
      "stop": "65102.86",
      "symbol": "BTCUSDT",
@@ -361,7 +386,7 @@
      "target_2": "66809.18"
     }
    },
-   "i": 54
+   "i": 53
   },
   {
    "body": {
@@ -398,12 +423,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-18T17:15:00Z",
+     "as_of_utc": "2026-11-18T17:00:00Z",
      "entry": "65896.65",
      "entry_window_open": false,
      "opened_utc": "2026-11-18T17:00:00Z",
-     "price": "65820.67",
-     "rr_now_t2": "1.84",
+     "price": "65896.65",
+     "rr_now_t2": "2.25",
      "side": "SHORT",
      "stop": "66423.83",
      "symbol": "BTCUSDT",
@@ -412,7 +437,7 @@
      "target_2": "64710.5"
     }
    },
-   "i": 68
+   "i": 67
   },
   {
    "body": {
@@ -487,12 +512,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-18T20:15:00Z",
+     "as_of_utc": "2026-11-18T20:00:00Z",
      "entry": "66589.43",
      "entry_window_open": false,
      "opened_utc": "2026-11-18T20:00:00Z",
-     "price": "66637.38",
-     "rr_now_t2": "2.57",
+     "price": "66589.43",
+     "rr_now_t2": "2.25",
      "side": "SHORT",
      "stop": "67122.15",
      "symbol": "BTCUSDT",
@@ -501,30 +526,17 @@
      "target_2": "65390.81"
     }
    },
-   "i": 80
+   "i": 79
   },
   {
    "body": {
     "book": {
      "as_of_utc": "2026-11-18T21:00:00Z",
-     "entry_window_open": false,
-     "price": "65610.35",
-     "side": "FLAT",
-     "symbol": "BTCUSDT",
-     "t1_taken": false
-    }
-   },
-   "i": 83
-  },
-  {
-   "body": {
-    "book": {
-     "as_of_utc": "2026-11-18T21:15:00Z",
      "entry": "65610.35",
      "entry_window_open": false,
      "opened_utc": "2026-11-18T21:00:00Z",
-     "price": "65192.4",
-     "rr_now_t2": "1.03",
+     "price": "65610.35",
+     "rr_now_t2": "2.64",
      "side": "SHORT",
      "stop": "66135.23",
      "symbol": "BTCUSDT",
@@ -533,7 +545,7 @@
      "target_2": "64222.69"
     }
    },
-   "i": 84
+   "i": 83
   },
   {
    "body": {
@@ -577,24 +589,11 @@
    "body": {
     "book": {
      "as_of_utc": "2026-11-18T22:15:00Z",
-     "entry_window_open": false,
-     "price": "66272.62",
-     "side": "FLAT",
-     "symbol": "BTCUSDT",
-     "t1_taken": false
-    }
-   },
-   "i": 88
-  },
-  {
-   "body": {
-    "book": {
-     "as_of_utc": "2026-11-18T22:30:00Z",
      "entry": "66272.62",
      "entry_window_open": false,
      "opened_utc": "2026-11-18T22:15:00Z",
-     "price": "66615.81",
-     "rr_now_t2": "0.82",
+     "price": "66272.62",
+     "rr_now_t2": "2",
      "side": "LONG",
      "stop": "65742.44",
      "symbol": "BTCUSDT",
@@ -603,7 +602,7 @@
      "target_2": "67332.98"
     }
    },
-   "i": 89
+   "i": 88
   },
   {
    "body": {
@@ -678,12 +677,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-19T01:00:00Z",
+     "as_of_utc": "2026-11-19T00:45:00Z",
      "entry": "66339.12",
      "entry_window_open": false,
      "opened_utc": "2026-11-19T00:45:00Z",
-     "price": "66297.41",
-     "rr_now_t2": "2.26",
+     "price": "66339.12",
+     "rr_now_t2": "2",
      "side": "LONG",
      "stop": "65808.4",
      "symbol": "BTCUSDT",
@@ -692,7 +691,7 @@
      "target_2": "67400.56"
     }
    },
-   "i": 99
+   "i": 98
   },
   {
    "body": {
@@ -767,12 +766,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-19T05:00:00Z",
+     "as_of_utc": "2026-11-19T04:45:00Z",
      "entry": "65761.62",
      "entry_window_open": false,
      "opened_utc": "2026-11-19T04:45:00Z",
-     "price": "65973.42",
-     "rr_now_t2": "4.44",
+     "price": "65761.62",
+     "rr_now_t2": "2.25",
      "side": "SHORT",
      "stop": "66287.72",
      "symbol": "BTCUSDT",
@@ -781,7 +780,7 @@
      "target_2": "64577.89"
     }
    },
-   "i": 115
+   "i": 114
   },
   {
    "body": {
@@ -799,12 +798,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-19T06:00:00Z",
+     "as_of_utc": "2026-11-19T05:45:00Z",
      "entry": "65644.37",
      "entry_window_open": false,
      "opened_utc": "2026-11-19T05:45:00Z",
-     "price": "65997.06",
-     "rr_now_t2": "0.94",
+     "price": "65644.37",
+     "rr_now_t2": "2.25",
      "side": "LONG",
      "stop": "65119.21",
      "symbol": "BTCUSDT",
@@ -813,7 +812,7 @@
      "target_2": "66825.98"
     }
    },
-   "i": 119
+   "i": 118
   },
   {
    "body": {
@@ -1009,24 +1008,11 @@
    "body": {
     "book": {
      "as_of_utc": "2026-11-19T11:15:00Z",
-     "entry_window_open": false,
-     "price": "64811.8",
-     "side": "FLAT",
-     "symbol": "BTCUSDT",
-     "t1_taken": false
-    }
-   },
-   "i": 140
-  },
-  {
-   "body": {
-    "book": {
-     "as_of_utc": "2026-11-19T11:30:00Z",
      "entry": "64811.8",
      "entry_window_open": false,
      "opened_utc": "2026-11-19T11:15:00Z",
-     "price": "65105.77",
-     "rr_now_t2": "1.07",
+     "price": "64811.8",
+     "rr_now_t2": "2.25",
      "side": "LONG",
      "stop": "64293.3",
      "symbol": "BTCUSDT",
@@ -1035,7 +1021,7 @@
      "target_2": "65978.43"
     }
    },
-   "i": 141
+   "i": 140
   },
   {
    "body": {
@@ -1136,24 +1122,11 @@
    "body": {
     "book": {
      "as_of_utc": "2026-11-19T14:30:00Z",
-     "entry_window_open": false,
-     "price": "64443.81",
-     "side": "FLAT",
-     "symbol": "BTCUSDT",
-     "t1_taken": false
-    }
-   },
-   "i": 153
-  },
-  {
-   "body": {
-    "book": {
-     "as_of_utc": "2026-11-19T14:45:00Z",
      "entry": "64443.81",
      "entry_window_open": false,
      "opened_utc": "2026-11-19T14:30:00Z",
-     "price": "64335.57",
-     "rr_now_t2": "1.69",
+     "price": "64443.81",
+     "rr_now_t2": "2.25",
      "side": "SHORT",
      "stop": "64959.37",
      "symbol": "BTCUSDT",
@@ -1162,7 +1135,7 @@
      "target_2": "63283.8"
     }
    },
-   "i": 154
+   "i": 153
   },
   {
    "body": {
@@ -1218,12 +1191,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-19T16:30:00Z",
+     "as_of_utc": "2026-11-19T16:15:00Z",
      "entry": "64988.85",
      "entry_window_open": false,
      "opened_utc": "2026-11-19T16:15:00Z",
-     "price": "65039.88",
-     "rr_now_t2": "2.33",
+     "price": "64988.85",
+     "rr_now_t2": "2",
      "side": "SHORT",
      "stop": "65508.77",
      "symbol": "BTCUSDT",
@@ -1232,7 +1205,7 @@
      "target_2": "63949.01"
     }
    },
-   "i": 161
+   "i": 160
   },
   {
    "body": {
@@ -1250,12 +1223,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-19T17:30:00Z",
+     "as_of_utc": "2026-11-19T17:15:00Z",
      "entry": "65429.21",
      "entry_window_open": false,
      "opened_utc": "2026-11-19T17:15:00Z",
-     "price": "64996.94",
-     "rr_now_t2": "22.61",
+     "price": "65429.21",
+     "rr_now_t2": "3.11",
      "side": "LONG",
      "stop": "64905.77",
      "symbol": "BTCUSDT",
@@ -1264,7 +1237,7 @@
      "target_2": "67058.4"
     }
    },
-   "i": 165
+   "i": 164
   },
   {
    "body": {
@@ -1282,12 +1255,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-19T18:45:00Z",
+     "as_of_utc": "2026-11-19T18:30:00Z",
      "entry": "64808.89",
      "entry_window_open": false,
      "opened_utc": "2026-11-19T18:30:00Z",
-     "price": "65064.95",
-     "rr_now_t2": "6.94",
+     "price": "64808.89",
+     "rr_now_t2": "3.02",
      "side": "SHORT",
      "stop": "65327.37",
      "symbol": "BTCUSDT",
@@ -1296,30 +1269,17 @@
      "target_2": "63243.76"
     }
    },
-   "i": 170
+   "i": 169
   },
   {
    "body": {
     "book": {
      "as_of_utc": "2026-11-19T19:00:00Z",
-     "entry_window_open": false,
-     "price": "65311.48",
-     "side": "FLAT",
-     "symbol": "BTCUSDT",
-     "t1_taken": false
-    }
-   },
-   "i": 171
-  },
-  {
-   "body": {
-    "book": {
-     "as_of_utc": "2026-11-19T19:15:00Z",
      "entry": "65311.48",
      "entry_window_open": false,
      "opened_utc": "2026-11-19T19:00:00Z",
-     "price": "65180.96",
-     "rr_now_t2": "1.42",
+     "price": "65311.48",
+     "rr_now_t2": "2.02",
      "side": "SHORT",
      "stop": "65833.98",
      "symbol": "BTCUSDT",
@@ -1328,7 +1288,7 @@
      "target_2": "64253.43"
     }
    },
-   "i": 172
+   "i": 171
   },
   {
    "body": {
@@ -1365,12 +1325,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-19T21:30:00Z",
+     "as_of_utc": "2026-11-19T21:15:00Z",
      "entry": "65242.78",
      "entry_window_open": false,
      "opened_utc": "2026-11-19T21:15:00Z",
-     "price": "65031.81",
-     "rr_now_t2": "4.68",
+     "price": "65242.78",
+     "rr_now_t2": "2.38",
      "side": "LONG",
      "stop": "64720.84",
      "symbol": "BTCUSDT",
@@ -1379,7 +1339,7 @@
      "target_2": "66485.65"
     }
    },
-   "i": 181
+   "i": 180
   },
   {
    "body": {
@@ -1397,12 +1357,44 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-19T23:00:00Z",
+     "as_of_utc": "2026-11-19T22:15:00Z",
+     "entry": "64118.82",
+     "entry_window_open": false,
+     "opened_utc": "2026-11-19T22:15:00Z",
+     "price": "64118.82",
+     "rr_now_t2": "3.32",
+     "side": "LONG",
+     "stop": "63605.86",
+     "symbol": "BTCUSDT",
+     "t1_taken": false,
+     "target_1": "65253.72",
+     "target_2": "65821.17"
+    }
+   },
+   "i": 184
+  },
+  {
+   "body": {
+    "book": {
+     "as_of_utc": "2026-11-19T22:30:00Z",
+     "entry_window_open": false,
+     "price": "63533.86",
+     "side": "FLAT",
+     "symbol": "BTCUSDT",
+     "t1_taken": false
+    }
+   },
+   "i": 185
+  },
+  {
+   "body": {
+    "book": {
+     "as_of_utc": "2026-11-19T22:45:00Z",
      "entry": "63673.15",
      "entry_window_open": false,
      "opened_utc": "2026-11-19T22:45:00Z",
-     "price": "63382.63",
-     "rr_now_t2": "0.95",
+     "price": "63673.15",
+     "rr_now_t2": "2.06",
      "side": "SHORT",
      "stop": "64182.53",
      "symbol": "BTCUSDT",
@@ -1411,7 +1403,7 @@
      "target_2": "62625.28"
     }
    },
-   "i": 187
+   "i": 186
   },
   {
    "body": {
@@ -1512,11 +1504,17 @@
    "body": {
     "book": {
      "as_of_utc": "2026-11-20T01:45:00Z",
+     "entry": "62581.91",
      "entry_window_open": false,
+     "opened_utc": "2026-11-20T01:45:00Z",
      "price": "62581.91",
-     "side": "FLAT",
+     "rr_now_t2": "2.25",
+     "side": "LONG",
+     "stop": "62081.25",
      "symbol": "BTCUSDT",
-     "t1_taken": false
+     "t1_taken": false,
+     "target_1": "63332.9",
+     "target_2": "63708.4"
     }
    },
    "i": 198
@@ -1524,12 +1522,57 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-20T03:00:00Z",
+     "as_of_utc": "2026-11-20T02:00:00Z",
+     "entry_window_open": false,
+     "price": "61996.74",
+     "side": "FLAT",
+     "symbol": "BTCUSDT",
+     "t1_taken": false
+    }
+   },
+   "i": 199
+  },
+  {
+   "body": {
+    "book": {
+     "as_of_utc": "2026-11-20T02:15:00Z",
+     "entry": "62004.51",
+     "entry_window_open": false,
+     "opened_utc": "2026-11-20T02:15:00Z",
+     "price": "62004.51",
+     "rr_now_t2": "2.25",
+     "side": "SHORT",
+     "stop": "62500.55",
+     "symbol": "BTCUSDT",
+     "t1_taken": false,
+     "target_1": "61260.45",
+     "target_2": "60888.42"
+    }
+   },
+   "i": 200
+  },
+  {
+   "body": {
+    "book": {
+     "as_of_utc": "2026-11-20T02:30:00Z",
+     "entry_window_open": false,
+     "price": "62388.76",
+     "side": "FLAT",
+     "symbol": "BTCUSDT",
+     "t1_taken": false
+    }
+   },
+   "i": 201
+  },
+  {
+   "body": {
+    "book": {
+     "as_of_utc": "2026-11-20T02:45:00Z",
      "entry": "62738.27",
      "entry_window_open": false,
      "opened_utc": "2026-11-20T02:45:00Z",
-     "price": "62583.32",
-     "rr_now_t2": "1.48",
+     "price": "62738.27",
+     "rr_now_t2": "2.25",
      "side": "SHORT",
      "stop": "63240.17",
      "symbol": "BTCUSDT",
@@ -1538,7 +1581,7 @@
      "target_2": "61608.99"
     }
    },
-   "i": 203
+   "i": 202
   },
   {
    "body": {
@@ -1582,24 +1625,11 @@
    "body": {
     "book": {
      "as_of_utc": "2026-11-20T05:15:00Z",
-     "entry_window_open": false,
-     "price": "63724.65",
-     "side": "FLAT",
-     "symbol": "BTCUSDT",
-     "t1_taken": false
-    }
-   },
-   "i": 212
-  },
-  {
-   "body": {
-    "book": {
-     "as_of_utc": "2026-11-20T05:30:00Z",
      "entry": "63724.65",
      "entry_window_open": false,
      "opened_utc": "2026-11-20T05:15:00Z",
-     "price": "63968.94",
-     "rr_now_t2": "4.76",
+     "price": "63724.65",
+     "rr_now_t2": "2",
      "side": "SHORT",
      "stop": "64234.45",
      "symbol": "BTCUSDT",
@@ -1608,7 +1638,7 @@
      "target_2": "62705.05"
     }
    },
-   "i": 213
+   "i": 212
   },
   {
    "body": {
@@ -1626,12 +1656,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-20T06:15:00Z",
+     "as_of_utc": "2026-11-20T06:00:00Z",
      "entry": "64103.76",
      "entry_window_open": false,
      "opened_utc": "2026-11-20T06:00:00Z",
-     "price": "64264.57",
-     "rr_now_t2": "3.73",
+     "price": "64103.76",
+     "rr_now_t2": "2.25",
      "side": "SHORT",
      "stop": "64616.6",
      "symbol": "BTCUSDT",
@@ -1640,7 +1670,7 @@
      "target_2": "62949.87"
     }
    },
-   "i": 216
+   "i": 215
   },
   {
    "body": {
@@ -1696,12 +1726,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-20T08:30:00Z",
+     "as_of_utc": "2026-11-20T08:15:00Z",
      "entry": "63703.83",
      "entry_window_open": false,
      "opened_utc": "2026-11-20T08:15:00Z",
-     "price": "63620.33",
-     "rr_now_t2": "2.94",
+     "price": "63703.83",
+     "rr_now_t2": "3.58",
      "side": "SHORT",
      "stop": "64213.47",
      "symbol": "BTCUSDT",
@@ -1710,7 +1740,7 @@
      "target_2": "61878.72"
     }
    },
-   "i": 225
+   "i": 224
   },
   {
    "body": {
@@ -1747,12 +1777,101 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-20T13:45:00Z",
+     "as_of_utc": "2026-11-20T11:30:00Z",
+     "entry": "62934.99",
+     "entry_window_open": false,
+     "opened_utc": "2026-11-20T11:30:00Z",
+     "price": "62934.99",
+     "rr_now_t2": "2",
+     "side": "LONG",
+     "stop": "62431.51",
+     "symbol": "BTCUSDT",
+     "t1_taken": false,
+     "target_1": "63356.65",
+     "target_2": "63941.95"
+    }
+   },
+   "i": 237
+  },
+  {
+   "body": {
+    "book": {
+     "as_of_utc": "2026-11-20T11:45:00Z",
+     "entry_window_open": false,
+     "price": "62236.49",
+     "side": "FLAT",
+     "symbol": "BTCUSDT",
+     "t1_taken": false
+    }
+   },
+   "i": 238
+  },
+  {
+   "body": {
+    "book": {
+     "as_of_utc": "2026-11-20T12:45:00Z",
+     "entry": "61615.04",
+     "entry_window_open": false,
+     "opened_utc": "2026-11-20T12:45:00Z",
+     "price": "61615.04",
+     "rr_now_t2": "2.25",
+     "side": "LONG",
+     "stop": "61122.12",
+     "symbol": "BTCUSDT",
+     "t1_taken": false,
+     "target_1": "62354.42",
+     "target_2": "62724.11"
+    }
+   },
+   "i": 242
+  },
+  {
+   "body": {
+    "book": {
+     "as_of_utc": "2026-11-20T13:00:00Z",
+     "entry": "61284.37",
+     "entry_window_open": false,
+     "opened_utc": "2026-11-20T13:00:00Z",
+     "price": "61284.37",
+     "rr_now_t2": "2.31",
+     "side": "SHORT",
+     "stop": "61774.65",
+     "symbol": "BTCUSDT",
+     "t1_taken": false,
+     "target_1": "60530.57",
+     "target_2": "60153.67"
+    }
+   },
+   "i": 243
+  },
+  {
+   "body": {
+    "book": {
+     "as_of_utc": "2026-11-20T13:15:00Z",
+     "entry": "61673.48",
+     "entry_window_open": false,
+     "opened_utc": "2026-11-20T13:15:00Z",
+     "price": "61673.48",
+     "rr_now_t2": "2.25",
+     "side": "LONG",
+     "stop": "61180.1",
+     "symbol": "BTCUSDT",
+     "t1_taken": false,
+     "target_1": "62413.55",
+     "target_2": "62783.59"
+    }
+   },
+   "i": 244
+  },
+  {
+   "body": {
+    "book": {
+     "as_of_utc": "2026-11-20T13:30:00Z",
      "entry": "61474.13",
      "entry_window_open": false,
      "opened_utc": "2026-11-20T13:30:00Z",
-     "price": "61615.45",
-     "rr_now_t2": "1.33",
+     "price": "61474.13",
+     "rr_now_t2": "2",
      "side": "LONG",
      "stop": "60982.33",
      "symbol": "BTCUSDT",
@@ -1761,7 +1880,7 @@
      "target_2": "62457.73"
     }
    },
-   "i": 246
+   "i": 245
   },
   {
    "body": {
@@ -1817,12 +1936,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-20T16:30:00Z",
+     "as_of_utc": "2026-11-20T16:15:00Z",
      "entry": "61577.92",
      "entry_window_open": false,
      "opened_utc": "2026-11-20T16:15:00Z",
-     "price": "61830.14",
-     "rr_now_t2": "0.98",
+     "price": "61577.92",
+     "rr_now_t2": "2",
      "side": "LONG",
      "stop": "61085.3",
      "symbol": "BTCUSDT",
@@ -1831,7 +1950,7 @@
      "target_2": "62563.16"
     }
    },
-   "i": 257
+   "i": 256
   },
   {
    "body": {
@@ -1856,24 +1975,11 @@
    "body": {
     "book": {
      "as_of_utc": "2026-11-20T18:00:00Z",
-     "entry_window_open": false,
-     "price": "61798.15",
-     "side": "FLAT",
-     "symbol": "BTCUSDT",
-     "t1_taken": false
-    }
-   },
-   "i": 263
-  },
-  {
-   "body": {
-    "book": {
-     "as_of_utc": "2026-11-20T18:15:00Z",
      "entry": "61798.15",
      "entry_window_open": false,
      "opened_utc": "2026-11-20T18:00:00Z",
-     "price": "61420.07",
-     "rr_now_t2": "0.84",
+     "price": "61798.15",
+     "rr_now_t2": "2.25",
      "side": "SHORT",
      "stop": "62292.53",
      "symbol": "BTCUSDT",
@@ -1882,7 +1988,7 @@
      "target_2": "60685.79"
     }
    },
-   "i": 264
+   "i": 263
   },
   {
    "body": {
@@ -1926,24 +2032,11 @@
    "body": {
     "book": {
      "as_of_utc": "2026-11-20T19:45:00Z",
-     "entry_window_open": false,
-     "price": "61832.32",
-     "side": "FLAT",
-     "symbol": "BTCUSDT",
-     "t1_taken": false
-    }
-   },
-   "i": 270
-  },
-  {
-   "body": {
-    "book": {
-     "as_of_utc": "2026-11-20T20:00:00Z",
      "entry": "61832.32",
      "entry_window_open": false,
      "opened_utc": "2026-11-20T19:45:00Z",
-     "price": "61882.28",
-     "rr_now_t2": "1.95",
+     "price": "61832.32",
+     "rr_now_t2": "2.25",
      "side": "LONG",
      "stop": "61337.66",
      "symbol": "BTCUSDT",
@@ -1952,7 +2045,7 @@
      "target_2": "62945.31"
     }
    },
-   "i": 271
+   "i": 270
   },
   {
    "body": {
@@ -1989,12 +2082,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-20T22:00:00Z",
+     "as_of_utc": "2026-11-20T21:45:00Z",
      "entry": "62959.92",
      "entry_window_open": false,
      "opened_utc": "2026-11-20T21:45:00Z",
-     "price": "62744.06",
-     "rr_now_t2": "6.79",
+     "price": "62959.92",
+     "rr_now_t2": "3.45",
      "side": "LONG",
      "stop": "62456.24",
      "symbol": "BTCUSDT",
@@ -2003,7 +2096,7 @@
      "target_2": "64699.63"
     }
    },
-   "i": 279
+   "i": 278
   },
   {
    "body": {
@@ -2066,11 +2159,17 @@
    "body": {
     "book": {
      "as_of_utc": "2026-11-21T01:00:00Z",
+     "entry": "63744.87",
      "entry_window_open": false,
+     "opened_utc": "2026-11-21T01:00:00Z",
      "price": "63744.87",
-     "side": "FLAT",
+     "rr_now_t2": "3.1",
+     "side": "LONG",
+     "stop": "63234.91",
      "symbol": "BTCUSDT",
-     "t1_taken": false
+     "t1_taken": false,
+     "target_1": "64364.07",
+     "target_2": "65323.51"
     }
    },
    "i": 291
@@ -2078,12 +2177,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-21T01:30:00Z",
+     "as_of_utc": "2026-11-21T01:15:00Z",
      "entry": "63276.74",
      "entry_window_open": false,
      "opened_utc": "2026-11-21T01:15:00Z",
-     "price": "63141.77",
-     "rr_now_t2": "1.33",
+     "price": "63276.74",
+     "rr_now_t2": "1.95",
      "side": "SHORT",
      "stop": "63782.96",
      "symbol": "BTCUSDT",
@@ -2092,7 +2191,7 @@
      "target_2": "62290.53"
     }
    },
-   "i": 293
+   "i": 292
   },
   {
    "body": {
@@ -2129,12 +2228,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-21T03:45:00Z",
+     "as_of_utc": "2026-11-21T03:30:00Z",
      "entry": "63657.48",
      "entry_window_open": false,
      "opened_utc": "2026-11-21T03:30:00Z",
-     "price": "63716.94",
-     "rr_now_t2": "2.42",
+     "price": "63657.48",
+     "rr_now_t2": "2.02",
      "side": "SHORT",
      "stop": "64166.74",
      "symbol": "BTCUSDT",
@@ -2143,7 +2242,7 @@
      "target_2": "62626.23"
     }
    },
-   "i": 302
+   "i": 301
   },
   {
    "body": {
@@ -2168,24 +2267,11 @@
    "body": {
     "book": {
      "as_of_utc": "2026-11-21T05:00:00Z",
-     "entry_window_open": false,
-     "price": "62499.68",
-     "side": "FLAT",
-     "symbol": "BTCUSDT",
-     "t1_taken": false
-    }
-   },
-   "i": 307
-  },
-  {
-   "body": {
-    "book": {
-     "as_of_utc": "2026-11-21T05:15:00Z",
      "entry": "62499.68",
      "entry_window_open": false,
      "opened_utc": "2026-11-21T05:00:00Z",
-     "price": "62129.74",
-     "rr_now_t2": "11.49",
+     "price": "62499.68",
+     "rr_now_t2": "2.25",
      "side": "LONG",
      "stop": "61999.68",
      "symbol": "BTCUSDT",
@@ -2194,7 +2280,7 @@
      "target_2": "63624.68"
     }
    },
-   "i": 308
+   "i": 307
   },
   {
    "body": {
@@ -2231,12 +2317,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-21T07:00:00Z",
+     "as_of_utc": "2026-11-21T06:45:00Z",
      "entry": "62248.33",
      "entry_window_open": false,
      "opened_utc": "2026-11-21T06:45:00Z",
-     "price": "62022.97",
-     "rr_now_t2": "1.24",
+     "price": "62248.33",
+     "rr_now_t2": "2.25",
      "side": "SHORT",
      "stop": "62746.31",
      "symbol": "BTCUSDT",
@@ -2245,7 +2331,7 @@
      "target_2": "61127.88"
     }
    },
-   "i": 315
+   "i": 314
   },
   {
    "body": {
@@ -2358,12 +2444,31 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-21T11:30:00Z",
+     "as_of_utc": "2026-11-21T11:00:00Z",
+     "entry": "62172.15",
+     "entry_window_open": false,
+     "opened_utc": "2026-11-21T11:00:00Z",
+     "price": "62172.15",
+     "rr_now_t2": "2.25",
+     "side": "SHORT",
+     "stop": "62669.53",
+     "symbol": "BTCUSDT",
+     "t1_taken": false,
+     "target_1": "61426.08",
+     "target_2": "61053.04"
+    }
+   },
+   "i": 331
+  },
+  {
+   "body": {
+    "book": {
+     "as_of_utc": "2026-11-21T11:15:00Z",
      "entry": "62628.5",
      "entry_window_open": false,
      "opened_utc": "2026-11-21T11:15:00Z",
-     "price": "62730.94",
-     "rr_now_t2": "2.77",
+     "price": "62628.5",
+     "rr_now_t2": "2",
      "side": "SHORT",
      "stop": "63129.52",
      "symbol": "BTCUSDT",
@@ -2372,7 +2477,7 @@
      "target_2": "61626.46"
     }
    },
-   "i": 333
+   "i": 332
   },
   {
    "body": {
@@ -2428,12 +2533,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-21T14:00:00Z",
+     "as_of_utc": "2026-11-21T13:45:00Z",
      "entry": "62405.33",
      "entry_window_open": false,
      "opened_utc": "2026-11-21T13:45:00Z",
-     "price": "62533.88",
-     "rr_now_t2": "3.04",
+     "price": "62405.33",
+     "rr_now_t2": "2",
      "side": "SHORT",
      "stop": "62904.57",
      "symbol": "BTCUSDT",
@@ -2442,7 +2547,7 @@
      "target_2": "61406.85"
     }
    },
-   "i": 343
+   "i": 342
   },
   {
    "body": {
@@ -2524,24 +2629,11 @@
    "body": {
     "book": {
      "as_of_utc": "2026-11-21T16:45:00Z",
-     "entry_window_open": false,
-     "price": "62273.05",
-     "side": "FLAT",
-     "symbol": "BTCUSDT",
-     "t1_taken": false
-    }
-   },
-   "i": 354
-  },
-  {
-   "body": {
-    "book": {
-     "as_of_utc": "2026-11-21T17:00:00Z",
      "entry": "62273.05",
      "entry_window_open": false,
      "opened_utc": "2026-11-21T16:45:00Z",
-     "price": "62204.56",
-     "rr_now_t2": "3.53",
+     "price": "62273.05",
+     "rr_now_t2": "2.91",
      "side": "LONG",
      "stop": "61774.87",
      "symbol": "BTCUSDT",
@@ -2550,7 +2642,7 @@
      "target_2": "63720.9"
     }
    },
-   "i": 355
+   "i": 354
   },
   {
    "body": {
@@ -2575,24 +2667,11 @@
    "body": {
     "book": {
      "as_of_utc": "2026-11-21T19:00:00Z",
-     "entry_window_open": false,
-     "price": "62755.83",
-     "side": "FLAT",
-     "symbol": "BTCUSDT",
-     "t1_taken": false
-    }
-   },
-   "i": 363
-  },
-  {
-   "body": {
-    "book": {
-     "as_of_utc": "2026-11-21T19:15:00Z",
      "entry": "62755.83",
      "entry_window_open": false,
      "opened_utc": "2026-11-21T19:00:00Z",
-     "price": "62975.12",
-     "rr_now_t2": "1.26",
+     "price": "62755.83",
+     "rr_now_t2": "2.25",
      "side": "LONG",
      "stop": "62253.79",
      "symbol": "BTCUSDT",
@@ -2601,7 +2680,7 @@
      "target_2": "63885.42"
     }
    },
-   "i": 364
+   "i": 363
   },
   {
    "body": {
@@ -2676,12 +2755,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-21T22:15:00Z",
+     "as_of_utc": "2026-11-21T22:00:00Z",
      "entry": "63919.41",
      "entry_window_open": false,
      "opened_utc": "2026-11-21T22:00:00Z",
-     "price": "63572.04",
-     "rr_now_t2": "9.89",
+     "price": "63919.41",
+     "rr_now_t2": "2.49",
      "side": "LONG",
      "stop": "63408.05",
      "symbol": "BTCUSDT",
@@ -2690,17 +2769,23 @@
      "target_2": "65194.6"
     }
    },
-   "i": 376
+   "i": 375
   },
   {
    "body": {
     "book": {
      "as_of_utc": "2026-11-21T22:30:00Z",
+     "entry": "63707.33",
      "entry_window_open": false,
+     "opened_utc": "2026-11-21T22:30:00Z",
      "price": "63707.33",
-     "side": "FLAT",
+     "rr_now_t2": "3.24",
+     "side": "SHORT",
+     "stop": "64216.99",
      "symbol": "BTCUSDT",
-     "t1_taken": false
+     "t1_taken": false,
+     "target_1": "62605.19",
+     "target_2": "62054.12"
     }
    },
    "i": 377
@@ -2708,12 +2793,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-21T23:00:00Z",
+     "as_of_utc": "2026-11-21T22:45:00Z",
      "entry": "63878.57",
      "entry_window_open": false,
      "opened_utc": "2026-11-21T22:45:00Z",
-     "price": "63507.05",
-     "rr_now_t2": "0.88",
+     "price": "63878.57",
+     "rr_now_t2": "2.25",
      "side": "SHORT",
      "stop": "64389.59",
      "symbol": "BTCUSDT",
@@ -2722,7 +2807,7 @@
      "target_2": "62728.78"
     }
    },
-   "i": 379
+   "i": 378
   },
   {
    "body": {
@@ -2766,24 +2851,11 @@
    "body": {
     "book": {
      "as_of_utc": "2026-11-22T01:15:00Z",
-     "entry_window_open": false,
-     "price": "64124.32",
-     "side": "FLAT",
-     "symbol": "BTCUSDT",
-     "t1_taken": false
-    }
-   },
-   "i": 388
-  },
-  {
-   "body": {
-    "book": {
-     "as_of_utc": "2026-11-22T01:30:00Z",
      "entry": "64124.32",
      "entry_window_open": false,
      "opened_utc": "2026-11-22T01:15:00Z",
-     "price": "64088.3",
-     "rr_now_t2": "2.86",
+     "price": "64124.32",
+     "rr_now_t2": "2.59",
      "side": "LONG",
      "stop": "63611.32",
      "symbol": "BTCUSDT",
@@ -2792,7 +2864,7 @@
      "target_2": "65454.38"
     }
    },
-   "i": 389
+   "i": 388
   },
   {
    "body": {
@@ -2886,12 +2958,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-22T05:15:00Z",
+     "as_of_utc": "2026-11-22T05:00:00Z",
      "entry": "65149.31",
      "entry_window_open": false,
      "opened_utc": "2026-11-22T05:00:00Z",
-     "price": "65038.48",
-     "rr_now_t2": "1.47",
+     "price": "65149.31",
+     "rr_now_t2": "2",
      "side": "SHORT",
      "stop": "65670.51",
      "symbol": "BTCUSDT",
@@ -2900,7 +2972,7 @@
      "target_2": "64106.91"
     }
    },
-   "i": 404
+   "i": 403
   },
   {
    "body": {
@@ -2918,12 +2990,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-22T06:15:00Z",
+     "as_of_utc": "2026-11-22T06:00:00Z",
      "entry": "65107.47",
      "entry_window_open": false,
      "opened_utc": "2026-11-22T06:00:00Z",
-     "price": "65221.94",
-     "rr_now_t2": "4.34",
+     "price": "65107.47",
+     "rr_now_t2": "3.17",
      "side": "SHORT",
      "stop": "65628.33",
      "symbol": "BTCUSDT",
@@ -2932,7 +3004,7 @@
      "target_2": "63457"
     }
    },
-   "i": 408
+   "i": 407
   },
   {
    "body": {
@@ -2950,12 +3022,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-22T07:30:00Z",
+     "as_of_utc": "2026-11-22T07:15:00Z",
      "entry": "65551.52",
      "entry_window_open": false,
      "opened_utc": "2026-11-22T07:15:00Z",
-     "price": "65526.74",
-     "rr_now_t2": "3.2",
+     "price": "65551.52",
+     "rr_now_t2": "3.39",
      "side": "SHORT",
      "stop": "66075.94",
      "symbol": "BTCUSDT",
@@ -2964,7 +3036,7 @@
      "target_2": "63771.8"
     }
    },
-   "i": 413
+   "i": 412
   },
   {
    "body": {
@@ -3008,24 +3080,11 @@
    "body": {
     "book": {
      "as_of_utc": "2026-11-22T08:30:00Z",
-     "entry_window_open": false,
-     "price": "65332.2",
-     "side": "FLAT",
-     "symbol": "BTCUSDT",
-     "t1_taken": false
-    }
-   },
-   "i": 417
-  },
-  {
-   "body": {
-    "book": {
-     "as_of_utc": "2026-11-22T08:45:00Z",
      "entry": "65332.2",
      "entry_window_open": false,
      "opened_utc": "2026-11-22T08:30:00Z",
-     "price": "65454.93",
-     "rr_now_t2": "4.15",
+     "price": "65332.2",
+     "rr_now_t2": "2.94",
      "side": "SHORT",
      "stop": "65854.86",
      "symbol": "BTCUSDT",
@@ -3034,7 +3093,7 @@
      "target_2": "63793.63"
     }
    },
-   "i": 418
+   "i": 417
   },
   {
    "body": {
@@ -3071,12 +3130,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-22T10:15:00Z",
+     "as_of_utc": "2026-11-22T10:00:00Z",
      "entry": "65865.94",
      "entry_window_open": false,
      "opened_utc": "2026-11-22T10:00:00Z",
-     "price": "65814.36",
-     "rr_now_t2": "2.44",
+     "price": "65865.94",
+     "rr_now_t2": "2.78",
      "side": "SHORT",
      "stop": "66392.86",
      "symbol": "BTCUSDT",
@@ -3085,7 +3144,7 @@
      "target_2": "64403.72"
     }
    },
-   "i": 424
+   "i": 423
   },
   {
    "body": {
@@ -3122,6 +3181,25 @@
   {
    "body": {
     "book": {
+     "as_of_utc": "2026-11-22T11:00:00Z",
+     "entry": "65303.93",
+     "entry_window_open": false,
+     "opened_utc": "2026-11-22T11:00:00Z",
+     "price": "65303.93",
+     "rr_now_t2": "2",
+     "side": "SHORT",
+     "stop": "65826.37",
+     "symbol": "BTCUSDT",
+     "t1_taken": false,
+     "target_1": "64833.74",
+     "target_2": "64259.05"
+    }
+   },
+   "i": 427
+  },
+  {
+   "body": {
+    "book": {
      "as_of_utc": "2026-11-22T11:15:00Z",
      "entry": "65303.93",
      "entry_window_open": false,
@@ -3142,11 +3220,17 @@
    "body": {
     "book": {
      "as_of_utc": "2026-11-22T11:30:00Z",
+     "entry": "65294.28",
      "entry_window_open": false,
+     "opened_utc": "2026-11-22T11:30:00Z",
      "price": "65294.28",
-     "side": "FLAT",
+     "rr_now_t2": "2.25",
+     "side": "LONG",
+     "stop": "64771.92",
      "symbol": "BTCUSDT",
-     "t1_taken": false
+     "t1_taken": false,
+     "target_1": "66077.82",
+     "target_2": "66469.59"
     }
    },
    "i": 429
@@ -3154,12 +3238,25 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-22T12:15:00Z",
+     "as_of_utc": "2026-11-22T11:45:00Z",
+     "entry_window_open": false,
+     "price": "65089.87",
+     "side": "FLAT",
+     "symbol": "BTCUSDT",
+     "t1_taken": false
+    }
+   },
+   "i": 430
+  },
+  {
+   "body": {
+    "book": {
+     "as_of_utc": "2026-11-22T12:00:00Z",
      "entry": "64727.79",
      "entry_window_open": false,
      "opened_utc": "2026-11-22T12:00:00Z",
-     "price": "64635.83",
-     "rr_now_t2": "2.44",
+     "price": "64727.79",
+     "rr_now_t2": "1.83",
      "side": "LONG",
      "stop": "64209.97",
      "symbol": "BTCUSDT",
@@ -3168,7 +3265,7 @@
      "target_2": "65674.02"
     }
    },
-   "i": 432
+   "i": 431
   },
   {
    "body": {
@@ -3193,24 +3290,11 @@
    "body": {
     "book": {
      "as_of_utc": "2026-11-22T12:45:00Z",
-     "entry_window_open": false,
-     "price": "65571.31",
-     "side": "FLAT",
-     "symbol": "BTCUSDT",
-     "t1_taken": false
-    }
-   },
-   "i": 434
-  },
-  {
-   "body": {
-    "book": {
-     "as_of_utc": "2026-11-22T13:00:00Z",
      "entry": "65571.31",
      "entry_window_open": false,
      "opened_utc": "2026-11-22T12:45:00Z",
-     "price": "65700.04",
-     "rr_now_t2": "4.87",
+     "price": "65571.31",
+     "rr_now_t2": "3.43",
      "side": "SHORT",
      "stop": "66095.89",
      "symbol": "BTCUSDT",
@@ -3219,7 +3303,7 @@
      "target_2": "63774.08"
     }
    },
-   "i": 435
+   "i": 434
   },
   {
    "body": {
@@ -3237,12 +3321,12 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-22T16:00:00Z",
+     "as_of_utc": "2026-11-22T15:45:00Z",
      "entry": "65573.4",
      "entry_window_open": false,
      "opened_utc": "2026-11-22T15:45:00Z",
-     "price": "65722.13",
-     "rr_now_t2": "1.53",
+     "price": "65573.4",
+     "rr_now_t2": "2.25",
      "side": "LONG",
      "stop": "65048.82",
      "symbol": "BTCUSDT",
@@ -3251,7 +3335,7 @@
      "target_2": "66753.7"
     }
    },
-   "i": 447
+   "i": 446
   },
   {
    "body": {
@@ -3345,11 +3429,62 @@
   {
    "body": {
     "book": {
-     "as_of_utc": "2026-11-22T19:15:00Z",
+     "as_of_utc": "2026-11-22T17:30:00Z",
+     "entry": "65056.84",
+     "entry_window_open": false,
+     "opened_utc": "2026-11-22T17:30:00Z",
+     "price": "65056.84",
+     "rr_now_t2": "2.25",
+     "side": "SHORT",
+     "stop": "65577.3",
+     "symbol": "BTCUSDT",
+     "t1_taken": false,
+     "target_1": "64276.15",
+     "target_2": "63885.8"
+    }
+   },
+   "i": 453
+  },
+  {
+   "body": {
+    "book": {
+     "as_of_utc": "2026-11-22T17:45:00Z",
+     "entry": "65193.19",
+     "entry_window_open": false,
+     "opened_utc": "2026-11-22T17:45:00Z",
+     "price": "65193.19",
+     "rr_now_t2": "2",
+     "side": "LONG",
+     "stop": "64671.65",
+     "symbol": "BTCUSDT",
+     "t1_taken": false,
+     "target_1": "65629.98",
+     "target_2": "66236.27"
+    }
+   },
+   "i": 454
+  },
+  {
+   "body": {
+    "book": {
+     "as_of_utc": "2026-11-22T18:00:00Z",
+     "entry_window_open": false,
+     "price": "64914.88",
+     "side": "FLAT",
+     "symbol": "BTCUSDT",
+     "t1_taken": false
+    }
+   },
+   "i": 455
+  },
+  {
+   "body": {
+    "book": {
+     "as_of_utc": "2026-11-22T19:00:00Z",
      "entry": "64543",
      "entry_window_open": false,
      "opened_utc": "2026-11-22T19:00:00Z",
-     "price": "64543.39",
+     "price": "64543",
      "rr_now_t2": "2.25",
      "side": "LONG",
      "stop": "64026.66",
@@ -3359,7 +3494,7 @@
      "target_2": "65704.76"
     }
    },
-   "i": 460
+   "i": 459
   },
   {
    "body": {
@@ -3441,24 +3576,11 @@
    "body": {
     "book": {
      "as_of_utc": "2026-11-22T21:45:00Z",
-     "entry_window_open": false,
-     "price": "64743.45",
-     "side": "FLAT",
-     "symbol": "BTCUSDT",
-     "t1_taken": false
-    }
-   },
-   "i": 470
-  },
-  {
-   "body": {
-    "book": {
-     "as_of_utc": "2026-11-22T22:00:00Z",
      "entry": "64743.45",
      "entry_window_open": false,
      "opened_utc": "2026-11-22T21:45:00Z",
-     "price": "64548.51",
-     "rr_now_t2": "3.81",
+     "price": "64743.45",
+     "rr_now_t2": "2",
      "side": "LONG",
      "stop": "64225.51",
      "symbol": "BTCUSDT",
@@ -3467,7 +3589,7 @@
      "target_2": "65779.33"
     }
    },
-   "i": 471
+   "i": 470
   },
   {
    "body": {
@@ -3492,24 +3614,11 @@
    "body": {
     "book": {
      "as_of_utc": "2026-11-22T23:00:00Z",
-     "entry_window_open": false,
-     "price": "65230.11",
-     "side": "FLAT",
-     "symbol": "BTCUSDT",
-     "t1_taken": false
-    }
-   },
-   "i": 475
-  },
-  {
-   "body": {
-    "book": {
-     "as_of_utc": "2026-11-22T23:15:00Z",
      "entry": "65230.11",
      "entry_window_open": false,
      "opened_utc": "2026-11-22T23:00:00Z",
-     "price": "65239.74",
-     "rr_now_t2": "3.51",
+     "price": "65230.11",
+     "rr_now_t2": "3.43",
      "side": "SHORT",
      "stop": "65751.95",
      "symbol": "BTCUSDT",
@@ -3518,7 +3627,7 @@
      "target_2": "63439.54"
     }
    },
-   "i": 476
+   "i": 475
   },
   {
    "body": {
@@ -3553,8 +3662,28 @@
    "i": 479
   }
  ],
- "engine_version": "think15-v5.2.6",
+ "engine_version": "think15-v5.2.9",
  "intents": [
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261118T023000Z.close.spot",
+    "market": "spot",
+    "reference_price": "63740.46",
+    "symbol": "BTCUSDT"
+   },
+   "i": 10
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261118T023000Z.close.futures",
+    "market": "futures",
+    "reference_price": "63740.46",
+    "symbol": "BTCUSDT"
+   },
+   "i": 10
+  },
   {
    "body": {
     "action": "close",
@@ -3564,6 +3693,16 @@
     "symbol": "BTCUSDT"
    },
    "i": 12
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261118T031500Z.close.futures",
+    "market": "futures",
+    "reference_price": "64619.42",
+    "symbol": "BTCUSDT"
+   },
+   "i": 13
   },
   {
    "body": {
@@ -4521,6 +4660,26 @@
   {
    "body": {
     "action": "close",
+    "intent_id": "BTCUSDT.20261119T221500Z.close.spot",
+    "market": "spot",
+    "reference_price": "63605.86",
+    "symbol": "BTCUSDT"
+   },
+   "i": 185
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261119T221500Z.close.futures",
+    "market": "futures",
+    "reference_price": "63605.86",
+    "symbol": "BTCUSDT"
+   },
+   "i": 185
+  },
+  {
+   "body": {
+    "action": "close",
     "intent_id": "BTCUSDT.20261119T224500Z.close.futures",
     "market": "futures",
     "reference_price": "63556.51",
@@ -4634,6 +4793,36 @@
     "symbol": "BTCUSDT"
    },
    "i": 198
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261120T014500Z.close.spot",
+    "market": "spot",
+    "reference_price": "62081.25",
+    "symbol": "BTCUSDT"
+   },
+   "i": 199
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261120T014500Z.close.futures",
+    "market": "futures",
+    "reference_price": "62081.25",
+    "symbol": "BTCUSDT"
+   },
+   "i": 199
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261120T021500Z.close.futures",
+    "market": "futures",
+    "reference_price": "62500.55",
+    "symbol": "BTCUSDT"
+   },
+   "i": 201
   },
   {
    "body": {
@@ -4802,6 +4991,76 @@
     "symbol": "BTCUSDT"
    },
    "i": 233
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261120T113000Z.close.spot",
+    "market": "spot",
+    "reference_price": "62431.51",
+    "symbol": "BTCUSDT"
+   },
+   "i": 238
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261120T113000Z.close.futures",
+    "market": "futures",
+    "reference_price": "62431.51",
+    "symbol": "BTCUSDT"
+   },
+   "i": 238
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261120T124500Z.close.spot",
+    "market": "spot",
+    "reference_price": "61122.12",
+    "symbol": "BTCUSDT"
+   },
+   "i": 243
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261120T124500Z.close.futures",
+    "market": "futures",
+    "reference_price": "61122.12",
+    "symbol": "BTCUSDT"
+   },
+   "i": 243
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261120T130000Z.close.futures",
+    "market": "futures",
+    "reference_price": "61774.65",
+    "symbol": "BTCUSDT"
+   },
+   "i": 244
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261120T131500Z.close.spot",
+    "market": "spot",
+    "reference_price": "61180.1",
+    "symbol": "BTCUSDT"
+   },
+   "i": 245
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261120T131500Z.close.futures",
+    "market": "futures",
+    "reference_price": "61180.1",
+    "symbol": "BTCUSDT"
+   },
+   "i": 245
   },
   {
    "body": {
@@ -5040,6 +5299,26 @@
   {
    "body": {
     "action": "close",
+    "intent_id": "BTCUSDT.20261121T010000Z.close.spot",
+    "market": "spot",
+    "reference_price": "63234.91",
+    "symbol": "BTCUSDT"
+   },
+   "i": 292
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261121T010000Z.close.futures",
+    "market": "futures",
+    "reference_price": "63234.91",
+    "symbol": "BTCUSDT"
+   },
+   "i": 292
+  },
+  {
+   "body": {
+    "action": "close",
     "intent_id": "BTCUSDT.20261121T011500Z.close.futures",
     "market": "futures",
     "reference_price": "63159.3",
@@ -5246,6 +5525,16 @@
     "symbol": "BTCUSDT"
    },
    "i": 330
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261121T110000Z.close.futures",
+    "market": "futures",
+    "reference_price": "62669.53",
+    "symbol": "BTCUSDT"
+   },
+   "i": 332
   },
   {
    "body": {
@@ -5518,6 +5807,16 @@
   {
    "body": {
     "action": "close",
+    "intent_id": "BTCUSDT.20261121T223000Z.close.futures",
+    "market": "futures",
+    "reference_price": "64216.99",
+    "symbol": "BTCUSDT"
+   },
+   "i": 378
+  },
+  {
+   "body": {
+    "action": "close",
     "intent_id": "BTCUSDT.20261121T224500Z.close.futures",
     "market": "futures",
     "reference_price": "63585.44",
@@ -5771,6 +6070,29 @@
   },
   {
    "body": {
+    "action": "reduce",
+    "fraction": 0.5,
+    "intent_id": "BTCUSDT.20261122T110000Z.reduce.futures",
+    "market": "futures",
+    "reference_price": "64833.74",
+    "symbol": "BTCUSDT"
+   },
+   "i": 428
+  },
+  {
+   "body": {
+    "action": "move_stop",
+    "intent_id": "BTCUSDT.20261122T110000Z.move_stop.futures",
+    "market": "futures",
+    "reference_price": "64933.24",
+    "side": "SELL",
+    "stop_price": "65303.93",
+    "symbol": "BTCUSDT"
+   },
+   "i": 428
+  },
+  {
+   "body": {
     "action": "close",
     "intent_id": "BTCUSDT.20261122T110000Z.close.futures",
     "market": "futures",
@@ -5778,6 +6100,26 @@
     "symbol": "BTCUSDT"
    },
    "i": 429
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261122T113000Z.close.spot",
+    "market": "spot",
+    "reference_price": "64771.92",
+    "symbol": "BTCUSDT"
+   },
+   "i": 430
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261122T113000Z.close.futures",
+    "market": "futures",
+    "reference_price": "64771.92",
+    "symbol": "BTCUSDT"
+   },
+   "i": 430
   },
   {
    "body": {
@@ -5922,6 +6264,36 @@
     "symbol": "BTCUSDT"
    },
    "i": 452
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261122T173000Z.close.futures",
+    "market": "futures",
+    "reference_price": "65577.3",
+    "symbol": "BTCUSDT"
+   },
+   "i": 454
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261122T174500Z.close.spot",
+    "market": "spot",
+    "reference_price": "64671.65",
+    "symbol": "BTCUSDT"
+   },
+   "i": 455
+  },
+  {
+   "body": {
+    "action": "close",
+    "intent_id": "BTCUSDT.20261122T174500Z.close.futures",
+    "market": "futures",
+    "reference_price": "64671.65",
+    "symbol": "BTCUSDT"
+   },
+   "i": 455
   },
   {
    "body": {
