@@ -4178,3 +4178,203 @@ were "expected"; in fact none were raised (with their files absent those cards r
 **For a round 5:** none of the four is registered as a candidate input by this rule. If a round 5 is ever run, these
 four should not be added on the strength of this study; `kp_chg24` and `cg_open` duplicate the past-return inputs the
 agents already have.
+
+## H90-H106. THE QUEUE FAMILY: walk-forward tests of one setting of the Setups rule (H90-H101) and chart-pattern claims on BTC and ETH (H102-H106) (registered 22 Nov 2026, about 11:40 UTC, before any H90-H106 number was computed; smoke runs on tiny slices only, their numbers not reported)
+
+**Prompted by:** the owner, 22 Nov 2026: "Queue at least 20 studies for SG box so it will have always have min 72 hours
+queue tasks backlog to clear". This family is one of three (another agent writes a placebo and bootstrap family; a third
+builds the queue runner). Research only: nothing in the engine, the Setups book or the vault changes, whatever the result.
+Code: `research/queue/walkforward.py` (H90-H101) and `research/queue/pattern.py` (H102-H106); tests
+`tests/test_queue_walkforward.py`. Run by the job queue, one study per job:
+`python research/queue/walkforward.py --study H9x --fits-dir <fits_today> --out <queue out>/H9x` (same form for pattern.py).
+
+**The danger, and how this family is built against it.** Twenty studies on one history will throw up good-looking results
+by chance. So: (1) every Part A setting is CHOSEN on one period and JUDGED on a later one, by a choice rule fixed now;
+(2) the last year of data (2025-11-11 onward, the holdout) is never loaded: the code refuses any load past
+2025-11-10 23:45 UTC (`wall()`, one function in each script); (3) the tests are counted in the ledger at the end and the
+pass levels are Bonferroni-corrected for that count; (4) whatever passes leads ONLY to a proposal for a forward PAPER
+shadow book, which needs the owner's word in this project. Nothing is ever called "proven".
+
+**Known before registering (no outcome numbers of this family).** H65 (the Setups book's replay post-mortem; on all
+history, the holdout included): the tightest third of stops lost (-81.9R over 2,623 trades), trades against the market's
+30-day move lost, the forced entry neither helped nor hurt, the entries' lead in the odds did not hold across halves.
+H67 and H68 (on the same history): a 30-day trend filter and a wait after a stop-out both "survive as a rule" on the
+replay. H72 (tonight, another agent) tests those two out of sample; this family does not repeat them. H74 (tonight): the
+owner's EMA200-drop / EMA10 long claim, "not supported" (8/22 episodes). The engine's constants are those of
+think15-v5.2.9; the code refuses to run if any of the ten constants named below differs from the value stated here.
+These grids were chosen from the engine's design and the brief, not from any replay of them: no grid value below has
+been replayed by anyone, as far as the research log shows. One limitation stated now: the voices' card VOTING list
+(`voting_for`, from the card rating of 17 Nov 2026) was chosen on full history; it is the same for every setting compared,
+so it cannot favour one setting over another, but the odds themselves are not fully walk-forward in that one respect.
+
+### PART A (H90-H101): walk-forward tests of one setting at a time
+
+**The book.** The Setups rule `b_targets` exactly as it runs now (`shadows.CHALLENGERS["b_targets"]["rule"]` =
+`{"targets": True, "early": True}`, cfg from `shadows.asset_cfg`, the early entry on BTC and ETH included), on all eight
+markets, through the engine's own `shadows.run`, inputs from `shadows.book_inputs` of a market group prepared by
+`research/h59_half_be.prep_cut` with the cached fits (as H62/H67/H68). Result per trade: the book's `r_mult` (net of
+fees, over the risk at the entry stop). The script checks once per market on the choice period that its "current
+setting" book equals the engine's own `run_challenger("b_targets")` book (trades and equity), and stops if not.
+
+**How one setting is varied, without editing the engine.**
+- A cfg override in the dict passed to `shadows.run` (stop_units, idle_max, theta_enter, theta_enter_shock, theta_flip,
+  theta_counter, htf_bias, trend_tiebreak, step_aside).
+- An ENTRY FILTER through the `guard` input: the study's mask is OR-ed into the market's real release-guard array (the
+  real guard keeps working exactly as before; `release_guard` stays on). What `policy.decide` does where `guard[i]` is
+  True, read from the code: FLAT -> IDLE, "release_guard": no new position at that close, and the idle count goes on,
+  so when the mask ends the idle count may already be past `idle_max` and the FORCED entry can come at the first close
+  after it. IN A POSITION -> HOLD, "release_guard_hold": no flip (neither the "other side clears the flip bar" flip nor
+  the "against the higher-timeframe bias" flip) and no step-aside at that close; the open position keeps its stop and
+  its targets, which `shadows.run` checks inside every bar before the decision, so a position can still end at its stop
+  or targets while masked. An order decided at an earlier close still fills at the next open. Every mask uses only what
+  is known at that bar's close (the close time, the close, the volatility unit at that close, and earlier bars).
+- The rule flags `trend_days` and `wait_after_stop` exist but are not used here (H72 tests them).
+
+**Periods, fixed for all of Part A.** CHOICE: each market's first decided session (from 2020-01/02) to the last stored
+session at or before 2023-06-07 23:45 UTC. TEST: from the first session at or after 2023-06-08 00:00 UTC to the last stored
+session at or before 2025-11-10 23:45 UTC. Each period's books start flat with $10,000 at the period's first session.
+Trades are counted by entry time; a trade still open at a period's end is not counted.
+HOLDOUT: nothing at or after 2025-11-11 is loaded (enforced in `wall()`).
+
+**The order, enforced in code.** (1) CHOICE: every grid value is run on the choice period with the market groups loaded
+ONLY up to the choice period's last session (the test period's bars are not in memory). The choice is computed and
+written to `choice.json`. (2) TEST: the script runs on the test period only the current setting and the chosen one; any
+other value is refused (`PeekError`) while `verdict.json` does not exist. The statistic below is computed and written to
+`verdict.json`. (3) Only then: a table of every grid value on the test period, marked "descriptive, not used for any
+choice". The tests check this order with a planted world (the test period cannot be loaded before `choice.json` exists).
+
+**Choice rule, fixed for all.** On CHOICE, the grid value with the largest pooled sum of R (eight markets) among the values
+whose BTC+ETH sum of R is at least the current setting's. Ties go to the current setting, then to grid order. If the
+choice is the current setting, the study ends: "the current setting was already the choice" (no test-period number).
+
+**Test statistic, fixed for all.** Per calendar month of the test period (2023-06 to 2025-11, 30 months, months with no
+trade count as zero), D(month) = the sum over the eight markets of (chosen setting's sum of R minus the current setting's
+sum of R) for trades entered that month (the pairing is by calendar month and market). The statistic is the mean of
+D over months, with a month-clustered bootstrap (whole months resampled with replacement, 20,000 draws, seed 20261122):
+95% percentile interval and one-sided p = (1 + number of bootstrap means <= 0) / (draws + 1). Also reported for both
+settings: mean R per trade with a month-clustered 95% interval, the worst fall of the pooled paper equity (the eight books'
+marked equity summed), the share of bars flat (markets' mean), the number of trades, paper net, and per market sums.
+
+**Pass rule.** p below 0.05 / 12 = 0.00417 (twelve Part A studies, H90-H101), AND the BTC+ETH difference over the test
+period not negative (and at least 12 months in the test period, which only a smoke run lacks). Conclusion words: "beats the current setting on later data", "does not", or "the current setting
+was already the choice".
+
+**A note on R across stop widths (H90).** R is in units of each trade's own entry-stop risk. On the markets sized by
+`backtest.leverage` (risk about 2% a trade) a wider stop means the same money at risk; on BTC and ETH (cap 1x, full size)
+a wider stop means more money per R. The choice and the test use R as registered; paper net in dollars is shown beside.
+
+**The studies.** Current setting first; the grid is fixed; "never" values are implemented as idle_max = 10^9 and
+theta_flip = 9.0 (an edge is at most 1.0).
+
+## H90. Stop distance: `stop_units` in {1.0, 1.5, 2.0 (current), 2.5, 3.0, 4.0}
+The protective stop is stop_units x the volatility unit (1.5 x ATR14 1h) from the fill; position size follows it.
+
+## H91. Forced-entry clock: `idle_max` in {2, 4 (current), 8, 16, 48, never forced}
+"Never forced" means the book enters only when a side clears the entry bar (it may stay flat a long time).
+
+## H92. Entry bar: `theta_enter` in {0.02, 0.03, 0.05 (current), 0.08, 0.10}
+Changed from the brief (which had 0.15 at the top, not 0.02): `theta_enter_shock` stays at 0.10 in this study, and with
+theta_enter above 0.10 the high-risk bar would be LOWER than the normal bar, which turns the rule inside out; 0.15 is
+replaced by 0.02 so the grid stays at five values on the same side. theta_enter is also the edge below which a position
+against the higher-timeframe bias is flipped (policy.decide), so that moves with it.
+
+## H93. Flip bar: `theta_flip` in {0.05, 0.10 (current), 0.15, 0.20, never flip}
+"Never flip" switches off only the "other side clears the flip bar" flip; the flip to the higher-timeframe bias side
+(a position against the bias with less than theta_enter for it) still works.
+
+## H94. Counter-bias entry bar: `theta_counter` in {0.05, 0.10, 0.15 (current), 0.25}
+Acts only when the higher-timeframe bias is set (htf_bias on, bias not 0); 0.05 equals theta_enter (no extra bar).
+
+## H95. Higher-timeframe bias and trend tiebreak: (htf_bias, trend_tiebreak) in {(on, on) current, (on, off), (off, on), (off, off)}
+
+## H96. Tight-stop entry filter: none (current), or no new entry when the stop would be in the lowest q, q in {0.2, 0.33, 0.5}
+Reading at close i: ratio = unit[i] / close[i] (the stop distance per unit of price the entry at that close would get).
+Threshold: the q-quantile of that ratio over the bars whose decision close falls in the 90 whole UTC days before bar i's
+UTC day (so only earlier, closed bars); fewer than 30 days with bars in that window: no block. Blocked when ratio <= threshold.
+
+## H97. Hours-of-day entry filter: none (current), or no new entry in one 6-hour UTC block: 00-06, 06-12, 12-18, 18-24
+The hour is that of the deciding close (open time + 15 minutes); a close at 06:00 belongs to 06-12. On SPX (cash hours)
+a block may cover most of its sessions; the rule is the same for all markets.
+
+## H98. Weekend entry filter, BTC and ETH only: none (current), Saturday and Sunday UTC, or Friday 21:00 to Sunday 21:00 UTC
+By the deciding close's UTC time. The other six markets run unchanged (their books are the current book, computed once).
+The pooled statistic over eight markets is then the BTC+ETH difference.
+
+## H99. Volatility entry filter: none (current), block the top third, block the bottom third of 24-hour realised volatility
+Reading at close i: sqrt of the sum of squared 15m log returns of the bars that closed in the 24 hours up to and including
+close i. Thirds: the 1/3 and 2/3 quantiles over the 90 whole UTC days before bar i's day (30 days minimum, as H96).
+Top: blocked when the reading >= the 2/3 quantile; bottom: when <= the 1/3 quantile.
+
+## H100. High-risk rules: `theta_enter_shock` in {0.05, 0.10 (current), 0.20} x `step_aside` in {off (current), on}: six values
+0.05 equals theta_enter (no extra bar in high risk). step_aside on: in high risk with the held side's edge negative, go flat.
+
+## H101. The kitchen sink: every chosen setting of H90-H100 stacked into one rule, tested once on the test period
+Replaces the brief's H101 (the H67/H68 variants and their combination), which is H72 tonight. The rule: the current
+setting with, for each of H90-H100, its chosen value where it is not the current one (cfg overrides merged; masks OR-ed).
+It reads the other studies' `choice.json` from the queue's sibling output folders and runs LAST: if any is missing it
+exits with code 75 and writes nothing final. There is no choice period of its own: the choice is the eleven choices.
+If every study kept its current setting the study ends "the current setting was already the choice". Same statistic and
+pass rule. Its point: to show what stacking choices made on one period really buys on a later one.
+
+### PART B (H102-H106): chart-pattern claims on BTC and ETH daily bars
+
+**Data.** Daily UTC bars (open first, high max, low min, close last) built from the stored 15-minute bars of BTCUSDT and
+ETHUSDT from 2019-01-01, ending with the bar that opens at 2025-11-10 23:45 UTC (the last day is 2025-11-10). The holdout
+is not read (`wall()`). Days with fewer than 96 bars are kept and counted in the report. EMA(N): alpha 2/(N+1), seeded
+with the mean of the first N closes, defined from the N-th close on (as H74). RSI(14): Wilder's, seeded with the mean of
+the first 14 changes.
+
+**Entry at the event day's close. Three fixed "win" readings** (long; a short is the mirror): W5: close 5 days later above
+the entry close; W10: 10 days later; WEMA10: held until the first later close below the daily EMA10 (short: above),
+exit at that close, a win if the result after 0.05% a side (0.10% in all) is above zero. An event whose reading would
+need a day past the data is left out of that reading.
+
+**Statistics, per event kind and reading.** BTC and ETH pooled; events of either coin within 10 days of each other are one
+episode (single linkage). Win rate on all events, with a cluster-bootstrap 95% interval (episodes resampled, 10,000 draws,
+seed 20261122). As H74, the Wilson 95% interval and the exact one-sided binomial test against the stated threshold use ONE
+event per episode (the earliest, BTC first on a tie: a choice that does not look at outcomes). Baseline: the same trade on
+every other day (EMA200 defined, reading inside the data, event days left out), the difference (event rate minus baseline)
+with a 95% bootstrap interval (episodes; baseline days in calendar-month blocks). Halves by entry day (before / from
+2023-06-08). Per coin counts. **Conclusion words**: "supported" if the binomial p < 0.05 / 18 = 0.00278 AND the difference's
+interval is above zero; "not supported" if the upper end of the Wilson interval is below the threshold; otherwise "too few
+cases to tell". Threshold 55% unless the claim names one.
+
+## H102. Golden cross (long) and death cross (short): daily EMA50 crossing EMA200; threshold 55%
+Golden: EMA50 > EMA200 at the close and EMA50 <= EMA200 at the close before (both defined); long. Death: the mirror; short.
+Two kinds x three readings = six tests. Descriptive beside it: nothing else.
+
+## H103. Daily RSI(14) back above 30: RSI <= 30 at the previous close and > 30 at this close; long; threshold 55%
+
+## H104. Three consecutive daily closes down totalling at least 10%: long at the third close; threshold 55%
+close(d) < close(d-1) < close(d-2) < close(d-3) and close(d) / close(d-3) - 1 <= -10%. One event per down streak (no new
+event until a close at or above the one before).
+
+## H105. A daily close back above the EMA200 after at least 30 days below it: long; threshold 55%
+close(d) > EMA200(d) and close(d-k) < EMA200(d-k) for each k = 1..30.
+
+## H106. The mirror of H74 for the short side: threshold 50% (the claim: "is going short a winner more than 50% of the time")
+Breakout day B: a close above the EMA200 with the previous close at or below it; counted only if more than 30 days after the
+previous counted breakout. Rise: the first day d* in [B, B+30] where the highest close from B to d* is at least 1.20 x the
+lowest close of the 60 days B-60 to B-1 (the mirror of H74's primary drop reading D1). Entry: the first day t in
+[max(B+1, d*), B+30] with close(t) < EMA10(t) and close(t-1) >= EMA10(t-1); short at close(t). One entry per breakout.
+Only D1 (H74's primary reading) is mirrored, to keep the count of tests down.
+
+### Changes from the brief, made before registering
+- H92's grid: 0.15 replaced by 0.02 (the reason is under H92).
+- H101: the brief's own H101 was H72's work; it is the kitchen-sink control as the brief proposed instead.
+- H98 moves only BTC and ETH, so its pooled statistic is the BTC+ETH difference (stated, not a separate rule).
+- Part B: one event per episode for the exact test and the Wilson interval (as H74), the cluster bootstrap beside it.
+- Bootstrap draws: 20,000 (Part A; the brief asked at least 5,000) so that p near 0.004 is resolved.
+- Each period's books start flat and fresh (a walk-forward deploy of the chosen setting starts at the test period).
+
+### The ledger
+- Part A: 12 tests (H90-H101), each one-sided at 0.05 / 12. If no setting truly differed from the current one, the expected
+  number of Part A passes by chance is at most 12 x 0.05/12 = 0.05 (the BTC+ETH condition only lowers it).
+- Part B: 18 tests (H102: 6; H103, H104, H105, H106: 3 each), each "supported" only at 0.05 / 18; expected chance
+  "supported" readings at most 18 x 0.05/18 = 0.05.
+- Family: 30 tests; at most about 0.1 passes expected by chance alone (a family-wise chance of any false pass of at most
+  about 10%). The descriptive tables (every grid value on the test period, halves, per coin, per market) are looks too,
+  and pass nothing.
+- Choice-period comparisons: 51 grid values in H90-H100 are compared on the choice period; they choose, they do not pass.
+- **The standing rule:** a pass leads only to a PROPOSAL for a forward PAPER shadow book, registered on its own, and that
+  needs the owner's word in this project. Nothing reaches the Setups book, the vault or real money from this family.
