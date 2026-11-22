@@ -1211,9 +1211,9 @@ CAUSAL_BLOCK = 5000                 # draws per checkpoint file (each block take
 # Seconds of ONE processor on the research server (22 Nov 2026, `--time-draws 200` on the full window to CUT; seconds and
 # memory only were printed): per group, the outcome precompute after the load (H81b: both sides of every real trade;
 # H82b: every bar of every trade's window), and one vectorised draw over all eight markets.
-CAUSAL_PRE_S = {"H81b": {"crypto": 1.0, "metals": 1.0, "fx": 0.5, "index": 0.2, "energy": 1.0},
-                "H82b": {"crypto": 60.0, "metals": 40.0, "fx": 20.0, "index": 5.0, "energy": 40.0}}
-CAUSAL_DRAW_S = {"H81b": 0.002, "H82b": 0.002}
+CAUSAL_PRE_S = {"H81b": {"crypto": 0.3, "metals": 0.2, "fx": 0.1, "index": 0.05, "energy": 0.2},
+                "H82b": {"crypto": 23.8, "metals": 14.5, "fx": 6.7, "index": 1.5, "energy": 11.2}}
+CAUSAL_DRAW_S = {"H81b": 0.0005, "H82b": 0.0003}  # measured: 0.0005 s and 0.0003 s a draw over the 5,162 trades
 
 
 def causal_outcomes(study, ctx):
