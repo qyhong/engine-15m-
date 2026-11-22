@@ -13,7 +13,9 @@ in the step that decides it, booked at that close's price (`CFG["early_entry"]`)
 Since 21 Nov 2026 a follower book runs beside the shadow books (`engine15/floor_book.py`, `shadows.FOLLOWERS`,
 book name `f_floor_33_3r`): the hold copy's trades with a third of the best closed profit locked once 3R up (H61).
 It started as a copy of the hold copy's book, is not a rule of `shadows.run`, and a failure in it is logged and
-skipped. No version change: no constant of the main book moved. H60 (exits by regime, per market) is registered and running; it may change this table.
+skipped. No version change: no constant of the main book moved.
+H67 (22 Nov 2026) adds the shadow book `b_trend30` (`shadows.CHALLENGERS`): `b_targets` with a 30-day trend
+filter (rule key `trend_days`); it starts flat at its first live bar, the vault never reads it. H60 (exits by regime, per market) is registered and running; it may change this table.
 
 Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisions), then
 `THOUGHT_PROCESS.md` ("Now" section) and `CLAUDE.md`. This file is only the moving parts.

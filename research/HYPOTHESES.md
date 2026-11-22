@@ -3936,3 +3936,42 @@ are descriptive (do they agree in sign with the 30-day one).
 **Forward.** `b_trend30` is added as a shadow book whatever the replay says (the owner asked for it), starting flat at
 its first live bar. First read at 30 closed trades against `b_targets` over the same days; nothing reaches the Setups
 book or the vault without the owner's word in this project.
+
+### H67 results (22 Nov 2026, 10:50-10:51 UTC on the research server; `research/out/h67_trend_filter/report.md` + `results.json`)
+
+**Verdict by the registered bar: the pattern SURVIVES as a rule** (all four checks hold). (1) Pooled sum of R above the
+current rule's in both halves: first half +86.3R vs +29.6R, second half +41.0R vs -7.1R. (2) BTC and ETH together, both
+halves: +106.1R vs +44.7R, +29.2R vs -52.5R. (3) Pooled mean R above zero in both halves: +0.032, +0.015. (4) Pooled worst
+fall (the eight books' marked equity summed) -41.0% vs -61.6%: not deeper.
+
+Each cell: trades, share won, mean R, sum of R, paper net ($), share of bars flat (pooled: the markets' mean).
+
+| Pooled, 8 markets | All | First half | Second half | Holdout (2025-11-11 on) | Forward (2026-11-11 on) | Worst fall |
+|---|---|---|---|---|---|---|
+| current rule | 5963, 43%, +0.004, +22.5, -21233, 2% | 2953, +0.010, +29.6, -4701 | 3010, -0.002, -7.1, -16532 | 793, +0.027, +21.1, -1117 | 21, +0.874, +18.3, +4175 | -61.6% |
+| 30-day filter | 5521, 43%, +0.023, +127.3, +278, 8% | 2721, +0.032, +86.3, +10861 | 2800, +0.015, +41.0, -10583 | 750, +0.060, +45.0, +11105 | 21, +0.765, +16.1, +7193 | -41.0% |
+| BTC + ETH current | 2074, 44%, -0.004, -7.7, -4794, 1% | 991, +0.045, +44.7, -2702 | 1083, -0.048, -52.5, -2092 | 305, +0.040, +12.3, +6214 | 9, +0.599, +5.4, +1869 | -78.5% |
+| BTC + ETH filter | 1815, 46%, +0.075, +135.3, +24847, 8% | 863, +0.123, +106.1, +22620 | 952, +0.031, +29.2, +2227 | 284, +0.051, +14.5, +14262 | 9, +0.599, +5.4, +5429 | -61.1% |
+| Other six current | 3889, 42%, +0.008, +30.3, -16439, 2% | 1962, -0.008, -15.1, -1999 | 1927, +0.024, +45.4, -14440 | 488, +0.018, +8.8, -7331 | 12, +1.080, +13.0, +2305 | -65.9% |
+| Other six filter | 3706, 41%, -0.002, -8.0, -24569, 8% | 1858, -0.011, -19.8, -11759 | 1848, +0.006, +11.8, -12809 | 466, +0.065, +30.5, -3156 | 12, +0.889, +10.7, +1764 | -57.0% |
+
+Descriptive, sum of R (all / first half / second half): 20-day filter +55.1 / +66.2 / -11.1 (worst fall -67.2%, deeper
+than the current rule); 45-day filter +144.9 / +22.3 / +122.7 (worst fall -46.1%). Both are above the current rule in
+total (+22.5R), but neither in both halves: the 20-day one is below it in the second half (-11.1R vs -7.1R) and the
+45-day one in the first half (+22.3R vs +29.6R). Neither would have cleared the bar.
+Per market (30-day): BTC -66.9R -> +30.4R, ETH +59.2R -> +104.8R, WTI -5.7 -> +11.7; gold, silver, USDJPY, SPX and
+Brent are a little worse (each within about 21R). The current rule's 5,963 trades and +22.5R match H65's record.
+
+**Deviations:** none from the registered rule, replay or read-outs. Two choices made with the code, before the run: the
+move at bar k uses the first bar whose open time is at or after open(k) minus 30 days (the registration says "30 days
+earlier"), and a flip into the wrong side leaves the idle count at 0 (as any flip does today). The replay also checks
+that the engine's own challenger `b_trend30` (via `run_challenger`) gives the very book the script ran (it did, on all
+eight markets). Worst fall is also shown for BTC + ETH and the other six (the registration asked it pooled only).
+
+**Reading.** On history the filter turns the Setups book's flat R into a positive one, and nearly all of the gain is on
+BTC and ETH; on the other six markets it is roughly neutral (slightly worse in total, better in the holdout). The book
+is flat about 8% of bars instead of 2%. The three lengths agree in sign on the total, but each of the other two loses
+one half to the current rule (and 20 days has the deeper fall), so the result depends on the length chosen. This filter was FOUND on this same history
+(H65), so the replay cannot validate it: it shows only that the pattern holds up when made a rule. The test is the
+forward shadow book `b_trend30`, first read at 30 closed trades against `b_targets` over the same days. Nothing reaches
+the Setups book or the vault without the owner's word.

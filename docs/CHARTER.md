@@ -501,3 +501,8 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   live trade so far is with that move. In 505 sudden rallies while short it turned long within a day in 26% and sold
   again into the move in 24%. Candidates put to the owner, none built: a 30-day trend filter, waiting for a signal
   after a stop-out, skipping unusually tight stops, a Telegram alert on a sharp move against an open Setups trade.
+- **H67: the Setups rule with a 30-day trend filter** (22 Nov 2026; owner: "Test it"). Shadow book `b_trend30`:
+  `b_targets` with no new entry, and no flip, against the market's own 30-day move (an open trade is never closed by
+  it). History replay (found on the same history, so not a validation): the registered bar holds; pooled +127R vs +22R,
+  BTC + ETH +135R vs -8R, worst fall -41% vs -62%; the other six markets roughly neutral. Runs forward on paper from its
+  first live bar; first read at 30 closed trades. The Setups book and the vault are unchanged.
