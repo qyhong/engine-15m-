@@ -582,3 +582,20 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   status, seeds on a model or on the fallback and since when, the split, drift, model and refit history, lateness, the
   yardstick's same-days numbers and the interim date, with the note that none has passed. The site session builds the
   Lab tab from it. No money file was touched.
+- **The research queue on the Singapore box** (22 Nov 2026; owner: "Double the workload", then "Queue at least 20
+  studies for SG box so it will have always have min 72 hours queue tasks backlog to clear").
+  Machinery: `research/queue/runner.py` runs on the box from `/data/research_queue/` (at most 2 jobs, lowest priority,
+  one thread each; it starts nothing new when disk or memory is low or for 45 minutes after an engine deploy; a STOP
+  file ends everything; jobs resume from checkpoints), driven from the laptop by `tools/research_queue.py` (`snapshot`,
+  `add`, `status` with the backlog in hours, `fetch`). It is not a service: after a reboot it is started by hand.
+  Studies, 27, all registered before any number (H80 to H106): ten placebo, permutation and bootstrap studies
+  (`research/queue/placebo.py`: are the odds, the side, the entry time, the trend filter, the wait after a stop, the
+  bias and the stop size distinguishable from the same thing scrambled; a bootstrap of 12-month paths; a costs surface;
+  year by year), about 71 CPU hours; twelve walk-forward tests of one setting of the Setups rule each
+  (`research/queue/walkforward.py`: chosen on 2020 to 2023-06-07, judged on 2023-06-08 to 2025-11-10) and five
+  chart-pattern claims on BTC and ETH daily bars (`research/queue/pattern.py`), about half an hour together.
+  Standing rules for every queued study: the last year of data (from 2025-11-11) is never loaded; each family counts its
+  tests in a ledger; a pass leads only to a proposal for a forward PAPER shadow book and needs the owner's word; nothing
+  reaches the Setups book or the vault. Said to the owner: the first batch is about 72 hours of one processor (about 36
+  hours with two jobs at a time); keeping the backlog at 72 hours means new studies must be designed and registered as
+  it drains, and runs that add nothing will not be queued to pad it.

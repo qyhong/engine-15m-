@@ -218,6 +218,17 @@ crypto replay).
   `forward5.advance(fallback="trend")`. Interim read: `research/rl_interim_read.py` prints nothing before 2027-01-07
   04:30 (`p5_rlq`) and 2027-01-08 03:00 UTC (Phase 6); run it on the box, where the records are. Page block `rl_lab`
   (schema 1): `engine15/rl_lab.py`, called by `export.merge` in a try/except (null on failure); fields in `docs/RL.md`.
+- Research job queue (22 Nov 2026). Long research computations run on the Singapore box from `/data/research_queue/`,
+  worked through by `research/queue/runner.py` (pid in `runner.pid`; log in `runner.log`). At most 2 jobs at a time, at
+  nice 19 and ionice idle, single-threaded. It starts nothing new when free disk on `/data` is under 4 GB, available
+  memory is under 3 GB, PAUSE exists, or the engine was deployed less than 45 minutes ago; it stops jobs (they resume
+  later) when disk is under 2 GB, memory under 1.5 GB, or STOP exists. Jobs are resumable harnesses
+  (`research/queue/placebo.py`, `walkforward.py`, `pattern.py`) run from code snapshots in `code/<commit>/`, which read
+  `/data/mind15/data` through a symlink and never write there. From the laptop: `py -3 -X utf8 tools/research_queue.py
+  status` (the backlog in hours), `snapshot`, `add`, `fetch`, `logs`, `start`, `stop`, `pause`, `resume`. NOT a systemd
+  service: after a reboot run `tools/research_queue.py start`. To stop everything at once:
+  `touch /data/research_queue/STOP`. `walkforward.py --study H101` needs the choice files of H90 to H100 and must be
+  queued after they are done. Details in `research/queue/README.md`.
 - Give-back alert (21 Nov 2026, owner "Yes"): `telegram_notify.giveback_update` sends one card when an open
   main-book trade is 25% or more below the best open profit the bot has seen for it (state key `giveback`). Alert only.
 
