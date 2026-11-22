@@ -4278,3 +4278,42 @@ descriptive. (4) Clustering links any two events within 10 days, of either coin 
 is shared by all readings. (6) The 4-hour entry may not come before the close of day d*.
 **Computed** by `research/h74_ema200_drop_ema10.py` on the research server in `/data/mind15_h74`; output
 `research/out/h74_ema200_drop_ema10/` (results.json, report.md, events.csv, the fetched daily candles).
+
+### H74 results (22 Nov 2026, run 11:27 UTC on the research server, 13 s; `research/out/h74_ema200_drop_ema10/report.md`, `results.json`, `events.csv`, fetched daily candles)
+
+**Data.** Daily candles fetched for both coins, 2017-08-17 to 2026-11-21 (3,384 days each, no missing day). On the 2,861
+overlapping days with all 96 stored 15-minute bars, the fetched daily close equals the close built from the stored bars
+exactly (largest difference 0.0). 49 BTC and 35 ETH breakdowns below the EMA200; 25 and 19 counted (30-day spacing).
+
+**Answer under the primary reading (D1W1, pooled): the data do not support the claim.** 28 entries (14 BTC, 14 ETH) in 22
+independent episodes; 10 won (35.7%); one event per episode 8/22, 95% interval 19.7%-57.0% (cluster bootstrap on all events
+17.9%-53.8%); the upper end is below 60%. The same trade at every other EMA10 cross won 51.4% (479 crosses); the difference
+-15.6% [-34.7%, +4.2%]. All days: the close 10 days later was higher on 52.5%.
+
+| reading | BTC (wins/events) | ETH | pooled events / episodes | pooled win rate [95%, 1 per episode] | p vs 60% (Holm) | cross baseline | verdict BTC / ETH / pooled |
+|---|---|---|---|---|---|---|---|
+| D1W1 (primary) | 4/14 | 6/14 | 28 / 22 | 35.7% [19.7, 57.0] | 0.993 (1.000) | 51.4% | not supported / too few / **not supported** |
+| D1W2 | 6/14 | 7/14 | 28 / 22 | 46.4% [26.9, 65.3] | 0.945 (1.000) | 48.4% | too few / too few / too few |
+| D1W3 | 3/14 | 5/14 | 28 / 22 | 28.6% [16.4, 52.7] | 0.998 (1.000) | 27.1% | not supported / too few / not supported |
+| D2W1 | 1/2 | 5/5 | 7 / 6 | 85.7% [43.6, 97.0] | 0.233 (1.000) | 49.6% | too few / too few / too few |
+| D2W2 | 1/2 | 2/5 | 7 / 6 | 42.9% [18.8, 81.2] | 0.821 (1.000) | 48.0% | too few (all) |
+| D2W3 | 0/2 | 2/5 | 7 / 6 | 28.6% [9.7, 70.0] | 0.959 (1.000) | 26.4% | too few (all) |
+
+No reading is "supported" (smallest Holm p 0.467, ETH D2W1). **Result per trade (D1, 28 trades):** W1 average -3.8%, median
+-5.2%, worst -30.1% (ETH, May 2022), best +48.3% (ETH, April 2018); W3 after fees average +1.9%, median -2.8%, worst -11.6%,
+won 28.6% (a few large winners, many small losers). 2017-2019 vs 2020 onward, W1 average -1.5% vs -4.9%. D2 (7 trades): W1
+average +10.4%, median +4.9%, worst -4.6%; too few to mean anything. Windows with the drop met and no EMA10 cross: D1 5 (3
+complete: -11%, -25%, -37% from B to B+30), D2 8; two are open now (BTC from 2026-11-05, ETH from 2026-10-29).
+**Cases:** about 153 independent episodes would be needed to tell a true 60% from 50% (80% power, alpha 0.05), 259 at the
+Holm worst case; the data hold 22 (D1) and 6 (D2).
+
+**4-hour version (descriptive only).** D1 pooled: W1 13/25 (52.0%, cross baseline 53.2%), W2 17/25 (68.0%, interval
+43.3%-81.9%, baseline 50.9%), W3 7/27 (25.9%); average W1 +0.3%, W2 +0.2% (worst -32.7%), W3 -0.2% after fees. D2 pooled:
+W1 6/8, W2 6/8, W3 2/9. Nothing here is evidence either way.
+
+**Deviations and notes.** (1) The registration's time reads "about 11:40 UTC"; the commit was at 11:25 UTC, before the first
+run (11:27, which crashed on a date-parsing error before any outcome was computed; fixed and rerun). (2) The baseline
+exclusion was applied to the windows of ALL breakdowns with the drop met (counted or not), the reading of "crosses not
+preceded by such a drop"; the registration's text did not say counted or not. (3) 4-hour bars with fewer than 16 stored
+15-minute bars were dropped and 4-hour entries need 3 days of 4-hour EMA history; not in the registration. (4) With 2
+events (BTC D2) the bootstrap difference intervals are degenerate; the verdict there rests on the Wilson interval.
