@@ -3896,3 +3896,43 @@ readily than it has turned long in a rally.
 
 **Reading.** The book does not chase a rally: in three of four sudden rallies it did not turn long within a day, and in
 one of four it sold again into the move. What bounds the loss is the stop, not a turn. Nothing here was changed.
+
+## H67. The Setups rule with a 30-day trend filter (registered 22 Nov 2026, before any H67 number was computed)
+
+**Prompted by:** H65 (trades against their market's own 30-day move lost 117R over 1,470 trades, with it +139R over
+4,493, consistent across halves and market groups) and the owner, in this project, 22 Nov 2026, asked "Test the 30-day
+trend filter on history and run it as a forward paper shadow book?": "Test it".
+
+**What must be said first.** The filter was FOUND on this same history, all of it, the holdout included. So the replay
+below cannot validate it: it only checks that the pattern survives when it is made a rule (a filtered book trades a
+different sequence: it is flat where the old book was in a trade, and its later entries differ). The test is the
+forward shadow book.
+
+**The rule, `b_trend30`.** `b_targets` as it runs from think15-v5.2.9 (the early entry on BTC and ETH included), with
+one change. At the close that decides, the market's 30-day move is the close against the close of the first bar at or
+after 30 days earlier (unknown when there is no such bar: then nothing is filtered).
+- A new entry from flat (ENTER or FORCED) on the side AGAINST the 30-day move is not taken: the book stays flat and its
+  idle count goes on.
+- A flip INTO the side against the 30-day move closes the position at the next open and opens nothing (flat).
+- A position already open is never closed because the 30-day move changes; its stop, targets and exits are untouched.
+So this book can sit flat for long: it has no 4-session mandate when the forced side is against the move. It is a
+shadow book; the Setups book and the vault are not touched.
+
+**Replay.** All eight markets, each from its first decided session to the last stored session at or before 2026-11-21
+13:45 UTC, the engine's own `shadows.run` for both books (no copy), in a scratch copy of the code on the research
+server, the evidence store and cached fits read only. Halves split at 2023-06-08; the holdout (2025-11-11 onward) and
+the forward slice (2026-11-11 onward) shown apart. Descriptive beside it: the same rule with 20 and with 45 days.
+
+**Read-outs, fixed now.** For the current rule and the filter, per market and pooled, BTC and ETH apart: trades, share
+won, mean R and sum of R (the book's `r_mult`), paper net, worst fall of the marked equity, share of bars flat; first
+half, second half, holdout, forward slice.
+
+**Bar for the replay, fixed now.** "The pattern survives as a rule" only if ALL hold: (1) pooled over eight markets the
+filter's sum of R is above the current rule's in BOTH halves; (2) the same on BTC and ETH together in BOTH halves;
+(3) its pooled mean R per trade is above zero in BOTH halves; (4) its pooled worst fall (the eight books' equity summed)
+is not deeper than the current rule's. Anything else is "does not survive as a rule". The 20-day and 45-day versions
+are descriptive (do they agree in sign with the 30-day one).
+
+**Forward.** `b_trend30` is added as a shadow book whatever the replay says (the owner asked for it), starting flat at
+its first live bar. First read at 30 closed trades against `b_targets` over the same days; nothing reaches the Setups
+book or the vault without the owner's word in this project.
