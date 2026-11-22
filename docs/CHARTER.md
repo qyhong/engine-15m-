@@ -506,3 +506,9 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   it). History replay (found on the same history, so not a validation): the registered bar holds; pooled +127R vs +22R,
   BTC + ETH +135R vs -8R, worst fall -41% vs -62%; the other six markets roughly neutral. Runs forward on paper from its
   first live bar; first read at 30 closed trades. The Setups book and the vault are unchanged.
+- **H68: the Setups rule that waits for a real signal after a stop-out** (22 Nov 2026; owner: "After a stop-out, wait
+  for a real signal instead of a forced re-entry"). Shadow book `b_wait_stop`: `b_targets` with no forced entry after a
+  trade ends at its entry stop, until a signal enters. History replay (found on the same history, so not a validation):
+  the registered bar holds; pooled +144R vs +22R, BTC + ETH +64R vs -8R, worst fall -32% vs -62%; but on gold, silver and
+  SPX the book was flat almost all of the second half (waits of months to years). Both changes together (descriptive):
+  BTC + ETH +93R, less than the 30-day filter alone. Runs forward on paper; first read at 30 closed trades.

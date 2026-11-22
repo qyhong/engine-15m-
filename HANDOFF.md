@@ -15,7 +15,9 @@ book name `f_floor_33_3r`): the hold copy's trades with a third of the best clos
 It started as a copy of the hold copy's book, is not a rule of `shadows.run`, and a failure in it is logged and
 skipped. No version change: no constant of the main book moved.
 H67 (22 Nov 2026) adds the shadow book `b_trend30` (`shadows.CHALLENGERS`): `b_targets` with a 30-day trend
-filter (rule key `trend_days`); it starts flat at its first live bar, the vault never reads it. H60 (exits by regime, per market) is registered and running; it may change this table.
+filter (rule key `trend_days`); it starts flat at its first live bar, the vault never reads it.
+H68 (22 Nov 2026) adds `b_wait_stop`: `b_targets` with no forced entry after an entry-stop exit until a signal
+enters (rule key `wait_after_stop`, state key `wait_stop` in that book only); also a shadow, never read by the vault. H60 (exits by regime, per market) is registered and running; it may change this table.
 
 Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisions), then
 `THOUGHT_PROCESS.md` ("Now" section) and `CLAUDE.md`. This file is only the moving parts.

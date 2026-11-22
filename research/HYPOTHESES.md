@@ -4018,3 +4018,51 @@ than the current rule's. Anything else is "does not survive as a rule".
 **Forward.** `b_wait_stop` is added as a shadow book whatever the replay says (the owner asked for it), starting flat at
 its first live bar. First read at 30 closed trades against `b_targets` over the same days; nothing reaches the Setups
 book or the vault without the owner's word in this project.
+
+### H68 results (22 Nov 2026, 10:56-10:57 UTC on the research server; `research/out/h68_wait_after_stop/report.md` + `results.json`)
+
+**Verdict by the registered bar: the pattern SURVIVES as a rule** (all four checks hold), with a large caveat below.
+(1) Pooled sum of R above the current rule's in both halves: first half +113.3R vs +29.6R, second half +30.5R vs -7.1R.
+(2) BTC and ETH together, both halves: +47.3R vs +44.7R (a narrow margin), +17.3R vs -52.5R. (3) Pooled mean R above
+zero in both halves: +0.054, +0.024. (4) Pooled worst fall -32.4% vs -61.6%: not deeper.
+
+Each cell: trades, share won, mean R, sum of R, paper net ($), share of bars flat (pooled: the markets' mean).
+
+| Book | All | First half | Second half | Holdout (2025-11-11 on) | Forward (2026-11-11 on) | Worst fall |
+|---|---|---|---|---|---|---|
+| Pooled current | 5963, 43%, +0.004, +22.5, -21233, 2% | 2953, +0.010, +29.6, -4701 | 3010, -0.002, -7.1, -16532 | 793, +0.027, +21.1, -1117 | 21, +0.874, +18.3, +4175 | -61.6% |
+| Pooled wait | 3389, 45%, +0.042, +143.9, +38537, 56% | 2090, +0.054, +113.3, +42343 | 1299, +0.024, +30.5, -3806 | 291, +0.105, +30.7, +8895 | 13, +0.516, +6.7, +1653 | -32.4% |
+| BTC + ETH current | 2074, 44%, -0.004, -7.7, -4794, 1% | 991, +0.045, +44.7, -2702 | 1083, -0.048, -52.5, -2092 | 305, +0.040, +12.3, +6214 | 9, +0.599, +5.4, +1869 | -78.5% |
+| BTC + ETH wait | 1761, 46%, +0.037, +64.5, +10032, 21% | 908, +0.052, +47.3, +8687 | 853, +0.020, +17.3, +1346 | 208, +0.064, +13.3, +9986 | 11, +0.658, +7.2, +1650 | -70.1% |
+| Other six current | 3889, 42%, +0.008, +30.3, -16439, 2% | 1962, -0.008, -15.1, -1999 | 1927, +0.024, +45.4, -14440 | 488, +0.018, +8.8, -7331 | 12, +1.080, +13.0, +2305 | -65.9% |
+| Other six wait | 1628, 44%, +0.049, +79.3, +28505, 67% | 1182, +0.056, +66.1, +33656 | 446, +0.030, +13.3, -5151 | 83, +0.210, +17.4, -1091 | 2, -0.264, -0.5, +2 | -24.7% |
+
+**Withheld forced entries and waits.** Stop-outs after which at least one forced entry was withheld: 1,259 (BTC + ETH
+651, the other six 608). Wait from a stop-out to the next entry (completed waits): BTC + ETH median 10.8 hours, longest
+353 hours (about 15 days); the other six median 26.5 hours, longest 14,666 hours. At the cut, gold had been waiting
+13,850 hours (about 19 months), silver 9,996 hours and SPX 27,389 hours (about 3 years): those three books were flat
+96-99% of the second half (gold 179 trades in all instead of 750, silver 160 instead of 725, SPX 19 instead of 240).
+The withheld entries in the current rule's own record (its FORCED entries right after a "STOP" exit): 2,675 trades,
+40% won, mean -0.019R, sum -51.7R; BTC + ETH 762 trades, mean -0.070R, sum -53.1R (both halves negative); the other six
+1,913 trades, mean +0.001R, sum +1.4R.
+
+**Descriptive: both changes in one book** (wait + 30-day filter; no bar, not a live book): pooled 2,516 trades, mean
++0.067R, sum +169.5R (+110.1R / +59.4R by half), flat 67%, worst fall -27.6%; BTC + ETH 1,311 trades, +93.1R (+68.7R /
++24.4R), flat 40%, worst fall -63.9%. They overlap: on BTC + ETH the filter alone made +135.3R and the wait alone +64.5R,
+together +93.1R, less than the filter alone.
+
+**Deviations:** none from the registered rule, replay or read-outs. Choices made with the code: the switch is the state
+key `wait_stop` = {"on": 0 off / 1 waiting / 2 waiting and a forced entry already withheld, "blocked": sessions withheld,
+"episodes": stop-outs with a withheld entry}; "sessions withheld" counts every flat session past the mandate in which
+the forced entry was refused; the waits are completed ones (a wait still open at the cut is reported apart). The replay
+checks that the engine's own `b_wait_stop` (via `run_challenger`) gives the very book the script ran (it did).
+
+**Reading.** By the bar it survives, but on two very different footings. On BTC and ETH the book still trades (flat
+about 21% of bars, waits of hours to two weeks) and its gain over the current rule (+72R) is close to what the withheld
+forced entries lost there (-53R). On the other six markets signals rarely clear the entry bar by themselves, so after a
+stop-out the book often waits for months or years: most of its better R and its shallower fall there come from hardly
+trading, not from better trades, and gold, silver and SPX were in effect switched off for the second half. The pooled
+worst-fall check is therefore weak evidence. The idea was FOUND on this same history (H65, H66), so the replay cannot
+validate it. The test is the forward shadow book `b_wait_stop` (starts flat at its first live bar, with no wait until
+its first stop-out), first read at 30 closed trades against `b_targets` over the same days; on gold, silver and SPX it
+may take a long time to reach any trades. Nothing reaches the Setups book or the vault without the owner's word.
