@@ -1,0 +1,95 @@
+{
+ "study": "H90",
+ "title": "the stop distance (stop_units)",
+ "conclusion": "the current setting was already the choice",
+ "choice": {
+  "study": "H90",
+  "current": "stop_units=2",
+  "chosen": "stop_units=2",
+  "specs": {
+   "stop_units=1": {
+    "cfg": {
+     "stop_units": 1.0
+    },
+    "mask": []
+   },
+   "stop_units=1.5": {
+    "cfg": {
+     "stop_units": 1.5
+    },
+    "mask": []
+   },
+   "stop_units=2": {
+    "cfg": {
+     "stop_units": 2.0
+    },
+    "mask": []
+   },
+   "stop_units=2.5": {
+    "cfg": {
+     "stop_units": 2.5
+    },
+    "mask": []
+   },
+   "stop_units=3": {
+    "cfg": {
+     "stop_units": 3.0
+    },
+    "mask": []
+   },
+   "stop_units=4": {
+    "cfg": {
+     "stop_units": 4.0
+    },
+    "mask": []
+   }
+  },
+  "choice_period": [
+   null,
+   "2023-06-07 23:45"
+  ],
+  "choice_table": {
+   "stop_units=1": {
+    "pooled_sum_r": -420.63384310899386,
+    "vault_sum_r": -170.11353964149953,
+    "trades": 7080
+   },
+   "stop_units=1.5": {
+    "pooled_sum_r": -35.9434577366572,
+    "vault_sum_r": -2.575332724408442,
+    "trades": 4286
+   },
+   "stop_units=2": {
+    "pooled_sum_r": 25.17986406784449,
+    "vault_sum_r": 46.92463489107163,
+    "trades": 2945
+   },
+   "stop_units=2.5": {
+    "pooled_sum_r": 55.243856965716,
+    "vault_sum_r": 38.51310266159987,
+    "trades": 2207
+   },
+   "stop_units=3": {
+    "pooled_sum_r": 99.87180311701927,
+    "vault_sum_r": 43.59280077775043,
+    "trades": 1744
+   },
+   "stop_units=4": {
+    "pooled_sum_r": 88.192597432988,
+    "vault_sum_r": 21.717501658819682,
+    "trades": 1226
+   }
+  },
+  "sources": null,
+  "written_utc": "2026-11-22T13:07:39Z",
+  "smoke": false
+ },
+ "smoke": false,
+ "finished_utc": "2026-11-22T13:07:39Z",
+ "periods": {
+  "choice_last": "2023-06-07 23:45",
+  "test_first": "2023-06-08 00:00",
+  "test_last": "2025-11-10 23:45",
+  "holdout_wall": "2025-11-10 23:45"
+ }
+}

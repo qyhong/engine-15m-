@@ -1,0 +1,824 @@
+{
+ "study": "H104",
+ "title": "three consecutive daily closes down totalling at least 10%, entry at the third close",
+ "smoke": false,
+ "data": {
+  "BTCUSDT": {
+   "first": "2019-01-01",
+   "last": "2025-11-10",
+   "days": 2506,
+   "days_short_of_96_bars": 21
+  },
+  "ETHUSDT": {
+   "first": "2019-01-01",
+   "last": "2025-11-10",
+   "days": 2506,
+   "days_short_of_96_bars": 21
+  }
+ },
+ "cells": {
+  "three_down_10pct_long|W5": {
+   "events": 82,
+   "wins": 54,
+   "threshold": 0.55,
+   "episodes": 48,
+   "episode_wins": 32,
+   "rate_all": 0.6585365853658537,
+   "rate_episodes": 0.6666666666666666,
+   "wilson_episodes": [
+    0.5254010959289259,
+    0.7832321938215805
+   ],
+   "p_binom_episodes": 0.06827506751387864,
+   "cluster_interval": [
+    0.5408163265306123,
+    0.7662337662337663
+   ],
+   "baseline_rate": 0.5362350861688024,
+   "baseline_days": 4526,
+   "diff": 0.12230149919705124,
+   "diff_interval": [
+    0.001569280877921245,
+    0.23721917426793365
+   ],
+   "alpha": 0.002777777777777778,
+   "conclusion": "too few cases to tell",
+   "halves": {
+    "first": {
+     "events": 63,
+     "win_rate": 0.6507936507936508
+    },
+    "second": {
+     "events": 19,
+     "win_rate": 0.6842105263157895
+    }
+   },
+   "per_coin": {
+    "BTCUSDT": {
+     "events": 33,
+     "wins": 22
+    },
+    "ETHUSDT": {
+     "events": 49,
+     "wins": 32
+    }
+   }
+  },
+  "three_down_10pct_long|W10": {
+   "events": 82,
+   "wins": 50,
+   "threshold": 0.55,
+   "episodes": 48,
+   "episode_wins": 27,
+   "rate_all": 0.6097560975609756,
+   "rate_episodes": 0.5625,
+   "wilson_episodes": [
+    0.42275017314264846,
+    0.6929873105137916
+   ],
+   "p_binom_episodes": 0.49039289438725253,
+   "cluster_interval": [
+    0.5061728395061729,
+    0.7105263157894737
+   ],
+   "baseline_rate": 0.5438441098317095,
+   "baseline_days": 4516,
+   "diff": 0.0659119877292661,
+   "diff_interval": [
+    -0.05030488215545538,
+    0.17939191572566002
+   ],
+   "alpha": 0.002777777777777778,
+   "conclusion": "too few cases to tell",
+   "halves": {
+    "first": {
+     "events": 63,
+     "win_rate": 0.6031746031746031
+    },
+    "second": {
+     "events": 19,
+     "win_rate": 0.631578947368421
+    }
+   },
+   "per_coin": {
+    "BTCUSDT": {
+     "events": 33,
+     "wins": 20
+    },
+    "ETHUSDT": {
+     "events": 49,
+     "wins": 30
+    }
+   }
+  },
+  "three_down_10pct_long|WEMA10": {
+   "events": 82,
+   "wins": 51,
+   "threshold": 0.55,
+   "episodes": 48,
+   "episode_wins": 28,
+   "rate_all": 0.6219512195121951,
+   "rate_episodes": 0.5833333333333334,
+   "wilson_episodes": [
+    0.4428133217663204,
+    0.7115033231089329
+   ],
+   "p_binom_episodes": 0.37667272676664626,
+   "cluster_interval": [
+    0.4939759036144578,
+    0.7368421052631579
+   ],
+   "baseline_rate": 0.3950562789671154,
+   "baseline_days": 4531,
+   "diff": 0.2268949405450797,
+   "diff_interval": [
+    0.09754679788986986,
+    0.34475377313737965
+   ],
+   "alpha": 0.002777777777777778,
+   "conclusion": "too few cases to tell",
+   "halves": {
+    "first": {
+     "events": 63,
+     "win_rate": 0.6190476190476191
+    },
+    "second": {
+     "events": 19,
+     "win_rate": 0.631578947368421
+    }
+   },
+   "per_coin": {
+    "BTCUSDT": {
+     "events": 33,
+     "wins": 20
+    },
+    "ETHUSDT": {
+     "events": 49,
+     "wins": 31
+    }
+   }
+  }
+ },
+ "events": {
+  "three_down_10pct_long": [
+   {
+    "coin": "BTCUSDT",
+    "day": "2019-05-18",
+    "close": 7257.45,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2019-07-01",
+    "close": 10624.93,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2019-08-14",
+    "close": 10050.37,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2019-09-25",
+    "close": 8430.05,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2019-11-22",
+    "close": 7268.23,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2020-02-26",
+    "close": 8785.25,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2020-03-09",
+    "close": 7929.87,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2020-03-29",
+    "close": 5881.42,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2020-05-10",
+    "close": 8722.77,
+    "W5": true,
+    "W10": true,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2020-11-27",
+    "close": 17139.52,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2021-01-11",
+    "close": 35404.47,
+    "W5": true,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2021-01-21",
+    "close": 30850.13,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2021-04-18",
+    "close": 56150.01,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2021-05-17",
+    "close": 43538.04,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2021-05-29",
+    "close": 34605.15,
+    "W5": true,
+    "W10": false,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2021-06-18",
+    "close": 35819.84,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2021-09-21",
+    "close": 40734.38,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2021-12-04",
+    "close": 49152.47,
+    "W5": false,
+    "W10": false,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2022-01-21",
+    "close": 36445.31,
+    "W5": true,
+    "W10": true,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2022-02-18",
+    "close": 39974.44,
+    "W5": false,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2022-03-04",
+    "close": 39148.66,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2022-05-07",
+    "close": 35472.39,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2022-06-12",
+    "close": 26574.53,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2022-07-12",
+    "close": 19328.75,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2022-08-19",
+    "close": 20834.39,
+    "W5": true,
+    "W10": false,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2022-11-08",
+    "close": 18547.23,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2023-04-21",
+    "close": 27262.84,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2023-08-18",
+    "close": 26054.0,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2024-03-16",
+    "close": 65300.63,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2024-08-04",
+    "close": 58161.0,
+    "W5": true,
+    "W10": true,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2025-02-26",
+    "close": 84250.09,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2025-03-09",
+    "close": 80734.37,
+    "W5": true,
+    "W10": true,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2025-10-11",
+    "close": 110644.4,
+    "W5": false,
+    "W10": false,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2019-01-12",
+    "close": 123.35,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2019-07-11",
+    "close": 268.63,
+    "W5": false,
+    "W10": false,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2019-08-14",
+    "close": 187.1,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2019-08-29",
+    "close": 169.01,
+    "W5": true,
+    "W10": true,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2019-09-24",
+    "close": 165.81,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2019-11-22",
+    "close": 149.56,
+    "W5": true,
+    "W10": false,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2020-02-26",
+    "close": 223.93,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2020-03-12",
+    "close": 107.82,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2020-03-22",
+    "close": 122.32,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2020-03-29",
+    "close": 124.5,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2020-05-10",
+    "close": 187.54,
+    "W5": true,
+    "W10": true,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2020-11-26",
+    "close": 519.83,
+    "W5": true,
+    "W10": true,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2021-01-12",
+    "close": 1050.16,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2021-03-24",
+    "close": 1581.84,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2021-04-18",
+    "close": 2235.64,
+    "W5": true,
+    "W10": true,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2021-05-17",
+    "close": 3282.51,
+    "W5": false,
+    "W10": false,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2021-05-23",
+    "close": 2096.39,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2021-05-29",
+    "close": 2278.74,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2021-09-21",
+    "close": 2765.9,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2021-12-04",
+    "close": 4117.25,
+    "W5": false,
+    "W10": false,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2021-12-29",
+    "close": 3630.19,
+    "W5": true,
+    "W10": false,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2022-01-07",
+    "close": 3199.24,
+    "W5": true,
+    "W10": true,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2022-01-21",
+    "close": 2568.15,
+    "W5": false,
+    "W10": true,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2022-02-12",
+    "close": 2918.88,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2022-02-18",
+    "close": 2779.48,
+    "W5": false,
+    "W10": true,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2022-03-04",
+    "close": 2622.1,
+    "W5": true,
+    "W10": false,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2022-04-06",
+    "close": 3168.51,
+    "W5": false,
+    "W10": false,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2022-05-07",
+    "close": 2635.34,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2022-05-27",
+    "close": 1727.27,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2022-06-11",
+    "close": 1532.89,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2022-06-30",
+    "close": 1071.01,
+    "W5": true,
+    "W10": true,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2022-07-12",
+    "close": 1038.58,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2022-08-28",
+    "close": 1426.76,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2022-09-13",
+    "close": 1574.4,
+    "W5": false,
+    "W10": false,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2022-11-08",
+    "close": 1334.77,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2022-12-16",
+    "close": 1166.83,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2024-03-16",
+    "close": 3523.09,
+    "W5": false,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2024-04-13",
+    "close": 3007.01,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2024-07-04",
+    "close": 3059.7,
+    "W5": true,
+    "W10": true,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2024-08-03",
+    "close": 2903.64,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2024-08-27",
+    "close": 2457.33,
+    "W5": false,
+    "W10": false,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2024-10-02",
+    "close": 2364.1,
+    "W5": true,
+    "W10": true,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2024-12-19",
+    "close": 3417.01,
+    "W5": true,
+    "W10": false,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2025-01-09",
+    "close": 3219.2,
+    "W5": true,
+    "W10": false,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2025-02-26",
+    "close": 2336.37,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2025-04-06",
+    "close": 1580.76,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2025-06-22",
+    "close": 2227.7,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2025-08-02",
+    "close": 3393.94,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2025-10-11",
+    "close": 3746.79,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   }
+  ]
+ },
+ "alpha": 0.002777777777777778,
+ "n_tests_part_b": 18
+}

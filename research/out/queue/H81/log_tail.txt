@@ -1,0 +1,11 @@
+
+=== 2026-11-22T13:04:09Z start attempt 1: /data/venv-research/bin/python research/queue/placebo.py --study H81 --fits-dir /data/mind15/research/out/h60_regime_exits/fits_today --out /data/research_queue/out/H81 (cwd /data/research_queue/code/0a94526dc49a)
+13:04:19 crypto: 240306 sessions to 2025-11-10 23:45; voices walked from 2020-01-01: 0 refits, 301 from the cache (9s)
+13:04:36 metals: 162215 sessions to 2025-11-10 23:45; voices walked from 2020-01-01: 0 refits, 202 from the cache (6s)
+13:04:47 fx: 171130 sessions to 2025-11-10 23:45; voices walked from 2020-01-01: 0 refits, 208 from the cache (3s)
+13:04:53 index: 44687 sessions to 2025-11-10 20:45; voices walked from 2020-01-01: 0 refits, 47 from the cache (1s)
+13:05:00 energy: 147360 sessions to 2025-11-10 21:45; voices walked from 2020-01-01: 0 refits, 183 from the cache (5s)
+/data/research_queue/code/0a94526dc49a/research/queue/placebo.py:940: RuntimeWarning: All-NaN slice encountered
+  "placebo_flat_median": float(np.nanmedian(dfl)) if len(dfl) else None,
+13:06:50 H81 done in 161s -> /data/research_queue/out/H81
+=== 2026-11-22T13:06:54Z exit 0

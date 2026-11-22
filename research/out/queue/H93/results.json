@@ -1,0 +1,84 @@
+{
+ "study": "H93",
+ "title": "the flip bar (theta_flip)",
+ "conclusion": "the current setting was already the choice",
+ "choice": {
+  "study": "H93",
+  "current": "theta_flip=0.1",
+  "chosen": "theta_flip=0.1",
+  "specs": {
+   "theta_flip=0.05": {
+    "cfg": {
+     "theta_flip": 0.05
+    },
+    "mask": []
+   },
+   "theta_flip=0.1": {
+    "cfg": {
+     "theta_flip": 0.1
+    },
+    "mask": []
+   },
+   "theta_flip=0.15": {
+    "cfg": {
+     "theta_flip": 0.15
+    },
+    "mask": []
+   },
+   "theta_flip=0.2": {
+    "cfg": {
+     "theta_flip": 0.2
+    },
+    "mask": []
+   },
+   "theta_flip=never": {
+    "cfg": {
+     "theta_flip": 9.0
+    },
+    "mask": []
+   }
+  },
+  "choice_period": [
+   null,
+   "2023-06-07 23:45"
+  ],
+  "choice_table": {
+   "theta_flip=0.05": {
+    "pooled_sum_r": -149.69688458894035,
+    "vault_sum_r": -73.22997107351551,
+    "trades": 5182
+   },
+   "theta_flip=0.1": {
+    "pooled_sum_r": 25.17986406784449,
+    "vault_sum_r": 46.92463489107163,
+    "trades": 2945
+   },
+   "theta_flip=0.15": {
+    "pooled_sum_r": -8.157213509706438,
+    "vault_sum_r": 37.11992294410268,
+    "trades": 2828
+   },
+   "theta_flip=0.2": {
+    "pooled_sum_r": -16.20243169176321,
+    "vault_sum_r": 32.435900399559934,
+    "trades": 2782
+   },
+   "theta_flip=never": {
+    "pooled_sum_r": -14.158452489347889,
+    "vault_sum_r": 32.435900399559934,
+    "trades": 2750
+   }
+  },
+  "sources": null,
+  "written_utc": "2026-11-22T13:10:36Z",
+  "smoke": false
+ },
+ "smoke": false,
+ "finished_utc": "2026-11-22T13:10:36Z",
+ "periods": {
+  "choice_last": "2023-06-07 23:45",
+  "test_first": "2023-06-08 00:00",
+  "test_last": "2025-11-10 23:45",
+  "holdout_wall": "2025-11-10 23:45"
+ }
+}

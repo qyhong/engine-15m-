@@ -599,3 +599,9 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   reaches the Setups book or the vault. Said to the owner: the first batch is about 72 hours of one processor (about 36
   hours with two jobs at a time); keeping the backlog at 72 hours means new studies must be designed and registered as
   it drains, and runs that add nothing will not be queued to pad it.
+- **Queue batch 1 results** (22 Nov 2026, 20 quick studies, about 13:04 to 13:15 UTC; summary in
+  `research/HYPOTHESES.md` under "Queue batch 1 results"). No setting of the Setups rule chosen on 2020-2023 beat the
+  current one on 2023-2025 (H90 to H100; six times the current setting was already the choice); no daily pattern on BTC
+  and ETH is supported (H102 to H106); the current rule's 12-month results lose 54% of the time on history (H87), break
+  even at 0.086% a side on BTC and ETH in R (H88), and rest on single years (H89). H81 (side placebo) gave a
+  surprising result and is under audit for an artefact before it is read. H101 queued after its siblings finished.

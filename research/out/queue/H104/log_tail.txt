@@ -1,0 +1,3 @@
+
+=== 2026-11-22T13:14:59Z start attempt 1: /data/venv-research/bin/python research/queue/pattern.py --study H104 --fits-dir /data/mind15/research/out/h60_regime_exits/fits_today --out /data/research_queue/out/H104 (cwd /data/research_queue/code/0a94526dc49a)
+=== 2026-11-22T13:15:04Z exit 0

@@ -1,0 +1,307 @@
+{
+ "study": "H100",
+ "title": "the high-risk rules (theta_enter_shock, step_aside)",
+ "conclusion": "does not",
+ "choice": {
+  "study": "H100",
+  "current": "shock=0.1,step_aside=off",
+  "chosen": "shock=0.05,step_aside=off",
+  "specs": {
+   "shock=0.05,step_aside=off": {
+    "cfg": {
+     "theta_enter_shock": 0.05,
+     "step_aside": false
+    },
+    "mask": []
+   },
+   "shock=0.05,step_aside=on": {
+    "cfg": {
+     "theta_enter_shock": 0.05,
+     "step_aside": true
+    },
+    "mask": []
+   },
+   "shock=0.1,step_aside=off": {
+    "cfg": {
+     "theta_enter_shock": 0.1,
+     "step_aside": false
+    },
+    "mask": []
+   },
+   "shock=0.1,step_aside=on": {
+    "cfg": {
+     "theta_enter_shock": 0.1,
+     "step_aside": true
+    },
+    "mask": []
+   },
+   "shock=0.2,step_aside=off": {
+    "cfg": {
+     "theta_enter_shock": 0.2,
+     "step_aside": false
+    },
+    "mask": []
+   },
+   "shock=0.2,step_aside=on": {
+    "cfg": {
+     "theta_enter_shock": 0.2,
+     "step_aside": true
+    },
+    "mask": []
+   }
+  },
+  "choice_period": [
+   null,
+   "2023-06-07 23:45"
+  ],
+  "choice_table": {
+   "shock=0.05,step_aside=off": {
+    "pooled_sum_r": 54.93010932673538,
+    "vault_sum_r": 63.734178118131524,
+    "trades": 3079
+   },
+   "shock=0.05,step_aside=on": {
+    "pooled_sum_r": -22.531642637217203,
+    "vault_sum_r": -10.0437198863213,
+    "trades": 5411
+   },
+   "shock=0.1,step_aside=off": {
+    "pooled_sum_r": 25.17986406784449,
+    "vault_sum_r": 46.92463489107163,
+    "trades": 2945
+   },
+   "shock=0.1,step_aside=on": {
+    "pooled_sum_r": -46.798929079532215,
+    "vault_sum_r": -28.323680569351655,
+    "trades": 5395
+   },
+   "shock=0.2,step_aside=off": {
+    "pooled_sum_r": 14.181497645927848,
+    "vault_sum_r": 35.74170743937232,
+    "trades": 2919
+   },
+   "shock=0.2,step_aside=on": {
+    "pooled_sum_r": -34.38982864507683,
+    "vault_sum_r": -15.754718843685774,
+    "trades": 5371
+   }
+  },
+  "sources": null,
+  "written_utc": "2026-11-22T13:15:19Z",
+  "smoke": false
+ },
+ "verdict": {
+  "monthly_diff": [
+   0.48635597603908565,
+   1.2710983841898957,
+   -2.3171113723117056,
+   1.3243927608482775,
+   -3.8629574964152207,
+   1.5080577066049852,
+   1.3263394308908234,
+   -3.910586997688892,
+   -2.0796181706866403,
+   7.6223712371067,
+   8.641565068308408,
+   3.693040521366468,
+   4.809988157207368,
+   -1.601400915448391,
+   -3.85464154166032,
+   0.19633180502381276,
+   3.71643522453801,
+   0.3948377692216165,
+   3.7527654023906627,
+   -0.9921296878614356,
+   -1.537948572266353,
+   -1.6014594534090034,
+   -0.3792356155729282,
+   -3.6620662214817568,
+   0.043534596442247,
+   2.6700546999925776,
+   0.9630570560830449,
+   6.129749283841468,
+   1.0770842833935501,
+   -3.0489631961154364
+  ],
+  "months": [
+   "2023-06",
+   "2023-07",
+   "2023-08",
+   "2023-09",
+   "2023-10",
+   "2023-11",
+   "2023-12",
+   "2024-01",
+   "2024-02",
+   "2024-03",
+   "2024-04",
+   "2024-05",
+   "2024-06",
+   "2024-07",
+   "2024-08",
+   "2024-09",
+   "2024-10",
+   "2024-11",
+   "2024-12",
+   "2025-01",
+   "2025-02",
+   "2025-03",
+   "2025-04",
+   "2025-05",
+   "2025-06",
+   "2025-07",
+   "2025-08",
+   "2025-09",
+   "2025-10",
+   "2025-11"
+  ],
+  "boot": {
+   "mean": 0.6926313374190306,
+   "lo": -0.4554111739629648,
+   "hi": 1.8988107580305906,
+   "p_one_sided": 0.12199390030498475,
+   "months": 30,
+   "draws": 20000
+  },
+  "alpha": 0.004166666666666667,
+  "vault_diff": 26.43878764724605,
+  "pooled_diff": 20.77894012257092,
+  "per_market": {
+   "BTCUSDT": {
+    "current_sum_r": -57.11796201946961,
+    "chosen_sum_r": -31.520880173755472,
+    "diff": 25.597081845714136,
+    "current_trades": 398,
+    "chosen_trades": 397
+   },
+   "ETHUSDT": {
+    "current_sum_r": 4.781295940512802,
+    "chosen_sum_r": 5.623001742044716,
+    "diff": 0.8417058015319108,
+    "current_trades": 368,
+    "chosen_trades": 379
+   },
+   "XAUUSD": {
+    "current_sum_r": 27.52098510535064,
+    "chosen_sum_r": 28.852872638466017,
+    "diff": 1.3318875331153786,
+    "current_trades": 247,
+    "chosen_trades": 247
+   },
+   "XAGUSD": {
+    "current_sum_r": -1.6511507048916716,
+    "chosen_sum_r": -0.3695422338225558,
+    "diff": 1.2816084710691147,
+    "current_trades": 248,
+    "chosen_trades": 248
+   },
+   "USDJPY": {
+    "current_sum_r": 21.3074514224733,
+    "chosen_sum_r": 19.761630199365754,
+    "diff": -1.5458212231075559,
+    "current_trades": 299,
+    "chosen_trades": 300
+   },
+   "SPX": {
+    "current_sum_r": 18.535763566430262,
+    "chosen_sum_r": 18.535763566430262,
+    "diff": 0.0,
+    "current_trades": 106,
+    "chosen_trades": 106
+   },
+   "WTI": {
+    "current_sum_r": -21.387942994697053,
+    "chosen_sum_r": -24.86584708775295,
+    "diff": -3.4779040930558955,
+    "current_trades": 262,
+    "chosen_trades": 255
+   },
+   "BRENT": {
+    "current_sum_r": -26.074034272190076,
+    "chosen_sum_r": -29.32365248488625,
+    "diff": -3.2496182126961677,
+    "current_trades": 284,
+    "chosen_trades": 282
+   }
+  },
+  "passed": false,
+  "conclusion": "does not",
+  "mean_r": {
+   "current": {
+    "mean_r": -0.015409400522821604,
+    "lo": -0.06645580589514846,
+    "hi": 0.0364634674101822,
+    "trades": 2212
+   },
+   "chosen": {
+    "mean_r": -0.006010232083970415,
+    "lo": -0.05645526472345153,
+    "hi": 0.045814625691285804,
+    "trades": 2214
+   }
+  },
+  "worst_fall": {
+   "current": -22.783958676610283,
+   "chosen": -24.398992326306022
+  },
+  "flat_pct": {
+   "current": 1.982570192570036,
+   "chosen": 1.8973021384883615
+  },
+  "trades": {
+   "current": 2212,
+   "chosen": 2214
+  },
+  "net": {
+   "current": -10309.168331067383,
+   "chosen": -10336.26734808093
+  },
+  "study": "H100",
+  "chosen": "shock=0.05,step_aside=off",
+  "current": "shock=0.1,step_aside=off",
+  "written_utc": "2026-11-22T13:16:11Z"
+ },
+ "descriptive_test_table": {
+  "note": "descriptive, not used for any choice",
+  "rows": {
+   "shock=0.05,step_aside=off": {
+    "pooled_sum_r": -13.30665383391048,
+    "vault_sum_r": -25.89787843171075,
+    "trades": 2214
+   },
+   "shock=0.05,step_aside=on": {
+    "pooled_sum_r": -132.9617687654325,
+    "vault_sum_r": -60.665489210867385,
+    "trades": 4405
+   },
+   "shock=0.1,step_aside=off": {
+    "pooled_sum_r": -34.085593956481404,
+    "vault_sum_r": -52.336666078956796,
+    "trades": 2212
+   },
+   "shock=0.1,step_aside=on": {
+    "pooled_sum_r": -162.0222770512789,
+    "vault_sum_r": -82.54581885617486,
+    "trades": 4423
+   },
+   "shock=0.2,step_aside=off": {
+    "pooled_sum_r": -41.84032337079503,
+    "vault_sum_r": -50.527070774284496,
+    "trades": 2233
+   },
+   "shock=0.2,step_aside=on": {
+    "pooled_sum_r": -161.33442973630068,
+    "vault_sum_r": -77.26320634835324,
+    "trades": 4402
+   }
+  }
+ },
+ "smoke": false,
+ "finished_utc": "2026-11-22T13:17:06Z",
+ "periods": {
+  "choice_last": "2023-06-07 23:45",
+  "test_first": "2023-06-08 00:00",
+  "test_last": "2025-11-10 23:45",
+  "holdout_wall": "2025-11-10 23:45"
+ }
+}

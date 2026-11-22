@@ -1,0 +1,66 @@
+{
+ "study": "H99",
+ "title": "no new entry when 24-hour realised volatility is in a trailing third",
+ "conclusion": "the current setting was already the choice",
+ "choice": {
+  "study": "H99",
+  "current": "none",
+  "chosen": "none",
+  "specs": {
+   "none": {
+    "cfg": {},
+    "mask": []
+   },
+   "block_top_third": {
+    "cfg": {},
+    "mask": [
+     {
+      "kind": "vol",
+      "third": "top"
+     }
+    ]
+   },
+   "block_bottom_third": {
+    "cfg": {},
+    "mask": [
+     {
+      "kind": "vol",
+      "third": "bottom"
+     }
+    ]
+   }
+  },
+  "choice_period": [
+   null,
+   "2023-06-07 23:45"
+  ],
+  "choice_table": {
+   "none": {
+    "pooled_sum_r": 25.17986406784449,
+    "vault_sum_r": 46.92463489107163,
+    "trades": 2945
+   },
+   "block_top_third": {
+    "pooled_sum_r": -37.69601030333537,
+    "vault_sum_r": 14.317594056612759,
+    "trades": 2612
+   },
+   "block_bottom_third": {
+    "pooled_sum_r": 49.27244956075577,
+    "vault_sum_r": 36.804934155972674,
+    "trades": 2600
+   }
+  },
+  "sources": null,
+  "written_utc": "2026-11-22T13:14:48Z",
+  "smoke": false
+ },
+ "smoke": false,
+ "finished_utc": "2026-11-22T13:14:48Z",
+ "periods": {
+  "choice_last": "2023-06-07 23:45",
+  "test_first": "2023-06-08 00:00",
+  "test_last": "2025-11-10 23:45",
+  "holdout_wall": "2025-11-10 23:45"
+ }
+}

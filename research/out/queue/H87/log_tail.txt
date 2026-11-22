@@ -1,0 +1,9 @@
+
+=== 2026-11-22T13:04:09Z start attempt 1: /data/venv-research/bin/python research/queue/placebo.py --study H87 --fits-dir /data/mind15/research/out/h60_regime_exits/fits_today --out /data/research_queue/out/H87 (cwd /data/research_queue/code/0a94526dc49a)
+13:04:19 crypto: 240306 sessions to 2025-11-10 23:45; voices walked from 2020-01-01: 0 refits, 301 from the cache (9s)
+13:04:37 metals: 162215 sessions to 2025-11-10 23:45; voices walked from 2020-01-01: 0 refits, 202 from the cache (6s)
+13:04:49 fx: 171130 sessions to 2025-11-10 23:45; voices walked from 2020-01-01: 0 refits, 208 from the cache (4s)
+13:04:55 index: 44687 sessions to 2025-11-10 20:45; voices walked from 2020-01-01: 0 refits, 47 from the cache (1s)
+13:05:02 energy: 147360 sessions to 2025-11-10 21:45; voices walked from 2020-01-01: 0 refits, 183 from the cache (5s)
+13:05:10 H87 done in 60s -> /data/research_queue/out/H87
+=== 2026-11-22T13:05:14Z exit 0

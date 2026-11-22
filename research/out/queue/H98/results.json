@@ -1,0 +1,66 @@
+{
+ "study": "H98",
+ "title": "no new entry at the weekend (BTC and ETH only)",
+ "conclusion": "the current setting was already the choice",
+ "choice": {
+  "study": "H98",
+  "current": "none",
+  "chosen": "none",
+  "specs": {
+   "none": {
+    "cfg": {},
+    "mask": []
+   },
+   "sat_sun": {
+    "cfg": {},
+    "mask": [
+     {
+      "kind": "weekend",
+      "mode": "sat_sun"
+     }
+    ]
+   },
+   "fri21_sun21": {
+    "cfg": {},
+    "mask": [
+     {
+      "kind": "weekend",
+      "mode": "fri21_sun21"
+     }
+    ]
+   }
+  },
+  "choice_period": [
+   null,
+   "2023-06-07 23:45"
+  ],
+  "choice_table": {
+   "none": {
+    "pooled_sum_r": 25.17986406784449,
+    "vault_sum_r": 46.92463489107163,
+    "trades": 2945
+   },
+   "sat_sun": {
+    "pooled_sum_r": -21.364223542233177,
+    "vault_sum_r": 0.38054728099396584,
+    "trades": 2895
+   },
+   "fri21_sun21": {
+    "pooled_sum_r": 0.8211761751968858,
+    "vault_sum_r": 22.565946998424028,
+    "trades": 2876
+   }
+  },
+  "sources": null,
+  "written_utc": "2026-11-22T13:14:29Z",
+  "smoke": false
+ },
+ "smoke": false,
+ "finished_utc": "2026-11-22T13:14:29Z",
+ "periods": {
+  "choice_last": "2023-06-07 23:45",
+  "test_first": "2023-06-08 00:00",
+  "test_last": "2025-11-10 23:45",
+  "holdout_wall": "2025-11-10 23:45"
+ }
+}

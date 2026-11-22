@@ -1,0 +1,25 @@
+{
+ "added_utc": "2026-11-22T12:21:00Z",
+ "command": [
+  "/data/venv-research/bin/python",
+  "research/queue/pattern.py",
+  "--study",
+  "H106",
+  "--fits-dir",
+  "/data/mind15/research/out/h60_regime_exits/fits_today",
+  "--out",
+  "/data/research_queue/out/H106"
+ ],
+ "commit": "0a94526dc49a",
+ "cwd": "/data/research_queue/code/0a94526dc49a",
+ "est_hours": 0.02,
+ "exit_code": 0,
+ "failures": 0,
+ "finished_utc": "2026-11-22T13:15:14Z",
+ "harness": "pattern",
+ "id": "H106",
+ "out": "/data/research_queue/out/H106",
+ "priority": 10,
+ "started_utc": "2026-11-22T13:15:09Z",
+ "study": "H106"
+}

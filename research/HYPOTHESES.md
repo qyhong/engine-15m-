@@ -5369,3 +5369,47 @@ Only D1 (H74's primary reading) is mirrored, to keep the count of tests down.
 - Choice-period comparisons: 51 grid values in H90-H100 are compared on the choice period; they choose, they do not pass.
 - **The standing rule:** a pass leads only to a PROPOSAL for a forward PAPER shadow book, registered on its own, and that
   needs the owner's word in this project. Nothing reaches the Setups book, the vault or real money from this family.
+
+### Queue batch 1 results: H81, H87 to H100, H102 to H106 (22 Nov 2026, run by the research queue 13:04 to about 13:15 UTC; each study's `report.md` and `results.json` in `research/out/queue/<ID>/`)
+
+All data end at 2025-11-10 23:45 UTC (the holdout was not read). Each conclusion below is the harness's own, by the rule
+registered in that study's block; nothing was re-judged here.
+
+**Part A, one setting at a time, chosen on 2020-02 to 2023-06-07, judged on 2023-06-08 to 2025-11-10 (pass level
+p < 0.00417 per study): none passes.**
+- The current setting was already the choice in 6 of 11: H90 stop distance, H93 flip bar, H94 counter-bias bar,
+  H95 bias and trend tiebreak, H98 weekend filter, H99 volatility filter.
+- Chosen something else, and it did not beat the current setting on later data: H91 idle_max 16 (p 0.79), H92
+  theta_enter 0.10 (+1.79R a month, p 0.031: the closest, not a pass), H96 tight-stop filter q 0.5 (p 0.38), H97 no
+  entries 12:00 to 18:00 UTC (p 0.32), H100 theta_enter_shock 0.05 (p 0.12).
+- H101 (every chosen value stacked) was queued at 14:2x UTC, after its siblings' choice files existed.
+
+**Part B, chart patterns on BTC and ETH daily bars (pass level p < 0.0028): none supported.**
+- H102 golden and death cross: too few cases to tell (9 to 10 episodes each).
+- H103 RSI(14) back above 30: too few to tell at 5 and 10 days; "not supported" for the hold-until-below-EMA10 reading.
+- H104 three daily closes down totalling 10% or more: too few cases to tell by the rule (48 episodes; per episode 66.7%
+  higher after 5 days, p 0.068 against 55%); it beat the all-days baseline (+12.2 points after 5 days, interval
+  +0.2 to +23.7; +22.7 points for the hold-until-below-EMA10 reading, interval +9.8 to +34.5). Descriptive only.
+- H105 a close back above the EMA200 after 30 days below: too few cases to tell (9 episodes; 8 of 9 higher after 10 days).
+- H106 the short mirror of H74: not supported for the hold-until-above-EMA10 reading, too few to tell for the others.
+
+**Placebo and bootstrap family, the quick studies:**
+- H81 side placebo: the harness reports the real book NOT distinguishable from its placebo at the upper tail
+  (p = 1.0000), with the lower tail at 0.0000: real -0.0030R a trade against a placebo median of +0.1083R. Read
+  literally the book's side choice within a month is worse than a random assignment with the same monthly mix. A
+  random assignment earning +0.11R a trade is implausible on its face; the result is UNDER AUDIT (22 Nov 2026) for an
+  artefact in the trade scoring (`machine_r`, which H82 also uses) before it is read either way.
+- H87 block bootstrap of 12-month paths (3-month blocks): current rule, chance of a losing 12 months 54% on eight
+  markets and 56% on BTC and ETH, median 12-month sum -3.7R; the 30-day filter 37% and 18%; the wait after a stop-out
+  26% and 33% (the two variants were found on this history, so their figures are flattered).
+- H88 costs surface: the current rule breaks even at a fee of 0.032% a side with no slip on eight markets, and at
+  0.086% a side on BTC and ETH (in R, before funding); the 30-day filter at 0.214% and the wait at 0.147% on BTC and ETH.
+- H89 year by year: the current rule's sign turns when a single year is left out (on eight markets: 2022, 2023 or 2025;
+  on BTC and ETH: 2024 or 2025): its result rests on single years. For the 30-day filter and the wait no single year
+  turns the sign.
+
+**Reading.** No single setting of the Setups rule, chosen on the first half, beat the current one on later data, and
+none of five common daily patterns is supported on BTC and ETH. The current rule's own record is close to zero per trade
+and rests on single years; its break-even fee on BTC and ETH (0.086% a side in R, before funding and slippage) is above
+the member's 0.05%. Nothing here changes a book. The six heavy placebo studies (H80, H82 to H86) are still running or
+queued.

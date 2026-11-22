@@ -1,0 +1,72 @@
+{
+ "study": "H95",
+ "title": "the higher-timeframe bias and the trend tiebreak",
+ "conclusion": "the current setting was already the choice",
+ "choice": {
+  "study": "H95",
+  "current": "bias=on,tiebreak=on",
+  "chosen": "bias=on,tiebreak=on",
+  "specs": {
+   "bias=on,tiebreak=on": {
+    "cfg": {},
+    "mask": []
+   },
+   "bias=on,tiebreak=off": {
+    "cfg": {
+     "trend_tiebreak": false
+    },
+    "mask": []
+   },
+   "bias=off,tiebreak=on": {
+    "cfg": {
+     "htf_bias": false
+    },
+    "mask": []
+   },
+   "bias=off,tiebreak=off": {
+    "cfg": {
+     "htf_bias": false,
+     "trend_tiebreak": false
+    },
+    "mask": []
+   }
+  },
+  "choice_period": [
+   null,
+   "2023-06-07 23:45"
+  ],
+  "choice_table": {
+   "bias=on,tiebreak=on": {
+    "pooled_sum_r": 25.17986406784449,
+    "vault_sum_r": 46.92463489107163,
+    "trades": 2945
+   },
+   "bias=on,tiebreak=off": {
+    "pooled_sum_r": -90.10791830931979,
+    "vault_sum_r": -3.719259918067322,
+    "trades": 3469
+   },
+   "bias=off,tiebreak=on": {
+    "pooled_sum_r": 9.018159032666311,
+    "vault_sum_r": 26.953034736947647,
+    "trades": 2851
+   },
+   "bias=off,tiebreak=off": {
+    "pooled_sum_r": -35.82298347869427,
+    "vault_sum_r": 8.036532625096282,
+    "trades": 3093
+   }
+  },
+  "sources": null,
+  "written_utc": "2026-11-22T13:11:19Z",
+  "smoke": false
+ },
+ "smoke": false,
+ "finished_utc": "2026-11-22T13:11:19Z",
+ "periods": {
+  "choice_last": "2023-06-07 23:45",
+  "test_first": "2023-06-08 00:00",
+  "test_last": "2025-11-10 23:45",
+  "holdout_wall": "2025-11-10 23:45"
+ }
+}

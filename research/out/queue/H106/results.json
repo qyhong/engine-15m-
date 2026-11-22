@@ -1,0 +1,352 @@
+{
+ "study": "H106",
+ "title": "the mirror of H74: after a rise above the daily EMA200 of more than 20%, the first close back below the daily EMA10, going short",
+ "smoke": false,
+ "data": {
+  "BTCUSDT": {
+   "first": "2019-01-01",
+   "last": "2025-11-10",
+   "days": 2506,
+   "days_short_of_96_bars": 21
+  },
+  "ETHUSDT": {
+   "first": "2019-01-01",
+   "last": "2025-11-10",
+   "days": 2506,
+   "days_short_of_96_bars": 21
+  }
+ },
+ "cells": {
+  "ema200_rise_ema10_break_short|W5": {
+   "events": 23,
+   "wins": 11,
+   "threshold": 0.5,
+   "episodes": 19,
+   "episode_wins": 9,
+   "rate_all": 0.4782608695652174,
+   "rate_episodes": 0.47368421052631576,
+   "wilson_episodes": [
+    0.27329805032541393,
+    0.6829219089514051
+   ],
+   "p_binom_episodes": 0.6761970520019531,
+   "cluster_interval": [
+    0.25,
+    0.6956521739130435
+   ],
+   "baseline_rate": 0.4614712944771884,
+   "baseline_days": 4581,
+   "diff": 0.01678957508802903,
+   "diff_interval": [
+    -0.21002447973763932,
+    0.2345982806376044
+   ],
+   "alpha": 0.002777777777777778,
+   "conclusion": "too few cases to tell",
+   "halves": {
+    "first": {
+     "events": 13,
+     "win_rate": 0.5384615384615384
+    },
+    "second": {
+     "events": 10,
+     "win_rate": 0.4
+    }
+   },
+   "per_coin": {
+    "BTCUSDT": {
+     "events": 11,
+     "wins": 5
+    },
+    "ETHUSDT": {
+     "events": 12,
+     "wins": 6
+    }
+   }
+  },
+  "ema200_rise_ema10_break_short|W10": {
+   "events": 23,
+   "wins": 8,
+   "threshold": 0.5,
+   "episodes": 19,
+   "episode_wins": 6,
+   "rate_all": 0.34782608695652173,
+   "rate_episodes": 0.3157894736842105,
+   "wilson_episodes": [
+    0.15364378998470052,
+    0.5398959249530334
+   ],
+   "p_binom_episodes": 0.9682159423828125,
+   "cluster_interval": [
+    0.125,
+    0.5833333333333334
+   ],
+   "baseline_rate": 0.45548020126886896,
+   "baseline_days": 4571,
+   "diff": -0.10765411431234723,
+   "diff_interval": [
+    -0.34164703277465747,
+    0.12997791711095727
+   ],
+   "alpha": 0.002777777777777778,
+   "conclusion": "too few cases to tell",
+   "halves": {
+    "first": {
+     "events": 13,
+     "win_rate": 0.3076923076923077
+    },
+    "second": {
+     "events": 10,
+     "win_rate": 0.4
+    }
+   },
+   "per_coin": {
+    "BTCUSDT": {
+     "events": 11,
+     "wins": 3
+    },
+    "ETHUSDT": {
+     "events": 12,
+     "wins": 5
+    }
+   }
+  },
+  "ema200_rise_ema10_break_short|WEMA10": {
+   "events": 23,
+   "wins": 7,
+   "threshold": 0.5,
+   "episodes": 19,
+   "episode_wins": 5,
+   "rate_all": 0.30434782608695654,
+   "rate_episodes": 0.2631578947368421,
+   "wilson_episodes": [
+    0.1180641227208778,
+    0.4879155107704944
+   ],
+   "p_binom_episodes": 0.9903945922851562,
+   "cluster_interval": [
+    0.09090909090909091,
+    0.5416666666666666
+   ],
+   "baseline_rate": 0.34560906515580736,
+   "baseline_days": 4589,
+   "diff": -0.04126123906885082,
+   "diff_interval": [
+    -0.25855793617918155,
+    0.19114178483672914
+   ],
+   "alpha": 0.002777777777777778,
+   "conclusion": "not supported",
+   "halves": {
+    "first": {
+     "events": 13,
+     "win_rate": 0.23076923076923078
+    },
+    "second": {
+     "events": 10,
+     "win_rate": 0.4
+    }
+   },
+   "per_coin": {
+    "BTCUSDT": {
+     "events": 11,
+     "wins": 3
+    },
+    "ETHUSDT": {
+     "events": 12,
+     "wins": 4
+    }
+   }
+  }
+ },
+ "events": {
+  "ema200_rise_ema10_break_short": [
+   {
+    "coin": "BTCUSDT",
+    "day": "2020-01-23",
+    "close": 8404.52,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2020-05-10",
+    "close": 8722.77,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2021-08-03",
+    "close": 38207.05,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2021-10-22",
+    "close": 60688.22,
+    "W5": true,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2022-04-05",
+    "close": 45497.55,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2023-02-05",
+    "close": 22932.91,
+    "W5": true,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2023-04-03",
+    "close": 27800.0,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2023-07-06",
+    "close": 29895.43,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2024-07-30",
+    "close": 66188.0,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2024-09-30",
+    "close": 63327.59,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "BTCUSDT",
+    "day": "2025-05-04",
+    "close": 94277.62,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2020-01-23",
+    "close": 162.81,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2020-05-06",
+    "close": 198.97,
+    "W5": true,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2021-07-08",
+    "close": 2116.33,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2022-04-06",
+    "close": 3168.51,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2023-01-24",
+    "close": 1555.97,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2023-02-22",
+    "close": 1643.14,
+    "W5": true,
+    "W10": true,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2023-07-17",
+    "close": 1911.2,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2023-11-14",
+    "close": 1979.39,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2024-07-24",
+    "close": 3335.81,
+    "W5": true,
+    "W10": true,
+    "WEMA10": true
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2024-11-20",
+    "close": 3069.97,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2025-05-30",
+    "close": 2531.34,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   },
+   {
+    "coin": "ETHUSDT",
+    "day": "2025-07-01",
+    "close": 2405.01,
+    "W5": false,
+    "W10": false,
+    "WEMA10": false
+   }
+  ]
+ },
+ "alpha": 0.002777777777777778,
+ "n_tests_part_b": 18
+}
