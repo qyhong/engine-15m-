@@ -554,3 +554,8 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
     $10,000 (worst fall -94.6%); the fee of H63 was double the real one and mattered sevenfold; every size still ends
     below its start. The site session inferred the member's taker fee from the wallet: about 0.05% a fill.
   No engine code was changed by any of the five.
+- **The Setups book is not changed on H72; the two shadow books run forward** (22 Nov 2026). After H72 I wrote: "this is
+  a good reason to keep the two paper shadow books running forward, and not enough to change the book members follow.
+  The forward record is what will settle it." The owner: "Agree". So `b_trend30` and `b_wait_stop` are paper shadows
+  only; each is read against `b_targets` at 30 closed trades over the same days, and nothing reaches the Setups book
+  or the vault from them without the owner's word in this project.
