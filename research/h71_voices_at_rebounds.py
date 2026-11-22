@@ -424,9 +424,19 @@ def later(stage, fits_dir, log):
     log("%s: passed %s" % (stage, [p["reading"] for p in passed]))
 
 
+def readout_confirmation(fits_dir, log):
+    """The registered descriptive read-out for the confirmation period, on its own: the combined odds' lead buckets
+    only (no tested reading is loaded or measured), for when nothing was selected for the confirmation stage."""
+    frames, meta = load_stage("confirmation", [], fits_dir, log)
+    out = {"stage": "readout-confirmation", "meta": meta, "counts": counts(frames), "readout": readout(frames)}
+    with open(os.path.join(OUT, "readout_confirmation.json"), "w") as f:
+        json.dump(out, f, indent=1, default=float)
+    log("readout for the confirmation period written")
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("--stage", choices=list(STAGES))
+    ap.add_argument("--stage", choices=list(STAGES) + ["readout-confirmation"])
     ap.add_argument("--fits-dir", default=None)
     a = ap.parse_args(argv)
     t0 = time.time()
@@ -435,6 +445,8 @@ def main(argv=None):
         print("[%5.0fs] %s" % (time.time() - t0, m), flush=True)
     if a.stage == "discovery":
         discovery(a.fits_dir, log)
+    elif a.stage == "readout-confirmation":
+        readout_confirmation(a.fits_dir, log)
     elif a.stage:
         later(a.stage, a.fits_dir, log)
 

@@ -1,0 +1,16 @@
+{
+ "written_utc": "2026-11-22 11:28:20",
+ "selected": [
+  {
+   "reading": "lead",
+   "sign": 1.0,
+   "pooled_partial_ic": 0.12006286861379156
+  },
+  {
+   "reading": "fund_z",
+   "sign": -1.0,
+   "pooled_partial_ic": -0.08832149497106935
+  }
+ ],
+ "nothing_to_confirm": false
+}
