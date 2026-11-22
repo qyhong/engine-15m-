@@ -3624,3 +3624,6 @@ first half yes (-1,873 against -2,983), BTC+ETH second half NO (-5,371 against -
 **Reading.** The owner's rule in the form the vault can follow (A) fails the registered bar: worse in the second half
 pooled and on BTC and ETH, with a deeper worst fall. Nothing here supports changing the Setups book's stop. No engine
 code was changed by this study. The Setups book changes only on the owner's word in this project.
+
+**Owner's decision (this project, 22 Nov 2026 local, after the results):** "Keep as is". The Setups book's stop is
+unchanged. H62 is closed.

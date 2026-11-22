@@ -456,3 +456,10 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   marks; for a trade already running, the best since the alert went live); measured on price, so closing half at a
   target is not a give-back; only when the best was worth at least 1% of the book's equity (my choice, to keep small
   wobbles quiet); once per best. An alert only: it reads the page and changes no stop, book or setting.
+- **The Setups book's stop stays as it is** (H62, 21-22 Nov 2026). In the site session the owner said the Setups book
+  "Should follow the main book stop loss where is wider" and chose "Setups trades, main-book stop" (relayed). Replayed
+  before anything was built (H62, `research/out/h62_setups_wide_stop/report.md`): the rule in the form the vault can
+  follow (the main book's stop if wider, fixed at the fill) failed the registered bar (worse in the second half pooled
+  and on BTC and ETH, deeper worst fall); the forms that move the stop mid-trade did not separate from the current rule
+  either. Asked in this project "Keep the Setups book's stop as it is?", the owner: "Keep as is". No engine change; the
+  study file and its checks stay in the repo.
