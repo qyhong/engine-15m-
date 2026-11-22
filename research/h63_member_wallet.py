@@ -508,7 +508,7 @@ def write_report(res):
             "n/a" if w["worst_day_pct"] is None else "%.1f%% (%s)" % (w["worst_day_pct"], w["worst_day"]),
             w["longest_losing_run"]))
     L += ["", "## (b): a fresh 10,000 wallet from every month-start, %d days each" % res["days"], "",
-          "| Sizing | Month-starts | +100% first | -50% first | Wiped out | Neither in %d days | Unfinished | Median days to either | Median days to +100% | Median days to -50% | Median end when neither |" % res["days"],
+          "| Sizing | Month-starts | +100%% first | -50%% first | Wiped out | Neither in %d days | Unfinished | Median days to either | Median days to +100%% | Median days to -50%% | Median end when neither |" % res["days"],
           "|---|---|---|---|---|---|---|---|---|---|---|"]
 
     def mrow(title, m):
@@ -550,7 +550,12 @@ def main(argv=None):
     ap.add_argument("--fits-dir", default=os.path.join(ROOT, "research", "out", "h60_regime_exits", "fits_today"))
     ap.add_argument("--live-dir", default=os.path.join(ROOT, "out", "live"))
     ap.add_argument("--state", default=os.path.join(ROOT, "data", "shadow_state.json"))
+    ap.add_argument("--report", action="store_true", help="write report.md again from results.json; computes nothing")
     a = ap.parse_args(argv)
+    if a.report:
+        with open(os.path.join(OUT, "results.json")) as fh:
+            write_report(json.load(fh))
+        return
     run(a.fits_dir, a.live_dir, a.state)
 
 

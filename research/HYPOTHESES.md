@@ -3686,3 +3686,65 @@ of the vault.
 
 A history replay is a warm-up, not a forward result; the first half and the second half of (b) are shown apart
 (month-starts before and from 2023-06-08).
+
+### H63 results (22 Nov 2026, 06:02-06:03 UTC on the research server; `research/out/h63_member_wallet/report.md` + `results.json`)
+
+**Gate:** passed on both coins (the walk with the paper book's sizing reproduced the replay's marked equity at every one
+of 238,079 bars; largest relative gap 6e-15). Replay 2020-02-05 to 2026-11-21 13:45 UTC, 2,076 trades. The report's
+first rendering failed on a formatting slip in a table header; `results.json` was already written and the report was
+rendered from it unchanged (`--report`, computes nothing).
+
+**(a), (c) One 10,000 wallet over the whole replay:**
+
+| Sizing | Final | Worst fall | Lowest | Wiped out | Joined / trimmed / capped / not joined | Fees | Funding paid | Final without funding | Worst day | Longest losing run |
+|---|---|---|---|---|---|---|---|---|---|---|
+| S1: 2% rule | 3,208 | -86.7% | 2,254 | no | 1,907 / 345 / 994 / 169 | 14,338 | 3,408 | 4,327 | -6.6% | 13 |
+| S2: 100% per coin | 847 | -98.6% | 426 | no | 2,040 / 174 / 0 / 36 | 28,220 | 9,758 | 1,677 | -19.6% | 13 |
+| S3: 3x book | 100 | -99.9% | 40 | no | 1,965 / 480 / 0 / 111 | 31,295 | 11,140 | 232 | -21.7% | 13 |
+
+No sizing met the wipe-out rule (not with closes only either): the stops bound each loss. S3 still ends at 1% of its
+start. All three lows are on 2026-08-19.
+
+**(b) A fresh 10,000 wallet from each of 81 month-starts, 365 days each:**
+
+| Sizing | +100% first | -50% first | Neither | Unfinished | Median days to +100% | Median days to -50% |
+|---|---|---|---|---|---|---|
+| S1: 2% rule | 0 | 4 | 65 (median end 7,984) | 12 | n/a | 313 |
+| S2: 100% per coin | 16 | 37 | 16 (median end 6,930) | 12 | 123 | 222 |
+| S3: 3x book | 24 | 54 | 1 | 2 | 83 | 166 |
+
+By half (month-starts before / from 2023-06-08), +100% first against -50% first: S1 0-0 / 0-4; S2 15-17 / 1-20;
+S3 16-24 / 8-30. No wipe-out in any start.
+
+**(d) The forward record alone (the live book, 11 Nov 06:45 to 22 Nov 05:45 UTC, 13 trades, 2 still open): TOO SHORT TO
+JUDGE.** Equity now from 10,000: S1 11,933 (worst fall -4.7%), S2 14,131 (-10.7%), S3 15,235 (-15.1%).
+
+**Where the model differs from the vault (from the site session, which read the vault's code; stated, not changed):**
+(1) the vault's daily room counts the account value as last read, open results included, where this model counts the
+realised wallet; (2) at a 3x leverage setting two 1.5x positions need the whole wallet as margin, so the vault trims the
+LATER order to the free margin: S3 here is an upper bound, a few percent high on the second coin; (3) the member's own
+caps bind in none of the three.
+
+**Reading.** On the replay every sizing loses, and a larger size loses faster: from a month-start, the 3x book halved
+before it doubled 54 times against 24, the 100% book 37 against 16; the 2% rule never doubled within a year and halved 4
+times. The fee is the paper book's 0.10% per side, about twice a member's real futures fee, and it is a large part of
+the loss (S1 paid 14,338 in fees on a 10,000 wallet); no other fee was run. The forward eleven days are strongly
+positive at every size and prove nothing yet. No engine code was changed by this study.
+
+## H64. What the one-bar delay costs a member at the entry (registered 22 Nov 2026, before any H64 code existed or any H64 number was computed)
+
+**Prompted by:** the site session, relaying an owner decision made there ("Cut the 15-minute delay": send a new setup to
+the vault when its entry price is set, not one bar later; not yet confirmed in this project). One observation is known:
+on 21 Nov the book's entries were 60,346.59 and 1,692.17 and the member's fills about 60,311 and 1,687.3, 17 minutes
+later (0.06% and 0.29% worse for a short). This measures the same thing over the replay before anything is built.
+
+**Measure.** For every `b_targets` trade on BTC and ETH in H63's replay: the book's entry is the open of bar i; the vault
+first sees the position after that bar closes, so the member's price is taken as the open of bar i+1. Cost = side x
+(open[i+1] - open[i]) / open[i], in percent of price: positive = the member's entry is worse than the book's. In R: the
+cost divided by the book's stop distance in percent (the member keeps the book's stop and targets, so a worse entry
+takes the same amount off every outcome).
+**Read-outs, fixed now:** trades, mean, median, share worse, share better, the 5th and 95th percentile, the sum of the
+cost in R; for all, per coin, per half (2023-06-08), per entry word (ENTER, FORCED, FLIP); the share of trades that were
+already closed inside their entry bar (the member is told of a trade that is over) and that reached Target 1 inside it;
+and the same cost on the live record's trades (too few to judge). Descriptive: nothing passes or fails. A positive mean
+says the delay has cost members on average; a mean near zero says it adds noise, not a cost.

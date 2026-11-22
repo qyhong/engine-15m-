@@ -1,0 +1,1713 @@
+{
+ "end": "2026-11-21 13:45",
+ "gate": {
+  "BTCUSDT": {
+   "ok": true,
+   "detail": "largest relative gap 2.11e-15 over 238079 bars, 1063 trades"
+  },
+  "ETHUSDT": {
+   "ok": true,
+   "detail": "largest relative gap 6.17e-15 over 238079 bars, 1013 trades"
+  }
+ },
+ "sizings": {
+  "S1": {
+   "title": "S1: 2% rule",
+   "whole": {
+    "final_equity": 3208.291599595463,
+    "final_wallet": 3231.546136437432,
+    "worst_fall_pct": -86.66003710983337,
+    "lowest_equity": 2254.4131494324747,
+    "lowest_at": "2026-08-19 06:00",
+    "joined": 1907,
+    "trimmed": 345,
+    "capped": 994,
+    "not_joined": 169,
+    "fees": 14338.365273098016,
+    "funding_paid": 3408.4651443758953,
+    "final_equity_no_funding": 4327.180735107888,
+    "wiped_out": false,
+    "wiped_at": null,
+    "wiped_out_closes_only": false,
+    "worst_day_pct": -6.578838214477367,
+    "worst_day": "2024-03-05",
+    "longest_losing_run": 13,
+    "open_at_end": 1
+   },
+   "months": {
+    "starts": 81,
+    "up": 0,
+    "down": 4,
+    "wiped": 0,
+    "neither": 65,
+    "unfinished": 12,
+    "median_days_to_either": 312.6875,
+    "median_days_up": null,
+    "median_days_down": 312.6875,
+    "median_end_neither": 7984.271994382367
+   },
+   "months_first_half": {
+    "starts": 40,
+    "up": 0,
+    "down": 0,
+    "wiped": 0,
+    "neither": 40,
+    "unfinished": 0,
+    "median_days_to_either": null,
+    "median_days_up": null,
+    "median_days_down": null,
+    "median_end_neither": 8566.32859648859
+   },
+   "months_second_half": {
+    "starts": 41,
+    "up": 0,
+    "down": 4,
+    "wiped": 0,
+    "neither": 25,
+    "unfinished": 12,
+    "median_days_to_either": 312.6875,
+    "median_days_up": null,
+    "median_days_down": 312.6875,
+    "median_end_neither": 6824.922524767672
+   },
+   "month_rows": [
+    {
+     "start": "2020-03-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 17473.890846135382
+    },
+    {
+     "start": "2020-04-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 13496.751270565348
+    },
+    {
+     "start": "2020-05-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 12674.035915028158
+    },
+    {
+     "start": "2020-06-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 11935.00487466561
+    },
+    {
+     "start": "2020-07-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 12855.167709546064
+    },
+    {
+     "start": "2020-08-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 13465.113619825312
+    },
+    {
+     "start": "2020-09-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 11196.846028637323
+    },
+    {
+     "start": "2020-10-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 10349.820875954465
+    },
+    {
+     "start": "2020-11-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 10659.47408117135
+    },
+    {
+     "start": "2020-12-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 9712.754276692269
+    },
+    {
+     "start": "2021-01-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 9253.916397865947
+    },
+    {
+     "start": "2021-02-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 9176.400485055932
+    },
+    {
+     "start": "2021-03-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 7921.805422990939
+    },
+    {
+     "start": "2021-04-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 8095.670381161875
+    },
+    {
+     "start": "2021-05-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 8131.23961238789
+    },
+    {
+     "start": "2021-06-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 9120.929915453122
+    },
+    {
+     "start": "2021-07-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 11543.37169175893
+    },
+    {
+     "start": "2021-08-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 8677.70768089953
+    },
+    {
+     "start": "2021-09-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 8318.295734398856
+    },
+    {
+     "start": "2021-10-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 9765.424621847436
+    },
+    {
+     "start": "2021-11-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 7786.275941379056
+    },
+    {
+     "start": "2021-12-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 7906.645535196551
+    },
+    {
+     "start": "2022-01-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 7229.88153370917
+    },
+    {
+     "start": "2022-02-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 7224.211394997637
+    },
+    {
+     "start": "2022-03-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 7447.550631714534
+    },
+    {
+     "start": "2022-04-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 9442.168633697103
+    },
+    {
+     "start": "2022-05-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 9610.481845953394
+    },
+    {
+     "start": "2022-06-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 7190.163715412435
+    },
+    {
+     "start": "2022-07-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 5778.415193774148
+    },
+    {
+     "start": "2022-08-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 5801.211899664822
+    },
+    {
+     "start": "2022-09-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 7002.721458998007
+    },
+    {
+     "start": "2022-10-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 7309.162932865807
+    },
+    {
+     "start": "2022-11-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 8939.97552529925
+    },
+    {
+     "start": "2022-12-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 8454.949512077652
+    },
+    {
+     "start": "2023-01-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 7433.644721157062
+    },
+    {
+     "start": "2023-02-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 6772.746616589785
+    },
+    {
+     "start": "2023-03-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 10298.26900664371
+    },
+    {
+     "start": "2023-04-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 7424.319950682979
+    },
+    {
+     "start": "2023-05-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 6153.609674113591
+    },
+    {
+     "start": "2023-06-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 5702.7299318778105
+    },
+    {
+     "start": "2023-07-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 5473.862790634409
+    },
+    {
+     "start": "2023-08-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 6254.7194502805305
+    },
+    {
+     "start": "2023-09-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 7044.5056233440855
+    },
+    {
+     "start": "2023-10-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 6824.922524767672
+    },
+    {
+     "start": "2023-11-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 5426.905735902935
+    },
+    {
+     "start": "2023-12-01",
+     "outcome": "down",
+     "days": 341.0416666666667,
+     "end_equity": 4999.556746785852
+    },
+    {
+     "start": "2024-01-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 6678.004487834041
+    },
+    {
+     "start": "2024-02-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 5401.8843046010015
+    },
+    {
+     "start": "2024-03-01",
+     "outcome": "down",
+     "days": 103.80208333333333,
+     "end_equity": 4986.592643362574
+    },
+    {
+     "start": "2024-04-01",
+     "outcome": "down",
+     "days": 293.5729166666667,
+     "end_equity": 4969.265469141659
+    },
+    {
+     "start": "2024-05-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 5585.121850109717
+    },
+    {
+     "start": "2024-06-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 6959.642063182006
+    },
+    {
+     "start": "2024-07-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 6696.944604476627
+    },
+    {
+     "start": "2024-08-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 6150.990945087618
+    },
+    {
+     "start": "2024-09-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 5987.355089389201
+    },
+    {
+     "start": "2024-10-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 5925.431908477745
+    },
+    {
+     "start": "2024-11-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 5937.174850771614
+    },
+    {
+     "start": "2024-12-01",
+     "outcome": "down",
+     "days": 331.8020833333333,
+     "end_equity": 4995.563270942496
+    },
+    {
+     "start": "2025-01-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 6598.5483264463355
+    },
+    {
+     "start": "2025-02-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 8540.025617393994
+    },
+    {
+     "start": "2025-03-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 8385.461756152192
+    },
+    {
+     "start": "2025-04-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 8630.11281537423
+    },
+    {
+     "start": "2025-05-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 8211.703491263292
+    },
+    {
+     "start": "2025-06-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 7719.542014034378
+    },
+    {
+     "start": "2025-07-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 10255.21928982758
+    },
+    {
+     "start": "2025-08-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 8136.801264309332
+    },
+    {
+     "start": "2025-09-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 7984.271994382367
+    },
+    {
+     "start": "2025-10-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 9358.289311338387
+    },
+    {
+     "start": "2025-11-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 9714.643569873297
+    },
+    {
+     "start": "2025-12-01",
+     "outcome": "unfinished",
+     "days": 355.5729166666667,
+     "end_equity": 11458.958377335597
+    },
+    {
+     "start": "2026-01-01",
+     "outcome": "unfinished",
+     "days": 324.5729166666667,
+     "end_equity": 12008.30418533583
+    },
+    {
+     "start": "2026-02-01",
+     "outcome": "unfinished",
+     "days": 293.5729166666667,
+     "end_equity": 10307.209755223908
+    },
+    {
+     "start": "2026-03-01",
+     "outcome": "unfinished",
+     "days": 265.5729166666667,
+     "end_equity": 9970.64511376334
+    },
+    {
+     "start": "2026-04-01",
+     "outcome": "unfinished",
+     "days": 234.57291666666666,
+     "end_equity": 11427.483044048213
+    },
+    {
+     "start": "2026-05-01",
+     "outcome": "unfinished",
+     "days": 204.57291666666666,
+     "end_equity": 11734.402847795083
+    },
+    {
+     "start": "2026-06-01",
+     "outcome": "unfinished",
+     "days": 173.57291666666666,
+     "end_equity": 11657.324333376064
+    },
+    {
+     "start": "2026-07-01",
+     "outcome": "unfinished",
+     "days": 143.57291666666666,
+     "end_equity": 10576.181807907145
+    },
+    {
+     "start": "2026-08-01",
+     "outcome": "unfinished",
+     "days": 112.57291666666667,
+     "end_equity": 12998.872641083077
+    },
+    {
+     "start": "2026-09-01",
+     "outcome": "unfinished",
+     "days": 81.57291666666667,
+     "end_equity": 12677.74375532063
+    },
+    {
+     "start": "2026-10-01",
+     "outcome": "unfinished",
+     "days": 51.572916666666664,
+     "end_equity": 12821.510167731618
+    },
+    {
+     "start": "2026-11-01",
+     "outcome": "unfinished",
+     "days": 20.572916666666668,
+     "end_equity": 12442.391450256313
+    }
+   ]
+  },
+  "S2": {
+   "title": "S2: 100% per coin",
+   "whole": {
+    "final_equity": 847.3164740074565,
+    "final_wallet": 861.7530459881499,
+    "worst_fall_pct": -98.59015842343621,
+    "lowest_equity": 426.2659777537777,
+    "lowest_at": "2026-08-19 06:00",
+    "joined": 2040,
+    "trimmed": 174,
+    "capped": 0,
+    "not_joined": 36,
+    "fees": 28220.249570149746,
+    "funding_paid": 9757.889727300653,
+    "final_equity_no_funding": 1677.2644956644917,
+    "wiped_out": false,
+    "wiped_at": null,
+    "wiped_out_closes_only": false,
+    "worst_day_pct": -19.64529138706873,
+    "worst_day": "2026-02-06",
+    "longest_losing_run": 13,
+    "open_at_end": 1
+   },
+   "months": {
+    "starts": 81,
+    "up": 16,
+    "down": 37,
+    "wiped": 0,
+    "neither": 16,
+    "unfinished": 12,
+    "median_days_to_either": 195.0625,
+    "median_days_up": 122.83854166666666,
+    "median_days_down": 222.34375,
+    "median_end_neither": 6929.686291455137
+   },
+   "months_first_half": {
+    "starts": 40,
+    "up": 15,
+    "down": 17,
+    "wiped": 0,
+    "neither": 8,
+    "unfinished": 0,
+    "median_days_to_either": 191.16145833333331,
+    "median_days_up": 132.28125,
+    "median_days_down": 229.67708333333334,
+    "median_end_neither": 7051.412278008398
+   },
+   "months_second_half": {
+    "starts": 41,
+    "up": 1,
+    "down": 20,
+    "wiped": 0,
+    "neither": 8,
+    "unfinished": 12,
+    "median_days_to_either": 214.84375,
+    "median_days_up": 63.947916666666664,
+    "median_days_down": 215.18229166666669,
+    "median_end_neither": 6927.90503795911
+   },
+   "month_rows": [
+    {
+     "start": "2020-03-01",
+     "outcome": "up",
+     "days": 157.88541666666666,
+     "end_equity": 20119.223164354815
+    },
+    {
+     "start": "2020-04-01",
+     "outcome": "up",
+     "days": 239.34375,
+     "end_equity": 20162.56010417261
+    },
+    {
+     "start": "2020-05-01",
+     "outcome": "up",
+     "days": 247.5625,
+     "end_equity": 20064.64639683533
+    },
+    {
+     "start": "2020-06-01",
+     "outcome": "up",
+     "days": 223.05208333333334,
+     "end_equity": 20033.332638347576
+    },
+    {
+     "start": "2020-07-01",
+     "outcome": "up",
+     "days": 187.26041666666666,
+     "end_equity": 20087.170581683222
+    },
+    {
+     "start": "2020-08-01",
+     "outcome": "up",
+     "days": 159.75,
+     "end_equity": 20057.028741525348
+    },
+    {
+     "start": "2020-09-01",
+     "outcome": "up",
+     "days": 132.28125,
+     "end_equity": 20247.29713127311
+    },
+    {
+     "start": "2020-10-01",
+     "outcome": "up",
+     "days": 95.26041666666667,
+     "end_equity": 20084.492997994617
+    },
+    {
+     "start": "2020-11-01",
+     "outcome": "up",
+     "days": 66.45833333333333,
+     "end_equity": 20038.624016367987
+    },
+    {
+     "start": "2020-12-01",
+     "outcome": "up",
+     "days": 41.666666666666664,
+     "end_equity": 20072.808626424747
+    },
+    {
+     "start": "2021-01-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 7391.664522297719
+    },
+    {
+     "start": "2021-02-01",
+     "outcome": "down",
+     "days": 228.75,
+     "end_equity": 4948.018714181297
+    },
+    {
+     "start": "2021-03-01",
+     "outcome": "down",
+     "days": 214.5,
+     "end_equity": 4964.383942621339
+    },
+    {
+     "start": "2021-04-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 5415.898686876988
+    },
+    {
+     "start": "2021-05-01",
+     "outcome": "down",
+     "days": 335.53125,
+     "end_equity": 4993.714762862595
+    },
+    {
+     "start": "2021-06-01",
+     "outcome": "down",
+     "days": 288.8020833333333,
+     "end_equity": 4977.86924341568
+    },
+    {
+     "start": "2021-07-01",
+     "outcome": "down",
+     "days": 274.6145833333333,
+     "end_equity": 4995.276114064495
+    },
+    {
+     "start": "2021-08-01",
+     "outcome": "down",
+     "days": 229.67708333333334,
+     "end_equity": 4955.921243799488
+    },
+    {
+     "start": "2021-09-01",
+     "outcome": "down",
+     "days": 212.69791666666666,
+     "end_equity": 4935.562857362882
+    },
+    {
+     "start": "2021-10-01",
+     "outcome": "up",
+     "days": 113.39583333333333,
+     "end_equity": 20184.868571114555
+    },
+    {
+     "start": "2021-11-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 5766.342949848734
+    },
+    {
+     "start": "2021-12-01",
+     "outcome": "up",
+     "days": 195.0625,
+     "end_equity": 20045.11980523685
+    },
+    {
+     "start": "2022-01-01",
+     "outcome": "down",
+     "days": 94.98958333333333,
+     "end_equity": 4945.06981372411
+    },
+    {
+     "start": "2022-02-01",
+     "outcome": "down",
+     "days": 63.59375,
+     "end_equity": 4993.629809789224
+    },
+    {
+     "start": "2022-03-01",
+     "outcome": "up",
+     "days": 105.03125,
+     "end_equity": 20246.460567912367
+    },
+    {
+     "start": "2022-04-01",
+     "outcome": "up",
+     "days": 72.97916666666667,
+     "end_equity": 20067.75005290186
+    },
+    {
+     "start": "2022-05-01",
+     "outcome": "up",
+     "days": 43.03125,
+     "end_equity": 20574.601135505865
+    },
+    {
+     "start": "2022-06-01",
+     "outcome": "down",
+     "days": 135.11458333333334,
+     "end_equity": 4993.985935679152
+    },
+    {
+     "start": "2022-07-01",
+     "outcome": "down",
+     "days": 39.479166666666664,
+     "end_equity": 4961.532292992176
+    },
+    {
+     "start": "2022-08-01",
+     "outcome": "down",
+     "days": 85.65625,
+     "end_equity": 4904.569320901925
+    },
+    {
+     "start": "2022-09-01",
+     "outcome": "down",
+     "days": 344.6875,
+     "end_equity": 4971.5010023632485
+    },
+    {
+     "start": "2022-10-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 6711.160033719077
+    },
+    {
+     "start": "2022-11-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 8415.664925547713
+    },
+    {
+     "start": "2022-12-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 7742.200059172276
+    },
+    {
+     "start": "2023-01-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 6024.241528629699
+    },
+    {
+     "start": "2023-02-01",
+     "outcome": "down",
+     "days": 336.5,
+     "end_equity": 4872.522054635545
+    },
+    {
+     "start": "2023-03-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 12595.453325133321
+    },
+    {
+     "start": "2023-04-01",
+     "outcome": "down",
+     "days": 263.3125,
+     "end_equity": 4997.891467744044
+    },
+    {
+     "start": "2023-05-01",
+     "outcome": "down",
+     "days": 247.5,
+     "end_equity": 4769.104553758464
+    },
+    {
+     "start": "2023-06-01",
+     "outcome": "down",
+     "days": 314.9270833333333,
+     "end_equity": 4976.424285869539
+    },
+    {
+     "start": "2023-07-01",
+     "outcome": "down",
+     "days": 285.4895833333333,
+     "end_equity": 4988.7917631202845
+    },
+    {
+     "start": "2023-08-01",
+     "outcome": "down",
+     "days": 258.2604166666667,
+     "end_equity": 4963.036054428769
+    },
+    {
+     "start": "2023-09-01",
+     "outcome": "down",
+     "days": 245.05208333333334,
+     "end_equity": 4995.292095151463
+    },
+    {
+     "start": "2023-10-01",
+     "outcome": "down",
+     "days": 215.52083333333334,
+     "end_equity": 4967.422723869195
+    },
+    {
+     "start": "2023-11-01",
+     "outcome": "down",
+     "days": 165.91666666666666,
+     "end_equity": 4962.314330373302
+    },
+    {
+     "start": "2023-12-01",
+     "outcome": "down",
+     "days": 136.26041666666666,
+     "end_equity": 4913.07070944608
+    },
+    {
+     "start": "2024-01-01",
+     "outcome": "up",
+     "days": 63.947916666666664,
+     "end_equity": 20000.834234097056
+    },
+    {
+     "start": "2024-02-01",
+     "outcome": "down",
+     "days": 98.10416666666667,
+     "end_equity": 4992.993318388111
+    },
+    {
+     "start": "2024-03-01",
+     "outcome": "down",
+     "days": 40.260416666666664,
+     "end_equity": 4995.785228467225
+    },
+    {
+     "start": "2024-04-01",
+     "outcome": "down",
+     "days": 38.104166666666664,
+     "end_equity": 4995.493320295855
+    },
+    {
+     "start": "2024-05-01",
+     "outcome": "down",
+     "days": 163.72916666666666,
+     "end_equity": 4963.123360123031
+    },
+    {
+     "start": "2024-06-01",
+     "outcome": "down",
+     "days": 245.39583333333334,
+     "end_equity": 4996.918321667884
+    },
+    {
+     "start": "2024-07-01",
+     "outcome": "down",
+     "days": 214.84375,
+     "end_equity": 4985.153169314416
+    },
+    {
+     "start": "2024-08-01",
+     "outcome": "down",
+     "days": 183.84375,
+     "end_equity": 4996.85766917484
+    },
+    {
+     "start": "2024-09-01",
+     "outcome": "down",
+     "days": 136.67708333333334,
+     "end_equity": 4993.105162477759
+    },
+    {
+     "start": "2024-10-01",
+     "outcome": "down",
+     "days": 230.08333333333334,
+     "end_equity": 4985.596404509365
+    },
+    {
+     "start": "2024-11-01",
+     "outcome": "down",
+     "days": 342.34375,
+     "end_equity": 4968.272852859496
+    },
+    {
+     "start": "2024-12-01",
+     "outcome": "down",
+     "days": 62.395833333333336,
+     "end_equity": 4969.015867411545
+    },
+    {
+     "start": "2025-01-01",
+     "outcome": "down",
+     "days": 281.34375,
+     "end_equity": 4942.13326539666
+    },
+    {
+     "start": "2025-02-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 7148.2125491911975
+    },
+    {
+     "start": "2025-03-01",
+     "outcome": "down",
+     "days": 222.34375,
+     "end_equity": 4964.396343073389
+    },
+    {
+     "start": "2025-04-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 6707.597526727022
+    },
+    {
+     "start": "2025-05-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 6087.02812888797
+    },
+    {
+     "start": "2025-06-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 6384.6041603899785
+    },
+    {
+     "start": "2025-07-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 9924.349726362349
+    },
+    {
+     "start": "2025-08-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 5364.432533082649
+    },
+    {
+     "start": "2025-09-01",
+     "outcome": "down",
+     "days": 345.46875,
+     "end_equity": 4993.860495064769
+    },
+    {
+     "start": "2025-10-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 8191.039380384048
+    },
+    {
+     "start": "2025-11-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 9376.010592566943
+    },
+    {
+     "start": "2025-12-01",
+     "outcome": "unfinished",
+     "days": 355.5729166666667,
+     "end_equity": 12336.820377952432
+    },
+    {
+     "start": "2026-01-01",
+     "outcome": "unfinished",
+     "days": 324.5729166666667,
+     "end_equity": 14908.236260472508
+    },
+    {
+     "start": "2026-02-01",
+     "outcome": "unfinished",
+     "days": 293.5729166666667,
+     "end_equity": 10751.440972904293
+    },
+    {
+     "start": "2026-03-01",
+     "outcome": "unfinished",
+     "days": 265.5729166666667,
+     "end_equity": 10528.970780095422
+    },
+    {
+     "start": "2026-04-01",
+     "outcome": "unfinished",
+     "days": 234.57291666666666,
+     "end_equity": 13130.759970124212
+    },
+    {
+     "start": "2026-05-01",
+     "outcome": "unfinished",
+     "days": 204.57291666666666,
+     "end_equity": 15117.774608834692
+    },
+    {
+     "start": "2026-06-01",
+     "outcome": "unfinished",
+     "days": 173.57291666666666,
+     "end_equity": 13038.88151469336
+    },
+    {
+     "start": "2026-07-01",
+     "outcome": "unfinished",
+     "days": 143.57291666666666,
+     "end_equity": 11603.4496811583
+    },
+    {
+     "start": "2026-08-01",
+     "outcome": "unfinished",
+     "days": 112.57291666666667,
+     "end_equity": 16966.0656810514
+    },
+    {
+     "start": "2026-09-01",
+     "outcome": "unfinished",
+     "days": 81.57291666666667,
+     "end_equity": 15368.533296987416
+    },
+    {
+     "start": "2026-10-01",
+     "outcome": "unfinished",
+     "days": 51.572916666666664,
+     "end_equity": 15482.627559384413
+    },
+    {
+     "start": "2026-11-01",
+     "outcome": "unfinished",
+     "days": 20.572916666666668,
+     "end_equity": 15106.866274820606
+    }
+   ]
+  },
+  "S3": {
+   "title": "S3: 3x book",
+   "whole": {
+    "final_equity": 100.20416486794805,
+    "final_wallet": 102.82381209030127,
+    "worst_fall_pct": -99.89540894600567,
+    "lowest_equity": 40.07261799757457,
+    "lowest_at": "2026-08-19 06:00",
+    "joined": 1965,
+    "trimmed": 480,
+    "capped": 0,
+    "not_joined": 111,
+    "fees": 31294.50239209113,
+    "funding_paid": 11139.922228978365,
+    "final_equity_no_funding": 232.06895076022337,
+    "wiped_out": false,
+    "wiped_at": null,
+    "wiped_out_closes_only": false,
+    "worst_day_pct": -21.65955196738838,
+    "worst_day": "2026-02-06",
+    "longest_losing_run": 13,
+    "open_at_end": 1
+   },
+   "months": {
+    "starts": 81,
+    "up": 24,
+    "down": 54,
+    "wiped": 0,
+    "neither": 1,
+    "unfinished": 2,
+    "median_days_to_either": 130.453125,
+    "median_days_up": 82.609375,
+    "median_days_down": 165.59895833333331,
+    "median_end_neither": 7463.521147507287
+   },
+   "months_first_half": {
+    "starts": 40,
+    "up": 16,
+    "down": 24,
+    "wiped": 0,
+    "neither": 0,
+    "unfinished": 0,
+    "median_days_to_either": 126.390625,
+    "median_days_up": 96.40625,
+    "median_days_down": 190.55208333333334,
+    "median_end_neither": null
+   },
+   "months_second_half": {
+    "starts": 41,
+    "up": 8,
+    "down": 30,
+    "wiped": 0,
+    "neither": 1,
+    "unfinished": 2,
+    "median_days_to_either": 142.65104166666666,
+    "median_days_up": 54.546875,
+    "median_days_down": 157.34895833333331,
+    "median_end_neither": 7463.521147507287
+   },
+   "month_rows": [
+    {
+     "start": "2020-03-01",
+     "outcome": "up",
+     "days": 12.083333333333334,
+     "end_equity": 20165.81082166094
+    },
+    {
+     "start": "2020-04-01",
+     "outcome": "up",
+     "days": 129.98958333333334,
+     "end_equity": 20047.56986542301
+    },
+    {
+     "start": "2020-05-01",
+     "outcome": "up",
+     "days": 101.08333333333333,
+     "end_equity": 20186.59649080857
+    },
+    {
+     "start": "2020-06-01",
+     "outcome": "up",
+     "days": 220.67708333333334,
+     "end_equity": 20120.056236566856
+    },
+    {
+     "start": "2020-07-01",
+     "outcome": "up",
+     "days": 187.21875,
+     "end_equity": 20079.736070817093
+    },
+    {
+     "start": "2020-08-01",
+     "outcome": "up",
+     "days": 157.0,
+     "end_equity": 20023.01677276149
+    },
+    {
+     "start": "2020-09-01",
+     "outcome": "up",
+     "days": 130.91666666666666,
+     "end_equity": 20049.206319658453
+    },
+    {
+     "start": "2020-10-01",
+     "outcome": "up",
+     "days": 94.66666666666667,
+     "end_equity": 20200.001732397603
+    },
+    {
+     "start": "2020-11-01",
+     "outcome": "up",
+     "days": 63.927083333333336,
+     "end_equity": 20096.481868839648
+    },
+    {
+     "start": "2020-12-01",
+     "outcome": "up",
+     "days": 40.84375,
+     "end_equity": 20069.103831469747
+    },
+    {
+     "start": "2021-01-01",
+     "outcome": "down",
+     "days": 273.5,
+     "end_equity": 4978.900995952414
+    },
+    {
+     "start": "2021-02-01",
+     "outcome": "down",
+     "days": 161.13541666666666,
+     "end_equity": 4985.6293316098745
+    },
+    {
+     "start": "2021-03-01",
+     "outcome": "down",
+     "days": 200.75,
+     "end_equity": 4928.97580219679
+    },
+    {
+     "start": "2021-04-01",
+     "outcome": "down",
+     "days": 349.3541666666667,
+     "end_equity": 4966.991567347586
+    },
+    {
+     "start": "2021-05-01",
+     "outcome": "down",
+     "days": 314.4791666666667,
+     "end_equity": 4952.365374880099
+    },
+    {
+     "start": "2021-06-01",
+     "outcome": "down",
+     "days": 281.1354166666667,
+     "end_equity": 4942.257000000403
+    },
+    {
+     "start": "2021-07-01",
+     "outcome": "down",
+     "days": 253.47916666666666,
+     "end_equity": 4905.342586707905
+    },
+    {
+     "start": "2021-08-01",
+     "outcome": "down",
+     "days": 49.927083333333336,
+     "end_equity": 4971.194072366129
+    },
+    {
+     "start": "2021-09-01",
+     "outcome": "down",
+     "days": 196.08333333333334,
+     "end_equity": 4917.352487331952
+    },
+    {
+     "start": "2021-10-01",
+     "outcome": "up",
+     "days": 98.14583333333333,
+     "end_equity": 20183.581942053454
+    },
+    {
+     "start": "2021-11-01",
+     "outcome": "up",
+     "days": 84.42708333333333,
+     "end_equity": 20108.899397261855
+    },
+    {
+     "start": "2021-12-01",
+     "outcome": "up",
+     "days": 52.260416666666664,
+     "end_equity": 20003.55507270509
+    },
+    {
+     "start": "2022-01-01",
+     "outcome": "down",
+     "days": 74.08333333333333,
+     "end_equity": 4977.573302957752
+    },
+    {
+     "start": "2022-02-01",
+     "outcome": "down",
+     "days": 37.510416666666664,
+     "end_equity": 4995.503675432778
+    },
+    {
+     "start": "2022-03-01",
+     "outcome": "up",
+     "days": 104.36458333333333,
+     "end_equity": 20045.261773921276
+    },
+    {
+     "start": "2022-04-01",
+     "outcome": "up",
+     "days": 72.09375,
+     "end_equity": 20711.127033593362
+    },
+    {
+     "start": "2022-05-01",
+     "outcome": "up",
+     "days": 41.364583333333336,
+     "end_equity": 20130.203942891345
+    },
+    {
+     "start": "2022-06-01",
+     "outcome": "down",
+     "days": 75.22916666666667,
+     "end_equity": 4995.234678635571
+    },
+    {
+     "start": "2022-07-01",
+     "outcome": "down",
+     "days": 31.71875,
+     "end_equity": 4981.6042034369075
+    },
+    {
+     "start": "2022-08-01",
+     "outcome": "down",
+     "days": 16.5625,
+     "end_equity": 4903.901472929328
+    },
+    {
+     "start": "2022-09-01",
+     "outcome": "down",
+     "days": 103.57291666666667,
+     "end_equity": 4999.161300685093
+    },
+    {
+     "start": "2022-10-01",
+     "outcome": "down",
+     "days": 304.7916666666667,
+     "end_equity": 4998.518753641807
+    },
+    {
+     "start": "2022-11-01",
+     "outcome": "down",
+     "days": 273.9895833333333,
+     "end_equity": 4997.313334975467
+    },
+    {
+     "start": "2022-12-01",
+     "outcome": "down",
+     "days": 318.8541666666667,
+     "end_equity": 4989.392783850653
+    },
+    {
+     "start": "2023-01-01",
+     "outcome": "down",
+     "days": 287.8541666666667,
+     "end_equity": 4989.392783850653
+    },
+    {
+     "start": "2023-02-01",
+     "outcome": "down",
+     "days": 185.02083333333334,
+     "end_equity": 4999.050264023823
+    },
+    {
+     "start": "2023-03-01",
+     "outcome": "down",
+     "days": 294.4166666666667,
+     "end_equity": 4997.0374898964765
+    },
+    {
+     "start": "2023-04-01",
+     "outcome": "down",
+     "days": 122.79166666666667,
+     "end_equity": 4991.5601958001635
+    },
+    {
+     "start": "2023-05-01",
+     "outcome": "down",
+     "days": 99.91666666666667,
+     "end_equity": 4970.422158821355
+    },
+    {
+     "start": "2023-06-01",
+     "outcome": "down",
+     "days": 136.91666666666666,
+     "end_equity": 4986.650543300268
+    },
+    {
+     "start": "2023-07-01",
+     "outcome": "down",
+     "days": 170.0625,
+     "end_equity": 4878.004349167222
+    },
+    {
+     "start": "2023-08-01",
+     "outcome": "down",
+     "days": 155.5,
+     "end_equity": 4940.403195743742
+    },
+    {
+     "start": "2023-09-01",
+     "outcome": "down",
+     "days": 223.61458333333334,
+     "end_equity": 4983.219966382655
+    },
+    {
+     "start": "2023-10-01",
+     "outcome": "down",
+     "days": 194.61458333333334,
+     "end_equity": 4998.970133241425
+    },
+    {
+     "start": "2023-11-01",
+     "outcome": "down",
+     "days": 63.5,
+     "end_equity": 4790.1732457820235
+    },
+    {
+     "start": "2023-12-01",
+     "outcome": "down",
+     "days": 61.885416666666664,
+     "end_equity": 4993.832330698336
+    },
+    {
+     "start": "2024-01-01",
+     "outcome": "up",
+     "days": 58.322916666666664,
+     "end_equity": 20125.11162310491
+    },
+    {
+     "start": "2024-02-01",
+     "outcome": "up",
+     "days": 27.708333333333332,
+     "end_equity": 20457.097242390188
+    },
+    {
+     "start": "2024-03-01",
+     "outcome": "down",
+     "days": 32.5625,
+     "end_equity": 4967.313232602624
+    },
+    {
+     "start": "2024-04-01",
+     "outcome": "down",
+     "days": 31.479166666666668,
+     "end_equity": 4981.753143690065
+    },
+    {
+     "start": "2024-05-01",
+     "outcome": "down",
+     "days": 159.03125,
+     "end_equity": 4991.297271292994
+    },
+    {
+     "start": "2024-06-01",
+     "outcome": "down",
+     "days": 228.61458333333334,
+     "end_equity": 4975.1344898120515
+    },
+    {
+     "start": "2024-07-01",
+     "outcome": "down",
+     "days": 191.20833333333334,
+     "end_equity": 4981.07905904944
+    },
+    {
+     "start": "2024-08-01",
+     "outcome": "down",
+     "days": 155.66666666666666,
+     "end_equity": 4982.805576553562
+    },
+    {
+     "start": "2024-09-01",
+     "outcome": "down",
+     "days": 40.791666666666664,
+     "end_equity": 4978.118158947052
+    },
+    {
+     "start": "2024-10-01",
+     "outcome": "down",
+     "days": 107.60416666666667,
+     "end_equity": 4964.487927798949
+    },
+    {
+     "start": "2024-11-01",
+     "outcome": "down",
+     "days": 217.09375,
+     "end_equity": 4990.355345950011
+    },
+    {
+     "start": "2024-12-01",
+     "outcome": "down",
+     "days": 38.614583333333336,
+     "end_equity": 4997.230475306967
+    },
+    {
+     "start": "2025-01-01",
+     "outcome": "down",
+     "days": 173.84375,
+     "end_equity": 4947.073444703143
+    },
+    {
+     "start": "2025-02-01",
+     "outcome": "down",
+     "days": 267.6458333333333,
+     "end_equity": 4999.534952623028
+    },
+    {
+     "start": "2025-03-01",
+     "outcome": "down",
+     "days": 112.82291666666667,
+     "end_equity": 4972.196264663759
+    },
+    {
+     "start": "2025-04-01",
+     "outcome": "down",
+     "days": 194.84375,
+     "end_equity": 4983.210919555994
+    },
+    {
+     "start": "2025-05-01",
+     "outcome": "down",
+     "days": 172.1875,
+     "end_equity": 4998.31894299954
+    },
+    {
+     "start": "2025-06-01",
+     "outcome": "down",
+     "days": 136.35416666666666,
+     "end_equity": 4994.776960132584
+    },
+    {
+     "start": "2025-07-01",
+     "outcome": "down",
+     "days": 203.21875,
+     "end_equity": 4988.26393753884
+    },
+    {
+     "start": "2025-08-01",
+     "outcome": "down",
+     "days": 86.53125,
+     "end_equity": 4968.665495723869
+    },
+    {
+     "start": "2025-09-01",
+     "outcome": "down",
+     "days": 58.666666666666664,
+     "end_equity": 4963.649207250325
+    },
+    {
+     "start": "2025-10-01",
+     "outcome": "down",
+     "days": 307.75,
+     "end_equity": 4994.23255676193
+    },
+    {
+     "start": "2025-11-01",
+     "outcome": "neither",
+     "days": 364.9895833333333,
+     "end_equity": 7463.521147507287
+    },
+    {
+     "start": "2025-12-01",
+     "outcome": "down",
+     "days": 252.625,
+     "end_equity": 4972.098339158339
+    },
+    {
+     "start": "2026-01-01",
+     "outcome": "up",
+     "days": 35.84375,
+     "end_equity": 20643.371568296556
+    },
+    {
+     "start": "2026-02-01",
+     "outcome": "down",
+     "days": 181.875,
+     "end_equity": 4996.191870082191
+    },
+    {
+     "start": "2026-03-01",
+     "outcome": "down",
+     "days": 148.94791666666666,
+     "end_equity": 4906.935798457576
+    },
+    {
+     "start": "2026-04-01",
+     "outcome": "unfinished",
+     "days": 234.57291666666666,
+     "end_equity": 13355.57642103198
+    },
+    {
+     "start": "2026-05-01",
+     "outcome": "up",
+     "days": 204.17708333333334,
+     "end_equity": 20107.765233205035
+    },
+    {
+     "start": "2026-06-01",
+     "outcome": "unfinished",
+     "days": 173.57291666666666,
+     "end_equity": 13557.138026784218
+    },
+    {
+     "start": "2026-07-01",
+     "outcome": "down",
+     "days": 35.729166666666664,
+     "end_equity": 4971.815881535634
+    },
+    {
+     "start": "2026-08-01",
+     "outcome": "up",
+     "days": 111.63541666666667,
+     "end_equity": 20300.45097967924
+    },
+    {
+     "start": "2026-09-01",
+     "outcome": "up",
+     "days": 80.79166666666667,
+     "end_equity": 20346.63577650532
+    },
+    {
+     "start": "2026-10-01",
+     "outcome": "up",
+     "days": 50.770833333333336,
+     "end_equity": 20009.173611682552
+    },
+    {
+     "start": "2026-11-01",
+     "outcome": "up",
+     "days": 19.791666666666668,
+     "end_equity": 20117.01716021508
+    }
+   ]
+  }
+ },
+ "maint": 0.005,
+ "days": 365,
+ "first": "2020-02-05 00:00",
+ "trades": 2076,
+ "fee_side": 0.001,
+ "funding_times_without_a_bar": 8,
+ "funding_rows": {
+  "BTCUSDT": 7884,
+  "ETHUSDT": 7650
+ },
+ "forward": {
+  "from": "2026-11-11 06:45",
+  "to": "2026-11-22 05:45",
+  "trades": 13,
+  "open": 2,
+  "sizings": {
+   "S1": {
+    "equity_now": 11932.533217976617,
+    "wallet": 11730.326734445076,
+    "worst_fall_pct": -4.672986875876218,
+    "joined": 12,
+    "trimmed": 0,
+    "capped": 5,
+    "not_joined": 1,
+    "funding_paid": -8.159595636612881,
+    "wiped_out": false,
+    "longest_losing_run": 1
+   },
+   "S2": {
+    "equity_now": 14131.135995098812,
+    "wallet": 13532.3919448448,
+    "worst_fall_pct": -10.725420218415472,
+    "joined": 13,
+    "trimmed": 0,
+    "capped": 0,
+    "not_joined": 0,
+    "funding_paid": -16.822297957509814,
+    "wiped_out": false,
+    "longest_losing_run": 1
+   },
+   "S3": {
+    "equity_now": 15234.923384952795,
+    "wallet": 14477.9654238077,
+    "worst_fall_pct": -15.082066999410337,
+    "joined": 13,
+    "trimmed": 3,
+    "capped": 0,
+    "not_joined": 0,
+    "funding_paid": -22.587035990307605,
+    "wiped_out": false,
+    "longest_losing_run": 1
+   }
+  }
+ }
+}
