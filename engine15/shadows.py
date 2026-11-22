@@ -77,6 +77,10 @@ CHALLENGERS = OrderedDict([
     # b_targets, never this.
     ("b_trend30", {"title": "Setups with the 30-day trend filter (H67)",
                    "rule": {"targets": True, "early": True, "trend_days": 30}, "cfg": {}}),
+    # H68 (registered 22 Nov 2026; owner: "After a stop-out, wait for a real signal instead of a forced re-entry"):
+    # b_targets, but after a trade ends at its entry stop ("STOP") no forced entry until a signal enters. A paper shadow.
+    ("b_wait_stop", {"title": "Setups waiting for a signal after a stop-out (H68)",
+                     "rule": {"targets": True, "early": True, "wait_after_stop": True}, "cfg": {}}),
     ("b_trail", {"title": "B: trailing swing / 2 ATR stop after 1R", "rule": {"trail": True}, "cfg": {}}),
     ("a_pullback", {"title": "A: wait up to 8 bars for a pullback fill", "rule": {"pullback": True}, "cfg": {}}),
     # Y, the charter's yardstick (11 Nov 2026): the same engine and odds, deciding only at 4h / daily closes
@@ -249,6 +253,8 @@ def run(px, odds, shock, tide, unit, cfg, lo, hi, state=None, bias=None, guard=N
     leg = dict(st["leg"]) if st.get("leg") else None            # h3: the old position closing on a limit
     order = dict(st["order"]) if st.get("order") else None      # a_pullback: an entry limit resting
     stats = dict(st.get("stats") or _blank_stats())
+    wait_stop = bool(rule.get("wait_after_stop"))                # H68: no forced entry after an entry-stop exit
+    ws = dict(st.get("wait_stop") or {"on": 0, "blocked": 0, "episodes": 0}) if wait_stop else None
 
     def book_trade(i, price, why, p_in, side, q0, s0, wi, ti, ti_ms, pnl, fees_t, t1=None, t2=None):
         risk = q0 * abs(p_in - s0) if s0 == s0 else np.nan
@@ -315,6 +321,8 @@ def run(px, odds, shock, tide, unit, cfg, lo, hi, state=None, bias=None, guard=N
         stop = entry - pos * cfg["stop_units"] * unit[i - 1]
         stop0, qty0, trail_on = stop, qty, False
         ma_on, trail_px = False, None
+        if ws is not None:
+            ws["on"] = 0                                         # H68: a trade is entered: the wait is over
         tg.update(t1=None, t2=None, t1_basis=None, t2_basis=None, t1_hit=False)
         if need_t1 and row_of is not None:
             from .live import plan_targets
@@ -381,11 +389,17 @@ def run(px, odds, shock, tide, unit, cfg, lo, hi, state=None, bias=None, guard=N
                 leg["left"] -= 1
         be_moved = tg["t1_hit"] and (use_targets or be_t1)       # the stop sits at break-even
         if pos == 1 and l[i] <= stop:
-            close(i, min(o[i], stop), _stop_word(be_moved, trail_on))
+            word = _stop_word(be_moved, trail_on)
+            close(i, min(o[i], stop), word)
             idle = 0
+            if ws is not None and word == "STOP":
+                ws["on"] = 1                                     # H68: out at the entry stop: wait for a signal
         elif pos == -1 and h[i] >= stop:
-            close(i, max(o[i], stop), _stop_word(be_moved, trail_on))
+            word = _stop_word(be_moved, trail_on)
+            close(i, max(o[i], stop), word)
             idle = 0
+            if ws is not None and word == "STOP":
+                ws["on"] = 1
         # ---- 2b. targets (b_targets): Target 1 then Target 2, both may fill in one bar
         if use_targets and pos != 0 and tg["t1"] is not None:
             reach = (lambda t: h[i] >= t) if pos == 1 else (lambda t: l[i] <= t)
@@ -439,6 +453,11 @@ def run(px, odds, shock, tide, unit, cfg, lo, hi, state=None, bias=None, guard=N
                                        tide[i] if tide[i] == tide[i] else 0.0, cfg,
                                        bias=0 if bias is None or bias[i] != bias[i] else int(bias[i]),
                                        guard=False if guard is None else bool(guard[i]))
+        if ws is not None and ws["on"] and pos == 0 and a == policy.FORCED:
+            a, target, why = policy.IDLE, 0, "wait_for_signal_after_stop"   # H68: only a signal enters now
+            ws["blocked"] += 1
+            if ws["on"] == 1:
+                ws["on"], ws["episodes"] = 2, ws["episodes"] + 1
         if move is not None and target != 0 and a in (policy.ENTER, policy.FORCED, policy.FLIP):
             mv = move[i]
             if mv == mv and mv != 0 and (mv > 0) != (target > 0):    # H67: the new side is against the N-day move
@@ -492,6 +511,8 @@ def run(px, odds, shock, tide, unit, cfg, lo, hi, state=None, bias=None, guard=N
         end.update(ma_on=bool(ma_on and pos), trail_px=None if (trail_px is None or not pos) else float(trail_px),
                    trail_basis=ma_basis(ma_key) if ma_key else None,
                    trail_arm=ARM_WORDS.get(ma_arm) if ma_key else None, be_t1=be_t1, half_t1=half_t1)
+    if ws is not None:                                           # H68 books only (every other book's state unchanged)
+        end["wait_stop"] = {"on": int(ws["on"]), "blocked": int(ws["blocked"]), "episodes": int(ws["episodes"])}
     if last is not None:
         end["mark"] = float(c[last])
         end["mark_ms"] = tms(last)

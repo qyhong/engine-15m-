@@ -185,7 +185,7 @@ def _usd_short(v):
 
 
 NAMES = {"main": "Main engine", "b_trail": "B trail (shadow)", "b_targets": "B targets (shadow)",
-         "b_trend30": "Trend 30d (shadow)",
+         "b_trend30": "Trend 30d (shadow)", "b_wait_stop": "Wait after stop (shadow)",
          "b_ema20_1h_t1": "EMA20 trail (shadow)", "b_sma20_1h_t1": "SMA20 trail (shadow)", "b_be_t1": "Break-even trail",
          "a_pullback": "A pullback (shadow)", "h3_flip_limit": "H3 flip limit", "h5_damp": "H5 damped", "v4": "v4 (old rules)",
          "y_4h": "4h yardstick", "y_1d": "Daily yardstick", "m_swing_1h": "1h swing mind", "m_swing_4h": "4h swing mind",
@@ -204,7 +204,7 @@ def _esc(t):
 
 
 TABLE = {"b_trail": "B trail", "b_targets": "B targets",
-         "b_trend30": "Trend 30d", "b_ema20_1h_t1": "EMA20 trail", "b_sma20_1h_t1": "SMA20 trail",
+         "b_trend30": "Trend 30d", "b_wait_stop": "Wait stop", "b_ema20_1h_t1": "EMA20 trail", "b_sma20_1h_t1": "SMA20 trail",
          "b_be_t1": "BE trail", "p8_fvg": "P8 FVG", "p3_orb": "P3 ORB", "p6_vwap": "P6 VWAP", "p10_round": "P10 round",
          "p1_liqhunt": "P1 liq hunt", "p5_rlq": "P5 RL", "p6_mtrend": "P6 RL mom", "p6_p4trend": "P6 RL ctrl",
          "p7_rvbear": "P7 pair", "a_pullback": "A pullback", "main": "Main"}
