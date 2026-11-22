@@ -72,6 +72,11 @@ CHALLENGERS = OrderedDict([
     ("v4", {"title": "v4: no higher-timeframe bias (H4)", "rule": {}, "cfg": {"htf_bias": False}}),
     ("h3_flip_limit", {"title": "H3: limit on flip exits", "rule": {"flip_limit": True}, "cfg": {}}),
     ("b_targets", {"title": "B: half at Target 1, rest at Target 2", "rule": {"targets": True, "early": True}, "cfg": {}}),
+    # H67 (registered 22 Nov 2026; owner: "Test it"): b_targets, but no entry against the market's own 30-day move
+    # (H65: those trades lost on history, in both halves and both market groups). A paper shadow; the vault copies
+    # b_targets, never this.
+    ("b_trend30", {"title": "Setups with the 30-day trend filter (H67)",
+                   "rule": {"targets": True, "early": True, "trend_days": 30}, "cfg": {}}),
     ("b_trail", {"title": "B: trailing swing / 2 ATR stop after 1R", "rule": {"trail": True}, "cfg": {}}),
     ("a_pullback", {"title": "A: wait up to 8 bars for a pullback fill", "rule": {"pullback": True}, "cfg": {}}),
     # Y, the charter's yardstick (11 Nov 2026): the same engine and odds, deciding only at 4h / daily closes
@@ -136,6 +141,21 @@ def aux_from_ev(ev, px):
     cols = [c for c in TARGET_COLS if ev is not None and c in ev]
     aux["targets"] = ev[cols] if cols else pd.DataFrame(index=range(n))
     return aux
+
+
+def trend_move(times_ms, close, days, lo, hi):
+    """H67: for each bar k in lo .. hi-1, close[k] against the close of the first bar at or after `days` days before
+    bar k (its open time). NaN where there is no bar that far back (or no times): nothing is filtered there.
+    -> an array as long as `close`, filled only for lo .. hi-1."""
+    out = np.full(len(close), np.nan)
+    if times_ms is None or hi <= lo:
+        return out
+    t = np.asarray(times_ms, dtype="int64")
+    back = np.searchsorted(t, t[lo:hi] - int(days) * 86400000)
+    ok = t[lo:hi] - t[0] >= int(days) * 86400000               # a bar that far back exists
+    k = np.arange(lo, hi)
+    out[k[ok]] = close[k[ok]] / close[back[ok]] - 1.0
+    return out
 
 
 def pullback_limit(aux, i, side, close):
@@ -309,6 +329,10 @@ def run(px, odds, shock, tide, unit, cfg, lo, hi, state=None, bias=None, guard=N
         return min(o[i], level) if side == 1 else max(o[i], level)
 
     p_up, p_dn = odds[:, labels.UP], odds[:, labels.DOWN]
+    trend_days = int(rule.get("trend_days") or 0)                # H67: the market's own N-day move at each deciding close
+    move = (aux or {}).get("trend_move") if trend_days else None
+    if trend_days and move is None:
+        move = trend_move(times_ms, c, trend_days, lo, hi)
     for i in range(lo, hi):
         # ---- 1. fills at this open
         if leg is not None and leg["left"] <= 0:                 # h3: the limit rested its 4 bars: market now
@@ -415,6 +439,13 @@ def run(px, odds, shock, tide, unit, cfg, lo, hi, state=None, bias=None, guard=N
                                        tide[i] if tide[i] == tide[i] else 0.0, cfg,
                                        bias=0 if bias is None or bias[i] != bias[i] else int(bias[i]),
                                        guard=False if guard is None else bool(guard[i]))
+        if move is not None and target != 0 and a in (policy.ENTER, policy.FORCED, policy.FLIP):
+            mv = move[i]
+            if mv == mv and mv != 0 and (mv > 0) != (target > 0):    # H67: the new side is against the N-day move
+                if a == policy.FLIP:
+                    target, why = 0, "trend_filter_flat"          # the position is closed at the next open; nothing opens
+                else:
+                    a, target, why = policy.IDLE, 0, "trend_filter"   # no entry; the idle count goes on
         if a == policy.IDLE:
             idle += 1
         elif a == policy.STEP_ASIDE:

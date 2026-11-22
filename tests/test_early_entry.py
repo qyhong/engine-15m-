@@ -43,7 +43,8 @@ def test_the_switch_is_the_rule_and_the_market_together():
     for a in ("XAUUSD", "XAGUSD", "USDJPY", "SPX", "WTI", "BRENT"):
         assert shadows.asset_cfg(a, dict(CFG))["early_fill"] is False and live.asset_cfg(a, dict(CFG))["early_fill"] is False
     only = [k for k, v in shadows.CHALLENGERS.items() if v["rule"].get("early")]
-    assert only == ["b_targets"]                                  # no other book of run() asks for it
+    # no other book of run() asks for it, except the H67 shadow b_trend30 (b_targets plus the trend filter)
+    assert only == ["b_targets", "b_trend30"]
 
 
 @pytest.mark.parametrize("seed", [3, 11, 17])
