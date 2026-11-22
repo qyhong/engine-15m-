@@ -4178,3 +4178,105 @@ were "expected"; in fact none were raised (with their files absent those cards r
 **For a round 5:** none of the four is registered as a candidate input by this rule. If a round 5 is ever run, these
 four should not be added on the strength of this study; `kp_chg24` and `cg_open` duplicate the past-return inputs the
 agents already have.
+
+## H71. BTC and ETH in an oversold state: do the engine's own odds, voices and card readings carry information about a rebound, and does the way the engine combines them lose it? (registered 22 Nov 2026, about 11:40 UTC, before any H71 code was run or any H71 number was computed)
+
+**Prompted by:** the owner, 22 Nov 2026: "how this 15minds engine can confluence mean reversion and turn long when sharp
+rebound happen", with statistics behind it. H70 (another branch, running now) tests price-pattern entry rules; this study
+asks about the engine's own evidence. Research only: nothing in the engine, the books or the vault changes, whatever the
+result. A study cannot promise an edge; "nothing holds up" is a complete answer.
+
+**Known before registering (no H71 outcome numbers).** H65: the lead in the odds did not hold up across halves as a
+trade filter; the Setups book earns with a market's 30-day move and loses against it. H66: in 505 sudden rallies while
+short the book turned long within 24 hours in 26%. The rule (`policy.decide`): from flat a long needs a 5-point lead in
+the odds (10 when risk is high, 15 against the higher-timeframe bias); a short flips long at a 10-point up lead or when
+the bias turns up.
+
+**Data.** BTCUSDT and ETHUSDT, 15-minute closes, the evidence store and the cached weekly fits read only, through the
+research helpers' path (`research/h59_half_be.py::prep_cut`, the frame H65 used): bars from `data.load`, readings from
+`prep["ev"]`, the combined odds as `prep["odds"]`, each voice's probabilities from the same walk. The fits are COPIED into
+the scratch folder before each stage (the walk deletes cached fits it does not use and writes any refit; copying keeps
+`/data/mind15` untouched).
+**Are the odds and voices out-of-sample when produced? Yes, by the code** (`engine15/leanprep.py::walk_forward_cached`):
+the fit used for the week starting at session s is trained only on rows r <= s - 96 whose triple-barrier grade
+(bars r+1 .. r+96) is complete by the close of bar s, and it is applied to sessions s .. s+671 only. Each voice's three
+probabilities at a bar therefore come from a fit made before that bar. The combined odds mix the voices with trust
+weights (`trust_tail`) built only from losses of calls whose grade had arrived by that bar. Known difference from the
+live engine: this replay frame has no v5.2 trust cap (no card above 40%); it is the frame H36/H59/H65 used. The
+readings themselves are fixed functions of closed bars (`data.htf_on_15`; the project's test
+`test_evidence_never_reads_the_future`); I rely on that test and do not re-verify every reading.
+
+**Stages, in order, each frozen before the next; the walk and every input are CUT at the stage's end before anything is
+formed (`prep_cut(end=...)`), so a stage cannot see later prices.**
+- DISCOVERY: from the first bar with odds at or after 2020-02-01 to 2023-06-07 23:45 UTC.
+- CONFIRMATION: 2023-06-08 00:00 to 2025-11-10 23:45 UTC, only for what discovery selected (at most 3).
+- HOLDOUT (sealed): 2025-11-11 00:00 to the last stored session at or before 2026-11-21 13:45 UTC, only for what
+  confirmation passed; one year is short, and is said so.
+A bar is used for horizon h only if its forward close is inside the same stage. The script takes `--stage`; the
+confirmation stage refuses to run without `selection.json` from discovery and computes nothing for a reading not in it;
+the holdout refuses to run without `confirmation.json` and computes only the readings that passed. The descriptive
+read-out (below) is computed in discovery and confirmation only; the holdout is not opened for it.
+
+**The oversold state (fixed).** 24-hour return (close against the close 96 bars earlier) of -6% or lower, OR the close at
+least 3 x ATR(1h) below the 1-hour EMA50 (`(px - bias_ema50_1h_px) / atr1h <= -3`, the stored readings; computed from
+bars the same way where a stored column is absent). **The overbought mirror**: +6% or more, or 3 x ATR(1h) above.
+**Calm**: every other bar. The calm state is the contrast.
+
+**The outcome.** Forward log return over 96 bars (24 hours) and 16 bars (4 hours) from the bar's close; a "sharp rebound"
+flag: close 96 bars later at least 5% above the close.
+
+**The readings tested (12, picked from the code before any outcome; "lead" = P(up) - P(down) of the 24-hour barrier
+call; every lead is out-of-sample as above).**
+1. `lead`: the engine's combined odds lead (what `policy.decide` acts on).
+2. `v_meanrev`: the "Stretch and exhaustion" voice's own lead (stretch from the 1h/4h averages, range position, StochRSI).
+3. `v_pullback`: the "Pullback inside the trend" voice's lead.
+4. `v_momentum`: the "Momentum" voice's lead (moves over 1h, 4h, 24h, 7d against volatility).
+5. `v_structure`: the "Market structure" voice's lead (swing structure 15m to 1d, position in the swing range).
+6. `v_regime`: the "Market regime" voice's lead (daily regime labels and numbers).
+7. `v_levels`: the "Support and resistance" voice's lead (nearest levels, strength, room).
+8. `v_flow`: the "Order flow (CVD)" voice's lead (net taker buying 1h/4h/24h, flow without price progress).
+9. `k_1h`: StochRSI on 1-hour bars, scaled -1..+1 (a raw card reading; low = oversold).
+10. `stretch_4h`: (close - 4h EMA50) / ATR(4h), clipped (a raw reading; how deep the larger stretch is).
+11. `cvd_div`: taker buying minus price progress over 4h (a raw reading; buying without price = absorption).
+12. `fund_z`: the funding rate against its last 90 fundings (a raw reading; negative = shorts crowded and paying).
+A voice that is not ready at a bar (NaN probabilities) or a reading that is NaN leaves that bar out for that reading.
+
+**Measures, each on bars in the state only, within each stage.**
+1. Raw IC: Spearman rank correlation of the reading with the forward return (24h and 4h).
+2. Partial IC (beyond past price): ranks of the reading and of the forward return each residualised (least squares,
+   within coin, state and stage) on the ranks of the trailing log returns over 4, 16, 96 and 672 bars and of the trailing
+   96-bar realised volatility; the IC is the correlation of the residuals. Pooled = both coins' residuals together.
+3. Month-clustered bootstrap: whole calendar months (of the bar's time) resampled with replacement, 4,000 draws, seed
+   20261122, from per-month sums with ranks and residuals fixed; 95% percentile interval. One-sided p (confirmation,
+   holdout): the share of centred draws, (b - estimate), at least as far as the estimate in the registered direction,
+   (1 + count) / (1 + draws). A 24-hour window can spill into the next month; that small leak is accepted.
+4. Hit rate (descriptive): share of sharp rebounds when the reading is in its top third and in its bottom third against
+   the state's base rate; the third cut points are set per coin on the discovery oversold bars and reused unchanged later.
+5. The same raw and partial ICs in the calm state, as contrast (selects nothing).
+
+**Discovery selection (fixed).** A reading is selected only if, in the oversold state, its partial IC with the forward
+24-hour return has the same sign on BTC and on ETH, the pooled month-clustered 95% interval excludes zero, and the pooled
+|partial IC| >= 0.02. At most the 3 largest by pooled |partial IC|. None qualifies: stop and report "nothing to confirm".
+**Confirmation pass (fixed).** Partial IC (oversold, 24h) of the same sign as in discovery on BTC and on ETH (point
+estimates), and pooled one-sided p below 0.05 / (the number selected) (Bonferroni).
+**Holdout read (fixed).** For each reading confirmed: pooled partial IC of the same sign with one-sided p below 0.05 /
+(the number confirmed) "held in the holdout"; else "did not hold in the holdout". BTC and ETH shown alone.
+**Number of looks.** 12 readings x 2 horizons x 2 measures x 2 states x 3 (BTC, ETH, pooled) in discovery = 288 ICs,
+plus hit rates; only the 12 oversold 24h partial ICs can select. With 12 null readings and the both-coins-same-sign plus
+interval rule, by luck about one might pass (BTC and ETH move together, and several voices share inputs), which is why
+confirmation exists and is Bonferroni-corrected.
+
+**Descriptive read-out (fixed, passes nothing).** In the oversold state, discovery and confirmation: the share of bars
+where the combined odds lead UP by 5 points or more (the long bar from flat), by 15 or more (the bar against the bias),
+lead DOWN by 5 or more, and in between; for each, bars, months, mean and median forward 24-hour return and the
+sharp-rebound rate; and the same split by `htf_bias` = -1 (down) against not down.
+
+**Computed** by `research/h71_voices_at_rebounds.py` on the research server in a scratch folder; output
+`research/out/h71_voices_at_rebounds/` (`discovery.json`, `selection.json`, `confirmation.json`, `holdout.json` as
+reached, `report.md`).
+
+**Changes from the proposal given to me, made before registering:** (1) the fits are copied, not used in place (the walk
+deletes unused fits and writes refits); (2) each stage cuts the walk at its own end rather than slicing after a full walk;
+(3) "top third" is shown with the bottom third too, since several readings point to a rebound at the low end (StochRSI,
+stretch, funding); (4) the calm state is "neither oversold nor the overbought mirror"; (5) the descriptive read-out adds
+the 15-point bar and stays out of the holdout; (6) 4,000 bootstrap draws.
