@@ -3972,3 +3972,40 @@ of the 39 passes the raw rule by luck. The features within a group are also corr
 intervals per coin, half and horizon; the pass flags; the volatility-third ICs; the verdict per input.
 **Computed** by `research/h69_rl_untested_inputs.py` on the research server, in a scratch folder reading the engine's data
 read-only; output `research/out/h69_rl_untested_inputs/results.json` and `report.md`.
+
+### H69 results (22 Nov 2026, run 10:53 UTC on the research server, 34 s; `research/out/h69_rl_untested_inputs/report.md` + `results.json`)
+
+**Gate (point in time):** the 13 features and their raw companions recomputed on bars and source files cut at
+2022-09-14 13:00 (BTC) and 2024-03-20 07:00 UTC (ETH) equal the full-data values on every row up to the cut. The source
+files were copied keeping only rows known before 2025-11-11 00:00 UTC; bars opening at or after 2025-11-10 23:45 were
+dropped before anything was computed.
+
+**All four inputs could be tested**, both coins, 2020-01-01 to 2025-11-10 (ETH's CME gap from 5 Feb 2021): every all-hours
+feature has 99-100% of rows usable in both halves (about 120,000 rows in the first half, 85,000 in the second, 41 and 29
+months). `cg_open` exists only while CME is shut (about 35,000 / 25,000 BTC rows); its months never reach 1,000 rows (a
+weekend month holds about 850), so on its own it would have read "thin" under the registered threshold; the group is
+testable through `cg_above` / `cg_below`, as the rule says.
+
+**Verdicts by the registered rule. No input earns a registered place in round 5.**
+
+| Input | Verdict | What passed (raw IC, half 1 / half 2, BTC; ETH) | Partial IC (beyond past price) |
+|---|---|---|---|
+| Korea premium | MOSTLY PAST PRICE | `kp_chg24` 1 h: +0.021 / +0.025; +0.020 / +0.023. 4 h: +0.023 / +0.035; +0.022 / +0.032 | 1 h: +0.004 / +0.002; +0.006 / -0.004. 4 h: -0.001 / +0.002; +0.002 / -0.002 (none excludes zero) |
+| CME gap (spot proxy) | MOSTLY PAST PRICE | `cg_open` 1 h: -0.067 / -0.065; -0.056 / -0.057. 4 h: -0.101 / -0.055; -0.093 / -0.053 | 1 h: -0.021 / -0.003; -0.019 / +0.001. 4 h: -0.034 / +0.005; -0.041 / +0.002 (second half about zero) |
+| BTC dominance | NOTHING SHOWN | none | `dm_stable_7d` 24 h passed on BTC only (+0.064 / +0.035) with its raw IC not passing; ETH second half +0.001 |
+| Spot vs perp | NOTHING SHOWN | `sl_taker_diff` 4 h on BTC only (-0.020 / -0.021); ETH -0.015 / +0.009 | on BTC at 1 h only (-0.012 / -0.016), not the same horizon |
+
+Of 39 feature-horizons, 4 passed the raw rule (both inside the two groups above) and 0 passed the partial rule on both
+coins; about 2 raw passes would be unremarkable by luck with features this correlated. Reading: the weekend CME move has
+tended to give back part of itself over the next hours, and a rising Korea premium has come with continued price, but in
+both cases the trailing returns (1 h to 7 days) already carry it; once they are taken out nothing is left in the second
+half. The volatility thirds (descriptive, 4 h) keep the raw `cg_open` and `kp_chg24` signs in most thirds (exceptions: BTC
+`kp_chg24` in the low-volatility third of the first half, ETH `cg_open` in the high-volatility third of the second half);
+no third stands out consistently. Nothing here is evidence of an advantage.
+
+**Deviations:** none from the registration. Two notes: (1) the `cg_open` monthly-row quirk above was not foreseen when
+the 1,000-row threshold was written; it changes no verdict. (2) `report.md` says errors from the cards not under test
+were "expected"; in fact none were raised (with their files absent those cards return empty).
+**For a round 5:** none of the four is registered as a candidate input by this rule. If a round 5 is ever run, these
+four should not be added on the strength of this study; `kp_chg24` and `cg_open` duplicate the past-return inputs the
+agents already have.

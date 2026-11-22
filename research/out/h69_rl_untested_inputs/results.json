@@ -1,0 +1,7226 @@
+{
+ "study": "H69",
+ "registered_commit_note": "registration committed before this code (research/HYPOTHESES.md H69)",
+ "data": {
+  "start": "2020-01-01 00:00:00+00:00",
+  "split": "2023-06-08 00:00:00+00:00",
+  "last_bar_open_before": "2025-11-10 23:45:00+00:00",
+  "source_cut_known_ms_before": 1762819200000,
+  "source_rows_kept": {
+   "cx_upbit_btcusdt.csv": 216737,
+   "cx_upbit_ethusdt.csv": 216707,
+   "cx_perp_btcusdt.csv": 216504,
+   "cx_perp_ethusdt.csv": 208864,
+   "cx_fx.csv": 1654,
+   "cx_caps.csv": 2505,
+   "cx_stables.csv": 2505
+  }
+ },
+ "horizons_bars": [
+  4,
+  16,
+  96
+ ],
+ "bootstrap": {
+  "B": 2000,
+  "seed": 20261122,
+  "cluster": "calendar month of the decision"
+ },
+ "availability": {
+  "BTCUSDT": {
+   "vol_third_cuts_rv96": [
+    0.002020661609555199,
+    0.0030235520648570747
+   ],
+   "kp_prem": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 120038,
+     "share_usable": 0.9984,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 84974,
+     "share_usable": 0.9979,
+     "months_1000": 29
+    }
+   },
+   "kp_z30": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 120038,
+     "share_usable": 0.9984,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 84974,
+     "share_usable": 0.9979,
+     "months_1000": 29
+    }
+   },
+   "kp_chg24": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 119753,
+     "share_usable": 0.996,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 84796,
+     "share_usable": 0.9958,
+     "months_1000": 29
+    }
+   },
+   "dm_btc_7d": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 120230,
+     "share_usable": 1.0,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 85152,
+     "share_usable": 1.0,
+     "months_1000": 29
+    }
+   },
+   "dm_btc_30d": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 120230,
+     "share_usable": 1.0,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 85152,
+     "share_usable": 1.0,
+     "months_1000": 29
+    }
+   },
+   "dm_stable_7d": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 120230,
+     "share_usable": 1.0,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 85152,
+     "share_usable": 1.0,
+     "months_1000": 29
+    }
+   },
+   "dm_stable_30d": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 120230,
+     "share_usable": 1.0,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 85152,
+     "share_usable": 1.0,
+     "months_1000": 29
+    }
+   },
+   "sl_share_z": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 119990,
+     "share_usable": 0.998,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 85152,
+     "share_usable": 1.0,
+     "months_1000": 29
+    }
+   },
+   "sl_taker_diff": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 119990,
+     "share_usable": 0.998,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 85152,
+     "share_usable": 1.0,
+     "months_1000": 29
+    }
+   },
+   "sl_lead": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 118760,
+     "share_usable": 0.9878,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 85152,
+     "share_usable": 1.0,
+     "months_1000": 29
+    }
+   },
+   "cg_open": {
+    "first_read": "2020-01-03 22:00:00+00:00",
+    "half1": {
+     "rows": 35233,
+     "usable": 35233,
+     "share_usable": 1.0,
+     "months_1000": 1
+    },
+    "half2": {
+     "rows": 24961,
+     "usable": 24961,
+     "share_usable": 1.0,
+     "months_1000": 1
+    }
+   },
+   "cg_above": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 120230,
+     "share_usable": 1.0,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 85152,
+     "share_usable": 1.0,
+     "months_1000": 29
+    }
+   },
+   "cg_below": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 120230,
+     "share_usable": 1.0,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 85152,
+     "share_usable": 1.0,
+     "months_1000": 29
+    }
+   }
+  },
+  "ETHUSDT": {
+   "vol_third_cuts_rv96": [
+    0.00266912320965398,
+    0.003979773443063817
+   ],
+   "kp_prem": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 120035,
+     "share_usable": 0.9984,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 84973,
+     "share_usable": 0.9979,
+     "months_1000": 29
+    }
+   },
+   "kp_z30": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 120035,
+     "share_usable": 0.9984,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 84973,
+     "share_usable": 0.9979,
+     "months_1000": 29
+    }
+   },
+   "kp_chg24": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 119747,
+     "share_usable": 0.996,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 84794,
+     "share_usable": 0.9958,
+     "months_1000": 29
+    }
+   },
+   "dm_btc_7d": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 120230,
+     "share_usable": 1.0,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 85152,
+     "share_usable": 1.0,
+     "months_1000": 29
+    }
+   },
+   "dm_btc_30d": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 120230,
+     "share_usable": 1.0,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 85152,
+     "share_usable": 1.0,
+     "months_1000": 29
+    }
+   },
+   "dm_stable_7d": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 120230,
+     "share_usable": 1.0,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 85152,
+     "share_usable": 1.0,
+     "months_1000": 29
+    }
+   },
+   "dm_stable_30d": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 120230,
+     "share_usable": 1.0,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 85152,
+     "share_usable": 1.0,
+     "months_1000": 29
+    }
+   },
+   "sl_share_z": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 119990,
+     "share_usable": 0.998,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 85152,
+     "share_usable": 1.0,
+     "months_1000": 29
+    }
+   },
+   "sl_taker_diff": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 119990,
+     "share_usable": 0.998,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 85152,
+     "share_usable": 1.0,
+     "months_1000": 29
+    }
+   },
+   "sl_lead": {
+    "first_read": "2020-01-01 00:00:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 118760,
+     "share_usable": 0.9878,
+     "months_1000": 41
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 85152,
+     "share_usable": 1.0,
+     "months_1000": 29
+    }
+   },
+   "cg_open": {
+    "first_read": "2021-02-05 22:00:00+00:00",
+    "half1": {
+     "rows": 24050,
+     "usable": 24050,
+     "share_usable": 1.0,
+     "months_1000": 1
+    },
+    "half2": {
+     "rows": 24961,
+     "usable": 24961,
+     "share_usable": 1.0,
+     "months_1000": 1
+    }
+   },
+   "cg_above": {
+    "first_read": "2021-02-04 23:45:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 81818,
+     "share_usable": 0.6805,
+     "months_1000": 28
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 85152,
+     "share_usable": 1.0,
+     "months_1000": 29
+    }
+   },
+   "cg_below": {
+    "first_read": "2021-02-04 23:45:00+00:00",
+    "half1": {
+     "rows": 120230,
+     "usable": 81818,
+     "share_usable": 0.6805,
+     "months_1000": 28
+    },
+    "half2": {
+     "rows": 85152,
+     "usable": 85152,
+     "share_usable": 1.0,
+     "months_1000": 29
+    }
+   }
+  }
+ },
+ "truncation": {
+  "BTCUSDT": {
+   "cut": "2022-09-14 13:00:00+00:00",
+   "rows": 129578,
+   "mismatched_cells_by_column": {},
+   "ok": true
+  },
+  "ETHUSDT": {
+   "cut": "2024-03-20 07:00:00+00:00",
+   "rows": 182637,
+   "mismatched_cells_by_column": {},
+   "ok": true
+  }
+ },
+ "ic": {
+  "BTCUSDT|kp_prem|h4|half1": {
+   "raw": {
+    "ic": -0.00786,
+    "lo": -0.01826,
+    "hi": 0.00359,
+    "n": 119254,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.01504,
+    "lo": -0.0253,
+    "hi": -0.00408,
+    "n": 119254,
+    "months": 42
+   }
+  },
+  "BTCUSDT|kp_prem|h4|half2": {
+   "raw": {
+    "ic": 0.006,
+    "lo": -0.00591,
+    "hi": 0.01773,
+    "n": 84970,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.00412,
+    "lo": -0.01746,
+    "hi": 0.00916,
+    "n": 84970,
+    "months": 30
+   }
+  },
+  "BTCUSDT|kp_prem|h16|half1": {
+   "raw": {
+    "ic": -0.01909,
+    "lo": -0.03735,
+    "hi": 0.00171,
+    "n": 119160,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.03165,
+    "lo": -0.05091,
+    "hi": -0.01031,
+    "n": 119160,
+    "months": 42
+   }
+  },
+  "BTCUSDT|kp_prem|h16|half2": {
+   "raw": {
+    "ic": 0.00989,
+    "lo": -0.01094,
+    "hi": 0.03233,
+    "n": 84958,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.00693,
+    "lo": -0.03233,
+    "hi": 0.01818,
+    "n": 84958,
+    "months": 30
+   }
+  },
+  "BTCUSDT|kp_prem|h96|half1": {
+   "raw": {
+    "ic": -0.03915,
+    "lo": -0.0866,
+    "hi": 0.01384,
+    "n": 119069,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.05499,
+    "lo": -0.106,
+    "hi": 0.00117,
+    "n": 119069,
+    "months": 42
+   }
+  },
+  "BTCUSDT|kp_prem|h96|half2": {
+   "raw": {
+    "ic": 0.01186,
+    "lo": -0.0395,
+    "hi": 0.06917,
+    "n": 84878,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.01117,
+    "lo": -0.06638,
+    "hi": 0.04783,
+    "n": 84878,
+    "months": 30
+   }
+  },
+  "BTCUSDT|kp_z30|h4|half1": {
+   "raw": {
+    "ic": 0.00644,
+    "lo": -0.00369,
+    "hi": 0.01668,
+    "n": 119254,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00042,
+    "lo": -0.01014,
+    "hi": 0.01059,
+    "n": 119254,
+    "months": 42
+   }
+  },
+  "BTCUSDT|kp_z30|h4|half2": {
+   "raw": {
+    "ic": 0.01139,
+    "lo": 0.00237,
+    "hi": 0.02082,
+    "n": 84970,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00207,
+    "lo": -0.00879,
+    "hi": 0.01321,
+    "n": 84970,
+    "months": 30
+   }
+  },
+  "BTCUSDT|kp_z30|h16|half1": {
+   "raw": {
+    "ic": 0.01072,
+    "lo": -0.00693,
+    "hi": 0.0289,
+    "n": 119160,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00125,
+    "lo": -0.01804,
+    "hi": 0.01919,
+    "n": 119160,
+    "months": 42
+   }
+  },
+  "BTCUSDT|kp_z30|h16|half2": {
+   "raw": {
+    "ic": 0.02062,
+    "lo": 0.00138,
+    "hi": 0.041,
+    "n": 84958,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00583,
+    "lo": -0.01481,
+    "hi": 0.02774,
+    "n": 84958,
+    "months": 30
+   }
+  },
+  "BTCUSDT|kp_z30|h96|half1": {
+   "raw": {
+    "ic": 0.01763,
+    "lo": -0.02098,
+    "hi": 0.05851,
+    "n": 119069,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00929,
+    "lo": -0.03563,
+    "hi": 0.05148,
+    "n": 119069,
+    "months": 42
+   }
+  },
+  "BTCUSDT|kp_z30|h96|half2": {
+   "raw": {
+    "ic": 0.04812,
+    "lo": 0.0001,
+    "hi": 0.09923,
+    "n": 84878,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.03531,
+    "lo": -0.01785,
+    "hi": 0.08855,
+    "n": 84878,
+    "months": 30
+   }
+  },
+  "BTCUSDT|kp_chg24|h4|half1": {
+   "raw": {
+    "ic": 0.021,
+    "lo": 0.01083,
+    "hi": 0.03064,
+    "n": 119062,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00364,
+    "lo": -0.00696,
+    "hi": 0.01352,
+    "n": 119062,
+    "months": 42
+   }
+  },
+  "BTCUSDT|kp_chg24|h4|half2": {
+   "raw": {
+    "ic": 0.02518,
+    "lo": 0.01626,
+    "hi": 0.03456,
+    "n": 84792,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00197,
+    "lo": -0.00867,
+    "hi": 0.01387,
+    "n": 84792,
+    "months": 30
+   }
+  },
+  "BTCUSDT|kp_chg24|h16|half1": {
+   "raw": {
+    "ic": 0.02326,
+    "lo": 0.00534,
+    "hi": 0.0407,
+    "n": 118968,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.00092,
+    "lo": -0.01934,
+    "hi": 0.01657,
+    "n": 118968,
+    "months": 42
+   }
+  },
+  "BTCUSDT|kp_chg24|h16|half2": {
+   "raw": {
+    "ic": 0.0346,
+    "lo": 0.01383,
+    "hi": 0.0569,
+    "n": 84780,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00225,
+    "lo": -0.02096,
+    "hi": 0.02765,
+    "n": 84780,
+    "months": 30
+   }
+  },
+  "BTCUSDT|kp_chg24|h96|half1": {
+   "raw": {
+    "ic": 0.02122,
+    "lo": -0.02,
+    "hi": 0.06216,
+    "n": 118877,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.00475,
+    "lo": -0.0448,
+    "hi": 0.03286,
+    "n": 118877,
+    "months": 42
+   }
+  },
+  "BTCUSDT|kp_chg24|h96|half2": {
+   "raw": {
+    "ic": 0.0335,
+    "lo": -0.00716,
+    "hi": 0.07617,
+    "n": 84700,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.0136,
+    "lo": -0.03012,
+    "hi": 0.05853,
+    "n": 84700,
+    "months": 30
+   }
+  },
+  "BTCUSDT|dm_btc_7d|h4|half1": {
+   "raw": {
+    "ic": 0.00496,
+    "lo": -0.00666,
+    "hi": 0.01637,
+    "n": 119431,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00148,
+    "lo": -0.01093,
+    "hi": 0.01347,
+    "n": 119431,
+    "months": 42
+   }
+  },
+  "BTCUSDT|dm_btc_7d|h4|half2": {
+   "raw": {
+    "ic": 0.00536,
+    "lo": -0.00575,
+    "hi": 0.01445,
+    "n": 85148,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00273,
+    "lo": -0.01021,
+    "hi": 0.01421,
+    "n": 85148,
+    "months": 30
+   }
+  },
+  "BTCUSDT|dm_btc_7d|h16|half1": {
+   "raw": {
+    "ic": 0.01193,
+    "lo": -0.01065,
+    "hi": 0.03422,
+    "n": 119337,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00919,
+    "lo": -0.01497,
+    "hi": 0.03268,
+    "n": 119337,
+    "months": 42
+   }
+  },
+  "BTCUSDT|dm_btc_7d|h16|half2": {
+   "raw": {
+    "ic": 0.0112,
+    "lo": -0.01014,
+    "hi": 0.02908,
+    "n": 85136,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00905,
+    "lo": -0.0151,
+    "hi": 0.03072,
+    "n": 85136,
+    "months": 30
+   }
+  },
+  "BTCUSDT|dm_btc_7d|h96|half1": {
+   "raw": {
+    "ic": 0.01356,
+    "lo": -0.04319,
+    "hi": 0.06645,
+    "n": 119246,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.01013,
+    "lo": -0.04328,
+    "hi": 0.06172,
+    "n": 119246,
+    "months": 42
+   }
+  },
+  "BTCUSDT|dm_btc_7d|h96|half2": {
+   "raw": {
+    "ic": 0.01261,
+    "lo": -0.03735,
+    "hi": 0.0572,
+    "n": 85056,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00912,
+    "lo": -0.04401,
+    "hi": 0.06178,
+    "n": 85056,
+    "months": 30
+   }
+  },
+  "BTCUSDT|dm_btc_30d|h4|half1": {
+   "raw": {
+    "ic": 0.00879,
+    "lo": -0.0024,
+    "hi": 0.01859,
+    "n": 119431,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00614,
+    "lo": -0.00507,
+    "hi": 0.01694,
+    "n": 119431,
+    "months": 42
+   }
+  },
+  "BTCUSDT|dm_btc_30d|h4|half2": {
+   "raw": {
+    "ic": 0.00517,
+    "lo": -0.00463,
+    "hi": 0.01357,
+    "n": 85148,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00219,
+    "lo": -0.00924,
+    "hi": 0.01188,
+    "n": 85148,
+    "months": 30
+   }
+  },
+  "BTCUSDT|dm_btc_30d|h16|half1": {
+   "raw": {
+    "ic": 0.01466,
+    "lo": -0.00755,
+    "hi": 0.03331,
+    "n": 119337,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.01262,
+    "lo": -0.01049,
+    "hi": 0.03363,
+    "n": 119337,
+    "months": 42
+   }
+  },
+  "BTCUSDT|dm_btc_30d|h16|half2": {
+   "raw": {
+    "ic": 0.01169,
+    "lo": -0.00684,
+    "hi": 0.02806,
+    "n": 85136,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00893,
+    "lo": -0.01343,
+    "hi": 0.02957,
+    "n": 85136,
+    "months": 30
+   }
+  },
+  "BTCUSDT|dm_btc_30d|h96|half1": {
+   "raw": {
+    "ic": 0.03626,
+    "lo": -0.01998,
+    "hi": 0.0858,
+    "n": 119246,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.03415,
+    "lo": -0.02112,
+    "hi": 0.08759,
+    "n": 119246,
+    "months": 42
+   }
+  },
+  "BTCUSDT|dm_btc_30d|h96|half2": {
+   "raw": {
+    "ic": 0.02262,
+    "lo": -0.02777,
+    "hi": 0.06605,
+    "n": 85056,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.01772,
+    "lo": -0.04218,
+    "hi": 0.07161,
+    "n": 85056,
+    "months": 30
+   }
+  },
+  "BTCUSDT|dm_stable_7d|h4|half1": {
+   "raw": {
+    "ic": -0.00549,
+    "lo": -0.01467,
+    "hi": 0.00415,
+    "n": 119431,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00957,
+    "lo": -0.00078,
+    "hi": 0.0196,
+    "n": 119431,
+    "months": 42
+   }
+  },
+  "BTCUSDT|dm_stable_7d|h4|half2": {
+   "raw": {
+    "ic": -0.00496,
+    "lo": -0.01389,
+    "hi": 0.00526,
+    "n": 85148,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00057,
+    "lo": -0.00965,
+    "hi": 0.01079,
+    "n": 85148,
+    "months": 30
+   }
+  },
+  "BTCUSDT|dm_stable_7d|h16|half1": {
+   "raw": {
+    "ic": 0.00389,
+    "lo": -0.01443,
+    "hi": 0.02266,
+    "n": 119337,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.02263,
+    "lo": 0.00353,
+    "hi": 0.04187,
+    "n": 119337,
+    "months": 42
+   }
+  },
+  "BTCUSDT|dm_stable_7d|h16|half2": {
+   "raw": {
+    "ic": 0.00231,
+    "lo": -0.01763,
+    "hi": 0.02434,
+    "n": 85136,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00454,
+    "lo": -0.01589,
+    "hi": 0.02521,
+    "n": 85136,
+    "months": 30
+   }
+  },
+  "BTCUSDT|dm_stable_7d|h96|half1": {
+   "raw": {
+    "ic": 0.02897,
+    "lo": -0.01907,
+    "hi": 0.08514,
+    "n": 119246,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.06449,
+    "lo": 0.01921,
+    "hi": 0.10983,
+    "n": 119246,
+    "months": 42
+   }
+  },
+  "BTCUSDT|dm_stable_7d|h96|half2": {
+   "raw": {
+    "ic": 0.02945,
+    "lo": -0.01558,
+    "hi": 0.08501,
+    "n": 85056,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.03451,
+    "lo": 0.00239,
+    "hi": 0.06904,
+    "n": 85056,
+    "months": 30
+   }
+  },
+  "BTCUSDT|dm_stable_30d|h4|half1": {
+   "raw": {
+    "ic": -0.00624,
+    "lo": -0.01516,
+    "hi": 0.00311,
+    "n": 119431,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.0025,
+    "lo": -0.01176,
+    "hi": 0.00697,
+    "n": 119431,
+    "months": 42
+   }
+  },
+  "BTCUSDT|dm_stable_30d|h4|half2": {
+   "raw": {
+    "ic": -0.00736,
+    "lo": -0.01745,
+    "hi": 0.00405,
+    "n": 85148,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.00619,
+    "lo": -0.01594,
+    "hi": 0.00376,
+    "n": 85148,
+    "months": 30
+   }
+  },
+  "BTCUSDT|dm_stable_30d|h16|half1": {
+   "raw": {
+    "ic": -0.00722,
+    "lo": -0.02344,
+    "hi": 0.00944,
+    "n": 119337,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.00473,
+    "lo": -0.02265,
+    "hi": 0.01304,
+    "n": 119337,
+    "months": 42
+   }
+  },
+  "BTCUSDT|dm_stable_30d|h16|half2": {
+   "raw": {
+    "ic": -0.00603,
+    "lo": -0.02523,
+    "hi": 0.01476,
+    "n": 85136,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.00781,
+    "lo": -0.02684,
+    "hi": 0.01064,
+    "n": 85136,
+    "months": 30
+   }
+  },
+  "BTCUSDT|dm_stable_30d|h96|half1": {
+   "raw": {
+    "ic": -0.01049,
+    "lo": -0.04799,
+    "hi": 0.02973,
+    "n": 119246,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.00834,
+    "lo": -0.04737,
+    "hi": 0.03208,
+    "n": 119246,
+    "months": 42
+   }
+  },
+  "BTCUSDT|dm_stable_30d|h96|half2": {
+   "raw": {
+    "ic": -0.00656,
+    "lo": -0.05328,
+    "hi": 0.0503,
+    "n": 85056,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.01469,
+    "lo": -0.06413,
+    "hi": 0.04056,
+    "n": 85056,
+    "months": 30
+   }
+  },
+  "BTCUSDT|sl_share_z|h4|half1": {
+   "raw": {
+    "ic": -0.00387,
+    "lo": -0.01459,
+    "hi": 0.00666,
+    "n": 119375,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.0012,
+    "lo": -0.0129,
+    "hi": 0.01042,
+    "n": 119375,
+    "months": 42
+   }
+  },
+  "BTCUSDT|sl_share_z|h4|half2": {
+   "raw": {
+    "ic": -0.00436,
+    "lo": -0.01549,
+    "hi": 0.00645,
+    "n": 85148,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.00361,
+    "lo": -0.01532,
+    "hi": 0.00799,
+    "n": 85148,
+    "months": 30
+   }
+  },
+  "BTCUSDT|sl_share_z|h16|half1": {
+   "raw": {
+    "ic": 0.00079,
+    "lo": -0.01743,
+    "hi": 0.02012,
+    "n": 119281,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00557,
+    "lo": -0.0149,
+    "hi": 0.02673,
+    "n": 119281,
+    "months": 42
+   }
+  },
+  "BTCUSDT|sl_share_z|h16|half2": {
+   "raw": {
+    "ic": -0.01272,
+    "lo": -0.03534,
+    "hi": 0.008,
+    "n": 85136,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.01056,
+    "lo": -0.03341,
+    "hi": 0.01063,
+    "n": 85136,
+    "months": 30
+   }
+  },
+  "BTCUSDT|sl_share_z|h96|half1": {
+   "raw": {
+    "ic": -0.00539,
+    "lo": -0.042,
+    "hi": 0.0307,
+    "n": 119190,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.00021,
+    "lo": -0.03823,
+    "hi": 0.03797,
+    "n": 119190,
+    "months": 42
+   }
+  },
+  "BTCUSDT|sl_share_z|h96|half2": {
+   "raw": {
+    "ic": -0.01138,
+    "lo": -0.05224,
+    "hi": 0.03026,
+    "n": 85056,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.00944,
+    "lo": -0.05026,
+    "hi": 0.03436,
+    "n": 85056,
+    "months": 30
+   }
+  },
+  "BTCUSDT|sl_taker_diff|h4|half1": {
+   "raw": {
+    "ic": -0.00503,
+    "lo": -0.0127,
+    "hi": 0.00408,
+    "n": 119375,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.01224,
+    "lo": -0.02018,
+    "hi": -0.00323,
+    "n": 119375,
+    "months": 42
+   }
+  },
+  "BTCUSDT|sl_taker_diff|h4|half2": {
+   "raw": {
+    "ic": -0.0181,
+    "lo": -0.03013,
+    "hi": -0.00678,
+    "n": 85148,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.01574,
+    "lo": -0.0284,
+    "hi": -0.00336,
+    "n": 85148,
+    "months": 30
+   }
+  },
+  "BTCUSDT|sl_taker_diff|h16|half1": {
+   "raw": {
+    "ic": -0.01965,
+    "lo": -0.03471,
+    "hi": -0.00323,
+    "n": 119281,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.02528,
+    "lo": -0.0404,
+    "hi": -0.0086,
+    "n": 119281,
+    "months": 42
+   }
+  },
+  "BTCUSDT|sl_taker_diff|h16|half2": {
+   "raw": {
+    "ic": -0.02075,
+    "lo": -0.04014,
+    "hi": -0.00321,
+    "n": 85136,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.01726,
+    "lo": -0.03735,
+    "hi": 0.00127,
+    "n": 85136,
+    "months": 30
+   }
+  },
+  "BTCUSDT|sl_taker_diff|h96|half1": {
+   "raw": {
+    "ic": -0.02745,
+    "lo": -0.04986,
+    "hi": -0.0047,
+    "n": 119190,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.02809,
+    "lo": -0.05033,
+    "hi": -0.00564,
+    "n": 119190,
+    "months": 42
+   }
+  },
+  "BTCUSDT|sl_taker_diff|h96|half2": {
+   "raw": {
+    "ic": 0.00105,
+    "lo": -0.02756,
+    "hi": 0.02786,
+    "n": 85056,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.00046,
+    "lo": -0.02826,
+    "hi": 0.02498,
+    "n": 85056,
+    "months": 30
+   }
+  },
+  "BTCUSDT|sl_lead|h4|half1": {
+   "raw": {
+    "ic": 0.00495,
+    "lo": -0.00644,
+    "hi": 0.01664,
+    "n": 118543,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00291,
+    "lo": -0.00926,
+    "hi": 0.01527,
+    "n": 118543,
+    "months": 42
+   }
+  },
+  "BTCUSDT|sl_lead|h4|half2": {
+   "raw": {
+    "ic": 0.00532,
+    "lo": -0.00455,
+    "hi": 0.01454,
+    "n": 85148,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00104,
+    "lo": -0.00953,
+    "hi": 0.01123,
+    "n": 85148,
+    "months": 30
+   }
+  },
+  "BTCUSDT|sl_lead|h16|half1": {
+   "raw": {
+    "ic": 0.01279,
+    "lo": -0.00602,
+    "hi": 0.03186,
+    "n": 118449,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00988,
+    "lo": -0.01042,
+    "hi": 0.03023,
+    "n": 118449,
+    "months": 42
+   }
+  },
+  "BTCUSDT|sl_lead|h16|half2": {
+   "raw": {
+    "ic": 0.00712,
+    "lo": -0.01085,
+    "hi": 0.02349,
+    "n": 85136,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00021,
+    "lo": -0.01867,
+    "hi": 0.01741,
+    "n": 85136,
+    "months": 30
+   }
+  },
+  "BTCUSDT|sl_lead|h96|half1": {
+   "raw": {
+    "ic": 0.04217,
+    "lo": 0.0078,
+    "hi": 0.07768,
+    "n": 118358,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.03812,
+    "lo": 0.00166,
+    "hi": 0.07363,
+    "n": 118358,
+    "months": 42
+   }
+  },
+  "BTCUSDT|sl_lead|h96|half2": {
+   "raw": {
+    "ic": 0.00993,
+    "lo": -0.04207,
+    "hi": 0.06106,
+    "n": 85056,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.00055,
+    "lo": -0.04942,
+    "hi": 0.05042,
+    "n": 85056,
+    "months": 30
+   }
+  },
+  "BTCUSDT|cg_open|h4|half1": {
+   "raw": {
+    "ic": -0.06704,
+    "lo": -0.08872,
+    "hi": -0.04691,
+    "n": 34998,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.02094,
+    "lo": -0.04237,
+    "hi": -0.00029,
+    "n": 34998,
+    "months": 42
+   }
+  },
+  "BTCUSDT|cg_open|h4|half2": {
+   "raw": {
+    "ic": -0.0646,
+    "lo": -0.08481,
+    "hi": -0.04638,
+    "n": 24961,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.00271,
+    "lo": -0.02296,
+    "hi": 0.01565,
+    "n": 24961,
+    "months": 30
+   }
+  },
+  "BTCUSDT|cg_open|h16|half1": {
+   "raw": {
+    "ic": -0.10086,
+    "lo": -0.14222,
+    "hi": -0.06281,
+    "n": 34968,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.03382,
+    "lo": -0.07968,
+    "hi": 0.00986,
+    "n": 34968,
+    "months": 42
+   }
+  },
+  "BTCUSDT|cg_open|h16|half2": {
+   "raw": {
+    "ic": -0.05507,
+    "lo": -0.09541,
+    "hi": -0.01882,
+    "n": 24961,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00526,
+    "lo": -0.02962,
+    "hi": 0.03949,
+    "n": 24961,
+    "months": 30
+   }
+  },
+  "BTCUSDT|cg_open|h96|half1": {
+   "raw": {
+    "ic": -0.06877,
+    "lo": -0.1528,
+    "hi": 0.00798,
+    "n": 34962,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.02661,
+    "lo": -0.11081,
+    "hi": 0.05405,
+    "n": 34962,
+    "months": 42
+   }
+  },
+  "BTCUSDT|cg_open|h96|half2": {
+   "raw": {
+    "ic": 0.08028,
+    "lo": -0.00659,
+    "hi": 0.1641,
+    "n": 24961,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.06983,
+    "lo": -0.0081,
+    "hi": 0.14893,
+    "n": 24961,
+    "months": 30
+   }
+  },
+  "BTCUSDT|cg_above|h4|half1": {
+   "raw": {
+    "ic": -0.0054,
+    "lo": -0.01561,
+    "hi": 0.00523,
+    "n": 119431,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.0028,
+    "lo": -0.01321,
+    "hi": 0.00815,
+    "n": 119431,
+    "months": 42
+   }
+  },
+  "BTCUSDT|cg_above|h4|half2": {
+   "raw": {
+    "ic": 0.00996,
+    "lo": -0.00126,
+    "hi": 0.02104,
+    "n": 85148,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.01036,
+    "lo": -0.0021,
+    "hi": 0.02238,
+    "n": 85148,
+    "months": 30
+   }
+  },
+  "BTCUSDT|cg_above|h16|half1": {
+   "raw": {
+    "ic": -0.00886,
+    "lo": -0.02922,
+    "hi": 0.01186,
+    "n": 119337,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.00678,
+    "lo": -0.02673,
+    "hi": 0.01407,
+    "n": 119337,
+    "months": 42
+   }
+  },
+  "BTCUSDT|cg_above|h16|half2": {
+   "raw": {
+    "ic": 0.031,
+    "lo": 0.0061,
+    "hi": 0.05536,
+    "n": 85136,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.03005,
+    "lo": 0.00491,
+    "hi": 0.05436,
+    "n": 85136,
+    "months": 30
+   }
+  },
+  "BTCUSDT|cg_above|h96|half1": {
+   "raw": {
+    "ic": -0.00248,
+    "lo": -0.04941,
+    "hi": 0.04522,
+    "n": 119246,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.00103,
+    "lo": -0.04507,
+    "hi": 0.04428,
+    "n": 119246,
+    "months": 42
+   }
+  },
+  "BTCUSDT|cg_above|h96|half2": {
+   "raw": {
+    "ic": 0.07455,
+    "lo": 0.02153,
+    "hi": 0.1279,
+    "n": 85056,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.07153,
+    "lo": 0.01733,
+    "hi": 0.12414,
+    "n": 85056,
+    "months": 30
+   }
+  },
+  "BTCUSDT|cg_below|h4|half1": {
+   "raw": {
+    "ic": -0.01284,
+    "lo": -0.02395,
+    "hi": -0.00192,
+    "n": 119431,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.00812,
+    "lo": -0.01884,
+    "hi": 0.00235,
+    "n": 119431,
+    "months": 42
+   }
+  },
+  "BTCUSDT|cg_below|h4|half2": {
+   "raw": {
+    "ic": -0.0029,
+    "lo": -0.01499,
+    "hi": 0.00953,
+    "n": 85148,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00099,
+    "lo": -0.01128,
+    "hi": 0.01331,
+    "n": 85148,
+    "months": 30
+   }
+  },
+  "BTCUSDT|cg_below|h16|half1": {
+   "raw": {
+    "ic": -0.01501,
+    "lo": -0.03529,
+    "hi": 0.00561,
+    "n": 119337,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.00898,
+    "lo": -0.02843,
+    "hi": 0.01122,
+    "n": 119337,
+    "months": 42
+   }
+  },
+  "BTCUSDT|cg_below|h16|half2": {
+   "raw": {
+    "ic": 0.00047,
+    "lo": -0.02342,
+    "hi": 0.02495,
+    "n": 85136,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00496,
+    "lo": -0.01851,
+    "hi": 0.02887,
+    "n": 85136,
+    "months": 30
+   }
+  },
+  "BTCUSDT|cg_below|h96|half1": {
+   "raw": {
+    "ic": -0.00583,
+    "lo": -0.05918,
+    "hi": 0.0459,
+    "n": 119246,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00055,
+    "lo": -0.05252,
+    "hi": 0.05183,
+    "n": 119246,
+    "months": 42
+   }
+  },
+  "BTCUSDT|cg_below|h96|half2": {
+   "raw": {
+    "ic": 0.01901,
+    "lo": -0.04094,
+    "hi": 0.07708,
+    "n": 85056,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.02409,
+    "lo": -0.0332,
+    "hi": 0.08216,
+    "n": 85056,
+    "months": 30
+   }
+  },
+  "ETHUSDT|kp_prem|h4|half1": {
+   "raw": {
+    "ic": -0.00166,
+    "lo": -0.01424,
+    "hi": 0.01206,
+    "n": 119251,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.00603,
+    "lo": -0.01878,
+    "hi": 0.00633,
+    "n": 119251,
+    "months": 42
+   }
+  },
+  "ETHUSDT|kp_prem|h4|half2": {
+   "raw": {
+    "ic": -0.00126,
+    "lo": -0.01317,
+    "hi": 0.01201,
+    "n": 84969,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.00779,
+    "lo": -0.02109,
+    "hi": 0.00641,
+    "n": 84969,
+    "months": 30
+   }
+  },
+  "ETHUSDT|kp_prem|h16|half1": {
+   "raw": {
+    "ic": -0.00979,
+    "lo": -0.03234,
+    "hi": 0.0159,
+    "n": 119157,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.01974,
+    "lo": -0.04265,
+    "hi": 0.0029,
+    "n": 119157,
+    "months": 42
+   }
+  },
+  "ETHUSDT|kp_prem|h16|half2": {
+   "raw": {
+    "ic": -0.00196,
+    "lo": -0.02346,
+    "hi": 0.02206,
+    "n": 84957,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.01091,
+    "lo": -0.03485,
+    "hi": 0.01515,
+    "n": 84957,
+    "months": 30
+   }
+  },
+  "ETHUSDT|kp_prem|h96|half1": {
+   "raw": {
+    "ic": -0.0244,
+    "lo": -0.07464,
+    "hi": 0.03371,
+    "n": 119066,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.03512,
+    "lo": -0.09,
+    "hi": 0.01916,
+    "n": 119066,
+    "months": 42
+   }
+  },
+  "ETHUSDT|kp_prem|h96|half2": {
+   "raw": {
+    "ic": -0.01296,
+    "lo": -0.06666,
+    "hi": 0.04704,
+    "n": 84877,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.02376,
+    "lo": -0.08568,
+    "hi": 0.04731,
+    "n": 84877,
+    "months": 30
+   }
+  },
+  "ETHUSDT|kp_z30|h4|half1": {
+   "raw": {
+    "ic": 0.00685,
+    "lo": -0.00451,
+    "hi": 0.01853,
+    "n": 119251,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00175,
+    "lo": -0.00949,
+    "hi": 0.01299,
+    "n": 119251,
+    "months": 42
+   }
+  },
+  "ETHUSDT|kp_z30|h4|half2": {
+   "raw": {
+    "ic": 0.00562,
+    "lo": -0.00336,
+    "hi": 0.0149,
+    "n": 84969,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.00527,
+    "lo": -0.01605,
+    "hi": 0.00563,
+    "n": 84969,
+    "months": 30
+   }
+  },
+  "ETHUSDT|kp_z30|h16|half1": {
+   "raw": {
+    "ic": 0.00803,
+    "lo": -0.01347,
+    "hi": 0.03011,
+    "n": 119157,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.0009,
+    "lo": -0.02266,
+    "hi": 0.01963,
+    "n": 119157,
+    "months": 42
+   }
+  },
+  "ETHUSDT|kp_z30|h16|half2": {
+   "raw": {
+    "ic": 0.0091,
+    "lo": -0.00834,
+    "hi": 0.02759,
+    "n": 84957,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.00506,
+    "lo": -0.02492,
+    "hi": 0.01529,
+    "n": 84957,
+    "months": 30
+   }
+  },
+  "ETHUSDT|kp_z30|h96|half1": {
+   "raw": {
+    "ic": 0.00685,
+    "lo": -0.03565,
+    "hi": 0.05372,
+    "n": 119066,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00084,
+    "lo": -0.04646,
+    "hi": 0.04737,
+    "n": 119066,
+    "months": 42
+   }
+  },
+  "ETHUSDT|kp_z30|h96|half2": {
+   "raw": {
+    "ic": 0.01484,
+    "lo": -0.03069,
+    "hi": 0.06138,
+    "n": 84877,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.0039,
+    "lo": -0.0444,
+    "hi": 0.05163,
+    "n": 84877,
+    "months": 30
+   }
+  },
+  "ETHUSDT|kp_chg24|h4|half1": {
+   "raw": {
+    "ic": 0.01954,
+    "lo": 0.00985,
+    "hi": 0.02837,
+    "n": 119056,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00603,
+    "lo": -0.00399,
+    "hi": 0.01511,
+    "n": 119056,
+    "months": 42
+   }
+  },
+  "ETHUSDT|kp_chg24|h4|half2": {
+   "raw": {
+    "ic": 0.0228,
+    "lo": 0.01352,
+    "hi": 0.03206,
+    "n": 84790,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.00351,
+    "lo": -0.0139,
+    "hi": 0.00708,
+    "n": 84790,
+    "months": 30
+   }
+  },
+  "ETHUSDT|kp_chg24|h16|half1": {
+   "raw": {
+    "ic": 0.02163,
+    "lo": 0.00411,
+    "hi": 0.03871,
+    "n": 118962,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00198,
+    "lo": -0.01597,
+    "hi": 0.01803,
+    "n": 118962,
+    "months": 42
+   }
+  },
+  "ETHUSDT|kp_chg24|h16|half2": {
+   "raw": {
+    "ic": 0.0323,
+    "lo": 0.01243,
+    "hi": 0.05226,
+    "n": 84778,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.00155,
+    "lo": -0.02153,
+    "hi": 0.02008,
+    "n": 84778,
+    "months": 30
+   }
+  },
+  "ETHUSDT|kp_chg24|h96|half1": {
+   "raw": {
+    "ic": 0.01302,
+    "lo": -0.0249,
+    "hi": 0.04864,
+    "n": 118871,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.00395,
+    "lo": -0.04216,
+    "hi": 0.02984,
+    "n": 118871,
+    "months": 42
+   }
+  },
+  "ETHUSDT|kp_chg24|h96|half2": {
+   "raw": {
+    "ic": -0.00199,
+    "lo": -0.0451,
+    "hi": 0.03811,
+    "n": 84698,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.0199,
+    "lo": -0.05889,
+    "hi": 0.01998,
+    "n": 84698,
+    "months": 30
+   }
+  },
+  "ETHUSDT|dm_btc_7d|h4|half1": {
+   "raw": {
+    "ic": -0.00681,
+    "lo": -0.01632,
+    "hi": 0.0031,
+    "n": 119431,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.00347,
+    "lo": -0.01454,
+    "hi": 0.00705,
+    "n": 119431,
+    "months": 42
+   }
+  },
+  "ETHUSDT|dm_btc_7d|h4|half2": {
+   "raw": {
+    "ic": 0.0003,
+    "lo": -0.00924,
+    "hi": 0.00863,
+    "n": 85148,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.0047,
+    "lo": -0.00605,
+    "hi": 0.01331,
+    "n": 85148,
+    "months": 30
+   }
+  },
+  "ETHUSDT|dm_btc_7d|h16|half1": {
+   "raw": {
+    "ic": -0.01069,
+    "lo": -0.02998,
+    "hi": 0.00793,
+    "n": 119337,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.00599,
+    "lo": -0.0269,
+    "hi": 0.01309,
+    "n": 119337,
+    "months": 42
+   }
+  },
+  "ETHUSDT|dm_btc_7d|h16|half2": {
+   "raw": {
+    "ic": 0.0015,
+    "lo": -0.01862,
+    "hi": 0.02004,
+    "n": 85136,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00631,
+    "lo": -0.01531,
+    "hi": 0.02543,
+    "n": 85136,
+    "months": 30
+   }
+  },
+  "ETHUSDT|dm_btc_7d|h96|half1": {
+   "raw": {
+    "ic": -0.0326,
+    "lo": -0.08324,
+    "hi": 0.01549,
+    "n": 119246,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.02581,
+    "lo": -0.07818,
+    "hi": 0.02347,
+    "n": 119246,
+    "months": 42
+   }
+  },
+  "ETHUSDT|dm_btc_7d|h96|half2": {
+   "raw": {
+    "ic": 0.02211,
+    "lo": -0.02991,
+    "hi": 0.07276,
+    "n": 85056,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.02056,
+    "lo": -0.02991,
+    "hi": 0.06863,
+    "n": 85056,
+    "months": 30
+   }
+  },
+  "ETHUSDT|dm_btc_30d|h4|half1": {
+   "raw": {
+    "ic": 0.00256,
+    "lo": -0.00976,
+    "hi": 0.01484,
+    "n": 119431,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00511,
+    "lo": -0.00688,
+    "hi": 0.01686,
+    "n": 119431,
+    "months": 42
+   }
+  },
+  "ETHUSDT|dm_btc_30d|h4|half2": {
+   "raw": {
+    "ic": 0.00656,
+    "lo": -0.00317,
+    "hi": 0.01598,
+    "n": 85148,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00699,
+    "lo": -0.00177,
+    "hi": 0.01592,
+    "n": 85148,
+    "months": 30
+   }
+  },
+  "ETHUSDT|dm_btc_30d|h16|half1": {
+   "raw": {
+    "ic": 0.00312,
+    "lo": -0.01898,
+    "hi": 0.02485,
+    "n": 119337,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00788,
+    "lo": -0.01457,
+    "hi": 0.02883,
+    "n": 119337,
+    "months": 42
+   }
+  },
+  "ETHUSDT|dm_btc_30d|h16|half2": {
+   "raw": {
+    "ic": 0.01507,
+    "lo": -0.00205,
+    "hi": 0.03213,
+    "n": 85136,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.01564,
+    "lo": -0.00138,
+    "hi": 0.03348,
+    "n": 85136,
+    "months": 30
+   }
+  },
+  "ETHUSDT|dm_btc_30d|h96|half1": {
+   "raw": {
+    "ic": 0.00544,
+    "lo": -0.04346,
+    "hi": 0.05283,
+    "n": 119246,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.01238,
+    "lo": -0.03781,
+    "hi": 0.06146,
+    "n": 119246,
+    "months": 42
+   }
+  },
+  "ETHUSDT|dm_btc_30d|h96|half2": {
+   "raw": {
+    "ic": 0.03494,
+    "lo": -0.00755,
+    "hi": 0.0793,
+    "n": 85056,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.0359,
+    "lo": -0.00915,
+    "hi": 0.08222,
+    "n": 85056,
+    "months": 30
+   }
+  },
+  "ETHUSDT|dm_stable_7d|h4|half1": {
+   "raw": {
+    "ic": -0.00672,
+    "lo": -0.01605,
+    "hi": 0.00326,
+    "n": 119431,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.0045,
+    "lo": -0.00526,
+    "hi": 0.01551,
+    "n": 119431,
+    "months": 42
+   }
+  },
+  "ETHUSDT|dm_stable_7d|h4|half2": {
+   "raw": {
+    "ic": -0.00977,
+    "lo": -0.0182,
+    "hi": 0.00047,
+    "n": 85148,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.00135,
+    "lo": -0.01206,
+    "hi": 0.01061,
+    "n": 85148,
+    "months": 30
+   }
+  },
+  "ETHUSDT|dm_stable_7d|h16|half1": {
+   "raw": {
+    "ic": 0.00227,
+    "lo": -0.01657,
+    "hi": 0.02264,
+    "n": 119337,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.0162,
+    "lo": -0.00244,
+    "hi": 0.03724,
+    "n": 119337,
+    "months": 42
+   }
+  },
+  "ETHUSDT|dm_stable_7d|h16|half2": {
+   "raw": {
+    "ic": -0.00544,
+    "lo": -0.02202,
+    "hi": 0.01411,
+    "n": 85136,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00556,
+    "lo": -0.01654,
+    "hi": 0.02962,
+    "n": 85136,
+    "months": 30
+   }
+  },
+  "ETHUSDT|dm_stable_7d|h96|half1": {
+   "raw": {
+    "ic": 0.03002,
+    "lo": -0.02036,
+    "hi": 0.08599,
+    "n": 119246,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.0604,
+    "lo": 0.00898,
+    "hi": 0.11271,
+    "n": 119246,
+    "months": 42
+   }
+  },
+  "ETHUSDT|dm_stable_7d|h96|half2": {
+   "raw": {
+    "ic": 0.011,
+    "lo": -0.03477,
+    "hi": 0.06405,
+    "n": 85056,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00143,
+    "lo": -0.03876,
+    "hi": 0.04856,
+    "n": 85056,
+    "months": 30
+   }
+  },
+  "ETHUSDT|dm_stable_30d|h4|half1": {
+   "raw": {
+    "ic": -0.0087,
+    "lo": -0.0173,
+    "hi": 0.00075,
+    "n": 119431,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.00633,
+    "lo": -0.01473,
+    "hi": 0.00281,
+    "n": 119431,
+    "months": 42
+   }
+  },
+  "ETHUSDT|dm_stable_30d|h4|half2": {
+   "raw": {
+    "ic": -0.01591,
+    "lo": -0.02463,
+    "hi": -0.00508,
+    "n": 85148,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.01262,
+    "lo": -0.02118,
+    "hi": -0.00296,
+    "n": 85148,
+    "months": 30
+   }
+  },
+  "ETHUSDT|dm_stable_30d|h16|half1": {
+   "raw": {
+    "ic": -0.01076,
+    "lo": -0.02725,
+    "hi": 0.00677,
+    "n": 119337,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.01116,
+    "lo": -0.0282,
+    "hi": 0.0069,
+    "n": 119337,
+    "months": 42
+   }
+  },
+  "ETHUSDT|dm_stable_30d|h16|half2": {
+   "raw": {
+    "ic": -0.02137,
+    "lo": -0.0365,
+    "hi": -0.00202,
+    "n": 85136,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.01874,
+    "lo": -0.03499,
+    "hi": -0.00065,
+    "n": 85136,
+    "months": 30
+   }
+  },
+  "ETHUSDT|dm_stable_30d|h96|half1": {
+   "raw": {
+    "ic": -0.02495,
+    "lo": -0.06745,
+    "hi": 0.02062,
+    "n": 119246,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.02718,
+    "lo": -0.06789,
+    "hi": 0.01894,
+    "n": 119246,
+    "months": 42
+   }
+  },
+  "ETHUSDT|dm_stable_30d|h96|half2": {
+   "raw": {
+    "ic": -0.03695,
+    "lo": -0.07573,
+    "hi": 0.01064,
+    "n": 85056,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.04918,
+    "lo": -0.09153,
+    "hi": -0.00084,
+    "n": 85056,
+    "months": 30
+   }
+  },
+  "ETHUSDT|sl_share_z|h4|half1": {
+   "raw": {
+    "ic": 0.00056,
+    "lo": -0.0118,
+    "hi": 0.01266,
+    "n": 119375,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00324,
+    "lo": -0.00926,
+    "hi": 0.01565,
+    "n": 119375,
+    "months": 42
+   }
+  },
+  "ETHUSDT|sl_share_z|h4|half2": {
+   "raw": {
+    "ic": 0.00448,
+    "lo": -0.00553,
+    "hi": 0.01415,
+    "n": 85148,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00455,
+    "lo": -0.00589,
+    "hi": 0.01489,
+    "n": 85148,
+    "months": 30
+   }
+  },
+  "ETHUSDT|sl_share_z|h16|half1": {
+   "raw": {
+    "ic": 0.00584,
+    "lo": -0.01819,
+    "hi": 0.02887,
+    "n": 119281,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.01014,
+    "lo": -0.01426,
+    "hi": 0.03311,
+    "n": 119281,
+    "months": 42
+   }
+  },
+  "ETHUSDT|sl_share_z|h16|half2": {
+   "raw": {
+    "ic": 0.01022,
+    "lo": -0.01064,
+    "hi": 0.03186,
+    "n": 85136,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.01074,
+    "lo": -0.01154,
+    "hi": 0.0342,
+    "n": 85136,
+    "months": 30
+   }
+  },
+  "ETHUSDT|sl_share_z|h96|half1": {
+   "raw": {
+    "ic": -0.00216,
+    "lo": -0.04434,
+    "hi": 0.03532,
+    "n": 119190,
+    "months": 42
+   },
+   "partial": {
+    "ic": 0.00145,
+    "lo": -0.03994,
+    "hi": 0.03828,
+    "n": 119190,
+    "months": 42
+   }
+  },
+  "ETHUSDT|sl_share_z|h96|half2": {
+   "raw": {
+    "ic": 0.00313,
+    "lo": -0.02945,
+    "hi": 0.03621,
+    "n": 85056,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.0088,
+    "lo": -0.02418,
+    "hi": 0.04238,
+    "n": 85056,
+    "months": 30
+   }
+  },
+  "ETHUSDT|sl_taker_diff|h4|half1": {
+   "raw": {
+    "ic": -0.0027,
+    "lo": -0.01147,
+    "hi": 0.00568,
+    "n": 119375,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.00643,
+    "lo": -0.01561,
+    "hi": 0.00278,
+    "n": 119375,
+    "months": 42
+   }
+  },
+  "ETHUSDT|sl_taker_diff|h4|half2": {
+   "raw": {
+    "ic": -0.00921,
+    "lo": -0.02327,
+    "hi": 0.00225,
+    "n": 85148,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.00642,
+    "lo": -0.02081,
+    "hi": 0.00583,
+    "n": 85148,
+    "months": 30
+   }
+  },
+  "ETHUSDT|sl_taker_diff|h16|half1": {
+   "raw": {
+    "ic": -0.01549,
+    "lo": -0.03236,
+    "hi": 0.00096,
+    "n": 119281,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.0184,
+    "lo": -0.03553,
+    "hi": -0.00235,
+    "n": 119281,
+    "months": 42
+   }
+  },
+  "ETHUSDT|sl_taker_diff|h16|half2": {
+   "raw": {
+    "ic": 0.00904,
+    "lo": -0.01226,
+    "hi": 0.02796,
+    "n": 85136,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.01205,
+    "lo": -0.00924,
+    "hi": 0.0316,
+    "n": 85136,
+    "months": 30
+   }
+  },
+  "ETHUSDT|sl_taker_diff|h96|half1": {
+   "raw": {
+    "ic": -0.00756,
+    "lo": -0.03352,
+    "hi": 0.01616,
+    "n": 119190,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.01177,
+    "lo": -0.03435,
+    "hi": 0.00947,
+    "n": 119190,
+    "months": 42
+   }
+  },
+  "ETHUSDT|sl_taker_diff|h96|half2": {
+   "raw": {
+    "ic": 0.01514,
+    "lo": -0.01201,
+    "hi": 0.04045,
+    "n": 85056,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.02083,
+    "lo": -0.00595,
+    "hi": 0.04655,
+    "n": 85056,
+    "months": 30
+   }
+  },
+  "ETHUSDT|sl_lead|h4|half1": {
+   "raw": {
+    "ic": -0.00037,
+    "lo": -0.00974,
+    "hi": 0.00892,
+    "n": 118543,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.00262,
+    "lo": -0.01224,
+    "hi": 0.00688,
+    "n": 118543,
+    "months": 42
+   }
+  },
+  "ETHUSDT|sl_lead|h4|half2": {
+   "raw": {
+    "ic": -0.00206,
+    "lo": -0.01167,
+    "hi": 0.00819,
+    "n": 85148,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.00663,
+    "lo": -0.01661,
+    "hi": 0.00522,
+    "n": 85148,
+    "months": 30
+   }
+  },
+  "ETHUSDT|sl_lead|h16|half1": {
+   "raw": {
+    "ic": 0.00252,
+    "lo": -0.01688,
+    "hi": 0.02183,
+    "n": 118449,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.00192,
+    "lo": -0.02162,
+    "hi": 0.01728,
+    "n": 118449,
+    "months": 42
+   }
+  },
+  "ETHUSDT|sl_lead|h16|half2": {
+   "raw": {
+    "ic": -0.01037,
+    "lo": -0.03146,
+    "hi": 0.01121,
+    "n": 85136,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.01603,
+    "lo": -0.03725,
+    "hi": 0.00695,
+    "n": 85136,
+    "months": 30
+   }
+  },
+  "ETHUSDT|sl_lead|h96|half1": {
+   "raw": {
+    "ic": -0.01286,
+    "lo": -0.05741,
+    "hi": 0.02781,
+    "n": 118358,
+    "months": 42
+   },
+   "partial": {
+    "ic": -0.01933,
+    "lo": -0.06453,
+    "hi": 0.02176,
+    "n": 118358,
+    "months": 42
+   }
+  },
+  "ETHUSDT|sl_lead|h96|half2": {
+   "raw": {
+    "ic": -0.02074,
+    "lo": -0.0656,
+    "hi": 0.02371,
+    "n": 85056,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.02274,
+    "lo": -0.06751,
+    "hi": 0.02191,
+    "n": 85056,
+    "months": 30
+   }
+  },
+  "ETHUSDT|cg_open|h4|half1": {
+   "raw": {
+    "ic": -0.05606,
+    "lo": -0.08226,
+    "hi": -0.03429,
+    "n": 23907,
+    "months": 29
+   },
+   "partial": {
+    "ic": -0.019,
+    "lo": -0.04109,
+    "hi": 0.00187,
+    "n": 23907,
+    "months": 29
+   }
+  },
+  "ETHUSDT|cg_open|h4|half2": {
+   "raw": {
+    "ic": -0.05662,
+    "lo": -0.08314,
+    "hi": -0.0327,
+    "n": 24961,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00091,
+    "lo": -0.02817,
+    "hi": 0.03065,
+    "n": 24961,
+    "months": 30
+   }
+  },
+  "ETHUSDT|cg_open|h16|half1": {
+   "raw": {
+    "ic": -0.09256,
+    "lo": -0.14342,
+    "hi": -0.04906,
+    "n": 23893,
+    "months": 29
+   },
+   "partial": {
+    "ic": -0.04079,
+    "lo": -0.084,
+    "hi": -0.00066,
+    "n": 23893,
+    "months": 29
+   }
+  },
+  "ETHUSDT|cg_open|h16|half2": {
+   "raw": {
+    "ic": -0.05331,
+    "lo": -0.10722,
+    "hi": -0.0006,
+    "n": 24961,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00171,
+    "lo": -0.05587,
+    "hi": 0.06162,
+    "n": 24961,
+    "months": 30
+   }
+  },
+  "ETHUSDT|cg_open|h96|half1": {
+   "raw": {
+    "ic": -0.0734,
+    "lo": -0.18799,
+    "hi": 0.02331,
+    "n": 23897,
+    "months": 29
+   },
+   "partial": {
+    "ic": -0.04828,
+    "lo": -0.1429,
+    "hi": 0.0374,
+    "n": 23897,
+    "months": 29
+   }
+  },
+  "ETHUSDT|cg_open|h96|half2": {
+   "raw": {
+    "ic": 0.05195,
+    "lo": -0.05965,
+    "hi": 0.15887,
+    "n": 24961,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.06008,
+    "lo": -0.05097,
+    "hi": 0.16849,
+    "n": 24961,
+    "months": 30
+   }
+  },
+  "ETHUSDT|cg_above|h4|half1": {
+   "raw": {
+    "ic": 0.00399,
+    "lo": -0.01107,
+    "hi": 0.01844,
+    "n": 81436,
+    "months": 29
+   },
+   "partial": {
+    "ic": 0.00602,
+    "lo": -0.00818,
+    "hi": 0.01972,
+    "n": 81436,
+    "months": 29
+   }
+  },
+  "ETHUSDT|cg_above|h4|half2": {
+   "raw": {
+    "ic": -0.00639,
+    "lo": -0.01526,
+    "hi": 0.00365,
+    "n": 85148,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.00088,
+    "lo": -0.01105,
+    "hi": 0.00984,
+    "n": 85148,
+    "months": 30
+   }
+  },
+  "ETHUSDT|cg_above|h16|half1": {
+   "raw": {
+    "ic": 0.00971,
+    "lo": -0.01635,
+    "hi": 0.03371,
+    "n": 81386,
+    "months": 29
+   },
+   "partial": {
+    "ic": 0.00913,
+    "lo": -0.01513,
+    "hi": 0.03127,
+    "n": 81386,
+    "months": 29
+   }
+  },
+  "ETHUSDT|cg_above|h16|half2": {
+   "raw": {
+    "ic": 0.00051,
+    "lo": -0.01807,
+    "hi": 0.02099,
+    "n": 85136,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00648,
+    "lo": -0.01418,
+    "hi": 0.02788,
+    "n": 85136,
+    "months": 30
+   }
+  },
+  "ETHUSDT|cg_above|h96|half1": {
+   "raw": {
+    "ic": 0.03239,
+    "lo": -0.02674,
+    "hi": 0.08765,
+    "n": 81302,
+    "months": 29
+   },
+   "partial": {
+    "ic": 0.03031,
+    "lo": -0.02299,
+    "hi": 0.08013,
+    "n": 81302,
+    "months": 29
+   }
+  },
+  "ETHUSDT|cg_above|h96|half2": {
+   "raw": {
+    "ic": 0.01242,
+    "lo": -0.03426,
+    "hi": 0.06174,
+    "n": 85056,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.01412,
+    "lo": -0.03453,
+    "hi": 0.06447,
+    "n": 85056,
+    "months": 30
+   }
+  },
+  "ETHUSDT|cg_below|h4|half1": {
+   "raw": {
+    "ic": -0.01524,
+    "lo": -0.02375,
+    "hi": -0.00606,
+    "n": 81436,
+    "months": 29
+   },
+   "partial": {
+    "ic": -0.0107,
+    "lo": -0.01893,
+    "hi": -0.00163,
+    "n": 81436,
+    "months": 29
+   }
+  },
+  "ETHUSDT|cg_below|h4|half2": {
+   "raw": {
+    "ic": -0.0078,
+    "lo": -0.01865,
+    "hi": 0.00305,
+    "n": 85148,
+    "months": 30
+   },
+   "partial": {
+    "ic": -9e-05,
+    "lo": -0.01205,
+    "hi": 0.01099,
+    "n": 85148,
+    "months": 30
+   }
+  },
+  "ETHUSDT|cg_below|h16|half1": {
+   "raw": {
+    "ic": -0.02398,
+    "lo": -0.04103,
+    "hi": -0.00581,
+    "n": 81386,
+    "months": 29
+   },
+   "partial": {
+    "ic": -0.01669,
+    "lo": -0.03304,
+    "hi": 0.00203,
+    "n": 81386,
+    "months": 29
+   }
+  },
+  "ETHUSDT|cg_below|h16|half2": {
+   "raw": {
+    "ic": -0.00858,
+    "lo": -0.02827,
+    "hi": 0.01127,
+    "n": 85136,
+    "months": 30
+   },
+   "partial": {
+    "ic": 0.00023,
+    "lo": -0.02069,
+    "hi": 0.02047,
+    "n": 85136,
+    "months": 30
+   }
+  },
+  "ETHUSDT|cg_below|h96|half1": {
+   "raw": {
+    "ic": -0.03415,
+    "lo": -0.07933,
+    "hi": 0.01224,
+    "n": 81302,
+    "months": 29
+   },
+   "partial": {
+    "ic": -0.02504,
+    "lo": -0.06829,
+    "hi": 0.02119,
+    "n": 81302,
+    "months": 29
+   }
+  },
+  "ETHUSDT|cg_below|h96|half2": {
+   "raw": {
+    "ic": -0.018,
+    "lo": -0.06874,
+    "hi": 0.03932,
+    "n": 85056,
+    "months": 30
+   },
+   "partial": {
+    "ic": -0.01149,
+    "lo": -0.06363,
+    "hi": 0.04196,
+    "n": 85056,
+    "months": 30
+   }
+  }
+ },
+ "vol_thirds": {
+  "BTCUSDT|kp_prem|h4|half1": {
+   "third1": {
+    "ic": -0.01588,
+    "lo": -0.03062,
+    "hi": -0.00102,
+    "n": 26167,
+    "months": 37
+   },
+   "third2": {
+    "ic": -0.01688,
+    "lo": -0.03083,
+    "hi": -0.00186,
+    "n": 38795,
+    "months": 42
+   },
+   "third3": {
+    "ic": -0.00403,
+    "lo": -0.01721,
+    "hi": 0.01351,
+    "n": 54292,
+    "months": 41
+   }
+  },
+  "BTCUSDT|kp_prem|h4|half2": {
+   "third1": {
+    "ic": 0.002,
+    "lo": -0.0126,
+    "hi": 0.01483,
+    "n": 41972,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.00697,
+    "lo": -0.00785,
+    "hi": 0.02419,
+    "n": 29313,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.00222,
+    "lo": -0.03183,
+    "hi": 0.02559,
+    "n": 13685,
+    "months": 28
+   }
+  },
+  "BTCUSDT|kp_prem|h16|half1": {
+   "third1": {
+    "ic": -0.04499,
+    "lo": -0.08054,
+    "hi": -0.00799,
+    "n": 26167,
+    "months": 37
+   },
+   "third2": {
+    "ic": -0.03682,
+    "lo": -0.06422,
+    "hi": -0.00605,
+    "n": 38745,
+    "months": 42
+   },
+   "third3": {
+    "ic": -0.0084,
+    "lo": -0.03343,
+    "hi": 0.02309,
+    "n": 54248,
+    "months": 41
+   }
+  },
+  "BTCUSDT|kp_prem|h16|half2": {
+   "third1": {
+    "ic": 0.00155,
+    "lo": -0.02908,
+    "hi": 0.02914,
+    "n": 41972,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.01381,
+    "lo": -0.01634,
+    "hi": 0.04889,
+    "n": 29301,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.00932,
+    "lo": -0.05288,
+    "hi": 0.03201,
+    "n": 13685,
+    "months": 28
+   }
+  },
+  "BTCUSDT|kp_prem|h96|half1": {
+   "third1": {
+    "ic": -0.06644,
+    "lo": -0.14762,
+    "hi": 0.02071,
+    "n": 26167,
+    "months": 37
+   },
+   "third2": {
+    "ic": -0.0823,
+    "lo": -0.1528,
+    "hi": -0.00406,
+    "n": 38664,
+    "months": 42
+   },
+   "third3": {
+    "ic": -0.02054,
+    "lo": -0.08553,
+    "hi": 0.05901,
+    "n": 54238,
+    "months": 41
+   }
+  },
+  "BTCUSDT|kp_prem|h96|half2": {
+   "third1": {
+    "ic": 0.0131,
+    "lo": -0.0607,
+    "hi": 0.09816,
+    "n": 41972,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.00258,
+    "lo": -0.08003,
+    "hi": 0.09432,
+    "n": 29221,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.03332,
+    "lo": -0.11787,
+    "hi": 0.0759,
+    "n": 13685,
+    "months": 28
+   }
+  },
+  "BTCUSDT|kp_z30|h4|half1": {
+   "third1": {
+    "ic": -0.00803,
+    "lo": -0.02366,
+    "hi": 0.00902,
+    "n": 26167,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.00829,
+    "lo": -0.00676,
+    "hi": 0.02463,
+    "n": 38795,
+    "months": 42
+   },
+   "third3": {
+    "ic": 0.01091,
+    "lo": -0.00591,
+    "hi": 0.02713,
+    "n": 54292,
+    "months": 41
+   }
+  },
+  "BTCUSDT|kp_z30|h4|half2": {
+   "third1": {
+    "ic": 0.0004,
+    "lo": -0.01372,
+    "hi": 0.0148,
+    "n": 41972,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.02268,
+    "lo": 0.00615,
+    "hi": 0.03979,
+    "n": 29313,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.00975,
+    "lo": -0.01035,
+    "hi": 0.03099,
+    "n": 13685,
+    "months": 28
+   }
+  },
+  "BTCUSDT|kp_z30|h16|half1": {
+   "third1": {
+    "ic": -0.01438,
+    "lo": -0.04753,
+    "hi": 0.02258,
+    "n": 26167,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.0145,
+    "lo": -0.01582,
+    "hi": 0.0473,
+    "n": 38745,
+    "months": 42
+   },
+   "third3": {
+    "ic": 0.01725,
+    "lo": -0.00876,
+    "hi": 0.04173,
+    "n": 54248,
+    "months": 41
+   }
+  },
+  "BTCUSDT|kp_z30|h16|half2": {
+   "third1": {
+    "ic": 0.002,
+    "lo": -0.02761,
+    "hi": 0.03186,
+    "n": 41972,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.04127,
+    "lo": 0.00199,
+    "hi": 0.08193,
+    "n": 29301,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.01472,
+    "lo": -0.02503,
+    "hi": 0.05537,
+    "n": 13685,
+    "months": 28
+   }
+  },
+  "BTCUSDT|kp_z30|h96|half1": {
+   "third1": {
+    "ic": -0.01769,
+    "lo": -0.08858,
+    "hi": 0.05628,
+    "n": 26167,
+    "months": 37
+   },
+   "third2": {
+    "ic": -0.00473,
+    "lo": -0.06725,
+    "hi": 0.06101,
+    "n": 38664,
+    "months": 42
+   },
+   "third3": {
+    "ic": 0.04825,
+    "lo": -0.01273,
+    "hi": 0.10425,
+    "n": 54238,
+    "months": 41
+   }
+  },
+  "BTCUSDT|kp_z30|h96|half2": {
+   "third1": {
+    "ic": 0.03741,
+    "lo": -0.04354,
+    "hi": 0.12497,
+    "n": 41972,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.06352,
+    "lo": -0.0458,
+    "hi": 0.17537,
+    "n": 29221,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.05112,
+    "lo": -0.03238,
+    "hi": 0.14497,
+    "n": 13685,
+    "months": 28
+   }
+  },
+  "BTCUSDT|kp_chg24|h4|half1": {
+   "third1": {
+    "ic": 0.00429,
+    "lo": -0.01692,
+    "hi": 0.02288,
+    "n": 26125,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.02051,
+    "lo": 0.00333,
+    "hi": 0.03876,
+    "n": 38742,
+    "months": 42
+   },
+   "third3": {
+    "ic": 0.02426,
+    "lo": 0.01051,
+    "hi": 0.03673,
+    "n": 54195,
+    "months": 41
+   }
+  },
+  "BTCUSDT|kp_chg24|h4|half2": {
+   "third1": {
+    "ic": 0.01619,
+    "lo": 0.00173,
+    "hi": 0.03151,
+    "n": 41875,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.02299,
+    "lo": 0.01112,
+    "hi": 0.0351,
+    "n": 29232,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.03867,
+    "lo": 0.01522,
+    "hi": 0.06915,
+    "n": 13685,
+    "months": 28
+   }
+  },
+  "BTCUSDT|kp_chg24|h16|half1": {
+   "third1": {
+    "ic": -0.01143,
+    "lo": -0.05525,
+    "hi": 0.03045,
+    "n": 26125,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.02142,
+    "lo": -0.01396,
+    "hi": 0.05787,
+    "n": 38692,
+    "months": 42
+   },
+   "third3": {
+    "ic": 0.03117,
+    "lo": 0.0112,
+    "hi": 0.05123,
+    "n": 54151,
+    "months": 41
+   }
+  },
+  "BTCUSDT|kp_chg24|h16|half2": {
+   "third1": {
+    "ic": 0.01909,
+    "lo": -0.01216,
+    "hi": 0.05413,
+    "n": 41875,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.02853,
+    "lo": 0.00227,
+    "hi": 0.055,
+    "n": 29220,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.06451,
+    "lo": 0.00606,
+    "hi": 0.13991,
+    "n": 13685,
+    "months": 28
+   }
+  },
+  "BTCUSDT|kp_chg24|h96|half1": {
+   "third1": {
+    "ic": -0.03183,
+    "lo": -0.12193,
+    "hi": 0.05069,
+    "n": 26125,
+    "months": 37
+   },
+   "third2": {
+    "ic": -0.01415,
+    "lo": -0.07652,
+    "hi": 0.04772,
+    "n": 38611,
+    "months": 42
+   },
+   "third3": {
+    "ic": 0.05657,
+    "lo": 0.00603,
+    "hi": 0.10541,
+    "n": 54141,
+    "months": 41
+   }
+  },
+  "BTCUSDT|kp_chg24|h96|half2": {
+   "third1": {
+    "ic": -0.0085,
+    "lo": -0.05054,
+    "hi": 0.03388,
+    "n": 41875,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.04657,
+    "lo": -0.02877,
+    "hi": 0.12299,
+    "n": 29140,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.09529,
+    "lo": -0.00453,
+    "hi": 0.21191,
+    "n": 13685,
+    "months": 28
+   }
+  },
+  "BTCUSDT|dm_btc_7d|h4|half1": {
+   "third1": {
+    "ic": 0.01057,
+    "lo": -0.0108,
+    "hi": 0.03224,
+    "n": 26200,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.00992,
+    "lo": -0.01024,
+    "hi": 0.02946,
+    "n": 38853,
+    "months": 42
+   },
+   "third3": {
+    "ic": 0.00212,
+    "lo": -0.01442,
+    "hi": 0.01671,
+    "n": 54378,
+    "months": 41
+   }
+  },
+  "BTCUSDT|dm_btc_7d|h4|half2": {
+   "third1": {
+    "ic": 0.00175,
+    "lo": -0.01188,
+    "hi": 0.01497,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.00664,
+    "lo": -0.01315,
+    "hi": 0.02468,
+    "n": 29353,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.00452,
+    "lo": -0.01793,
+    "hi": 0.02846,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|dm_btc_7d|h16|half1": {
+   "third1": {
+    "ic": 0.02405,
+    "lo": -0.02182,
+    "hi": 0.07243,
+    "n": 26200,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.01886,
+    "lo": -0.02183,
+    "hi": 0.05841,
+    "n": 38803,
+    "months": 42
+   },
+   "third3": {
+    "ic": 0.00889,
+    "lo": -0.02525,
+    "hi": 0.03812,
+    "n": 54334,
+    "months": 41
+   }
+  },
+  "BTCUSDT|dm_btc_7d|h16|half2": {
+   "third1": {
+    "ic": 0.00166,
+    "lo": -0.02683,
+    "hi": 0.02767,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.02593,
+    "lo": -0.0121,
+    "hi": 0.06153,
+    "n": 29341,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.00028,
+    "lo": -0.04714,
+    "hi": 0.05192,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|dm_btc_7d|h96|half1": {
+   "third1": {
+    "ic": 0.03311,
+    "lo": -0.06455,
+    "hi": 0.14985,
+    "n": 26200,
+    "months": 37
+   },
+   "third2": {
+    "ic": -0.00746,
+    "lo": -0.09413,
+    "hi": 0.07564,
+    "n": 38722,
+    "months": 42
+   },
+   "third3": {
+    "ic": 0.02111,
+    "lo": -0.05246,
+    "hi": 0.08777,
+    "n": 54324,
+    "months": 41
+   }
+  },
+  "BTCUSDT|dm_btc_7d|h96|half2": {
+   "third1": {
+    "ic": -0.00303,
+    "lo": -0.08223,
+    "hi": 0.07142,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.05928,
+    "lo": -0.02759,
+    "hi": 0.14893,
+    "n": 29261,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.05253,
+    "lo": -0.15373,
+    "hi": 0.06148,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|dm_btc_30d|h4|half1": {
+   "third1": {
+    "ic": -0.00586,
+    "lo": -0.02348,
+    "hi": 0.01207,
+    "n": 26200,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.01044,
+    "lo": -0.00669,
+    "hi": 0.02712,
+    "n": 38853,
+    "months": 42
+   },
+   "third3": {
+    "ic": 0.01059,
+    "lo": -0.00738,
+    "hi": 0.02467,
+    "n": 54378,
+    "months": 41
+   }
+  },
+  "BTCUSDT|dm_btc_30d|h4|half2": {
+   "third1": {
+    "ic": 0.0031,
+    "lo": -0.00828,
+    "hi": 0.01339,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.00738,
+    "lo": -0.0128,
+    "hi": 0.02541,
+    "n": 29353,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.00449,
+    "lo": -0.02395,
+    "hi": 0.01364,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|dm_btc_30d|h16|half1": {
+   "third1": {
+    "ic": 0.00097,
+    "lo": -0.04286,
+    "hi": 0.04544,
+    "n": 26200,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.01036,
+    "lo": -0.02719,
+    "hi": 0.04455,
+    "n": 38803,
+    "months": 42
+   },
+   "third3": {
+    "ic": 0.02108,
+    "lo": -0.01363,
+    "hi": 0.04779,
+    "n": 54334,
+    "months": 41
+   }
+  },
+  "BTCUSDT|dm_btc_30d|h16|half2": {
+   "third1": {
+    "ic": 0.01176,
+    "lo": -0.013,
+    "hi": 0.03338,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.01267,
+    "lo": -0.03137,
+    "hi": 0.05,
+    "n": 29341,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.00849,
+    "lo": -0.04956,
+    "hi": 0.02706,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|dm_btc_30d|h96|half1": {
+   "third1": {
+    "ic": 0.01011,
+    "lo": -0.08271,
+    "hi": 0.10071,
+    "n": 26200,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.02593,
+    "lo": -0.06112,
+    "hi": 0.11196,
+    "n": 38722,
+    "months": 42
+   },
+   "third3": {
+    "ic": 0.04868,
+    "lo": -0.03896,
+    "hi": 0.11847,
+    "n": 54324,
+    "months": 41
+   }
+  },
+  "BTCUSDT|dm_btc_30d|h96|half2": {
+   "third1": {
+    "ic": 0.04419,
+    "lo": -0.02614,
+    "hi": 0.11164,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.00046,
+    "lo": -0.09151,
+    "hi": 0.08395,
+    "n": 29261,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.03404,
+    "lo": -0.11471,
+    "hi": 0.0467,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|dm_stable_7d|h4|half1": {
+   "third1": {
+    "ic": 0.00063,
+    "lo": -0.02178,
+    "hi": 0.02034,
+    "n": 26200,
+    "months": 37
+   },
+   "third2": {
+    "ic": -0.00822,
+    "lo": -0.02803,
+    "hi": 0.01324,
+    "n": 38853,
+    "months": 42
+   },
+   "third3": {
+    "ic": -0.00588,
+    "lo": -0.0183,
+    "hi": 0.00613,
+    "n": 54378,
+    "months": 41
+   }
+  },
+  "BTCUSDT|dm_stable_7d|h4|half2": {
+   "third1": {
+    "ic": -0.00859,
+    "lo": -0.02064,
+    "hi": 0.00544,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.00257,
+    "lo": -0.01154,
+    "hi": 0.01804,
+    "n": 29353,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.01294,
+    "lo": -0.03375,
+    "hi": 0.00967,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|dm_stable_7d|h16|half1": {
+   "third1": {
+    "ic": 0.01914,
+    "lo": -0.0317,
+    "hi": 0.06473,
+    "n": 26200,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.00026,
+    "lo": -0.03511,
+    "hi": 0.03636,
+    "n": 38803,
+    "months": 42
+   },
+   "third3": {
+    "ic": 0.00166,
+    "lo": -0.02126,
+    "hi": 0.02492,
+    "n": 54334,
+    "months": 41
+   }
+  },
+  "BTCUSDT|dm_stable_7d|h16|half2": {
+   "third1": {
+    "ic": -0.01215,
+    "lo": -0.03744,
+    "hi": 0.01972,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.01892,
+    "lo": -0.01249,
+    "hi": 0.05302,
+    "n": 29341,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.00106,
+    "lo": -0.03397,
+    "hi": 0.04334,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|dm_stable_7d|h96|half1": {
+   "third1": {
+    "ic": 0.06417,
+    "lo": -0.0485,
+    "hi": 0.16813,
+    "n": 26200,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.00736,
+    "lo": -0.08056,
+    "hi": 0.1036,
+    "n": 38722,
+    "months": 42
+   },
+   "third3": {
+    "ic": 0.03262,
+    "lo": -0.01742,
+    "hi": 0.09454,
+    "n": 54324,
+    "months": 41
+   }
+  },
+  "BTCUSDT|dm_stable_7d|h96|half2": {
+   "third1": {
+    "ic": -0.00057,
+    "lo": -0.0589,
+    "hi": 0.06726,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.01659,
+    "lo": -0.05286,
+    "hi": 0.0968,
+    "n": 29261,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.10353,
+    "lo": -0.01112,
+    "hi": 0.22304,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|dm_stable_30d|h4|half1": {
+   "third1": {
+    "ic": 0.00107,
+    "lo": -0.0151,
+    "hi": 0.01596,
+    "n": 26200,
+    "months": 37
+   },
+   "third2": {
+    "ic": -0.00729,
+    "lo": -0.02412,
+    "hi": 0.00921,
+    "n": 38853,
+    "months": 42
+   },
+   "third3": {
+    "ic": -0.00939,
+    "lo": -0.01922,
+    "hi": 0.00217,
+    "n": 54378,
+    "months": 41
+   }
+  },
+  "BTCUSDT|dm_stable_30d|h4|half2": {
+   "third1": {
+    "ic": -0.00598,
+    "lo": -0.01624,
+    "hi": 0.00551,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.00214,
+    "lo": -0.01218,
+    "hi": 0.01655,
+    "n": 29353,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.02309,
+    "lo": -0.04375,
+    "hi": 0.0025,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|dm_stable_30d|h16|half1": {
+   "third1": {
+    "ic": 0.00692,
+    "lo": -0.02719,
+    "hi": 0.03994,
+    "n": 26200,
+    "months": 37
+   },
+   "third2": {
+    "ic": -0.01314,
+    "lo": -0.04512,
+    "hi": 0.01843,
+    "n": 38803,
+    "months": 42
+   },
+   "third3": {
+    "ic": -0.01201,
+    "lo": -0.02998,
+    "hi": 0.01051,
+    "n": 54334,
+    "months": 41
+   }
+  },
+  "BTCUSDT|dm_stable_30d|h16|half2": {
+   "third1": {
+    "ic": -0.01529,
+    "lo": -0.0402,
+    "hi": 0.01325,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.01641,
+    "lo": -0.0125,
+    "hi": 0.04477,
+    "n": 29341,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.02201,
+    "lo": -0.06831,
+    "hi": 0.03414,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|dm_stable_30d|h96|half1": {
+   "third1": {
+    "ic": 0.05629,
+    "lo": -0.03039,
+    "hi": 0.14051,
+    "n": 26200,
+    "months": 37
+   },
+   "third2": {
+    "ic": -0.01378,
+    "lo": -0.08805,
+    "hi": 0.05857,
+    "n": 38722,
+    "months": 42
+   },
+   "third3": {
+    "ic": -0.03593,
+    "lo": -0.07654,
+    "hi": 0.01329,
+    "n": 54324,
+    "months": 41
+   }
+  },
+  "BTCUSDT|dm_stable_30d|h96|half2": {
+   "third1": {
+    "ic": -0.01552,
+    "lo": -0.08375,
+    "hi": 0.05976,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.0086,
+    "lo": -0.07706,
+    "hi": 0.06699,
+    "n": 29261,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.00644,
+    "lo": -0.11043,
+    "hi": 0.11855,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|sl_share_z|h4|half1": {
+   "third1": {
+    "ic": -0.00841,
+    "lo": -0.02341,
+    "hi": 0.00867,
+    "n": 26192,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.00068,
+    "lo": -0.01653,
+    "hi": 0.01783,
+    "n": 38825,
+    "months": 42
+   },
+   "third3": {
+    "ic": -0.00274,
+    "lo": -0.01751,
+    "hi": 0.01077,
+    "n": 54358,
+    "months": 41
+   }
+  },
+  "BTCUSDT|sl_share_z|h4|half2": {
+   "third1": {
+    "ic": 0.00194,
+    "lo": -0.00844,
+    "hi": 0.01266,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.01229,
+    "lo": -0.03342,
+    "hi": 0.007,
+    "n": 29353,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.00889,
+    "lo": -0.03599,
+    "hi": 0.01564,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|sl_share_z|h16|half1": {
+   "third1": {
+    "ic": -0.01499,
+    "lo": -0.04244,
+    "hi": 0.01374,
+    "n": 26192,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.00457,
+    "lo": -0.02697,
+    "hi": 0.03946,
+    "n": 38775,
+    "months": 42
+   },
+   "third3": {
+    "ic": 0.00733,
+    "lo": -0.02156,
+    "hi": 0.03336,
+    "n": 54314,
+    "months": 41
+   }
+  },
+  "BTCUSDT|sl_share_z|h16|half2": {
+   "third1": {
+    "ic": 0.00506,
+    "lo": -0.02177,
+    "hi": 0.03179,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.03558,
+    "lo": -0.07542,
+    "hi": -0.00016,
+    "n": 29341,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.01277,
+    "lo": -0.06679,
+    "hi": 0.03941,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|sl_share_z|h96|half1": {
+   "third1": {
+    "ic": -0.01561,
+    "lo": -0.09127,
+    "hi": 0.04924,
+    "n": 26192,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.03049,
+    "lo": -0.03703,
+    "hi": 0.0966,
+    "n": 38694,
+    "months": 42
+   },
+   "third3": {
+    "ic": -0.02002,
+    "lo": -0.07073,
+    "hi": 0.02366,
+    "n": 54304,
+    "months": 41
+   }
+  },
+  "BTCUSDT|sl_share_z|h96|half2": {
+   "third1": {
+    "ic": -0.0149,
+    "lo": -0.06956,
+    "hi": 0.04158,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.01639,
+    "lo": -0.06863,
+    "hi": 0.03793,
+    "n": 29261,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.00371,
+    "lo": -0.08535,
+    "hi": 0.09611,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|sl_taker_diff|h4|half1": {
+   "third1": {
+    "ic": 0.01438,
+    "lo": -0.00037,
+    "hi": 0.0315,
+    "n": 26192,
+    "months": 37
+   },
+   "third2": {
+    "ic": -0.00439,
+    "lo": -0.02155,
+    "hi": 0.01368,
+    "n": 38825,
+    "months": 42
+   },
+   "third3": {
+    "ic": -0.01203,
+    "lo": -0.02489,
+    "hi": 0.00242,
+    "n": 54358,
+    "months": 41
+   }
+  },
+  "BTCUSDT|sl_taker_diff|h4|half2": {
+   "third1": {
+    "ic": -0.01815,
+    "lo": -0.03433,
+    "hi": -0.00345,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.01891,
+    "lo": -0.03909,
+    "hi": 0.00249,
+    "n": 29353,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.02957,
+    "lo": -0.05297,
+    "hi": -0.0011,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|sl_taker_diff|h16|half1": {
+   "third1": {
+    "ic": 0.01994,
+    "lo": -0.00771,
+    "hi": 0.0481,
+    "n": 26192,
+    "months": 37
+   },
+   "third2": {
+    "ic": -0.01998,
+    "lo": -0.04615,
+    "hi": 0.00918,
+    "n": 38775,
+    "months": 42
+   },
+   "third3": {
+    "ic": -0.03174,
+    "lo": -0.0518,
+    "hi": -0.00991,
+    "n": 54314,
+    "months": 41
+   }
+  },
+  "BTCUSDT|sl_taker_diff|h16|half2": {
+   "third1": {
+    "ic": -0.02376,
+    "lo": -0.05071,
+    "hi": 0.00072,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.0284,
+    "lo": -0.06858,
+    "hi": 0.00976,
+    "n": 29341,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.02449,
+    "lo": -0.06847,
+    "hi": 0.0269,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|sl_taker_diff|h96|half1": {
+   "third1": {
+    "ic": -0.00415,
+    "lo": -0.05554,
+    "hi": 0.03823,
+    "n": 26192,
+    "months": 37
+   },
+   "third2": {
+    "ic": -0.03333,
+    "lo": -0.07388,
+    "hi": 0.00811,
+    "n": 38694,
+    "months": 42
+   },
+   "third3": {
+    "ic": -0.02844,
+    "lo": -0.06649,
+    "hi": 0.00648,
+    "n": 54304,
+    "months": 41
+   }
+  },
+  "BTCUSDT|sl_taker_diff|h96|half2": {
+   "third1": {
+    "ic": 0.03205,
+    "lo": -0.00642,
+    "hi": 0.07042,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.03657,
+    "lo": -0.08217,
+    "hi": 0.00791,
+    "n": 29261,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.04009,
+    "lo": -0.11127,
+    "hi": 0.03306,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|sl_lead|h4|half1": {
+   "third1": {
+    "ic": -0.00709,
+    "lo": -0.02727,
+    "hi": 0.0136,
+    "n": 25999,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.00866,
+    "lo": -0.00475,
+    "hi": 0.02202,
+    "n": 38614,
+    "months": 42
+   },
+   "third3": {
+    "ic": 0.00553,
+    "lo": -0.01166,
+    "hi": 0.02327,
+    "n": 53930,
+    "months": 41
+   }
+  },
+  "BTCUSDT|sl_lead|h4|half2": {
+   "third1": {
+    "ic": -0.00529,
+    "lo": -0.01877,
+    "hi": 0.00823,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.00808,
+    "lo": -0.00858,
+    "hi": 0.02297,
+    "n": 29353,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.01682,
+    "lo": -0.0089,
+    "hi": 0.04635,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|sl_lead|h16|half1": {
+   "third1": {
+    "ic": -0.00388,
+    "lo": -0.03975,
+    "hi": 0.0337,
+    "n": 25999,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.01207,
+    "lo": -0.01786,
+    "hi": 0.04146,
+    "n": 38564,
+    "months": 42
+   },
+   "third3": {
+    "ic": 0.01539,
+    "lo": -0.01404,
+    "hi": 0.04264,
+    "n": 53886,
+    "months": 41
+   }
+  },
+  "BTCUSDT|sl_lead|h16|half2": {
+   "third1": {
+    "ic": -0.01462,
+    "lo": -0.03776,
+    "hi": 0.00776,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.02115,
+    "lo": -0.01105,
+    "hi": 0.0497,
+    "n": 29341,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.01976,
+    "lo": -0.02796,
+    "hi": 0.0817,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|sl_lead|h96|half1": {
+   "third1": {
+    "ic": 0.02915,
+    "lo": -0.05484,
+    "hi": 0.12181,
+    "n": 25999,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.06113,
+    "lo": -0.0023,
+    "hi": 0.12622,
+    "n": 38483,
+    "months": 42
+   },
+   "third3": {
+    "ic": 0.03148,
+    "lo": -0.01899,
+    "hi": 0.08261,
+    "n": 53876,
+    "months": 41
+   }
+  },
+  "BTCUSDT|sl_lead|h96|half2": {
+   "third1": {
+    "ic": -0.01983,
+    "lo": -0.08116,
+    "hi": 0.05043,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.02376,
+    "lo": -0.05785,
+    "hi": 0.09354,
+    "n": 29261,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.02443,
+    "lo": -0.10529,
+    "hi": 0.16724,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|cg_open|h4|half1": {
+   "third1": {
+    "ic": -0.07829,
+    "lo": -0.11103,
+    "hi": -0.04896,
+    "n": 11593,
+    "months": 37
+   },
+   "third2": {
+    "ic": -0.04615,
+    "lo": -0.08685,
+    "hi": -0.01076,
+    "n": 10919,
+    "months": 41
+   },
+   "third3": {
+    "ic": -0.07602,
+    "lo": -0.10348,
+    "hi": -0.04988,
+    "n": 12486,
+    "months": 37
+   }
+  },
+  "BTCUSDT|cg_open|h4|half2": {
+   "third1": {
+    "ic": -0.06758,
+    "lo": -0.09126,
+    "hi": -0.04761,
+    "n": 17794,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.06198,
+    "lo": -0.12482,
+    "hi": -0.00819,
+    "n": 5235,
+    "months": 29
+   },
+   "third3": {
+    "ic": -0.07613,
+    "lo": -0.13246,
+    "hi": -0.00739,
+    "n": 1932,
+    "months": 19
+   }
+  },
+  "BTCUSDT|cg_open|h16|half1": {
+   "third1": {
+    "ic": -0.10529,
+    "lo": -0.17679,
+    "hi": -0.03143,
+    "n": 11593,
+    "months": 37
+   },
+   "third2": {
+    "ic": -0.06498,
+    "lo": -0.14764,
+    "hi": 0.00899,
+    "n": 10903,
+    "months": 41
+   },
+   "third3": {
+    "ic": -0.12891,
+    "lo": -0.16954,
+    "hi": -0.09009,
+    "n": 12472,
+    "months": 37
+   }
+  },
+  "BTCUSDT|cg_open|h16|half2": {
+   "third1": {
+    "ic": -0.04898,
+    "lo": -0.09201,
+    "hi": -0.00858,
+    "n": 17794,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.07411,
+    "lo": -0.1988,
+    "hi": 0.02771,
+    "n": 5235,
+    "months": 29
+   },
+   "third3": {
+    "ic": -0.09258,
+    "lo": -0.2275,
+    "hi": 0.09018,
+    "n": 1932,
+    "months": 19
+   }
+  },
+  "BTCUSDT|cg_open|h96|half1": {
+   "third1": {
+    "ic": -0.05311,
+    "lo": -0.17376,
+    "hi": 0.07471,
+    "n": 11593,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.02115,
+    "lo": -0.12256,
+    "hi": 0.149,
+    "n": 10913,
+    "months": 41
+   },
+   "third3": {
+    "ic": -0.14411,
+    "lo": -0.24626,
+    "hi": -0.03761,
+    "n": 12456,
+    "months": 37
+   }
+  },
+  "BTCUSDT|cg_open|h96|half2": {
+   "third1": {
+    "ic": 0.12751,
+    "lo": 0.01,
+    "hi": 0.23387,
+    "n": 17794,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.03072,
+    "lo": -0.17212,
+    "hi": 0.1877,
+    "n": 5235,
+    "months": 29
+   },
+   "third3": {
+    "ic": -0.18221,
+    "lo": -0.42206,
+    "hi": 0.16927,
+    "n": 1932,
+    "months": 19
+   }
+  },
+  "BTCUSDT|cg_above|h4|half1": {
+   "third1": {
+    "ic": -0.01647,
+    "lo": -0.03873,
+    "hi": 0.00678,
+    "n": 26200,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.00163,
+    "lo": -0.01501,
+    "hi": 0.01818,
+    "n": 38853,
+    "months": 42
+   },
+   "third3": {
+    "ic": -0.00578,
+    "lo": -0.02064,
+    "hi": 0.01177,
+    "n": 54378,
+    "months": 41
+   }
+  },
+  "BTCUSDT|cg_above|h4|half2": {
+   "third1": {
+    "ic": 0.00792,
+    "lo": -0.00927,
+    "hi": 0.0225,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.0166,
+    "lo": -0.00269,
+    "hi": 0.03552,
+    "n": 29353,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.00346,
+    "lo": -0.0213,
+    "hi": 0.03265,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|cg_above|h16|half1": {
+   "third1": {
+    "ic": -0.0294,
+    "lo": -0.07508,
+    "hi": 0.02339,
+    "n": 26200,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.00061,
+    "lo": -0.03493,
+    "hi": 0.03343,
+    "n": 38803,
+    "months": 42
+   },
+   "third3": {
+    "ic": -0.00889,
+    "lo": -0.03787,
+    "hi": 0.0243,
+    "n": 54334,
+    "months": 41
+   }
+  },
+  "BTCUSDT|cg_above|h16|half2": {
+   "third1": {
+    "ic": 0.01885,
+    "lo": -0.01312,
+    "hi": 0.04823,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.04839,
+    "lo": -0.00066,
+    "hi": 0.09688,
+    "n": 29341,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.03005,
+    "lo": -0.02473,
+    "hi": 0.08902,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|cg_above|h96|half1": {
+   "third1": {
+    "ic": -0.01835,
+    "lo": -0.10883,
+    "hi": 0.07998,
+    "n": 26200,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.02061,
+    "lo": -0.05988,
+    "hi": 0.09051,
+    "n": 38722,
+    "months": 42
+   },
+   "third3": {
+    "ic": -0.01619,
+    "lo": -0.08139,
+    "hi": 0.05634,
+    "n": 54324,
+    "months": 41
+   }
+  },
+  "BTCUSDT|cg_above|h96|half2": {
+   "third1": {
+    "ic": 0.05864,
+    "lo": -0.02293,
+    "hi": 0.13289,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.07723,
+    "lo": -0.01331,
+    "hi": 0.17565,
+    "n": 29261,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.12017,
+    "lo": 0.02583,
+    "hi": 0.21995,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|cg_below|h4|half1": {
+   "third1": {
+    "ic": -0.02965,
+    "lo": -0.05587,
+    "hi": -0.00268,
+    "n": 26200,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.0152,
+    "lo": -0.00074,
+    "hi": 0.03034,
+    "n": 38853,
+    "months": 42
+   },
+   "third3": {
+    "ic": -0.02378,
+    "lo": -0.03794,
+    "hi": -0.01024,
+    "n": 54378,
+    "months": 41
+   }
+  },
+  "BTCUSDT|cg_below|h4|half2": {
+   "third1": {
+    "ic": 0.00306,
+    "lo": -0.01269,
+    "hi": 0.01924,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.00476,
+    "lo": -0.02499,
+    "hi": 0.01392,
+    "n": 29353,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.00528,
+    "lo": -0.02674,
+    "hi": 0.01519,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|cg_below|h16|half1": {
+   "third1": {
+    "ic": -0.03632,
+    "lo": -0.09759,
+    "hi": 0.02564,
+    "n": 26200,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.02758,
+    "lo": -0.00524,
+    "hi": 0.06132,
+    "n": 38803,
+    "months": 42
+   },
+   "third3": {
+    "ic": -0.03536,
+    "lo": -0.06017,
+    "hi": -0.01132,
+    "n": 54334,
+    "months": 41
+   }
+  },
+  "BTCUSDT|cg_below|h16|half2": {
+   "third1": {
+    "ic": 0.00931,
+    "lo": -0.01963,
+    "hi": 0.03994,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.00175,
+    "lo": -0.04227,
+    "hi": 0.03735,
+    "n": 29341,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.00824,
+    "lo": -0.06147,
+    "hi": 0.03714,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "BTCUSDT|cg_below|h96|half1": {
+   "third1": {
+    "ic": -0.04999,
+    "lo": -0.16983,
+    "hi": 0.07599,
+    "n": 26200,
+    "months": 37
+   },
+   "third2": {
+    "ic": 0.07182,
+    "lo": -0.01256,
+    "hi": 0.15762,
+    "n": 38722,
+    "months": 42
+   },
+   "third3": {
+    "ic": -0.03483,
+    "lo": -0.10326,
+    "hi": 0.02928,
+    "n": 54324,
+    "months": 41
+   }
+  },
+  "BTCUSDT|cg_below|h96|half2": {
+   "third1": {
+    "ic": 0.05521,
+    "lo": -0.02697,
+    "hi": 0.1398,
+    "n": 42100,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.00014,
+    "lo": -0.08763,
+    "hi": 0.08191,
+    "n": 29261,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.02086,
+    "lo": -0.11502,
+    "hi": 0.05545,
+    "n": 13695,
+    "months": 28
+   }
+  },
+  "ETHUSDT|kp_prem|h4|half1": {
+   "third1": {
+    "ic": -0.01,
+    "lo": -0.03082,
+    "hi": 0.01106,
+    "n": 27164,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.00462,
+    "lo": -0.02736,
+    "hi": 0.01911,
+    "n": 39469,
+    "months": 41
+   },
+   "third3": {
+    "ic": 0.00027,
+    "lo": -0.01363,
+    "hi": 0.01517,
+    "n": 52618,
+    "months": 40
+   }
+  },
+  "ETHUSDT|kp_prem|h4|half2": {
+   "third1": {
+    "ic": 0.00861,
+    "lo": -0.01076,
+    "hi": 0.02748,
+    "n": 40966,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.01462,
+    "lo": -0.02792,
+    "hi": 0.00196,
+    "n": 28600,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.00211,
+    "lo": -0.02431,
+    "hi": 0.02122,
+    "n": 15403,
+    "months": 29
+   }
+  },
+  "ETHUSDT|kp_prem|h16|half1": {
+   "third1": {
+    "ic": -0.03068,
+    "lo": -0.07332,
+    "hi": 0.01245,
+    "n": 27152,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.01405,
+    "lo": -0.05851,
+    "hi": 0.03588,
+    "n": 39450,
+    "months": 41
+   },
+   "third3": {
+    "ic": -0.00868,
+    "lo": -0.03236,
+    "hi": 0.01582,
+    "n": 52555,
+    "months": 40
+   }
+  },
+  "ETHUSDT|kp_prem|h16|half2": {
+   "third1": {
+    "ic": 0.02122,
+    "lo": -0.01588,
+    "hi": 0.05844,
+    "n": 40966,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.03099,
+    "lo": -0.0659,
+    "hi": 0.00783,
+    "n": 28588,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.00836,
+    "lo": -0.05016,
+    "hi": 0.03928,
+    "n": 15403,
+    "months": 29
+   }
+  },
+  "ETHUSDT|kp_prem|h96|half1": {
+   "third1": {
+    "ic": -0.05101,
+    "lo": -0.12994,
+    "hi": 0.04125,
+    "n": 27058,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.05577,
+    "lo": -0.14534,
+    "hi": 0.03812,
+    "n": 39426,
+    "months": 41
+   },
+   "third3": {
+    "ic": -0.01157,
+    "lo": -0.08037,
+    "hi": 0.05988,
+    "n": 52582,
+    "months": 40
+   }
+  },
+  "ETHUSDT|kp_prem|h96|half2": {
+   "third1": {
+    "ic": 0.0601,
+    "lo": -0.0243,
+    "hi": 0.14778,
+    "n": 40966,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.09403,
+    "lo": -0.16234,
+    "hi": 0.01179,
+    "n": 28508,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.02411,
+    "lo": -0.10463,
+    "hi": 0.08001,
+    "n": 15403,
+    "months": 29
+   }
+  },
+  "ETHUSDT|kp_z30|h4|half1": {
+   "third1": {
+    "ic": 0.00224,
+    "lo": -0.01905,
+    "hi": 0.02611,
+    "n": 27164,
+    "months": 38
+   },
+   "third2": {
+    "ic": 0.00745,
+    "lo": -0.0111,
+    "hi": 0.0267,
+    "n": 39469,
+    "months": 41
+   },
+   "third3": {
+    "ic": 0.00671,
+    "lo": -0.01205,
+    "hi": 0.0245,
+    "n": 52618,
+    "months": 40
+   }
+  },
+  "ETHUSDT|kp_z30|h4|half2": {
+   "third1": {
+    "ic": 0.00307,
+    "lo": -0.01387,
+    "hi": 0.01952,
+    "n": 40966,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.00245,
+    "lo": -0.01274,
+    "hi": 0.01902,
+    "n": 28600,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.00684,
+    "lo": -0.01595,
+    "hi": 0.03212,
+    "n": 15403,
+    "months": 29
+   }
+  },
+  "ETHUSDT|kp_z30|h16|half1": {
+   "third1": {
+    "ic": -0.0088,
+    "lo": -0.05286,
+    "hi": 0.03612,
+    "n": 27152,
+    "months": 38
+   },
+   "third2": {
+    "ic": 0.02193,
+    "lo": -0.02194,
+    "hi": 0.06673,
+    "n": 39450,
+    "months": 41
+   },
+   "third3": {
+    "ic": 0.00172,
+    "lo": -0.03059,
+    "hi": 0.03294,
+    "n": 52555,
+    "months": 40
+   }
+  },
+  "ETHUSDT|kp_z30|h16|half2": {
+   "third1": {
+    "ic": 0.0097,
+    "lo": -0.02009,
+    "hi": 0.03979,
+    "n": 40966,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.00151,
+    "lo": -0.03164,
+    "hi": 0.03504,
+    "n": 28588,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.0067,
+    "lo": -0.0397,
+    "hi": 0.05831,
+    "n": 15403,
+    "months": 29
+   }
+  },
+  "ETHUSDT|kp_z30|h96|half1": {
+   "third1": {
+    "ic": -0.02035,
+    "lo": -0.09494,
+    "hi": 0.05705,
+    "n": 27058,
+    "months": 38
+   },
+   "third2": {
+    "ic": 0.03509,
+    "lo": -0.04212,
+    "hi": 0.11443,
+    "n": 39426,
+    "months": 41
+   },
+   "third3": {
+    "ic": -0.00778,
+    "lo": -0.07768,
+    "hi": 0.06304,
+    "n": 52582,
+    "months": 40
+   }
+  },
+  "ETHUSDT|kp_z30|h96|half2": {
+   "third1": {
+    "ic": 0.02359,
+    "lo": -0.03843,
+    "hi": 0.09222,
+    "n": 40966,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.01082,
+    "lo": -0.09217,
+    "hi": 0.10984,
+    "n": 28508,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.00133,
+    "lo": -0.10294,
+    "hi": 0.10722,
+    "n": 15403,
+    "months": 29
+   }
+  },
+  "ETHUSDT|kp_chg24|h4|half1": {
+   "third1": {
+    "ic": 0.02576,
+    "lo": 0.00652,
+    "hi": 0.04369,
+    "n": 27114,
+    "months": 38
+   },
+   "third2": {
+    "ic": 0.014,
+    "lo": 0.00047,
+    "hi": 0.02672,
+    "n": 39406,
+    "months": 41
+   },
+   "third3": {
+    "ic": 0.02185,
+    "lo": 0.00798,
+    "hi": 0.03521,
+    "n": 52536,
+    "months": 40
+   }
+  },
+  "ETHUSDT|kp_chg24|h4|half2": {
+   "third1": {
+    "ic": 0.01221,
+    "lo": -0.00121,
+    "hi": 0.0262,
+    "n": 40856,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.02653,
+    "lo": 0.01172,
+    "hi": 0.04322,
+    "n": 28531,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.02919,
+    "lo": 0.00381,
+    "hi": 0.05583,
+    "n": 15403,
+    "months": 29
+   }
+  },
+  "ETHUSDT|kp_chg24|h16|half1": {
+   "third1": {
+    "ic": 0.02094,
+    "lo": -0.01355,
+    "hi": 0.05231,
+    "n": 27102,
+    "months": 38
+   },
+   "third2": {
+    "ic": 0.02233,
+    "lo": -0.01095,
+    "hi": 0.05226,
+    "n": 39387,
+    "months": 41
+   },
+   "third3": {
+    "ic": 0.02072,
+    "lo": -0.00052,
+    "hi": 0.04016,
+    "n": 52473,
+    "months": 40
+   }
+  },
+  "ETHUSDT|kp_chg24|h16|half2": {
+   "third1": {
+    "ic": 0.0138,
+    "lo": -0.01912,
+    "hi": 0.0479,
+    "n": 40856,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.03507,
+    "lo": 0.00184,
+    "hi": 0.0702,
+    "n": 28519,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.04362,
+    "lo": -0.00083,
+    "hi": 0.08897,
+    "n": 15403,
+    "months": 29
+   }
+  },
+  "ETHUSDT|kp_chg24|h96|half1": {
+   "third1": {
+    "ic": 0.0161,
+    "lo": -0.04765,
+    "hi": 0.07492,
+    "n": 27008,
+    "months": 38
+   },
+   "third2": {
+    "ic": 0.0225,
+    "lo": -0.03629,
+    "hi": 0.07729,
+    "n": 39363,
+    "months": 41
+   },
+   "third3": {
+    "ic": 0.0059,
+    "lo": -0.03995,
+    "hi": 0.04901,
+    "n": 52500,
+    "months": 40
+   }
+  },
+  "ETHUSDT|kp_chg24|h96|half2": {
+   "third1": {
+    "ic": -0.02799,
+    "lo": -0.08979,
+    "hi": 0.0398,
+    "n": 40856,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.02283,
+    "lo": -0.09763,
+    "hi": 0.0565,
+    "n": 28439,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.0688,
+    "lo": -0.05682,
+    "hi": 0.19346,
+    "n": 15403,
+    "months": 29
+   }
+  },
+  "ETHUSDT|dm_btc_7d|h4|half1": {
+   "third1": {
+    "ic": 0.00242,
+    "lo": -0.01728,
+    "hi": 0.02105,
+    "n": 27225,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.00307,
+    "lo": -0.02101,
+    "hi": 0.01305,
+    "n": 39533,
+    "months": 41
+   },
+   "third3": {
+    "ic": -0.00887,
+    "lo": -0.02289,
+    "hi": 0.0054,
+    "n": 52673,
+    "months": 40
+   }
+  },
+  "ETHUSDT|dm_btc_7d|h4|half2": {
+   "third1": {
+    "ic": -0.00363,
+    "lo": -0.01924,
+    "hi": 0.01119,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.00342,
+    "lo": -0.01838,
+    "hi": 0.01317,
+    "n": 28648,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.0109,
+    "lo": -0.00662,
+    "hi": 0.02877,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|dm_btc_7d|h16|half1": {
+   "third1": {
+    "ic": 0.01611,
+    "lo": -0.0218,
+    "hi": 0.05614,
+    "n": 27213,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.01548,
+    "lo": -0.05019,
+    "hi": 0.01566,
+    "n": 39514,
+    "months": 41
+   },
+   "third3": {
+    "ic": -0.01175,
+    "lo": -0.03986,
+    "hi": 0.01532,
+    "n": 52610,
+    "months": 40
+   }
+  },
+  "ETHUSDT|dm_btc_7d|h16|half2": {
+   "third1": {
+    "ic": -0.00665,
+    "lo": -0.0374,
+    "hi": 0.02271,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.00743,
+    "lo": -0.03832,
+    "hi": 0.02708,
+    "n": 28636,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.0265,
+    "lo": -0.00871,
+    "hi": 0.0634,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|dm_btc_7d|h96|half1": {
+   "third1": {
+    "ic": 0.01374,
+    "lo": -0.08562,
+    "hi": 0.10759,
+    "n": 27119,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.03075,
+    "lo": -0.11142,
+    "hi": 0.04021,
+    "n": 39490,
+    "months": 41
+   },
+   "third3": {
+    "ic": -0.04201,
+    "lo": -0.11361,
+    "hi": 0.02308,
+    "n": 52637,
+    "months": 40
+   }
+  },
+  "ETHUSDT|dm_btc_7d|h96|half2": {
+   "third1": {
+    "ic": 0.0084,
+    "lo": -0.07265,
+    "hi": 0.08953,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.01859,
+    "lo": -0.07662,
+    "hi": 0.12894,
+    "n": 28556,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.04929,
+    "lo": -0.02676,
+    "hi": 0.14644,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|dm_btc_30d|h4|half1": {
+   "third1": {
+    "ic": 0.00365,
+    "lo": -0.01536,
+    "hi": 0.02309,
+    "n": 27225,
+    "months": 38
+   },
+   "third2": {
+    "ic": 0.01125,
+    "lo": -0.00986,
+    "hi": 0.0295,
+    "n": 39533,
+    "months": 41
+   },
+   "third3": {
+    "ic": -0.00014,
+    "lo": -0.01921,
+    "hi": 0.01821,
+    "n": 52673,
+    "months": 40
+   }
+  },
+  "ETHUSDT|dm_btc_30d|h4|half2": {
+   "third1": {
+    "ic": 0.00939,
+    "lo": -0.00779,
+    "hi": 0.02343,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.00205,
+    "lo": -0.01252,
+    "hi": 0.01803,
+    "n": 28648,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.00498,
+    "lo": -0.01387,
+    "hi": 0.02426,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|dm_btc_30d|h16|half1": {
+   "third1": {
+    "ic": 0.00767,
+    "lo": -0.03306,
+    "hi": 0.04701,
+    "n": 27213,
+    "months": 38
+   },
+   "third2": {
+    "ic": 0.01588,
+    "lo": -0.02707,
+    "hi": 0.05153,
+    "n": 39514,
+    "months": 41
+   },
+   "third3": {
+    "ic": 0.00204,
+    "lo": -0.03311,
+    "hi": 0.03334,
+    "n": 52610,
+    "months": 40
+   }
+  },
+  "ETHUSDT|dm_btc_30d|h16|half2": {
+   "third1": {
+    "ic": 0.025,
+    "lo": -0.01009,
+    "hi": 0.05689,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.00374,
+    "lo": -0.02612,
+    "hi": 0.03966,
+    "n": 28636,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.01074,
+    "lo": -0.02335,
+    "hi": 0.04575,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|dm_btc_30d|h96|half1": {
+   "third1": {
+    "ic": 0.03655,
+    "lo": -0.05481,
+    "hi": 0.12803,
+    "n": 27119,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.02136,
+    "lo": -0.10233,
+    "hi": 0.05252,
+    "n": 39490,
+    "months": 41
+   },
+   "third3": {
+    "ic": 0.02438,
+    "lo": -0.05615,
+    "hi": 0.09166,
+    "n": 52637,
+    "months": 40
+   }
+  },
+  "ETHUSDT|dm_btc_30d|h96|half2": {
+   "third1": {
+    "ic": 0.091,
+    "lo": 0.01758,
+    "hi": 0.1517,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.00931,
+    "lo": -0.09499,
+    "hi": 0.08248,
+    "n": 28556,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.00177,
+    "lo": -0.07259,
+    "hi": 0.08033,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|dm_stable_7d|h4|half1": {
+   "third1": {
+    "ic": 0.00999,
+    "lo": -0.01681,
+    "hi": 0.03547,
+    "n": 27225,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.02916,
+    "lo": -0.04752,
+    "hi": -0.00959,
+    "n": 39533,
+    "months": 41
+   },
+   "third3": {
+    "ic": -0.00026,
+    "lo": -0.01306,
+    "hi": 0.01504,
+    "n": 52673,
+    "months": 40
+   }
+  },
+  "ETHUSDT|dm_stable_7d|h4|half2": {
+   "third1": {
+    "ic": -0.0118,
+    "lo": -0.02696,
+    "hi": 0.00535,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.01378,
+    "lo": -0.03109,
+    "hi": 0.00686,
+    "n": 28648,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.00956,
+    "lo": -0.0256,
+    "hi": 0.01169,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|dm_stable_7d|h16|half1": {
+   "third1": {
+    "ic": 0.025,
+    "lo": -0.03562,
+    "hi": 0.07717,
+    "n": 27213,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.04053,
+    "lo": -0.08105,
+    "hi": -0.0006,
+    "n": 39514,
+    "months": 41
+   },
+   "third3": {
+    "ic": 0.01565,
+    "lo": -0.00712,
+    "hi": 0.04273,
+    "n": 52610,
+    "months": 40
+   }
+  },
+  "ETHUSDT|dm_stable_7d|h16|half2": {
+   "third1": {
+    "ic": -0.01986,
+    "lo": -0.04954,
+    "hi": 0.01235,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.00728,
+    "lo": -0.04657,
+    "hi": 0.04005,
+    "n": 28636,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.00517,
+    "lo": -0.02505,
+    "hi": 0.04803,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|dm_stable_7d|h96|half1": {
+   "third1": {
+    "ic": 0.06991,
+    "lo": -0.04165,
+    "hi": 0.18519,
+    "n": 27119,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.02479,
+    "lo": -0.11705,
+    "hi": 0.06966,
+    "n": 39490,
+    "months": 41
+   },
+   "third3": {
+    "ic": 0.04306,
+    "lo": -0.00257,
+    "hi": 0.09785,
+    "n": 52637,
+    "months": 40
+   }
+  },
+  "ETHUSDT|dm_stable_7d|h96|half2": {
+   "third1": {
+    "ic": -0.01581,
+    "lo": -0.07908,
+    "hi": 0.05695,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.02384,
+    "lo": -0.0776,
+    "hi": 0.13624,
+    "n": 28556,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.01711,
+    "lo": -0.06274,
+    "hi": 0.11099,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|dm_stable_30d|h4|half1": {
+   "third1": {
+    "ic": 0.0076,
+    "lo": -0.01113,
+    "hi": 0.02764,
+    "n": 27225,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.02732,
+    "lo": -0.04087,
+    "hi": -0.01125,
+    "n": 39533,
+    "months": 41
+   },
+   "third3": {
+    "ic": -0.00666,
+    "lo": -0.01864,
+    "hi": 0.00853,
+    "n": 52673,
+    "months": 40
+   }
+  },
+  "ETHUSDT|dm_stable_30d|h4|half2": {
+   "third1": {
+    "ic": -0.01054,
+    "lo": -0.0231,
+    "hi": 0.00527,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.01631,
+    "lo": -0.03228,
+    "hi": 0.00484,
+    "n": 28648,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.0273,
+    "lo": -0.04524,
+    "hi": -0.00392,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|dm_stable_30d|h16|half1": {
+   "third1": {
+    "ic": 0.01853,
+    "lo": -0.02228,
+    "hi": 0.05629,
+    "n": 27213,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.05011,
+    "lo": -0.08191,
+    "hi": -0.01439,
+    "n": 39514,
+    "months": 41
+   },
+   "third3": {
+    "ic": -0.00589,
+    "lo": -0.02714,
+    "hi": 0.02288,
+    "n": 52610,
+    "months": 40
+   }
+  },
+  "ETHUSDT|dm_stable_30d|h16|half2": {
+   "third1": {
+    "ic": -0.02118,
+    "lo": -0.05197,
+    "hi": 0.01422,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.02801,
+    "lo": -0.0657,
+    "hi": 0.01633,
+    "n": 28636,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.02098,
+    "lo": -0.0616,
+    "hi": 0.0282,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|dm_stable_30d|h96|half1": {
+   "third1": {
+    "ic": 0.05036,
+    "lo": -0.03269,
+    "hi": 0.13409,
+    "n": 27119,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.06358,
+    "lo": -0.1439,
+    "hi": 0.018,
+    "n": 39490,
+    "months": 41
+   },
+   "third3": {
+    "ic": -0.04095,
+    "lo": -0.08681,
+    "hi": 0.01639,
+    "n": 52637,
+    "months": 40
+   }
+  },
+  "ETHUSDT|dm_stable_30d|h96|half2": {
+   "third1": {
+    "ic": -0.02873,
+    "lo": -0.10074,
+    "hi": 0.0448,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.04836,
+    "lo": -0.11232,
+    "hi": 0.02778,
+    "n": 28556,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.04883,
+    "lo": -0.10698,
+    "hi": 0.03835,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|sl_share_z|h4|half1": {
+   "third1": {
+    "ic": -0.00428,
+    "lo": -0.02459,
+    "hi": 0.01702,
+    "n": 27218,
+    "months": 38
+   },
+   "third2": {
+    "ic": 0.00098,
+    "lo": -0.01825,
+    "hi": 0.02068,
+    "n": 39516,
+    "months": 41
+   },
+   "third3": {
+    "ic": 0.00339,
+    "lo": -0.01497,
+    "hi": 0.01923,
+    "n": 52641,
+    "months": 40
+   }
+  },
+  "ETHUSDT|sl_share_z|h4|half2": {
+   "third1": {
+    "ic": -0.00611,
+    "lo": -0.0186,
+    "hi": 0.00668,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.00288,
+    "lo": -0.01778,
+    "hi": 0.02312,
+    "n": 28648,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.01203,
+    "lo": -0.01519,
+    "hi": 0.03462,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|sl_share_z|h16|half1": {
+   "third1": {
+    "ic": -0.0151,
+    "lo": -0.05579,
+    "hi": 0.02412,
+    "n": 27206,
+    "months": 38
+   },
+   "third2": {
+    "ic": 0.00934,
+    "lo": -0.02874,
+    "hi": 0.04945,
+    "n": 39497,
+    "months": 41
+   },
+   "third3": {
+    "ic": 0.01325,
+    "lo": -0.02011,
+    "hi": 0.04345,
+    "n": 52578,
+    "months": 40
+   }
+  },
+  "ETHUSDT|sl_share_z|h16|half2": {
+   "third1": {
+    "ic": 0.00525,
+    "lo": -0.02025,
+    "hi": 0.0356,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.00449,
+    "lo": -0.03065,
+    "hi": 0.03866,
+    "n": 28636,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.0192,
+    "lo": -0.03399,
+    "hi": 0.06548,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|sl_share_z|h96|half1": {
+   "third1": {
+    "ic": 0.00825,
+    "lo": -0.06222,
+    "hi": 0.07658,
+    "n": 27112,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.00137,
+    "lo": -0.07873,
+    "hi": 0.08451,
+    "n": 39473,
+    "months": 41
+   },
+   "third3": {
+    "ic": 0.00048,
+    "lo": -0.05793,
+    "hi": 0.05388,
+    "n": 52605,
+    "months": 40
+   }
+  },
+  "ETHUSDT|sl_share_z|h96|half2": {
+   "third1": {
+    "ic": -0.03124,
+    "lo": -0.07457,
+    "hi": 0.01624,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.0396,
+    "lo": -0.03503,
+    "hi": 0.11134,
+    "n": 28556,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.01473,
+    "lo": -0.06215,
+    "hi": 0.07847,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|sl_taker_diff|h4|half1": {
+   "third1": {
+    "ic": -0.00084,
+    "lo": -0.01799,
+    "hi": 0.01696,
+    "n": 27218,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.00886,
+    "lo": -0.02341,
+    "hi": 0.00592,
+    "n": 39516,
+    "months": 41
+   },
+   "third3": {
+    "ic": -0.00095,
+    "lo": -0.0152,
+    "hi": 0.01273,
+    "n": 52641,
+    "months": 40
+   }
+  },
+  "ETHUSDT|sl_taker_diff|h4|half2": {
+   "third1": {
+    "ic": -0.01327,
+    "lo": -0.03061,
+    "hi": 0.00487,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.00012,
+    "lo": -0.02286,
+    "hi": 0.0213,
+    "n": 28648,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.01909,
+    "lo": -0.05079,
+    "hi": 0.01067,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|sl_taker_diff|h16|half1": {
+   "third1": {
+    "ic": -0.02054,
+    "lo": -0.05365,
+    "hi": 0.01458,
+    "n": 27206,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.02431,
+    "lo": -0.05006,
+    "hi": 0.00317,
+    "n": 39497,
+    "months": 41
+   },
+   "third3": {
+    "ic": -0.01241,
+    "lo": -0.03934,
+    "hi": 0.01408,
+    "n": 52578,
+    "months": 40
+   }
+  },
+  "ETHUSDT|sl_taker_diff|h16|half2": {
+   "third1": {
+    "ic": 0.00725,
+    "lo": -0.02053,
+    "hi": 0.03539,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.02364,
+    "lo": -0.017,
+    "hi": 0.06024,
+    "n": 28636,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.01831,
+    "lo": -0.07215,
+    "hi": 0.03439,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|sl_taker_diff|h96|half1": {
+   "third1": {
+    "ic": -0.00376,
+    "lo": -0.04235,
+    "hi": 0.03342,
+    "n": 27112,
+    "months": 38
+   },
+   "third2": {
+    "ic": 0.01781,
+    "lo": -0.03683,
+    "hi": 0.07231,
+    "n": 39473,
+    "months": 41
+   },
+   "third3": {
+    "ic": -0.02798,
+    "lo": -0.07489,
+    "hi": 0.01122,
+    "n": 52605,
+    "months": 40
+   }
+  },
+  "ETHUSDT|sl_taker_diff|h96|half2": {
+   "third1": {
+    "ic": -2e-05,
+    "lo": -0.04351,
+    "hi": 0.04305,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.02994,
+    "lo": -0.03418,
+    "hi": 0.08727,
+    "n": 28556,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.03093,
+    "lo": -0.04501,
+    "hi": 0.10994,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|sl_lead|h4|half1": {
+   "third1": {
+    "ic": -0.0008,
+    "lo": -0.02319,
+    "hi": 0.01997,
+    "n": 27122,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.01282,
+    "lo": -0.0307,
+    "hi": 0.00383,
+    "n": 39250,
+    "months": 41
+   },
+   "third3": {
+    "ic": 0.00549,
+    "lo": -0.00629,
+    "hi": 0.01704,
+    "n": 52171,
+    "months": 40
+   }
+  },
+  "ETHUSDT|sl_lead|h4|half2": {
+   "third1": {
+    "ic": -0.01108,
+    "lo": -0.0249,
+    "hi": 0.00378,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.00142,
+    "lo": -0.01892,
+    "hi": 0.0219,
+    "n": 28648,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.0087,
+    "lo": -0.01032,
+    "hi": 0.02807,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|sl_lead|h16|half1": {
+   "third1": {
+    "ic": -0.00265,
+    "lo": -0.04996,
+    "hi": 0.04537,
+    "n": 27110,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.02949,
+    "lo": -0.0674,
+    "hi": 0.0047,
+    "n": 39231,
+    "months": 41
+   },
+   "third3": {
+    "ic": 0.0179,
+    "lo": -0.00725,
+    "hi": 0.04306,
+    "n": 52108,
+    "months": 40
+   }
+  },
+  "ETHUSDT|sl_lead|h16|half2": {
+   "third1": {
+    "ic": -0.02634,
+    "lo": -0.05472,
+    "hi": 0.00368,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.00821,
+    "lo": -0.04828,
+    "hi": 0.03405,
+    "n": 28636,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.02521,
+    "lo": -0.00639,
+    "hi": 0.05533,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|sl_lead|h96|half1": {
+   "third1": {
+    "ic": -0.01761,
+    "lo": -0.08361,
+    "hi": 0.05823,
+    "n": 27016,
+    "months": 38
+   },
+   "third2": {
+    "ic": -0.04424,
+    "lo": -0.12538,
+    "hi": 0.03286,
+    "n": 39207,
+    "months": 41
+   },
+   "third3": {
+    "ic": 0.00122,
+    "lo": -0.06467,
+    "hi": 0.05681,
+    "n": 52135,
+    "months": 40
+   }
+  },
+  "ETHUSDT|sl_lead|h96|half2": {
+   "third1": {
+    "ic": -0.00221,
+    "lo": -0.06639,
+    "hi": 0.06209,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.03616,
+    "lo": -0.10729,
+    "hi": 0.03677,
+    "n": 28556,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.02339,
+    "lo": -0.09796,
+    "hi": 0.05997,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|cg_open|h4|half1": {
+   "third1": {
+    "ic": -0.09387,
+    "lo": -0.13303,
+    "hi": -0.05911,
+    "n": 8431,
+    "months": 26
+   },
+   "third2": {
+    "ic": -0.04483,
+    "lo": -0.08422,
+    "hi": -0.00432,
+    "n": 7282,
+    "months": 28
+   },
+   "third3": {
+    "ic": -0.05133,
+    "lo": -0.09443,
+    "hi": -0.01554,
+    "n": 8194,
+    "months": 24
+   }
+  },
+  "ETHUSDT|cg_open|h4|half2": {
+   "third1": {
+    "ic": -0.07728,
+    "lo": -0.10476,
+    "hi": -0.05158,
+    "n": 16553,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.03768,
+    "lo": -0.08229,
+    "hi": 0.00013,
+    "n": 5971,
+    "months": 28
+   },
+   "third3": {
+    "ic": -0.00484,
+    "lo": -0.07975,
+    "hi": 0.0652,
+    "n": 2437,
+    "months": 23
+   }
+  },
+  "ETHUSDT|cg_open|h16|half1": {
+   "third1": {
+    "ic": -0.13267,
+    "lo": -0.2038,
+    "hi": -0.06419,
+    "n": 8431,
+    "months": 26
+   },
+   "third2": {
+    "ic": -0.03681,
+    "lo": -0.11768,
+    "hi": 0.04302,
+    "n": 7282,
+    "months": 28
+   },
+   "third3": {
+    "ic": -0.11763,
+    "lo": -0.19679,
+    "hi": -0.05487,
+    "n": 8180,
+    "months": 24
+   }
+  },
+  "ETHUSDT|cg_open|h16|half2": {
+   "third1": {
+    "ic": -0.07634,
+    "lo": -0.13299,
+    "hi": -0.02231,
+    "n": 16553,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.0355,
+    "lo": -0.13732,
+    "hi": 0.05709,
+    "n": 5971,
+    "months": 28
+   },
+   "third3": {
+    "ic": 0.00774,
+    "lo": -0.14078,
+    "hi": 0.1586,
+    "n": 2437,
+    "months": 23
+   }
+  },
+  "ETHUSDT|cg_open|h96|half1": {
+   "third1": {
+    "ic": -0.0883,
+    "lo": -0.25475,
+    "hi": 0.09866,
+    "n": 8431,
+    "months": 26
+   },
+   "third2": {
+    "ic": 0.02968,
+    "lo": -0.15375,
+    "hi": 0.2027,
+    "n": 7282,
+    "months": 28
+   },
+   "third3": {
+    "ic": -0.12511,
+    "lo": -0.2611,
+    "hi": -0.00924,
+    "n": 8184,
+    "months": 24
+   }
+  },
+  "ETHUSDT|cg_open|h96|half2": {
+   "third1": {
+    "ic": 0.07168,
+    "lo": -0.0653,
+    "hi": 0.20081,
+    "n": 16553,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.09082,
+    "lo": -0.09828,
+    "hi": 0.26479,
+    "n": 5971,
+    "months": 28
+   },
+   "third3": {
+    "ic": -0.14216,
+    "lo": -0.39417,
+    "hi": 0.1692,
+    "n": 2437,
+    "months": 23
+   }
+  },
+  "ETHUSDT|cg_above|h4|half1": {
+   "third1": {
+    "ic": -0.008,
+    "lo": -0.02607,
+    "hi": 0.01826,
+    "n": 20005,
+    "months": 27
+   },
+   "third2": {
+    "ic": 0.01039,
+    "lo": -0.01291,
+    "hi": 0.02872,
+    "n": 25796,
+    "months": 28
+   },
+   "third3": {
+    "ic": -0.00095,
+    "lo": -0.02246,
+    "hi": 0.01773,
+    "n": 35635,
+    "months": 27
+   }
+  },
+  "ETHUSDT|cg_above|h4|half2": {
+   "third1": {
+    "ic": -0.01049,
+    "lo": -0.02304,
+    "hi": 0.00098,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.00375,
+    "lo": -0.01559,
+    "hi": 0.0235,
+    "n": 28648,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.00388,
+    "lo": -0.02992,
+    "hi": 0.02219,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|cg_above|h16|half1": {
+   "third1": {
+    "ic": -0.01778,
+    "lo": -0.06154,
+    "hi": 0.0254,
+    "n": 19993,
+    "months": 27
+   },
+   "third2": {
+    "ic": 0.01751,
+    "lo": -0.03184,
+    "hi": 0.05609,
+    "n": 25794,
+    "months": 28
+   },
+   "third3": {
+    "ic": 0.00687,
+    "lo": -0.03181,
+    "hi": 0.04014,
+    "n": 35599,
+    "months": 27
+   }
+  },
+  "ETHUSDT|cg_above|h16|half2": {
+   "third1": {
+    "ic": -0.01547,
+    "lo": -0.04348,
+    "hi": 0.0091,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.01613,
+    "lo": -0.0242,
+    "hi": 0.06052,
+    "n": 28636,
+    "months": 30
+   },
+   "third3": {
+    "ic": 0.01984,
+    "lo": -0.03435,
+    "hi": 0.07068,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|cg_above|h96|half1": {
+   "third1": {
+    "ic": -0.01156,
+    "lo": -0.11947,
+    "hi": 0.10507,
+    "n": 19913,
+    "months": 27
+   },
+   "third2": {
+    "ic": 0.02189,
+    "lo": -0.04373,
+    "hi": 0.08995,
+    "n": 25773,
+    "months": 28
+   },
+   "third3": {
+    "ic": 0.0333,
+    "lo": -0.04868,
+    "hi": 0.11119,
+    "n": 35616,
+    "months": 27
+   }
+  },
+  "ETHUSDT|cg_above|h96|half2": {
+   "third1": {
+    "ic": -0.00458,
+    "lo": -0.07552,
+    "hi": 0.06593,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": 0.04084,
+    "lo": -0.049,
+    "hi": 0.13396,
+    "n": 28556,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.01009,
+    "lo": -0.10532,
+    "hi": 0.09058,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|cg_below|h4|half1": {
+   "third1": {
+    "ic": 0.0008,
+    "lo": -0.02366,
+    "hi": 0.01841,
+    "n": 20005,
+    "months": 27
+   },
+   "third2": {
+    "ic": -0.00615,
+    "lo": -0.03285,
+    "hi": 0.01998,
+    "n": 25796,
+    "months": 28
+   },
+   "third3": {
+    "ic": -0.02087,
+    "lo": -0.03234,
+    "hi": -0.00967,
+    "n": 35635,
+    "months": 27
+   }
+  },
+  "ETHUSDT|cg_below|h4|half2": {
+   "third1": {
+    "ic": -0.00752,
+    "lo": -0.02396,
+    "hi": 0.00947,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.00143,
+    "lo": -0.02147,
+    "hi": 0.0177,
+    "n": 28648,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.01262,
+    "lo": -0.03559,
+    "hi": 0.00686,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|cg_below|h16|half1": {
+   "third1": {
+    "ic": 0.00104,
+    "lo": -0.04591,
+    "hi": 0.04101,
+    "n": 19993,
+    "months": 27
+   },
+   "third2": {
+    "ic": -0.01317,
+    "lo": -0.06458,
+    "hi": 0.03543,
+    "n": 25794,
+    "months": 28
+   },
+   "third3": {
+    "ic": -0.03307,
+    "lo": -0.05435,
+    "hi": -0.01185,
+    "n": 35599,
+    "months": 27
+   }
+  },
+  "ETHUSDT|cg_below|h16|half2": {
+   "third1": {
+    "ic": -0.01353,
+    "lo": -0.04155,
+    "hi": 0.01625,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.00022,
+    "lo": -0.04509,
+    "hi": 0.04075,
+    "n": 28636,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.01133,
+    "lo": -0.05082,
+    "hi": 0.02526,
+    "n": 15404,
+    "months": 29
+   }
+  },
+  "ETHUSDT|cg_below|h96|half1": {
+   "third1": {
+    "ic": 0.0462,
+    "lo": -0.06043,
+    "hi": 0.16053,
+    "n": 19913,
+    "months": 27
+   },
+   "third2": {
+    "ic": -0.01714,
+    "lo": -0.10479,
+    "hi": 0.06715,
+    "n": 25773,
+    "months": 28
+   },
+   "third3": {
+    "ic": -0.05502,
+    "lo": -0.12481,
+    "hi": 0.00962,
+    "n": 35616,
+    "months": 27
+   }
+  },
+  "ETHUSDT|cg_below|h96|half2": {
+   "third1": {
+    "ic": -0.03266,
+    "lo": -0.08341,
+    "hi": 0.03188,
+    "n": 41096,
+    "months": 30
+   },
+   "third2": {
+    "ic": -0.02312,
+    "lo": -0.10681,
+    "hi": 0.0691,
+    "n": 28556,
+    "months": 30
+   },
+   "third3": {
+    "ic": -0.00626,
+    "lo": -0.10271,
+    "hi": 0.07667,
+    "n": 15404,
+    "months": 29
+   }
+  }
+ },
+ "pass": {
+  "kp_prem|h4": {
+   "raw": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "kp_prem|h16": {
+   "raw": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "kp_prem|h96": {
+   "raw": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "kp_z30|h4": {
+   "raw": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   }
+  },
+  "kp_z30|h16": {
+   "raw": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "kp_z30|h96": {
+   "raw": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   }
+  },
+  "kp_chg24|h4": {
+   "raw": {
+    "btc": true,
+    "btc_sign": 1,
+    "eth": true,
+    "eth_sign": 1,
+    "both": true
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   }
+  },
+  "kp_chg24|h16": {
+   "raw": {
+    "btc": true,
+    "btc_sign": 1,
+    "eth": true,
+    "eth_sign": 1,
+    "both": true
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   }
+  },
+  "kp_chg24|h96": {
+   "raw": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "dm_btc_7d|h4": {
+   "raw": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "dm_btc_7d|h16": {
+   "raw": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "dm_btc_7d|h96": {
+   "raw": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "dm_btc_30d|h4": {
+   "raw": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   }
+  },
+  "dm_btc_30d|h16": {
+   "raw": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   }
+  },
+  "dm_btc_30d|h96": {
+   "raw": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   }
+  },
+  "dm_stable_7d|h4": {
+   "raw": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   }
+  },
+  "dm_stable_7d|h16": {
+   "raw": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   }
+  },
+  "dm_stable_7d|h96": {
+   "raw": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   },
+   "partial": {
+    "btc": true,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   }
+  },
+  "dm_stable_30d|h4": {
+   "raw": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "dm_stable_30d|h16": {
+   "raw": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "dm_stable_30d|h96": {
+   "raw": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "sl_share_z|h4": {
+   "raw": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   }
+  },
+  "sl_share_z|h16": {
+   "raw": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   }
+  },
+  "sl_share_z|h96": {
+   "raw": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   }
+  },
+  "sl_taker_diff|h4": {
+   "raw": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": true,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "sl_taker_diff|h16": {
+   "raw": {
+    "btc": true,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "sl_taker_diff|h96": {
+   "raw": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "sl_lead|h4": {
+   "raw": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "sl_lead|h16": {
+   "raw": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "sl_lead|h96": {
+   "raw": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "cg_open|h4": {
+   "raw": {
+    "btc": true,
+    "btc_sign": -1,
+    "eth": true,
+    "eth_sign": -1,
+    "both": true
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "cg_open|h16": {
+   "raw": {
+    "btc": true,
+    "btc_sign": -1,
+    "eth": true,
+    "eth_sign": -1,
+    "both": true
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "cg_open|h96": {
+   "raw": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "cg_above|h4": {
+   "raw": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   }
+  },
+  "cg_above|h16": {
+   "raw": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   }
+  },
+  "cg_above|h96": {
+   "raw": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": 1,
+    "both": false
+   }
+  },
+  "cg_below|h4": {
+   "raw": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "cg_below|h16": {
+   "raw": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  },
+  "cg_below|h96": {
+   "raw": {
+    "btc": false,
+    "btc_sign": -1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   },
+   "partial": {
+    "btc": false,
+    "btc_sign": 1,
+    "eth": false,
+    "eth_sign": -1,
+    "both": false
+   }
+  }
+ },
+ "verdict": {
+  "kprem": {
+   "title": "Korea premium",
+   "verdict": "MOSTLY PAST PRICE",
+   "testable_cells": {
+    "BTCUSDT|half1": true,
+    "BTCUSDT|half2": true,
+    "ETHUSDT|half1": true,
+    "ETHUSDT|half2": true
+   },
+   "passes_raw_and_partial": [],
+   "passes_raw_only": [
+    "kp_chg24 h4",
+    "kp_chg24 h16"
+   ],
+   "one_coin_raw_and_partial": []
+  },
+  "dom": {
+   "title": "BTC dominance",
+   "verdict": "NOTHING SHOWN",
+   "testable_cells": {
+    "BTCUSDT|half1": true,
+    "BTCUSDT|half2": true,
+    "ETHUSDT|half1": true,
+    "ETHUSDT|half2": true
+   },
+   "passes_raw_and_partial": [],
+   "passes_raw_only": [],
+   "one_coin_raw_and_partial": []
+  },
+  "spotlead": {
+   "title": "Spot vs perp leadership",
+   "verdict": "NOTHING SHOWN",
+   "testable_cells": {
+    "BTCUSDT|half1": true,
+    "BTCUSDT|half2": true,
+    "ETHUSDT|half1": true,
+    "ETHUSDT|half2": true
+   },
+   "passes_raw_and_partial": [],
+   "passes_raw_only": [],
+   "one_coin_raw_and_partial": []
+  },
+  "cmegap": {
+   "title": "CME gap (spot proxy)",
+   "verdict": "MOSTLY PAST PRICE",
+   "testable_cells": {
+    "BTCUSDT|half1": true,
+    "BTCUSDT|half2": true,
+    "ETHUSDT|half1": true,
+    "ETHUSDT|half2": true
+   },
+   "passes_raw_and_partial": [],
+   "passes_raw_only": [
+    "cg_open h4",
+    "cg_open h16"
+   ],
+   "one_coin_raw_and_partial": []
+  }
+ },
+ "errors": {
+  "BTCUSDT": {},
+  "ETHUSDT": {}
+ },
+ "seconds": 34.1
+}
