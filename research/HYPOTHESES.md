@@ -4178,3 +4178,83 @@ were "expected"; in fact none were raised (with their files absent those cards r
 **For a round 5:** none of the four is registered as a candidate input by this rule. If a round 5 is ever run, these
 four should not be added on the strength of this study; `kp_chg24` and `cg_open` duplicate the past-return inputs the
 agents already have.
+
+## H73. One member wallet on the Setups book's BTC and ETH trades at realistic fees, at the member's new size, and on the two shadow rules (registered 22 Nov 2026, about 11:40 UTC, before any H73 code was run or any H73 number was computed)
+
+**Prompted by:** H63 (today) walked ONE member wallet of $10,000 through every BTC and ETH trade of the Setups book
+(`b_targets`) since 2020 at three sizes; every size lost on history, larger sizes faster. Two limits on what that says
+about the owner's real member account: (1) H63 charged the paper book's fee, 0.10% of the notional per side, about twice
+a standard futures taker fee, and fees were a large part of the loss (the 2% wallet paid 14,338 in fees on a 10,000
+start); (2) since 11:18 UTC today the member account trades NEW setups at 100% of its balance per coin at 2x leverage with
+a 15% daily loss limit (it was on the 2% rule). Also today two rule variants became paper shadow books: `b_trend30` (H67)
+and `b_wait_stop` (H68). This is a description of history under stated assumptions, not a forecast and not advice. There
+is no pass bar: nothing can pass. No engine code is changed.
+
+**What must be said first.** The two variants were FOUND on this same history (H65, H66; tested as rules in H67, H68). Any
+wallet result for them inherits that: it cannot show an advantage, and the report says so each time their numbers are
+shown. A history replay is a warm-up, not a forward result. The member's actual fee rate was not available to this study.
+
+**The trades.** BTCUSDT and ETHUSDT trades of three books, each run by the engine's own `shadows.run_challenger` (the
+engine's code, no copy) over the replay H63 used (the crypto group prepared by `h59.prep_cut` with the cached fits, to the
+last stored session at or before 2026-11-21 13:45 UTC, `h62.group_end`; first decided session as H63):
+(a) `b_targets`, the current Setups rule as it runs from think15-v5.2.9 (early entry at the deciding close on BTC and ETH);
+(b) `b_trend30` (H67); (c) `b_wait_stop` (H68). H63's reduced copy (`h62.run_setups`) is NOT used: since v5.2.9 it no
+longer equals `b_targets` on BTC and ETH. Each book's closed trades and its open trade at the cut (from the book's own end
+state: side, entry, initial stop, entry bar, Target 1 and whether it was taken) become setups with `h63.setup_of`; an
+entry booked at the last close (held from a bar beyond the cut) is dropped. GATE (must pass or nothing is read, per book
+and coin): walked with the paper book's own sizing and its own fee, one coin at a time, funding off, the walk reproduces
+that engine book's marked equity at every bar (largest relative gap below 1e-7), as `h63.gate` does, adapted in the H73
+script only to take the open trade from `shadows.run`'s end state.
+
+**The wallet.** H63's rules unchanged (`h63.walk`, `h63.member_sizer`, imported, not edited): one wallet of 10,000, both
+coins; in a bar funding first, then fills at the open (closes before entries, BTC before ETH), then stops and targets
+inside the bar; funding from the stored Binance series (`data/<coin>_funding.csv`) on the open notional at each funding
+time; the daily loss brake as H63 modelled it (UTC day, budget = brake% of the day-start wallet less the day's loss less
+the other coin's open risk; a new trade is trimmed to fit or not joined; it closes nothing); the wipe-out rule (equity at
+each open position's worst price of a bar at or below 0.5% of the open notional ends the run); a setup already open when a
+wallet starts is not joined. Sizings:
+- **S1 "2% rule":** loses 2% of the wallet at the stop, notional capped at the wallet less the other coin's open notional; brake 5%.
+- **S2 "100% per coin":** notional = 1.0 x the wallet at the entry; brake 15%. Read here as the member's setting from
+  today (100% of the balance per coin, 2x leverage: the two coins together need the whole wallet as margin). If the
+  account instead means a notional of 2x the balance per coin, that is larger than S3 and is not run here.
+- **S3 "3x book":** notional = 1.5 x the wallet at the entry; brake 15%.
+
+**Fees, the point of the study:** three levels per side, charged as H63 charges them (fee x quantity x (entry price + exit
+price)): **0.10%** (H63's, a reproduction check), **0.05%** (a standard futures taker fee, the PRIMARY level), **0.02%**
+(a maker-like lower bound, shown as a bound; market orders do not pay it). Slippage of the member's fill against the
+book's prices is not modelled (H64 measured the one-bar delay as zero on average with about 0.8% of noise either way).
+
+**Read-outs, fixed now, for each of 3 books x 3 sizings x 3 fees (27 cells):**
+- (a) One 10,000 wallet over the whole replay: final equity, worst fall of the equity, lowest equity (and when), worst UTC
+  day (equity at the day's last close against the day before), longest run of losing joined trades, trades joined /
+  trimmed / capped / not joined, fees paid, funding paid, the final equity without funding, wiped out or not (also with
+  closes only, if it differs).
+- (b) The same read-outs for three separate fresh 10,000 wallets: first half (first decided session to 2023-06-07, i.e.
+  bars before 2023-06-08 00:00 UTC), second half (2023-06-08 to the cut), holdout (2025-11-11 to the cut).
+- (c) H63's month-start table: a fresh 10,000 from every month-start for 365 days: how often +100% came first, how often
+  -50% or a wipe-out came first, how often neither (median end equity), unfinished, median days to either, to +100%, to
+  -50%; also by half (month-starts before / from 2023-06-08), as H63.
+- (d) **The statistical statement, fixed now,** for the PRIMARY cell (book (a), S2, fee 0.05%) and the same cell of (b)
+  and (c): from the whole-run wallet of (a), the equity at each calendar month's last close; monthly returns between
+  consecutive month-ends, COMPLETE calendar months only (the partial first month from the start and the partial last
+  month to the cut are left out); their mean, with a bootstrap 90% interval (resample the months with replacement, the
+  same number of months, 10,000 draws, numpy seed 73, the 5th and 95th percentiles of the resampled means); and 10,000
+  paths of 12 months drawn with replacement from the same months (seed 73), compounded: the share of paths that end above
+  their start, and the share that fall below half their start at any month-end. This treats months as exchangeable
+  (independent and alike), which they are not exactly: runs of good and bad months, and the wallet's size changing what a
+  fixed-size month would do, are lost. If a wallet is wiped out, its wipe-out month counts as -100% and no month follows.
+  The same numbers are written for all 27 cells in `results.json`, descriptive only.
+- (e) **Reproduction check:** book (a) at 0.10% against H63's published S1/S2/S3 results (final, worst fall, lowest,
+  fees, funding, joined/trimmed/not joined, month-start counts), side by side with the differences. No tolerance bar:
+  the v5.2.9 entry at the deciding close instead of the next open moves the figures slightly, and how much is reported.
+  Also shown: each book's trade count against H63 (2,076) and the BTC + ETH counts of H67 and H68.
+
+**Not modelled, and said:** the member's actual fee rate, slippage and the vault's join window, refusals, exchange
+limits, the vault's rounding, the vault's account-value reading of the daily room (H63's notes on where the model differs
+from the vault stand). The forward record (H63's (d)) is not repeated here.
+
+**Changes from the design as handed to me, made before registering:** (1) months for the statistic are complete calendar
+months only (the partial first and last months are not months); (2) the bootstrap uses 10,000 draws, seed 73; (3) the
+interpretation of "100% at 2x" is written down (S2 = 1.0x notional per coin); (4) the month-start table is also shown by
+half, as in H63; (5) an entry booked at the last close (beyond the cut) is dropped rather than walked; (6) the trade
+counts are cross-checked against H63, H67 and H68.
