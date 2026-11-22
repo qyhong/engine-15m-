@@ -3771,3 +3771,42 @@ Cost of entering at the next bar's open instead of the book's entry, in percent 
 in total); it is as often a better price as a worse one. What it adds is noise: in nine entries of ten the member's
 price is within about 0.8% of the book's, either way. So sending the setup a bar earlier would make the member's entry
 match the book's more closely, and would not have improved results. No engine code was changed by this measurement.
+
+## H65. Post-mortem of the Setups book, from its first replay trade to now: where its results come from (registered 22 Nov 2026, before any H65 code existed or any H65 number was computed)
+
+**Prompted by:** the owner, in this project, 22 Nov 2026: "Audit from beginning to now and see any post mortem. How can
+we play the rules better". A description with fixed slices, not a rule change: nothing is adopted from it.
+
+**Known before registering:** the live record (11 Nov to 20 Nov 2026 entries, 29 closed trades on eight markets: +27.25R,
+22 wins; every trade short except USDJPY's five longs, which are the only losing market; 20 of 29 entered by the forced
+rule). H62/H63: on the replay the current rule loses on BTC and ETH (sum of R -8.6 over 2,075 trades). H64: 1,212 of
+those 2,075 entries are FORCED, 745 ENTER, 118 FLIP.
+
+**Data.** `b_targets` as the server runs it today (the rule before v5.2.9; the early entry moves entry prices by a hair
+and is not part of this), all eight markets, each from its first decided session to the last stored session at or before
+2026-11-21 13:45 UTC, the evidence store and cached fits read only. Every closed trade, its result in R as the book
+books it (`r_mult`: net of fees, over the risk at the entry stop). Halves split at 2023-06-08 by entry time.
+
+**Slices, fixed now.** Readings are taken at the bar that decided the entry.
+1. Entry word: ENTER, FORCED, FLIP.
+2. Side: long, short.
+3. Higher-timeframe bias: with the trade, against it, none.
+4. Tide: with the trade, against it.
+5. The market's own 30-day move (close against the close 30 days earlier): with the trade, against it.
+6. The lead of the trade's side in the odds (P(side) - P(other side)): thirds, cut on the first half only.
+7. Stop distance in percent of price: thirds per market, cut on that market's first half only.
+8. Target 1's distance in R: thirds, cut on the first half only.
+9. What came before on that market: the previous trade ended at its stop / at a target (Target 2, or the entry after
+   Target 1) / otherwise; and whether this trade is on the same side as the previous one.
+10. Facts about exits (not a slice to trade on): the exit words; of the trades stopped at the entry stop, the share that
+    had been at least 0.5R and at least 1R in open profit first (best price of the bars before the exit bar); of the
+    trades that took Target 1, the share that went on to Target 2; median bars held.
+
+**Read-outs.** For every cell: trades, share won, mean R, sum of R; for all eight markets, for BTC and ETH, for the
+other six; each in the first half and the second half. The live record's 29 trades are shown beside slices 1, 2 and 10.
+
+**How a slice is called, fixed now.** A cell is "consistent" only if its mean R has the same sign in the first half and
+the second half AND on BTC and ETH and on the other six markets, with at least 100 trades in each of those four parts.
+Anything else is "not consistent". A consistent cell is a candidate for a registered forward shadow book and nothing
+more: ten slices are looked at here, so some will look good by chance, and a history replay is a warm-up, not a
+forward result. No engine code is changed by this.
