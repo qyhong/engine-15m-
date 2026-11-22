@@ -81,9 +81,17 @@ STUDIES = {
     "H87": {"kind": "boot", "draws": 20000, "title": "block bootstrap of 12-month results (current rule, H67, H68)"},
     "H88": {"kind": "costs", "draws": 5000, "title": "costs surface: fee x entry slip"},
     "H89": {"kind": "years", "draws": 10000, "title": "year by year and leave one year out"},
+    # registered after the H81 audit (H81 void, H82 withdrawn): causal versions, no information the book did not have
+    "H81b": {"kind": "causal", "draws": 200000, "seed": 20261122812,
+             "title": "causal side placebo: each trade's side drawn from the long share of the book's previous 20 trades "
+                      "on the market (and a fair coin)"},
+    "H82b": {"kind": "causal", "draws": 200000, "seed": 20261122822,
+             "title": "causal entry-time placebo: each trade, same side, moved to a random bar at or after its real entry, "
+                      "within the median of the book's previous 20 entry gaps"},
 }
 for _k, _s in STUDIES.items():
-    _s["seed"] = SEED0 * 100 + int(_k[1:])                    # e.g. 2026112280 for H80
+    if "seed" not in _s:
+        _s["seed"] = SEED0 * 100 + int(_k[1:])                # e.g. 2026112280 for H80
 
 
 def log(msg):
@@ -641,6 +649,164 @@ def trade_draw(study, ctxs, k, gi):
 
 
 # =====================================================================================
+# H81b / H82b: the CAUSAL side and entry-time placebos (registered after the H81 audit; H81 void, H82 withdrawn).
+# Every placebo trade uses only what the book knew at that trade's own entry: a side drawn from the book's PREVIOUS
+# trades (H81b) or the real side moved to a bar AT OR AFTER the real entry, inside a window whose length is set by the
+# book's PREVIOUS entries (H82b). Trades are scored by machine_r exactly as in H81/H82. The pure functions below are
+# also what the random-walk check (rw_check) and tests/test_queue_placebo.py exercise.
+# =====================================================================================
+TRAIL_N = 20                        # H81b / H82b: the book's previous 20 trades on the market (fewer at the start)
+
+
+def trailing_long_share(sides, n_prev=TRAIL_N):
+    """p[j] = the long share of the book's previous n_prev trades on the market (all earlier ones while fewer exist;
+    0.5 for the first). Uses sides[:j] only: the trade's own side and every later side are never read."""
+    s = (np.asarray(sides) == 1).astype(float)
+    c = np.concatenate([[0.0], np.cumsum(s)])
+    j = np.arange(len(s))
+    a = np.maximum(j - int(n_prev), 0)
+    cnt = j - a
+    with np.errstate(invalid="ignore", divide="ignore"):
+        p = np.where(cnt > 0, (c[j] - c[a]) / np.where(cnt > 0, cnt, 1), 0.5)
+    return p
+
+
+def trailing_gap(pos, n_prev=TRAIL_N):
+    """L[j] = the median of the book's previous n_prev entry gaps on the market, in drawable bars (the gap from trade
+    j-1 to trade j is known at trade j's entry, so it counts; no later entry is read), truncated to an integer, at
+    least 1. L[0] = 1 (no gap known yet: the first trade stays at its real bar)."""
+    pos = np.asarray(pos, dtype="int64")
+    g = np.diff(pos)
+    out = np.ones(len(pos), dtype="int64")
+    for j in range(1, len(pos)):
+        out[j] = max(1, int(np.median(g[max(0, j - int(n_prev)):j])))
+    return out
+
+
+def h81b_sides(p, u):
+    """Placebo sides from uniforms u: long where u < p. With p = trailing_long_share it is the H81b draw; with
+    p = 0.5 it is the coin cell."""
+    return np.where(np.asarray(u) < np.asarray(p), 1, -1)
+
+
+def h82b_offsets(L, u):
+    """Offsets in [0, L) (uniform integers) from uniforms u in [0, 1): offset 0 is the real entry bar."""
+    L = np.asarray(L, dtype="int64")
+    return np.minimum((np.asarray(u) * L).astype("int64"), L - 1)
+
+
+# ------------------------------------------------------------------ the random-walk check (no market data)
+def rw_walk(seed, years=2, per_day=24, vol_day=0.03):
+    """A driftless random walk (a martingale in log price) of hourly bars, with every trade outcome precomputed: R of a
+    long and of a short entered at bar i (price close[i-1], decision row i-1), scored by replay_trade exactly as
+    machine_r scores the book (stop 2 units, no readings: Target 1 1.5R, Target 2 2R, 30-day cap)."""
+    rng = np.random.default_rng([2026, 8182, int(seed)])
+    nbar = int(years * 365 * per_day)
+    ret = rng.standard_normal(nbar) * vol_day / math.sqrt(per_day)
+    close = 30000.0 * np.exp(np.cumsum(ret))
+    op = np.r_[close[0], close[:-1]]
+    wig = vol_day / math.sqrt(per_day) / 3.0
+    hi = np.maximum(op, close) * np.exp(np.abs(rng.standard_normal(nbar)) * wig)
+    lo_ = np.minimum(op, close) * np.exp(-np.abs(rng.standard_normal(nbar)) * wig)
+    px = {"open": op, "high": hi, "low": lo_, "close": close}
+    unit = close * 0.012
+    tms = np.arange(nbar, dtype="int64") * (DAY_MS // per_day)
+    cfg = {"cost_side": 0.001, "stop_units": 2.0}
+    empty = (lambda k: {})
+    R = {1: np.full(nbar, np.nan), -1: np.full(nbar, np.nan)}
+    E = {1: np.zeros(nbar, dtype="int64"), -1: np.zeros(nbar, dtype="int64")}
+    for i in range(1, nbar):
+        e = cap_bar(tms, i, nbar)
+        for sd in (1, -1):
+            r, _w, jo = replay_trade(sd, i, close[i - 1], i - 1, e, False, px, unit, cfg, empty)
+            R[sd][i], E[sd][i] = r, jo
+    return {"close": close, "R": R, "E": E, "nbar": nbar, "per_day": per_day, "tms": tms, "rng_seed": int(seed)}
+
+
+def rw_book(w, rule, seed, lookback_days=3):
+    """A one-position toy book on the walk: side by a CAUSAL rule at the close before entry (momentum: the sign of the
+    last lookback_days' move; reversal: its opposite; coin), out by the machinery, the next entry 0-23 bars after the
+    exit (so, like the real book, when it enters next depends on how the trade ended). -> entry bars, sides."""
+    rng = np.random.default_rng([2026, 8183, int(seed), ["momentum", "reversal", "coin"].index(rule)])
+    lb = int(lookback_days * w["per_day"])
+    c, nbar = w["close"], w["nbar"]
+    i, ins, sides = lb + 1, [], []
+    while i < nbar - 1:
+        if rule == "coin":
+            sd = 1 if rng.random() < 0.5 else -1
+        else:
+            sd = (1 if c[i - 1] > c[i - 1 - lb] else -1) * (1 if rule == "momentum" else -1)
+        ins.append(i)
+        sides.append(sd)
+        i = int(w["E"][sd][i]) + 1 + int(rng.integers(0, 24))
+    return np.array(ins, dtype="int64"), np.array(sides, dtype="int64")
+
+
+def rw_placebos(w, ins, sides, draws, seed):
+    """Per placebo design, the mean R a trade of each draw on one toy book. The causal designs (H81b trailing share,
+    H81b coin, H82b trailing-gap window) and, for comparison, the designs found to look ahead (H81 within-month
+    permutation, H82 random bar of the month, and the brief's H82b window that runs to the NEXT real entry)."""
+    R = w["R"]
+    nbar = w["nbar"]
+    rp, rm = R[1][ins], R[-1][ins]
+    month = (w["tms"] // (30 * DAY_MS)).astype("int64")[ins]
+    p_tr = trailing_long_share(sides)
+    pos = ins                                                    # every bar is drawable on the walk
+    L = trailing_gap(pos)
+    nxt = np.r_[ins[1:], nbar - 1]
+    Lnext = np.maximum(nxt - ins, 1)                             # the brief's window: up to the next real entry (future)
+    month_all = (w["tms"] // (30 * DAY_MS)).astype("int64")
+    mstart = np.maximum(np.searchsorted(month_all, month, side="left"), 1)
+    mend = np.searchsorted(month_all, month, side="right")
+    res = dict((k, np.empty(draws)) for k in ("h81_month_perm", "h81b_trailing", "h81b_coin", "h82_month_bar",
+                                               "h82b_window_to_next_entry", "h82b_trailing_gap"))
+    T = len(ins)
+
+    def rs(sd, i0):
+        return np.where(sd == 1, R[1][i0], R[-1][i0])
+    for k in range(draws):
+        g = draw_rng(seed, k)
+        u = g.random((5, T))
+        res["h81_month_perm"][k] = np.nanmean(np.where(sides[permute_within(month, g)] == 1, rp, rm))
+        res["h81b_trailing"][k] = np.nanmean(np.where(h81b_sides(p_tr, u[0]) == 1, rp, rm))
+        res["h81b_coin"][k] = np.nanmean(np.where(h81b_sides(0.5, u[1]) == 1, rp, rm))
+        i0 = mstart + (u[2] * (mend - mstart)).astype("int64")
+        res["h82_month_bar"][k] = np.nanmean(rs(sides, np.minimum(i0, nbar - 1)))
+        res["h82b_window_to_next_entry"][k] = np.nanmean(rs(sides, np.minimum(ins + h82b_offsets(Lnext, u[3]), nbar - 1)))
+        res["h82b_trailing_gap"][k] = np.nanmean(rs(sides, np.minimum(ins + h82b_offsets(L, u[4]), nbar - 1)))
+    real = float(np.nanmean(np.where(sides == 1, rp, rm)))
+    return real, res
+
+
+def rw_check(walks=12, draws=200, years=2, rules=("momentum", "reversal", "coin"), log=None):
+    """The random-walk check of H81b and H82b. On driftless walks no causal side rule and no entry timing can earn
+    anything, so a sound placebo must show no difference from the real toy book on average (any rule), and must not
+    reproduce the old designs' tilt (placebo better than a momentum rule, worse than a reversal rule).
+    -> {rule: {design: {mean gap placebo - real, its SE over walks, share of walks with p_upper <= 0.05 / >= 0.95}}}"""
+    gaps, pu = {}, {}
+    for s in range(walks):
+        w = rw_walk(s, years=years)
+        for rule in rules:
+            ins, sides = rw_book(w, rule, s)
+            real, res = rw_placebos(w, ins, sides, draws, 818200 + s)
+            for d, v in res.items():
+                gaps.setdefault(rule, {}).setdefault(d, []).append(float(np.nanmean(v)) - real)
+                pu.setdefault(rule, {}).setdefault(d, []).append((1 + int(np.sum(v >= real - 1e-12))) / (1 + len(v)))
+        if log:
+            log("rw walk %d of %d done" % (s + 1, walks))
+    out = {}
+    for rule in gaps:
+        out[rule] = {}
+        for d in gaps[rule]:
+            g, p = np.array(gaps[rule][d]), np.array(pu[rule][d])
+            out[rule][d] = {"walks": int(len(g)), "gap_mean": float(g.mean()),
+                            "gap_se": float(g.std(ddof=1) / math.sqrt(len(g))) if len(g) > 1 else float("nan"),
+                            "share_p_upper_le_0.05": float(np.mean(p <= 0.05)),
+                            "share_p_upper_ge_0.95": float(np.mean(p >= 0.95))}
+    return out
+
+
+# =====================================================================================
 # checkpoints and progress
 # =====================================================================================
 def fingerprint(study, draws, cut):
@@ -739,7 +905,7 @@ def real_books_for(study, ctxs, gate_log, prep=None):
             if not okc:
                 raise RuntimeError("%s: the real book is not the engine's b_targets: %s" % (a, whyc))
         rec = {"current": book_stats(cur, ctx)}
-        if study in ("H81", "H82"):
+        if study in ("H81", "H82", "H81b", "H82b"):
             ok, bad = replay_gate(ctx, cur["trades"])
             gate_log[a].update(replay_gate=ok, trades=int(len(cur["trades"])), mismatches=int(bad))
             if not ok:
@@ -1039,6 +1205,231 @@ def run_side_study(args, out, groups, cut, draws, smoke=False):
     return reals, S, gl_all
 
 
+# ------------------------------------------------------------------ H81b / H82b: causal placebos, outcomes precomputed
+CAUSAL_BLOCK = 5000                 # draws per checkpoint file (each block takes seconds: well inside a minute)
+
+# Seconds of ONE processor on the research server (22 Nov 2026, `--time-draws 200` on the full window to CUT; seconds and
+# memory only were printed): per group, the outcome precompute after the load (H81b: both sides of every real trade;
+# H82b: every bar of every trade's window), and one vectorised draw over all eight markets.
+CAUSAL_PRE_S = {"H81b": {"crypto": 1.0, "metals": 1.0, "fx": 0.5, "index": 0.2, "energy": 1.0},
+                "H82b": {"crypto": 60.0, "metals": 40.0, "fx": 20.0, "index": 5.0, "energy": 40.0}}
+CAUSAL_DRAW_S = {"H81b": 0.002, "H82b": 0.002}
+
+
+def causal_outcomes(study, ctx):
+    """One market's precomputed outcomes for H81b / H82b (after real_books_for: ctx["slots"] with r_mach).
+    H81b: R of each real trade with either side at its real entry (machine_r), and the trailing long share.
+    H82b: for each real trade j, R of its own side entered at each of the L_j drawable bars starting AT its real entry
+    bar (offset 0 = the real entry), L_j = trailing_gap of the drawable positions; entry price by the real trade's own
+    convention (the close of the bar before for an early entry, else the bar's open).
+    Checks that no placebo uses a later side or an earlier bar; raises if one would."""
+    s = ctx["slots"]
+    i_in, i_out, side = s["i_in"], s["i_out"], s["side"]
+    if len(i_in) > 1 and not (np.all(np.diff(i_in) > 0) and np.all(i_out[:-1] <= i_in[1:])):
+        raise RuntimeError("%s: the book's trades are not one after another" % ctx["a"])
+    rec = {"side": side.tolist(), "h2": [bool(i >= ctx["mid"]) for i in i_in], "real_r": s["r"].tolist(),
+           "r_mach": s["r_mach"].tolist()}
+    px, unit, n = ctx["inp"]["px"], ctx["inp"]["unit"], ctx["n"]
+    if study == "H81b":
+        rp = np.array([machine_r(ctx, 1, int(i_in[j]), float(s["p_in"][j])) for j in range(len(side))])
+        rm = np.array([machine_r(ctx, -1, int(i_in[j]), float(s["p_in"][j])) for j in range(len(side))])
+        own = np.where(side == 1, rp, rm)
+        if not np.allclose(own, s["r_mach"], rtol=0, atol=1e-12, equal_nan=True):
+            raise RuntimeError("%s: both-side outcomes disagree with the real machinery R" % ctx["a"])
+        rec.update(r_plus=rp.tolist(), r_minus=rm.tolist(), p_long=trailing_long_share(side).tolist())
+        return rec
+    rows = np.arange(ctx["lo"] + 1, n)
+    rows = rows[np.isfinite(unit[rows - 1]) & (unit[rows - 1] > 0)]
+    valid = np.union1d(rows, i_in).astype("int64")              # every real entry bar is drawable (offset 0)
+    pos = np.searchsorted(valid, i_in)
+    if not np.array_equal(valid[pos], i_in):
+        raise RuntimeError("%s: a real entry bar is not drawable" % ctx["a"])
+    L = np.minimum(trailing_gap(pos), len(valid) - pos)
+    early = ctx["cfg"].get("early_fill") is True and not int(ctx["cfg"].get("fill_delay_bars", 0) or 0)
+    tab, early_j = [], []
+    for j in range(len(side)):
+        ej = bool(early and s["p_in"][j] == px["close"][i_in[j] - 1])
+        early_j.append(ej)
+        bars = valid[pos[j]:pos[j] + L[j]]
+        if bars[0] != i_in[j] or np.any(bars < i_in[j]):
+            raise RuntimeError("%s: a placebo bar before the real entry" % ctx["a"])
+        for i0 in bars:
+            p = px["close"][i0 - 1] if ej else px["open"][i0]
+            tab.append(machine_r(ctx, int(side[j]), int(i0), float(p)))
+    tab = np.asarray(tab, dtype=float)
+    off = np.concatenate([[0], np.cumsum(L)[:-1]]).astype("int64") if len(L) else np.zeros(0, dtype="int64")
+    if not np.allclose(tab[off], s["r_mach"], rtol=0, atol=1e-12, equal_nan=True):
+        raise RuntimeError("%s: offset 0 is not the real trade" % ctx["a"])
+    nxt = np.r_[i_in[1:], n]
+    last_bar = valid[pos + L - 1] if len(L) else np.zeros(0, dtype="int64")
+    rec.update(L=L.tolist(), tab=tab.tolist(), early=early_j,
+               L_median=float(np.median(L)) if len(L) else None,
+               share_window_past_next_entry=float(np.mean(last_bar >= nxt)) if len(L) else None)
+    return rec
+
+
+def causal_stats(r, mk, h2, nm=len(MARKETS)):
+    """(markets, NSTAT) stats of one draw: per market (trades, sum_r, wins, 0, 0) for all / first half / second half."""
+    ok = np.isfinite(r)
+    rr = np.where(ok, r, 0.0)
+    out = np.zeros((nm, NSTAT))
+    for off, sel in ((0, ok), (5, ok & ~h2), (10, ok & h2)):
+        out[:, off] = np.bincount(mk, weights=sel.astype(float), minlength=nm)
+        out[:, off + 1] = np.bincount(mk, weights=np.where(sel, rr, 0.0), minlength=nm)
+        out[:, off + 2] = np.bincount(mk, weights=(sel & (rr > 0)).astype(float), minlength=nm)
+    return out
+
+
+def causal_draw(study, D, k, seed):
+    """Draw k over all markets at once (D: the concatenated outcomes) -> {cell name: (markets, NSTAT)}."""
+    g = draw_rng(seed, k)
+    if study == "H81b":
+        u = g.random((2, D["T"]))
+        r_tr = np.where(h81b_sides(D["p_long"], u[0]) == 1, D["rp"], D["rm"])
+        r_coin = np.where(h81b_sides(0.5, u[1]) == 1, D["rp"], D["rm"])
+        return {"main": causal_stats(r_tr, D["mk"], D["h2"]), "coin": causal_stats(r_coin, D["mk"], D["h2"])}
+    u = g.random(D["T"])
+    r = D["tab"][D["off"] + h82b_offsets(D["L"], u)]
+    return {"main": causal_stats(r, D["mk"], D["h2"])}
+
+
+def causal_concat(recs, groups):
+    """The per-market outcome records, concatenated in the fixed market order."""
+    D = {"mk": [], "h2": [], "side": [], "rp": [], "rm": [], "p_long": [], "tab": [], "L": [], "off": [], "real": []}
+    base = 0
+    for g, assets in groups:
+        for a in assets:
+            m = recs[g]["markets"][a]
+            nt = len(m["side"])
+            D["mk"] += [MARKETS.index(a)] * nt
+            D["h2"] += m["h2"]
+            D["side"] += m["side"]
+            D["real"] += m["r_mach"]
+            if "r_plus" in m:
+                D["rp"] += m["r_plus"]
+                D["rm"] += m["r_minus"]
+                D["p_long"] += m["p_long"]
+            if "tab" in m:
+                L = np.asarray(m["L"], dtype="int64")
+                D["off"] += (base + np.concatenate([[0], np.cumsum(L)[:-1]])).astype("int64").tolist() if nt else []
+                D["L"] += m["L"]
+                D["tab"] += m["tab"]
+                base += len(m["tab"])
+    out = dict((k, np.asarray(v)) for k, v in D.items())
+    out["mk"] = out["mk"].astype("int64")
+    out["h2"] = out["h2"].astype(bool)
+    out["L"] = out["L"].astype("int64")
+    out["off"] = out["off"].astype("int64")
+    out["T"] = int(len(out["mk"]))
+    return out
+
+
+def run_causal_study(study, args, out, groups, cut, draws, smoke=False):
+    """H81b / H82b. Phase 1 (per group, resumable): load, real book + gates, outcomes -> outcomes_<group>.json.
+    Phase 2: vectorised draws in blocks of CAUSAL_BLOCK, each block one file written whole (atomic rename), so a resume
+    recomputes only an unfinished block and no draw is ever counted twice."""
+    fp = fingerprint(study, draws, cut)
+    seed = STUDIES[study]["seed"]
+    nblk = int(math.ceil(draws / float(CAUSAL_BLOCK)))
+    total = len(groups) + nblk
+
+    def blk_path(b):
+        return os.path.join(out, "draws_%s_%04d.npz" % (study, b))
+
+    def blk_ok(b):
+        p = blk_path(b)
+        if not os.path.exists(p):
+            return False
+        try:
+            z = np.load(p)
+            return str(z["fp"]) == fp
+        except Exception:                                        # a torn file: recomputed
+            return False
+
+    def cost_left(gdone, bdone):
+        pre = sum(PREP_S[g] + CAUSAL_PRE_S[study][g] for g, _a in groups if g not in gdone)
+        return pre + (nblk - bdone) * CAUSAL_BLOCK * CAUSAL_DRAW_S[study]
+    prog = Progress(out, total, None)
+    recs, gdone = {}, set()
+    for g, assets in groups:
+        path = os.path.join(out, "outcomes_%s.json" % g)
+        if os.path.exists(path):
+            r = json.load(open(path))
+            if r.get("fp") == fp:
+                recs[g] = r
+                gdone.add(g)
+    prog.update(len(gdone), cost_left(gdone, 0), note="starting")
+    for g, assets in groups:
+        if g in gdone:
+            continue
+        prep = load_group(g, assets, args.fits_dir, out, cut)
+        ctxs = dict((a, market_ctx(prep, a)) for a in assets)
+        gl = {}
+        real = real_books_for(study, ctxs, gl, prep)
+        rec = {"fp": fp, "group": g, "end": str(prep["times"][-1])[:16], "gate": gl, "real": real, "markets": {},
+               "windows": dict((a, [str(prep["times"][c["lo"]])[:16], str(prep["times"][c["n"] - 1])[:16]])
+                               for a, c in ctxs.items())}
+        for a, ctx in ctxs.items():
+            rec["markets"][a] = causal_outcomes(study, ctx)
+        write_json(os.path.join(out, "outcomes_%s.json" % g), rec)
+        recs[g] = rec
+        gdone.add(g)
+        log("%s: loaded to %s, outcomes saved" % (g, rec["end"]))
+        prog.update(len(gdone), cost_left(gdone, 0), note="%s outcomes" % g)
+        del prep, ctxs
+        gc.collect()
+    D = causal_concat(recs, groups)
+    bdone = sum(1 for b in range(nblk) if blk_ok(b))
+    for b in range(nblk):
+        if blk_ok(b):
+            continue
+        k0, k1 = b * CAUSAL_BLOCK, min(draws, (b + 1) * CAUSAL_BLOCK)
+        S = {}
+        for k in range(k0, k1):
+            for name, st in causal_draw(study, D, k, seed).items():
+                S.setdefault(name, np.empty((k1 - k0, len(MARKETS), NSTAT)))[k - k0] = st
+        tmp = blk_path(b) + ".tmp.npz"
+        np.savez(tmp, fp=fp, k0=k0, k1=k1, **S)
+        os.replace(tmp, blk_path(b))
+        bdone += 1
+        prog.update(len(groups) + bdone, cost_left(gdone, bdone), note="draws to %d" % k1)
+        if smoke:
+            log("%s: draws %d-%d done" % (study, k0, k1 - 1))
+    # collect
+    names = ("main", "coin") if study == "H81b" else ("main",)
+    S = dict((nm, np.full((draws, len(MARKETS), NSTAT), np.nan)) for nm in names)
+    for b in range(nblk):
+        z = np.load(blk_path(b))
+        if str(z["fp"]) != fp:
+            raise RuntimeError("block %d is from another configuration" % b)
+        for nm in names:
+            S[nm][int(z["k0"]):int(z["k1"])] = z[nm]
+    reals, gates, windows, diag = {}, {}, {}, {}
+    real_st = causal_stats(D["real"].astype(float), D["mk"], D["h2"])
+    for g, assets in groups:
+        gates[g], windows[g] = recs[g]["gate"], recs[g]["windows"]
+        for a in assets:
+            reals[a] = {"real": real_st[MARKETS.index(a)].tolist(), "current": recs[g]["real"][a]["current"]}
+            m = recs[g]["markets"][a]
+            if study == "H82b":
+                diag[a] = {"window_median_bars": m["L_median"], "share_window_past_next_entry": m["share_window_past_next_entry"]}
+    # exact expectations of the placebo mean R (descriptive): H81b closed form, H82b the mean over each window
+    exp = {}
+    for sname, mk in SLICES:
+        idx = np.isin(D["mk"], [MARKETS.index(a) for a in mk])
+        if study == "H81b":
+            e = D["p_long"] * D["rp"] + (1 - D["p_long"]) * D["rm"]
+            ec = 0.5 * D["rp"] + 0.5 * D["rm"]
+            ok = idx & np.isfinite(e)
+            exp[sname] = {"main": float(e[ok].mean()) if ok.any() else None,
+                          "coin": float(ec[ok].mean()) if ok.any() else None}
+        else:
+            e = np.array([np.nanmean(D["tab"][o:o + l]) for o, l in zip(D["off"], D["L"])]) if D["T"] else np.zeros(0)
+            ok = idx & np.isfinite(e)
+            exp[sname] = {"main": float(e[ok].mean()) if ok.any() else None}
+    return reals, S, gates, windows, {"exact_expectation_all": exp, "per_market": diag}
+
+
 # ------------------------------------------------------------------ H87 / H88 / H89: the real books' trades
 def real_trades(args, out, groups, cut, study):
     """Per group, the trades of the current rule, the 30-day filter and the wait, saved once (resumable)."""
@@ -1238,7 +1629,13 @@ WHAT = {
     "H84": ("the wait-after-stop book (b_wait_stop)", "the wait switched on after random exits"),
     "H85": ("the Setups book (b_targets)", "its higher-timeframe bias and tide shifted in time"),
     "H86": ("the Setups book (b_targets)", "its volatility unit shuffled within each month"),
+    "H81b": ("the Setups book's choice of side (b_targets)",
+             "sides drawn from the long share of its previous 20 trades on the market"),
+    "H82b": ("the Setups book's entry timing (b_targets)",
+             "the same trades moved to random bars at or after the real entry, within the median of its previous 20 "
+             "entry gaps"),
 }
+WHAT_COIN = {"H81b": ("the Setups book's choice of side (b_targets)", "a fair coin for each trade's side")}
 
 
 def verdict_line(study, summ, smoke):
@@ -1259,9 +1656,22 @@ def write_report(out, study, res, smoke):
     if smoke:
         L += ["**SMOKE RUN on a tiny slice. These numbers test the code; they are not results and are not reported.**", ""]
     kind = STUDIES[study]["kind"]
-    if kind in ("book", "trade", "side"):
+    if kind in ("book", "trade", "side", "causal"):
         summ = res["summary"]
-        L += ["## Conclusion", "", verdict_line(study, summ, smoke), "",
+        L += ["## Conclusion", "", verdict_line(study, summ, smoke), ""]
+        if kind == "causal":
+            if "summary_coin" in res:
+                c = res["summary_coin"]["cells"]["pooled_all"]["mean_r"]
+                who, how = WHAT_COIN[study]
+                L += ["Secondary (registered, not used for the conclusion): %s %s from %s at p = %.4f (lower-tail p = "
+                      "%.4f; placebo median %+.4fR)." % (who[0].upper() + who[1:], "IS distinguishable" if c["p_upper"] <= 0.05
+                                                          else "is NOT distinguishable", how, c["p_upper"], c["p_lower"],
+                                                          c["q50"]), ""]
+            L += ["Exact placebo expectations (descriptive): `%s`" % json.dumps(res.get("extra", {}).get(
+                "exact_expectation_all"), default=_jsonable), ""]
+            if res.get("extra", {}).get("per_market"):
+                L += ["Windows (H82b, descriptive): `%s`" % json.dumps(res["extra"]["per_market"], default=_jsonable), ""]
+        L += [
               "Never read as proof: this family makes many tests (see the ledger in research/HYPOTHESES.md), and one or "
               "two will look significant by chance. Data end at the last session at or before %s (the holdout is not read)."
               % CUT, "", "## All cells (p_upper: share of draws at least as good, +1 corrected)", "",
@@ -1328,6 +1738,8 @@ def estimate_hours(study, groups=GROUPS, draws=None):
     prep = sum(PREP_S[g] for g, _a in groups)
     if s["kind"] in ("book", "trade"):
         return (prep + draws * sum(DRAW_S[study][g] for g, _a in groups)) / 3600.0
+    if s["kind"] == "causal":                                    # outcomes precomputed once per group, then cheap draws
+        return (prep + sum(CAUSAL_PRE_S[study][g] for g, _a in groups) + draws * CAUSAL_DRAW_S[study]) / 3600.0
     if s["kind"] == "side":                                      # both sides of every trade replayed once, then cheap draws
         return (prep + 2 * sum(DRAW_S["H82"][g] for g, _a in groups) + draws * 0.003) / 3600.0
     return (prep + 3 * sum(DRAW_S["H80"][g] for g, _a in groups) / 2 + 120.0) / 3600.0   # three engine runs per market
@@ -1351,7 +1763,7 @@ def main(argv=None):
     groups, cut, draws, out = GROUPS, CUT, STUDIES[study]["draws"], args.out
     if args.smoke:
         groups, cut, out = [("index", ["SPX"])], SMOKE_CUT, os.path.join(args.out, "smoke")
-        draws = {"side": 200, "boot": 500, "costs": 200, "years": 200}.get(STUDIES[study]["kind"], 3)
+        draws = {"side": 200, "boot": 500, "costs": 200, "years": 200, "causal": 400}.get(STUDIES[study]["kind"], 3)
     os.makedirs(out, exist_ok=True)
     if os.path.exists(os.path.join(out, "DONE")):
         log("%s already DONE in %s" % (study, out))
@@ -1374,6 +1786,14 @@ def main(argv=None):
         res["summary"] = summarise_draws(study, reals, S, {})
         res["gates"] = gl
         res["real"] = reals
+    elif kind == "causal":
+        reals, S, gl, win, extra = run_causal_study(study, args, out, groups, cut, draws, smoke=args.smoke)
+        res["summary"] = summarise_draws(study, reals, S["main"], {})
+        if "coin" in S:
+            res["summary_coin"] = summarise_draws(study, reals, S["coin"], {})
+        res["gates"], res["windows"], res["real"], res["extra"] = gl, win, reals, extra
+        if res["summary"]["draws_used"] < draws:
+            raise RuntimeError("only %d of %d draws found" % (res["summary"]["draws_used"], draws))
     elif kind == "boot":
         res.update(study_boot(args, out, groups, cut, draws))
     elif kind == "costs":
@@ -1401,6 +1821,8 @@ def time_draws(study, args):
     out = os.path.join(args.out, "timing_scratch")
     os.makedirs(out, exist_ok=True)
     kind = STUDIES[study]["kind"]
+    if kind == "causal":
+        return time_causal(study, args, out)
     for gi, (g, assets) in enumerate(GROUPS):
         prep = load_group(g, assets, args.fits_dir, out, CUT)
         t1 = time.time()
@@ -1426,5 +1848,41 @@ def time_draws(study, args):
     return 0
 
 
+def time_causal(study, args, out):
+    """Timing only for H81b / H82b: per group the load, the real book with its gates, the outcome precompute; then N
+    vectorised draws over every group loaded. Prints seconds and peak memory only."""
+    import resource
+    recs = {}
+    for g, assets in GROUPS:
+        prep = load_group(g, assets, args.fits_dir, out, CUT)
+        t1 = time.time()
+        ctxs = dict((a, market_ctx(prep, a)) for a in assets)
+        real_books_for(study, ctxs, {})
+        t2 = time.time()
+        recs[g] = {"markets": dict((a, causal_outcomes(study, ctx)) for a, ctx in ctxs.items())}
+        print("TIMING %s %s load %.1fs real+gates %.1fs outcomes %.1fs maxrss %.0f MB" % (
+            study, g, prep["_load_s"], t2 - t1, time.time() - t2,
+            resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024.0), flush=True)
+        del prep, ctxs
+        gc.collect()
+    D = causal_concat(recs, GROUPS)
+    t3 = time.time()
+    for k in range(args.time_draws):
+        causal_draw(study, D, k, STUDIES[study]["seed"])
+    print("TIMING %s draw %.4fs each (%d draws, %d trades) maxrss %.0f MB" % (
+        study, (time.time() - t3) / args.time_draws, args.time_draws, D["T"],
+        resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024.0), flush=True)
+    return 0
+
+
+def rw_main(argv=None):
+    """`placebo.py --rw-check [walks]`: the random-walk check of H81b / H82b (synthetic data only), printed as JSON."""
+    walks = int(argv[0]) if argv else 120
+    print(json.dumps(rw_check(walks=walks, draws=400, years=2, log=log), indent=1))
+    return 0
+
+
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == "--rw-check":
+        sys.exit(rw_main(sys.argv[2:]))
     sys.exit(main())

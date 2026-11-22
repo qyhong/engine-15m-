@@ -357,3 +357,188 @@ def test_flipping_a_side_has_no_built_in_advantage_on_bars_without_information()
             d.append(b - a)
     d = np.array(d)
     assert len(d) > 3000 and abs(np.nanmean(d)) < 4 * np.nanstd(d) / np.sqrt(len(d)) + 0.01
+
+
+# ------------------------------------------------------------------ H81b / H82b: the causal placebos
+def test_trailing_long_share_reads_only_earlier_sides():
+    rng = np.random.default_rng(81)
+    side = rng.choice([-1, 1], 300)
+    p = P.trailing_long_share(side)
+    assert p[0] == 0.5 and p[1] == (1.0 if side[0] == 1 else 0.0)
+    for j in (1, 7, 19, 20, 21, 150, 299):
+        assert p[j] == pytest.approx(np.mean(side[max(0, j - 20):j] == 1))
+        planted = side.copy()
+        planted[j:] = -planted[j:]                                       # the trade's own and every later side changed
+        assert np.array_equal(P.trailing_long_share(planted)[:j + 1], p[:j + 1])
+
+
+def test_trailing_gap_reads_only_earlier_entries():
+    rng = np.random.default_rng(82)
+    pos = np.cumsum(rng.integers(1, 400, 200))
+    L = P.trailing_gap(pos)
+    assert L[0] == 1 and L[1] == pos[1] - pos[0]
+    for j in (1, 5, 20, 21, 120, 199):
+        assert L[j] == max(1, int(np.median(np.diff(pos)[max(0, j - 20):j])))
+        planted = pos.copy()
+        planted[j + 1:] = planted[j] + 1 + np.arange(len(pos) - j - 1)  # every later entry moved right next to j
+        assert np.array_equal(P.trailing_gap(planted)[:j + 1], L[:j + 1])
+    off = P.h82b_offsets(L, rng.random(len(L)))
+    assert (off >= 0).all() and (off < L).all()
+    assert (P.h82b_offsets(np.array([1, 5]), np.array([0.999999, 0.999999])) == [0, 4]).all()
+
+
+def _causal_ctx(seed, asset):
+    ctx = _ctx(random_inputs(n=3000, seed=seed), asset)
+    book = P.run_book(ctx, P.RULE_CURRENT)
+    sl = P.real_slots(book["trades"])
+    sl["r_mach"] = np.array([P.machine_r(ctx, int(sl["side"][j]), int(sl["i_in"][j]), float(sl["p_in"][j]))
+                             for j in range(len(sl["side"]))])
+    ctx["slots"] = sl
+    return ctx
+
+
+def _poison_before(ctx, i_cut):
+    """A copy of ctx whose prices and stop unit are scrambled on every bar before i_cut."""
+    c2 = dict(ctx)
+    px = dict((k, np.array(v, copy=True)) for k, v in ctx["inp"]["px"].items())
+    unit = np.array(ctx["inp"]["unit"], copy=True)
+    for k in px:
+        px[k][:i_cut] = px[k][:i_cut] * 1.7 + 3.0
+    unit[:i_cut] = unit[:i_cut] * 3.0
+    c2["inp"] = dict(ctx["inp"], px=px, unit=unit)
+    sl = dict(ctx["slots"])                                              # the gate compares with the poisoned replay
+    old, new = ctx["inp"]["px"], px                                      # entry prices follow their own convention
+    sl["p_in"] = np.array([new["close"][i - 1] if p == old["close"][i - 1] else new["open"][i]
+                           for p, i in zip(sl["p_in"], sl["i_in"])])
+    sl["r_mach"] = np.array([P.machine_r(c2, int(sl["side"][j]), int(sl["i_in"][j]), float(sl["p_in"][j]))
+                             for j in range(len(sl["side"]))])
+    c2["slots"] = sl
+    return c2
+
+
+@pytest.mark.parametrize("asset", ["BTCUSDT", "SPX"])                   # early entry / open entry
+def test_h82b_windows_start_at_the_real_entry_and_read_nothing_before_the_decision(asset):
+    ctx = _causal_ctx(17, asset)
+    rec = P.causal_outcomes("H82b", ctx)
+    s = ctx["slots"]
+    L = np.asarray(rec["L"])
+    tab = np.asarray(rec["tab"])
+    off = np.r_[0, np.cumsum(L)[:-1]]
+    assert len(L) == len(s["side"]) > 30 and (L >= 1).all() and L.max() > 1
+    assert np.allclose(tab[off], s["r_mach"], atol=1e-12, equal_nan=True)  # offset 0 is the real trade
+    if asset == "BTCUSDT":
+        assert any(rec["early"])
+    # planted: prices and stop unit scrambled before trade j's decision row leave trade j's whole window unchanged
+    for j in (len(L) // 3, len(L) // 2, len(L) - 2):
+        i_dec = int(s["i_in"][j]) - 1
+        rec2 = P.causal_outcomes("H82b", _poison_before(ctx, i_dec))
+        seg = slice(off[j], off[j] + L[j])
+        assert rec2["L"][j] == L[j]
+        assert np.allclose(np.asarray(rec2["tab"])[seg], tab[seg], atol=1e-12, equal_nan=True)
+
+
+def test_h81b_outcomes_and_draw_never_use_a_later_side_or_an_earlier_bar():
+    ctx = _causal_ctx(11, "BTCUSDT")
+    rec = P.causal_outcomes("H81b", ctx)
+    s = ctx["slots"]
+    own = np.where(s["side"] == 1, rec["r_plus"], rec["r_minus"])
+    assert np.allclose(own, s["r_mach"], atol=1e-12, equal_nan=True)
+    j = len(s["side"]) // 2
+    rec2 = P.causal_outcomes("H81b", _poison_before(ctx, int(s["i_in"][j]) - 1))
+    assert rec2["r_plus"][j] == pytest.approx(rec["r_plus"][j], abs=1e-12)
+    assert rec2["r_minus"][j] == pytest.approx(rec["r_minus"][j], abs=1e-12)
+    # the draw: with the sides from trade j on changed, the placebo sides of trades 0..j stay the same
+    groups = [("crypto", ["BTCUSDT", "ETHUSDT"])]
+    D = P.causal_concat({"crypto": {"markets": {"BTCUSDT": rec, "ETHUSDT": dict(rec)}}}, groups)
+    side2 = np.array(rec["side"])
+    side2[j:] = -side2[j:]
+    rec_b = dict(rec, side=side2.tolist(), p_long=P.trailing_long_share(side2).tolist())
+    D2 = P.causal_concat({"crypto": {"markets": {"BTCUSDT": rec_b, "ETHUSDT": dict(rec)}}}, groups)
+    for k in range(5):
+        u = P.draw_rng(P.STUDIES["H81b"]["seed"], k).random((2, D["T"]))
+        a = P.h81b_sides(D["p_long"], u[0])
+        b = P.h81b_sides(D2["p_long"], u[0])
+        assert np.array_equal(a[:j + 1], b[:j + 1])
+    st = P.causal_draw("H81b", D, 3, P.STUDIES["H81b"]["seed"])
+    assert set(st) == {"main", "coin"} and st["main"][P.MARKETS.index("BTCUSDT"), 0] == np.isfinite(own).sum()
+    assert np.array_equal(st["main"], P.causal_draw("H81b", D, 3, P.STUDIES["H81b"]["seed"])["main"])
+
+
+def _fake_causal(monkeypatch):
+    rng = np.random.default_rng(5)
+
+    def outcomes(study_, ctx):
+        nt = 40
+        side = rng.choice([-1, 1], nt)
+        rec = {"side": side.tolist(), "h2": [i >= 20 for i in range(nt)], "real_r": [0.0] * nt,
+               "r_mach": rng.normal(size=nt).tolist()}
+        if study_ == "H81b":
+            rec.update(r_plus=rng.normal(size=nt).tolist(), r_minus=rng.normal(size=nt).tolist(),
+                       p_long=P.trailing_long_share(side).tolist())
+        else:
+            L = rng.integers(1, 6, nt)
+            rec.update(L=L.tolist(), tab=rng.normal(size=int(L.sum())).tolist(), early=[False] * nt, L_median=3.0,
+                       share_window_past_next_entry=0.0)
+        return rec
+    monkeypatch.setattr(P, "load_group", lambda g, assets, fits, out, cut: {
+        "times": pd.date_range("2021-01-01", periods=10, freq="15min", tz="UTC"), "_load_s": 0.0})
+    monkeypatch.setattr(P, "market_ctx", lambda prep, a: {"lo": 1, "n": 10, "a": a})
+    monkeypatch.setattr(P, "real_books_for", lambda study_, ctxs, gl, prep=None: dict(
+        (a, {"current": [1] * P.NSTAT, "real": [1] * P.NSTAT}) for a in ctxs))
+    monkeypatch.setattr(P, "causal_outcomes", outcomes)
+    monkeypatch.setattr(P, "CAUSAL_BLOCK", 3)
+
+
+@pytest.mark.parametrize("study", ["H81b", "H82b"])
+def test_causal_resume_never_double_counts_a_draw(tmp_path, monkeypatch, study):
+    import shutil
+    _fake_causal(monkeypatch)
+    real_draw = P.causal_draw
+    calls = []
+    state = {"stop_at": 7}
+
+    def counted(study_, D, k, seed):
+        if len(calls) == state["stop_at"]:
+            raise KeyboardInterrupt()
+        calls.append(k)
+        return real_draw(study_, D, k, seed)
+    monkeypatch.setattr(P, "causal_draw", counted)
+    args = type("A", (), {"fits_dir": str(tmp_path)})()
+    groups = [("index", ["SPX"]), ("fx", ["USDJPY"])]
+    out = str(tmp_path / "o")
+    os.makedirs(out)
+    with pytest.raises(KeyboardInterrupt):
+        P.run_causal_study(study, args, out, groups, P.CUT, 10)
+    assert calls == list(range(7))
+    state["stop_at"] = -1
+    reals, S, gates, win, extra = P.run_causal_study(study, args, out, groups, P.CUT, 10)
+    assert calls[7:] == [6, 7, 8, 9]                                     # only the unwritten block is computed again
+    n_before = len(calls)
+    _r2, S2, _g2, _w2, _e2 = P.run_causal_study(study, args, out, groups, P.CUT, 10)
+    assert len(calls) == n_before                                        # a third run computes nothing
+    out2 = str(tmp_path / "fresh")                                       # the same outcomes, one uninterrupted run
+    os.makedirs(out2)
+    for g, _a in groups:
+        shutil.copy(os.path.join(out, "outcomes_%s.json" % g), os.path.join(out2, "outcomes_%s.json" % g))
+    _r3, S3, _g3, _w3, _e3 = P.run_causal_study(study, args, out2, groups, P.CUT, 10)
+    for nm in S:
+        assert np.isfinite(S[nm][:, P.MARKETS.index("SPX"), 0]).all()
+        assert np.array_equal(S[nm], S3[nm]) and np.array_equal(S[nm], S2[nm])
+    files = sorted(f for f in os.listdir(out) if f.startswith("draws_%s_" % study))
+    assert files == ["draws_%s_%04d.npz" % (study, b) for b in range(4)]
+
+
+def test_random_walk_check_causal_placebos_find_nothing_and_old_designs_tilt():
+    """On driftless random walks no causal rule earns anything. The causal placebos (H81b trailing share, H81b coin,
+    H82b trailing-gap window) must show no difference from the toy book for a momentum, a reversal and a coin rule; the
+    designs found to look ahead must show their tilt (so the check can see one)."""
+    res = P.rw_check(walks=16, draws=100, years=2)
+    for rule in ("momentum", "reversal", "coin"):
+        for d in ("h81b_trailing", "h81b_coin", "h82b_trailing_gap"):
+            c = res[rule][d]
+            assert abs(c["gap_mean"]) < 3.5 * c["gap_se"] + 0.005, (rule, d, c)
+    m, r = res["momentum"]["h81_month_perm"], res["reversal"]["h81_month_perm"]
+    assert m["gap_mean"] > 2.5 * m["gap_se"] and r["gap_mean"] < -2.5 * r["gap_se"]   # the old H81 tilt
+    for rule in ("momentum", "reversal", "coin"):            # the window that runs to the NEXT real entry leaks the end
+        c = res[rule]["h82b_window_to_next_entry"]
+        assert c["gap_mean"] < -3 * c["gap_se"], (rule, c)
