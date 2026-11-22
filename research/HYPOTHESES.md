@@ -4178,3 +4178,147 @@ were "expected"; in fact none were raised (with their files absent those cards r
 **For a round 5:** none of the four is registered as a candidate input by this rule. If a round 5 is ever run, these
 four should not be added on the strength of this study; `kp_chg24` and `cg_open` duplicate the past-return inputs the
 agents already have.
+
+## H70. BTC and ETH: a long on a sharp rebound out of an oversold state, tested in three sealed stages (registered 22 Nov 2026, about 11:30 UTC, before any H70 code existed or any H70 number was computed)
+
+**Prompted by:** the owner, 22 Nov 2026: "Deploy a study to find how this 15minds engine can confluence mean reversion
+and turn long when sharp rebound happen. With stasticially proven edge." H66: in 505 sudden rallies while the Setups
+book was short it lost in 93%, turned long within the day in 26% and sold again inside the rally in 24%. H65: the book
+earns with a market's own 30-day move and loses against it, so a trend rule will not turn long early in a rebound.
+Research only: nothing in the engine, the books or the vault changes, whatever the result. A study cannot show a
+proven edge; it can only say whether a rule fixed in advance held up on data it was not chosen on.
+
+**Known before registering:** H65 to H69 (above). No number about any of these oversold states, triggers or this long
+trade has been computed on these markets for this study; none was looked at before this registration.
+
+**Markets.** BTCUSDT and ETHUSDT decide everything (pooled, and each alone). XAUUSD, XAGUSD, USDJPY, SPX, WTI, BRENT
+appear only in a descriptive table for a candidate that passes Stage 2; they pass or fail nothing.
+
+**Three stages, three periods, in this order** (a period is the deciding bar's open time, UTC):
+- Stage 1 DISCOVERY: the first decided session (2020-02) to 2023-06-07 23:45.
+- Stage 2 CONFIRMATION: 2023-06-08 00:00 to 2025-11-10 23:45. Only the candidates Stage 1 selected (at most 3).
+- Stage 3 FINAL: 2025-11-11 00:00 to the last stored session at or before 2026-11-21 13:45 (the sealed holdout).
+  Only candidates that passed Stage 2. This uses the holdout once for this question.
+Each stage is a separate run of `research/h70_rebound_long.py --stage N`. Stage N cuts every input (bars, readings,
+odds) at its own period's end before anything is computed (`h59.prep_cut` with that end), so it cannot read later
+prices. Stage 1 writes `selection_stage1.json`; Stage 2 refuses to run without it and evaluates only the candidates it
+names, then writes `selection_stage2.json`; Stage 3 refuses to run without that and evaluates only its survivors. A
+trade belongs to the period of its deciding bar and must END inside that period: an event whose 96-bar exit window would
+run past the period's last bar is not taken (counted). So no stage's result uses a price from a later period.
+
+**Readings (closed bars only, as known at the deciding close k).** From the evidence store where it holds them:
+`atr1h` (ATR(14) of the 1h chart, joined by `data.htf_on_15`), `atr15` (ATR(14) of the 15m chart), `bias_ema50_1h_px`
+(EMA50 of 1h closes, joined), `sw_hi_15m` (the last confirmed 15m swing high, `structure.swings`); if a column is
+missing, it is computed from the bars by the same engine function (said in the output). Computed here: EMA20 of 15m
+closes (`ewm(span=20, adjust=False)`); RSI(14) of 1h closes (`indicators.rsi` on `data.resample(.., "1h")`, joined by
+`data.htf_on_15`); the 24-hour return (close k against the close of the last bar whose open is at or before open(k)
+minus 24 hours; on BTC and ETH exactly 96 bars back).
+
+**A candidate = OVERSOLD x REBOUND x CONFLUENCE, entered long.**
+- OVERSOLD at a bar: (O1) close <= `bias_ema50_1h_px` - 3 x `atr1h`; (O2) 24-hour return <= -6%; (O3) RSI(14) of 1h
+  closes <= 30 at some bar within the last 32 bars (8 hours) including this one.
+- REBOUND trigger at the deciding close k, taken only if the oversold state was true at some bar in k-15..k, and only at
+  its ONSET (the condition true at k and false at k-1): (R1) close > EMA20(15m); (R2) close >= the lowest low of bars
+  k-15..k + 1.5 x `atr15`; (R3) close > `sw_hi_15m`.
+- CONFLUENCE: (C0) none; (C1) the engine's own odds at k: P(up) - P(down) >= -0.05 (`prep["odds"]`, `labels.UP/DOWN`).
+3 x 3 x 2 = 18 candidates, named e.g. O1-R2-C1. Every candidate only from the coin's first decided session (bars with
+odds), so C0 and C1 share one population. One trade at a time per candidate and coin: an event at k is taken only if
+k is at or after the exit bar of that candidate's previous trade on that coin.
+
+**The trade (one rule for all, fixed now).** Entry at the open of bar k+1. Stop = lowest low of bars k-15..k minus
+0.25 x `atr15`(k). R = entry - stop. Skipped and counted: entry <= stop, or stop distance under 0.3% or over 8% of
+the entry. Bars k+1 .. k+96 are walked; in each bar the stop is looked at first (low <= stop: out at the stop, or at
+the open if the open is already below it); then +1R (high >= entry + 1R: half out at +1R exactly, and the stop on the
+rest moves to the entry from the NEXT bar); then +2.5R (high >= entry + 2.5R: the rest out at +2.5R exactly, also in
+the same bar as +1R). Whatever is left goes out at the close of bar k+96 (24 hours). Targets fill at their price, never
+better. Result per trade in R after fees: the fee is the book's, `cost_side` (0.10% of notional per side for BTC and
+ETH) and `asset_cost` for the other six, on entry and on each part's exit, divided by R. Also kept: the trade's
+percent return (same fees), bars held.
+
+**The baseline (the drift problem).** For a trade on coin a decided in calendar month m, its baseline is the mean R of
+the same trade rule entered at EVERY eligible bar of coin a in month m of the same stage (all bars with odds, the same
+stop filter, the window inside the period), with no oversold or trigger condition. EXCESS of a trade = its R minus that
+month's baseline; a candidate's excess = the mean over its trades. (All bars of those months instead of 20 random
+draws: the exact expectation of a random entry, with no simulation noise.)
+
+**Intervals and p-values.** Month-clustered bootstrap: calendar months (UTC, of the deciding bar) resampled with
+replacement, both coins' trades of a month kept together when pooled; 5,000 draws, seed 20261122; the statistic is the
+ratio of summed values to summed trades over the drawn months. 95% interval = 2.5th and 97.5th percentiles. One-sided
+p-value for "excess > 0" = (1 + #{draw - observed >= observed}) / 5,001 (the bootstrap distribution shifted to zero).
+Reported for mean R and for excess.
+
+**Stage 1 selection rule (fixed now).** A candidate is selected only if, on BTC and ETH pooled in Stage 1: at least
+150 trades; mean R > 0; excess > 0 with its 95% interval above zero; and the excess > 0 on BTC alone and on ETH alone
+(point values). If more than 3 qualify, the 3 with the largest pooled excess. If none qualifies, the study stops and
+reports "nothing to confirm"; Stages 2 and 3 are not run.
+
+**Stage 2 pass rule (fixed now).** On BTC and ETH pooled in Stage 2: at least 80 trades; mean R > 0; excess > 0 with
+one-sided p < 0.05 / (number selected in Stage 1) (Bonferroni); excess > 0 on each coin alone. 18 candidates are looked
+at in Stage 1; the Stage 1 interval filter, Bonferroni over the selected and a fresh period are the guards.
+
+**Stage 3 (holdout), for each Stage 2 survivor:** trades, share won, mean R, sum of R, excess with its interval and
+p-value, the longest run of consecutive losing trades and the deepest fall of cumulative R. "Holds in the holdout" only
+if mean R > 0 and excess > 0 with at least 30 trades. One year is short; that is said with the result.
+
+**Descriptive, only for a candidate that passes Stage 2 (passes nothing; over the whole history to the cut, one
+continuous run without stage boundaries):** (a) the H66 sudden-rally episodes recomputed the same way (a bar where the
+current Setups book `b_targets` holds a short and the close 96 bars later is at least 5% higher, the next looked for
+after those 96 bars, from the coin's first decided bar; the count should be 505): in how many the candidate decided an
+entry inside the episode (bars t+1..t+96), the median hours from the episode start, and those trades' R; (b) entries a
+year and median bars held; (c) what `b_targets` held at the deciding bar (short, long, flat) and its marked equity
+change (paper, 1x) over the trade's 96 bars, beside the candidate's own percent return; (d) the same candidate on the
+other six markets per stage (trades, mean R, excess), with their own fees.
+
+**Read-outs.** `research/out/h70_rebound_long/`: `stage1.json`, `selection_stage1.json`, and as the stages are reached
+`stage2.json`, `selection_stage2.json`, `stage3.json`, `results.json` (all merged) and `report.md`; skipped events
+counted by reason. A study that finds nothing is a complete answer.
+
+### H70 results (22 Nov 2026, Stage 1 run 11:28 UTC on the research server, 12 s; `research/out/h70_rebound_long/report.md` + `results.json`)
+
+**Verdict by the registered rule: NOTHING TO CONFIRM.** No candidate met the Stage 1 selection rule, so Stage 2 was not
+run, and the holdout (2025-11-11 onward) was not opened: it stays sealed for this question. Stage 3 refused to run, as it
+was built to, without a Stage 2 selection.
+
+**Why nothing qualified.** All 18 candidates lost money per trade after fees in Stage 1 (mean R from -0.05 to -0.25, every
+one below zero; 5 of 18 have a 95% interval that reaches above zero, none has a point value above it). The rule needs mean
+R above zero first. Most candidates did beat the matched baseline (random long entries in the same coin and month with the
+same trade), which lost -0.256R a trade on BTC and -0.182R on ETH: 10 of 18 have an excess interval above zero, the best
+O2-R1-C0 (24-hour return -6% or worse within the last 4 hours, then a 15m close back above its EMA20; no odds filter),
++0.160R [+0.081, +0.252], p 0.0006, positive on both coins.
+
+Stage 1, BTC and ETH pooled, 2020-02-05 to 2023-06-06 (41 months). Each cell: trades, share won, mean R [95%], excess
+over the baseline [95%].
+
+| Candidate | No odds filter (C0) | With the odds filter (C1) |
+|---|---|---|
+| O1-R1 | 780, 49%, -0.124 [-0.196, -0.046], +0.130 [+0.054, +0.206] | 569, 48%, -0.162 [-0.241, -0.076], +0.092 [+0.011, +0.177] |
+| O1-R2 | 1273, 46%, -0.221 [-0.276, -0.159], +0.035 [-0.020, +0.093] | 601, 46%, -0.247 [-0.327, -0.158], +0.010 [-0.076, +0.098] |
+| O1-R3 | 378, 46%, -0.171 [-0.265, -0.064], +0.088 [-0.012, +0.201] | 292, 46%, -0.167 [-0.278, -0.042], +0.091 [-0.026, +0.222] |
+| O2-R1 | 531, 51%, -0.053 [-0.147, +0.055], +0.160 [+0.081, +0.252] | 369, 52%, -0.051 [-0.146, +0.046], +0.144 [+0.063, +0.227] |
+| O2-R2 | 801, 48%, -0.122 [-0.188, -0.048], +0.091 [+0.029, +0.160] | 390, 50%, -0.086 [-0.178, +0.019], +0.106 [+0.013, +0.213] |
+| O2-R3 | 309, 48%, -0.090 [-0.194, +0.024], +0.116 [+0.015, +0.224] | 240, 50%, -0.056 [-0.174, +0.076], +0.138 [+0.023, +0.268] |
+| O3-R1 | 774, 50%, -0.113 [-0.175, -0.050], +0.139 [+0.067, +0.209] | 593, 49%, -0.151 [-0.218, -0.087], +0.100 [+0.023, +0.175] |
+| O3-R2 | 1253, 47%, -0.208 [-0.259, -0.151], +0.049 [-0.005, +0.104] | 723, 47%, -0.248 [-0.319, -0.171], +0.008 [-0.071, +0.085] |
+| O3-R3 | 510, 46%, -0.175 [-0.259, -0.085], +0.079 [-0.014, +0.179] | 424, 46%, -0.181 [-0.285, -0.074], +0.074 [-0.042, +0.192] |
+
+The engine's odds filter (C1) made the excess smaller in 6 of 9 pairs (larger in O1-R3, O2-R2 and O2-R3, by +0.003, +0.015 and
++0.022R).
+
+**Post hoc, descriptive, not registered (Stage 1 data only; `research/h70_posthoc_fees.py`, `posthoc_fees_stage1.json`).**
+The same trades WITHOUT fees: the baseline is about zero (BTC -0.014R, ETH +0.022R; median stop 0.97% / 1.22% of price, so
+the 0.20% round trip costs about 0.21R / 0.16R a trade), and the candidates range from -0.073R to +0.038R (best O2-R1-C1
++0.038, O2-R1-C0 +0.026, O2-R2-C1 +0.026). So most of the "excess" is not a better direction: the oversold entries have
+WIDER stops (median 1.15% to 3.4% of price against about 1% for a random bar), so the same fee is a smaller part of R. Before
+fees the best rebound entry made about +0.03R a trade more than a random entry; after fees it still lost.
+
+**Deviations:** none from the registered rule. Notes: (1) the registration's heading says "about 11:30 UTC"; it was
+committed at 11:19 UTC (commit ecf42cd), before any H70 code existed. (2) The post-hoc fee read above was not registered;
+it uses only Stage 1 data and changes no verdict. (3) Stages 2 and 3 and the descriptive read-outs (rallies, frequency, what
+the book held, the other six markets) exist in the script but were not run, because their precondition (a Stage 1
+selection) was not met.
+
+**Reading.** Out of an oversold state, these rebound triggers picked better long entries than a random bar in the same
+month, but not good enough to pay a 0.20% round trip with a stop at the rebound's low and a 24-hour exit, and adding the
+engine's own odds mostly made them worse (6 of 9 pairs), not better. Nothing here supports adding a rebound long to the Setups book. A different
+trade shape (wider stop, longer hold, a lower-cost venue) would be a NEW question with its own registration and a fresh
+discovery period; it could not reuse this Stage 1 as if it had not been seen.
