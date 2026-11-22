@@ -240,6 +240,11 @@ def merge(fragments, order):
         page["ideas"] = reports.ideas_block()                      # charter L3: the idea queue
     except Exception:
         page["horizon_skill"] = None
+    try:                                                           # the Lab tab's RL block (rl_lab.py; owner 22 Nov 2026);
+        from . import rl_lab                                       # read only, and a failure never stops the page
+        page["rl_lab"] = rl_lab.block(log=lambda *_: None)
+    except Exception:
+        page["rl_lab"] = None
     return page
 
 

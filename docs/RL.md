@@ -540,3 +540,57 @@ bot reports them. No decision of any book uses them.
   on a coin is on the fallback and one line when an agent is back; one weekly card when a new model is in use. The
   weekly card says "drifting" when the reading is above 5% and more than twice the week before: a flag to look,
   not a tested threshold.
+
+## Momentum yardstick, interim read and the Lab block (22 Nov 2026; owner: "Run all above")
+
+Three items from the RL audit of 21 Nov 2026. None changes a decision of any RL book; every RL book stays NOT passed.
+
+- **Momentum yardstick `p8_mom`** (`engine15/playbook8.py`, tests `tests/test_playbook8.py`; registered in
+  research/HYPOTHESES.md as a yardstick, not a hypothesis). BTC and ETH, $10,000 each from 2026-11-23 00:00 UTC, flat at
+  the start. It calls `forward5.advance(fallback="trend")` with a stand-in model whose every seed carries the 'do no harm'
+  flag (no weights), so every decision is `forward5.trend_w` on features3's `mom_signal` (`benchmarks.momentum(close,
+  30, True)`: sign of the 30-day return, decided at the 00:00 UTC close, long or short), then the cost band,
+  `policy3.decide`, the Phase 3 risk manager and the cost model through `forward5.risk_and_book`, with the Phase 6
+  configuration. Same closes as the Phase 6 books (those the readings cover). Record:
+  `research/out/rl/forward8/decisions_p8_mom_<asset>.jsonl`. Each coin's page state has `same_days`: each Phase 6 book's
+  return from its equity marked at the yardstick's start to the last common close, beside the yardstick's and spot
+  buy-and-hold's. Scoreboard row `p8_mom`; module `playbook8` in `reports.PLAYBOOK_MODULES` (after `playbook6`).
+- **Interim read at 8 weeks** (`research/rl_interim_read.py`, test `tests/test_rl_interim_read.py`): `p5_rlq` on
+  2027-01-07 04:30 UTC, `p6_mtrend` and `p6_p4trend` on 2027-01-08 03:00 UTC. It refuses to show anything before the
+  date; on or after it prints the registered sentences only ("ahead of", "behind" or "level with", 1.0-point band).
+- **The page's `rl_lab` block** (`engine15/rl_lab.py`, called by `export.merge` inside its own try/except; tests
+  `tests/test_rl_lab.py`). Read only: built from the playbook page blocks, the decision records and the model files.
+
+### The page's rl_lab block, schema 1 (for the site session)
+
+`page.json` key `rl_lab` (null if it could not be built). Times are UTC strings "YYYY-MM-DD HH:MM"; money in USD on
+$10,000 per coin; percentages are percent. A field may be null when the engine has not written it yet.
+
+- `schema` (1), `generated_utc`, `not_passed` (always true), `note` (plain words: none of these books has passed; show it),
+  `verdict_rule` (the 30-per-coin rule in words).
+- `interim_read`: `books` {book: {`start_utc`, `read_utc`}}, `words`, `changes_nothing`, `registered`.
+- `books` {`p5_rlq`, `p6_mtrend`, `p6_p4trend`}: each
+  - `title`, `kind` ("agent" / "control"), `not_passed` (true), `started_utc`, `interim_read_utc`,
+    `fallback_kind` ("flat" for p5_rlq, "momentum" for the Phase 6 books), `split` (the book over both coins:
+    `agent_gross_usd`, `fallback_gross_usd`, `costs_usd`, `net_usd`, `coins`), `totals` (closed trades: `trades`, `won`,
+    `win_rate_pct`, `net_usd`, `fees_usd`, `costs_usd`, ...),
+  - `refits`: oldest first, [{`model_id`, `data_end_utc`, `created_utc`, `first_decision_utc`, `last_decision_utc`
+    (decisions this book took with it; null if never used), `seeds_passed_validation` {coin: [seed numbers on their
+    model: own validation net Sharpe at least 0.5]}, `val_net_sharpe` {coin: [per seed]}}],
+  - `coins` {`BTCUSDT`, `ETHUSDT`}: each `status` ("running", or "stale" when no decision for 2 hours), `position`
+    (e.g. "short 1.00x since 2026-11-15 23:45 UTC" or "flat"), `exposure`, `equity_usd`, `return_pct`,
+    `bh_spot_equity_usd`, `bh_spot_return_pct` (spot buy-and-hold over the same days), `max_dd_pct`, `bh_max_dd_pct`,
+    `closed_trades`, `trades_needed` (30), `progress_pct`, `seeds` (3), `seeds_on_model`, `seeds_on_fallback`,
+    `fallback_kind`, `seed_modes` [{`seed`, `mode` ("model" / "fallback"), `since_utc` (first decision of the current
+    run in that mode)}], `split` (`agent_gross_usd`, `fallback_gross_usd`, `costs_usd`, `net_usd`,
+    `agent_seed_bars_pct`, `all_fallback_bars_pct`, `last_7d` {...}, `note`), `input_drift` (`z`, `last_7d_pct`,
+    `decisions_7d`, `week_before_pct`, `note`), `model_id`, `model_data_end_utc`, `last_decision_utc`, `decisions`,
+    `late_decisions` (recorded more than 30 minutes after the close), `late_share_pct`; the Phase 6 books also
+    `momentum_yardstick` (`from_utc`, `to_utc`, `book_return_pct`, `yardstick_return_pct`, `bh_spot_return_pct`,
+    `difference_pts`: the same days only; null before the yardstick has a close).
+- `momentum_yardstick`: `book` ("p8_mom"), `for` (the two Phase 6 books), `started_utc`, `not_a_hypothesis` (true),
+  `note`, `totals`, `coins` {coin: `status`, `position`, `equity_usd`, `return_pct`, `bh_spot_return_pct`, `max_dd_pct`,
+  `closed_trades`, `daily_direction` (+1 / -1 now), `momentum_30d_pct`, `last_decision_utc`, `late_decisions`,
+  `decisions`, `same_days` {Phase 6 book: as above}}.
+
+Wording for the tab: these are forward paper books that have NOT passed; never present a number here as a proven result.
