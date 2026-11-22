@@ -404,3 +404,30 @@ Each line was PROPOSED until answered. **Answered 17 Nov 2026: the owner approve
 7. **`p8_fvg` trades six markets, not eight**, and its registered rule uses the gap only, not the order block.
 8. **Version.** `engine15/config.py` says `think15-v5.2.4` (17 Nov 2026). `THOUGHT_PROCESS.md` "Now" and
    `HANDOFF.md` still say v5.2.2.
+
+## 10. Book: `b_targets` (the Setups book): the read at 30 trades (approved 22 Nov 2026)
+
+**Why this section exists.** The records said the Setups book is "read at 30 closed forward trades" (docs/CHARTER.md,
+research/HYPOTHESES.md) without fixing the moment of the read, what follows from each outcome, or how the entry change
+of think15-v5.2.9 is handled. Section 7's rule 1 pinned the moment only for `b_trail` and `p8_fvg`. An agent preparing
+the forward reads found the gap on 22 Nov 2026 (`research/out/forward_reads/status_20261122.md`).
+
+**Disclosure: what had been seen when this was fixed.** The book stood at 29 closed trades (server scoreboard of
+2026-11-22 11:03 UTC: "too few trades to judge (29 of 30)"), realised +$7,186 on paper, +27.25R, 22 wins; every one of
+the 29 with its market's own 30-day move (H65). So this rule was written one trade before the count and with the
+record known. It fixes how the read is made; it cannot make the read independent of what was already seen.
+
+**The rule. Proposed 22 Nov 2026; the owner, in this project, asked "Approve the proposed wording for the Setups
+book's 30-trade read?": "Approve it".**
+1. The read at 30 is the first server scoreboard row for `b_targets` showing 30 or more trades, copied as it stands.
+   Later changes of the text do not change it.
+2. It pools all eight markets and compares each trade with zero (section 2's rule: ahead, behind or undecided from the
+   90% range). BTC and ETH alone are shown beside it, not as the rule.
+3. Trades from before and after think15-v5.2.9 are pooled; v5.2.9's own BTC and ETH trades are also reported apart.
+4. Ahead or undecided: nothing changes, and a second check follows at 60 trades.
+5. Behind: a post-mortem, then the owner decides.
+6. Nothing changes the vault feed without the owner's word in this project.
+
+A trade counts when it is fully closed (a half taken at Target 1 is not a trade; `reports.per_entry`). The 30th may be
+any of the eight markets. Section 3 applies: 30 trades opened within two weeks of one market spell, many of them at the
+same hours, show less than 30 independent results would.

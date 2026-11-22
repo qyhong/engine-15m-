@@ -512,3 +512,22 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   the registered bar holds; pooled +144R vs +22R, BTC + ETH +64R vs -8R, worst fall -32% vs -62%; but on gold, silver and
   SPX the book was flat almost all of the second half (waits of months to years). Both changes together (descriptive):
   BTC + ETH +93R, less than the 30-day filter alone. Runs forward on paper; first read at 30 closed trades.
+- **The Setups book's read at 30 trades has a fixed rule** (22 Nov 2026). An agent preparing the forward reads found
+  that "read at 30 closed forward trades" named no moment, no consequence and no handling of the v5.2.9 entry change,
+  with the book at 29 trades. Asked "Approve the proposed wording for the Setups book's 30-trade read?", the owner:
+  "Approve it". The rule is `research/VERDICT_RULES.md` section 10: the first server scoreboard row with 30 or more
+  trades, eight markets pooled against zero, BTC and ETH shown beside it, v5.2.9's own trades reported apart; ahead or
+  undecided changes nothing and a second check follows at 60; behind means a post-mortem and the owner decides.
+  The same agent drafted wording for five other reads (the profit-floor shadow, the main books, the paper desk, the RL
+  books, the trend-filter shadow) in `research/out/forward_reads/status_20261122.md`; those are not approved yet.
+- **RL audit task 9, the untested crypto inputs one at a time** (owner, 22 Nov 2026: "Run all above"): done, H69.
+  Korea premium, BTC dominance, spot vs perp and the CME gap (spot proxy) were each tested alone on BTC and ETH from
+  2020 to 2025-11-10, the holdout not loaded: rank correlation with 1h, 4h and 24h forward returns in both halves with
+  month-clustered intervals, raw and beyond past price. None earns a registered place in an RL round 5. Korea premium
+  and the CME gap are mostly past price; dominance and spot vs perp show nothing. No RL change follows.
+- **Three preparations, 22 Nov 2026** (owner: "Start all 4 with opus 5.5 agents"; nothing graded, no rule changed):
+  the RL refit preflight (`research/out/rl/refit_preflight_20261122.md`: Monday 23 Nov's first refit on the server
+  should run and does not block the step; a failed refit is silent and can leave cache folders behind), the forward
+  reads (`research/forward_reads.py`, read only, prints "due" or "not due"), and the B trail second check
+  (`research/b_trail_second_check.py`, which refuses to grade before 60 trades and 10 Dec; its status note proposes
+  precise wording for that check, not yet approved).
