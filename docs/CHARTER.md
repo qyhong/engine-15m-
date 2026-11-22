@@ -559,3 +559,26 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   The forward record is what will settle it." The owner: "Agree". So `b_trend30` and `b_wait_stop` are paper shadows
   only; each is read against `b_targets` at 30 closed trades over the same days, and nothing reaches the Setups book
   or the vault from them without the owner's word in this project.
+- **Setups moving-against alert** (22 Nov 2026; owner: "A Telegram alert when price moves sharply against an open
+  Setups trade."). `telegram_notify.adverse_update`, the owner's own chat only. For each open trade of the Setups book
+  (`b_targets`): one card when the last close is half way from the entry to the trade's starting stop, one when it is
+  within a quarter of that distance from the stop; once each per trade, none after Target 1. The thresholds (0.5R and
+  0.75R) are a first setting chosen by the engine author; the owner was told. Information only: no stop, book or
+  setting changes. It reads 15-minute closes, so a move inside a bar shows at the next close. Context: H66 found that
+  in sudden rallies the book rarely turns and the stop is what bounds the loss.
+- **The RL momentum yardstick, the interim read and the Lab block** (22 Nov 2026; owner: "Run all above", tasks 4, 7
+  and 8 of the RL audit of 21 Nov).
+  (4) `engine15/playbook8.py`, book `p8_mom`: the Phase 6 books' daily 30-day momentum fallback alone, through the very
+  same code (`forward5.advance` with every seed on the 'do no harm' flag, then `forward5.risk_and_book`), the same
+  fees and decision times; BTC and ETH, $10,000 each, from 2026-11-23 00:00 UTC, flat at the start. A yardstick, not a
+  hypothesis: never graded; it is there so the momentum rule's result is not credited to an agent. On the scoreboard
+  and the page; each Phase 6 book is shown beside it over the same days only.
+  (7) An interim read at 8 weeks, registered before any number: `p5_rlq` on 2027-01-07 04:30 UTC, the Phase 6 books on
+  2027-01-08 03:00 UTC; each book against buy-and-hold, the Phase 6 books also against `p8_mom` (same days), the agent
+  and fallback parts shown apart; only "ahead of", "behind" or "level with" (1-point band), with the numbers.
+  `research/rl_interim_read.py` refuses before the date. It changes nothing: the 30-closed-trades-per-coin rule still
+  decides and every book stays NOT passed.
+  (8) The page's `rl_lab` block (schema 1, `engine15/rl_lab.py`, field list in `docs/RL.md`): per book and coin the
+  status, seeds on a model or on the fallback and since when, the split, drift, model and refit history, lateness, the
+  yardstick's same-days numbers and the interim date, with the note that none has passed. The site session builds the
+  Lab tab from it. No money file was touched.

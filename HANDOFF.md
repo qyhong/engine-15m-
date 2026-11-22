@@ -207,6 +207,17 @@ crypto replay).
   reads the book's closed-trade files, `data/shadow_state.json`, the tail of the two bar files and the funding files
   and walks them again (H63's rules; `tests/test_paper_desk.py` holds its walk to H63's numbers). Its output is the
   `paper_desk` block of `out/live/scoreboard.json`. To restart the desk from a new date, change START_UTC.
+- "Setups moving against" alert (22 Nov 2026, owner asked for it): `telegram_notify.adverse_update`, hooked into
+  `check()` in its own try/except. It reads the page's `b_targets` book and the market closes; its state is the key
+  `adverse` in the bot's state (per market: trade id, entry, starting stop, flags a, b and t1). Thresholds
+  `ADVERSE_A_R` (0.5) and `ADVERSE_B_R` (0.75) in `telegram_notify.py`. If it fails the bot log shows "setups adverse
+  check failed". On the first start after a deploy, open trades already past a threshold get their card at once.
+- Momentum yardstick (22 Nov 2026, owner "Run all above"): `engine15/playbook8.py` (`p8_mom`, from 2026-11-23 00:00
+  UTC) runs in `reports.PLAYBOOK_MODULES` after `playbook6`. Record: `research/out/rl/forward8/decisions_p8_mom_<asset>.jsonl`
+  (append-only; never edit). No model and no refit: a stand-in model with every seed on the fallback, through
+  `forward5.advance(fallback="trend")`. Interim read: `research/rl_interim_read.py` prints nothing before 2027-01-07
+  04:30 (`p5_rlq`) and 2027-01-08 03:00 UTC (Phase 6); run it on the box, where the records are. Page block `rl_lab`
+  (schema 1): `engine15/rl_lab.py`, called by `export.merge` in a try/except (null on failure); fields in `docs/RL.md`.
 - Give-back alert (21 Nov 2026, owner "Yes"): `telegram_notify.giveback_update` sends one card when an open
   main-book trade is 25% or more below the best open profit the bot has seen for it (state key `giveback`). Alert only.
 
