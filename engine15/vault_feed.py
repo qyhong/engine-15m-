@@ -90,6 +90,17 @@ REDUCE_FRACTION = exits.PART                     # the book's half at Target 1 (
 # held_share while t1_taken is not true (AI Trading Bot session, 20 Nov 2026). Before Target 1 the key is left out.
 SEND_CONTRACT_1 = False
 BOOK_SCHEMA = 1
+# The opening Lead (23 Nov 2026; the owner's order in the AI Trading session: VIP accounts take a setup only when the
+# Lead of the step that OPENED it is above 5.0 points in the setup's direction; the vault applies the cut). `lead_pts`:
+# a JSON number, P(up) - P(down) in points (positive favours LONG), two decimals, from -100 to +100, the Lead of the
+# deciding step that opened the setup, fixed for the setup's life. It is taken from setups.json's
+# edge_with_position_pts at the step whose price bar IS the setup's opened_utc (the early entry books the setup at that
+# close), kept in the feed's memory (pos[symbol]["lead_pts"]) and carried while the setup lasts. A setup first seen
+# later (the feed's memory lost, the feed switched on mid-setup) has no known opening Lead and the key is left out;
+# FLAT books never carry it. OFF: the live vault refuses a book with a key it does not know, so this stays False until
+# the AI Trading Bot session confirms the vault that accepts it is LIVE. The memory records the Lead either way.
+SEND_LEAD = False
+LEAD_MAX = 100.0
 REF_MAX_OFF = Decimal("0.015")                   # a book exit / T1 price further than this from the price now is replaced
                                                  # by the price now (the vault refuses a reference > 2% off its own price)
 INTENT_GIVE_UP_S = 86400                         # the vault refuses an intent older than a day at signing
@@ -178,9 +189,26 @@ def _contract(b, m=None):
     return b
 
 
-def build_book(m, as_of):
+def _lead_ok(v):
+    """A Lead the vault can take: a finite number within +-LEAD_MAX (never a bool)."""
+    return not isinstance(v, bool) and isinstance(v, (int, float)) and v == v and abs(v) <= LEAD_MAX
+
+
+def opening_lead(m, side):
+    """The setup's opening Lead from its setups.json entry, signed (positive favours LONG), or None when this step is
+    not the one that opened it or the reading is missing."""
+    if side not in ("LONG", "SHORT") or m.get("opened_utc") is None or m.get("opened_utc") != m.get("price_bar_utc"):
+        return None
+    e = m.get("edge_with_position_pts")
+    if not _lead_ok(e):
+        return None
+    return round(float(e) * (1 if side == "LONG" else -1), 2) + 0.0
+
+
+def build_book(m, as_of, lead=None):
     """One market's submit_book body {"book": {...}} from its setups.json entry, or (None, short reason). Nothing is
-    'fixed': a market whose levels are missing or out of order is not sent."""
+    'fixed': a market whose levels are missing or out of order is not sent. `lead`: the setup's opening Lead from the
+    feed's memory, added as lead_pts only when SEND_LEAD is on."""
     sym, side = m.get("symbol"), m.get("side")
     if side not in ("LONG", "SHORT", "FLAT"):
         return None, "bad side"
@@ -224,6 +252,8 @@ def build_book(m, as_of):
             t = dec_text(theirs, places=2)
             if t is not None and abs(Decimal(t) - mine) <= max(Decimal("0.02"), mine / 100):
                 b["rr_now_t2"] = t
+    if SEND_LEAD and _lead_ok(lead):
+        b["lead_pts"] = round(float(lead), 2) + 0.0
     return {"book": _contract(b, m)}, None
 
 
@@ -374,6 +404,9 @@ def track(sym, m, st, trades_dir, now):
     if isinstance(cur, dict):
         same = isinstance(prev, dict) and prev.get("side") == cur["side"] and prev.get("opened_utc") == cur["opened_utc"]
         cur["eligible"] = bool(m.get("entry_window_open") is True or (same and prev.get("eligible")))
+        lead = prev.get("lead_pts") if same else opening_lead(m, cur["side"])    # fixed at the opening step
+        if _lead_ok(lead):
+            cur["lead_pts"] = lead
     new = []
     if not first and prev and (prev.get("eligible") or not EXITS_ONLY_IF_WINDOW_SEEN):
         if cur is not None and cur["side"] == prev["side"] and cur["opened_utc"] == prev["opened_utc"]:
@@ -640,7 +673,9 @@ def _run(setups_path, log, env, state_path, trades_dir, now):
         if why:                                                  # the position is kept as it was and the book waits too:
             _say(log, "vault: %s not sent (exit not queued: %s)" % (sym, why))    # every book sent was tracked first, so
             continue                                             # a close can never land on a newer setup's join
-        books[sym] = build_book(m, m.get("price_bar_utc"))
+        p = st.get("pos", {}).get(sym)
+        lead = p.get("lead_pts") if isinstance(p, dict) and p.get("opened_utc") == m.get("opened_utc") else None
+        books[sym] = build_book(m, m.get("price_bar_utc"), lead)
     memory_alarm(st, markets, syms, how, now, log)
     queue = st.setdefault("intents", {})
     for iid in list(queue):                                      # old finished ones go; stuck ones are given up
