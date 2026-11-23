@@ -1,0 +1,25 @@
+{
+ "added_utc": "2026-11-22T12:21:01Z",
+ "command": [
+  "/data/venv-research/bin/python",
+  "research/queue/placebo.py",
+  "--study",
+  "H80",
+  "--fits-dir",
+  "/data/mind15/research/out/h60_regime_exits/fits_today",
+  "--out",
+  "/data/research_queue/out/H80"
+ ],
+ "commit": "0a94526dc49a",
+ "cwd": "/data/research_queue/code/0a94526dc49a",
+ "est_hours": 11.7,
+ "exit_code": 0,
+ "failures": 0,
+ "finished_utc": "2026-11-23T01:49:22Z",
+ "harness": "placebo",
+ "id": "H80",
+ "out": "/data/research_queue/out/H80",
+ "priority": 50,
+ "started_utc": "2026-11-22T13:15:14Z",
+ "study": "H80"
+}

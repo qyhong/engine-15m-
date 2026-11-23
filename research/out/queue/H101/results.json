@@ -1,0 +1,293 @@
+{
+ "study": "H101",
+ "title": "the kitchen sink: every chosen setting of H90-H100 stacked, tested once",
+ "conclusion": "does not",
+ "choice": {
+  "study": "H101",
+  "current": "current",
+  "chosen": "stacked",
+  "specs": {
+   "current": {
+    "cfg": {},
+    "mask": []
+   },
+   "stacked": {
+    "cfg": {
+     "idle_max": 16,
+     "theta_enter": 0.1,
+     "theta_enter_shock": 0.05,
+     "step_aside": false
+    },
+    "mask": [
+     {
+      "kind": "tight_stop",
+      "q": 0.5
+     },
+     {
+      "kind": "hours",
+      "h0": 12,
+      "h1": 18
+     }
+    ]
+   }
+  },
+  "choice_period": [
+   null,
+   "2023-06-07 23:45"
+  ],
+  "choice_table": null,
+  "sources": {
+   "H90": {
+    "chosen": "stop_units=2",
+    "current": "stop_units=2",
+    "sha256": "1a3576dbd40b800320d72969c6c2bb8e4adfac962bc561d4a2d948b9f47219d8"
+   },
+   "H91": {
+    "chosen": "idle_max=16",
+    "current": "idle_max=4",
+    "sha256": "ce574d37d1b841277d0bbd5002e97d43104fc5f25fc027af7b651020660d1c6c"
+   },
+   "H92": {
+    "chosen": "theta_enter=0.1",
+    "current": "theta_enter=0.05",
+    "sha256": "6a2dad7e52d57e4a732560735d4ae90ea03a5dcc10ff7beb3f7f092a150d1343"
+   },
+   "H93": {
+    "chosen": "theta_flip=0.1",
+    "current": "theta_flip=0.1",
+    "sha256": "13226cfbd6836b1df34d6db9679fa58236476cf8a56d3223404db21921d5f299"
+   },
+   "H94": {
+    "chosen": "theta_counter=0.15",
+    "current": "theta_counter=0.15",
+    "sha256": "6e64827e4fb5283fd613a3cf6003f45a7e64c95816451c959e0aabeb40deebeb"
+   },
+   "H95": {
+    "chosen": "bias=on,tiebreak=on",
+    "current": "bias=on,tiebreak=on",
+    "sha256": "d7368a7722f79425a1e47425cc5025c1dc8845f670c5f0658854541c735eecf4"
+   },
+   "H96": {
+    "chosen": "tight_q=0.5",
+    "current": "none",
+    "sha256": "01ced236f91bde2f61e96283390bbdf3b358b08687e4c4384b7eeb76d89c1c41"
+   },
+   "H97": {
+    "chosen": "block_12-18",
+    "current": "none",
+    "sha256": "833b1291b0f1a11e794e294999d62ebb0e84c8e9850710c41f6dbd284ed11b64"
+   },
+   "H98": {
+    "chosen": "none",
+    "current": "none",
+    "sha256": "06445cd3fceb4dd6b3c7c6c0f2664ca2d9e6624510827f8e7837fbfcc6cb4bf5"
+   },
+   "H99": {
+    "chosen": "none",
+    "current": "none",
+    "sha256": "be9877544a5cf7aaff72b0c8c0d4052186216c99dd9cabab775fd13f47b68cd7"
+   },
+   "H100": {
+    "chosen": "shock=0.05,step_aside=off",
+    "current": "shock=0.1,step_aside=off",
+    "sha256": "88829c3f02db13de5bb3baa29030d93154f7b2e5d5954bff0a9e3d6f0a8364da"
+   }
+  },
+  "written_utc": "2026-11-23T01:49:22Z",
+  "smoke": false
+ },
+ "verdict": {
+  "monthly_diff": [
+   2.209084813305942,
+   -2.865060953019427,
+   14.234072697280016,
+   -12.213661063737714,
+   4.578238836599738,
+   1.3543914075994397,
+   3.5815309554941064,
+   -10.276982236154963,
+   -3.6926241626532814,
+   -2.0135574925472257,
+   2.8488850228336826,
+   12.417092908066074,
+   1.1023417473311845,
+   -5.613361996353307,
+   -8.788200732387173,
+   -0.4785718110140571,
+   10.56529659494069,
+   -10.241515526005244,
+   20.557347670661525,
+   -0.1443612414170694,
+   4.2560965862282885,
+   10.520083707318285,
+   -1.63554127669105,
+   0.6727653839063261,
+   3.5420137299758947,
+   6.1731393266045185,
+   11.339511270416326,
+   17.35042802214996,
+   3.2676148311415396,
+   -8.16737343346318
+  ],
+  "months": [
+   "2023-06",
+   "2023-07",
+   "2023-08",
+   "2023-09",
+   "2023-10",
+   "2023-11",
+   "2023-12",
+   "2024-01",
+   "2024-02",
+   "2024-03",
+   "2024-04",
+   "2024-05",
+   "2024-06",
+   "2024-07",
+   "2024-08",
+   "2024-09",
+   "2024-10",
+   "2024-11",
+   "2024-12",
+   "2025-01",
+   "2025-02",
+   "2025-03",
+   "2025-04",
+   "2025-05",
+   "2025-06",
+   "2025-07",
+   "2025-08",
+   "2025-09",
+   "2025-10",
+   "2025-11"
+  ],
+  "boot": {
+   "mean": 2.1479707862136617,
+   "lo": -0.7307927157054965,
+   "hi": 5.07260606332592,
+   "p_one_sided": 0.07404629768511574,
+   "months": 30,
+   "draws": 20000
+  },
+  "alpha": 0.004166666666666667,
+  "vault_diff": 69.72404597255873,
+  "pooled_diff": 64.43912358640985,
+  "per_market": {
+   "BTCUSDT": {
+    "current_sum_r": -57.11796201946961,
+    "chosen_sum_r": -0.5613056114323878,
+    "diff": 56.55665640803722,
+    "current_trades": 398,
+    "chosen_trades": 257
+   },
+   "ETHUSDT": {
+    "current_sum_r": 4.781295940512802,
+    "chosen_sum_r": 17.948685505034312,
+    "diff": 13.167389564521502,
+    "current_trades": 368,
+    "chosen_trades": 241
+   },
+   "XAUUSD": {
+    "current_sum_r": 27.52098510535064,
+    "chosen_sum_r": 6.465669911216281,
+    "diff": -21.055315194134355,
+    "current_trades": 247,
+    "chosen_trades": 202
+   },
+   "XAGUSD": {
+    "current_sum_r": -1.6511507048916716,
+    "chosen_sum_r": -0.7339138168498653,
+    "diff": 0.9172368880418054,
+    "current_trades": 248,
+    "chosen_trades": 195
+   },
+   "USDJPY": {
+    "current_sum_r": 21.3074514224733,
+    "chosen_sum_r": 9.039545993895661,
+    "diff": -12.267905428577643,
+    "current_trades": 299,
+    "chosen_trades": 204
+   },
+   "SPX": {
+    "current_sum_r": 18.535763566430262,
+    "chosen_sum_r": 5.49786489989164,
+    "diff": -13.037898666538625,
+    "current_trades": 106,
+    "chosen_trades": 64
+   },
+   "WTI": {
+    "current_sum_r": -21.387942994697053,
+    "chosen_sum_r": 1.5738545147778933,
+    "diff": 22.96179750947495,
+    "current_trades": 262,
+    "chosen_trades": 168
+   },
+   "BRENT": {
+    "current_sum_r": -26.074034272190076,
+    "chosen_sum_r": -8.87687176660509,
+    "diff": 17.19716250558499,
+    "current_trades": 284,
+    "chosen_trades": 165
+   }
+  },
+  "passed": false,
+  "conclusion": "does not",
+  "mean_r": {
+   "current": {
+    "mean_r": -0.015409400522821604,
+    "lo": -0.06645580589514846,
+    "hi": 0.0364634674101822,
+    "trades": 2212
+   },
+   "chosen": {
+    "mean_r": 0.02028979253337463,
+    "lo": -0.03850017339549333,
+    "hi": 0.07969754030045675,
+    "trades": 1496
+   }
+  },
+  "worst_fall": {
+   "current": -22.783958676610283,
+   "chosen": -15.299579235719186
+  },
+  "flat_pct": {
+   "current": 1.982570192570036,
+   "chosen": 21.621969217147786
+  },
+  "trades": {
+   "current": 2212,
+   "chosen": 1496
+  },
+  "net": {
+   "current": -10309.168331067383,
+   "chosen": -726.5702269297126
+  },
+  "study": "H101",
+  "chosen": "stacked",
+  "current": "current",
+  "written_utc": "2026-11-23T01:50:26Z"
+ },
+ "descriptive_test_table": {
+  "note": "descriptive, not used for any choice",
+  "rows": {
+   "current": {
+    "pooled_sum_r": -34.085593956481404,
+    "vault_sum_r": -52.336666078956796,
+    "trades": 2212
+   },
+   "stacked": {
+    "pooled_sum_r": 30.353529629928442,
+    "vault_sum_r": 17.387379893601924,
+    "trades": 1496
+   }
+  }
+ },
+ "smoke": false,
+ "finished_utc": "2026-11-23T01:50:26Z",
+ "periods": {
+  "choice_last": "2023-06-07 23:45",
+  "test_first": "2023-06-08 00:00",
+  "test_last": "2025-11-10 23:45",
+  "holdout_wall": "2025-11-10 23:45"
+ }
+}

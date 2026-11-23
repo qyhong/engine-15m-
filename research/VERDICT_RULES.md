@@ -431,3 +431,17 @@ book's 30-trade read?": "Approve it".**
 A trade counts when it is fully closed (a half taken at Target 1 is not a trade; `reports.per_entry`). The 30th may be
 any of the eight markets. Section 3 applies: 30 trades opened within two weeks of one market spell, many of them at the
 same hours, show less than 30 independent results would.
+
+**Record of the read at 30 (b_targets), made by section 10's rule.** The 30th closed trade was gold (XAUUSD), a short
+opened 2026-11-20 03:30 UTC by the forced rule and stopped 2026-11-23 01:00 UTC (-$271.41, -1.02R). The first server
+scoreboard row with 30 trades, copied as it stands (the scoreboard of 2026-11-23 04:27 UTC still holds 30 trades, and
+the row is computed from those 30 trades only, so it is the same row the first such scoreboard showed):
+`{"trades": 30, "net_usd": 6914.58, "mean_usd": 230.49, "range90_usd": [104.95, 356.02], "verdict": "ahead: even the
+low end of the range is positive", "won_pct": 73.3}`.
+- BTC and ETH alone, beside it (not the rule): 11 trades, 9 won, +$3,381.40, +10.77R.
+- think15-v5.2.9's own BTC and ETH trades: none closed yet (both positions open were opened 2026-11-21 14:30 UTC).
+- By rule 4: **ahead, so nothing changes, and a second check follows at 60 trades.**
+- Section 3 applies in full: the 30 trades were opened within two weeks of one market spell (24 of them shorts in
+  falling markets, all with their market's own 30-day move, per H65), many at the same hours, so they show much less
+  than 30 independent results would; on history (H65, H87, H89) the same rule is flat per trade, loses in about half of
+  12-month stretches, and its result rests on single years.

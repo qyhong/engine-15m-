@@ -1,0 +1,25 @@
+{
+ "added_utc": "2026-11-22T14:21:33Z",
+ "command": [
+  "/data/venv-research/bin/python",
+  "research/queue/walkforward.py",
+  "--study",
+  "H101",
+  "--fits-dir",
+  "/data/mind15/research/out/h60_regime_exits/fits_today",
+  "--out",
+  "/data/research_queue/out/H101"
+ ],
+ "commit": "0a94526dc49a",
+ "cwd": "/data/research_queue/code/0a94526dc49a",
+ "est_hours": 0.042,
+ "exit_code": 0,
+ "failures": 0,
+ "finished_utc": "2026-11-23T01:50:27Z",
+ "harness": "walkforward",
+ "id": "H101",
+ "out": "/data/research_queue/out/H101",
+ "priority": 5,
+ "started_utc": "2026-11-23T01:49:22Z",
+ "study": "H101"
+}

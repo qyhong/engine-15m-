@@ -1,0 +1,50 @@
+18:43:44 metals: draw 2707 done; 2708 of 10000
+18:53:45 metals: draw 3248 done; 3249 of 10000
+19:03:46 metals: draw 3789 done; 3790 of 10000
+19:13:46 metals: draw 4329 done; 4330 of 10000
+19:23:48 metals: draw 4869 done; 4870 of 10000
+19:33:48 metals: draw 5408 done; 5409 of 10000
+19:43:49 metals: draw 5947 done; 5948 of 10000
+19:53:49 metals: draw 6486 done; 6487 of 10000
+20:03:50 metals: draw 7026 done; 7027 of 10000
+20:13:50 metals: draw 7567 done; 7568 of 10000
+20:23:51 metals: draw 8108 done; 8109 of 10000
+20:33:52 metals: draw 8649 done; 8650 of 10000
+20:43:52 metals: draw 9190 done; 9191 of 10000
+20:53:53 metals: draw 9730 done; 9731 of 10000
+20:58:55 fx: 171130 sessions to 2025-11-10 23:45; voices walked from 2020-01-01: 0 refits, 208 from the cache (4s)
+20:59:00 fx: loaded to 2025-11-10 23:45 in 7s; 0 of 10000 draws done before
+21:09:00 fx: draw 1048 done; 1049 of 10000
+21:19:01 fx: draw 2096 done; 2097 of 10000
+21:29:01 fx: draw 3144 done; 3145 of 10000
+21:39:01 fx: draw 4192 done; 4193 of 10000
+21:49:01 fx: draw 5239 done; 5240 of 10000
+21:59:01 fx: draw 6288 done; 6289 of 10000
+22:09:01 fx: draw 7337 done; 7338 of 10000
+22:19:02 fx: draw 8385 done; 8386 of 10000
+22:29:02 fx: draw 9434 done; 9435 of 10000
+22:34:27 index: 44687 sessions to 2025-11-10 20:45; voices walked from 2020-01-01: 0 refits, 47 from the cache (1s)
+22:34:28 index: loaded to 2025-11-10 20:45 in 2s; 0 of 10000 draws done before
+22:44:28 index: draw 4460 done; 4461 of 10000
+22:54:28 index: draw 8932 done; 8933 of 10000
+22:56:57 energy: 147360 sessions to 2025-11-10 21:45; voices walked from 2020-01-01: 0 refits, 183 from the cache (5s)
+22:57:04 energy: loaded to 2025-11-10 21:45 in 10s; 0 of 10000 draws done before
+23:07:04 energy: draw 581 done; 582 of 10000
+23:17:04 energy: draw 1161 done; 1162 of 10000
+23:27:05 energy: draw 1744 done; 1745 of 10000
+23:37:06 energy: draw 2327 done; 2328 of 10000
+23:47:07 energy: draw 2908 done; 2909 of 10000
+23:57:07 energy: draw 3491 done; 3492 of 10000
+00:07:07 energy: draw 4072 done; 4073 of 10000
+00:17:07 energy: draw 4654 done; 4655 of 10000
+00:27:08 energy: draw 5230 done; 5231 of 10000
+00:37:08 energy: draw 5809 done; 5810 of 10000
+00:47:09 energy: draw 6392 done; 6393 of 10000
+00:57:09 energy: draw 6969 done; 6970 of 10000
+01:07:10 energy: draw 7550 done; 7551 of 10000
+01:17:10 energy: draw 8133 done; 8134 of 10000
+01:27:11 energy: draw 8716 done; 8717 of 10000
+01:37:11 energy: draw 9296 done; 9297 of 10000
+01:47:11 energy: draw 9877 done; 9878 of 10000
+01:49:19 H80 done in 45244s -> /data/research_queue/out/H80
+=== 2026-11-23T01:49:22Z exit 0

@@ -611,3 +611,8 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   not have yet. The scoring itself is sound. Against side choices with no future information the book is about as good
   as a coin. H82 had the same flaw and was taken out of the queue before it ran. Recorded under "Audit of H81" in
   `research/HYPOTHESES.md`.
+- **The Setups book's read at 30 trades: ahead; nothing changes** (23 Nov 2026, by `research/VERDICT_RULES.md`
+  section 10, approved 22 Nov). The 30th trade (a gold short stopped at 01:00 UTC, -$271) made the scoreboard row:
+  30 trades, 73% won, +$6,915, mean +$230 a trade, 90% range +$105 to +$356, "ahead". BTC and ETH alone: 11 trades,
+  9 won, +$3,381. So nothing changes and a second check follows at 60 trades. The record says plainly that these 30
+  trades come from one two-week falling-market spell and that the same rule is flat on history.
