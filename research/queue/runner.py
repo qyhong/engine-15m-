@@ -39,6 +39,13 @@ MAX_FAILURES = 2                           # a failing job runs at most twice (o
 TERM_GRACE_S = 60                          # after SIGTERM, SIGKILL the job's process group if still alive
 MEM_STOP_SPACING_S = 60                    # stop at most one job per minute for memory
 TICK_S = 5
+# Yield to the engine (23 Nov 2026): the box is a burstable t2.xlarge, so a queue job slows the engine's 15-minute step
+# even at nice 19 (the hypervisor caps the whole box). Jobs are paused from YIELD_LEAD_S before each close until the
+# engine has written its page for that close (page.json newer than the close), at most YIELD_MAX_S after the close.
+PAGE_FILE = "/data/mind15/out/live/page.json"
+BAR_S = 900
+YIELD_LEAD_S = 45
+YIELD_MAX_S = 14 * 60
 STATUS_EVERY_S = 60
 CHILD_ENV = {"OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1", "MKL_NUM_THREADS": "1"}
 ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}$")
@@ -192,6 +199,24 @@ def succeeded(exit_code, out_dir):
 
 
 # ----------------------------------------------------------------------------------------------- probes (server)
+def engine_busy(now_ts, page_mtime, lead_s=YIELD_LEAD_S, max_s=YIELD_MAX_S, bar_s=BAR_S):
+    """True while the engine is about to step or is stepping: from lead_s before a close until the page is newer than
+    that close (at most max_s after it). No page file: never busy (nothing to wait for)."""
+    if page_mtime is None:
+        return False
+    prev_close = (int(now_ts) // bar_s) * bar_s
+    if prev_close + bar_s - now_ts <= lead_s:
+        return True
+    return page_mtime < prev_close and now_ts - prev_close < max_s
+
+
+def probe_page_mtime(path):
+    try:
+        return os.path.getmtime(path)
+    except OSError:
+        return None
+
+
 def probe_free_disk_gb(path):
     try:
         st = os.statvfs(path)
@@ -247,7 +272,7 @@ def ionice_ok():
 # ----------------------------------------------------------------------------------------------- the runner
 class Runner:
     def __init__(self, root, workers=HARD_MAX_WORKERS, prefix=None, probes=None, deployed_file=DEPLOYED_FILE,
-                 term_grace_s=TERM_GRACE_S, log_to_stdout=False):
+                 term_grace_s=TERM_GRACE_S, log_to_stdout=False, yield_to_engine=True, page_file=PAGE_FILE):
         self.root = os.path.abspath(root)
         self.workers = clamp_workers(workers)
         self.requested_workers = workers
@@ -263,6 +288,10 @@ class Runner:
         self.mem_gb = p.get("mem_gb", probe_mem_avail_gb)
         self.deployed_age_min = p.get("deployed_age_min",
                                       lambda: probe_deployed_age_min(self.deployed_file, time.time()))
+        self.yield_to_engine = yield_to_engine
+        self.page_mtime = p.get("page_mtime", lambda: probe_page_mtime(page_file))
+        self.now_ts = p.get("now_ts", time.time)
+        self.paused = False
         self.procs = {}            # id -> {"proc", "job", "log", "term_at", "stop_kind", "stop_reason"}
         self.started = utc_now()
         self.hold_reason = None
@@ -382,6 +411,8 @@ class Runner:
         except (OSError, ValueError):
             pass
         if hasattr(os, "killpg"):
+            if hasattr(signal, "SIGCONT"):
+                self._signal_group(r["proc"].pid, signal.SIGCONT)   # a job paused for the engine must run to exit
             self._signal_group(r["proc"].pid, signal.SIGTERM)
         else:
             r["proc"].terminate()
@@ -469,6 +500,30 @@ class Runner:
                     break
         return True
 
+    def yield_pass(self):
+        """Pause running jobs while the engine steps; resume them after. A job started while paused is paused too."""
+        if not self.yield_to_engine or not hasattr(signal, "SIGSTOP"):
+            return
+        busy = engine_busy(self.now_ts(), self.page_mtime())
+        live = [r for r in self.procs.values() if r["term_at"] is None]
+        if busy:
+            for r in live:
+                if not r.get("stopped"):
+                    self._signal_group(r["proc"].pid, signal.SIGSTOP)
+                    r["stopped"] = True
+            if not self.paused:
+                self.paused = True
+                self.dirty = True
+                self.log("pause jobs: the engine is stepping (%d job(s))" % len(live))
+        elif self.paused:
+            for r in self.procs.values():
+                if r.get("stopped"):
+                    self._signal_group(r["proc"].pid, signal.SIGCONT)
+                    r["stopped"] = False
+            self.paused = False
+            self.dirty = True
+            self.log("resume jobs: the engine's step is done")
+
     def write_reason(self, reason):
         try:
             with open(self.d("LAST_GUARD_STOP.txt"), "w", encoding="utf-8") as f:
@@ -494,7 +549,8 @@ class Runner:
         return {
             "updated_utc": iso(utc_now()),
             "runner": {"pid": os.getpid(), "started_utc": iso(self.started), "workers": self.workers,
-                       "prefix": self.prefix, "hold_reason": self.hold_reason},
+                       "prefix": self.prefix, "hold_reason": self.hold_reason,
+                       "yield_to_engine": self.yield_to_engine, "paused_for_engine": self.paused},
             "running": running,
             "queued": len(queued),
             "queued_ids": [j["id"] for j in queued],
@@ -517,6 +573,7 @@ class Runner:
         keep = self.guards_and_schedule()
         if not keep:
             return False
+        self.yield_pass()
         if time.time() - self.last_status >= STATUS_EVERY_S or self.dirty:
             self.write_status()
             self.dirty = False
@@ -579,6 +636,8 @@ def main(argv=None):
     ap.add_argument("--root", default=DEFAULT_ROOT)
     ap.add_argument("--workers", type=int, default=HARD_MAX_WORKERS, help="at most %d" % HARD_MAX_WORKERS)
     ap.add_argument("--deployed-file", default=DEPLOYED_FILE)
+    ap.add_argument("--no-yield", action="store_true", help="do not pause jobs while the engine steps")
+    ap.add_argument("--page-file", default=PAGE_FILE)
     ap.add_argument("--once", action="store_true", help="one tick, then exit (testing)")
     a = ap.parse_args(argv)
     os.makedirs(a.root, exist_ok=True)
@@ -587,7 +646,8 @@ def main(argv=None):
         pid = (read_json(os.path.join(a.root, "runner.pid")) or {}).get("pid")
         print("runner already running (pid %s); not starting a second one" % pid)
         return 3
-    r = Runner(a.root, workers=a.workers, deployed_file=a.deployed_file, log_to_stdout=True)
+    r = Runner(a.root, workers=a.workers, deployed_file=a.deployed_file, log_to_stdout=True,
+               yield_to_engine=not a.no_yield, page_file=a.page_file)
     if a.once:
         r.recover()
         r.tick()

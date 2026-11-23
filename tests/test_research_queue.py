@@ -276,3 +276,64 @@ class QueueTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ---------------------------------------------------------------- yield to the engine (23 Nov 2026)
+def test_engine_busy_from_just_before_a_close_until_the_page_is_written():
+    close = 1795900500                                              # a quarter-hour close (divisible by 900)
+    assert close % 900 == 0
+    old_page = close - 700                                          # written by the step before
+    assert not R.engine_busy(close - 300, old_page)                 # mid-sleep: not busy
+    assert R.engine_busy(close - 30, old_page)                      # within the lead: busy
+    assert R.engine_busy(close + 100, old_page)                     # stepping: the page is older than the close
+    assert not R.engine_busy(close + 200, close + 190)              # the page for this close is written: resume
+    assert not R.engine_busy(close + R.YIELD_MAX_S + 1, old_page)   # engine silent too long: do not wait forever
+    assert not R.engine_busy(close + 100, None)                     # no page file: nothing to wait for
+
+
+def test_jobs_are_stopped_and_continued_and_a_paused_job_gets_sigcont_before_sigterm(tmp_path, monkeypatch):
+    import signal as S
+    if not hasattr(S, "SIGSTOP"):
+        import pytest
+        pytest.skip("no SIGSTOP on this platform")
+    sent = []
+    clock = {"t": 1795900500 - 300.0, "page": 1795900500 - 700.0}
+    r = R.Runner(str(tmp_path), workers=1, prefix=[], probes={"now_ts": lambda: clock["t"], "page_mtime": lambda: clock["page"],
+                                                            "disk_gb": lambda: 50.0, "mem_gb": lambda: 10.0,
+                                                            "deployed_age_min": lambda: None})
+    monkeypatch.setattr(R.Runner, "_signal_group", staticmethod(lambda pid, sig: sent.append((pid, sig))))
+
+    class P:
+        pid = 4242
+
+        def poll(self):
+            return None
+    r.procs["J"] = {"proc": P(), "job": {"id": "J"}, "log": open(str(tmp_path / "j.log"), "ab"), "term_at": None,
+                    "stop_kind": None, "stop_reason": None}
+    r.yield_pass()
+    assert sent == [] and not r.paused
+    clock["t"] = 1795900500 + 60                                    # the engine is stepping
+    r.yield_pass()
+    r.yield_pass()                                                  # stopped once, not again
+    assert sent == [(4242, S.SIGSTOP)] and r.paused and r.status()["runner"]["paused_for_engine"]
+    clock["page"] = 1795900500 + 150                                # the step wrote its page
+    clock["t"] = 1795900500 + 160
+    r.yield_pass()
+    assert sent[-1] == (4242, S.SIGCONT) and not r.paused
+    clock["t"] = 1795901400 - 10                                    # just before the next close: paused again
+    r.yield_pass()
+    assert sent[-1] == (4242, S.SIGSTOP)
+    r.request_stop("J", "requeue", "test")                          # a paused job is continued, then terminated
+    assert sent[-2:] == [(4242, S.SIGCONT), (4242, S.SIGTERM)]
+    r.procs["J"]["log"].close()
+
+
+def test_no_yield_leaves_jobs_alone(tmp_path, monkeypatch):
+    sent = []
+    r = R.Runner(str(tmp_path), workers=1, prefix=[], yield_to_engine=False,
+                 probes={"now_ts": lambda: 1795900500 + 60.0, "page_mtime": lambda: 1795900500 - 700.0,
+                         "disk_gb": lambda: 50.0, "mem_gb": lambda: 10.0, "deployed_age_min": lambda: None})
+    monkeypatch.setattr(R.Runner, "_signal_group", staticmethod(lambda pid, sig: sent.append((pid, sig))))
+    r.yield_pass()
+    assert sent == [] and not r.paused
+
