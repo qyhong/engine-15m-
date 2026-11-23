@@ -616,3 +616,12 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   30 trades, 73% won, +$6,915, mean +$230 a trade, 90% range +$105 to +$356, "ahead". BTC and ETH alone: 11 trades,
   9 won, +$3,381. So nothing changes and a second check follows at 60 trades. The record says plainly that these 30
   trades come from one two-week falling-market spell and that the same rule is flat on history.
+- **The research queue throttled the box; it now runs one job at a time** (23 Nov 2026). The Singapore box is a
+  t2.xlarge, a burstable instance whose CPU credits are earned at about 0.9 of one processor. Two queue jobs around
+  the clock drained the credits by about 02:00 UTC; the hypervisor then withheld about 75% of processor time, the
+  engine's steps went from about 1.5-3 minutes to about 11, and the vault's book posts landed about 11 minutes after
+  each close (no exit fell due meanwhile; the member's stops rest on the exchange). The queue was stopped at 04:30 UTC
+  and the next step took 192 s. Asked how to handle the throttled box, the owner: "No i dont want unlimited. We can let
+  the studies go sequential rather concurrent". The queue restarted at 04:35 UTC with one worker (`tools/research_queue.py
+  start --workers 1`); its jobs resumed from their checkpoints. With one job the credits will not rebuild while it runs,
+  so the engine's steps are watched; if they slow materially the queue is paused first and the owner told.

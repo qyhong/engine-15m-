@@ -229,6 +229,9 @@ crypto replay).
   service: after a reboot run `tools/research_queue.py start`. To stop everything at once:
   `touch /data/research_queue/STOP`. `walkforward.py --study H101` needs the choice files of H90 to H100 and must be
   queued after they are done. Details in `research/queue/README.md`.
+  The box is a t2.xlarge (burstable CPU credits): never run two queue jobs at once there (owner, 23 Nov 2026:
+  sequential, no T2 Unlimited). Start it with `tools/research_queue.py start --workers 1`. If the engine's step time
+  (`grep "timing step" /data/mind15/live.log`) climbs well above 3 minutes, `touch /data/research_queue/STOP` first.
 - Give-back alert (21 Nov 2026, owner "Yes"): `telegram_notify.giveback_update` sends one card when an open
   main-book trade is 25% or more below the best open profit the bot has seen for it (state key `giveback`). Alert only.
 
