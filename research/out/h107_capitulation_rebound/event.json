@@ -1,0 +1,80 @@
+{
+ "BTCUSDT": {
+  "last_bar": "2026-11-23 14:15",
+  "signals": {
+   "A": [
+    {
+     "decided_bar_open": "2026-11-21 06:30",
+     "decided_close_utc": "2026-11-21 06:45",
+     "entry": 57193.99,
+     "stop": 54664.20450058956,
+     "target_1": 59723.77549941043,
+     "target_2": 62253.56099882087,
+     "funding_last": -6.069e-05,
+     "drop_pct": -18.100283105914173,
+     "bounce_atr": 2.4487530667891457,
+     "r_so_far_or_final": 1.310420139465617,
+     "finished": true,
+     "how": "T1 then time",
+     "marked_or_exit_bar": "2026-11-23 06:30"
+    }
+   ],
+   "B": [
+    {
+     "decided_bar_open": "2026-11-21 06:30",
+     "decided_close_utc": "2026-11-21 06:45",
+     "entry": 57193.99,
+     "stop": 54664.20450058956,
+     "target_1": 59723.77549941043,
+     "target_2": 62253.56099882087,
+     "funding_last": -6.069e-05,
+     "drop_pct": -18.100283105914173,
+     "bounce_atr": 2.4487530667891457,
+     "r_so_far_or_final": 1.310420139465617,
+     "finished": true,
+     "how": "T1 then time",
+     "marked_or_exit_bar": "2026-11-23 06:30"
+    }
+   ]
+  }
+ },
+ "ETHUSDT": {
+  "last_bar": "2026-11-23 14:15",
+  "signals": {
+   "A": [
+    {
+     "decided_bar_open": "2026-11-21 06:30",
+     "decided_close_utc": "2026-11-21 06:45",
+     "entry": 1613.7,
+     "stop": 1533.9607886847418,
+     "target_1": 1693.4392113152583,
+     "target_2": 1773.1784226305165,
+     "funding_last": -0.00018843,
+     "drop_pct": -19.170897318660064,
+     "bounce_atr": 2.8502915472968766,
+     "r_so_far_or_final": 1.1556012974301777,
+     "finished": true,
+     "how": "T1 then time",
+     "marked_or_exit_bar": "2026-11-23 06:30"
+    }
+   ],
+   "B": [
+    {
+     "decided_bar_open": "2026-11-21 06:30",
+     "decided_close_utc": "2026-11-21 06:45",
+     "entry": 1613.7,
+     "stop": 1533.9607886847418,
+     "target_1": 1693.4392113152583,
+     "target_2": 1773.1784226305165,
+     "funding_last": -0.00018843,
+     "drop_pct": -19.170897318660064,
+     "bounce_atr": 2.8502915472968766,
+     "r_so_far_or_final": 1.1556012974301777,
+     "finished": true,
+     "how": "T1 then time",
+     "marked_or_exit_bar": "2026-11-23 06:30"
+    }
+   ]
+  }
+ }
+}

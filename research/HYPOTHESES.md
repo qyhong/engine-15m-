@@ -5703,3 +5703,35 @@ ATR, drop 8% and 12%, hold 24 and 96 hours. **The event apart (descriptive):** t
 **Code:** `research/h107_capitulation_rebound.py` (history run; `--event` for the event alone; the event mode was run
 before this registration to check the code on the event it was shaped on: the numbers above). Output:
 `research/out/h107_capitulation_rebound/` (`results.json`, `event.json`, `report.md`).
+
+### H107 results (23 Nov 2026, about 14:50 UTC on the laptop, 22 s; `research/out/h107_capitulation_rebound/report.md` + `results.json` + `event.json`)
+
+**Verdict by the registered rule: NO PASS. Rule A FAILS; rule B has TOO FEW TRADES TO JUDGE.** Data 2019-10-01 to
+2025-11-10 23:45 UTC; the holdout was not read (only the bars of 19-23 Nov 2026 for the event apart).
+
+Each cell: trades, share won, mean R [95% month-clustered interval], sum of R; one-sided p for mean R > 0.
+- **Rule A, BTC + ETH:** 123, 47%, -0.006 [-0.220, +0.273], -0.7R; p 0.545, Holm 0.545. First half 83, 37%, -0.127,
+  -10.6R; second half 40, 68%, +0.246 [-0.029, +0.556], +9.8R (p 0.057). BTC 54, -0.041, -2.2R; ETH 69, +0.021,
+  +1.5R. Checks failed: first-half mean, BTC mean, Holm p. Excess over random longs in the same coin-months +0.19R
+  [-0.03, +0.46]. By year (sum R): 2019 +0.7, 2020 -6.7, 2021 +7.7, 2022 -14.1 (44 trades), 2023 +1.3, 2024 +5.7,
+  2025 +4.7. 51 of 123 stopped; longest losing run 11; deepest fall of cumulative R -19.3R.
+- **Rule B (A with negative funding):** 32, 59%, +0.194 [-0.110, +0.622], +6.2R; p 0.182, Holm 0.364. First half 19,
+  +0.079; second half 13, +0.362. BTC 8, ETH 24. Fewer than the 60 trades (and 20 a half) the rule needs; 16 of the 32
+  are in 2022 (-0.4R together).
+- **Descriptive, one setting moved at a time:** no variant makes rule A's first half positive (-0.05 to -0.21R a
+  trade) or its second half negative (+0.23 to +0.41R); rule B +0.07 to +0.30R a trade on 12 to 44 trades.
+- **Look-ahead guards:** 561 bars recomputed on data cut at the bar, 0 mismatches; the vectorised walk equals the
+  bar-by-bar walk on every trade.
+- **The event apart (inside the holdout, not a test):** both rules buy at the 21 Nov 06:45 UTC close (BTC 57,194, ETH
+  1,613.70), take Target 1 the same day and close the rest at 48 hours on 23 Nov 06:30: BTC +1.31R, ETH +1.16R; flat
+  for today's +4% candle.
+
+**Deviations.** (1) ETH's funding file starts 2019-11-27, not 2019-09-10 as written (that is BTC's), so rule B could not
+fire on ETH in Oct-Nov 2019. (2) The first run crashed in the look-ahead test on an empty funding slice before anything
+was printed or written; the fix (empty = no funding yet) changes no rule, and the run was repeated.
+
+**Reading.** A rule built on this event would have caught it, but over six years of history the same rule is flat after
+fees: it lost in the first half (2022 above all, when bounces off new lows kept failing) and made money in the second.
+Negative funding looks better but rests on 32 trades and is not significant. This agrees with H70 and H71: on BTC and
+ETH no rebound-long rule tested so far has held up across both halves. Nothing here supports a paper shadow book on the
+registered bar; nothing in the engine, the books or the vault was changed.

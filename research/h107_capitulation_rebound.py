@@ -79,7 +79,8 @@ def features(df, fund, p=REG):
     close_ms = data.to_ms(t) + int(CFG["bar_ms"])
     fms = data.to_ms(fund.index)
     fi = np.searchsorted(fms, close_ms, side="right") - 1        # last funding set at or before the bar's close
-    fund_last = np.where(fi >= 0, fund.values[np.maximum(fi, 0)], np.nan)
+    fv = np.concatenate([fund.values.astype(float), [np.nan]])   # no funding set yet -> NaN (ETH's file starts 2019-11-27)
+    fund_last = np.where(fi >= 0, fv[np.where(fi >= 0, fi, len(fv) - 1)], np.nan)
     with np.errstate(invalid="ignore"):
         fresh = have & (low16 <= lowN)
         drop = low16 / cref - 1.0 <= -p["drop"]
