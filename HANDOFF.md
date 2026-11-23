@@ -232,6 +232,9 @@ crypto replay).
   The box is a t2.xlarge (burstable CPU credits): never run two queue jobs at once there (owner, 23 Nov 2026:
   sequential, no T2 Unlimited). Start it with `tools/research_queue.py start --workers 1`. If the engine's step time
   (`grep "timing step" /data/mind15/live.log`) climbs well above 3 minutes, `touch /data/research_queue/STOP` first.
+  Since 23 Nov 2026 the runner also pauses its job (SIGSTOP) from 45 s before each 15-minute close until the engine has
+  written its page for that close (at most 14 minutes), then continues it (`engine_busy` in `runner.py`; `--no-yield`
+  turns it off). One job without this pause still made a step take 391 s.
 - Give-back alert (21 Nov 2026, owner "Yes"): `telegram_notify.giveback_update` sends one card when an open
   main-book trade is 25% or more below the best open profit the bot has seen for it (state key `giveback`). Alert only.
 
