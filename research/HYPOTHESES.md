@@ -5608,3 +5608,98 @@ each draw being seeded on its own); the running jobs use their own snapshot and 
   disclosures above). A "distinguishable" from either is weaker evidence than one from a blind test; a primary p well
   below 0.01 that agrees across halves and market groups would be worth a forward test, and only that. Nothing here
   can make a rule "proven", and nothing in the engine, the books or the vault changes, whatever these studies say.
+
+## H107. BTC and ETH: a long after a capitulation low that rebounds (rule A), and the same only when shorts are paying funding (rule B) (registered 23 Nov 2026, about 14:45 UTC, before any H107 number on history was computed)
+
+**Prompted by:** the owner, 23 Nov 2026: "Deploy a study how we can take advantage of last fri where price huge drop to
+55k and then rally back to now". Research only: nothing in the engine, the books or the vault changes, whatever the
+result. A pass leads only to a proposal for a forward PAPER shadow book; it never changes a live book or the vault.
+
+**The event (descriptive, from the box's bars, journal and trade files, read before this registration).** BTC fell from
+75,442 (10 Nov) to 55,130 at 06:15 UTC on Sat 21 Nov (Fri 20 Nov 12:00 UTC to the low: 61,808 to 55,130); ETH from 2,137
+to 1,538 at 04:00 UTC on 21 Nov. At the low the engine read: 24-hour return about -10%, 7-day about -17%, 3.7-3.8 ATR
+below the 1h average, StochRSI 1h 0 / 4h 6 / daily 5, last funding negative (BTC -0.0061%, ETH -0.0188% per 8 hours,
+both at the bottom of their 90-funding range), open interest down over 24 hours (BTC -2.4%, ETH -5.7%) with a
+liquidation-proxy flag of longs closed out in a 7.6-sigma bar, net taker selling over 24 hours, Fear and Greed 12,
+regime MOMENTUM_DOWN, higher-timeframe bias down; the odds led DOWN by 9 to 12 points at the low. BTC then rallied
++4% in 45 minutes and to 63,841 at 14:00 UTC today (one 15m bar +4.2%; ETH +4.9%). The main book's shorts left at the
+low by their trailing stop (21 Nov 06:30, +$2,321 BTC, +$2,465 ETH) and then sold the bounce (ETH ENTER short at
+1,613.70 at the 06:45 close, BTC ENTER short at 58,100 at 07:45); those and the next forced shorts were stopped (BTC
+-$644, -$405; ETH -$641, -$670). The Setups book's BTC short took Target 1 then the entry (+0.60R); its ETH short was
+stopped (-1.04R); both forced shorts of 21 Nov 14:30 were stopped today (-1.04R each); `b_trend30` and `b_wait_stop`
+(live since 22 Nov) shorted on 22 Nov and were stopped today (about -1.06R each). A long from flat needs a 5-point up
+lead (15 against a down bias); the odds' best up lead from the low until 13:45 today was -1.1 points.
+
+**Known before registering (prior work, holdout untouched by H107):** H66: in 505 sudden rallies while short the Setups
+book lost in 93%, turned long within a day in 26%, sold again inside the rally in 24%; what bounds the loss is the
+stop. H70: 18 rebound-long rules out of an oversold state (24-hour -6%, 3 x ATR(1h) under the 1h EMA50, or 1h RSI
+under 30; triggers: back above the 15m EMA20, 1.5 x ATR(15m) off the 4-hour low, above the 15m swing high; stop at the
+4-hour low; 24-hour exit) ALL lost after fees in 2020-02 to 2023-06 (mean R -0.05 to -0.25): nothing to confirm. They
+beat random longs, but mostly because their wider stops make the same fee a smaller part of R; before fees about
++0.03R better than a random entry. H71: none of the engine's own readings (odds lead, voices, StochRSI, stretch, flow,
+funding) carried confirmed information about the next 24 hours in an oversold state; low funding came closest
+(p 0.026 against 0.025) and largely repeats past price; in oversold bars the odds almost never reach the long bar.
+H74 and H102-H106: the owner's daily EMA200/EMA10 pattern and five daily chart patterns are not supported (too few or
+below the claim); H104 (three daily closes down 10%) was descriptively better than all days, too few to judge.
+H65/H67/H72: the Setups book earns with the 30-day move and loses against it; H68: forced re-entries after a stop lose
+on BTC and ETH. H80-H89, H81b, H82b: the book's odds are not distinguishable from shifted odds; its side choice is a
+little better than its own recent mix (p 0.034); its exact entry bar is not distinguishable. So nothing already in the
+engine catches a rebound; H107 asks a NEW trade shape (the engine's own stop of 3 x ATR(1h), a 48-hour hold) at a
+capitulation low, not an oversold state in general.
+
+**What must be said first.** Both rules were SHAPED BY THIS ONE EVENT: their numbers (a fresh 30-day low, 10% below a
+week earlier, a 2 x ATR(1h) rebound, negative funding, a 48-hour hold) were chosen after looking at 20-23 Nov 2026,
+where they fire once per coin at the 21 Nov 06:45 UTC close (BTC 57,194, ETH 1,613.70: the same close at which the main
+book sold ETH short). That event is inside the sealed holdout (from 2025-11-11) and is NOT part of the test; it is
+reported apart, descriptive only. H70's discovery period (2020-02 to 2023-06) overlaps this test's first half and was
+seen, so the first half is not blind. Only the bar and funding files were read for the event (from 2026-08-01, for the
+indicators' warm-up); nothing else from 2025-11-11 onward is computed.
+
+**Data.** `btcusdt_15m.csv`, `ethusdt_15m.csv` (Binance spot 15m) and the two funding files, as copied from the box's
+`/data/mind15/data` on 23 Nov 2026 (md5 in results.json). Deciding bars from 2019-10-01 00:00 UTC (funding exists from
+2019-09-10; the 30-day low needs 30 days) to the cut. **Cut: every input is truncated at the bar opening 2025-11-10
+23:45 UTC before anything is computed** (funding: rates set up to that bar's close); a trade must END by that bar, else
+it is not taken. Halves split at 2023-06-08 by the deciding bar. No evidence store, fits, odds or engine book is used.
+
+**Readings at the close of bar k (all from bars up to k).** ATR(1h) = Wilder ATR(14) of 1h bars (`data.resample`,
+`indicators.atr_wilder`) joined by `data.htf_on_15` (only closed 1h bars), the engine's own stop unit (checked: it
+gives the Setups book's live BTC stop of 21 Nov 14:30 exactly). low16 = lowest low of bars k-15..k (4 hours). low30d =
+lowest low of the bars whose open is within 30 days up to k (needs 30 days of bars). c7 = close of the last bar whose
+open is at or before open(k) - 7 days. Funding = the last rate SET at or before the close of bar k.
+
+**Rule A (capitulation rebound long).** Signal at the close of bar k when, at k: (1) a fresh 30-day low within the last
+4 hours: low16 <= low30d; (2) that low is at least 10% under the price a week earlier: low16 / c7 - 1 <= -10%;
+(3) the rebound: close(k) >= low16 + 2.0 x ATR(1h); and (1)-(3) were NOT all true at k-1 (onset only).
+**Rule B (A when shorts are crowded):** rule A's signal and the last funding rate < 0.
+**The trade (both rules, fixed now).** Long at the open of bar k+1 = P. R = 3 x ATR(1h) at k (`stop_units` 2 x
+`barrier_atr` 1.5, the engine's stop). Stop P - R. Bars k+1 .. k+192 (48 hours) are walked; in each bar the stop is
+looked at first (low <= stop: out at the stop, or at the open if the open is below it); then Target 1 = P + 1R (half out
+at T1 exactly, the stop on the rest moves to P from the NEXT bar); then Target 2 = P + 2R (the rest out at T2 exactly,
+also in the T1 bar). What is left goes out at the close of bar k+192. Fees 0.10% of notional a side (`cost_side`) on
+the entry and on each part's exit, in R. Funding is not charged or paid (as the books' R). One trade at a time per rule
+and coin: a signal at k is taken only if k >= the previous trade's exit bar. Result per trade: R net of fees (and the
+percent return).
+
+**Statistics.** Pooled BTC + ETH, and each coin. Month-clustered bootstrap: every calendar month of the window (UTC, of
+the deciding bar; months without a trade included) resampled with replacement, both coins' trades of a month together;
+10,000 draws, seed 20261123; the statistic is summed R over summed trades of the drawn months; 95% interval = 2.5th and
+97.5th percentiles; one-sided p for "mean R > 0" = (1 + #{draw - observed >= observed}) / (draws + 1) (the H70 method).
+Holm correction over the two rules (m = 2) on the pooled whole-window p. **Baseline (drift):** for each coin-month with a
+trade, the same trade entered at EVERY bar of that coin-month (window inside the period); excess = R minus that mean.
+
+**Pass rule, per rule, fixed now. PASS only if all hold:** (a) at least 60 trades pooled and at least 20 in EACH half;
+(b) pooled mean R > 0 in BOTH halves; (c) mean R > 0 on BTC alone and on ETH alone over the whole window; (d) the
+Holm-adjusted one-sided p < 0.05; (e) pooled excess over the baseline > 0 (point estimate). Fewer trades than (a):
+"too few trades to judge" (no pass). Anything else: FAIL.
+
+**Read-outs.** For each rule: trades, share won, mean R, sum of R, median R, percent return, exits by kind, longest
+losing run, deepest fall of cumulative R, months with a trade; pooled / BTC / ETH x whole / first half / second half,
+each with the bootstrap interval and p for R and for the excess; signals skipped while a trade was open; the trade
+list. **Look-ahead guards:** (i) for every signal bar (and up to 200 rule bars and 40 random bars per coin) the readings
+are recomputed on data cut at that bar and must match the full run exactly; (ii) the vectorised trade walk is checked
+bar by bar on every trade. **Descriptive only (decides nothing; one setting moved at a time):** rebound 1.5 and 2.5
+ATR, drop 8% and 12%, hold 24 and 96 hours. **The event apart (descriptive):** the two rules on 19-23 Nov 2026.
+
+**Code:** `research/h107_capitulation_rebound.py` (history run; `--event` for the event alone; the event mode was run
+before this registration to check the code on the event it was shaped on: the numbers above). Output:
+`research/out/h107_capitulation_rebound/` (`results.json`, `event.json`, `report.md`).
