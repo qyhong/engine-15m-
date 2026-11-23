@@ -625,3 +625,7 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   the studies go sequential rather concurrent". The queue restarted at 04:35 UTC with one worker (`tools/research_queue.py
   start --workers 1`); its jobs resumed from their checkpoints. With one job the credits will not rebuild while it runs,
   so the engine's steps are watched; if they slow materially the queue is paused first and the owner told.
+- **The wait after a trailing-stop exit stays** (23 Nov 2026). The owner saw the gold, silver, WTI and Brent main books
+  flat for more than four sessions after their trailing-stop exits (01:00 and 04:00 UTC) and asked whether that was
+  normal. Told it is the v5.2.8 rule (no forced entry after a trailing-stop exit until one side leads by 5 points; the
+  4-session limit after every other exit; the Setups book unchanged), the owner: "Ok noted". No change.
