@@ -290,6 +290,31 @@ crypto replay).
   `telegram_notify.QUIET`); 30 trades and a verdict change alert as for any book. Tests: `tests/test_playbook9.py`
   (parity with `research/h107_capitulation_rebound.py` trade for trade on the real files, no look-ahead, forward
   only, stale funding, state and restart, the cards).
+- Back at a capitulation low: the retest levels and their two Telegram notices (24 Nov 2026; the owner chose "a plain
+  Telegram notice when price enters the zone"; a NOTICE built from H116's descriptive base rates, NOT a setup, not a
+  hypothesis, no trade; NOT deployed when this was written). `playbook9.levels_of` is H116's level machine (the low
+  behind a rule A trigger; dead if undercut before a 5% bounce; armed; first touch = a 15m low within 1.5% above the
+  low; and, new here, broken = a low under it from the first touch on; a level counts for 30 days). The levels are NOT
+  kept from triggers seen live: at every new bar `playbook9._step_levels` recomputes them from the last 93 days of
+  closed bars (`LEVEL_TAIL_DAYS`, the comment there says why 93), after the trades and in its own try/except, and
+  writes them under the key `zone` of `data/capit_long_state.json` beside the trades (the trades' keys, the rows and
+  the books are untouched; an old state file without `zone` simply gets it). A level is listed for its 30 days and 2
+  more. Log: one line per change of state, `playbook9 <coin>: the <low> low of <time> UTC is <state> ... A notice
+  only, no trade` (at the first step after a deploy, one line per level listed); a failure is one line, `playbook9
+  <coin>: the retest levels were not updated (...); the trades are not affected`. Page: `levels` (per coin: L, low_utc,
+  made_utc, zone_top, state, live, live_until_utc, touch_utc, broken_utc, new_low) and `levels_note` in each of the two
+  book blocks; the web tab does not show them yet. Cost on the laptop on the real files: a step with a new bar on both
+  coins went from about 10 ms to about 38 ms (a second, longer tail read per coin); a step with no new bar reads
+  nothing more. THE NOTICES: `telegram_notify.zone_check`, called in `check()` right after `capit_check`, with its
+  own guard (a failure prints `capitulation-low notices failed (...)` once). It reads the same state file and sends,
+  to the owner's locked chat only: the zone notice at a level's first touch (the low, its date, the zone, the price,
+  "A notice, NOT a setup", the base rates, what the long would need) and the break notice when a touched level gets a
+  15m low under it (the new low so far, the close rule A needs now, whether its other two conditions hold at the last
+  close). Each once per level (bot state key `zone_alerted`, `z|<id>` and `x|<id>`; the id is the trigger's, as in
+  `capit_alerted`); a failed send is retried; nothing older than 48 hours is sent; a level first seen already broken
+  gets the break notice only. Restart `mind15-telegram` after the deploy. Tests: `tests/test_capit_zone.py` (the rules
+  on made-up bars and the parity with `research/h116_retest_capitulation_low.py` on the real files at 338 BTC and 460
+  ETH test dates; no look-ahead; the two texts; delivery).
 - "Setups moving against" alert (22 Nov 2026, owner asked for it): `telegram_notify.adverse_update`, hooked into
   `check()` in its own try/except. It reads the page's `b_targets` book and the market closes; its state is the key
   `adverse` in the bot's state (per market: trade id, entry, starting stop, flags a, b and t1). Thresholds

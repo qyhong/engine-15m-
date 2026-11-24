@@ -87,6 +87,19 @@ CAPITULATION LONG (H115; owner, 24 Nov 2026: "build the paper capitulation-long 
   get the generic closed-trade card (their ids start with "p9_", which is in QUIET); 30 trades and a verdict change do.
   A missing, garbled or too large file means no card; a failure there is printed once and never stops the rest.
 
+BACK AT A CAPITULATION LOW (owner, 24 Nov 2026: a plain notice when price enters the zone, with the base rates; NOT a
+  setup, not a hypothesis, no trade): the same state file carries, under "zone", the levels playbook9 recomputes from
+  the bars at every new bar (H116's level: the low behind a rule A trigger; armed after a 5% bounce; first touch = a
+  15m low within 1.5% above the low; broken = a 15m low under it after that). TWO notices per level, each once:
+    the zone notice at the first touch: the low and its date, the zone, the price, "a notice, NOT a setup", H116's
+      base rates on history, and what the long (rule A, the card above) would need;
+    the break notice when a touched level gets a low under it: the new low so far, the close the long needs now, and
+      whether rule A's other two conditions hold at the last close.
+  A level first seen already broken gets the break notice only (one message, not two; it names the touch). An id is
+  remembered (state key zone_alerted) only once its notice is delivered, so a failed send is retried and a restart never
+  sends twice; no event older than ZONE_WINDOW_S (48 hours) is sent. To the owner's own chat only. Its own guard: a
+  failure is printed once and never stops the rest, and it never changes capit_check's cards.
+
 THE KEY: read from a file the owner places (TOKEN_FILE, chmod 600); never printed, logged or stored anywhere else.
 THE CHAT: the first chat that sends /start is locked in (state file); every other chat is ignored. No key file = it waits.
 """
@@ -145,6 +158,21 @@ CAPIT_HISTORY = u"On history rule A was flat over 123 trades; rule B had 32 trad
 CAPIT_HOW = {"STOP": u"stopped", "T1+BE": u"Target 1, then stopped at the entry", "T1+T2": u"Target 1 and Target 2",
              "T1+TIME": u"Target 1, then the 48 h exit", "TIME": u"the 48 h exit"}
 _CAPIT_ERR = [None]                                                   # the last failure printed (printed once)
+# Back at a capitulation low (owner, 24 Nov 2026): notices from the levels under "zone" in the same file. NOT a setup.
+ZONE_COINS = ("BTCUSDT", "ETHUSDT")
+ZONE_BAR_S = 900                                                      # level times are bar opens; the event is the close
+ZONE_WINDOW_S = 48 * 3600                                             # no touch or break older than this is sent
+ZONE_LATE_S = 1800                                                    # a notice sent this long after its bar closed says so
+ZONE_STALE_S = 1800                                                   # readings older than this are "last", not "now"
+ZONE_MEMORY_S = 35 * 86400                                            # delivered ids kept this long (a level lives 30 days) ...
+ZONE_MEMORY_MAX = 400                                                 # ... and at most this many (the newest)
+ZONE_PCT, ZONE_DROP, ZONE_BOUNCE_ATR = 0.015, 0.10, 2.0               # playbook9's LEVEL_ZONE, DROP and BOUNCE_ATR (a test holds them equal)
+ZONE_RATES = (u"On history (77 retests, 2019 to 2025): in 88% price traded under the low within 4 days (median lowest "
+              u"point 6.6% below it).",
+              u"A day after the first touch price was higher in 58% (median +1.9%).")
+ZONE_TESTED = u"Buying the retest itself was tested (H116): too few trades to judge, a small loss on those."
+ZONE_PIN, ZONE_DOWN = u"\U0001f4cd", u"\U0001f53b"                   # their own names: DOWN further down is another card's
+_ZONE_ERR = [None]                                                    # the last failure printed (printed once)
 
 
 def disk_free_gb(path=None):
@@ -965,6 +993,153 @@ def capit_check(st, tok, chat, now):
     return done
 
 
+# ------------------------------------------------------------------ back at a capitulation low (playbook9's levels, read only)
+# The book keeps under "zone" one block per coin: {"as_of_open_ms", "close", "atr_1h", "low_4h", "week_ago_close",
+# "fresh_30d_low", "drop_enough", "all_three", "levels": [{"id", "asset", "L", "zone_top", "state", "low_open_ms",
+# "touch_open_ms", "broken_open_ms", "new_low", ...}]}; every time there is the OPEN of a 15m bar, in epoch ms.
+def _zone_levels(doc):
+    """-> [(level, its coin's block)] from the book's state; anything not shaped as expected is skipped."""
+    zone = doc.get("zone") if isinstance(doc, dict) else None
+    out = []
+    for asset in ZONE_COINS:
+        blk = zone.get(asset) if isinstance(zone, dict) else None
+        if not isinstance(blk, dict) or not isinstance(blk.get("levels"), list):
+            continue
+        for lv in blk["levels"]:
+            if isinstance(lv, dict) and isinstance(lv.get("id"), str) and lv.get("asset") == asset:
+                out.append((lv, blk))
+    return out
+
+
+def _zone_price(blk, now):
+    """'Price now <b>x</b> (the 13:15 UTC close)', or 'Last price ...' with the day when the reading is old. None: no
+    usable reading."""
+    c, as_of = _num(blk.get("close")), _num(blk.get("as_of_open_ms"))
+    if c is None or as_of is None or c <= 0:
+        return None
+    close_ms = as_of + 1000.0 * ZONE_BAR_S
+    hm, day = _capit_when(close_ms)
+    if now.timestamp() - close_ms / 1000.0 > ZONE_STALE_S:
+        return u"Last price <b>%s</b> (the %s close, %s)" % (_adv_px(c), hm, day)
+    return u"Price now <b>%s</b> (the %s close)" % (_adv_px(c), hm)
+
+
+def _zone_late(what, event_s, now):
+    age = now.timestamp() - event_s
+    return [u"%s Late: %s %s ago." % (WARN, what, _capit_ago(age))] if age > ZONE_LATE_S else []
+
+
+def zone_touch_card(lv, blk, now):
+    """The zone notice for one level at its first touch, or None when it cannot be read. A notice, NOT a setup."""
+    if not isinstance(lv, dict) or not isinstance(blk, dict) or lv.get("asset") not in ZONE_COINS:
+        return None
+    L, low_ms, f_ms, atr, week = (_num(lv.get("L")), _num(lv.get("low_open_ms")), _num(lv.get("touch_open_ms")),
+                                  _num(blk.get("atr_1h")), _num(blk.get("week_ago_close")))
+    price = _zone_price(blk, now)
+    if None in (L, low_ms, f_ms, atr, week, price) or min(L, atr, week) <= 0:
+        return None
+    top = (1.0 + ZONE_PCT) * L
+    f_close = f_ms + 1000.0 * ZONE_BAR_S
+    out = [u"%s <b>Back at the capitulation low \u00b7 %s</b>" % (ZONE_PIN, _esc(_mk(lv["asset"]))),
+           u"A 15m low reached the zone in the bar that closed at %s (%s)." % _capit_when(f_close),
+           u"Low <b>%s</b>, made %s (the %s bar)" % ((_adv_px(L),) + _capit_when(low_ms)[::-1]),
+           u"Zone %s to <b>%s</b> (the low to 1.5%% above it)" % (_adv_px(L), _adv_px(top)),
+           price,
+           u"<b>A notice, NOT a setup.</b> No trade is opened here.",
+           ZONE_RATES[0], ZONE_RATES[1],
+           u"The long needs a low under %s, then a 15m close 2 x ATR(1h) above that new low (ATR(1h) is %s now: %s above it)."
+           % (_adv_px(L), _adv_px(atr), _adv_px(ZONE_BOUNCE_ATR * atr)),
+           u"That low must also be 10%% under the close a week earlier: at or under %s now." % _adv_px((1.0 - ZONE_DROP) * week),
+           u"A separate alert comes if the long fires."]
+    out += _zone_late(u"price reached the zone", f_close / 1000.0, now)
+    out.append(u"<i>%s</i>" % ZONE_TESTED)
+    return u"\n".join(out)
+
+
+def zone_broken_card(lv, blk, now, first=False):
+    """The break notice for one touched level that got a 15m low under it, or None when it cannot be read.
+    first: no zone notice went out for this level, so this one names the touch. A notice, NOT a setup."""
+    if not isinstance(lv, dict) or not isinstance(blk, dict) or lv.get("asset") not in ZONE_COINS:
+        return None
+    L, low_ms, f_ms, s_ms, new_low = (_num(lv.get(k)) for k in ("L", "low_open_ms", "touch_open_ms", "broken_open_ms",
+                                                              "new_low"))
+    atr, low4, week = _num(blk.get("atr_1h")), _num(blk.get("low_4h")), _num(blk.get("week_ago_close"))
+    price = _zone_price(blk, now)
+    if None in (L, low_ms, f_ms, s_ms, new_low, atr, low4, week, price) or min(L, atr, low4, week) <= 0 or new_low >= L:
+        return None
+    s_close = s_ms + 1000.0 * ZONE_BAR_S
+    need_low = (1.0 - ZONE_DROP) * week
+    fall = 100.0 * (low4 / week - 1.0)
+    fresh, enough = blk.get("fresh_30d_low") is True, blk.get("drop_enough") is True
+    out = [u"%s <b>Capitulation low broken \u00b7 %s</b>" % (ZONE_DOWN, _esc(_mk(lv["asset"]))),
+           u"A 15m low went under <b>%s</b> (the low of %s) in the bar that closed at %s (%s)."
+           % ((_adv_px(L), _capit_when(low_ms)[1]) + _capit_when(s_close)),
+           u"New low so far <b>%s</b>" % _adv_px(new_low),
+           price]
+    if first:
+        out.append(u"First notice for this low: price reached its zone (up to %s) in the bar that closed at %s (%s)."
+                   % ((_adv_px((1.0 + ZONE_PCT) * L),) + _capit_when(f_ms + 1000.0 * ZONE_BAR_S)))
+    out.append(u"<b>A notice, NOT a setup.</b> No trade is opened here.")
+    if blk.get("all_three") is True:
+        out.append(u"All three conditions of the long (rule A) held at the last close. If it fired, its own alert says so.")
+    else:
+        out.append(u"The long (rule A) needs a 15m close at or above <b>%s</b>: the 4-hour low %s + 2 x ATR(1h) %s."
+                   % (_adv_px(low4 + ZONE_BOUNCE_ATR * atr), _adv_px(low4), _adv_px(atr)))
+    out += [u"Its other two conditions must hold at that close too:",
+            u"\u2022 a fresh 30-day low in the last 4 hours: %s" % (u"true now" if fresh else u"NOT true now"),
+            u"\u2022 that low 10%% under the close a week earlier (%s), so at or under %s: %s (%+.1f%%)"
+            % (_adv_px(week), _adv_px(need_low), u"true now" if enough else u"NOT true now", fall),
+            u"These numbers move with every bar. A separate alert comes if the long fires."]
+    out += _zone_late(u"the low broke", s_close / 1000.0, now)
+    out.append(u"<i>The long is paper only, NOT passed. %s</i>" % CAPIT_HISTORY)
+    return u"\n".join(out)
+
+
+def zone_check(st, tok, chat, now):
+    """The capitulation-low notices of one check: for each level in the book's state, the zone notice at its first
+    touch and the break notice at its break, each once and never for an event older than ZONE_WINDOW_S. A level found
+    already broken gets the break notice only. An id is remembered only once its notice is delivered. Never raises.
+    -> the notices delivered."""
+    done = []
+    try:
+        doc = _capit_read()
+        if doc is None:
+            return done
+        now_s = now.timestamp()
+        mem = dict(st.get("zone_alerted")) if isinstance(st.get("zone_alerted"), dict) else {}
+        for lv, blk in _zone_levels(doc):
+            f_ms, s_ms = _num(lv.get("touch_open_ms")), _num(lv.get("broken_open_ms"))
+            if f_ms is None:
+                continue                                              # not touched: nothing to say
+            zk, xk = "z|" + lv["id"], "x|" + lv["id"]
+            if s_ms is not None:
+                if xk in mem or now_s - (s_ms / 1000.0 + ZONE_BAR_S) > ZONE_WINDOW_S:
+                    continue
+                card, keys = zone_broken_card(lv, blk, now, first=zk not in mem), (xk, zk)
+            else:
+                if zk in mem or now_s - (f_ms / 1000.0 + ZONE_BAR_S) > ZONE_WINDOW_S:
+                    continue
+                card, keys = zone_touch_card(lv, blk, now), (zk,)
+            if card is None:
+                continue
+            r = _send(tok, chat, card)
+            if isinstance(r, dict) and r.get("ok"):
+                for k in keys:
+                    mem.setdefault(k, now_s)
+                st["zone_alerted"] = mem                              # kept even if a later notice fails
+                done.append(card)
+        cut = now_s - ZONE_MEMORY_S
+        keep = sorted(((k, v) for k, v in mem.items() if isinstance(v, (int, float)) and v >= cut), key=lambda kv: -kv[1])
+        st["zone_alerted"] = dict(keep[:ZONE_MEMORY_MAX])
+        _ZONE_ERR[0] = None
+    except Exception as e:                                            # never stops the other alerts; printed once
+        tag = type(e).__name__
+        if _ZONE_ERR[0] != tag:
+            _ZONE_ERR[0] = tag
+            print(time.strftime("%Y-%m-%d %H:%M:%S"), "capitulation-low notices failed (%s)" % tag, flush=True)
+    return done
+
+
 # ------------------------------------------------------------------ data history changed (the daily check's report, read only)
 # Owner, 19 Nov 2026: "add an alert". Once a UTC day the reading cache re-reads every stored row of each group and rewrites
 # the rows whose readings changed (evcache.update); live.write_check_report puts what it found in data/check_report.json:
@@ -1659,6 +1834,7 @@ def check(st, tok, send=True, now=None):
         for e in ev:
             _send(tok, st["chat_id"], e)
         ev += capit_check(st, tok, st["chat_id"], now)                # H115 paper book: trigger and close cards; guarded inside
+        ev += zone_check(st, tok, st["chat_id"], now)                 # back at a capitulation low: notices, NOT setups; guarded inside
         if due:
             _send(tok, st["chat_id"], summary(page, score, now, st.get("health")))
             st["summary_day"] = day
