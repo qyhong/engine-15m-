@@ -5736,6 +5736,7 @@ Negative funding looks better but rests on 32 trades and is not significant. Thi
 ETH no rebound-long rule tested so far has held up across both halves. Nothing here supports a paper shadow book on the
 registered bar; nothing in the engine, the books or the vault was changed.
 
+<<<<<<< HEAD
 ## H110. The book allocator `a_alloc`: does moving one paper wallet toward the books that are doing well forward beat holding them all equally? (registered 24 Nov 2026, about 05:25 UTC, before any H110 number was computed; RL idea R2 of `docs/RL_NEXT.md`; owner, 24 Nov 2026: "Ok lets do it")
 
 **Paper only. NOT passed. It changes no book and no decision.** `a_alloc` is one paper wallet of $10,000 that is split
@@ -5817,3 +5818,77 @@ So a row that arrives late (gold, silver and oil step one bar behind) can still 
 first hour of that day; after that a day's shares do not change unless a record changes. A book whose records cannot
 be read at a step is left out of that step for both wallets, and the block says so. Constants live in the module, not
 in `CFG`. Tests: `tests/test_book_alloc.py`.
+=======
+## H108. RL idea R3: card trust kept separately per regime bucket, as a paper shadow mind (registered 24 Nov 2026, about 05:25 UTC, before any H108 code existed or any H108 number, on history or live, was computed)
+
+**Prompted by:** `docs/RL_NEXT.md` section R3 ("Trust that depends on the regime") and the owner, in this project, 24 Nov
+2026, on the three RL-style ideas that "would run as a paper shadow first": "Ok lets do it".
+
+**What must be said first.** There is NO evidence yet that this helps. Nothing was measured before this entry: no
+replay, no forward number, no count of how often each bucket occurs. The known risk (RL_NEXT.md): each bucket sees
+fewer graded calls than the one live table, so its weights are noisier. The forward shadow book is the only test.
+Paper only. It decides nothing for any other book.
+
+**The idea.** The live engine learns one set of card weights ("trust") per market group from every graded call
+(`engine15/model.py` `trust_path`: exponential weights, 10-day half-life; then the 40% cap). The shadow mind keeps one
+such set PER REGIME BUCKET: a card's errors made in one kind of market only move its weight for that kind of market.
+
+**The buckets, fixed now (4).** Read per market at each 15-minute close, from two readings the engine already has at
+that close (`engine15/evidence.py`; closed bars only):
+- trend or range: the `regime` reading (the six-label daily regime of the last CLOSED daily bar). `TREND_UP`,
+  `TREND_DOWN`, `MOMENTUM_UP`, `MOMENTUM_DOWN` = "trend". `RANGE`, `TRANSITION` = "range".
+- high or low volatility: the `vol_rank` reading (where ATR(1h) / price stands among its last 2,880 15-minute bars).
+  0.5 or more = "high". Below 0.5 = "low".
+- The four buckets: `trend_hi`, `trend_lo`, `range_hi`, `range_lo`. A bar where either reading is missing has no bucket.
+
+**The rule, fixed now.** For a market group (its markets pooled, as the live learner pools them) and a bucket b:
+- A call made at bar t on market a belongs to bucket b when market a was in b at bar t.
+- Bucket b's table is exactly `model.trust_path` fed only with the calls that belong to b. Same loss (direction only,
+  calls graded up or down), same clock (a loss counts from the bar its grade arrives, never earlier, and halves every
+  960 bars after that), same constants as the live learner, read from the live config, never copied: `trust_eta`,
+  `trust_halflife`, `trust_floor`. Same learning window as the live step.
+- At bar s, market a takes the table of the bucket it is in at bar s. Then the live mixing, unchanged: only the
+  group's voting cards, the 40% cap (`trust_cap`), a card with no reading has no vote, the cap again, the weighted
+  mix of the cards' calls. That gives the mind's own odds for bar s.
+- A bar with no bucket uses the engine's own odds. A bucket with no graded call yet starts level (every card equal).
+- The paper book `m_regime_trust` trades those odds with the main rule, unchanged: `shadows.run` with no rule
+  switched on (the rule of the fresh main copy `main`: `policy.decide`, the same stop, the same sizing, hold to stop
+  or flip, the 4-session mandate), $10,000 per market, the market's own fee. All eight markets. It starts FLAT on
+  each market at its first live bar. The tables it starts with come from the graded calls of the live learning window
+  (warm-up, as for the live learner; not proof of anything).
+- No look-ahead: a table at bar s uses only calls whose grade had arrived by bar s. A truncation test holds this
+  (the odds at bar t must not change when later bars are removed).
+
+**What it is compared with.** The fresh main copy (`main` in `shadows.CHALLENGERS`): the same rule, the same bars,
+the same sizing, the same markets, over the same days. The only difference is the odds (one table against four).
+Each side is its change in marked paper equity since the bar the mind started on that market, summed over the
+markets, in percent of the starting capital ($10,000 x markets).
+
+**The verdict rule, fixed now. Forward only.**
+1. Nothing is read before the book has 30 closed forward trades (all its markets pooled; a trade counts when it is
+   fully closed). Until then the only words are "too few trades to judge (N of 30)" and "no read before 30 closed
+   forward trades". A history replay, if one is ever run, is labelled warm-up and decides nothing.
+2. The read at 30 is the first server scoreboard (`out/live/scoreboard.json`) whose `m_regime_trust` row shows 30 or
+   more trades, copied as it stands: the row against zero by `research/VERDICT_RULES.md` section 2 ("ahead", "behind"
+   or "undecided" from the 90% range), and the comparison line beside it. Later changes do not change the read.
+3. The comparison line uses only these words: the mind is "ahead of" the main copy when its return is 1.0 percentage
+   point or more above the main copy's over the same days, "behind" when it is 1.0 point or more below, otherwise
+   "level with". Both returns and the difference are shown. BTC and ETH alone are shown beside it, not as the rule.
+4. A second read follows at 60 closed trades, by the same rule.
+5. What each outcome changes: "ahead of" at both reads, and the row against zero not "behind": the result goes to the
+   owner with a proposal (a longer run or a registered follow-up); nothing else. "behind" at both reads: I propose to
+   retire the book; the owner decides. Anything else: it keeps running and nothing changes.
+6. No word such as passed, proven, works or edge is used for it. `research/VERDICT_RULES.md` section 3 applies: 30
+   trades opened within a few weeks of one market spell show much less than 30 independent results would, and the
+   two books trade the same bars, so most of their results move together.
+7. Nothing here changes the live learner, the main books, the Setups book (`b_targets`) or what the vault is sent.
+   Any such change needs the owner's word in this project and its own registration.
+
+**Not tested, said now:** other bucket choices (six labels, three volatility bands, the 4h trend), a bucket clock
+that only runs while the market is in the bucket, a different half-life per bucket. None is tried here. Trying them
+later is a new hypothesis each.
+
+**Code:** `engine15/regime_trust.py` (the buckets, the tables, the odds, the book's step, the comparison line),
+hooked into `engine15/shadows.py` `advance` as a guarded shadow mind (`shadows.MINDS`; a failure is logged in one
+line and skipped). Tests `tests/test_regime_trust.py`. Scoreboard label: "NOT passed, paper only".
+>>>>>>> worktree-agent-a5340299436c7a4b4

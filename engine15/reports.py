@@ -215,8 +215,18 @@ def scoreboard(playbook_rows=None, log=print):
     for p in glob.glob(os.path.join(live_dir, "shadow_trades_*.csv")):
         name = os.path.basename(p)[len("shadow_trades_"):].rsplit("_", 1)[0]
         shadow.setdefault(name, []).extend(pnl_of(p))
+    mind_rows = {}                                                 # shadow minds (H108, regime_trust.py): the row says
+    try:                                                           # "NOT passed, paper only" and carries the registered
+        from . import regime_trust                                 # comparison with the fresh main copy. Read only; a
+        extra = regime_trust.scoreboard_extra(len(shadow.get(regime_trust.NAME, [])))   # failure never stops the scoreboard
+        if extra is not None:
+            shadow.setdefault(regime_trust.NAME, [])               # shown from its first live bar, before any trade
+            mind_rows[regime_trust.NAME] = extra
+    except Exception as e:
+        log("regime trust mind: %r" % (e,))
     for name, pn in sorted(shadow.items()):
         rows.append(dict({"book": name, "title": "Shadow: " + name, "kind": "shadow"}, **_stats(pn)))
+        rows[-1].update(mind_rows.get(name) or {})
     by_book = {}
     for r in playbook_rows or []:
         if r.get("status") == "CLOSED" and r.get("pnl_usd") is not None:
