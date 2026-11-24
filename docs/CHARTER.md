@@ -662,3 +662,15 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
 - **The research queue on the box stays stopped** (24 Nov 2026). Asked whether to restart it under the 30% CPU cap
   or keep it stopped, the owner: "Keep it stop now". It is not restarted, capped or not, without the owner's word. H85
   waits with its checkpoint; H86 runs on the laptop.
+- **think15-v5.2.10 is LIVE** (24 Nov 2026, deployed 08:33:41 UTC, commit 5ed3d6e; owner: "Check every hour. Anytime
+  can then just do it"). The deploy waited until the box had banked about 117 CPU credits by the `sar` estimate (the
+  research queue stopped since 04:48 UTC) and was timed clear of the 08:00 UTC boundary the AI Trading session named.
+  Two attempts (06:50 and 07:50 UTC) stopped in the laptop's test run before anything changed on the box: the child
+  engine of `tests/test_parallel_step.py` died with 0xC0000005. Cause, found by reproducing it: importing the research
+  queue harnesses sets the BLAS thread variables to 1 in the pytest process, the child inherits them and crashes on the
+  Windows ARM64 laptop. `tests/conftest.py` now restores those variables after collection and after each test (no test
+  skipped or changed; a first guess, memory, and its run-first ordering were wrong and are replaced). Third attempt:
+  1,564 passed. First step on the box: the reading cache rebuilt in 681 s, the 08:45 UTC books went out after it, the
+  09:00 UTC step took 113 s, no failed step and no refused book. The two shorts open since 23 Nov 15:00 UTC carry no
+  `lead_pts`; the first book with one comes with the next new setup. The vault's own filter is still off (the AI
+  Trading session's switch). A second VIP member (member 6) is funded since about 08:18 UTC.

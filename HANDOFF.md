@@ -14,7 +14,9 @@ v5.2.10 (owner 23-24 Nov 2026) adds one key to the open book the vault gets: `le
 points, positive favours LONG) of the step that opened the setup, fixed for its life (`vault_feed.SEND_LEAD`,
 `opening_lead`; kept in the feed's memory as `pos[sym]["lead_pts"]`, with each step's reading in `lead_seen` for a flip
 shown a step later). The vault's join filter on it (lead above 5.0 in the setup's direction) is the AI Trading Bot
-session's switch; a setup with no known opening Lead carries no key and does not pass that filter.
+session's switch; a setup with no known opening Lead carries no key and does not pass that filter. Live on the box since
+24 Nov 2026 08:33 UTC (commit 5ed3d6e). `tests/conftest.py` keeps the queue harnesses' BLAS thread settings from
+leaking into other tests (they crashed the parallel-step test's child engine on the Windows ARM64 laptop).
 Since 21 Nov 2026 a follower book runs beside the shadow books (`engine15/floor_book.py`, `shadows.FOLLOWERS`,
 book name `f_floor_33_3r`): the hold copy's trades with a third of the best closed profit locked once 3R up (H61).
 It started as a copy of the hold copy's book, is not a rule of `shadows.run`, and a failure in it is logged and
