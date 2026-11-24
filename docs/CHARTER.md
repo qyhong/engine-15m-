@@ -647,3 +647,15 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   registered before any history number: rule A broke even over 123 trades (2019 to Nov 2025), rule B had 32 trades,
   too few to judge. No shadow book proposed. `research/out/h107_capitulation_rebound/report.md`.
 - **Agents on Fable 5.2** (24 Nov 2026; owner: "utilise fable 5.2 agents").
+- **v5.2.10 is committed but NOT live; the queue is stopped; H86 runs on the laptop** (24 Nov 2026, about 04:50 UTC).
+  The owner said "Do for me" and `tools/deploy.sh` was started, then stopped by this session during its test phase,
+  before anything on the box changed (the box still runs d50b5bf, v5.2.9). Reason: the box has been out of CPU credits
+  since 23 Nov 02:40 UTC (58% steal measured), the version bump makes the first step rebuild the reading cache, and a
+  throttled rebuild can pass the 25-minute worker limit and the watchdog's 30 minutes while the vault member holds two
+  3x shorts (Target 1 taken, stops at the entry on the exchange). The research queue was stopped (`STOP`; H85 keeps its
+  checkpoint at 17,417 of 65,000) so credits can build before the deploy. The owner, the same hour: "For those sg box
+  research still pending. Utilise this laptop to start 1": H86 was moved to `held/` on the box and started on the
+  laptop in the worktree `C:\Ai Dataset\engine-15m-q86` (commit 0a94526, the box's fits, bars and reading cache copied
+  while the engine slept; output `out_H86/`; the fits overlay was filled with copies because Windows refuses the
+  harness's symlinks; no code changed). The AI Trading session reported the owner's choice there to cap the research
+  runner's CPU (a slice at about 30%); it is not applied until the owner confirms it in this project.
