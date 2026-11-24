@@ -6024,3 +6024,130 @@ Nothing in the registered rule was changed. What the registration left open, and
   `wild_agree`. No forward number exists yet.
 - **Step cost, measured on the laptop** with synthetic records and a 21 MB bar file: about 0.03 s with today's two
   weeks of arm records, 0.08 s after three months, 0.23 s after a year. It grows with the length of the arms' records.
+
+## H113. BTC and ETH: how fast the Lead turns after a capitulation low, and whether Setups shorts opened in the 48 hours after a capitulation rebound do worse than the book's other shorts (registered 24 Nov 2026, about 12:25 UTC, before any H113 number on history was computed)
+
+**Prompted by:** the live audit of 24 Nov 2026 (`research/out/live_audit_20261124/report.md`, study E): on BTC and ETH
+the Lead pointed down in 98% of steps over 14 live days, including through the rebound from the 21 Nov low (BTC
+55,130), and trades opened after that low lost in all three books (main 2 of 6 won, -$1,455; Setups 0 of 3, -$1,555;
+B trail 2 of 6, -$1,549). The owner asked for a study on history of "how fast the Lead turns after a capitulation
+low". Research only: nothing in the engine, the books or the vault changes, whatever the result. A pass leads only to
+a PROPOSAL for a forward paper shadow book ("no new short for 48 hours after a capitulation rebound"); it never
+changes a live book or the vault.
+
+**Words.** The **Lead** is the engine's P(up first) minus P(down first), in points (`engine15/policy.py`: `edge`,
+times 100). Above zero it favours up, below zero it favours down. From flat the engine goes long by itself only at
++5 points (+10 when risk is high, +15 against the higher-timeframe bias). **R** is a trade's result divided by what it
+risked at its entry stop, after fees (the book's `r_mult`). The **Setups book** is the paper book `b_targets`.
+
+**Known before registering (what earlier studies already answer).**
+- H71 (the engine's readings in an oversold state): in oversold bars the odds led UP by 5 points or more in 0.1% to
+  0.2% of bars and never by 15; they led DOWN by 5 or more in 53% to 62%. The Lead did not carry confirmed
+  information about the next 24 hours there. So "the Lead mostly stays down while a market is oversold" is ALREADY
+  KNOWN. H71 counted bars in a state; it did not measure time from a low.
+- H66 (sudden rallies while short): in 505 rallies of +5% in 24 hours while the Setups book was short, it lost in 93%,
+  opened a NEW short inside the rally in 24%, and turned long within the day in 26%. The rallies were picked with
+  hindsight on price and were not tied to a capitulation; the shorts' own R was not compared with other shorts.
+- H65 / H67 / H72: the book earns with its market's 30-day move and loses against it; shorts as a whole averaged
+  -0.062R. A short just after a capitulation is WITH the 30-day move, the cell that was positive. So H113's claim is
+  that the first 48 hours after a capitulation rebound are an exception inside a cell that earns on average.
+- H68: forced entries right after a stop-out lost on BTC and ETH (762 trades, -0.070R); `b_wait_stop` runs forward.
+- H70: 18 rebound-long rules out of an oversold state all lost after fees in 2020-02 to 2023-06.
+- H107 (the event definition reused here): a long at rule A's trigger made -0.127R a trade in the first half (83
+  trades) and +0.246R in the second (40 trades), flat over all (123, -0.006R). Two things follow before any H113
+  number: (i) bounces off new lows kept failing in the first half (2022 above all), so shorts opened there may well
+  have done fine: the claim is NOT expected to hold in the first half on that evidence; (ii) with about 40 triggers
+  taken in the second half, the second half may hold fewer than 20 in-window shorts.
+- The 21 Nov 2026 event itself (the audit and H107's event read): rule A fired on both coins at the 06:45 UTC close;
+  the books' shorts after the low lost. That event shaped H107's rule and prompted this study. It is NOT part of the
+  test and is reported apart.
+
+**What H113 adds.** (a) Time measured from a capitulation low: how many hours until the Lead first favours up, the
+Lead's path hour by hour, and how often it still favours down one, two and three days later. No earlier study measured
+this. (b) A test, without look-ahead, of whether the Setups book's shorts opened in the 48 hours after H107's rule A
+fires do worse than its other shorts. H66 and H68 are near it but answer different questions.
+**What H113 does not repeat.** Whether a LONG at the trigger pays (H107: it does not hold up). Whether the Lead
+predicts anything in an oversold state (H71: not confirmed).
+
+**Data.** BTCUSDT and ETHUSDT. The laptop's copy of the live box's data (`data/`: 15-minute bars, funding, the
+evidence store to 2026-11-24 04:30 UTC) and a private copy of the cached weekly fits, all read only. The Lead per
+15-minute close is `prep["odds"]` from `research/h59_half_be.py::prep_cut` (the frame H65 to H68 and H71 used; each
+fit is made only from rows graded before the week it serves). **Known difference from the live engine:** this replay
+frame has no trust cap (live, since v5.2, no card holds more than 40% of the say), so the replay Lead is close to but
+not the same as the live Lead. The Setups book is the engine's own `shadows.run` under the rule of
+`shadows.CHALLENGERS["b_targets"]` (`{"targets": True, "early": True}`), as in `research/h68_wait_after_stop.py`,
+from the first close with odds to the store's last session.
+
+**Segments, by the time of the bar that decides (UTC).** First half: the first close with odds (2020-02) to 2023-06-07
+23:45. Second half: 2023-06-08 00:00 to 2025-11-10 23:45. Holdout: 2025-11-11 00:00 to 2026-11-18 23:45. The event
+apart: from 2026-11-19 00:00 (H107's event window). The halves are H107's.
+
+**The capitulation trigger (part b), reused from H107 exactly.** `research/h107_capitulation_rebound.py::features`
+with its registered settings (`REG`), column `"A"`: at the close of bar k, a fresh 30-day low within the last 4 hours,
+that low at least 10% under the close a week earlier, the close at least 2 x ATR(1h) above that low, and not all true
+one bar earlier. The script imports that function; it defines no trigger of its own. Each coin uses its own trigger.
+
+**Part (a), descriptive, hindsight allowed, decides nothing.** A **confirmed capitulation low** is a 15-minute bar k
+whose low (1) is the lowest of the 30 days up to it (H107's `lowN`, 30 days of bars needed), (2) is at least 10% under
+the close a week earlier (H107's `cref`), and (3) is not undercut in the next 192 bars (48 hours). Events on one coin
+are kept in time order, and one is dropped if it comes less than 7 days after the last one kept. The Lead must exist
+at bar k. For each event, with the Lead read at each close from 24 hours before to 72 hours after:
+- the median Lead by hour (and the quartiles);
+- the hours from the low bar's close until the Lead is first at or above 0 (and first at or above +5), within 72
+  hours; an event where that never happens is counted as "not within 72 hours", and the median is given only if at
+  least half the events turned;
+- the share of events in which the Lead is below 0 at +24h, +48h and +72h, and the share of the 72 hours spent below 0;
+- the price at +24h, +48h and +72h against the low and against the low bar's close. By construction price cannot be
+  under the low in the first 48 hours, so these moves flatter the low; they are a description, not a forecast.
+Per segment, each coin and both together (BTC and ETH lows mostly fall on the same days, so "both" is not twice the
+evidence). As a yardstick: the share of ALL closes in each segment with the Lead below 0. Without hindsight, the same
+shares anchored at rule A's trigger instead of the low. The 21 Nov 2026 lows are shown apart.
+
+**Part (b), the test, no look-ahead.** A trigger at the close of bar k opens a **post-capitulation window**: that close
+and the next 191 closes (48 hours; the bars H107's long would hold). A later trigger extends it. A short of the
+Setups book is **in-window** if the close that decided it (the bar before its entry bar `i_in`) lies inside a window
+of its own coin; every other short of the book on BTC and ETH is an "other short". All shorts count, whatever the
+entry word (ENTER, FORCED, FLIP). The measure is the mean of `r_mult`, BTC and ETH trades pooled.
+**The claim:** shorts opened inside the window do worse than the book's other shorts.
+**PASS condition, fixed now.** In the first half AND in the second half: at least 20 in-window shorts, their mean R
+below zero, AND their mean R below the other shorts' mean R of that half. Fewer than 20 in either half: "too few to
+judge" (no pass). Anything else: "does not pass".
+**The holdout** is opened for part (b) only if both halves pass (as H70 and H71 did: nothing to confirm, nothing
+opened). It then confirms only if it holds at least 10 in-window shorts with a mean R below zero and below the other
+shorts' mean R there; otherwise the proposal does not stand. If the halves do not pass, the in-window split is not
+computed on the holdout and it stays sealed for this question.
+**The event apart.** Shorts decided from 2026-11-19 on, in the replay and (from the audit's copy of the live files,
+if still on disk) in the live books, with the live Lead from the journal: descriptive only.
+
+**Descriptive beside the test (decides nothing; first and second half only unless the holdout is opened):**
+- a month-clustered bootstrap interval for (in-window mean R minus others' mean R): calendar months of the deciding
+  bar, both coins together, 10,000 draws, seed 20261124, 95% percentile interval;
+- the others restricted to the same coin-months as the in-window shorts (a like-for-like yardstick);
+- each coin alone; by entry word; the first 24 hours of the window against the second;
+- the mirror: the book's LONGS decided inside the window against its other longs (if they do worse too, the window is
+  simply a costly time to trade, not a bad time to be short);
+- the Lead at the entry of the in-window shorts; the number of triggers and the share of closes inside a window;
+- windows of 24 and of 96 hours.
+**Look-ahead guard.** For every trigger bar and 40 random bars per coin, `features` is recomputed on bars cut at that
+bar and the flag must match the full run.
+
+**Changes from the brief, made before registering.**
+1. The second half ends at 2025-11-10 23:45, so it does not overlap the holdout (in H68 the second half ran to the end).
+2. The holdout is opened for part (b) only if both halves pass, and needs at least 10 in-window shorts to confirm
+   (the brief asked for "the same sign" with no count).
+3. The holdout ends at 2026-11-18 23:45; everything from 19 Nov 2026 is the event apart.
+4. Part (a)'s 10% test compares the LOW with the close a week earlier, not the close with the close, so that a
+   confirmed low is H107's own first two conditions at the low bar, on H107's code.
+5. The window is defined by the close that DECIDES the short (the trigger's close and the next 191), each coin by its
+   own trigger, later triggers extending it; flips into a short count.
+6. The replay runs to the store's last session (2026-11-24 04:30), not to 2026-11-21 13:45, so that the event can be
+   shown. This changes nothing before 19 Nov 2026.
+7. The descriptive read-outs listed above were added (the +5 bar, the yardsticks, the trigger-anchored path, the
+   bootstrap interval, the mirror on longs, the 24- and 96-hour windows, the live journal for the event).
+
+**Seen before this registration:** the audit report, the H107 code and results, the studies named above, the store's
+time index (its first and last session) and file listings, and the first and last lines of the audit's journal copy.
+No Lead path, no event list beyond H107's own results, and no split of the book's shorts has been computed.
+
+**Code:** `research/h113_lead_after_capitulation.py`, tests `tests/test_h113_lead_after_capitulation.py`. Output:
+`research/out/h113_lead_after_capitulation/` (`report.md`, `results.json`).
