@@ -76,6 +76,17 @@ SETUPS MOVING AGAINST (owner, 22 Nov 2026: "A Telegram alert when price moves sh
   state (the page shows the current stop, which equals the entry stop until Target 1). These thresholds are a first
   setting chosen by the engine author, not by the owner. An alert only: no stop, book or setting changes. Its own guard.
 
+CAPITULATION LONG (H115; owner, 24 Nov 2026: "build the paper capitulation-long book with the Telegram alert"): the paper
+  books p9_rebound_a / p9_rebound_b (playbook9.py: H107's rules A and B, NOT passed) keep their own state file,
+  data/capit_long_state.json. Read only, one small read per check; playbook9 is never imported. ONE card per coin and
+  deciding close at which a rule opened a paper trade: which rule(s), the entry, the stop, Target 1 and 2, the 48-hour
+  exit time in UTC, the risk in %, the funding reading, and the line "Paper only, NOT passed" with the history. ONE card
+  when trades of a coin close, with each rule's R. An id is remembered (state key capit_alerted) only once its card is
+  delivered, so a failed send is retried and a restart never sends twice; nothing older than CAPIT_WINDOW_S is sent.
+  To the owner's own chat only, like every card here: it is not a signal for members. These books' closes do NOT also
+  get the generic closed-trade card (their ids start with "p9_", which is in QUIET); 30 trades and a verdict change do.
+  A missing, garbled or too large file means no card; a failure there is printed once and never stops the rest.
+
 THE KEY: read from a file the owner places (TOKEN_FILE, chmod 600); never printed, logged or stored anywhere else.
 THE CHAT: the first chat that sends /start is locked in (state file); every other chat is ignored. No key file = it waits.
 """
@@ -121,6 +132,19 @@ VAULT_FAIL_S = 1800                                                   # sends fa
 VAULT_BAR_S = 900                                                     # a book goes once per 15m bar: its as_of may lag one bar
 VAULT_ALIVE_S = 600                                                   # the feed wrote its state this recently = it is running
 _VAULT_ERR = [None]                                                   # the last vault-alert failure printed (printed once)
+# Capitulation long (H115; owner, 24 Nov 2026): the paper book's own state file, READ ONLY (playbook9.py writes it; never
+# imported here)
+CAPIT_STATE = os.path.join(DATA_DIR, "capit_long_state.json")
+CAPIT_READ_MAX = 4 << 20                                              # bytes read at most; a larger file is not read (no card)
+CAPIT_WINDOW_S = 48 * 3600                                            # nothing decided or closed longer ago than this is sent
+CAPIT_LATE_S = 1800                                                   # a trigger card sent this long after its close says so
+CAPIT_MEMORY_S = 30 * 86400                                           # delivered ids kept this long ...
+CAPIT_MEMORY_MAX = 400                                                # ... and at most this many (the newest)
+CAPIT_RULES = {"p9_rebound_a": "A", "p9_rebound_b": "B"}
+CAPIT_HISTORY = u"On history rule A was flat over 123 trades; rule B had 32 trades, too few to judge."
+CAPIT_HOW = {"STOP": u"stopped", "T1+BE": u"Target 1, then stopped at the entry", "T1+T2": u"Target 1 and Target 2",
+             "T1+TIME": u"Target 1, then the 48 h exit", "TIME": u"the 48 h exit"}
+_CAPIT_ERR = [None]                                                   # the last failure printed (printed once)
 
 
 def disk_free_gb(path=None):
@@ -133,6 +157,8 @@ def disk_free_gb(path=None):
 SUMMARY_UTC = (0, 0)
 QUIET = ("p1_", "p2_", "p3_", "p6_vwap", "p7_session", "p8_", "p9_", "p10_", "p11_", "p12_")
 FORWARD = ("playbook4", "playbook5", "playbook6", "playbook7")
+# "p9_" also covers the H115 books p9_rebound_a / p9_rebound_b (playbook9): their closes get their own card with the
+# trade's R (capit_check), not the generic one; 30 trades and a verdict change still alert like any book.
 WON = {}                                                    # book key -> win % (scoreboard)
 
 
@@ -205,7 +231,8 @@ NAMES = {"main": "Main engine", "b_trail": "B trail (shadow)", "b_targets": "B t
          "p4_h30spot": "P4 rule A", "p4_h31trail": "P4 rule B", "p1_liqhunt": "P1 liquidity hunt (retired)",
          "p3_orb": "P3 opening range", "p6_vwap": "P6 VWAP", "p7_session": "P7 session", "p8_fvg": "P8 fair-value gap",
          "p10_round": "P10 round numbers (retired)", "p11_release": "P11 release", "p12_orb_us": "P12 US opening range",
-         "p5_squeeze": "P5 squeeze", "f_floor_33_3r": "Floor 1/3 (shadow)"}
+         "p5_squeeze": "P5 squeeze", "f_floor_33_3r": "Floor 1/3 (shadow)",
+         "p9_rebound_a": "Capitulation long A (NOT passed)", "p9_rebound_b": "Capitulation long B (NOT passed)"}
 GREEN, RED, FLAG_END, SCALE, BRAIN, WARN, OK, WAVE, CHART = (u"\U0001f7e2", u"\U0001f534", u"\U0001f3c1", u"\u2696\ufe0f",
                                                             u"\U0001f9e0", u"\u26a0\ufe0f", u"\u2705", u"\U0001f44b", u"\U0001f4ca")
 TARGET, DISH, BANK, CROSS = u"\U0001f3af", u"\U0001f4e1", u"\U0001f3e6", u"❌"
@@ -780,6 +807,164 @@ def vault_check(st, tok, chat, now):
             print(time.strftime("%Y-%m-%d %H:%M:%S"), "vault alerts failed (%s)" % tag, flush=True)
     return done
 
+# ------------------------------------------------------------------ capitulation long (H115; playbook9.py's state, read only)
+# The book (playbook9.step) appends to "alerts" one entry per coin and deciding close at which a rule opened a paper trade
+# ({"id", "asset", "rules", "decided_ms", "entry_est", "stop_est", "t1_est", "t2_est", "time_exit_ms", "funding",
+# "not_taken", "late"}, and "entry", "stop", "t1", "t2" once the next bar's open has filled it), and to "closed" one
+# entry per finished trade ({"id", "book", "asset", "rule", "entry", "exit", "exit_close_ms", "why_out", "r", "pnl_usd"}).
+def _capit_read(path=None):
+    """-> the book's state dict or None: missing, too large, garbled or not an object. One read."""
+    path = path or CAPIT_STATE
+    try:
+        with open(path, "rb") as fh:
+            raw = fh.read(CAPIT_READ_MAX + 1)
+        if len(raw) > CAPIT_READ_MAX:
+            return None
+        doc = json.loads(raw.decode("utf-8"))
+    except Exception:
+        return None
+    return doc if isinstance(doc, dict) else None
+
+
+def _capit_when(ms):
+    """epoch ms -> ('06:45 UTC', 'Sat 21 Nov')."""
+    d = datetime.fromtimestamp(float(ms) / 1000.0, timezone.utc)
+    return u"%s UTC" % d.strftime("%H:%M"), u"%s %d %s" % (d.strftime("%a"), d.day, d.strftime("%b"))
+
+
+def _capit_ago(sec):
+    m = int(max(0, sec) // 60)
+    return u"%d min" % m if m < 120 else u"%d h %02d min" % (m // 60, m % 60)
+
+
+def capit_trigger_card(a, now):
+    """The card for one alert entry of the book's state, or None when the entry cannot be read as a trigger."""
+    if not isinstance(a, dict) or a.get("asset") not in MKT:
+        return None
+    rules = [r for r in ("A", "B") if r in (a.get("rules") or ())]
+    dec = _num(a.get("decided_ms"))
+    filled = all(_num(a.get(k)) is not None for k in ("entry", "stop", "t1", "t2"))
+    entry, stop, t1, t2 = (_num(a.get(k if filled else k + "_est")) for k in ("entry", "stop", "t1", "t2"))
+    out_ms = _num(a.get("time_exit_ms"))
+    if not rules or None in (dec, entry, stop, t1, t2, out_ms) or not 0 < stop < entry < t1 < t2:
+        return None
+    why = a.get("not_taken") if isinstance(a.get("not_taken"), dict) else {}
+    fund = _num(a.get("funding"))
+    ftxt = u"" if fund is None else u"%+.4f%%" % (100.0 * fund)
+    L = [u"%s <b>Capitulation long \u00b7 %s</b>" % (TARGET, _esc(_mk(a["asset"]))),
+         u"Rule%s %s fired at the %s close (%s)." % ((u"s" if len(rules) > 1 else u"", u" and ".join(rules))
+                                                      + _capit_when(dec)),
+         (u"Entry <b>%s</b> (the paper fill)" if filled else u"Entry near <b>%s</b> (paper fill: next bar's open)")
+         % _adv_px(entry),
+         u"Stop <b>%s</b> \u00b7 risk %.1f%%" % (_adv_px(stop), 100.0 * (entry - stop) / entry),
+         u"Target 1 <b>%s</b>: half off, then stop at entry" % _adv_px(t1),
+         u"Target 2 %s: the rest" % _adv_px(t2),
+         u"Time exit %s, %s (48 h)" % _capit_when(out_ms)]
+    if "B" in rules:
+        L.append(u"Funding %s: shorts are paying." % ftxt if ftxt else u"Funding below zero: shorts are paying.")
+    elif why.get("B") == "funding_not_negative":
+        L.append(u"Rule B did not fire: funding %s, shorts are not paying." % ftxt)
+    elif why.get("B") == "funding_stale":
+        L.append(u"Rule B did not fire: the funding reading is stale.")
+    elif why.get("B") == "funding_missing":
+        L.append(u"Rule B did not fire: no funding reading.")
+    elif why.get("B") == "in_trade":
+        L.append(u"Rule B is already in a trade: not taken again.")
+    if "A" not in rules and why.get("A") == "in_trade":
+        L.append(u"Rule A is already in a trade: not taken again.")
+    age = now.timestamp() - dec / 1000.0
+    if a.get("late") is True or age > CAPIT_LATE_S:
+        L.append(u"%s Late: this fired %s ago; the price has moved since." % (WARN, _capit_ago(age)))
+    L.append(u"<i>Paper only, NOT passed. %s</i>" % CAPIT_HISTORY)
+    return u"\n".join(L)
+
+
+def capit_close_card(asset, trades, closed):
+    """One card for the trades of one coin that closed at the same close. trades: their entries of the state's
+    "closed" list; closed: the whole list (for each rule's count so far). None when nothing can be read."""
+    rows = []
+    for t in sorted(trades, key=lambda t: str(t.get("rule"))):
+        r, pnl, e, x = _num(t.get("r")), _num(t.get("pnl_usd")), _num(t.get("entry")), _num(t.get("exit"))
+        if t.get("rule") in ("A", "B") and None not in (r, pnl, e, x):
+            rows.append((t["rule"], r, pnl, e, x, CAPIT_HOW.get(t.get("why_out"), u"closed")))
+    out_ms = _num(trades[0].get("exit_close_ms")) if trades else None
+    if not rows or out_ms is None or asset not in MKT:
+        return None
+    L = [u"%s <b>Capitulation long \u00b7 %s \u00b7 closed</b>" % (GREEN if sum(r[1] for r in rows) >= 0 else RED,
+                                                                 _esc(_mk(asset)))]
+    for rule, r, pnl, e, x, how in rows:
+        L.append(u"Rule %s: <b>%+.2fR</b> (%s)" % (rule, r, _usd(pnl)))
+        L.append(u"%s \u2192 %s \u00b7 %s" % (_adv_px(e), _adv_px(x), how))
+    L.append(u"Out at the %s close (%s)." % _capit_when(out_ms))
+    sofar = []
+    for rule in ("A", "B"):
+        rs = [_num(t.get("r")) for t in closed if isinstance(t, dict) and t.get("rule") == rule]
+        rs = [v for v in rs if v is not None]
+        if rs:
+            sofar.append(u"rule %s %d closed, %+.2fR" % (rule, len(rs), sum(rs)))
+    if sofar:
+        L.append(u"So far: " + u" \u00b7 ".join(sofar))
+    L.append(u"<i>Paper only, NOT passed.</i>")
+    return u"\n".join(L)
+
+
+def capit_check(st, tok, chat, now):
+    """The capitulation-long part of one check: a card per trigger that opened a paper trade and a card per coin when
+    its trades close, each once. An id is remembered only once its card is delivered. Never raises. -> the cards
+    delivered."""
+    done = []
+    try:
+        doc = _capit_read()
+        if doc is None:
+            return done
+        now_s = now.timestamp()
+        mem = dict(st.get("capit_alerted")) if isinstance(st.get("capit_alerted"), dict) else {}
+        alerts = doc.get("alerts") if isinstance(doc.get("alerts"), list) else []
+        closed = doc.get("closed") if isinstance(doc.get("closed"), list) else []
+        for a in alerts:
+            aid = a.get("id") if isinstance(a, dict) else None
+            dec = _num(a.get("decided_ms")) if isinstance(a, dict) else None
+            if not isinstance(aid, str) or dec is None or ("t|" + aid) in mem or now_s - dec / 1000.0 > CAPIT_WINDOW_S:
+                continue
+            card = capit_trigger_card(a, now)
+            if card is None:
+                continue
+            r = _send(tok, chat, card)
+            if isinstance(r, dict) and r.get("ok"):
+                mem["t|" + aid] = now_s
+                st["capit_alerted"] = mem                             # kept even if a later card fails
+                done.append(card)
+        groups = {}
+        for t in closed:
+            tid = t.get("id") if isinstance(t, dict) else None
+            out_ms = _num(t.get("exit_close_ms")) if isinstance(t, dict) else None
+            if not isinstance(tid, str) or out_ms is None or t.get("book") not in CAPIT_RULES:
+                continue
+            if ("c|" + tid) in mem or now_s - out_ms / 1000.0 > CAPIT_WINDOW_S:
+                continue
+            groups.setdefault((out_ms, str(t.get("asset"))), []).append(t)
+        for (out_ms, asset), trades in sorted(groups.items()):
+            card = capit_close_card(asset, trades, closed)
+            if card is None:
+                continue
+            r = _send(tok, chat, card)
+            if isinstance(r, dict) and r.get("ok"):
+                for t in trades:
+                    mem["c|" + t["id"]] = now_s
+                st["capit_alerted"] = mem
+                done.append(card)
+        cut = now_s - CAPIT_MEMORY_S
+        keep = sorted(((k, v) for k, v in mem.items() if isinstance(v, (int, float)) and v >= cut), key=lambda kv: -kv[1])
+        st["capit_alerted"] = dict(keep[:CAPIT_MEMORY_MAX])
+        _CAPIT_ERR[0] = None
+    except Exception as e:                                            # never stops the other alerts; printed once
+        tag = type(e).__name__
+        if _CAPIT_ERR[0] != tag:
+            _CAPIT_ERR[0] = tag
+            print(time.strftime("%Y-%m-%d %H:%M:%S"), "capitulation-long alerts failed (%s)" % tag, flush=True)
+    return done
+
+
 # ------------------------------------------------------------------ data history changed (the daily check's report, read only)
 # Owner, 19 Nov 2026: "add an alert". Once a UTC day the reading cache re-reads every stored row of each group and rewrites
 # the rows whose readings changed (evcache.update); live.write_check_report puts what it found in data/check_report.json:
@@ -945,7 +1130,8 @@ RANK_MARKETS = {"playbook5": 2, "playbook6": 2, "playbook7": 1}       # RL books
 RANK_SHORT = {"v4": "v4 old", "h3_flip_limit": "H3 flip", "h5_damp": "H5 damped", "y_4h": "Y 4h", "y_1d": "Y daily",
               "m_swing_1h": "M swing 1h", "m_swing_4h": "M swing 4h", "p2_trap": "P2 trap", "p4_gapfill": "P4 gap fill",
               "p5_squeeze": "P5 squeeze", "p7_session": "P7 session", "p9_cascade": "P9 cascade", "p11_release": "P11 release",
-              "p12_orb_us": "P12 US ORB", "p4_h30spot": "P4 rule A", "p4_h31trail": "P4 rule B"}
+              "p12_orb_us": "P12 US ORB", "p4_h30spot": "P4 rule A", "p4_h31trail": "P4 rule B",
+              "p9_rebound_a": "Capit long A", "p9_rebound_b": "Capit long B"}
 TROPHY, STOP, UP, DOWN = u"\U0001f3c6", u"\U0001f6d1", u"\U0001f4c8", u"\U0001f4c9"
 _RANK_ERR = [None]                                                    # the last ranking failure printed (printed once)
 
@@ -1472,6 +1658,7 @@ def check(st, tok, send=True, now=None):
     if send and tok and st.get("chat_id") is not None:
         for e in ev:
             _send(tok, st["chat_id"], e)
+        ev += capit_check(st, tok, st["chat_id"], now)                # H115 paper book: trigger and close cards; guarded inside
         if due:
             _send(tok, st["chat_id"], summary(page, score, now, st.get("health")))
             st["summary_day"] = day

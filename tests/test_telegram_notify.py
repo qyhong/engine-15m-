@@ -25,6 +25,8 @@ def no_real_records(monkeypatch, tmp_path):
     monkeypatch.setattr(tn, "_SIGNALS_UNREAD", [""])
     monkeypatch.setattr(tn, "VAULT_STATE", str(tmp_path / "data" / "vault_feed_state.json"))   # never the real feed's file
     monkeypatch.setattr(tn, "_VAULT_ERR", [None])
+    monkeypatch.setattr(tn, "CAPIT_STATE", str(tmp_path / "data" / "capit_long_state.json"))   # never the real book's file
+    monkeypatch.setattr(tn, "_CAPIT_ERR", [None])
 
     monkeypatch.setattr(tn, "EARLY_STATE", str(tmp_path / "data" / "signals_early_state.json"))     # H56 early preview
     monkeypatch.setattr(tn, "EARLY_LOG", str(tmp_path / "data" / "signals_early_log.jsonl"))
