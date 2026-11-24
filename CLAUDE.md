@@ -20,6 +20,8 @@ The exit learner `b_learn` (`engine15/learn_book.py`, H109, 24 Nov 2026; paper o
 the next trade of whichever of six exit shadow books (`b_targets`, `main`, `b_trail`, `b_be_t1`, `b_ema20_1h_t1`,
 `b_sma20_1h_t1`) leads in the entry's market state; it is recomputed every step from those books' records inside
 `reports.scoreboard`, keeps no state, is not a rule of `run()` and never reaches the vault.
+The book allocator `a_alloc` (`engine15/book_alloc.py`, H110, 24 Nov 2026; paper only, NOT passed) splits one paper wallet
+each UTC day between the forward books on the scoreboard; read only, in `scoreboard.json`.
 The engine version is `CFG["version"]` in `engine15/config.py` (think15-v5.2.10 on 24 Nov 2026); what each version changed
 is in `VERSION_NOTE` there and in THOUGHT_PROCESS.md "Now". It runs on the Singapore box, not on this laptop (HANDOFF.md).
 `out/live/scoreboard.json` judges every book on live trades only.
