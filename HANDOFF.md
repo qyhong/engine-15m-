@@ -23,6 +23,19 @@ H67 (22 Nov 2026) adds the shadow book `b_trend30` (`shadows.CHALLENGERS`): `b_t
 filter (rule key `trend_days`); it starts flat at its first live bar, the vault never reads it.
 H68 (22 Nov 2026) adds `b_wait_stop`: `b_targets` with no forced entry after an entry-stop exit until a signal
 enters (rule key `wait_after_stop`, state key `wait_stop` in that book only); also a shadow, never read by the vault. H60 (exits by regime, per market) is registered and running; it may change this table.
+H108 (24 Nov 2026; RL idea R3, owner "Ok lets do it") adds the shadow MIND `m_regime_trust` (`engine15/regime_trust.py`,
+registry `shadows.MINDS`): NOT passed, paper only. The live card-trust learner kept separately per regime bucket (the
+`regime` reading: trend or range; `vol_rank` at 0.5: high or low; four buckets), the live constants read from the config,
+the live mixing unchanged; its book is `shadows.run` with no rule (the fresh main copy's rule and sizing) on those odds,
+all eight markets, flat at its first live bar. It is not a rule of `run()`: `shadows.advance` calls it after every
+challenger and follower inside a try/except (a failure is one log line, `shadow mind m_regime_trust failed` or `regime
+trust mind failed on <market>`, and the next step catches the book up from its own `mind.last_ms`). It keeps no table:
+every step it recomputes the four tables from the prep's graded calls. State: `shadow_state.json` `books.m_regime_trust`
+(the book plus `mind`: last bar, bucket, graded calls behind the bucket, forward bars per bucket) and
+`late_starts.m_regime_trust` (its start and the main copy's equity then). One log line per group and step:
+`<group>: regime trust mind (H108, paper) 0.0Ns: <market> <bucket>, ...`. Trades: `shadow_trades_m_regime_trust_<market>.csv`.
+Scoreboard: its row in `scoreboard.json` carries `label`, `passed: false` and `vs_main_copy` (H108's comparison line; no
+number and no word before 30 closed trades). The Telegram ranking shows it under its raw name (no short name was added).
 
 Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisions), then
 `THOUGHT_PROCESS.md` ("Now" section) and `CLAUDE.md`. This file is only the moving parts.

@@ -662,3 +662,20 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
 - **The research queue on the box stays stopped** (24 Nov 2026). Asked whether to restart it under the 30% CPU cap
   or keep it stopped, the owner: "Keep it stop now". It is not restarted, capped or not, without the owner's word. H85
   waits with its checkpoint; H86 runs on the laptop.
+- **H108: card trust per regime bucket, built as a paper shadow mind. NOT passed, NOT deployed** (24 Nov 2026; RL
+  idea R3 of `docs/RL_NEXT.md`; the owner, on the three RL-style ideas that "would run as a paper shadow first":
+  "Ok lets do it"). Registered in `research/HYPOTHESES.md` H108 before any code or number (its own commit). There is
+  no evidence yet that it helps; no history replay was run. What it is: the live card-trust learner kept separately
+  for four buckets (the daily `regime` reading: trend or range; `vol_rank` at 0.5: high or low volatility), same
+  half-life, floor, learning rate and 40% cap, read from the live config. Its paper book `m_regime_trust` trades those
+  odds with the main rule and sizing unchanged, on all eight markets, flat from its first live bar. Compared with the
+  fresh main copy (`main`) over the same days. Verdict rule: nothing is read before 30 closed forward trades; then the
+  scoreboard row against zero and one line, "ahead of", "behind" or "level with" the main copy (1.0-point band); a
+  second read at 60. Code: `engine15/regime_trust.py`, a guarded hook in `shadows.advance` (`shadows.MINDS`), a label
+  on its scoreboard row (`reports.py`). No `CFG` key, no reading-cache file and no rule of `shadows.run` changed: the
+  golden money-path test and the vault-feed tests are green with the record untouched. Cost measured on the laptop at
+  live sizes (240-day window, synthetic inputs): about 0.4 to 0.55 s per 15-minute step for all five groups, of which
+  crypto 0.15 to 0.24 s; each step logs its own cost per group. Tests: `tests/test_regime_trust.py` (18, with the
+  cut-the-future tests). Only targeted tests were run; the full suite and the deploy are left for the merge.
+  **Open for the owner:** all eight markets or BTC and ETH only (the brief allowed eight "if free"; eight costs about
+  0.3 s more per step). Changing that before the first live bar needs a dated note under H108.

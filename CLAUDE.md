@@ -14,6 +14,8 @@ and the H61 profit-floor follower in
 rules A/B (`playbook4`), the RL agents (`playbook5`, `playbook6`) and the BTC/ETH pair book (`playbook7`, H37 V4).
 The paper desk (`engine15/paper_desk.py`, 22 Nov 2026) walks three paper wallets through the Setups book's BTC and ETH
 trades at three sizes; it is read only and lives in `scoreboard.json`.
+The H108 shadow mind `m_regime_trust` (`engine15/regime_trust.py`, `shadows.MINDS`, 24 Nov 2026; RL idea R3) trades the
+main rule on odds mixed with card trust kept per regime bucket: NOT passed, paper only, not a rule of `run()`.
 The engine version is `CFG["version"]` in `engine15/config.py` (think15-v5.2.10 on 24 Nov 2026); what each version changed
 is in `VERSION_NOTE` there and in THOUGHT_PROCESS.md "Now". It runs on the Singapore box, not on this laptop (HANDOFF.md).
 `out/live/scoreboard.json` judges every book on live trades only.

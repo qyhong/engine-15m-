@@ -27,6 +27,9 @@ Promotion is decided later on forward results (docs/CHARTER.md), never here.
     m_swing_4h     the 1h / 4h minds of engine15/intraday.py (H19): enter when the expected value after
                    costs clears the margin (1h: 0.05 R, 4h: 0), stop at structure or 1 barrier, target
                    1.5R (1h) / 1R (4h), out at the horizon; flat is allowed (no mandate). intraday.run_swing is its book.
+    m_regime_trust H108 (RL idea R3), a shadow MIND (MINDS below, engine15/regime_trust.py): the main rule, unchanged, on
+                   odds mixed with card trust kept per regime bucket (trend / range x high / low volatility). NOT
+                   passed, paper only. Not a rule of run(): advanced after every book here, guarded.
 
 THE BOOK (run): the same honest frame as backtest.run_book, line for line: the decision at bar i's
 close fills at bar i+1's open; the protective stop is checked first inside every bar; fees per side;
@@ -111,6 +114,17 @@ FOLLOWERS = OrderedDict([
     # H61 (registered 21 Nov 2026): the one floor variant that passed on history, weakly. The owner: "Add shadow".
     (floor_book.NAME, {"title": floor_book.TITLE, "follows": "main"}),
 ])
+# Shadow MINDS: the main rule (run() with no rule switched on) on odds of their own. Not rules of run() either: each
+# is advanced after every book above, inside a try/except, and writes only its own book. A failure in one (or in its
+# import) is logged in one line and skipped; it never stops a book above.
+MINDS = OrderedDict()
+try:
+    # H108 (registered 24 Nov 2026; owner on RL idea R3: "Ok lets do it"): card trust kept per regime bucket.
+    # NOT passed, paper only; the vault copies b_targets, never this.
+    from . import regime_trust  # noqa: E402  (it imports shadows only inside its functions)
+    MINDS[regime_trust.NAME] = {"title": regime_trust.TITLE, "module": regime_trust, "label": regime_trust.LABEL}
+except Exception:                                                # the books above never depend on a shadow mind
+    pass
 TARGET_COLS = ["fib_1h_dir", "fib_1h_t1_px", "fib_1h_t2_px", "fib_4h_dir", "fib_4h_t1_px", "fib_4h_t2_px",
                "reach_24h_med_pct"]
 TRADE_COLS = ["t_in_ms", "t_out_ms", "i_in", "i_out", "side", "p_in", "p_out", "why_in", "why_out", "pnl_pct",
@@ -706,9 +720,11 @@ def advance(prep, group, assets, n, sst, cfg=None, start_lo=None, main_books=Non
     if lo < n:
         swing = swing_odds(prep, group, log=log or (lambda *_: None))
         late = g.get("last_ms") is not None                      # a book added after the group started (H36 ...)
+        mains_before = {}                                        # the fresh main copy before this step (shadow minds)
         for a in assets:
             aux = aux_from_ev(prep["ev"][a], prep["px"][a])
             main_before = (sst["books"].get("main") or {}).get(a) or {}
+            mains_before[a] = main_before
             main_run = None
             for name in CHALLENGERS:
                 books = sst["books"].setdefault(name, {})
@@ -737,6 +753,12 @@ def advance(prep, group, assets, n, sst, cfg=None, start_lo=None, main_books=Non
                         closed[(name, a)] = pd.DataFrame(rows, columns=TRADE_COLS)
                 except Exception as e:
                     (log or (lambda *_: None))("%s: follower book %s failed on %s: %r" % (group, name, a, e))
+        for name, spec in MINDS.items():                         # after every book above; never in their way
+            try:
+                closed.update(spec["module"].advance(prep, group, list(assets), lo, n, sst, cfg=cfg,
+                                                     mains_before=mains_before, log=log))
+            except Exception as e:
+                (log or (lambda *_: None))("%s: shadow mind %s failed: %r" % (group, name, e))
         g["last_ms"] = _ms(times[n - 1])
     return summary(group, assets, sst, prep, n, main_books), closed
 
@@ -836,14 +858,30 @@ def summary(group, assets, sst, prep=None, n=None, main_books=None):
         if any(sst["books"].get(name, {}).get(a) for a in assets):
             out["books"][name] = {"title": spec["title"], "follows": spec["follows"],
                                   "assets": dict((a, asset_view(sst["books"].get(name, {}).get(a))) for a in assets)}
+    for name, spec in MINDS.items():                             # a shadow mind: only the markets it has a book on
+        have = [a for a in assets if sst["books"].get(name, {}).get(a)]
+        if not have:
+            continue
+        out["books"][name] = {"title": spec["title"], "label": spec["label"], "assets": {}}
+        for a in have:
+            st = sst["books"][name][a]
+            v = asset_view(st)
+            try:
+                v.update(spec["module"].view_extra(st))
+            except Exception:
+                pass
+            ls = (late.get(name) or {}).get(a)
+            if ls:                                               # compared with the main copy over its own time only
+                v.update(started_utc=ls["utc"], main_equity_at_start=ls["main_eq"])
+            out["books"][name]["assets"][a] = v
     return out
 
 
 def scoreboard(groups):
     """Across market groups: each challenger's total equity against the fresh main copy, the main
     book's own change and buy-and-hold over the same time. groups: {group: summary}."""
-    rows, names = [], list(CHALLENGERS) + list(FOLLOWERS)
-    titles = dict((k, v["title"]) for k, v in list(CHALLENGERS.items()) + list(FOLLOWERS.items()))
+    rows, names = [], list(CHALLENGERS) + list(FOLLOWERS) + list(MINDS)
+    titles = dict((k, v["title"]) for k, v in list(CHALLENGERS.items()) + list(FOLLOWERS.items()) + list(MINDS.items()))
     assets = dict((a, r) for s in groups.values() for a, r in s["assets"].items())
     main_since = {}                                              # books that joined late: main's change since then
     same_assets = {}                                             # followers: against the followed book, same assets only
@@ -876,6 +914,8 @@ def scoreboard(groups):
         elif starts:
             rows[-1]["since_utc"] = min(starts)
             main_since[name] = since
+        if name in MINDS:                                        # a shadow mind says what it is on its row
+            rows[-1]["label"] = MINDS[name]["label"]
     base = next((r for r in rows if r["book"] == "main"), None)
     for r in rows:
         if r["book"] in FOLLOWERS:
