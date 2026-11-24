@@ -30,6 +30,11 @@ Promotion is decided later on forward results (docs/CHARTER.md), never here.
     m_regime_trust H108 (RL idea R3), a shadow MIND (MINDS below, engine15/regime_trust.py): the main rule, unchanged, on
                    odds mixed with card trust kept per regime bucket (trend / range x high / low volatility). NOT
                    passed, paper only. Not a rule of run(): advanced after every book here, guarded.
+    b_rebound      H117, BTC and ETH only (engine15/rebound_book.py): b_targets plus the rule key "rebound": at an
+                   H107 rule A trigger a short or flat book goes long at the next open (H107's trade: stop 3 x ATR(1h),
+                   +1R half, +2R, out after 192 bars), and the Setups rule is not consulted while that long lives. NOT
+                   passed, paper only. It IS a rule of run(), but it is advanced with the guarded books (MINDS below),
+                   after every book here, never in CHALLENGERS: the vault copies b_targets, never this.
 
 THE BOOK (run): the same honest frame as backtest.run_book, line for line: the decision at bar i's
 close fills at bar i+1's open; the protective stop is checked first inside every bar; fees per side;
@@ -125,6 +130,16 @@ try:
     MINDS[regime_trust.NAME] = {"title": regime_trust.TITLE, "module": regime_trust, "label": regime_trust.LABEL}
 except Exception:                                                # the books above never depend on a shadow mind
     pass
+try:
+    # H117 (registered 24 Nov 2026; owner on step 1 of the rebound plan: "1. Yes."): b_rebound, the Setups rule plus
+    # the capitulation-rebound override (run()'s "rebound" key), on BTC and ETH only. NOT passed, paper only; the
+    # vault copies b_targets, never this. It is a rule of run(), yet it is registered HERE and not in CHALLENGERS: that
+    # loop runs every book on all eight markets, and one exception inside it stops every book's step, b_targets
+    # included. Here the book is advanced after them, inside a try/except, on its own two markets.
+    from . import rebound_book  # noqa: E402  (it imports shadows only inside its functions)
+    MINDS[rebound_book.NAME] = {"title": rebound_book.TITLE, "module": rebound_book, "label": rebound_book.LABEL}
+except Exception:                                                # ... nor on this book
+    pass
 TARGET_COLS = ["fib_1h_dir", "fib_1h_t1_px", "fib_1h_t2_px", "fib_4h_dir", "fib_4h_t1_px", "fib_4h_t2_px",
                "reach_24h_med_pct"]
 TRADE_COLS = ["t_in_ms", "t_out_ms", "i_in", "i_out", "side", "p_in", "p_out", "why_in", "why_out", "pnl_pct",
@@ -217,6 +232,20 @@ def _blank_stats():
     return {"n": 0, "wins": 0, "pnl": 0.0, "r_sum": 0.0, "r_n": 0, "win_usd": 0.0, "loss_usd": 0.0}
 
 
+REBOUND_KEPT = 50                       # H117: rebound longs kept in the book's state (the trade file holds them all)
+
+
+def _rebound_state(saved):
+    """H117: the override's part of a b_rebound book's state, as plain JSON values. on: a rebound long is open;
+    bars: bars it has lived (the entry bar is 1); hold: the bar count at whose close it goes out; next: a trigger
+    taken at the last close, filling at the next open; trade: the open long's own facts; seen / from_short /
+    from_flat / while_long / in_trade: the triggers and what became of each; closed: the last rebound longs."""
+    rb = {"on": 0, "bars": 0, "hold": 0, "next": None, "trade": None, "seen": 0, "from_short": 0, "from_flat": 0,
+          "while_long": 0, "in_trade": 0, "closed": []}
+    rb.update(json.loads(json.dumps(saved)) if saved else {})
+    return rb
+
+
 def run(px, odds, shock, tide, unit, cfg, lo, hi, state=None, bias=None, guard=None, rule=None, aux=None,
         times_ms=None, row_of=None):
     """One asset's book over sessions lo .. hi-1 under `rule` (flags: flip_limit, targets, trail,
@@ -269,6 +298,13 @@ def run(px, odds, shock, tide, unit, cfg, lo, hi, state=None, bias=None, guard=N
     stats = dict(st.get("stats") or _blank_stats())
     wait_stop = bool(rule.get("wait_after_stop"))                # H68: no forced entry after an entry-stop exit
     ws = dict(st.get("wait_stop") or {"on": 0, "blocked": 0, "episodes": 0}) if wait_stop else None
+    # H117 (b_rebound only): the capitulation-rebound override. rb is None for every other book, and every line added
+    # for it below sits behind `rb is not None` (or rb_live, which is then False): with the key off run() takes
+    # exactly the path it took before. The trigger arrays come in through aux["rebound"] (rebound_book.trigger; None
+    # or absent: no trigger can be seen in this call, and the book is the Setups rule plus a long it already holds).
+    rb = _rebound_state(st.get("rebound")) if rule.get("rebound") else None
+    rb_aux = (aux or {}).get("rebound") if rb is not None else None
+    rb_live = False
 
     def book_trade(i, price, why, p_in, side, q0, s0, wi, ti, ti_ms, pnl, fees_t, t1=None, t2=None):
         risk = q0 * abs(p_in - s0) if s0 == s0 else np.nan
@@ -344,6 +380,38 @@ def run(px, odds, shock, tide, unit, cfg, lo, hi, state=None, bias=None, guard=N
             tg.update(t1=t.get("target_1"), t2=t.get("target_2"), t1_basis=t.get("target_1_basis"),
                       t2_basis=t.get("target_2_basis"))
 
+    def open_rebound(i):
+        """H117: the long taken at bar i-1's close fills at this open: H107's trade (the stop R below the fill, Target
+        1 at +1R, Target 2 at +2R) at the Setups book's own size (its sizing rule with this trade's stop distance)."""
+        nonlocal pos, entry, qty, t_in, t_in_ms, why_in, stop, stop0, qty0, trail_on, ma_on, trail_px
+        from .backtest import leverage as _lev
+        nx, price = rb["next"], o[i]
+        R = float(nx["r_dist"])
+        pos, entry, qty, t_in, why_in = 1, price, eq * _lev(cfg, price, R) / price, i, "REBOUND"
+        t_in_ms = tms(i)
+        stop = entry - R
+        stop0, qty0, trail_on = stop, qty, False
+        ma_on, trail_px = False, None
+        tg.update(t1=float(entry + R), t2=float(entry + 2.0 * R), t1_basis="rebound: +1R", t2_basis="rebound: +2R",
+                  t1_hit=False)
+        rb.update(on=1, bars=0, hold=int(nx["hold"]), next=None,
+                  trade=dict(nx, entry=float(entry), stop0=float(stop), t1=tg["t1"], t2=tg["t2"], t_in_ms=t_in_ms))
+
+    def rebound_done():
+        """H117: the rebound long has just been closed (its row is the last trade booked): keep its own record."""
+        row = dict(zip(TRADE_COLS, trades[-1])) if trades else {}
+        t = rb["trade"] or {}
+        if row.get("why_in") == "REBOUND":                       # (a state that says "open" with no such trade: no record)
+            R, f = float(t.get("r_dist") or np.nan), float(t.get("fee_ref") or 0.0)
+            p_in, p_out = float(row["p_in"]), float(row["p_out"])
+            r107 = ((p_out - p_in) - f * (p_in + p_out)) / R      # H107's R: the same trade at H107's own fee
+            rb["closed"].append(dict(t, exit=p_out, t_out_ms=row["t_out_ms"], why_out=row["why_out"],
+                                     bars=int(rb["bars"]), r=None if row["r_mult"] != row["r_mult"] else float(row["r_mult"]),
+                                     r_h107=None if r107 != r107 else float(r107), pnl_usd=float(row["pnl_usd"]),
+                                     pct=float(row["pnl_pct"])))
+            del rb["closed"][:-REBOUND_KEPT]
+        rb.update(on=0, bars=0, hold=0, trade=None)
+
     def stop_hit(i, side, level):
         return (side == 1 and l[i] <= level) or (side == -1 and h[i] >= level)
 
@@ -362,6 +430,12 @@ def run(px, odds, shock, tide, unit, cfg, lo, hi, state=None, bias=None, guard=N
         if order is not None and order["left"] <= 0:             # a_pullback: no fill in 8 bars: market now
             open_pos(i, order["side"], o[i], order["a"] + "_MKT", i - 1)
             order = None
+        if rb is not None and pending is not None and pending[0] == "REBOUND":   # H117: the override fills here
+            if rb["next"] is not None:
+                if pos != 0:
+                    close(i, o[i], "REBOUND")                    # the short it replaces, at the same price
+                open_rebound(i)
+            pending = None                                       # (no trigger on file for it: nothing is opened)
         if pending is not None and len(pending) > 3 and pending[3] > 0:   # a late feed: the order waits a bar
             pending = tuple(pending[:3]) + (pending[3] - 1,)
         elif pending is not None:
@@ -393,6 +467,10 @@ def run(px, odds, shock, tide, unit, cfg, lo, hi, state=None, bias=None, guard=N
             else:
                 order["left"] -= 1
         held[i] = pos
+        if rb is not None:                                       # H117: a rebound long is open in this bar (the entry
+            rb_live = bool(rb["on"])                             # bar is its first)
+            if rb_live:
+                rb["bars"] += 1
         # ---- 2. the protective stops, first inside the bar
         if leg is not None:
             if stop_hit(i, leg["side"], leg["stop"]):
@@ -433,6 +511,12 @@ def run(px, odds, shock, tide, unit, cfg, lo, hi, state=None, bias=None, guard=N
                     take_part(i, tg["t1"], qty * PART, "T1")
                 if be_t1:
                     stop = exits.be_stop(pos, entry, stop)
+        if rb_live:                                              # H117: what is left goes out at the close of the
+            if pos != 0 and rb["bars"] >= rb["hold"]:            # hold-th bar (after this bar's stop and targets)
+                close(i, c[i], "TIME")
+                idle = 0
+            if pos == 0:                                         # stopped, Target 2 or the time exit, in this bar
+                rebound_done()
         # ---- 2c. the trailing stop (b_trail), set at this close for the bars that follow
         if trail and pos != 0 and stop0 == stop0:
             R = abs(entry - stop0)
@@ -461,6 +545,29 @@ def run(px, odds, shock, tide, unit, cfg, lo, hi, state=None, bias=None, guard=N
             eq_arr[i] = eq + (qty * pos * (c[i] - entry) if pos else 0.0) + \
                 (leg["qty"] * leg["side"] * (c[i] - leg["entry"]) if leg is not None else 0.0)
             continue                                             # not a 4h / daily close: no decision, stops still live
+        if rb is not None:                                       # H117: the trigger at this close, then the override
+            skip = rb_live                                       # a rebound long lived in this bar: no Setups decision
+            if rb_aux is not None and bool(rb_aux["A"][i]):
+                atr = float(rb_aux["atr"][i])
+                if 0.0 < atr < np.inf:                           # (never true for NaN) H107: no trade without an ATR
+                    rb["seen"] += 1
+                    if rb["on"]:
+                        rb["in_trade"] += 1                      # counted, not taken
+                    elif pos == 1:
+                        rb["while_long"] += 1                    # a Setups long: counted; the Setups rule decides below
+                    else:                                        # SHORT or FLAT: the long at the next open
+                        rb["from_short" if pos == -1 else "from_flat"] += 1
+                        flag = rb_aux.get("B")
+                        rb["next"] = {"decided_ms": None if times_ms is None else int(times_ms[i]) + CFG["bar_ms"],
+                                      "from": "SHORT" if pos == -1 else "FLAT", "atr1h": atr,
+                                      "r_dist": float(rb_aux["stop_atr"]) * atr, "hold": int(rb_aux["hold"]),
+                                      "fee_ref": float(rb_aux["fee"]),
+                                      "rule_b": None if flag is None or int(flag[i]) < 0 else bool(flag[i])}
+                        pending, idle, skip = ("REBOUND", 1, "rebound_A"), 0, True
+            if skip:
+                eq_arr[i] = eq + (qty * pos * (c[i] - entry) if pos else 0.0) + \
+                    (leg["qty"] * leg["side"] * (c[i] - leg["entry"]) if leg is not None else 0.0)
+                continue
         intent = pos if pos != 0 else (order["side"] if order is not None else 0)
         pu = p_up[i]
         a, target, why = policy.decide(intent, idle, None if pu != pu else pu, p_dn[i], bool(shock[i]),
@@ -527,6 +634,8 @@ def run(px, odds, shock, tide, unit, cfg, lo, hi, state=None, bias=None, guard=N
                    trail_arm=ARM_WORDS.get(ma_arm) if ma_key else None, be_t1=be_t1, half_t1=half_t1)
     if ws is not None:                                           # H68 books only (every other book's state unchanged)
         end["wait_stop"] = {"on": int(ws["on"]), "blocked": int(ws["blocked"]), "episodes": int(ws["episodes"])}
+    if rb is not None:                                           # H117 book only (every other book's state unchanged)
+        end["rebound"] = rb
     if last is not None:
         end["mark"] = float(c[last])
         end["mark_ms"] = tms(last)
