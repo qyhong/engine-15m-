@@ -222,4 +222,5 @@ def test_a_failure_in_the_follower_leaves_every_other_book_as_it_was(monkeypatch
         if key in c_good:
             pd.testing.assert_frame_equal(c_bad[key], c_good[key])
     assert floor_book.NAME not in view["books"] and floor_book.NAME not in bad["books"]
-    assert [r["book"] for r in shadows.scoreboard({"crypto": view})["rows"]] == list(shadows.CHALLENGERS)
+    # (H117: b_rebound, a guarded book of its own, is not touched by the follower's failure either)
+    assert [r["book"] for r in shadows.scoreboard({"crypto": view})["rows"]] == list(shadows.CHALLENGERS) + ["b_rebound"]

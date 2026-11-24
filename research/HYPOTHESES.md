@@ -7255,3 +7255,202 @@ beside the H115 book and opens, closes and changes no trade:
   the bot was away): the break notice names the touch. This is the bot's choice, not H116's.
 - **Not verified:** nothing was run on the live box and no notice was sent to Telegram; the texts are held by tests.
   The page block carries the levels; the web tab does not show them.
+## H117. The Setups rule with a capitulation-rebound override, as a forward paper shadow book `b_rebound` on BTC and ETH (registered 24 Nov 2026, about 13:35 UTC, before any H117 code existed; no number on history was computed for it)
+
+**Prompted by:** the owner, 24 Nov 2026, about BTC and ETH falling back to, or under, the 21 Nov capitulation lows:
+"So we can earn the short and then turn long"; to the three-step proposal whose step 1 is "a paper copy of the Setups
+book with the rebound override (`b_rebound`)": "1. Yes."; and then "I want minds15 engine able to take this
+opportunity". **Paper only. NOT passed.** It places no order, it changes no other book and no decision, and it never
+reaches the VIP vault: the vault copies `b_targets`, and `setups.BOOK` stays `b_targets`.
+
+**What must be said first: history does not support this rule, and this override itself has never been run on
+history. The book is started on the owner's word, not because a study passed.** On record:
+- **H107 (the trigger and the long used here).** Rule A, 2019-10 to 2025-11, BTC + ETH, after fees: 123 trades, 47%
+  won, -0.006R a trade (95% month-clustered range -0.220 to +0.273): FLAT; it lost in the first half (-0.127R on 83)
+  and won in the second (+0.246R on 40); 2022 alone 44 trades, -14.1R; longest losing run 11. Verdict: FAILS. Rule B
+  (A with negative funding): 32 trades, +0.194R, too few to judge.
+- **H113 (what the override withholds).** Setups shorts opened inside the 48 hours after a rule A trigger, against
+  the book's other shorts: first half -0.085R (58) against -0.032R, second half -0.501R (37) against -0.093R, but in
+  the holdout year (2025-11 to 2026-11) they were the BETTER shorts: +0.588R (28) against +0.079R. The holdout did not
+  confirm that those shorts are bad. From the trigger's close the price was +1.3% after 48 hours at the median and
+  -0.7% in the holdout year. So in the most recent year, standing aside from shorts after a trigger would have cost.
+- **H116.** A long on the RETEST of an old capitulation low lost a little (C1 48 trades, -0.18R; C2 37, -0.11R; too
+  few to judge). This book does not buy a retest: it buys only a NEW rule A trigger (a fresh 30-day low that
+  rebounds). If BTC or ETH falls back to the 21 Nov lows and holds above them, rule A does not fire and this book does
+  what the Setups book does.
+- **H70, H71:** no rebound-long rule or reading tested so far has held up across both halves.
+- **Not known at all:** what closing a Setups short at a trigger and holding the rebound long instead would have made
+  on history. No replay of this override exists and none was run for this registration.
+
+So the honest expectation is a book that behaves as `b_targets` almost all the time and, about twenty times a year on
+the two coins together, swaps the Setups position for a long whose record on history is flat after fees. "Earn the
+short" means only this: a short the book holds at the trigger is closed at the next bar's open, at whatever result it
+has then. Nothing here may be described as having an edge.
+
+**The book.** `b_rebound` = the Setups rule `b_targets` exactly as it runs on the day (rule `{"targets": True,
+"early": True}`, the same odds, readings, bars, sizing rule, fee and early entry) plus ONE rule key, `"rebound": True`.
+BTCUSDT and ETHUSDT only; on the other six markets the book does not exist. With no trigger it is `b_targets`, bar
+for bar.
+
+**The trigger (H107's rule A, nothing tuned).** At the close of each 15-minute bar k, from bars up to k only,
+`engine15/playbook9.py`'s `features` on the book's own 15-minute bars (the last 45 days of them, as `p9_rebound_a`
+reads): the onset flag `A` (low16 <= low30d; low16 / c7 - 1 <= -10%; close(k) >= low16 + 2.0 x ATR(1h); not all three
+true at k-1) and its ATR(1h) (Wilder ATR(14) of the 1h bars through `data.htf_on_15`, closed 1h bars only). A trigger
+needs a finite ATR above zero. Rule B's flag (A with negative, fresh funding) is RECORDED with each trigger and
+decides nothing: every rule B trigger is a rule A trigger.
+
+**The override, at a trigger at the close of bar k.** The book's position is read at that close, after bar k's own
+stop and target fills and before the Setups decision of that close.
+1. **SHORT:** the Setups decision of that close is not taken. At the open of bar k+1 the short is closed (exit word
+   `REBOUND`, or `T1+REBOUND` when its Target 1 was taken before) and the long is opened at the same price, the way the
+   book books a flip.
+2. **FLAT:** the Setups decision of that close is not taken (no entry at that close, early or forced). The long is
+   opened at the open of bar k+1. (The Setups early entry books a trade at the deciding close; the rebound long keeps
+   H107's fill, the next open, so it shows one step later.)
+3. **Already LONG (a Setups long):** nothing changes; the trigger is counted (`while_long`) and the Setups rule decides
+   that close as always, whatever it decides.
+4. **A rebound long is open:** the trigger is counted (`in_trade`), not taken. A trigger at the close of the very bar
+   in which a rebound long ended IS taken (the book is flat at that close; `playbook9` does the same).
+
+**The long (H107's trade exactly).** P = the open of bar k+1. R = 3 x ATR(1h) at k (`playbook9.STOP_ATR`). Stop P - R.
+In every bar from k+1 on the stop is looked at first (low <= stop: out at the stop, or at the open if the open is
+below it); then Target 1 = P + R (half out at exactly T1, the book's `PART`; the stop on the rest moves to P from the
+NEXT bar); then Target 2 = P + 2R (the rest out, also in the Target 1 bar). What is left is closed at the close of the
+192nd bar (bar k+192, 48 hours; exit word `TIME`). The targets come from R, not from `live.plan_targets`. So for the
+same trigger the entry, stop, targets, exit and R are those of `p9_rebound_a`'s trade (the two books can still differ
+in WHICH triggers they take: each skips a trigger while its own long is open, and this one also while it holds a
+Setups long).
+
+**Size and fees: the Setups book's own, so its dollars compare with `b_targets`.** Quantity = the book's equity x
+`backtest.leverage(cfg, P, R)` / P: the book's sizing rule with this trade's stop distance; on BTC and ETH the cap is
+1.0, so the whole book at 1x, compounding as the book does (H115's books use a flat $10,000 a trade instead). Fee =
+the book's `cost_side` (0.10% a side on BTC and ETH today, the figure H107 used), on the entry and on each part's
+exit; funding is not charged, as in the book. R = the book's `r_mult` (net dollars over quantity x R), which with
+that fee is H107's R. Each rebound long also records its R at H107's 0.10% fee (`r_h107`), so the two stay visible if
+the book's fee is ever changed.
+
+**While the rebound long is open** the Setups rule is not consulted: no flip to short, no step-aside, no forced
+entry; the idle count stays at zero. **When it ends** (stop, Target 2 or the 48-hour exit) the book is flat with an
+idle count of zero; the Setups rule makes no decision at the close of the bar in which it ended and decides again from
+the close of the next bar. Everything else is `b_targets` unchanged.
+
+**When something fails.** If the trigger cannot be computed at a step (the module does not import, the bars cannot be
+read), that step runs as the plain Setups rule and one log line says so; a rebound long already open is still managed
+by its own stop, targets and 48-hour exit, which need no trigger. A trigger at such a close is lost, not taken later.
+If the book's own step fails, it is not advanced, one log line says so, no other book is touched, and the next step
+walks the bars it missed one by one (a trigger found then is taken at the rule's own fill, already on file).
+
+**Forward only.** The book starts FLAT with $10,000 a coin at the first live step after the deploy, as `b_trend30`
+did; nothing from history is written into it. Its state lives in `data/shadow_state.json` under its own key, written
+only for this book; a restart resumes an open rebound long exactly.
+
+**The forward read, fixed now.**
+1. **The scoreboard's verdict** (`reports._stats`: the 90% range of the mean dollar result per closed trade) on the
+   row `b_rebound`, BTC and ETH together, at the first server scoreboard that shows 30 or more closed forward trades,
+   copied as it stands, with its by-day range.
+2. **The registered comparison with `b_targets` over the same days:** the change in marked equity of `b_rebound`
+   against that of `b_targets` on the same two coins, both counted from the close of `b_rebound`'s first live step, in
+   points of return on the two $10,000 books. "ahead of" at +1.0 point or more, "behind" at -1.0 or less, "level with"
+   between (H108's band). No number and no word before 30 closed trades.
+3. **What that read can and cannot say.** Most of those 30 trades will be ordinary Setups trades: the override acts
+   about twenty times a year on the two coins (H107's pace; fewer here, because triggers while the book is long are
+   skipped), so the first read mostly measures the Setups rule and the luck of a fresh start. The book starts flat
+   while `b_targets` may be in a trade, so the two differ until they fall into step, and that difference is not the
+   override. The override's own record is kept beside the read and carries no verdict: every trigger seen, how many
+   were taken from SHORT and from FLAT, how many were skipped and why, and each rebound long's R. Thirty rebound longs
+   are more than a year away at H107's pace.
+
+**What a good read would and would not change.** "ahead" opens a discussion with the owner about a next test under a
+new registration, and nothing else. It does not make H107 pass on history, and the book stays labelled NOT passed
+whatever it reads. Following this book with real money would still need two separate decisions, both the owner's
+(`docs/CHARTER.md`, the rebound plan): pointing the feed at `b_rebound` (that alone closes members' shorts earlier and
+withholds shorts while the long lives) and the vault's own rebound switch. Neither is part of this registration.
+"behind": a post-mortem, then the owner decides whether it runs on.
+
+**Disclosure: what had been seen when this was written.** H107, H113, H115 and H116 with their results (above), H66,
+and the live books of 21 to 24 Nov 2026. No `b_rebound` code and no `b_rebound` number, on history or live, existed.
+
+**Code (to be written after this is committed):** the rule key in `engine15/shadows.py` `run()` (a money-path file:
+with the key off every line of the old path is untouched, `tests/test_money_path_golden.py` stays green and its record
+is not rewritten), the trigger computed from `playbook9.features` outside `run()` and handed in through `aux`, with
+`playbook9` imported lazily and only for this book; tests in `tests/test_rebound_book.py`. No `CFG` change, no version
+bump; `setups.py`, `signals.py`, `vault_feed.py`, `policy.py`, `backtest.py`, `exits.py`, `config.py` and `live.py`
+are not edited.
+
+### H117 note: implementation choices (24 Nov 2026, written with the code, after the registration was committed as 1dac3df)
+
+Nothing in the registered rule was changed. The registration was committed at 13:28 UTC by the laptop's clock (the
+heading says "about 13:35"). What the registration left open, and what was seen while building:
+- **Where the book lives: not in `shadows.CHALLENGERS`.** The shadow framework cannot restrict a challenger to two
+  markets (its loop runs every book on all eight), and that loop is not guarded: one exception in any book stops
+  every book's step for the group, `b_targets` included, and then the vault's book is not advanced. So `b_rebound` is
+  a module (`engine15/rebound_book.py`) registered in `shadows.MINDS`, the guarded registry H108 added: it is advanced
+  after every challenger and follower, inside a try/except, on BTCUSDT and ETHUSDT only, and the summary and the
+  scoreboard already show such a book on the markets it has. Its rule is read at every step as
+  `dict(shadows.CHALLENGERS["b_targets"]["rule"], rebound=True)` with `b_targets`' own cfg, so it follows the Setups
+  rule of the day. Consequences: the tests that run over `CHALLENGERS` do not cover it (its own file does);
+  `research/challengers.py` does not list it; `a_alloc` lists it as "not registered" (H110 fixed its books).
+- **`engine15/shadows.py` (a money-path file): 109 lines added, none changed or removed.** The doc entry; the guarded
+  registration; `REBOUND_KEPT` and `_rebound_state`; and in `run()`: the state read (`rb`, `None` unless the rule key
+  is on), two inner functions (`open_rebound`, `rebound_done`), the fill of the override at the open, the bar count,
+  the 48-hour exit after the stop and the targets, the trigger and the override before the Setups decision, and the
+  state key written for this book only. Every one of those sits behind `rb is not None` (or `rb_live`, which is then
+  `False`). No other money file was edited; no `CFG` change; no version bump.
+- **That `b_targets` and every other book are unchanged was checked three ways.** (1) `tests/test_money_path_golden.py`
+  is green and its record was not rewritten. (2) `tests/fixtures/rebound_main_books.json` was written by the new test
+  file run on main's code (commit 46df899, before the rule key existed): all sixteen challengers on the golden bars
+  and on a 3,000-bar made-up run (trades, equity, held sides, final state), and a `shadow_state.json` written by
+  main's forward step with where every book stood 280 bars later; the test compares the current code with it,
+  including loading that file and stepping on. Floats are compared to 1e-9 because the made-up bars come from the
+  machine's own `exp`; times, sides and exit words exactly. (3) Once, on the laptop, outside the suite: every
+  challenger under BTC's and gold's cfg on the golden bars and three 4,000-bar runs, plus 120 single-bar resumed
+  steps each and one forward `advance`, pickled from main's code and from this branch and compared bit for bit:
+  129 entries, 88,601 trades, no difference. A fourth test hands every challenger a trigger object that fails when
+  touched: with the key off nothing reads it.
+- **The order at a trigger's close.** The trigger is read after that bar's own stop and target fills and before the
+  Setups decision. When the override acts, or while a rebound long is open, or in the bar it ended, `policy.decide`
+  is not called at all. From SHORT the short is closed by the book's own `close()` at the next open and the long
+  opened at the same price in the same bar. A LONG book counts the trigger and the Setups rule then decides as
+  always, a flip to short included (tested).
+- **The trigger's frame.** The step's own bars (`prep["px"]`, the bars the book trades on, which the live step reads
+  from the same files `playbook9` reads): `playbook9.TAIL_BARS + 8` bars before the first new bar plus the new bars,
+  as that book's own step. Bars that are not numbers are left out. On planted bars the flags equal
+  `playbook9.features` on the whole frame and the ATR agrees to 1e-9; a test halves every bar after the deciding one
+  and nothing changes. The funding file is read only when a trigger is there; rule B's flag is recorded as true,
+  false or unknown (no fresh funding reading), and a file that cannot be read leaves rule A's trigger as it is.
+- **The long against `playbook9`.** Bar by bar against `playbook9._open_trade` / `_walk_bar` on planted bars: the
+  entry, stop and targets to the last digit, the stop, Target 1 and the share held at every bar, the exit bar, kind
+  and price, and R, over all five kinds of exit. The forward book (through `shadows.advance`, with no odds so that
+  only the override trades) against `playbook9.replay` from the same start: the same trades one for one, and the
+  same count of triggers skipped while a long was open. On the laptop's real bar files the book's own code gives
+  H107's two published event trades of 21 Nov 2026 (fills 57,193.99 and 1,613.70; +1.31R and +1.16R): a check of the
+  code on trades already published, not a result.
+- **Size, fee and R.** On BTC and ETH today the book's fee is 0.10% a side and its leverage cap 1.0, so the long is the
+  whole book at 1x, `r_mult` equals H107's R, and `r_h107` equals both (tested). A test with another fee and a cap
+  of 5 shows the two R's apart and the quantity following `backtest.leverage` with the trade's own stop distance.
+- **Words.** Entry word `REBOUND`. Exits `STOP`, `T1+STOP_BE`, `T1+T2`, `T1+TIME`, `TIME` (`playbook9`'s STOP, T1+BE,
+  T1+T2, T1+TIME, TIME). A short the override replaced ends `REBOUND` or `T1+REBOUND`. A `TIME` exit is booked at the
+  close of the 192nd bar with that bar's open time as `t_out_ms`, as every exit inside a bar.
+- **The comparison's start.** `late_starts.b_rebound.<coin>` keeps `ref_utc` (the close of the book's first live
+  step), `own_eq` and `setups_eq` (both books' marked equity at that close); `rebound_book.compare` counts both from
+  there. The generic shadow table's "vs main" column for this book is against the fresh main copy since its start,
+  as for every late book; the registered line is `vs_setups_book` on the scoreboard row.
+- **Added beside the read, not registered:** each rebound long also records what `b_targets` made on its own book
+  from the trigger's close to the close of the bar the long ended in (`setups_pct`; `setups_exact` only when both
+  ends were single-bar steps). Descriptive, in `override.against_setups_same_bars`; it carries no verdict.
+- **After the engine was down** the missed bars are walked one by one, and a trigger among them is taken at the
+  rule's own fill; unlike `playbook9` it is not marked late. A trigger at a step whose trigger could not be computed
+  is lost; `h117.no_trigger_steps` counts such steps.
+- **Limits.** The state keeps the last 50 rebound longs a coin (the trade file keeps all). The rule key was built and
+  tested only on top of the Setups rule: with a pullback entry, a flip limit or a delayed fill it is untested, and
+  BTC and ETH have none of those.
+- **Existing tests changed:** four assertions that list the books of a crypto group's view (`tests/test_shadows.py`
+  two, `tests/test_floor_book.py` one, `tests/test_regime_trust.py` one) now include `b_rebound`. Nothing else.
+- **Telegram.** The bot's generic closed-trade card will fire for this book as for `b_trend30` and `b_wait_stop`
+  (a name was added: "Setups + rebound long (shadow, NOT passed)"); it was not added to `QUIET`. No card of its own.
+- **Step cost, measured on the laptop on the real bar files (276,613 bars a coin):** 20 to 35 ms a step for both
+  coins, of which the trigger is about 3 ms a coin and the rest is building the book's inputs from the evidence
+  frame; 132 ms to catch up 403 bars.
+- **Not verified:** nothing was run on the live box, and the live `shadow_state.json` was not seen (the test uses a
+  file written by main's own code on planted bars; the laptop's stale copy has the same keys). The full suite was
+  not run here. The web tab was not opened: the page block is the generic one. No Telegram card was sent.

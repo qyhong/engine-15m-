@@ -318,6 +318,14 @@ def scoreboard(playbook_rows=None, log=print):
             mind_rows[regime_trust.NAME] = extra
     except Exception as e:
         log("regime trust mind: %r" % (e,))
+    try:                                                           # b_rebound (rebound_book.py, H117; owner, 24 Nov 2026):
+        from . import rebound_book                                 # the Setups rule + the capitulation-rebound long on BTC
+        extra = rebound_book.scoreboard_extra(len(shadow.get(rebound_book.NAME, [])))   # and ETH. The row says "NOT passed,
+        if extra is not None:                                      # paper only" and carries the registered comparison with
+            shadow.setdefault(rebound_book.NAME, [])               # b_targets and the override's own record. Read only; a
+            mind_rows[rebound_book.NAME] = extra                   # failure never stops the scoreboard
+    except Exception as e:
+        log("rebound book: %r" % (e,))
     for name, pn in sorted(shadow.items()):
         rows.append(dict({"book": name, "title": SHADOW_TITLES.get(name) or "Shadow: " + name, "kind": "shadow"},
                          **row(pn)))

@@ -368,7 +368,7 @@ def test_a_prep_without_the_voices_is_skipped_not_raised():
     assert rt.NAME not in sst["books"] and rt.NAME not in view["books"]
     assert len([s for s in said if rt.NAME in s]) == 1
     assert [r["book"] for r in shadows.scoreboard({"crypto": view})["rows"]] == list(shadows.CHALLENGERS) + \
-        list(shadows.FOLLOWERS)
+        list(shadows.FOLLOWERS) + ["b_rebound"]                                          # (H117's guarded book goes on)
 
 
 # ------------------------------------------------------------------ the scoreboard and the verdict words
