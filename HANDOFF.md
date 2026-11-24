@@ -212,6 +212,19 @@ crypto replay).
   reads the book's closed-trade files, `data/shadow_state.json`, the tail of the two bar files and the funding files
   and walks them again (H63's rules; `tests/test_paper_desk.py` holds its walk to H63's numbers). Its output is the
   `paper_desk` block of `out/live/scoreboard.json`. To restart the desk from a new date, change START_UTC.
+- Book allocator `a_alloc` (24 Nov 2026, H110, RL idea R2; owner "Ok lets do it"; paper only, NOT passed):
+  `engine15/book_alloc.py`, called by `reports.scoreboard(playbook_rows)` inside a try/except after the paper desk.
+  One paper wallet of $10,000 from `book_alloc.START_UTC` (25 Nov 2026 00:00 UTC), split each UTC day between the 37
+  books of `book_alloc.BOOKS` (the main books, 17 shadow books, 19 strategy books; a book added later is NOT in until
+  the hypothesis is amended, it shows under `books_not_registered`). Exponential weights on each book's daily result
+  (`ETA` 7.0), cap 25%, floor half the equal share until 30 closed trades; yardstick = the same books held equally.
+  A daily result is CLOSED trades only, booked on the close day, over $10,000 x the book's markets: open trades are
+  not marked. It keeps NO state: every step it reads `out/live/trades_*.csv`, `shadow_trades_*.csv` and the step's
+  strategy rows and recomputes every day from the start (about 7 ms on today's files, 75 ms on a planted year). A
+  book whose file cannot be read is left out of that step (`books_left_out`), never an error; any other failure is
+  one log line `book allocator: ...` and the scoreboard is written without the block. Output: the `a_alloc` block of
+  `out/live/scoreboard.json` (today's shares, both wallets, daily rows, the reads at 30 and 60 completed days). It
+  changes no book and no decision; the constants are in the module, not in `CFG`. Tests: `tests/test_book_alloc.py`.
 - "Setups moving against" alert (22 Nov 2026, owner asked for it): `telegram_notify.adverse_update`, hooked into
   `check()` in its own try/except. It reads the page's `b_targets` book and the market closes; its state is the key
   `adverse` in the bot's state (per market: trade id, entry, starting stop, flags a, b and t1). Thresholds

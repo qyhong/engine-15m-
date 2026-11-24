@@ -232,6 +232,11 @@ def scoreboard(playbook_rows=None, log=print):
         out["paper_desk"] = paper_desk.block()                     # and ETH trades. Read only; it never stops the scoreboard
     except Exception as e:
         log("paper desk: %r" % (e,))
+    try:                                                           # the book allocator a_alloc (book_alloc.py; H110, owner
+        from . import book_alloc                                   # 24 Nov 2026): one paper wallet split daily between the
+        out["a_alloc"] = book_alloc.block(playbook_rows)           # forward books. Read only, NOT passed; never stops this
+    except Exception as e:
+        log("book allocator: %r" % (e,))
     tmp = SCOREBOARD_JSON + ".tmp"
     with open(tmp, "w", encoding="utf-8") as fh:
         json.dump(out, fh)

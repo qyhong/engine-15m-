@@ -5735,3 +5735,85 @@ fees: it lost in the first half (2022 above all, when bounces off new lows kept 
 Negative funding looks better but rests on 32 trades and is not significant. This agrees with H70 and H71: on BTC and
 ETH no rebound-long rule tested so far has held up across both halves. Nothing here supports a paper shadow book on the
 registered bar; nothing in the engine, the books or the vault was changed.
+
+## H110. The book allocator `a_alloc`: does moving one paper wallet toward the books that are doing well forward beat holding them all equally? (registered 24 Nov 2026, about 05:25 UTC, before any H110 number was computed; RL idea R2 of `docs/RL_NEXT.md`; owner, 24 Nov 2026: "Ok lets do it")
+
+**Paper only. NOT passed. It changes no book and no decision.** `a_alloc` is one paper wallet of $10,000 that is split
+each UTC day between the forward books the scoreboard already judges. It reads the books' own trade records and writes
+one block of `out/live/scoreboard.json`. It cannot create an edge that none of the books has: all it can do is hold more
+of what has been working and less of what has not.
+
+**What had been seen when this was written (disclosure).** The server's scoreboard of 24 Nov 2026 03:48 UTC (which
+books exist and how many trades each has, for example `b_trail` 59, `p10_round` 121, `p1_liqhunt` 66) and the line in
+`docs/RL_NEXT.md` that `b_trail` reads ahead and `p10_round` and `p1_liqhunt` behind. No allocator number, share or
+equity had been computed. The settings below come from the textbook rule, not from the books' results.
+
+**Start.** 2026-11-25 00:00 UTC (`book_alloc.START_UTC`). Nothing before it counts: only trades OPENED at or after the
+start enter a daily result or a trade count (as the paper desk does not join a trade that was already open).
+
+**The books (37, fixed now).** Each with the number of markets it trades; its capital base is $10,000 times that number.
+- Main books, 8 markets: `main` (files `out/live/trades_<market>.csv`).
+- Shadow books, 8 markets each (files `out/live/shadow_trades_<book>_<market>.csv`), 17 books: `main` (the hold copy),
+  `v4`, `h3_flip_limit`, `b_targets`, `b_trend30`, `b_wait_stop`, `b_trail`, `a_pullback`, `y_4h`, `y_1d`, `h5_damp`,
+  `m_swing_1h`, `m_swing_4h`, `b_be_t1`, `b_ema20_1h_t1`, `b_sma20_1h_t1`, `f_floor_33_3r`.
+- Strategy books (the rows the strategy modules return each step), 19 books, markets in brackets: `p1_liqhunt` (6),
+  `p2_trap` (6), `p3_orb` (6), `p4_gapfill` (1), `p5_squeeze` (6), `p6_vwap` (6), `p7_session` (2), `p8_fvg` (6),
+  `p9_cascade` (2), `p10_round` (6), `p11_release` (6), `p12_orb_us` (2), the loop rules `p4_h30spot` (2) and
+  `p4_h31trail` (2), the RL books `p5_rlq` (2), `p6_mtrend` (2), `p6_p4trend` (2), the pair book `p7_rvbear` (2) and
+  the momentum yardstick `p8_mom` (2).
+
+The CPI book (H1) and the paper desk are not on the scoreboard's rows and are not in. A book that joins the scoreboard
+later is NOT added (it is listed as "not registered"). A registered book with no trade yet stays in with a zero result.
+
+**A book's daily result (closed trades only; open trades are NOT marked).** The scoreboard's data holds closed trades,
+not a marked value for every book, so: a book's result on UTC day D = the sum of `pnl_usd` (after fees) of its rows
+whose close time is in D, divided by its capital base. Close time = `time_out` (main), `t_out_ms` (shadow),
+`exit_utc` (strategy); entry time = `time_in`, `t_in_ms`, `entry_utc`. A trade closed in parts books each part on its
+own day. A row written twice counts once. What this means: a trade held for days books its whole result on the day it
+closes, an open loss is not seen until then, and a day without a closed trade is a zero. Dollars are taken as the book
+booked them (a book's own compounding is not undone).
+
+**Method: exponential weights (the "experts" rule), not Thompson sampling.** Why: (1) every book's daily result is seen
+whatever the wallet held, because a paper share moves no book; that is the full-information case this rule is made
+for, while Thompson sampling is for when only the chosen book is seen; (2) it has no random draw, so the same records
+always give the same shares, it needs no stored state and the no-lookahead test is exact; (3) the engine already uses
+it for card trust (`model.trust_path`). Settings, fixed now:
+- Score of book b for day D = the sum of its daily results on the days before D since the start, each cut to the
+  range -5% to +5% (`RET_CLIP` 0.05; the cut is for the score only, never for the equity). No forgetting.
+- Raw weight = exp(`ETA` x score), `ETA` = 7.0: the textbook rate sqrt(8 ln N / T) / range with N = 37 books,
+  T = 60 days and range 0.10, which is 6.94, rounded.
+- **Cap:** no book above 25% (`CAP` 0.25). **Floor:** a book with fewer than 30 closed trades since the start (counted
+  per entry, as the scoreboard counts) holds at least half the equal share (`FLOOR_X` 0.5: 0.5 / 37 = 1.35%); after
+  30 trades it has no floor. Shares = the raw weights times one number, each held inside its floor and the cap, the
+  number chosen so the shares add up to 1. If fewer than 4 books can be read the cap cannot be met fully invested:
+  each holds 25% and the rest is cash at zero.
+- **No lookahead:** the shares for day D use only rows that closed before D 00:00 UTC. On the first day every score
+  is zero, so every book holds 1/37.
+
+**The two wallets.** Both start at $10,000 and compound once a day. Allocator: wallet x (1 + sum over books of share x
+the book's result that day). **Yardstick: the equal-weight mix of the same books over the same days**: wallet x
+(1 + the plain average of the books' results that day). No cost of moving the wallet between books is counted (the
+daily turnover is shown). `a_alloc` is "ahead" only against this yardstick.
+
+**Verdict rule, forward only, fixed now.** d = the allocator's day result minus the yardstick's, on each completed UTC
+day (a day is complete one hour after it ends). Two reads and no decision between them:
+- **First read: the first 30 completed days** (25 Nov to 24 Dec 2026). **Second read: the first 60** (to 23 Jan 2027).
+- The 90% range of the mean of d, the scoreboard's formula: mean +/- 1.645 x sd / sqrt(n). **"ahead"**: the low end is
+  above zero. **"behind"**: the high end is below zero. **"level"**: the range includes zero. Before day 30: "too
+  early to read (n of 30 days)". Both wallets' returns and their difference in points are shown beside the word.
+- No other verdict word is used. A read changes nothing by itself: `a_alloc` stays NOT passed whatever it reads.
+  "Ahead" at both reads means it is worth bringing to the owner; "level" or "behind" at the second read means the
+  allocator added nothing over holding the books equally.
+
+**Caveats, part of the rule.** The books are correlated and share market spells: 17 of the 37 are shadow books built
+on the main engine's own calls, and most books trade the same eight markets, so 30 days hold far fewer than 30 separate facts
+and may be one or two market moods; the range above understates the uncertainty. Closed-trade booking lumps a long
+trade into one day. The equal-weight yardstick is itself mostly the main-rule family. The rule's own guarantee is only
+that it ends close to the best single book in hindsight; that says nothing about beating equal weight.
+
+**How it runs.** `engine15/book_alloc.py`, called by `reports.scoreboard` inside a try/except; block `a_alloc` of
+`scoreboard.json`. It keeps no state: every step it reads the records again and recomputes every day from the start.
+So a row that arrives late (gold, silver and oil step one bar behind) can still move the newest day's shares in the
+first hour of that day; after that a day's shares do not change unless a record changes. A book whose records cannot
+be read at a step is left out of that step for both wallets, and the block says so. Constants live in the module, not
+in `CFG`. Tests: `tests/test_book_alloc.py`.

@@ -662,3 +662,14 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
 - **The research queue on the box stays stopped** (24 Nov 2026). Asked whether to restart it under the 30% CPU cap
   or keep it stopped, the owner: "Keep it stop now". It is not restarted, capped or not, without the owner's word. H85
   waits with its checkpoint; H86 runs on the laptop.
+- **The book allocator `a_alloc` is built, paper only, NOT passed, NOT deployed** (24 Nov 2026; RL idea R2 of
+  `docs/RL_NEXT.md`; the owner on the three RL ideas "run as a paper shadow first": "Ok lets do it"). Registered as
+  H110 before any number. One paper wallet of $10,000 from 25 Nov 2026 00:00 UTC is split each UTC day between the 37
+  forward books on the scoreboard by exponential weights on each book's daily closed-trade result (no book above 25%;
+  a book with fewer than 30 closed trades keeps at least half the equal share). Yardstick: the same books held
+  equally. Reads after 30 and 60 days: ahead / behind / level. It reads trade records only, changes no book and no
+  decision, keeps no state, and writes the `a_alloc` block of `scoreboard.json` (`engine15/book_alloc.py`,
+  `tests/test_book_alloc.py`; about 7 ms a step on today's files). It cannot create an edge that none of the books
+  has. Open: deploy with the next `tools/deploy.sh` (no `CFG` key, no cache rebuild); tell the AI Trading Bot session
+  that `scoreboard_all` gains a block with paper dollars and a sentence with the word "edge" before it shows on a
+  page; no Books tab entry is built.
