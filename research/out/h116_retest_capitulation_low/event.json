@@ -1,0 +1,122 @@
+{
+ "BTCUSDT": {
+  "last_bar_open_utc": "2026-11-24 04:30",
+  "last_close": 60537.51,
+  "atr1h_at_last_bar": 713.076174071917,
+  "rule_A_onsets_since_2026-11-19": 1,
+  "same_low_again": 0,
+  "levels": [
+   {
+    "L": 55130.0,
+    "low_bar_open_utc": "2026-11-21 06:15",
+    "trigger_close_utc": "2026-11-21 06:45",
+    "state_at_last_bar": "armed_no_touch",
+    "arm_price_5pct_above_L": 57886.5,
+    "armed_at_bar_open_utc": "2026-11-21 06:45",
+    "highest_high_since_low": 64603.12,
+    "lowest_low_since_trigger": 57093.77,
+    "retest_zone_top": 55956.95,
+    "retest_zone": "a 15m low at or below 55956.95",
+    "first_touch_bar_open_utc": null,
+    "c1_signal_bar_open_utc": null,
+    "c2_signal_bar_open_utc": null,
+    "live_until_close_utc": "2026-12-21 06:45",
+    "last_signal_bar_opens_utc": "2026-12-21 06:30",
+    "atr1h_at_last_bar": 713.076174071917,
+    "examples_at_that_atr": {
+     "C1, retest low exactly at the zone top": {
+      "entry": 56670.026174071914,
+      "stop": 54773.46191296404,
+      "r_distance": 1896.5642611078729,
+      "stop_pct_of_entry": 3.346679698509832,
+      "target_1": 58566.59043517979,
+      "target_2": 60463.15469628766,
+      "round_trip_fee_in_r": 0.059760723468413636,
+      "needs": "a 15m close at or above 56670.03"
+     },
+     "C1, retest low exactly at L": {
+      "entry": 55843.07617407192,
+      "stop": 54773.46191296404,
+      "r_distance": 1069.6142611078758,
+      "stop_pct_of_entry": 1.915392801380989,
+      "target_1": 56912.69043517979,
+      "target_2": 57982.30469628767,
+      "round_trip_fee_in_r": 0.10441722442300136,
+      "needs": "a 15m close at or above 55843.08, and no 15m close below 55130.00 before it"
+     },
+     "C2, sweep to 1% under L, reclaim close just above L": {
+      "entry": 55130.0,
+      "stop": 54222.16191296404,
+      "r_distance": 907.8380870359615,
+      "stop_pct_of_entry": 1.646722450636607,
+      "target_1": 56037.83808703596,
+      "target_2": 56945.67617407192,
+      "round_trip_fee_in_r": 0.12145337541410328,
+      "needs": "a 15m low below 55130.00, then within 24 hours a 15m close above 55130.00",
+      "sweep_low": 54578.7
+     }
+    }
+   }
+  ]
+ },
+ "ETHUSDT": {
+  "last_bar_open_utc": "2026-11-24 04:30",
+  "last_close": 1703.85,
+  "atr1h_at_last_bar": 22.893379958480008,
+  "rule_A_onsets_since_2026-11-19": 1,
+  "same_low_again": 0,
+  "levels": [
+   {
+    "L": 1538.0,
+    "low_bar_open_utc": "2026-11-21 04:00",
+    "trigger_close_utc": "2026-11-21 06:45",
+    "state_at_last_bar": "armed_no_touch",
+    "arm_price_5pct_above_L": 1614.9,
+    "armed_at_bar_open_utc": "2026-11-21 06:30",
+    "highest_high_since_low": 1845.07,
+    "lowest_low_since_trigger": 1612.91,
+    "retest_zone_top": 1561.07,
+    "retest_zone": "a 15m low at or below 1561.07",
+    "first_touch_bar_open_utc": null,
+    "c1_signal_bar_open_utc": null,
+    "c2_signal_bar_open_utc": null,
+    "live_until_close_utc": "2026-12-21 06:45",
+    "last_signal_bar_opens_utc": "2026-12-21 06:30",
+    "atr1h_at_last_bar": 22.893379958480008,
+    "examples_at_that_atr": {
+     "C1, retest low exactly at the zone top": {
+      "entry": 1583.96337995848,
+      "stop": 1526.55331002076,
+      "r_distance": 57.41006993771998,
+      "stop_pct_of_entry": 3.624456894907814,
+      "target_1": 1641.3734498961999,
+      "target_2": 1698.7835198339199,
+      "round_trip_fee_in_r": 0.05518068107831281,
+      "needs": "a 15m close at or above 1583.96"
+     },
+     "C1, retest low exactly at L": {
+      "entry": 1560.89337995848,
+      "stop": 1526.55331002076,
+      "r_distance": 34.340069937720045,
+      "stop_pct_of_entry": 2.200026624408741,
+      "target_1": 1595.2334498962,
+      "target_2": 1629.57351983392,
+      "round_trip_fee_in_r": 0.09090799074022579,
+      "needs": "a 15m close at or above 1560.89, and no 15m close below 1538.00 before it"
+     },
+     "C2, sweep to 1% under L, reclaim close just above L": {
+      "entry": 1538.0,
+      "stop": 1511.1733100207598,
+      "r_distance": 26.8266899792402,
+      "stop_pct_of_entry": 1.7442581260884396,
+      "target_1": 1564.8266899792402,
+      "target_2": 1591.6533799584804,
+      "round_trip_fee_in_r": 0.1146619281909307,
+      "needs": "a 15m low below 1538.00, then within 24 hours a 15m close above 1538.00",
+      "sweep_low": 1522.62
+     }
+    }
+   }
+  ]
+ }
+}
