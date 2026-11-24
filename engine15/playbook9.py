@@ -41,6 +41,13 @@ THE ALERT: the state's "alerts" list holds one entry per coin and deciding close
 engine15/telegram_notify.py (a separate process, read only) sends it to the owner's own chat once. Nothing here sends
 anything.
 
+THE RETEST LEVELS (owner, 24 Nov 2026; a NOTICE, not a setup, not a hypothesis, no trade): the low behind each rule A
+trigger is H116's "level" (research/h116_retest_capitulation_low.py, machine): dead, armed, first touch, and here also
+broken (a low under it after the first touch). The levels are recomputed at every new bar from a 93-day tail of closed
+bars (levels_of; LEVEL_TAIL_DAYS says why 93), kept under the state's "zone" key beside the trades (the trades' own
+keys are not touched) and shown on the page; telegram_notify.py sends the owner one notice at the first touch and one
+at the break. They open, close and change nothing in the two books.
+
 Rows follow docs/PLAYBOOK_INTERFACE.md (status WAITING / OPEN / CLOSED, side 1). A failure is logged in one line and
 skipped; it never stops the engine's step (reports.playbooks wraps the module too). Constants live here, not in CFG.
 """
@@ -83,6 +90,29 @@ LATE_MS = BAR_MS                    # a trigger first seen after the next bar ha
 ALERTS_KEPT = 100
 STATE_VERSION = 1
 STATE_PATH = os.path.join(DATA_DIR, "capit_long_state.json")
+
+# ---------------------------------------------------------------- the retest levels (H116's level; a notice, no trade)
+LEVEL_LIFE_DAYS = 30                # a level counts at bars that open at most this long after its trigger bar opened
+LEVEL_ARM = 0.05                    # armed: a high at least 5% above the low
+LEVEL_ZONE = 0.015                  # first touch: a low at or below the low + 1.5%
+LEVEL_KEEP_DAYS = 2                 # a level stays listed this long after its last bar (the bot's 48-hour limit)
+# The tail the levels are recomputed from at every new bar, counted back from the newest bar T:
+#   32 days  a level is listed when its trigger bar opened in the last LEVEL_LIFE_DAYS + LEVEL_KEEP_DAYS days;
+#   30 days  the same-low rule asks which levels were made in the 30 days before that trigger, so the triggers must be
+#            right back to T - 62 days;
+#   30 days  a trigger is right only with a full 30 days of lows behind it AND behind the bar before it (the onset),
+#            so the tail must start by T - 92 days - 15 minutes. The 7-day close and the 16-bar low lie inside that,
+#            and Wilder's ATR(1h) then has at least 30 days behind every bar that can trigger (its start weighs
+#            (13/14)^720, about 1e-23, by then).
+#   1 day    spare. A gap in the bars only makes the tail reach further back.
+# Not covered, by any tail: three or more triggers off EXACTLY the same low price that chain across more than 30 days
+# (each within 30 days of the next); tests/test_capit_zone.py holds the tail to the research script on the real bars.
+LEVEL_TAIL_DAYS = LEVEL_LIFE_DAYS + LEVEL_KEEP_DAYS + 30 + 30 + 1
+LEVEL_TAIL_BARS = LEVEL_TAIL_DAYS * 96
+LEVELS_NOTE = ("A notice, not a setup: no trade is opened at a level. The level is the low behind a rule A trigger "
+               "(H116). On history (77 retests, 2019 to 2025) price traded under the old low within four days in 88% of "
+               "the retests (median lowest point 6.6% below it), and a day after the first touch it was higher in 58% "
+               "(median +1.9%). H116 tested buying the retest: too few trades to judge, and a small loss on those.")
 
 RULES = {"p9_rebound_a": "A", "p9_rebound_b": "B"}
 HOW = ("STOP", "T1+BE", "T1+T2", "T1+TIME", "TIME")       # research walk(): how 0..4
@@ -434,6 +464,147 @@ def replay(asset, df, fund, start_ms, max_age_ms=FUND_MAX_AGE_MS, now_of=None, l
     return st
 
 
+# ---------------------------------------------------------------- the retest levels (a notice only; no trade)
+def levels_of(fx, n=None):
+    """H116's level machine (research/h116_retest_capitulation_low.machine: the level, dead, armed, first touch), and
+    the first low under the level from the first touch on, with bars [0, n) only. Stateless: every level comes from
+    the bars, and each step at a bar reads bars up to it, so what is found on a prefix stays as it is when bars are
+    appended. For each rule A onset k: L = the lowest low of bars k-15..k, b = the first of them with that low; no
+    level when one at the same L was made in the 30 days before; e = the last bar that opens within 30 days of bar k;
+    dead when a bar after b has a low under L before, or in, the arming bar; armed at the first bar after b with a high
+    >= 1.05 x L; first touch at the first bar after both the arming bar and k with a low <= 1.015 x L; broken at the
+    first bar from the first touch on with a low under L (all up to e).
+    -> list of {"k", "L", "b", "e", "a", "u", "f", "s", "state"} (bar indices or None; state waiting / dead / armed /
+    touched / broken)."""
+    open_ms, h, l = fx["open_ms"], fx["h"], fx["l"]
+    n = len(l) if n is None else int(n)
+    life = LEVEL_LIFE_DAYS * 86400000
+    out = []
+    for k in np.flatnonzero(fx["A"][:n]):
+        k = int(k)
+        L = float(fx["low16"][k])
+        b = k - (LOOK - 1) + int(np.argmin(l[k - (LOOK - 1):k + 1]))     # the first of the 16 bars with that low
+        if any(lv["L"] == L and open_ms[k] - open_ms[lv["k"]] <= life for lv in out[-40:]):
+            continue                                              # the same low again: one level (the script's -40 too)
+        e = min(int(np.searchsorted(open_ms, open_ms[k] + life, side="right")) - 1, n - 1)
+        lv = {"k": k, "L": L, "b": b, "e": e, "a": None, "u": None, "f": None, "s": None, "state": "waiting"}
+        out.append(lv)
+        arm = np.flatnonzero(h[b + 1:e + 1] >= (1.0 + LEVEL_ARM) * L)
+        und = np.flatnonzero(l[b + 1:e + 1] < L)
+        a = b + 1 + int(arm[0]) if len(arm) else None
+        u = b + 1 + int(und[0]) if len(und) else None
+        if u is not None and (a is None or u <= a):
+            lv["state"], lv["u"] = "dead", u                      # undercut before (or in) the arming bar
+            continue
+        if a is None:
+            continue
+        lv["a"], lv["state"] = a, "armed"
+        g = max(a, k) + 1
+        touch = np.flatnonzero(l[g:e + 1] <= (1.0 + LEVEL_ZONE) * L)
+        if not len(touch):
+            continue
+        f = g + int(touch[0])
+        lv["f"], lv["state"] = f, "touched"
+        under = np.flatnonzero(l[f:e + 1] < L)
+        if len(under):
+            lv["s"], lv["state"] = f + int(under[0]), "broken"
+    return out
+
+
+def level_rows(asset, fx, levels):
+    """The levels whose trigger bar opened in the last LEVEL_LIFE_DAYS + LEVEL_KEEP_DAYS days, as the state keeps
+    them. Times are epoch ms of a bar's OPEN, except trigger_close_ms and live_until_ms (closes)."""
+    open_ms, l = fx["open_ms"], fx["l"]
+    n = len(l)
+    if not n:
+        return []
+    last = int(open_ms[n - 1])
+    life = LEVEL_LIFE_DAYS * 86400000
+    rows = []
+    for lv in levels:
+        k_open = int(open_ms[lv["k"]])
+        if k_open < last - life - LEVEL_KEEP_DAYS * 86400000:
+            continue
+        at = lambda i: None if i is None else int(open_ms[i])      # noqa: E731
+        L = lv["L"]
+        rows.append({"id": "%s|%d" % (asset, k_open + BAR_MS), "asset": asset, "L": L,
+                     "zone_top": (1.0 + LEVEL_ZONE) * L, "arm_price": (1.0 + LEVEL_ARM) * L, "state": lv["state"],
+                     "live": bool(last < k_open + life), "low_open_ms": at(lv["b"]), "trigger_close_ms": k_open + BAR_MS,
+                     "live_until_ms": k_open + life + BAR_MS, "armed_open_ms": at(lv["a"]), "dead_open_ms": at(lv["u"]),
+                     "touch_open_ms": at(lv["f"]), "broken_open_ms": at(lv["s"]),
+                     "new_low": None if lv["s"] is None else _f(np.min(l[lv["s"]:n]))})
+    return rows
+
+
+def _level_frame(asset, bars, now):
+    """The closed bars the levels are recomputed from: the last LEVEL_TAIL_BARS of them."""
+    if bars is None:
+        df = tail_bars(asset, LEVEL_TAIL_BARS + 8)
+    else:
+        df = bars.get(asset)
+        if df is None:
+            return None
+    df = df[data.to_ms(df.index) + BAR_MS <= int(now)]
+    return df.iloc[-LEVEL_TAIL_BARS:]
+
+
+def _step_levels(st, asset, bars, now, log=None):
+    """Recompute `asset`'s levels when a bar has closed since they were last computed. Writes only st["zone"][asset].
+    -> True when it changed. Raises on anything it cannot read (the caller logs one line; the trades are not touched)."""
+    zone = st.get("zone") if isinstance(st.get("zone"), dict) else {}
+    old = zone.get(asset) if isinstance(zone.get(asset), dict) else {}
+    seen = old.get("as_of_open_ms")
+    if isinstance(seen, int) and seen >= (int(now) // BAR_MS) * BAR_MS - BAR_MS:
+        return False                                              # by the clock no bar has closed since: nothing is read
+    df = _level_frame(asset, bars, now)
+    if df is None or not len(df):
+        return False
+    fx = features(df, None)
+    i = len(df) - 1
+    last = int(fx["open_ms"][i])
+    if seen == last:
+        return False                                              # the bar file is behind the clock: nothing new
+    rows = level_rows(asset, fx, levels_of(fx))
+    block = {"as_of_open_ms": last, "as_of_utc": _utc(last + BAR_MS), "bars": int(len(df)), "close": _f(fx["c"][i]),
+             "atr_1h": _f(fx["atr1h"][i]), "low_4h": _f(fx["low16"][i]), "low_30d": _f(fx["lowN"][i]),
+             "week_ago_close": _f(fx["cref"][i]), "fresh_30d_low": bool(fx["is_low"][i]),
+             "drop_enough": bool(fx["drop"][i]), "all_three": bool(fx["trig"][i]), "levels": rows}
+    was = dict((r.get("id"), r.get("state")) for r in (old.get("levels") or []) if isinstance(r, dict))
+    name = SHORT_NAME.get(asset, asset)
+    for r in rows:
+        if was.get(r["id"]) != r["state"] and (r["live"] or r["id"] in was):
+            _say(log, "playbook9 %s: the %s low of %s UTC is %s (zone up to %s, counts until the %s UTC close). A notice "
+                      "only, no trade" % (name, _px(r["L"]), _utc(r["low_open_ms"]), r["state"], _px(r["zone_top"]),
+                                          _utc(r["live_until_ms"])))
+    zone = dict(zone)
+    zone[asset] = block
+    st["zone"] = zone
+    return True
+
+
+def page_levels(st):
+    """{asset: [the small level rows for the page]} from the state. A block or a row that is not what _step_levels
+    writes is left out (it is replaced at that coin's next new bar); never raises."""
+    out = {}
+    zone = st.get("zone") if isinstance(st.get("zone"), dict) else {}
+    for asset in ASSETS:
+        blk = zone.get(asset)
+        if not isinstance(blk, dict) or not isinstance(blk.get("levels"), list):
+            continue
+        rows = []
+        for r in blk["levels"]:
+            try:
+                rows.append({"L": r["L"], "low_utc": _utc(r["low_open_ms"]), "made_utc": _utc(r["trigger_close_ms"]),
+                             "zone_top": _f(r["zone_top"], 6), "state": r["state"], "live": r["live"],
+                             "live_until_utc": _utc(r["live_until_ms"]), "touch_utc": _utc(r["touch_open_ms"]),
+                             "broken_utc": _utc(r["broken_open_ms"]), "new_low": r["new_low"],
+                             "as_of_utc": blk.get("as_of_utc")})
+            except Exception:
+                continue
+        out[asset] = rows
+    return out
+
+
 # ---------------------------------------------------------------- bars
 def tail_bars(asset, nrows, path=None):
     """The last `nrows` bars of the engine's 15m file, as data.load gives them, read from the end of the file."""
@@ -528,6 +699,11 @@ def step(bars=None, now_ms=None, funding=None, state_path=None, log=print, start
                     st, changed = trial, True
             except Exception as e:
                 _say(log, "playbook9 %s failed: %r" % (asset, e))
+        for asset in ASSETS:                                      # the retest levels (a notice only): after the trades,
+            try:                                                  # on their own, so nothing here can reach a trade
+                changed = _step_levels(st, asset, bars, now, log) or changed
+            except Exception as e:
+                _say(log, "playbook9 %s: the retest levels were not updated (%r); the trades are not affected" % (asset, e))
         if changed:
             try:
                 save_state(st, path)
@@ -535,7 +711,8 @@ def step(bars=None, now_ms=None, funding=None, state_path=None, log=print, start
                 _say(log, "playbook9: the state could not be written (%r): this step is redone at the next one" % (e,))
         rows = rows_of(st)
         LAST_RUN.update({"started_utc": st.get("started_utc"), "skipped": copy.deepcopy(st.get("skipped")),
-                         "readings": copy.deepcopy(st.get("readings")), "state_note": st.get("state_note")})
+                         "readings": copy.deepcopy(st.get("readings")), "state_note": st.get("state_note"),
+                         "levels": page_levels(st)})
     except Exception as e:
         _say(log, "playbook9 failed: %r" % (e,))
     LAST_RUN.update({"seconds": round(time.perf_counter() - t0, 4), "utc": _utc(int(time.time() * 1000))})
@@ -646,6 +823,7 @@ def page_block(rows):
                      "totals": _totals(closed), "by_asset": per,
                      "started_utc": LAST_RUN.get("started_utc"), "coins": copy.deepcopy(LAST_RUN.get("readings") or {}),
                      "signals_not_taken_while_in_a_trade": copy.deepcopy((LAST_RUN.get("skipped") or {}).get(book) or {}),
+                     "levels": copy.deepcopy(LAST_RUN.get("levels") or {}), "levels_note": LEVELS_NOTE,
                      "pass_rule": PASS_RULE, "note": NOT_PASSED + " " + HISTORY,
                      "step_seconds": LAST_RUN.get("seconds")}
     return out
@@ -665,6 +843,9 @@ def main(argv=None):
         print(book, _totals([r for r in rows if r["book"] == book and r["status"] == "CLOSED"]))
     for a, rd in sorted((st.get("readings") or {}).items()):
         print("  ", a, rd)
+    for a, rows in sorted(page_levels(st).items()):
+        for r in rows:
+            print("   retest level (a notice, no trade)", a, r)
 
 
 def load_state_readonly(path=None):
