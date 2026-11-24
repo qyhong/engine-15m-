@@ -6149,3 +6149,74 @@ independent tests.
 
 **Code:** `research/h111_pair_bets.py`, tests `tests/test_h111_pair_bets.py`. Output: `research/out/h111_pair_bets/`
 (`report.md`, `results.json`).
+
+### H111 results (24 Nov 2026, books run 12:24-12:32 UTC on the laptop, analysis 12:33 UTC; `research/out/h111_pair_bets/report.md` + `results.json`; registered in commit 7c8e63e, its stated time corrected in 39b0f9c, both before any number)
+
+**Verdict by the registered condition: V1 (pair-half) DOES NOT PASS.** None of the four legs is met. Ratio = total
+points / worst fall; a point is one percent of one book's own money, added over the eight books by the day a trade closed.
+- h1 (2020-02-05 to 2023-06-07): V1's ratio +0.54 against V0's +0.65: NO (V1's total +88.4, above zero).
+- h2 (2023-06-08 to 2025-11-10): ratio -0.38 against -0.65, higher, but V1's total is -54.2: NO.
+- Holdout (2025-11-11 to 2026-11-10): ratio -0.66 against -0.43, total -98.6: NO.
+- Total kept: V1 -26.9 points over all history against V0 +18.1: NO.
+By the brief's wording alone (no above-zero requirement) it does not pass either (h1 no, h2 yes, holdout no, total no).
+
+Each cell: total points, worst day, worst fall, ratio.
+
+| Variant | All | h1 | h2 | Holdout | Forward (2026-11-11 on) |
+|---|---|---|---|---|---|
+| V0 current | +18.1, -40.3, 466.6, +0.04 | +168.2, -40.3, 259.3, +0.65 | -136.9, -22.2, 209.3, -0.65 | -85.7, -27.1, 200.5, -0.43 | +72.5, -3.0, 3.0, +24.24 |
+| V1 pair-half (primary) | -26.9, -27.0, 308.5, -0.09 | +88.4, -27.0, 163.3, +0.54 | -54.2, -16.7, 141.6, -0.38 | -98.6, -19.1, 148.7, -0.66 | +37.5, -3.1, 4.6, +8.19 |
+| V1s, ties full (descriptive) | -53.1, -33.8, 369.4, -0.14 | +101.8, -33.8, 179.0, +0.57 | -90.9, -16.7, 143.1, -0.64 | -113.7, -24.5, 155.9, -0.73 | +49.7, -2.1, 2.1, +23.48 |
+| V2 direction cap (descriptive) | +10.1, -36.3, 254.5, +0.04 | +39.7, -36.3, 167.4, +0.24 | -23.2, -19.4, 169.9, -0.14 | -50.1, -27.0, 151.9, -0.33 | +43.8, -5.5, 10.9, +4.01 |
+
+5,971 closed trades (5,007 on the six pair markets). V1 halves 3,667 (506 of them by the tie rule), V1s 3,161; V2
+drops 1,391. V1's mean size is 0.69 of V0's.
+
+**Descriptive.**
+- **Placebo (2,000 draws, the same number of trades halved at random per market and period):** share of draws with a
+  ratio at least V1's: all 71%, h1 52%, h2 36%, holdout 97%, forward 97%. Which trades are halved does not matter.
+- **Halved against full, pair markets, mean points a trade at full size:** halved +0.025 (3,667 trades, 44% won), left
+  full -0.083 (1,340, 40%); h1 +0.087 / +0.028, h2 -0.129 / -0.081, holdout +0.050 / -0.629. The trade that opens second
+  is not the worse trade.
+- **Five or more markets on one side** (15-minute grid, 2021-01-12 on, when all eight books have started): 77% of the
+  time (long 51%, short 27%); h1 83%, h2 75%, holdout 69%, forward 100% (all short). Largest same-side count: 4 22%,
+  5 34%, 6 25%, 7 15%, 8 3% of the time.
+- **Pairs, correlation of daily points (all days / only days both closed a trade), share of time on the same side:**
+  BTC+ETH +0.25 / +0.47, 81%; gold+silver +0.16 / +0.33, 76%; WTI+Brent +0.51 / +0.73, 91%.
+- **The 20 worst V0 days:** on 17 both members of at least one pair lost (BTC+ETH 9, gold+silver 6, WTI+Brent 11),
+  against 15.8% of all days and 34% of losing days. The 20 days sum to -533.6 points in V0, -325.0 in V1, -413.7 in V2.
+- **V2:** the trades it drops made +0.006 points a trade against +0.002 for the ones it keeps (h1 +0.176 / +0.018,
+  h2 -0.228 / -0.014, holdout -0.231 / -0.081). A real book that skips a trade would trade differently afterwards.
+- **Per market, V0 points over all history:** BTC -162.2, ETH +191.8, gold -5.1, silver -66.5, USDJPY +18.1, S&P 500
+  +21.1, WTI +34.7, Brent -13.7.
+- **Forward, 23 Nov:** the replay closed seven trades that day, five at the stop, for +1.2 points (-$480); V1 makes it
+  -3.1 points (it halves the two winning oil trades and two of the five stops).
+
+**Reconciliation with H68.** The trades closed by 2026-11-21 13:45 UTC: 5,963 trades, +22.5R (BTC+ETH 2,074, -7.7R; the
+other six 3,889, +30.3R): H68's figures exactly. Every book equalled `run_challenger("b_targets")`.
+
+**Checks.** `tests/test_h111_pair_bets.py` (11 tests on made-up trades). The V1, V1s and V2 choices on the real trades
+were recomputed by a separate brute-force pass over every pair of trades and are identical.
+
+**Deviations from the registration:** none in the rule, the segments, the measures or the pass condition. Choices
+made with the code: the books are run one group per process and their trades cached, so the evidence store is held
+for seconds (crypto 3 minutes, 54 refits); a trade stopped inside the bar that opens at T counts as open at T (the
+registered definition), so a partner trade entered at that bar's open is halved; the 5+ table counts a 15-minute slot
+when a trade is open during any part of it and includes the trades still open at the end; the correlation "all days"
+runs from the day both members have started. Before the full run the USDJPY group was run alone as a smoke test
+(`out/smoke`, numbers not reported).
+
+**Reading.** History agrees with the audit that the eight books are largely one bet: five or more on one side three
+quarters of the time, and the worst days are days on which both members of a pair lose. But counting the second trade
+of a pair at half did not improve the result for the risk taken: it cut the worst fall by 34% while cutting size by
+31%, which is what betting less on every trade does, and random halving did as well. The reason is that the second
+trade of a pair is not a worse trade than the first. Under it all the Setups book is flat on this history (+18 points
+in almost seven years, worst fall 467; negative in h2 and in the holdout), as H65 and H68 found, and no sizing rule
+makes a flat book a good one. No forward shadow is proposed on this condition. If smaller falls are wanted, a smaller
+size on every trade does the same more simply; that is a sizing decision for the owner, not a finding of this study.
+A replay on history is post-mortem material, not validation. Nothing in the engine, the books or the vault was changed.
+
+**Limits.** Closed trades booked on the closing day (a marked book would show larger worst days and falls); points
+added across books without compounding; "half size" is counting (the engine never sizes below 1x); one definition of a
+pair bet tested; the three legs are parts of one history and no part of it was unseen for this book; the replay's
+forward days were not matched trade for trade with the live record (live 23 Nov: five stops, -$2,086).
