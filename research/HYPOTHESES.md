@@ -6153,3 +6153,89 @@ it is read only to see that the code runs and the files are written. None of its
 
 **Code:** `research/h112_entry_bar_per_market.py`; tests `tests/test_h112_entry_bar.py`. Output:
 `research/out/h112_entry_bar_per_market/report.md` + `results.json`.
+
+### H112 results (24 Nov 2026, run 12:25-12:28 UTC on the laptop, 210 s; registration committed first as `972b24b`; `research/out/h112_entry_bar_per_market/report.md` + `results.json` + `reading.md` + `extra_lead_by_period.json`)
+
+**Verdict by the registered condition: the PRIMARY rule (all bars scaled) DOES NOT PASS.** Pooled over the six
+markets: (1) sum of R in h2 +2.1R against the current rule's +18.3R: NOT higher; (2) sum of R in the holdout +4.5R
+against +3.2R: higher; (3) in the new book in h2 real calls -0.049R a trade (142 trades) against forced entries
+-0.000R (1,271): NOT higher. Two of three legs fail. The prior expectation was low (H65, H80, H82b, H92, H93) and the
+result agrees with it. A replay is post-mortem material, not validation; nothing live was changed.
+
+**Step 1: is the 5-point bar out of reach on history too?** Share of steps with |Lead| >= 5 points, h1 / h2 / holdout
+/ forward, then the largest reading in the forward days (live audit's in brackets):
+- BTC 20.9% / 13.4% / 14.9% / 71.3%; ETH 21.1% / 13.0% / 15.1% / 76.4%.
+- Gold 9.26% / 0.98% / 0.00% / 0.00%, 4.53 (4.6). Silver 8.65% / 0.95% / 0.00% / 0.00%, 4.70 (4.7).
+- USDJPY 8.72% / 0.74% / 0.23% / 0.00%, 4.11 (5.0). S&P 500 1.91% / 0.01% / 0.00% / 0.00%, 3.62 (3.5).
+- WTI 28.83% / 13.72% / 22.71% / 0.00%, 4.30 (4.2). Brent 29.26% / 14.33% / 22.59% / 0.00%, 4.61 (4.5).
+So on gold, silver, USDJPY and the S&P the bar has been out of reach since about mid-2023 (under 1% of steps), though
+not in 2020-21. On oil it is NOT out of reach: the Lead cleared 5 points more often than on crypto in h1 and in the
+holdout year; the live 14 days were a quiet spell. The current Setups book's entries (continuous book; real calls /
+forced / flips): the six pooled h1 324 / 1,512 / 126 (17% real calls), h2 108 / 1,288 / 43 (8%), holdout 34 / 439 / 5
+(7%), forward 0 / 16 / 0; BTC + ETH 39%, 34%, 29%, 82% real calls. On gold, silver, USDJPY and the S&P real calls are
+0% to 2% of entries from h2 on; on WTI and Brent 16% to 22%.
+
+**Step 2, the fit (h1 only).** p* = 21.00% (BTC + ETH, 233,742 steps). Fitted entry bars in points (factor): gold 3.25
+(0.650), silver 3.20 (0.640), USDJPY 3.63 (0.726), S&P 500 2.43 (0.486), WTI 6.74 (1.348), Brent 6.96 (1.392). For oil
+the registered rule RAISED the bar. Share of steps at or above the fitted bar, h1 / h2 / holdout / forward: gold 21.0%
+/ 4.6% / 1.1% / 9.6%; silver 21.0 / 4.5 / 1.3 / 15.4; USDJPY 21.0 / 6.3 / 1.9 / 2.6; S&P 21.0 / 6.3 / 3.4 / 0.9; WTI
+21.0 / 10.4 / 19.9 / 0.0; Brent 21.0 / 10.6 / 19.2 / 0.0. The bars did not stay "cleared as often as on crypto" after
+h1, because the Lead on the four markets keeps shrinking.
+
+**Step 2, the replay, pooled over the six** (each book fresh and flat with $10,000 a market at its segment). Cells:
+trades, share that are real calls, share won, sum of R, mean R, net dollars, worst fall of the six books summed.
+
+| Rule | h2 (2023-06-08 to 2025-11-10) | holdout (2025-11-11 to 2026-11-10) | forward (2026-11-11 on) |
+|---|---|---|---|
+| current rule | 1,446, 7%, 42%, +18.3R, +0.013R, +$332, -21.1% | 486, 7%, 42%, +3.2R, +0.007R, -$11,579, -34.4% | 23, 0%, 61%, +12.6R, +0.546R, +$4,176, -2.1% |
+| all bars scaled (PRIMARY) | 1,463, 10%, 42%, +2.1R, +0.001R, -$2,693, -25.4% | 483, 8%, 42%, +4.5R, +0.009R, -$11,834, -33.9% | 23, 9%, 61%, +12.7R, +0.553R, +$4,181, -2.2% |
+| entry bar only (secondary) | 1,468, 10%, 42%, -2.7R, -0.002R, -$4,087, -25.4% | 482, 8%, 42%, +5.9R, +0.012R, -$10,740, -32.4% | 23, 9%, 61%, +12.7R, +0.553R, +$4,181, -2.2% |
+
+By entry word in the PRIMARY book: h2 real calls 142, -0.049R, -7.0R; forced 1,271, -0.000R, -0.3R; flips 50,
++0.188R, +9.4R. Holdout: real calls 40, -0.083R; forced 438, +0.014R; flips 5.
+Month-clustered bootstrap of the gap to the current rule (descriptive): PRIMARY h2 -16.1R (95% range -54.6 to
++19.4, 30 months), holdout +1.3R (-8.8 to +9.8, 13 months); secondary h2 -21.0R (-61.2 to +16.5), holdout +2.7R
+(-8.3 to +12.1). No gap can be told from chance in either direction.
+
+Per market, sum of R, current rule against PRIMARY (trades): h2 gold +27.5 (247) / +26.5 (250); silver -1.7 (248) /
+-7.0 (262); USDJPY +21.3 (299) / -5.6 (319); S&P +18.5 (106) / +29.5 (100); WTI -21.4 (262) / -14.3 (254); Brent -26.1
+(284) / -27.0 (278). Holdout: gold +9.5 / +9.5; silver +8.0 / +7.8; USDJPY -8.8 / -6.5; S&P -4.4 / -0.8; WTI -4.4 /
+-9.2; Brent +3.3 / +3.6. USDJPY carries most of the h2 gap.
+
+**Check.** The current rule's h2 numbers per market equal H92's test-period table exactly (trades and sum of R, all
+six markets): an independent check of the loader and the book for h2. There is no such check for the holdout.
+
+**Deviations and what was done after the registration.**
+- None from the registered fit, rules, segments, read-outs or pass condition.
+- The smoke run (fx only, made-up scale 0.5) came before the full run, as registered. It showed USDJPY's real step-1
+  numbers and its books at the made-up scale. After it only the report's wording and layout were changed (a missing
+  mean printed as "-R"; the loader's lines kept in results.json). No rule or read-out was changed.
+- The cached fits did not hold the last year for crypto (54 weekly refits) and fx (38): those were refitted on the
+  laptop by the engine's own cached walk, as the registration allowed. Metals, index and energy came wholly from cache.
+- **Added after the results, NOT registered, descriptive** (`--by-year`, `extra_lead_by_period.json`): the share of
+  steps at 5+ points per calendar year. Gold 20.6% (2020), 10.5%, 2.2%, 1.1%, 0.4%, 0.8%, 0.0% (2026), last reached
+  22 Apr 2025; silver 18.2% to 0.0%, last 25 Sep 2025; USDJPY 7.3%, 14.7%, 4.4%, 3.7%, 0.5%, 0.8%, 0.2%, last 5 Nov
+  2026; S&P 3.8% (2021), 0.9%, then 0.0%, last 27 Sep 2023; WTI 50.7%, 30.3%, 17.5%, 17.9%, 10.5%, 8.8%, 25.3% (2026),
+  last 3 Nov 2026; Brent the same shape, last 2 Nov 2026. Oil in 2026 by month runs from about 0% (June, July) to 63% (February).
+- The history lock was free at the smoke run and held by a sibling study for under two minutes before the full run
+  and before the extra look (9 s and 54 s old on arrival; waited, not removed).
+
+**Not verified.** The laptop's refits for the last year of BTC, ETH and USDJPY were not compared with the live box's
+fits. The replay's largest forward reading on USDJPY (4.11) is below the live audit's 5.0; the audit's window starts a
+day earlier and the reason was not checked. Why dollars and R disagree in the holdout (+3.2R, -$11,579; silver +8.0R,
+-$3,783, worst fall -72.7%) was not checked trade by trade; the likely reason is that a position is never smaller
+than 1x, so far stops cost more than 2% (the audit's finding 5). Only the study's own 10 tests were run, not the full
+suite; no file under `engine15/` was changed.
+
+**Reading.** On four of the six markets (gold, silver, USDJPY, the S&P) history agrees with the live audit: since
+about mid-2023 the 5-point bar is almost never reached and nearly every entry is forced. On oil it is reached often
+and the live fortnight was a quiet spell. A bar fitted per market on 2020 to mid-2023 does not fix this: the Lead on
+the four markets kept shrinking, so the fitted bars were cleared in 5% to 6% of later steps, not 21%, and real calls
+rose only from 7% to 10% of entries. Where the lower bar did add real calls they were not better than forced entries
+(-0.049R against 0.000R a trade), and the book as a whole was 16R lower in h2 and 1R higher in the holdout, both
+inside the noise. Nothing here supports a per-market entry bar, and no forward shadow book is proposed. It does not
+show that a lower bar harms either. Limits: one replay; six markets that share days and trends; a holdout already
+read by H65, H67, H68 and H72; a forward slice of two weeks; a bar fitted on how often the Lead is large, not on
+whether it was right. A bar that follows the recent Lead would be a different rule needing its own registration, with
+a low prior for the same reasons. Why the odds on these four markets have moved so close to even since 2022 was not
+studied. Nothing in the engine, the books or the vault was changed.
