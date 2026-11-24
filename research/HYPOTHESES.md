@@ -5735,3 +5735,117 @@ fees: it lost in the first half (2022 above all, when bounces off new lows kept 
 Negative funding looks better but rests on 32 trades and is not significant. This agrees with H70 and H71: on BTC and
 ETH no rebound-long rule tested so far has held up across both halves. Nothing here supports a paper shadow book on the
 registered bar; nothing in the engine, the books or the vault was changed.
+
+## H109. An exit learner for BTC and ETH: a paper book `b_learn` that follows whichever exit rule has been earning most in the current market state (registered 24 Nov 2026, about 05:45 UTC, before any H109 code existed and before any number for the learner, on history or live, was computed)
+
+**Prompted by:** `docs/RL_NEXT.md`, R1 ("Exit and join learner for setups"; only the EXIT part is built here, not the
+join part). The owner on 21 Nov 2026: "Not now". The owner on 24 Nov 2026, on three RL-style ideas that "would run as
+a paper shadow first": "Ok lets do it". The 24 Nov word replaces the earlier one. Paper only. Nothing here reaches the
+Setups book, the vault feed or any main book.
+
+**What must be said first.** H36 found that on history holding beat every trail and every target exit (2020 to Nov
+2026, eight markets: hold +$329k, every variant less). A learner that shifts weight between exit rules ends close to the
+best single rule; it can only do BETTER than the best single rule if the right exit depends on the market state at
+the entry. That is not proven. It is the one thing this book tests. If one rule is best in every state, the learner
+ends as a late copy of that rule and adds nothing.
+
+**Disclosure: what had been seen when this was written.** H36's history numbers (above); `b_trail`'s history (-$47k)
+and its forward lead ("ahead" at 33 trades, RL_NEXT.md); `b_targets`' read at 30 trades (ahead, +$6,915, eight markets;
+BTC and ETH alone 11 trades, +10.77R; VERDICT_RULES.md section 10). While checking the file format, the header and the
+first row of the laptop's stale copy of `shadow_trades_b_targets_BTCUSDT.csv` (one trade, 11 to 13 Nov, +1.40R). The
+per-arm BTC and ETH records of the other five arms were not opened. No bucket, weight or choice was computed.
+
+**The arms (six, fixed).** The exit rules the shadow books already run on BTCUSDT and ETHUSDT
+(`engine15/shadows.py` `CHALLENGERS`), each with its own $10,000 per coin and its own live record:
+`b_targets` (the Setups book: half at Target 1, the rest at Target 2, stop to the entry after Target 1), `main` (the
+hold copy: out only at the entry stop or on a flip), `b_trail` (swing / 2 ATR trail after 1R), `b_be_t1` (stop to the
+entry after Target 1), `b_ema20_1h_t1` and `b_sma20_1h_t1` (EMA20 / SMA20 of the 1h chart as a trail after Target 1).
+Not arms: `b_trend30` and `b_wait_stop` (they change entries, not exits), the H61 floor follower, v4, H3, A, H5, the
+yardsticks and the swing minds. The arms take the same entries only until their first different exit; after it each
+re-enters on its own clock. So the arms' trades are NOT the same setups graded six ways (RL_NEXT.md's picture): each
+arm is scored on its own closed trades. This is said because it is weaker than a same-setup comparison.
+
+**The reward.** A closed trade's net R-multiple after fees: the `r_mult` column of the arm's own record
+(`out/live/shadow_trades_<arm>_<coin>.csv`; net result over the risk at entry). Not clipped. A row without a finite
+`r_mult` is left out.
+
+**The buckets (four, fixed before any result).** Two readings at the entry, from the stored 15-minute bars of the
+entry's own coin, using only bars that had CLOSED at or before the entry time (for these six arms the entry time is the
+close that decided the entry):
+- *Volatility*: x = a bar's true range over the previous close. The mean of x over the last 96 closed bars (24 hours)
+  against the median of that same 96-bar mean over the last 2,880 closes (30 days, this close included). Above the
+  median: `wild`. Otherwise: `calm`.
+- *Trend agreement*: on 4h bars and on daily bars (built with `data.resample`, read through `data.htf_on_15`, so only
+  a 4h or daily bar that has closed counts), the sign of the last closed bar's close against the simple average of the
+  last 20 closed closes. Both above or both below: `agree`. Anything else: `mixed`.
+
+Buckets: `calm_agree`, `calm_mixed`, `wild_agree`, `wild_mixed`. BTC and ETH share one weight table per bucket (the
+coin is NOT a split: eight buckets would halve the trades in each, and the book already keeps the coins apart). An entry
+with no reading (fewer bars than the look-backs need, or the last stored bar more than one hour before the entry) is
+left out: it is neither followed nor used for weights, and it is counted in the block.
+
+**The weights (exponential weights, full information).** For bucket b and arm a at time T:
+score(a, b, T) = the sum, over a's closed trades of both coins whose ENTRY was in bucket b and whose exit time is
+strictly before T, of r_mult x 0.5^((T - exit time) / 30 days). Weight = exp(0.5 x score), normalised over the six
+arms. Half-life 30 days, learning rate 0.5 per R, both fixed here. Because the book follows the single best-weighted
+arm, the learning rate changes the weights shown but never a trade: only the ORDER of the scores matters.
+A bucket's own table is used once it holds at least 12 closed arm trades (all arms together, exits before T); until
+then the choice uses the four buckets pooled into one table. Ties (and the start, when every score is zero): the order
+`b_targets`, `main`, `b_trail`, `b_be_t1`, `b_ema20_1h_t1`, `b_sma20_1h_t1`. So with no information the book copies
+the Setups book.
+
+**Warm-up (not proof).** Weights start equal. Every closed trade in the arms' LIVE records counts for the weights,
+including the ones closed before `b_learn` starts (the arms have run since 11 and 13 Nov 2026). Those earlier trades
+are warm-up for the weights only; none of them is a trade of `b_learn`. No history replay is run for starting weights.
+One may be added later only by a new note here, as warm-up, never as proof.
+
+**The follower rule (how weights become a paper position).** One book per coin, $10,000 each, flat at
+2026-11-25 00:00 UTC (`START_UTC`); only arm trades entered at or after that time can be followed.
+- When `b_learn` is flat on a coin and an arm opens a trade on that coin at time T, in bucket b: if that arm is the
+  best-weighted arm for b at T (weights from trades closed strictly before T), `b_learn` copies that trade from its
+  entry to its exit, at the arm's own fills, sized so that it earns the arm's return on equity for that trade (its
+  result = the arm's net result x `b_learn`'s equity over the arm's equity before the trade). Then it is flat and
+  chooses again.
+- It is flat for an entry at T if its last copied trade closed strictly before T, or closed at T and was the same
+  arm's (an arm's flip is one moment). An entry of another arm in the bar in which its own trade closes is not taken.
+- Entries of arms that are not the best-weighted one are ignored. While the best arm is inside a trade that began
+  before `b_learn` was free, `b_learn` waits flat. The time it spends flat is reported.
+- No lookahead: the choice at T uses the arms' closed-trade rows with exit time before T and bars closed by T, nothing
+  else. A test removes later trades from the arms' records and checks that no earlier choice changes.
+
+The book keeps no state: every step it is recomputed from the arms' closed-trade files, the shadow books' state (open
+trades) and the bar files, so a restart or a late deploy gives exactly the trades a continuous run from `START_UTC`
+gives. A row written twice counts once; a row or state that does not add up leaves that trade out.
+
+**Baselines, over the same days** (arm trades entered at or after `START_UTC` and closed by the read): `b_targets`,
+and the best single arm, which is the arm with the highest sum of net R on BTC and ETH together, picked at the read
+with hindsight. That is a hard yardstick and it is meant to be.
+
+**Verdict rule (forward only; wording as `research/VERDICT_RULES.md` sections 2, 3 and 10).**
+1. The read at 30 is the first server scoreboard whose `b_learn` row shows 30 or more closed trades (BTC and ETH
+   pooled), copied as it stands; the read at 60 the same at 60. Later changes of the text do not change either. No
+   decision is taken between the two.
+2. The scoreboard's own verdict (ahead, undecided or behind zero, from the 90% range per trade) is copied but is NOT
+   the pass rule here: `b_learn` copies the arms, so being above zero says the arms made money, not that choosing
+   helped.
+3. At 30: nothing changes whatever it shows. A short note: its sum of R against each arm's over the same days, which
+   arm it followed how often, by bucket, and the share of time flat. If the scoreboard reads "behind", a post-mortem
+   first, then the owner decides whether it runs on.
+4. At 60, "the learner adds something" only if ALL hold over the same days: (a) its sum of net R is above
+   `b_targets`'; (b) it is above the best single arm's; (c) at least two different arms were each followed for at
+   least 10 of its trades (otherwise it is one rule under another name); (d) the scoreboard does not read "behind".
+   Then, and only then, a proposal goes to the owner for a NEXT TEST under a new registration. It is not a proposal
+   to change the Setups book.
+5. At 60, (a) holds but (b) does not: no worse than the Setups book, no better than one fixed rule. The contextual
+   part has not shown itself. It runs on to 100 trades for the record; no proposal.
+6. At 60, below `b_targets`: a post-mortem, then the owner decides: retire it or keep it as a labelled reference.
+7. Whatever the read, nothing changes the Setups book, the vault feed or a main book without the owner's word in this
+   project and a new registration. Sixty trades from two coins that move together, inside a few weeks, are far fewer
+   than sixty independent results (VERDICT_RULES.md section 3); a pass here is "worth a second look", never proof.
+
+**Label.** On the scoreboard the book is a shadow, paper only, NOT passed. It never calls itself passed.
+
+**Code:** `engine15/learn_book.py` (the book; constants in the module, none in `CFG`), hooked into
+`reports.scoreboard` inside a try/except, as the paper desk is. Tests: `tests/test_learn_book.py`. It writes
+`out/live/shadow_trades_b_learn_<coin>.csv` (its closed trades, rewritten from the recomputation) and the
+`exit_learner` block of `out/live/scoreboard.json`. It reads the arms' files and changes none of them.
