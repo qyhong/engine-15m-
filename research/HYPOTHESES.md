@@ -6024,3 +6024,126 @@ Nothing in the registered rule was changed. What the registration left open, and
   `wild_agree`. No forward number exists yet.
 - **Step cost, measured on the laptop** with synthetic records and a 21 MB bar file: about 0.03 s with today's two
   weeks of arm records, 0.08 s after three months, 0.23 s after a year. It grows with the length of the arms' records.
+
+## H114. USDJPY in the Setups book: a wider stop (3 barriers instead of 2), or leave the market out (registered 24 Nov 2026, about 12:40 UTC, before any H114 code existed or any H114 number on history was computed)
+
+**Prompted by:** the live audit of 24 Nov 2026 (`research/out/live_audit_20261124/report.md`, finding 9 and row F) and
+the owner, 24 Nov 2026: "USDJPY: a wider stop, or leave it out of the Setups book". Research only: nothing in the engine,
+the Setups book, the main book or the vault changes, whatever the result. A pass leads only to a proposal for a forward
+PAPER shadow book; leaving a market out is the owner's decision.
+
+**Known before registering (prior work and the live record; none of it computed for H114).**
+- **Live, 10 to 24 Nov (the audit):** the Setups book (`b_targets`) on USDJPY: 6 closed trades, -$196, three of them
+  stopped. The stop sat 0.26% to 0.41% from the entry, with the position at about 6x so that a stop costs 2% of the book.
+  The Lead was on the right side 24 hours later in 34% to 38% of steps. Fourteen days in one market: a description.
+- **H62 (21 Nov) does NOT answer the wider-stop question for USDJPY.** Its "wider stop" was the main book's stop where
+  that was further away. On USDJPY the main book runs the same target rule from the same entries, so the carried stop
+  was the main book's on 0 of 722 trades and all three variants equal the current rule to the dollar ("USDJPY is
+  unchanged"). What H62 does give is the current rule's own record on USDJPY (replay 2020-04-08 to 2026-11-20 21:45,
+  trades by exit time): 722 trades, 42.0% won, net -$882, worst fall -53.1%, fees $6,226, sum of R +8.5; first half
+  337 trades, -$1,986, -6.1R; second half 385, +$1,104, +14.6R; holdout 86, -$2,162, -8.4R; forward slice 4 trades,
+  -$274, +0.7R. Exits: 401 at the entry stop, 195 at both targets, 103 at Target 1 then the entry, 22 flips.
+- **H65 and H68 (22 Nov), same replay, trades by entry time:** USDJPY 722 trades, +8.5R; first half 338, -5.5R; second
+  half 384, +14.0R. H65 pooled over eight markets: the tightest third of stops per market lost (-81.9R on 2,623 trades).
+- **H90 (22 Nov, the queue) has replayed these very stop distances, but pooled.** `stop_units` in {1, 1.5, 2, 2.5, 3,
+  4} on all eight markets together, 2020-02 to 2023-06-07 only, sum of R: -420.6, -35.9, +25.2 (current, 2,945 trades),
+  +55.2, +99.9 (stop 3.0, 1,744 trades), +88.2 (stop 4.0, 1,226 trades). Its choice rule kept 2.0 (on BTC and ETH 3.0
+  made +43.6R against +46.9R), so the study ended there: no number for another stop on later data exists, and no
+  per-market number was published. So the FIRST-HALF leg of the condition below is not blind: pooled, a wider stop
+  already looked better in R on that period. The second half and the holdout with a 3.0 stop are new. H91 and H96
+  give the current rule on USDJPY for 2023-06-08 to 2025-11-10 (a fresh book): +21.3R on 299 trades; H96's filter
+  that skips the tighter half of stops made +22.4R on 220 trades there (no difference to speak of).
+- **USDJPY post-mortem (20 Nov, `research/out/usdjpy_postmortem_20261120.md`):** on USDJPY the odds almost never clear
+  the entry bar (1 decision of 710), so entries are forced on the trend's side; a trade that banks its targets is
+  forced back in within the hour and gives the money back (first trade +$304, the next three -$392). History tables for
+  this market moved by thousands of dollars between two runs a week apart (the readings store was rebuilt), so dollar
+  totals here are soft.
+- **What this means for "leave it out":** on the published numbers the current rule's sum of R on USDJPY is negative
+  in the first half (-5.5R / -6.1R), POSITIVE in the second half (+14.0R / +14.6R) and negative in the holdout (-8.4R).
+  The condition below (at or below zero in all three) is therefore not met on what is already published. H114 only
+  re-reads it on today's store (rebuilt 23 Nov, three more days of data); that part is a re-read, not a new study.
+- **So H114 is reduced to what is new:** the Setups rule on USDJPY alone with its own stop at 3.0 (and 4.0) barriers,
+  per period, in dollars and with the worst fall; and a count of stop-outs that price then reversed.
+
+**What changes with the stop, read from the code (`engine15/shadows.py` `run`/`open_pos`, `engine15/backtest.py`
+`leverage`, `engine15/live.py` `plan_targets`).** One barrier is 1.5 x the 14-hour average range of the 1-hour chart.
+- The stop: `stop_units` barriers from the fill (2.0 now).
+- The size: `leverage` = 2% / (stop distance as a share of price), between 1x and the market's cap (100x for USDJPY).
+  A stop 1.5 times as far means a position two thirds the size; the loss at the stop stays about 2% of the book.
+- The targets DO depend on the stop distance (call it R). Target 1 is the Fibonacci 1.272 level of the 1h (else 4h)
+  leg only when that level lies between 0.5R and 4R from the entry; else a typical day's travel (the median 24-hour
+  reach, which does not depend on the stop); else 1.5R. Target 2 is that leg's 1.618 level when Target 1 came from it,
+  else the larger of 2R and 1.5 times Target 1's distance. With a wider stop the Fibonacci window moves out (a near
+  level is refused, a far one accepted) and the 2R fallback for Target 2 moves out. The engine's own behaviour is kept:
+  the targets are planned from the widened stop. Half is still closed at Target 1, the stop still goes to the entry.
+- Nothing else reads `stop_units`: the odds, the entries, the forced entry and the flips are the same rule. The books
+  differ in their trades only because a different exit leaves the book flat or in a trade at different times.
+
+**The books.** USDJPY only. The engine's own `shadows.run` under the `b_targets` rule
+(`shadows.CHALLENGERS["b_targets"]["rule"]`, cfg from `shadows.asset_cfg`), inputs from `shadows.book_inputs` of the fx
+group prepared by `research/h59_half_be.prep_cut` with the cached fits (as H62/H68), from the first decided session to
+the last stored session at or before 2026-11-24 04:30 UTC (the copy of the live box's store made today). Three books,
+each one continuous from $10,000: `stop_units` 2.0 (current), 3.0 (PRIMARY), 4.0 (secondary, descriptive, can pass
+nothing). The stop is passed in the cfg dict handed to `shadows.run`; no engine file is edited. GATE (must hold or
+nothing is read): the 2.0 book equals the engine's own `shadows.run_challenger("b_targets")` book, every trade and the
+marked equity at every bar.
+
+**Periods.** all; h1 (first decided session to 2023-06-08); h2 (2023-06-08 to the end; as in H68 it CONTAINS the
+holdout); holdout (2025-11-11 to the end); forward (2026-11-11 to the end, live days; about two weeks, a description).
+Shown beside them, descriptive: "h2 before the holdout" (2023-06-08 to 2025-11-10), so the three parts that do not
+overlap can be seen. Trades are counted by entry time.
+
+**Read-outs per book and period, fixed now.**
+1. Trades; share won; sum of R and mean R (R = a trade's result after fees over its own risk at its entry stop, the
+   book's `r_mult`); net dollars (the marked equity's change over the period) and the same as a percentage of the
+   equity at the period's start; fees paid by the period's trades.
+2. Worst fall: the largest peak-to-trough fall of the marked equity INSIDE the period, in percent (the running peak
+   starts at the equity the period starts with).
+3. Net / worst fall: net percent divided by the size of the worst fall in percent. No value when there is no fall.
+4. Stop-outs (exit word exactly "STOP": the entry stop, before Target 1) and, of those with 96 later sessions on file,
+   the share after which price traded back at the ENTRY price within the next 96 fifteen-minute sessions (24 hours of
+   trading; a weekend is skipped; the rest of the exit bar itself is not counted, since the order inside a bar is
+   unknown). Yardstick beside it: the share after which price instead went a further full stop distance beyond the
+   stop in the same 96 sessions. For price with no memory the two shares are about equal; the first being clearly
+   larger is what "stops hit by noise" would look like. A count, not a test.
+5. Descriptive: of the current rule's stop-outs that were back at the entry within 96 sessions, the share where price,
+   from the entry to that return, never reached a stop 3.0 (4.0) barriers from the same entry (bars' lows and highs,
+   the return bar included). Same entry, not the same book: after the first different exit the books part.
+6. Checks: the share of trades whose size was held at the 1x floor or the 100x cap (there the stop does not cost 2%);
+   the median stop distance in percent and the median leverage; where each Target 1 came from (Fibonacci, a day's
+   travel, 1.5R) and the median distance of both targets in percent, by recomputing `plan_targets` for each trade.
+
+**PASS condition for the 3.0 stop, fixed now.** ALL of:
+- (a) net / worst fall is higher than the current rule's in h1, AND in h2, AND in the holdout;
+- (b) net over all history is higher than the current rule's.
+Anything else is "does not pass". A pass leads only to a proposal for a forward paper shadow book (USDJPY with a 3.0
+stop beside `b_targets`), which needs the owner's word; it never changes a live book. A history replay is post-mortem
+material, not validation, whatever it shows.
+
+**The "leave it out" read, descriptive.** The current rule's own record on USDJPY per period, from the 2.0 book. If its
+sum of R is at or below zero in h1 AND in h2 AND in the holdout, that is written down as a proposal for the owner to
+decide. Otherwise the report says the record does not make that case by this rule, and shows the periods. Either way
+nothing changes: the owner decides which markets a book trades.
+
+**Changes from the brief, made before registering.**
+1. "Net / worst fall" is defined in percent, with the fall measured inside each period, because the three books arrive
+   at a period with different equity and the size compounds (2% of the equity at each entry).
+2. A guard on leg (a): the ratio misleads when a book loses (with the same loss, a DEEPER fall gives a "higher" ratio).
+   So in a period where the 3.0 book's net is at or below zero, the leg holds only if its net is higher than the
+   current rule's AND its worst fall is not deeper. Where the 3.0 book's net is above zero the leg is the ratio as
+   written. This can only make a pass harder.
+3. h2 contains the holdout, as in H68 (the brief names H68's periods); the non-overlapping middle part is shown too.
+4. "Back at the entry within 24 hours" is fixed as 96 sessions after the exit bar, with a yardstick (read-out 4) and
+   read-out 5, since a good share of stops reverse that far in a random walk and the bare share would mislead.
+5. Fees, leverage-limit checks and the targets' sources are added as read-outs (a wider stop means fewer and smaller
+   trades, so part of any difference is fees; that part is to be shown, not left inside the total).
+6. The replay ends at the last stored session of today's copy (24 Nov 04:30 UTC), not at H62's 21 Nov cut, so the
+   forward slice holds the live days the audit covers.
+7. The "leave it out" read is a re-read of numbers already published (see above), and is labelled so.
+8. The gate against the engine's own `b_targets` book is added, as in H62 and H68.
+
+**Limits, stated now.** One market and three stop values on one history that earlier studies have already looked at
+(the first half pooled, by H90). One stop is graded (3.0) and one described (4.0); no correction is made, so a pass is
+weak evidence and leads only to a forward paper shadow. Paper fees (0.01% a side on USDJPY), fills at the stop price or
+the bar's open, no slippage, no swap or financing cost on a leveraged position held for days. The voices' voting list
+was chosen on full history (as in H90). Dollar totals on this market have moved between store rebuilds.
