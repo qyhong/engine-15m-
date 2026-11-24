@@ -23,6 +23,9 @@ H67 (22 Nov 2026) adds the shadow book `b_trend30` (`shadows.CHALLENGERS`): `b_t
 filter (rule key `trend_days`); it starts flat at its first live bar, the vault never reads it.
 H68 (22 Nov 2026) adds `b_wait_stop`: `b_targets` with no forced entry after an entry-stop exit until a signal
 enters (rule key `wait_after_stop`, state key `wait_stop` in that book only); also a shadow, never read by the vault. H60 (exits by regime, per market) is registered and running; it may change this table.
+H109 (24 Nov 2026) adds the exit learner `b_learn` (`engine15/learn_book.py`, BTC and ETH, paper only, NOT passed): it
+copies the next trade of whichever of six exit shadow books leads in the entry's market state. It is not a rule of
+`shadows.run` and not in `shadows.FOLLOWERS`; `reports.scoreboard` runs it (see "Exit learner" below).
 
 Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisions), then
 `THOUGHT_PROCESS.md` ("Now" section) and `CLAUDE.md`. This file is only the moving parts.
@@ -212,6 +215,18 @@ crypto replay).
   reads the book's closed-trade files, `data/shadow_state.json`, the tail of the two bar files and the funding files
   and walks them again (H63's rules; `tests/test_paper_desk.py` holds its walk to H63's numbers). Its output is the
   `paper_desk` block of `out/live/scoreboard.json`. To restart the desk from a new date, change START_UTC.
+- Exit learner `b_learn` (24 Nov 2026, H109, owner "Ok lets do it"; paper only, NOT passed): `engine15/learn_book.py`,
+  called by `reports.scoreboard` inside a try/except, before the shadow rows are read. Arms: `b_targets`, `main` (the
+  hold copy), `b_trail`, `b_be_t1`, `b_ema20_1h_t1`, `b_sma20_1h_t1`, on BTC and ETH. It keeps NO state: every step it
+  reads the arms' `shadow_trades_<arm>_<coin>.csv`, `data/shadow_state.json` (open trades) and the tail of the two bar
+  files (from 40 days before the arms' first trade), recomputes the whole book from `learn_book.START_UTC` (25 Nov 2026
+  00:00 UTC) and rewrites `out/live/shadow_trades_b_learn_<coin>.csv` only when it changed; that file is what puts it
+  on the scoreboard (title in `reports.SHADOW_TITLES`). The `exit_learner` block of `scoreboard.json` holds the four
+  tables (scores, weights, leader), whom each coin follows, the arms over the same days and what was left out. If a
+  bar file or the state cannot be read at a step, the block says so and the record on file is left as it was. A
+  failure logs one line, `exit learner: ...`, and the scoreboard goes on. Constants are in the module (none in `CFG`);
+  they are H109's and are not to be tuned. To read it by hand: `py -3 -m engine15.learn_book` (prints the block, writes
+  nothing). Measured cost: about 0.03 s a step now, 0.23 s with a year of records. Tests: `tests/test_learn_book.py`.
 - "Setups moving against" alert (22 Nov 2026, owner asked for it): `telegram_notify.adverse_update`, hooked into
   `check()` in its own try/except. It reads the page's `b_targets` book and the market closes; its state is the key
   `adverse` in the bot's state (per market: trade id, entry, starting stop, flags a, b and t1). Thresholds

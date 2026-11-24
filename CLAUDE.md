@@ -14,6 +14,10 @@ and the H61 profit-floor follower in
 rules A/B (`playbook4`), the RL agents (`playbook5`, `playbook6`) and the BTC/ETH pair book (`playbook7`, H37 V4).
 The paper desk (`engine15/paper_desk.py`, 22 Nov 2026) walks three paper wallets through the Setups book's BTC and ETH
 trades at three sizes; it is read only and lives in `scoreboard.json`.
+The exit learner `b_learn` (`engine15/learn_book.py`, H109, 24 Nov 2026; paper only, NOT passed) copies, on BTC and ETH,
+the next trade of whichever of six exit shadow books (`b_targets`, `main`, `b_trail`, `b_be_t1`, `b_ema20_1h_t1`,
+`b_sma20_1h_t1`) leads in the entry's market state; it is recomputed every step from those books' records inside
+`reports.scoreboard`, keeps no state, is not a rule of `run()` and never reaches the vault.
 The engine version is `CFG["version"]` in `engine15/config.py` (think15-v5.2.10 on 24 Nov 2026); what each version changed
 is in `VERSION_NOTE` there and in THOUGHT_PROCESS.md "Now". It runs on the Singapore box, not on this laptop (HANDOFF.md).
 `out/live/scoreboard.json` judges every book on live trades only.

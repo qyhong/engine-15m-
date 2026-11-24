@@ -126,6 +126,9 @@ def playbooks(log=print):
 SCOREBOARD_JSON = os.path.join(ROOT, "out", "live", "scoreboard.json")
 IDEAS_MD = os.path.join(OUT, "ideas_queue.md")
 MIN_TRADES = 30
+SHADOW_TITLES = {                                               # shadow books that carry their own label on the scoreboard
+    "b_learn": "Shadow: b_learn (exit learner, H109; paper only, NOT passed)",   # = learn_book.SCOREBOARD_TITLE
+}
 
 
 def per_entry(rows):
@@ -211,12 +214,19 @@ def scoreboard(playbook_rows=None, log=print):
     for p in glob.glob(os.path.join(live_dir, "trades_*.csv")):
         main += pnl_of(p)
     rows.append(dict({"book": "main", "title": "Main books (live)", "kind": "main"}, **_stats(main)))
+    learner = None
+    try:                                                           # the exit learner b_learn (learn_book.py, H109; owner,
+        from . import learn_book                                   # 24 Nov 2026): recomputed from six shadow books' own
+        learner = learn_book.step(live_dir=live_dir, log=log)      # records, then read below like any shadow book. Paper
+    except Exception as e:                                         # only, NOT passed; it never stops the scoreboard
+        log("exit learner: %r" % (e,))
     shadow = {}
     for p in glob.glob(os.path.join(live_dir, "shadow_trades_*.csv")):
         name = os.path.basename(p)[len("shadow_trades_"):].rsplit("_", 1)[0]
         shadow.setdefault(name, []).extend(pnl_of(p))
     for name, pn in sorted(shadow.items()):
-        rows.append(dict({"book": name, "title": "Shadow: " + name, "kind": "shadow"}, **_stats(pn)))
+        rows.append(dict({"book": name, "title": SHADOW_TITLES.get(name) or "Shadow: " + name, "kind": "shadow"},
+                         **_stats(pn)))
     by_book = {}
     for r in playbook_rows or []:
         if r.get("status") == "CLOSED" and r.get("pnl_usd") is not None:
@@ -227,6 +237,8 @@ def scoreboard(playbook_rows=None, log=print):
     out = {"generated_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "min_trades": MIN_TRADES, "rows": rows,
            "note": "Forward results only. A book is judged once it has %d trades: ahead if the low end of its 90%% range "
                    "per trade is above zero, behind if the high end is below zero." % MIN_TRADES}
+    if learner is not None:
+        out["exit_learner"] = learner                              # its tables, whom it follows, the arms over the same days
     try:                                                           # the paper desk (paper_desk.py; owner, 22 Nov 2026):
         from . import paper_desk                                   # three forward paper wallets on the Setups book's BTC
         out["paper_desk"] = paper_desk.block()                     # and ETH trades. Read only; it never stops the scoreboard

@@ -5849,3 +5849,25 @@ with hindsight. That is a hard yardstick and it is meant to be.
 `reports.scoreboard` inside a try/except, as the paper desk is. Tests: `tests/test_learn_book.py`. It writes
 `out/live/shadow_trades_b_learn_<coin>.csv` (its closed trades, rewritten from the recomputation) and the
 `exit_learner` block of `out/live/scoreboard.json`. It reads the arms' files and changes none of them.
+
+### H109 note: implementation choices (24 Nov 2026, written with the code, after the registration was committed as d9002fd)
+
+Nothing in the registered rule was changed. What the registration left open, and what was seen while building:
+- **Readings.** The two means (96 bars of range, 20 higher-timeframe closes) are summed window by window, and the
+  median is an order statistic, so a reading is the same whether the bar file is read from 40 days or from six years
+  before the entry (`tests/test_learn_book.py` checks both that and the cut at the entry's bar). The bars are read from
+  the tail of `data/<coin>_15m.csv` by the module's own reader, held equal to `signals.read_bars` by a test.
+- **Decay base.** Rewards are stored against `START_UTC`, a constant, so a stored reward does not depend on which other
+  rows the records hold.
+- **Open trades.** An arm's open trade is read from `data/shadow_state.json`. If its closed row is already in the arm's
+  file (the engine writes the file before the state), the file wins. An open trade the state cannot support is left out.
+- **An input that cannot be read at a step** (a bar file, the state file): the block says so and the book's own record
+  on file is left as it was, so a half-written file never shortens the record or changes the scoreboard row.
+- **Not on the page's shadow table.** The book is hooked into `reports.scoreboard` (rows of `scoreboard.json`, as every
+  shadow book, plus the `exit_learner` block), not into `shadows.FOLLOWERS`: `shadows.py` is on the money path and was
+  not touched. So it has no row in `page["shadows"]["scoreboard"]` (the marked-equity table with `vs_main_usd`).
+- **Seen after the registration, not a result:** one smoke run, writing nothing, on the laptop's stale copy of the
+  arms' files (four of the six arms, up to 16 Nov 2026): the book reads "not started", 20 warm-up trades all fall in
+  `wild_agree`. No forward number exists yet.
+- **Step cost, measured on the laptop** with synthetic records and a 21 MB bar file: about 0.03 s with today's two
+  weeks of arm records, 0.08 s after three months, 0.23 s after a year. It grows with the length of the arms' records.

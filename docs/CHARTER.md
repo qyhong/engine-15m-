@@ -662,3 +662,15 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
 - **The research queue on the box stays stopped** (24 Nov 2026). Asked whether to restart it under the 30% CPU cap
   or keep it stopped, the owner: "Keep it stop now". It is not restarted, capped or not, without the owner's word. H85
   waits with its checkpoint; H86 runs on the laptop.
+- **The exit learner `b_learn` is built as a paper shadow, NOT passed** (24 Nov 2026; H109). The owner, on three
+  RL-style ideas that "would run as a paper shadow first" (docs/RL_NEXT.md): "Ok lets do it" (on 21 Nov it was "Not
+  now"). This is R1, the EXIT part only. `engine15/learn_book.py`: six shadow books' exit rules on BTC and ETH are the
+  arms (`b_targets`, the hold copy `main`, `b_trail`, `b_be_t1`, `b_ema20_1h_t1`, `b_sma20_1h_t1`); each arm's closed
+  trade is a reward (net R after fees, 30-day half-life) in one of four market states (volatility calm or wild, 4h and
+  daily trend agreeing or mixed, from closed 15-minute bars); when flat, the book copies the next trade of the arm
+  that leads in that entry's state. One $10,000 book per coin from 2026-11-25 00:00 UTC, recomputed every step from
+  the arms' own records (no state of its own), shown on `scoreboard.json` as a shadow row and the `exit_learner`
+  block. Registered before any code or number (commit d9002fd). H36 found holding beat every other exit on history,
+  so the learner only adds something if the right exit depends on the market state: unproven. Read at 30 and 60
+  closed trades against `b_targets` and the best single arm over the same days. Nothing reaches the Setups book or
+  the vault. Not deployed: it goes live with the next deploy after the merge and the full test suite.
