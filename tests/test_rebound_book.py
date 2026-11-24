@@ -1094,3 +1094,21 @@ def test_the_scoreboard_shows_the_book_with_its_label(tmp_path, monkeypatch):
     assert row["title"] == rb.SCOREBOARD_TITLE and row["kind"] == "shadow" and row["label"] == rb.LABEL
     assert row["trades"] == 2 and row["passed"] is False and row["vs_setups_book"]["read"].startswith("no read before 30")
     assert row["override"]["from_short"] == 2
+
+
+def test_a_mind_whose_view_fails_cannot_stop_the_group_summary(monkeypatch):
+    """Review finding (24 Nov 2026): shadows.summary must survive a paper mind whose view raises, so that b_targets'
+    save and setups.json never depend on it."""
+    from engine15 import shadows
+    real = shadows.asset_view
+
+    def boom(st):
+        if isinstance(st, dict) and st.get("_poison"):
+            raise RuntimeError("bad mind view")
+        return real(st)
+    monkeypatch.setattr(shadows, "asset_view", boom)
+    name = next(iter(shadows.MINDS))
+    sst = {"groups": {"crypto": {}}, "books": {name: {"BTCUSDT": {"_poison": True}}}}
+    out = shadows.summary("crypto", ["BTCUSDT"], sst)
+    assert name not in out["books"]
+    assert all(k in out["books"] for k in shadows.CHALLENGERS)

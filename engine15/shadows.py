@@ -968,21 +968,25 @@ def summary(group, assets, sst, prep=None, n=None, main_books=None):
             out["books"][name] = {"title": spec["title"], "follows": spec["follows"],
                                   "assets": dict((a, asset_view(sst["books"].get(name, {}).get(a))) for a in assets)}
     for name, spec in MINDS.items():                             # a shadow mind: only the markets it has a book on
-        have = [a for a in assets if sst["books"].get(name, {}).get(a)]
-        if not have:
-            continue
-        out["books"][name] = {"title": spec["title"], "label": spec["label"], "assets": {}}
-        for a in have:
-            st = sst["books"][name][a]
-            v = asset_view(st)
-            try:
-                v.update(spec["module"].view_extra(st))
-            except Exception:
-                pass
-            ls = (late.get(name) or {}).get(a)
-            if ls:                                               # compared with the main copy over its own time only
-                v.update(started_utc=ls["utc"], main_equity_at_start=ls["main_eq"])
-            out["books"][name]["assets"][a] = v
+        try:                                                     # a paper mind's view can never stop the group's summary
+            have = [a for a in assets if sst["books"].get(name, {}).get(a)]   # (and so b_targets' save and setups.json)
+            if not have:
+                continue
+            block = {"title": spec["title"], "label": spec["label"], "assets": {}}
+            for a in have:
+                st = sst["books"][name][a]
+                v = asset_view(st)
+                try:
+                    v.update(spec["module"].view_extra(st))
+                except Exception:
+                    pass
+                ls = (late.get(name) or {}).get(a)
+                if ls:                                           # compared with the main copy over its own time only
+                    v.update(started_utc=ls["utc"], main_equity_at_start=ls["main_eq"])
+                block["assets"][a] = v
+            out["books"][name] = block
+        except Exception:
+            out["books"].pop(name, None)
     return out
 
 
