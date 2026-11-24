@@ -6151,3 +6151,78 @@ No Lead path, no event list beyond H107's own results, and no split of the book'
 
 **Code:** `research/h113_lead_after_capitulation.py`, tests `tests/test_h113_lead_after_capitulation.py`. Output:
 `research/out/h113_lead_after_capitulation/` (`report.md`, `results.json`).
+
+### H113 results (24 Nov 2026; build 12:21 to 12:24 UTC on the laptop, analysis about 20 s; `research/out/h113_lead_after_capitulation/report.md` + `results.json`; registration commit 5a2241c)
+
+**Verdict by the registered condition: the two halves PASS; the holdout does NOT confirm; the proposal does not
+stand.** Nothing in the engine, the books or the vault was changed.
+
+**Part (b), the test.** Setups shorts decided inside the 48 hours after rule A's trigger against the book's other
+shorts, BTC + ETH. Each cell: trades, share won, mean R, sum of R.
+- First half: in-window 58, 43%, -0.085, -4.9R; others 428, 42%, -0.032, -13.9R. Difference -0.052R, month-clustered
+  95% range [-0.502, +0.310]. Passes the three checks, by a margin that could be chance.
+- Second half: in-window 37, 27%, -0.501, -18.5R; others 305, 41%, -0.093, -28.2R. Difference -0.409R [-0.744, -0.033].
+- Both halves passed, so the holdout was opened. Holdout (2025-11-11 to 2026-11-18): in-window 28, 61%, +0.588,
+  +16.5R; others 165, 45%, +0.079, +13.0R. Difference +0.509R [-0.234, +1.591]. The opposite sign: not confirmed.
+- Like for like (other shorts in the same coin-months): +0.325R (162), +0.218R (124), +0.518R (42) in the three
+  segments. In the halves the in-window shorts were far under the other shorts of the same months; in the holdout
+  they were level with them.
+- Beside the test: BTC in-window -0.158 / -0.822 / +0.370; ETH +0.000 / -0.282 / +0.805 (first half / second half /
+  holdout). Forced entries in the window -0.549 (15) / -0.541 (20) / +1.247 (10); entries on a signal +0.077 (43) /
+  -0.454 (17) / +0.222 (18). No flip into a short fell in a window. The mirror cannot be read: the book opened only 3
+  longs inside a window in the two halves. Windows of 24 and 96 hours give the same signs in every segment. Triggers
+  120 / 61 / 61; 4.8% / 3.8% / 7.5% of closes lie inside a window.
+- Not registered, added after the run, by calendar year (in-window shorts): 2020 11, -0.024; 2021 12, -0.511; 2022
+  28, +0.249; 2023 10, -0.700; 2024 15, -0.751; 2025 22, -0.284; 2026 25, +0.678. They won in the two years of long
+  falls and lost or were flat in the other five.
+- Look-ahead guard: `features` recomputed on bars cut at 348 bars (every trigger bar, 40 random bars a coin), 0
+  mismatches.
+
+**Part (a), descriptive (hindsight).** 76 confirmed capitulation lows (BTC 34, ETH 42; 97 candidates before the 7-day
+rule): first half 37, second half 28, holdout 11.
+- Lead at the low: median -10.4 points; below zero in 99% of events.
+- Hours from the low until the Lead is first at or above 0: median 19.9 (first half 15.0, second half 18.4, holdout
+  37.0). Within 24 / 48 / 72 hours in 54% / 79% / 84% of events; never within 72 hours in 12 of 76.
+- Still below 0 at +24h / +48h / +72h: 79% / 74% / 75% of events (holdout 100% / 82% / 100%). Median Lead -3.1 at
+  +24h, -2.3 at +48h, -2.0 at +72h. Median share of the 72 hours spent below 0: 87%. Yardstick, all closes: the Lead
+  is below 0 at 67% (first half), 55% (second half), 64% (holdout) of BTC closes; ETH the same within 2 points.
+- At or above +5 within 24 / 48 / 72 hours: 8% / 14% / 29% of events (holdout 0 of 11). Median highest Lead in the 72
+  hours +2.5.
+- Price against the low at +24h / +48h / +72h, median: +6.3% / +8.3% / +8.8% (by construction not under the low for
+  48 hours).
+- Without hindsight, from the trigger that opens a window (87 of them): median 27.5 hours to the first reading at
+  or above 0; still below 0 at +24h / +48h / +72h in 87% / 79% / 77%; price against the trigger's close +0.6% / +1.3% /
+  +1.6% at the median (holdout -1.2% / -0.7% / -3.7%).
+- Not registered: all 95 candidates before the event, without the 7-day rule, give the same picture (19.2 hours;
+  78% / 75% / 78%).
+
+**The 21 Nov 2026 event, apart (descriptive).** Rule A fired on both coins at the 06:45 UTC close. Live Lead (the
+audit's copy of the journal): -11.3 (BTC) and -10.9 (ETH) at the low; first at or above 0 after 55.5 and 57.75 hours;
+highest +4.9 and +5.5; price +11.7% and +12.7% above the low at +48h. Replay Lead: BTC touched 0 after 2 hours and
+was below 0 again at +24h and +48h; ETH 57.75 hours. Over the 14 live days the replay Lead had the live Lead's sign
+at 99% of 1,311 closes a coin and differed by 2.2 points on average. Live shorts decided inside the window: Setups
+2, both stopped, -$1,254; B trail 4, all stopped, -$2,516; main 4, all stopped, -$2,361. Replay Setups book: 2
+in-window shorts, both stopped (-1.05R, -1.04R). The 21 Nov lows are left out of part (a)'s tables by the 7-day rule
+(a confirmed low on 15 Nov 2026 was kept on each coin); the event's read-outs use them all the same.
+
+**Deviations and choices made with the code.** (1) The heading says "about 12:25 UTC"; the registration was committed
+at 12:17 UTC by the laptop's clock (5a2241c), before the script existed. (2) The private copy of the fits held 301 of
+the walk's 355 weekly fits (those to 2025-11-10); the other 54 were refitted on the laptop by the engine's own walk.
+Check: the book's record to 2026-11-21 13:45 is 2,074 trades, -7.7R (BTC -66.9R, ETH +59.2R), exactly H67's and
+H68's. (3) The trigger-anchored yardstick uses the trigger that OPENS a window (no trigger in the 192 bars before
+it), since triggers come in clusters. (4) The event's lows are taken before the 7-day rule (above). (5) Added after
+the run and marked so: the by-year table, the candidates without the 7-day rule, the check against H67. (6) The
+build (the one run that loads the evidence store) ran once; the analysis, which reads only the saved Lead and trades, was rerun several times for the
+report's layout and the additions in (4) and (5); the registered numbers were identical in every run. (7) In the holdout's
+bootstrap 9,989 of 10,000 draws held both groups.
+
+**Reading.** On part (a) the answer to the owner's question is: slowly. After a capitulation low the Lead touches
+zero within about a day in half the events, but it does not stay; three days later it still favours down in three
+events out of four, and it reaches the +5 points a long needs within three days in fewer than one in three. That
+agrees with H71: the Lead follows the recent fall and does not call the turn. On part (b) the pattern the audit saw
+on 21 Nov (shorts sold into the rebound lose) is there in both halves, clearly in the second and barely in the
+first, and it is reversed in the holdout year, where the same shorts were the book's best. By year these shorts won
+in 2022 and 2026, the years in which bounces off new lows kept failing, and lost or were flat in the other five.
+The trigger does not tell the two kinds of bounce apart. So a rule "no new short for 48 hours after a capitulation
+rebound" is not supported: no forward shadow is proposed. The holdout has now been read for this question and
+cannot be a fresh check for a variant of it. A replay is post-mortem material, not validation.
