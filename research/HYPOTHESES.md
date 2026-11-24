@@ -6825,3 +6825,167 @@ worse than today's in the second half, in the holdout and in total, and the thre
 zero. So this study finds no evidence that the stop distance is what makes USDJPY weak. What the post-mortem pointed
 at (entries forced on the trend's side) was not tested here. No engine code was changed. Nothing is proposed for a
 forward shadow. Whether USDJPY stays in the Setups book is the owner's call.
+
+## H116. BTC and ETH: when price comes back to a capitulation low, a long if the low holds (rule C1) and a long if the low is swept and reclaimed (rule C2) (registered 24 Nov 2026, about 13:00 UTC, before any H116 code existed or any H116 number on history was computed)
+
+**Prompted by:** the owner, 24 Nov 2026: "You need to find the mechanism or way to able to take setup when market
+like btc and eth reach its all time low and earn from the rebound. If there is a chance btc revisit 55k or 56k. What
+can we do. So we can earn the short and then turn long." Research only: nothing in the engine, the books or the vault
+changes, whatever the result. A pass leads only to a PROPOSAL for a forward PAPER book; it never changes a live book
+or the vault. A replay on history is post-mortem material, not validation.
+
+**The gap this study fills.** BTC fell to 55,130 on 21 Nov 2026 (ETH to 1,538), bounced to 64,603 (ETH 1,845) and
+trades near 60,550. The engine cannot turn long by itself there (a long from flat needs a 5-point Lead, 15 against a
+down trend; H71, H113). H107's rules A and B (being built as a paper book in H115) buy the rebound from a FRESH
+30-day low; they do not fire when price comes BACK to an earlier capitulation low and stays above it, because that
+makes no new low. H116 asks about that case: the RETEST of a capitulation low.
+
+**Words.** A **capitulation low** here is the low that H107's rule A trigger fired off (a fresh 30-day low, at least
+10% under the price a week earlier, followed by a rebound of 2 x ATR(1h)). The **level L** is that low's price. A
+**retest** is price coming back down to within 1.5% of L after it has first been at least 5% above L. The level
+**holds** when the retest turns up without a 15-minute close below L; it **breaks** when a 15-minute bar closes below
+L. A **sweep** is a 15-minute low below L. **ATR(1h)** is the engine's stop unit (Wilder ATR(14) of 1h bars, closed
+bars only). **R** is a trade's result divided by the distance from its entry to its stop, after fees.
+
+**Known before registering.**
+- H107 (the same triggers, the same window): a long AT rule A's trigger made -0.127R a trade in the first half (83
+  trades), +0.246R in the second (40), -0.006R over all (123; p 0.545): FAIL. 2022 alone -14.1R on 44 trades: lows kept
+  being undercut. So this window is NOT blind for these events: which years' capitulation lows failed is known.
+- H113: 181 rule A triggers in the two halves (120 / 61); they come in clusters. After a confirmed capitulation low
+  the Lead is still below zero three days later in three events of four, and Setups shorts opened in the 48 hours
+  after a trigger did badly in both halves but well in the holdout year: the trigger does not tell a bounce that
+  lasts from one that fails. With about 180 clustered triggers, **fewer than 60 trades a rule is likely**; then the
+  verdict is "too few to judge" and Part 1's base rates are the study's main product.
+- H70: 18 rebound-long rules out of an oversold state all lost after fees (2020-02 to 2023-06). H71: none of the
+  engine's readings carried confirmed information about a rebound. H66: in 505 sudden rallies while short the Setups
+  book lost in 93% and turned long within a day in 26%.
+- The liquidation-hunt book `p1_liqhunt` (H6; `engine15/playbook.py`, `research/out/p1_postmortem.md`): a GENERIC fade
+  of sweeps through ANY liquidity pool (15m swings, 24-hour, 7-day and prior-day highs and lows, round numbers) on six
+  markets. It lost forward (65 trades at the post-mortem, 32% won, -0.68R a trade after costs; retired by the owner on
+  15 Nov 2026) and on history, and its improvement study H41 (8 variants, about 23,000 trades each) found no edge
+  before costs. Its three faults: fading the trend, a stop 0.1 x ATR(15m) beyond the sweep (re-swept), and costs of
+  0.26R to 0.5R on tiny stops. **H116 differs in one thing only: the kind of level.** It looks at ONE kind of level,
+  the low of a confirmed capitulation (a few a year), long side only, on BTC and ETH, with a stop 0.5 x ATR(1h) beyond
+  the low. Rule C2 IS a sweep fade of that level; the generic version of that idea has failed, and nothing known
+  says this special case is different. The fee share of R is reported for that reason.
+
+**What must be said first.** The rules' numbers (within 1.5% of the low, a 5% bounce first, 30 days, 1 x ATR(1h) off
+the retest's low, a stop 0.5 x ATR(1h) under, 24 hours to reclaim) were chosen by the brief AFTER looking at one
+event (21-24 Nov 2026) and before any count on history. They are not fitted, and they are not known to be good.
+That event is inside the sealed holdout and is not part of the test. Before this registration nothing of H116 was
+computed; I read H107's script and results, H113, H70, H71, H66, the p1 post-mortem, and the first two and last two
+rows of the two bar files (the last bar is 24 Nov 2026 04:30 UTC).
+
+**Data.** As H107: `btcusdt_15m.csv`, `ethusdt_15m.csv` and the two funding files in `data/` (a read-only link to the
+shared copy of the box's data; md5 in results.json). Deciding bars from 2019-10-01 00:00 UTC. **Cut: every input is
+truncated at the bar opening 2025-11-10 23:45 UTC before anything is computed**; the holdout from 2025-11-11 is not
+read; a trade must END by the cut, else it is not taken. Halves split at 2023-06-08 00:00 UTC (Part 1: by the trigger
+bar; Part 2: by the bar that decides the trade). No evidence store, fits, odds or engine book is used. The event apart
+reads bars from 2026-08-01 (indicator warm-up, as H107) and reports only levels created from 2026-11-19 on.
+
+**The level (H107's trigger reused exactly: `h107_capitulation_rebound.features`, flag `A`).** When rule A's signal
+(onset) fires at the close of 15m bar k: L = low16(k), the lowest 15m low of bars k-15..k; b = the first of those bars
+with that low. No new level is made when the coin already has a level with the same L made in the last 30 days. The
+level is LIVE for 30 days: it can be touched and can give a signal only at bars that open at most 30 days after the
+open of bar k. States, each known at the close of the bar named, from bars up to it only:
+1. **Undercut before the bounce (the level dies).** A 15m low below L at any bar after b, before or in the bar that
+   arms the level. (The low was not the low; a new trigger at the lower low makes its own level.)
+2. **Armed.** The first bar a after b with a 15m high >= 1.05 x L (it may lie before k).
+3. **First touch (the retest starts).** The first bar f after both a and k with a 15m low <= 1.015 x L.
+4. **In the retest** (bars j = f, f+1, ... while the level is live), with m(j) = the lowest low of bars f..j and
+   s = the first bar from f on with a 15m low below L (the sweep's first bar), the two rules below.
+
+**Rule C1, "holds the low".** If any bar from f on closes below L before C1 has signalled, C1 is off for this level
+(the retest is a BREAK). Otherwise C1 signals at the close of the first bar j with close(j) >= m(j) + 1.0 x
+ATR(1h)(j) (the retest is a HOLD; wicks below L are allowed, closes below L are not). Stop = the lower of L and m(j),
+less 0.5 x ATR(1h)(j).
+**Rule C2, "sweep and reclaim".** If C1 has signalled before any sweep began (s later than C1's bar), C2 is off for
+this level (that sweep is not the first retest). Otherwise C2 signals at the close of the first bar j with
+s <= j <= s+95 (within 24 hours of the sweep's first bar, that bar included) and close(j) > L. Stop = the lowest low
+of bars s..j, less 0.5 x ATR(1h)(j). No such bar: no C2 trade on this level.
+**Both.** One signal per level per rule (the first retest only). A signal needs a finite ATR(1h) > 0. The two rules
+are judged apart, as two books; both may trade the same retest.
+
+**The trade (H107's exit code with only the stop swapped).** Long at the open of bar j+1 = P (H107's convention; on
+these 24-hour markets the next open is the deciding close within a tick). Not taken if P <= the stop. R = P - stop.
+Bars j+1 .. j+192 (48 hours) are walked; in each bar the stop is looked at first (low <= stop: out at the stop, or at
+the open if the open is below it); then Target 1 = P + 1R (half out at T1 exactly; the stop on the rest moves to P
+from the NEXT bar); then Target 2 = P + 2R (the rest out at T2 exactly, also in the T1 bar). What is left goes out at
+the close of bar j+192. Fees 0.10% of notional a side (`cost_side`) on the entry and on each part's exit. Funding is
+not charged or paid. One trade at a time per rule and coin: a signal is taken only if its bar is at or after the
+previous trade's exit bar; a skipped signal uses up its level for that rule. Result: R net of fees, and percent.
+
+**Part 1, base rates (descriptive; decides nothing).** Levels whose trigger is at least 34 days (30 days + 96 hours)
+before the cut, so each is seen in full; per half and overall, pooled and per coin. Counts: triggers, levels; of the
+levels: undercut before a 5% bounce, never bounced 5% in 30 days, armed; of the armed: retested within 30 days (a first
+touch) or not; of the retested: HOLD (C1's signal came with no close below L before it; with or without a wick under
+L), BREAK (a 15m close below L came first; reclaimed within 24 hours, i.e. C2 signalled, or not), unresolved (neither
+by the end of the 30 days). Also, with hindsight and labelled so: the share of retests with a 15m close below L within
+24, 48 and 96 hours of the first touch. Timing: hours from the low (bar b) to the first touch (median, quartiles,
+range). **What price did next:** from the CLOSE of the first-touch bar, the close 24, 48 and 96 hours later (bars
+f+96, f+192, f+384), as a percent (median, quartiles, share above zero), and the lowest low and highest high of the 96
+hours against L; all retests, and split by HOLD and BREAK (a split known only afterwards: hindsight).
+
+**Part 2, the test.** Rules C1 and C2 as above, BTC + ETH pooled, and each coin. **Statistics as H107:** month-clustered
+bootstrap (every calendar month of the window, of the deciding bar, months without a trade included, both coins'
+trades of a month together; 10,000 draws; seed 20261124; statistic = summed R over summed trades of the drawn months;
+95% interval = 2.5th and 97.5th percentiles; one-sided p for "mean R > 0" = (1 + #{draw - observed >= observed}) /
+(draws + 1)). A half's bootstrap resamples that half's months (June 2023, which the split cuts, is in both lists with
+each half's own trades). Holm correction over the two rules (m = 2) on the pooled whole-window p.
+**Pass rule, per rule, fixed now. PASS only if all hold:** (a) at least 60 trades pooled and at least 20 in EACH half;
+(b) pooled mean R > 0 in BOTH halves; (c) pooled mean R > 0 over the whole window with the Holm-adjusted one-sided
+month-clustered p < 0.05. Fewer trades than (a): "TOO FEW TRADES TO JUDGE" (no pass). Anything else: FAIL.
+**Read-outs (not conditions):** per rule, pooled / BTC / ETH x whole / first half / second half: trades, share won,
+mean R, sum of R, median R, percent return, exits by kind, longest losing run, deepest fall of cumulative R, months
+with a trade, the bootstrap interval and p; by calendar year; signals skipped; the median stop distance as a percent
+of price and the round-trip fee in R; a drift yardstick in percent (the trade's net percent minus the mean net percent
+of a plain 48-hour long, next open to the close 192 bars later less 0.20%, entered at every bar of the same
+coin-month); the trade list.
+**Look-ahead guards:** (i) for every signal bar of both rules and 40 random bars per coin, H107's readings AND the
+whole level machine are recomputed on data cut at that bar; the set of signals up to that bar (rule, bar, L, stop)
+must equal the full run's; (ii) the trade walk with a swapped stop is checked bar by bar on every trade, and against
+H107's own `walk` when given H107's stop.
+**Descriptive only (decides nothing; one setting moved at a time):** zone 1.0% and 2.5%; first bounce 3% and 8%; C1's
+turn 0.5 and 2.0 x ATR(1h); stop pad 0.25 and 1.0 x ATR(1h); C2's reclaim window 6 and 48 hours; level life 14 and 60
+days.
+
+**Part 3, "earn the short and then turn long" (descriptive; ARITHMETIC ON PRICES, NOT A BOOK).** The evidence store is
+not loaded, so what the Setups book held is not read. For each C1 and C2 trade: H = the highest 15m high from the bar
+after the low to the bar before the first touch (the bounce high, known as the high only afterwards); Z = 1.015 x L
+(the top of the retest zone). The fall into the zone = (H - Z) / H. A short sold at H and bought back at Z would have
+made that less 0.20% fees; a short sold halfway, at (H + Z) / 2, makes ((H + Z) / 2 - Z) / ((H + Z) / 2) less 0.20%.
+Nobody sells the exact high: the first is an upper bound. Next to them: the long's own net percent and R, and the
+move from Z to the long's entry (what a short held past the zone until the long's signal would have added or given
+back). Medians and ranges per rule, per half.
+
+**Part 4, the live case (descriptive only; NO result is computed for it).** The level machine on the event: BTC L =
+55,130 (low 21 Nov 2026 06:15 UTC), ETH L = 1,538 (low 21 Nov 04:00 UTC), rule A's trigger at the 06:45 UTC close on
+both (H107's event read). Stated in prices: the state of each level at the last bar read (armed or not, touched or
+not), the retest zone, what C1 and what C2 must see to signal, where the stop and Target 1 would sit for example fills
+at the ATR(1h) of the last bar read (the ATR on the day will differ), and the date the levels stop being live. If a
+C1 or C2 signal has already occurred it is named, without a result.
+
+**Changes from the brief, made before registering.**
+1. The entry is the OPEN of the bar after the deciding close (H107's code), not the close itself.
+2. H107's exit code closes the rest at Target 2 = +2R when it is reached inside the 48 hours; the brief's summary
+   named only Target 1 and the 48-hour close. Kept as H107's code, since the brief asks for H107's own exit.
+3. A level DIES when its low is undercut before price has bounced 5% (state 1). The brief did not say; without it a
+   level that price fell through would later be "retested" from below.
+4. Triggers that repeat the same low within 30 days make ONE level (rule A can fire again off the same low).
+5. The first touch must come after the trigger bar and after the arming bar (not in the bar that arms).
+6. HOLD and BREAK are defined by which comes first in the retest, C1's turn or a 15m close below L; a retest with
+   neither inside the 30 days is "unresolved". The brief's "no close below L during the retest" had no end.
+7. C2 belongs to the first retest: if C1's turn came before any low below L, a later sweep gives no C2 trade. C2's
+   24 hours run from the sweep's FIRST bar and include a reclaim in that same bar (a wick).
+8. One trade at a time per rule and coin (H107's form), so two levels alive together cannot stack trades in a rule.
+9. The pass rule is the brief's three conditions. H107's two further conditions (each coin above zero, above the
+   random-entry baseline) are read-outs here, not conditions; the baseline is a drift yardstick in percent, because
+   H70 showed an R baseline mostly measures how much of R the fee eats.
+10. Part 1 uses only levels seen in full (trigger at least 34 days before the cut). Forward prices are measured from
+    the close of the first-touch bar.
+11. Added, descriptive only: the sensitivity list; the hindsight share of retests with a close below L in 24/48/96
+    hours; the fee share of R.
+
+**Code:** `research/h116_retest_capitulation_low.py` (history run; `--event` for Part 4 alone), tests
+`tests/test_h116_retest.py`. Output: `research/out/h116_retest_capitulation_low/` (`results.json`, `event.json`,
+`report.md`).
