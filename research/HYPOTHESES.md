@@ -6989,3 +6989,77 @@ C1 or C2 signal has already occurred it is named, without a result.
 **Code:** `research/h116_retest_capitulation_low.py` (history run; `--event` for Part 4 alone), tests
 `tests/test_h116_retest.py`. Output: `research/out/h116_retest_capitulation_low/` (`results.json`, `event.json`,
 `report.md`).
+
+### H116 results (24 Nov 2026, run 12:58 UTC on the laptop, 7 s; registration commit `90ecef2`; `research/out/h116_retest_capitulation_low/report.md` + `results.json` + `event.json`; tests `tests/test_h116_retest.py`)
+
+**Verdict by the registered condition: NO PASS. Rule C1 and rule C2 both have TOO FEW TRADES TO JUDGE; on the trades
+there are, both lost after fees.** Data 2019-10-01 to 2025-11-10 23:45 UTC; the holdout was not read (only the bars
+from 2026-08-01 for the two live levels, states and prices only). Nothing in the engine, the books or the vault was
+changed; nothing is proposed for a forward book on the registered condition.
+
+**Part 1, base rates.** 187 rule A triggers, 130 levels (57 triggers repeated a low); 126 seen in full.
+- Of the 126: 24 (19%) undercut before a 5% bounce; 25 (20%) bounced and never came back within 1.5% in 30 days; 77
+  (61%) retested. First half 88 levels / 58 retests; second half 38 / 19.
+- Of the 77 retests: HOLD 47 (61%; 13 with a wick under L), BREAK 30 (39%; 26 back above L within 24 hours),
+  unresolved 0. First half 33 / 25; second half 14 / 5.
+- Hindsight from the first touch: a 15m close below L within 24 / 48 / 96 hours in 70% / 78% / 81% of the retests
+  (first half 72 / 83 / 86; second half 63 / 63 / 63), and in 51% / 64% / 68% of those that "held". Price traded below
+  L inside 96 hours in 88% (91%, 79%). Lowest low of the 96 hours against L, median -6.6% (-8.7%, -1.8%); highest
+  high +9.7%.
+- Hours from the low to the first touch: median 21.0, quartiles 7.5 and 95.5, range 2 to 716 (first half median 13.6,
+  second half 119.5). The bounce high before the retest: median 9.1% above L.
+- From the close of the first-touch bar, median return and share above zero at 24 / 48 / 96 hours: all +1.9% 58%,
+  +1.3% 56%, +0.9% 53%; first half +1.4% 57%, +0.2% 52%, -0.5% 47%; second half +2.9% 63%, +4.1% 68%, +4.6% 74%;
+  HOLD +2.4% 68%, +1.7% 62%, +2.0% 55%; BREAK -4.3% 43%, -1.8% 47%, -0.2% 50%. 2022 holds 47 levels and 33 retests.
+
+**Part 2, the test.** Each cell: trades, share won, mean R [95% month-clustered interval], sum of R; one-sided p.
+- **C1, BTC + ETH:** 48, 40%, -0.178 [-0.513, +0.203], -8.5R; p 0.844, Holm 1.0. First half 31, 29%, -0.431 [-0.756,
+  -0.053], -13.4R; second half 17, 59%, +0.285 [-0.411, +0.902], +4.8R (p 0.18). BTC 26, -0.108; ETH 22, -0.260.
+  Checks failed: 60 trades, 20 in the second half, first-half mean, whole-window mean, Holm p. 27 of 48 stopped;
+  longest losing run 13; deepest fall of cumulative R -16.6R. By year (trades, sum R): 2019 3, -3.2; 2020 4, -3.8;
+  2021 6, +3.3; 2022 16, -11.5; 2023 4, +2.1; 2024 7, +2.5; 2025 8, +2.1.
+- **C2, BTC + ETH:** 37, 49%, -0.113 [-0.520, +0.331], -4.2R; p 0.712, Holm 1.0. First half 29, 48%, -0.112; second
+  half 8, 50%, -0.116. BTC 17, -0.222; ETH 20, -0.020. Checks failed: 60 trades, 20 in the second half, both halves'
+  means, whole-window mean, Holm p. 18 of 37 stopped. By year: 2020 3, -2.4; 2021 9, +3.2; 2022 17, -4.0; 2024 4,
+  -0.4; 2025 4, -0.5.
+- Median stop 3.7% of price (C1) and 3.5% (C2); the round-trip fee is 0.05R to 0.06R: costs are not what loses.
+  Drift yardstick (net percent minus a plain 48-hour long at every bar of the same coin-month): C1 +0.45, C2 +1.51
+  percentage points. Signals not taken: one per coin per rule (a trade was open).
+- **Look-ahead guards:** H107's readings and the level machine recomputed on data cut at 164 bars (84 signal bars, 80
+  random), 0 mismatches; the walk equals the bar-by-bar walk on every trade and H107's own walk when given H107's
+  stop (84 bars). H107's rule A re-run on this data copy: 123 trades, -0.7R, as H107 reported.
+- **Descriptive, one setting moved at a time:** C1's first half is below zero in all 10 variants that change it (-0.05
+  to -0.50R a trade) and its second half above zero in all (+0.07 to +0.64R); overall -0.29R (first bounce 8%, 34
+  trades) to +0.20R (a 2 x ATR turn, 29 trades); zone 2.5% gives 62 trades at +0.02R. C2 overall -0.19R to +0.07R.
+
+**Part 3, arithmetic on prices, not a book.** At the median, C1's 48 trades / C2's 37: fall from the bounce high to
+the zone top 7.1% / 7.9% (at least 3.3% by construction); a short from the exact high to the zone top +6.9% / +7.7%
+after fees, from halfway +3.5% / +3.9%; a short kept from the zone top to the long's entry -1.3% / +0.9%; the long
+from there -2.5% (mean -0.9%) / -1.3% (mean -0.3%). The bounce high is known only afterwards.
+
+**Part 4, the live case (states and prices; no result).** At the bar opening 24 Nov 2026 04:30 UTC both levels are
+armed and not touched; both live until the 15m close of 21 Dec 2026 06:45 UTC. BTC: L 55,130.00, zone a 15m low <=
+55,956.95; ETH: L 1,538.00, zone <= 1,561.07. ATR(1h) then: BTC 713.08, ETH 22.89. Example fills at that ATR: BTC C1
+with the retest low at the zone top needs a close >= 56,670.03, stop 54,773.46, T1 58,566.59; with the retest low at
+L, close >= 55,843.08, stop 54,773.46, T1 56,912.69; BTC C2 after a sweep to 54,578.70, a close above 55,130, stop
+54,222.16, T1 56,037.84. ETH C1: close >= 1,583.96 (stop 1,526.55, T1 1,641.37) or >= 1,560.89 (stop 1,526.55, T1
+1,595.23); ETH C2 after a sweep to 1,522.62: close above 1,538, stop 1,511.17, T1 1,564.83.
+
+**Not registered, added after the run (small cells).** By time from the low to the first touch: under 24 hours 41
+retests, C1 23 trades -0.30R, C2 16 trades -0.29R; 24 hours to 7 days 21 retests, C1 14, +0.15R, C2 12, +0.27R; over
+7 days 15 retests, C1 11, -0.35R, C2 9, -0.32R.
+
+**Deviations.** (1) The heading says "about 13:00 UTC"; the registration was committed at 12:54 UTC (`90ecef2`),
+before the script existed. (2) The split by time to the first touch was added after the first run and is marked so;
+the run was repeated with it and every registered number was identical. (3) The bar files are a later copy than
+H107's (other md5); inside the cut they give H107's rule A result exactly. (4) Only the H116 tests were run (10
+pass), not the full suite; no engine file was touched.
+
+**Reading.** A capitulation low was revisited within 30 days in six cases of ten, and when it was, price mostly did
+not stop there: it traded under the low within four days in about nine revisits of ten and closed a 15-minute bar
+under it in eight of ten. Buying the retest, either when the low first holds (C1) or after a sweep is reclaimed (C2),
+lost a little after fees over 2019 to 2025, on too few trades to judge. As in H107 the halves disagree: the first half
+(2022 above all) lost, C1's second half is positive on 17 trades. History gives no support for covering a short at
+the old low and buying there because the low should hold. The rules are written out exactly in the report, so they
+can be ported to a paper book if the owner wants the data points; that would be collecting evidence, not acting on
+an edge. A replay is post-mortem material, not validation.
