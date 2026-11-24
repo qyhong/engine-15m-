@@ -6147,3 +6147,71 @@ nothing changes: the owner decides which markets a book trades.
 weak evidence and leads only to a forward paper shadow. Paper fees (0.01% a side on USDJPY), fills at the stop price or
 the bar's open, no slippage, no swap or financing cost on a leveraged position held for days. The voices' voting list
 was chosen on full history (as in H90). Dollar totals on this market have moved between store rebuilds.
+
+### H114 results (24 Nov 2026, runs 12:20 and 12:24 UTC on the laptop, 41 s and 11 s; `research/out/h114_usdjpy_stop/report.md` + `results.json`; script `research/h114_usdjpy_stop.py`, tests `tests/test_h114.py`)
+
+Registered in commit `e2758da` (12:17 UTC; `d70dc57` corrected only the time in the heading), both before the script
+existed or any number was computed. USDJPY, 2020-04-08 21:00 to 2026-11-24 04:30 UTC. **Gate passed:** the 2.0 book is
+the engine's own `b_targets` book, every trade and the marked equity at every bar (723 trades). The first run refitted
+38 weekly fits that the copied cache did not hold (they are in the worktree's own `fits_today`); the second run read all
+246 from the cache and gave the same numbers. The 2.0 book agrees with what H62 and H65 published (first half -$1,986
+and -5.5R, the same to the dollar; 722 trades to 20 Nov, 723 with the one closed since).
+
+**Verdict for the 3.0 stop: DOES NOT PASS.** First half holds (by the guard: -17.5% against -19.9%, worst fall -46.2%
+against -53.1%), second half NO (-14.0% against +16.2%), holdout NO (-18.4% against -17.4%), net over all history NO
+(-$2,910 against -$688). No proposal for a forward paper book follows.
+
+Each cell: trades, share won, sum of R, net $, net % of the period's starting equity, worst fall inside the period,
+net / worst fall.
+
+| Stop | All | First half (to 2023-06-08) | Second half (holdout included) | Second half before the holdout | Holdout (2025-11-11 on) | Forward (2026-11-11 on) |
+|---|---|---|---|---|---|---|
+| 2.0 (current) | 723, 42%, +9.0R, -688, -6.9%, -53.1%, -0.13 | 338, 41%, -5.5R, -1,986, -19.9%, -53.1%, -0.37 | 385, 43%, +14.6R, +1,298, +16.2%, -49.5%, +0.33 | 299, 44%, +24.1R, +3,266, +40.8%, -42.4%, +0.96 | 86, 41%, -9.5R, -1,968, -17.4%, -28.1%, -0.62 | 4, 50%, -1.1R, -80, -0.9%, -6.3%, -0.14 |
+| 3.0 (PRIMARY) | 453, 47%, -10.7R, -2,910, -29.1%, -46.2%, -0.63 | 215, 44%, -7.1R, -1,754, -17.5%, -46.2%, -0.38 | 238, 49%, -3.6R, -1,156, -14.0%, -43.8%, -0.32 | 189, 52%, +7.0R, +442, +5.4%, -33.4%, +0.16 | 49, 39%, -10.7R, -1,598, -18.4%, -25.4%, -0.72 | 2, 50%, -0.7R, -57, -0.8%, -4.2%, -0.19 |
+| 4.0 (descriptive) | 296, 54%, +8.0R, +896, +9.0%, -31.4%, +0.28 | 155, 52%, +6.4R, +893, +8.9%, -31.4%, +0.28 | 141, 56%, +1.5R, +3, +0.0%, -28.2%, +0.00 | 106, 59%, +10.3R, +1,869, +17.2%, -17.5%, +0.98 | 35, 46%, -8.7R, -1,866, -14.6%, -20.0%, -0.73 | 3, 67%, -0.5R, -38, -0.3%, -3.1%, -0.11 |
+
+- **No pattern across the three stops.** Net -688, -2,910, +896; sum of R +9.0, -10.7, +8.0; mean R +0.013, -0.024,
+  +0.027. Two standard errors of the sum of R (trades taken as independent) are 72R, 50R and 35R: none of the three
+  can be told from zero. The 4.0 stop, not graded, would not have passed either (second half +$3 against +$1,298).
+  Fees: $6,236, $2,468, $1,467.
+- **Why a wider stop does not pay here (from the checks).** The loss at a stop stays about -1R (mean stop-out -1.05R,
+  -1.04R, -1.03R), but Target 1 hardly moves out with the stop: median 0.68%, 0.77%, 0.73% of price, which is 1.31R,
+  0.89R and 0.66R. Half of the Target 1s come from a Fibonacci level and half from the median day's travel, never from
+  1.5R. More trades win (42%, 47%, 54%) and each win is smaller. Every trade's targets were reproduced from
+  `plan_targets` (0 not reproduced).
+- **Stops and noise.** After a stop-out, price was back at the entry within 96 sessions in 36% of cases at 2.0 (146 of
+  401), 20% at 3.0, 7% at 4.0; it ran a further full stop distance instead in 39%, 22%, 14%. At no width is the
+  first share the larger one: no sign that the stops are hit by noise more than a price with no memory would hit them. Of the 146 returns at
+  2.0, a 3.0 stop from the same entry holds through 110 (75%) and a 4.0 stop through 133 (91%).
+- **Size.** Median stop distance 0.45%, 0.71%, 0.88%; median leverage 4.5x, 2.8x, 2.3x; no trade at the 100x cap;
+  trades at the 1x floor (stop more than 2% away, so the loss exceeds 2%): 0%, 1.8%, 5.7%. Worst trade -1.52R, -2.58R,
+  -1.94R (by the code a loss past -1R and fees needs a bar that opens beyond the stop; not checked trade by trade).
+- **"Leave it out", a re-read: no proposal by the registered rule.** The current rule's sum of R: first half -5.5R,
+  second half +14.6R, holdout -9.5R. Not all three at or below zero. As the registration said, the published numbers
+  already showed this. What the three non-overlapping parts show: -5.5R, +24.1R (2023-06-08 to 2025-11-10), -9.5R; in
+  all +9.0R on 723 trades with a chance band of 72R, net -$688, worst fall -53.1%. The record neither earns nor
+  loses on this history by more than chance. Leaving the market out stays the owner's decision; the Setups book on
+  USDJPY is paper only (the vault copies BTC and ETH).
+
+**Deviations and things to know.**
+- **The registration's sentence "This can only make a pass harder" (change 2, the guard) was wrong.** In the first half
+  the 3.0 stop lost less with a shallower fall, so the guarded leg holds, while the plain ratio is not higher (-0.38
+  against -0.37). With the plain ratio in every leg the verdict is the same: does not pass (no leg holds).
+- **The guard's unit.** The registration did not say whether "its net is higher" means dollars or percent. The code,
+  written before the run, uses percent of the period's starting equity. In the holdout the two differ: -18.4% against
+  -17.4%, but -$1,598 against -$1,968 (the 3.0 book entered the holdout with $8,688 against $11,280). In dollars that
+  leg would hold. The verdict does not turn on it: the second half and the total fail either way.
+- **Added after the first run, descriptive:** the chance band on the sum of R (two standard errors), and the plain
+  ratio beside each guarded leg. Neither enters the verdict. The second run was made only to add them.
+- **Not verified:** that the 38 fits made on the laptop equal the live box's own (they cover about the last 38 weeks;
+  the 2.0 book's trade count and first-half numbers match H62's, and the gate compares the script with the engine on
+  the same odds, not with the box). The live Setups book's six trades of the audit are not the replay's forward
+  trades: the replay arrives at 11 Nov in a position of its own (4 closed trades, -$80, against 6 and -$196 live).
+- **Limits** as registered: one market, one history already looked at (H90, pooled first half), two stop values with
+  no correction, paper fees of 0.01% a side, no slippage and no financing cost, compounding books.
+
+**Reading.** On this history a wider stop does not improve the Setups rule on USDJPY: the registered stop (3.0) is
+worse than today's in the second half, in the holdout and in total, and the three widths together show noise around
+zero. So this study finds no evidence that the stop distance is what makes USDJPY weak. What the post-mortem pointed
+at (entries forced on the trend's side) was not tested here. No engine code was changed. Nothing is proposed for a
+forward shadow. Whether USDJPY stays in the Setups book is the owner's call.
