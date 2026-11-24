@@ -6025,7 +6025,7 @@ Nothing in the registered rule was changed. What the registration left open, and
 - **Step cost, measured on the laptop** with synthetic records and a 21 MB bar file: about 0.03 s with today's two
   weeks of arm records, 0.08 s after three months, 0.23 s after a year. It grows with the length of the arms' records.
 
-## H111. Pairs as one bet: the Setups book's trades counted at half size when the pair partner already holds the same side, and a cap on trades open in one direction (registered 24 Nov 2026, about 12:35 UTC, before any H111 number on history was computed)
+## H111. Pairs as one bet: the Setups book's trades counted at half size when the pair partner already holds the same side, and a cap on trades open in one direction (registered 24 Nov 2026, about 12:20 UTC, before any H111 number on history was computed)
 
 **Prompted by:** the live audit of 24 Nov 2026 (`research/out/live_audit_20261124/report.md`, findings 1 and 10, row B
 of its table): BTC and ETH open and close in the same hours, as do gold and silver, and WTI and Brent; the main books
