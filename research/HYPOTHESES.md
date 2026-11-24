@@ -7351,3 +7351,81 @@ is not rewritten), the trigger computed from `playbook9.features` outside `run()
 `playbook9` imported lazily and only for this book; tests in `tests/test_rebound_book.py`. No `CFG` change, no version
 bump; `setups.py`, `signals.py`, `vault_feed.py`, `policy.py`, `backtest.py`, `exits.py`, `config.py` and `live.py`
 are not edited.
+
+### H117 note: implementation choices (24 Nov 2026, written with the code, after the registration was committed as 1dac3df)
+
+Nothing in the registered rule was changed. The registration was committed at 13:28 UTC by the laptop's clock (the
+heading says "about 13:35"). What the registration left open, and what was seen while building:
+- **Where the book lives: not in `shadows.CHALLENGERS`.** The shadow framework cannot restrict a challenger to two
+  markets (its loop runs every book on all eight), and that loop is not guarded: one exception in any book stops
+  every book's step for the group, `b_targets` included, and then the vault's book is not advanced. So `b_rebound` is
+  a module (`engine15/rebound_book.py`) registered in `shadows.MINDS`, the guarded registry H108 added: it is advanced
+  after every challenger and follower, inside a try/except, on BTCUSDT and ETHUSDT only, and the summary and the
+  scoreboard already show such a book on the markets it has. Its rule is read at every step as
+  `dict(shadows.CHALLENGERS["b_targets"]["rule"], rebound=True)` with `b_targets`' own cfg, so it follows the Setups
+  rule of the day. Consequences: the tests that run over `CHALLENGERS` do not cover it (its own file does);
+  `research/challengers.py` does not list it; `a_alloc` lists it as "not registered" (H110 fixed its books).
+- **`engine15/shadows.py` (a money-path file): 109 lines added, none changed or removed.** The doc entry; the guarded
+  registration; `REBOUND_KEPT` and `_rebound_state`; and in `run()`: the state read (`rb`, `None` unless the rule key
+  is on), two inner functions (`open_rebound`, `rebound_done`), the fill of the override at the open, the bar count,
+  the 48-hour exit after the stop and the targets, the trigger and the override before the Setups decision, and the
+  state key written for this book only. Every one of those sits behind `rb is not None` (or `rb_live`, which is then
+  `False`). No other money file was edited; no `CFG` change; no version bump.
+- **That `b_targets` and every other book are unchanged was checked three ways.** (1) `tests/test_money_path_golden.py`
+  is green and its record was not rewritten. (2) `tests/fixtures/rebound_main_books.json` was written by the new test
+  file run on main's code (commit 46df899, before the rule key existed): all sixteen challengers on the golden bars
+  and on a 3,000-bar made-up run (trades, equity, held sides, final state), and a `shadow_state.json` written by
+  main's forward step with where every book stood 280 bars later; the test compares the current code with it,
+  including loading that file and stepping on. Floats are compared to 1e-9 because the made-up bars come from the
+  machine's own `exp`; times, sides and exit words exactly. (3) Once, on the laptop, outside the suite: every
+  challenger under BTC's and gold's cfg on the golden bars and three 4,000-bar runs, plus 120 single-bar resumed
+  steps each and one forward `advance`, pickled from main's code and from this branch and compared bit for bit:
+  129 entries, 88,601 trades, no difference. A fourth test hands every challenger a trigger object that fails when
+  touched: with the key off nothing reads it.
+- **The order at a trigger's close.** The trigger is read after that bar's own stop and target fills and before the
+  Setups decision. When the override acts, or while a rebound long is open, or in the bar it ended, `policy.decide`
+  is not called at all. From SHORT the short is closed by the book's own `close()` at the next open and the long
+  opened at the same price in the same bar. A LONG book counts the trigger and the Setups rule then decides as
+  always, a flip to short included (tested).
+- **The trigger's frame.** The step's own bars (`prep["px"]`, the bars the book trades on, which the live step reads
+  from the same files `playbook9` reads): `playbook9.TAIL_BARS + 8` bars before the first new bar plus the new bars,
+  as that book's own step. Bars that are not numbers are left out. On planted bars the flags equal
+  `playbook9.features` on the whole frame and the ATR agrees to 1e-9; a test halves every bar after the deciding one
+  and nothing changes. The funding file is read only when a trigger is there; rule B's flag is recorded as true,
+  false or unknown (no fresh funding reading), and a file that cannot be read leaves rule A's trigger as it is.
+- **The long against `playbook9`.** Bar by bar against `playbook9._open_trade` / `_walk_bar` on planted bars: the
+  entry, stop and targets to the last digit, the stop, Target 1 and the share held at every bar, the exit bar, kind
+  and price, and R, over all five kinds of exit. The forward book (through `shadows.advance`, with no odds so that
+  only the override trades) against `playbook9.replay` from the same start: the same trades one for one, and the
+  same count of triggers skipped while a long was open. On the laptop's real bar files the book's own code gives
+  H107's two published event trades of 21 Nov 2026 (fills 57,193.99 and 1,613.70; +1.31R and +1.16R): a check of the
+  code on trades already published, not a result.
+- **Size, fee and R.** On BTC and ETH today the book's fee is 0.10% a side and its leverage cap 1.0, so the long is the
+  whole book at 1x, `r_mult` equals H107's R, and `r_h107` equals both (tested). A test with another fee and a cap
+  of 5 shows the two R's apart and the quantity following `backtest.leverage` with the trade's own stop distance.
+- **Words.** Entry word `REBOUND`. Exits `STOP`, `T1+STOP_BE`, `T1+T2`, `T1+TIME`, `TIME` (`playbook9`'s STOP, T1+BE,
+  T1+T2, T1+TIME, TIME). A short the override replaced ends `REBOUND` or `T1+REBOUND`. A `TIME` exit is booked at the
+  close of the 192nd bar with that bar's open time as `t_out_ms`, as every exit inside a bar.
+- **The comparison's start.** `late_starts.b_rebound.<coin>` keeps `ref_utc` (the close of the book's first live
+  step), `own_eq` and `setups_eq` (both books' marked equity at that close); `rebound_book.compare` counts both from
+  there. The generic shadow table's "vs main" column for this book is against the fresh main copy since its start,
+  as for every late book; the registered line is `vs_setups_book` on the scoreboard row.
+- **Added beside the read, not registered:** each rebound long also records what `b_targets` made on its own book
+  from the trigger's close to the close of the bar the long ended in (`setups_pct`; `setups_exact` only when both
+  ends were single-bar steps). Descriptive, in `override.against_setups_same_bars`; it carries no verdict.
+- **After the engine was down** the missed bars are walked one by one, and a trigger among them is taken at the
+  rule's own fill; unlike `playbook9` it is not marked late. A trigger at a step whose trigger could not be computed
+  is lost; `h117.no_trigger_steps` counts such steps.
+- **Limits.** The state keeps the last 50 rebound longs a coin (the trade file keeps all). The rule key was built and
+  tested only on top of the Setups rule: with a pullback entry, a flip limit or a delayed fill it is untested, and
+  BTC and ETH have none of those.
+- **Existing tests changed:** four assertions that list the books of a crypto group's view (`tests/test_shadows.py`
+  two, `tests/test_floor_book.py` one, `tests/test_regime_trust.py` one) now include `b_rebound`. Nothing else.
+- **Telegram.** The bot's generic closed-trade card will fire for this book as for `b_trend30` and `b_wait_stop`
+  (a name was added: "Setups + rebound long (shadow, NOT passed)"); it was not added to `QUIET`. No card of its own.
+- **Step cost, measured on the laptop on the real bar files (276,613 bars a coin):** 20 to 35 ms a step for both
+  coins, of which the trigger is about 3 ms a coin and the rest is building the book's inputs from the evidence
+  frame; 132 ms to catch up 403 bars.
+- **Not verified:** nothing was run on the live box, and the live `shadow_state.json` was not seen (the test uses a
+  file written by main's own code on planted bars; the laptop's stale copy has the same keys). The full suite was
+  not run here. The web tab was not opened: the page block is the generic one. No Telegram card was sent.

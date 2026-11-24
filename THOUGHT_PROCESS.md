@@ -95,6 +95,15 @@ and every later change is in `VERSION_NOTE` in engine15/config.py)
   after the signal. The owner asked for the book after the 21 Nov low; on history rule A was flat over 123 trades and
   rule B had 32, so this is a record to watch, not a rule that passed. The Telegram bot sends the owner a card when a
   rule fires. The books keep their own state, decide nothing for the main books and never reach the vault.
+- **Setups copy with the rebound override (24 Nov 2026, H117, NOT passed):** `b_rebound`
+  (`engine15/rebound_book.py`) is the Setups book on BTC and ETH with one change. When rule A above fires and the
+  book is short or flat, it closes the short and goes long at the next open (H107's trade: stop 3 x ATR 1h, half out
+  at +1R with the stop to the entry, the rest at +2R or 48 hours after the signal), and the Setups rule is not asked
+  again until that long has ended; a book that is already long only counts the trigger. The owner asked for it ("So
+  we can earn the short and then turn long"); history does not support it (rule A was flat, and in the last year
+  the shorts it withholds were the book's better ones), and the override itself was never run on history. It is
+  read at 30 closed trades against the Setups book over the same days; most of those will be ordinary Setups trades.
+  Paper only: the vault copies `b_targets`, never this book.
 - **Lean live step (11 Nov 2026, opt-in with `ENGINE15_LEAN=1`):** the live step no longer holds all history
   in memory. Every session's readings and feature matrix are kept on disk (`engine15/evcache.py`,
   `data/evcache/`, memory-mapped). Each step computes only the new sessions plus a 30-day refresh for late

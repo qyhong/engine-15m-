@@ -26,6 +26,11 @@ The capitulation-long books `p9_rebound_a` and `p9_rebound_b` (`engine15/playboo
 NOT passed) run H107's rules A and B forward on BTC and ETH because the owner asked for them, although history does not
 support the rule; they keep their own state in `data/capit_long_state.json`, the Telegram bot sends the owner one card
 per trigger, and they never reach the vault.
+The Setups copy `b_rebound` (`engine15/rebound_book.py` and the rule key `rebound` in `shadows.run`, registry
+`shadows.MINDS`; H117, 24 Nov 2026; paper only, NOT passed) is `b_targets` on BTC and ETH with one override: at an H107
+rule A trigger a short or flat book goes long at the next open (H107's trade) and the Setups rule is not consulted
+while that long lives. Started on the owner's word although history does not support the rule; its state is its own key
+in `data/shadow_state.json`, and it never reaches the vault.
 The engine version is `CFG["version"]` in `engine15/config.py` (think15-v5.2.10 on 24 Nov 2026); what each version changed
 is in `VERSION_NOTE` there and in THOUGHT_PROCESS.md "Now". It runs on the Singapore box, not on this laptop (HANDOFF.md).
 `out/live/scoreboard.json` judges every book on live trades only.
@@ -64,6 +69,10 @@ real futures trades from it. So a change in any of these changes real entries, s
 - `engine15/vault_feed.py`: all of it (the book body, the exit intents, the state in `data/vault_feed_state.json`).
 - `engine15/config.py`: every constant the above read (`idle_max`, `stop_units`, `risk_per_trade`, fees, flip and edge
   thresholds, the release guard, the higher-timeframe bias).
+
+`b_rebound` (H117) is a paper copy of the Setups book that runs through the same `run()` behind the rule key `rebound`
+(off for every other book). The vault must never read it: `setups.BOOK` (and `signals.BOOK`) stay `b_targets`. Pointing
+the feed at `b_rebound` is a real-money decision that only the owner takes (docs/CHARTER.md, the rebound plan).
 
 The list as files is `tools/money_files.txt`. Rules for it:
 

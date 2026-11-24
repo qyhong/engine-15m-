@@ -39,6 +39,35 @@ every step it recomputes the four tables from the prep's graded calls. State: `s
 `<group>: regime trust mind (H108, paper) 0.0Ns: <market> <bucket>, ...`. Trades: `shadow_trades_m_regime_trust_<market>.csv`.
 Scoreboard: its row in `scoreboard.json` carries `label`, `passed: false` and `vs_main_copy` (H108's comparison line; no
 number and no word before 30 closed trades). The Telegram ranking shows it under its raw name (no short name was added).
+H117 (24 Nov 2026; owner on step 1 of the rebound plan: "1. Yes.") adds the paper shadow book `b_rebound`
+(`engine15/rebound_book.py`; NOT passed, NOT deployed when this was written): `b_targets` on BTCUSDT and ETHUSDT only, plus
+the rule key `rebound` in `shadows.run`. At an H107 rule A trigger (`playbook9.features` on the step's own bars, the
+last 45 days of them) a SHORT book closes the short and opens a long at the next open, a FLAT book opens the long, a
+LONG book counts the trigger; the long is H107's trade (stop 3 x ATR(1h), half at +1R and the stop to the entry, the
+rest at +2R, out at the close of the 192nd bar) at the Setups book's own size and fee, and the Setups rule is not
+consulted while it lives. It is a rule of `run()` but it is NOT in `shadows.CHALLENGERS`: that loop runs every book on
+all eight markets and one exception in it stops every book's step, `b_targets` included. It sits in `shadows.MINDS`,
+so `shadows.advance` calls it after every challenger and follower inside a try/except; `playbook9` is imported only
+inside `rebound_book.trigger`. State: `shadow_state.json` `books.b_rebound.<coin>` (the book as `b_targets` keeps it,
+plus `rebound`: the open long, a trigger waiting for the next open, the counts `seen` / `from_short` / `from_flat` /
+`while_long` / `in_trade`, the last 50 rebound longs; plus `h117`: `last_ms`, `no_trigger_steps`) and
+`late_starts.b_rebound` (its start, the main copy's equity then, and `ref_utc` / `own_eq` / `setups_eq` for the
+comparison with `b_targets`). It starts FLAT at the first step after the deploy; no key of any other book moves.
+Log, one line per crypto step: `crypto: b_rebound (H117, paper) 0.0Ns: BTCUSDT <side>, ETHUSDT <side>`; on events
+`b_rebound <coin>: rule A trigger at the ... UTC close, taken from SHORT|FLAT ...`, `... counted, not taken: ...`,
+`... the rebound long of ... closed (...)`; on trouble `the rebound trigger could not be computed (...): this step
+runs as the Setups rule` (the step then is plain `b_targets`; an open rebound long is still managed) or `b_rebound
+failed on <coin>` (not advanced; the next step walks the missed bars from `h117.last_ms`). Trades:
+`shadow_trades_b_rebound_<coin>.csv` (entry word `REBOUND`; exit words `STOP`, `T1+STOP_BE`, `T1+T2`, `T1+TIME`,
+`TIME`; a short it replaced ends `REBOUND` or `T1+REBOUND`). Page: `shadows.books.b_rebound` (two coins; each view
+adds `label`, `rebound_long`, `rebound_triggers`, and for an open rebound long `rebound_from`,
+`rebound_time_exit_utc`). Scoreboard: its row carries `label`, `passed: false`, `vs_setups_book` (H117's comparison
+line; no number and no word before 30 closed trades) and `override` (the override's own record, no verdict). The
+Telegram bot sends its generic closed-trade card for it as for the other Setups copies (it is not in `QUIET`).
+Measured on the laptop, real bar files, 276,613 bars: 20 to 35 ms a step for both coins (the trigger about 3 ms a
+coin). The vault never reads it: `setups.BOOK` stays `b_targets`. Tests: `tests/test_rebound_book.py`, with
+`tests/fixtures/rebound_main_books.json` (what every book gave on main's code before the rule key; never rewritten to
+make a change pass).
 H109 (24 Nov 2026) adds the exit learner `b_learn` (`engine15/learn_book.py`, BTC and ETH, paper only, NOT passed): it
 copies the next trade of whichever of six exit shadow books leads in the entry's market state. It is not a rule of
 `shadows.run` and not in `shadows.FOLLOWERS`; `reports.scoreboard` runs it (see "Exit learner" below).
