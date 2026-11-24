@@ -741,3 +741,27 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   `research/VERDICT_RULES.md`), everything the Setups page and the Telegram alerts read, and `signals.py` are exactly
   as they were. Whether the by-day verdict should become the one shown is the owner's decision, not yet made. No
   version bump (no constant and no trading rule changed).
+- **The scoreboard's by-day read is live** (24 Nov 2026, deployed 12:19:02 UTC, commit 5edab35, 429 tests of the
+  scoreboard's readers; no money file changed, no version bump). The 12:30 UTC step took 108 s (115 to 129 before) and
+  the 12:30 books reached the vault on time; `scoreboard.json` shows `b_targets` "ahead" per trade and "undecided" by
+  day, `b_trail` "ahead" on both. The AI Trading session confirmed its page reads rows by named fields and ignores the
+  new keys. Told by that session for the record: vault member 6 is on full balance at 3x since 12:59:50 UTC.
+- **H111 to H114: none passes** (24 Nov 2026; each registered before any number, run on the laptop from a copy of the
+  box's evidence store, one run at a time; reports in `research/out/h11*/report.md`). Nothing live changes.
+  **H111** (pairs as one bet, Setups rule, eight markets): halving the second trade of a pair fails every leg; it cuts
+  the worst fall 34% by cutting size 31%, and random halving does as well or better in 71% of 2,000 draws; the halved
+  trades are not the worse ones. The audit's observation holds on history (five or more markets on one side 77% of the
+  time; on 17 of the 20 worst days both members of a pair lost). **H112** (an entry bar per market): fails two of three
+  legs (h2 sum R +2.1 against +18.3; real calls no better than forced entries). It corrects the audit's finding 2: on
+  gold, silver, USDJPY and the S&P the Lead has almost never reached 5 points since mid-2023 (gold last on 22 Apr
+  2025, the S&P on 27 Sep 2023), but on WTI and Brent it clears 5 points as often as on crypto (holdout 23% of steps);
+  the 14 live days were a quiet spell for oil. Why the odds on the four markets moved so close to even was not studied.
+  **H113** (the Lead after a capitulation low, BTC and ETH): over 76 lows the Lead first favours up after a median 20
+  hours and still favours down a day later in 79% of events; it reached +5 points within 72 hours in 29% (0 of 11 in
+  the holdout). Shorts decided in the 48 hours after H107's trigger did worse than other shorts in both halves (-0.085R
+  against -0.032R; -0.501R against -0.093R) but better in the holdout (+0.588R against +0.079R, 28 trades), so the
+  proposal does not stand; the holdout has now been read for this question. **H114** (USDJPY's stop): a 3-barrier stop
+  is worse than the current 2 (-$2,910 against -$688 over 2020 to Nov 2026) and fails h2, the holdout and the total;
+  no sign of stops hit by noise; no "leave it out" proposal by the registered rule (sum R -5.5, +14.6, -9.5).
+  The four worktrees `engine-15m-h111` to `-h114` are kept (each holds a `data` LINK to `engine-15m-q86\data`: remove
+  the link with `rmdir` before removing a worktree, never with a recursive delete).
