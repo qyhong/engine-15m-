@@ -266,6 +266,7 @@ def test_check_sends_it_beside_the_other_alerts(tg, monkeypatch):
     monkeypatch.setattr(tn, "refit_marks", lambda: [0, 0])
     monkeypatch.setattr(tn, "disk_free_gb", lambda path=None: 50.0)
     monkeypatch.setattr(tn, "vault_check", lambda st, tok, chat, now: [])
+    monkeypatch.setattr(tn, "capit_check", lambda st, tok, chat, now: [])
     monkeypatch.setattr(tn, "signals_check", lambda *a, **k: None)
     monkeypatch.setattr(tn, "early_check", lambda *a, **k: None)
     st = {"chat_id": 7, "summary_day": "2026-11-19"}

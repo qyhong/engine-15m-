@@ -259,6 +259,37 @@ crypto replay).
   failure logs one line, `exit learner: ...`, and the scoreboard goes on. Constants are in the module (none in `CFG`);
   they are H109's and are not to be tuned. To read it by hand: `py -3 -m engine15.learn_book` (prints the block, writes
   nothing). Measured cost: about 0.03 s a step now, 0.23 s with a year of records. Tests: `tests/test_learn_book.py`.
+- Capitulation-long books `p9_rebound_a` / `p9_rebound_b` (24 Nov 2026, H115; owner: "build the paper
+  capitulation-long book with the Telegram alert"; paper only, NOT passed; NOT deployed when this was written):
+  `engine15/playbook9.py`, in `reports.PLAYBOOK_MODULES`, so it runs with the strategy books after the groups fetched
+  their bars. H107's rule A and rule B on BTC and ETH (a fresh 30-day low, 10% under a week earlier, a 2 x ATR(1h)
+  rebound; rule B also needs negative funding; stop 3 x ATR(1h), half out at Target 1 then the stop at the entry, the
+  rest at Target 2 or at the close 48 hours after the signal), $10,000 a trade, 1x, 0.10% a side. History does not
+  support it (rule A flat over 123 trades, rule B 32 trades): it runs because the owner asked.
+  UNLIKE the other new paper books IT KEEPS STATE: `data/capit_long_state.json` (written atomically: the last bar seen
+  per coin, the waiting and open trades with their fixed levels, the closed trades, the alerts). A decision is made
+  once, by the step that first sees the bar. The record starts at the first step after the deploy (`started_utc` in
+  the file; never before `playbook9.REGISTERED`). A missing or unreadable file means the book starts flat again from
+  that step: one log line, the unreadable file kept as `capit_long_state.json.bad-<unix time>`, and the record made
+  so far is no longer on the page or the scoreboard. The daily laptop backup holds `data/`; the hourly
+  `tools/server/state_copies.py` does NOT list this file. Each step reads the tail of the two bar files (45 days plus
+  the bars not seen yet) and the two funding files; rule B fires only on a rate set at most 9 hours before the
+  deciding close (`FUND_MAX_AGE_MS`), else one line `playbook9 <coin>: rule A fired ... rule B does not fire`. It logs
+  only on events (a signal, a fill, a close, a state problem), every line starting `playbook9`. A failure is one line
+  and the step goes on. Measured on the laptop on the real files: 12 ms a step with no new bar, 26 ms with a new bar
+  on both coins, 34 ms to catch up five days. Page: block `playbook.playbook9` (`not_passed: true`, per-coin readings
+  under `coins`: how far each coin is from a signal). `a_alloc` lists both books under `books_not_registered`
+  (H110 fixed its 37 books). To read it by hand: `py -3 -m engine15.playbook9` (prints the state file, writes nothing).
+  THE ALERT: `telegram_notify.capit_check`, in the bot's own process (`mind15-telegram`; restart it after a deploy so
+  it loads the new code). It reads the state file (never imports the book) and sends, to the owner's locked chat only,
+  one card per coin and deciding close at which a rule opened a paper trade (rule(s), entry, stop, Target 1 and 2, the
+  48-hour exit time, risk %, funding, "Paper only, NOT passed" with the history line; a card sent more than 30 minutes
+  after the close says "Late") and one card when a coin's trades close (R per rule). Delivered ids are in the bot's
+  state under `capit_alerted`; a failed send is retried at the next check; nothing older than 48 hours is sent. These
+  books' closes do not also get the generic closed-trade card (their ids start with `p9_`, which is in
+  `telegram_notify.QUIET`); 30 trades and a verdict change alert as for any book. Tests: `tests/test_playbook9.py`
+  (parity with `research/h107_capitulation_rebound.py` trade for trade on the real files, no look-ahead, forward
+  only, stale funding, state and restart, the cards).
 - "Setups moving against" alert (22 Nov 2026, owner asked for it): `telegram_notify.adverse_update`, hooked into
   `check()` in its own try/except. It reads the page's `b_targets` book and the market closes; its state is the key
   `adverse` in the bot's state (per market: trade id, entry, starting stop, flags a, b and t1). Thresholds

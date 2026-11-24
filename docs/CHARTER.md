@@ -765,3 +765,17 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   no sign of stops hit by noise; no "leave it out" proposal by the registered rule (sum R -5.5, +14.6, -9.5).
   The four worktrees `engine-15m-h111` to `-h114` are kept (each holds a `data` LINK to `engine-15m-q86\data`: remove
   the link with `rmdir` before removing a worktree, never with a recursive delete).
+- **The capitulation-long paper books are built, with a Telegram alert. NOT passed, NOT deployed** (24 Nov 2026;
+  H115). The owner: "So how can we seize the opportunity when the capitulation occur. How can we do the long setup?"
+  and then, to the proposal of a paper book with an alert: "build the paper capitulation-long book with the Telegram
+  alert". `engine15/playbook9.py` runs H107's rule A and rule B side by side on BTC and ETH as two forward paper books
+  (`p9_rebound_a`, `p9_rebound_b`; $10,000 a trade, 1x), from the first step after the deploy; the Telegram bot sends
+  the owner one card when a rule fires (entry, stop, targets, the 48-hour exit, the risk) and one when a trade closes.
+  History does not support the rule, and the registration says so first: rule A was flat over 123 trades (it lost in
+  the first half and won in the second), rule B had 32 trades, too few to judge (H107; H70, H71 and H113 agree).
+  Registered before any code (commit 98a0954). One thing differs from the proposal's short wording ("half off at
+  Target 1 and the rest closed after 48 hours"): the book runs H107's trade exactly, which also moves the stop to the
+  entry after Target 1 and takes the rest off at Target 2 if price gets there, because the history numbers are for
+  that trade. The read is the scoreboard's at 30 and at 60 closed trades per rule: at H107's pace about a year and a
+  half for rule A's first read and about six years for rule B's. A good read only opens a discussion with the owner;
+  nothing reaches the Setups book or the vault. It goes live with the next deploy after the merge and the full suite.

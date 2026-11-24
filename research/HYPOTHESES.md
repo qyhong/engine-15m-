@@ -7063,3 +7063,169 @@ lost a little after fees over 2019 to 2025, on too few trades to judge. As in H1
 the old low and buying there because the low should hold. The rules are written out exactly in the report, so they
 can be ported to a paper book if the owner wants the data points; that would be collecting evidence, not acting on
 an edge. A replay is post-mortem material, not validation.
+## H115. A forward paper book for H107's capitulation-rebound long on BTC and ETH: rule A and rule B side by side, with a Telegram alert when a rule fires (registered 24 Nov 2026, about 12:55 UTC, before any H115 code existed; no new number on history was computed for it)
+
+**Prompted by:** the owner, 24 Nov 2026: "So how can we seize the opportunity when the capitulation occur. How can we
+do the long setup?" and then, to the proposal of a paper book with an alert: "build the paper capitulation-long book
+with the Telegram alert". **Paper only. NOT passed.** It places no order, it changes no book and no decision, and it
+never reaches the VIP vault.
+
+**What must be said first: history does not support this rule. The book is started because the owner asked for it,
+not because a study passed.** What is already on record:
+- **H107 (the two rules run here), 2019-10 to 2025-11, BTC + ETH, after fees.** Rule A: 123 trades, 47% won, -0.006R
+  a trade (95% month-clustered range -0.220 to +0.273), -0.7R in all: FLAT. It lost in the first half (83 trades,
+  -0.127R, -10.6R) and won in the second (40 trades, +0.246R, +9.8R); BTC alone -0.041R, ETH alone +0.021R; 51 of 123
+  stopped; longest losing run 11; deepest fall of cumulative R -19.3R; 2022 alone 44 trades, -14.1R. Verdict by its
+  registered rule: FAILS. Rule B (A with negative funding): 32 trades, 59% won, +0.194R a trade (-0.110 to +0.622;
+  p 0.182), +6.2R in all; 16 of the 32 are in 2022. Verdict: TOO FEW TRADES TO JUDGE (no pass).
+- **H70:** 18 other rebound-long rules out of an oversold state ALL lost after fees in 2020-02 to 2023-06 (mean R -0.05
+  to -0.25 a trade). **H71:** none of the engine's own readings carried confirmed information about the next 24 hours
+  in an oversold state.
+- **H113:** counted from rule A's trigger without hindsight, the price was +0.6% / +1.3% / +1.6% above the trigger's
+  close after 24 / 48 / 72 hours at the median, and -1.2% / -0.7% / -3.7% in the holdout year. The trigger "does not
+  tell the two kinds of bounce apart": bounces off new lows kept failing in 2022 and in 2026.
+- **The one event the rules were shaped on:** at the 21 Nov 2026 06:45 UTC close both rules bought on both coins (BTC
+  57,194, ETH 1,613.70) and made +1.31R and +1.16R. That is one event, seen before the rules were written. It is not
+  evidence.
+
+So the honest expectation is a book that is about flat after fees, with long losing runs when the market keeps
+falling. Nothing here may be described as having an edge.
+
+**The rules: H107's, exactly as registered there (nothing is tuned).** Per coin (BTCUSDT, ETHUSDT), at the close of
+each 15-minute bar k, from bars up to k only:
+- ATR(1h) = Wilder ATR(14) of the 1h bars (`data.resample`, `indicators.atr_wilder`), read through
+  `data.htf_on_15` (closed 1h bars only). low16 = the lowest low of bars k-15..k (4 hours). low30d = the lowest low of
+  the bars whose open is within 30 days up to k (30 days of bars needed). c7 = the close of the last bar whose open is
+  at or before open(k) - 7 days. Funding = the last rate SET at or before the close of bar k.
+- **Rule A:** (1) low16 <= low30d (a fresh 30-day low in the last 4 hours); (2) low16 / c7 - 1 <= -10%; (3) close(k) >=
+  low16 + 2.0 x ATR(1h); and (1)-(3) were NOT all true at k-1 (onset only).
+- **Rule B:** rule A's signal AND the last funding rate < 0 (shorts are paying).
+- **The trade (both rules):** long at the open of bar k+1 = P. R = 3 x ATR(1h) at k. Stop P - R. Bars k+1 .. k+192
+  (48 hours) are walked; in each bar the stop is looked at first (low <= stop: out at the stop, or at the open if the
+  open is below it); then Target 1 = P + 1R (half out at T1 exactly; the stop on the rest moves to P from the NEXT
+  bar); then Target 2 = P + 2R (the rest out at T2 exactly, also in the T1 bar). What is left goes out at the close
+  of bar k+192. One trade at a time per rule and coin: a signal at k is taken only if k >= the previous trade's exit
+  bar; a signal while that rule's trade is open is counted and not taken.
+- **A note on the owner's summary.** The accepted proposal said "half off at Target 1 and the rest closed after 48
+  hours". H107's registered trade has two more parts: the stop on the rest moves to the entry after Target 1, and the
+  rest goes out at Target 2 (+2R) if price gets there within the 48 hours. The book runs H107's trade exactly, because
+  every history number quoted above is for that trade; a different exit would be a new, untested rule. The alert names
+  both parts.
+
+**Two books, side by side.** `p9_rebound_a` (rule A) and `p9_rebound_b` (rule B), module `engine15/playbook9.py`,
+each on BTC and ETH. They are NOT two independent tests: every rule B trigger is a rule A trigger, and BTC and ETH
+mostly fire at the same close.
+
+**Forward only.** The record starts at the first live step after the deploy (kept in the book's state as
+`started_utc`), and never before 2026-11-24 12:50 UTC (`REGISTERED`). Only a trigger whose deciding bar CLOSES after
+the start counts. No trade from history is ever written into the record; the 21 Nov 2026 event is not in it.
+- The book keeps its own state (`data/capit_long_state.json`, written atomically): the last bar it has seen per coin,
+  an open or waiting trade per rule and coin with its fixed entry, stop and targets, the closed trades, and the alerts
+  made. A decision is made once, at the step that first sees the bar, and is not recomputed later. A restart resumes
+  from the file. A missing or unreadable file means the book starts flat again from that step (an unreadable one is
+  kept beside it for a person to look at); that is logged, and it loses the record made so far, so the file belongs
+  with the engine's other state when the box is backed up.
+- If the engine was down over a deciding close, the step that comes back finds the trigger late. It is still taken at
+  the rule's own fill (the open of bar k+1, already on file), walked bar by bar through what it missed, and marked
+  late; the alert says how late. This keeps the record equal to the rule; it is said here because such a trade could
+  not have been acted on by hand in time.
+
+**Funding for rule B (the live source).** The engine's own funding file, `data/<coin>_funding.csv`
+(`data.load_funding`), which `live._update_bars` refreshes from Binance at every crypto step and which the journal's
+funding reading is built from. Binance sets BTC and ETH funding every 8 hours; in the file since 2019 no two rates are
+more than 8 hours and 47 milliseconds apart. **Stale = the last rate set at or before the deciding close is more than
+9 hours older than that close** (one 8-hour interval plus one hour: four engine steps of grace for a late fetch, and
+far short of a second interval, so a file that missed a whole funding can never pass). When rule A fires and the
+funding is missing or stale, rule B does NOT fire, one log line says so, and the alert says so. Rule B never fires on
+a stale rate. Known limit: at the three closes a day where a new rate is set in the same second (00:00, 08:00, 16:00
+UTC), the step may still hold the previous rate; each decision records the rate it used and when that rate was set.
+
+**Sizing and fees (the strategy books' convention).** $10,000 per trade, per coin and per rule, 1x, not compounded
+(`docs/PLAYBOOK_INTERFACE.md`: "at $10,000 per trade"; crypto is 1x in `backtest.leverage`). Fee 0.10% of notional a
+side, on the entry and on each part's exit (the H107 figure; frozen in the module). Funding is not charged or paid, as
+in H107's R. Each trade records its net R (H107's formula: result after fees over the entry-to-stop distance) and
+its dollars (`pnl_usd` = the net percent return x $10,000). A stop-out loses the stop distance (typically 2% to 5% of
+the price) on $10,000 plus about $20 of fees. Not chosen: sizing to a fixed 2% risk, which the engine uses only where
+leverage is allowed.
+
+**Forward verdict, fixed now.** Per rule, BTC and ETH pooled, by the scoreboard's own rule
+(`reports._stats`, `research/VERDICT_RULES.md` section 2): the 90% range of the mean dollar result per closed trade.
+1. First read: the first server scoreboard whose row for the book shows 30 or more closed forward trades, copied as
+   it stands. Second read: the same at 60. No decision is taken between the two.
+2. The by-day range the scoreboard shows beside it is read with it: BTC and ETH fire together, so 30 trades may be 15
+   to 20 separate events. Mean R per trade (H107's measure) is shown on the book's block; it carries no verdict.
+3. **How long this will take, honestly.** On history rule A made about 20 trades a year on the two coins together
+   (123 in 6.1 years) and rule B about 5 (32). So rule A's first read is about a year and a half away and its second
+   about three years; rule B's first read is about six years away. The triggers come in clusters (44 of rule A's 123
+   trades were in 2022), so it can be much sooner or much later. In practice rule B is a record, not a test.
+4. "ahead" at the first read changes nothing; "behind" at the first read: a post-mortem, then the owner decides
+   whether it runs on. "undecided" at the second read: it stays a labelled record.
+
+**What a pass would and would not change.** "ahead" at BOTH reads opens a discussion with the owner about a next test
+under a new registration, and nothing else. It never by itself reaches the vault, the Setups book or a main book, and
+it does not make H107 pass on history. Whatever it reads, the book stays labelled NOT passed.
+
+**The Telegram alert (to the owner's own chat only).** `engine15/telegram_notify.py` reads the book's state file and
+sends one card per coin when a rule opens a trade: the coin, which rule(s), the entry (the deciding close; the paper
+fill is the next bar's open), the stop, Target 1 and Target 2, the time exit in UTC, the risk in percent, the funding
+reading, and the line that this is paper only, NOT passed, flat on history. One card says both rules when both fire at
+the same close. A second card when a trade closes, with its R. Each is sent once (the bot remembers what it delivered
+in its own state). The bot is a separate process and only reads: a failed alert cannot touch the book. The alert is
+information for the owner; it is not a signal for members and goes to no channel.
+
+**Disclosure: what had been seen when this was written.** H107's results and its event read, H70, H71 and H113 (all
+above). No forward trade of this book exists. No new history run was made for this registration.
+
+**Code (to be written after this is committed):** `engine15/playbook9.py` (the rules ported into the engine, constants
+in the module, none in `CFG`, no version bump), registered in `reports.PLAYBOOK_MODULES`; the alert in
+`engine15/telegram_notify.py`; tests `tests/test_playbook9.py` (parity with `research/h107_capitulation_rebound.py`
+trade for trade on the real bars, no look-ahead, forward only, stale funding, state and restart, the cards). Nothing on
+the money path is edited (`tools/money_files.txt`).
+
+### H115 note: implementation choices (24 Nov 2026, written with the code, after the registration was committed as 98a0954)
+
+Nothing in the registered rule was changed. The registration was committed at 12:50 UTC by the laptop's clock (the
+heading says "about 12:55"); `REGISTERED` is 12:50. What the registration left open, and what was seen while building:
+- **The port and its proof.** `playbook9.features` and the bar-by-bar trade (`_walk_bar`) are H107's
+  `features` and `walk_loop`, with the constants frozen in the module (stop 3.0 x ATR, fee 0.10%), so a later change
+  of `CFG` does not silently change the book. `tests/test_playbook9.py` runs the book's own per-bar code over the
+  whole of both bar files and holds it to the research script: the three flags on every bar, and every trade's
+  deciding bar, entry, stop, targets, exit bar, kind of exit and R (BTC 68 rule A and 13 rule B trades, ETH 94 and
+  37, on the laptop's copy to 24 Nov 2026 04:30 UTC). Those files include the holdout year. The test asserts equality
+  and reports no result; the only results looked at were the two 21 Nov 2026 event trades H107 already published
+  (+1.31R and +1.16R, reproduced). The counts were seen: about 39 rule A trades fall after 10 Nov 2025, against about
+  20 a year before, so the first read may come sooner than the registration's estimate if new lows keep coming.
+- **The two prices in the registration** ("BTC 57,194, ETH 1,613.70") are H107's words. On the files the deciding
+  closes are 57,194.94 and 1,613.76 and the fills at the next open 57,193.99 and 1,613.70.
+- **The start is the first step's clock**, not the last bar on file: the last 15-minute close before the clock of the
+  step that finds no state (never before `REGISTERED`). A bar file that is behind at that step cannot bring an older
+  bar into the record later.
+- **The tail.** Each step reads the last 45 days of bars plus the bars it has not seen. A test recomputes the readings
+  on such a tail cut at the bar, for every rule A bar and 40 random bars a coin: the flags are identical and the ATR
+  agrees to 1e-9 (Wilder's average has forgotten its start after 45 days).
+- **Stale funding never happened on history.** With the 9-hour limit no bar since 2019 has a stale rate, so the guard
+  changes nothing in the parity check; it protects the live read only. Rates carry the exchange's own timestamps,
+  which are up to 47 ms after the 8-hour mark: a rate stamped after a close is not read at that close, as in H107.
+- **"Late".** A trigger is marked late when the step that finds it runs after the NEXT bar has closed (more than 15
+  minutes after the deciding close). The Telegram card adds its own "Late" line when it is sent more than 30 minutes
+  after the close, whatever the reason (the bot was down, the send failed).
+- **The alert's numbers.** At the signal the fill (the next bar's open) is not on file yet, so the card gives the
+  deciding close as "Entry near" and the stop and targets from it; one bar later the state holds the paper fill and
+  a card sent after that shows the exact levels. Trades of one coin that close at the same close share one card. The
+  bot shows paper dollars at its usual 15x display (`DISPLAY_X`); R is not scaled.
+- **The generic close card.** The bot's own closed-trade card is silent for ids that start with `p9_` (its `QUIET`
+  list, there for `p9_cascade`), so these books' closes are announced once, by their own card. The milestone at 30
+  trades and a verdict change still alert. Seen while reading that code, not changed: for the other forward books
+  the generic card cannot fire on a book's FIRST closed trade (the key changes from `<book>|forward` to the
+  scoreboard title when the row first appears).
+- **Signals while a rule's trade is open** are counted in the state and on the page and get no card.
+- **The allocator** `a_alloc` lists both books as "not registered": H110 fixed its 37 books, and that is left as it is.
+- **The web tab.** The block `playbook.playbook9` carries `not_passed: true`; the tab's generic strategy-book code
+  (`web/mind15/index.html` in this repo) lists such a book in its NOT-passed group, with an open trade's entry, stop
+  and targets. Whether the deployed page shows it is the page pipeline's matter; it was not checked.
+- **The hourly state copies** (`tools/server/state_copies.py`) do not include `capit_long_state.json`; the daily
+  laptop backup of `data/` does. Not changed here.
+- **Step cost, measured on the laptop on the real files:** 12 ms with no new bar, 26 ms with a new bar on both
+  coins, 34 ms to catch up five days.
+- **Not verified:** nothing was run on the live box. That the box's funding file is refreshed at every crypto step
+  is read from `live._update_bars`, not observed there. No card was sent to Telegram: the texts are held by tests.
