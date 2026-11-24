@@ -42,6 +42,9 @@ number and no word before 30 closed trades). The Telegram ranking shows it under
 H109 (24 Nov 2026) adds the exit learner `b_learn` (`engine15/learn_book.py`, BTC and ETH, paper only, NOT passed): it
 copies the next trade of whichever of six exit shadow books leads in the entry's market state. It is not a rule of
 `shadows.run` and not in `shadows.FOLLOWERS`; `reports.scoreboard` runs it (see "Exit learner" below).
+Every scoreboard row also carries the by-day read (`days`, `range90_by_day_usd`, `verdict_by_day`; `reports.by_day`,
+24 Nov 2026): the same mean with a range that lets one day's results move together. It is shown beside the registered
+per-trade `verdict`, which nothing here changes.
 
 Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisions), then
 `THOUGHT_PROCESS.md` ("Now" section) and `CLAUDE.md`. This file is only the moving parts.

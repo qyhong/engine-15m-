@@ -1,0 +1,243 @@
+bars span: {'BTCUSDT': ('11-06 18:45', '11-24 11:30', 1700), 'ETHUSDT': ('11-06 18:45', '11-24 11:30', 1700), 'XAUUSD': ('10-28 12:00', '11-24 11:15', 1700), 'XAGUSD': ('10-28 12:00', '11-24 11:15', 1700), 'USDJPY': ('10-29 01:15', '11-24 11:30', 1700), 'SPX': ('08-21 17:30', '11-23 20:45', 1700), 'WTI': ('10-28 09:30', '11-24 11:15', 1700), 'BRENT': ('10-26 13:15', '11-24 11:15', 1700)}
+rows checked: 207
+16 ('b_targets', 'exit price')
+1 ('b_trend30', 'exit price')
+1 ('b_wait_stop', 'exit price')
+
+('b_targets', 'BTCUSDT', '11-11 06:45', 'exit price 71463 outside its bar 11-13 00:30 [70688, 71270] (inside the bar before)')
+('b_targets', 'BTCUSDT', '11-13 04:30', 'exit price 65903 outside its bar 11-14 15:15 [65170, 65787] (inside the bar before)')
+('b_targets', 'BTCUSDT', '11-14 15:30', 'exit price 64065 outside its bar 11-15 03:00 [64868, 65596]')
+('b_targets', 'BTCUSDT', '11-15 03:15', 'exit price 60281 outside its bar 11-20 16:00 [58769, 60025]')
+('b_targets', 'BTCUSDT', '11-20 17:00', 'exit price 58004 outside its bar 11-21 13:15 [59080, 59806]')
+('b_targets', 'ETHUSDT', '11-11 06:45', 'exit price 1941.1 outside its bar 11-13 05:00 [1913.1, 1928.7]')
+('b_targets', 'ETHUSDT', '11-13 05:15', 'exit price 1808.4 outside its bar 11-14 22:00 [1729.2, 1773.7]')
+('b_targets', 'ETHUSDT', '11-15 09:15', 'exit price 1618.2 outside its bar 11-20 19:15 [1581.5, 1601.6] (inside the bar before)')
+('b_targets', 'XAUUSD', '11-11 06:30', 'exit price 3959.9 outside its bar 11-12 08:45 [3933, 3948] (inside the bar before)')
+('b_targets', 'XAUUSD', '11-16 07:15', 'exit price 3790.3 outside its bar 11-18 08:00 [3760.1, 3776]')
+('b_targets', 'XAUUSD', '11-19 17:15', 'exit price 3576.3 outside its bar 11-20 02:00 [3538.3, 3562.2] (inside the bar before)')
+('b_targets', 'XAGUSD', '11-11 06:30', 'exit price 49.922 outside its bar 11-13 14:15 [49.445, 49.67]')
+('b_targets', 'XAGUSD', '11-16 17:30', 'exit price 45.65 outside its bar 11-18 12:45 [45.095, 45.395] (inside the bar before)')
+('b_targets', 'XAGUSD', '11-18 14:15', 'exit price 43.47 outside its bar 11-19 23:30 [42.115, 42.9]')
+('b_targets', 'USDJPY', '11-20 14:15', 'exit price 159.13 outside its bar 11-24 02:00 [158.75, 158.85] (inside the bar before)')
+('b_targets', 'SPX', '11-11 15:45', 'exit price 7187.8 outside its bar 11-20 15:15 [7103.8, 7156.8] (inside the bar before)')
+('b_trend30', 'BRENT', '11-23 02:30', 'exit price 86.365 outside its bar 11-24 05:15 [85.82, 85.99]')
+('b_wait_stop', 'BRENT', '11-23 02:30', 'exit price 86.365 outside its bar 11-24 05:15 [85.82, 85.99]')
+
+===== main
+opened before the 21 Nov low   n=13 won= 8 net=  8781.56 mean=  675.50
+opened after it                n= 6 won= 2 net= -1454.82 mean= -242.47
+next trade after a losing stop: n=9, same side 9, median gap 1.2h; won 7, net 5614.77
+   ETHUSDT  gap   1.2h same side FORCED ->   -670.37 STOP
+   ETHUSDT  gap   1.2h same side FORCED ->    480.79 TRAIL
+   XAGUSD   gap   1.2h same side FORCED ->   1943.65 TRAIL
+   BTCUSDT  gap   1.2h same side FORCED ->   2321.09 TRAIL
+   BTCUSDT  gap   1.2h same side FORCED ->   -405.03 STOP
+   BTCUSDT  gap   1.2h same side FORCED ->    425.47 TRAIL
+   SPX      gap   1.2h same side FORCED ->    371.35 T1_LATE
+   BRENT    gap   1.5h same side FORCED ->    557.97 TRAIL
+   WTI      gap   1.5h same side FORCED ->    589.84 TRAIL
+losing closes by day: {'11-11': 3, '11-12': 2, '11-21': 1, '11-22': 1, '11-23': 2}
+candles with 2+ losing closes: {'11-23 13:45': 2}
+   stop XAGUSD   11-11 05:00 candle range 0.42% = 1.5x its 24h median; trade's best point 0.46%, stop distance ?%, held 12h
+   stop BTCUSDT  11-11 17:15 candle range 0.61% = 2.4x its 24h median; trade's best point 0.13%, stop distance ?%, held 24h
+   stop SPX      11-11 18:15 candle range 0.13% = 0.7x its 24h median; trade's best point 0.18%, stop distance ?%, held 25h
+   stop BRENT    11-12 17:45 candle range 0.95% = 2.8x its 24h median; trade's best point 1.35%, stop distance ?%, held 35h
+   stop WTI      11-12 19:30 candle range 0.50% = 1.4x its 24h median; trade's best point 1.75%, stop distance ?%, held 37h
+   stop ETHUSDT  11-21 13:30 candle range 2.41% = 3.6x its 24h median; trade's best point 0.05%, stop distance ?%, held 7h
+   stop BTCUSDT  11-22 09:45 candle range 1.98% = 5.9x its 24h median; trade's best point 1.24%, stop distance ?%, held 26h
+   stop ETHUSDT  11-23 13:45 candle range 5.47% = 15.1x its 24h median; trade's best point 2.30%, stop distance ?%, held 47h
+   stop BTCUSDT  11-23 13:45 candle range 4.61% = 13.8x its 24h median; trade's best point 0.81%, stop distance ?%, held 27h
+markets short at the same moment: mean 6.2, max 7, share of time with 5 or more: 89%
+fees total 262.38; gross before fees 7589.12
+
+===== b_targets
+opened before the 21 Nov low   n=32 won=23 net=  6759.27 mean=  211.23
+opened after it                n= 3 won= 0 net= -1554.84 mean= -518.28
+next trade after a losing stop: n=7, same side 7, median gap 1.2h; won 4, net 844.01
+   XAUUSD   gap   1.5h same side FORCED ->   -301.30 STOP
+   BRENT    gap   1.5h same side FORCED ->    593.58 T1+T2
+   ETHUSDT  gap   0.2h same side ENTER  ->   1253.05 T1+T2
+   ETHUSDT  gap   1.2h same side FORCED ->   -635.05 STOP
+   USDJPY   gap   1.2h same side FORCED ->     40.81 T1+STOP_BE
+   USDJPY   gap   1.2h same side FORCED ->   -211.02 STOP
+   USDJPY   gap   1.2h same side FORCED ->    103.94 T1+STOP_BE
+losing closes by day: {'11-12': 3, '11-15': 1, '11-17': 1, '11-20': 1, '11-21': 1, '11-23': 5}
+candles with 2+ losing closes: {'11-23 13:45': 2}
+   stop BRENT    11-12 17:45 candle range 0.95% = 2.8x its 24h median; trade's best point 1.35%, stop distance 2.80%, held 35h
+   stop WTI      11-12 19:30 candle range 0.50% = 1.4x its 24h median; trade's best point 1.75%, stop distance 2.80%, held 37h
+   stop USDJPY   11-12 16:30 candle range 0.46% = 9.1x its 24h median; trade's best point 0.13%, stop distance 0.32%, held 24h
+   stop USDJPY   11-17 04:00 candle range 0.07% = 1.2x its 24h median; trade's best point 0.19%, stop distance 0.34%, held 92h
+   stop ETHUSDT  11-15 09:00 candle range 2.09% = 2.9x its 24h median; trade's best point 2.80%, stop distance 4.72%, held 11h
+   stop USDJPY   11-20 13:00 candle range 0.09% = 1.4x its 24h median; trade's best point 0.51%, stop distance 0.31%, held 80h
+   stop XAUUSD   11-23 01:00 candle range 1.37% = 3.6x its 24h median; trade's best point 0.63%, stop distance 2.27%, held 70h
+   stop SPX      11-23 14:30 candle range 1.49% = 4.3x its 24h median; trade's best point 2.67%, stop distance 2.41%, held 70h
+   stop ETHUSDT  11-21 13:15 candle range 0.87% = 1.3x its 24h median; trade's best point 3.69%, stop distance 5.25%, held 18h
+   stop BTCUSDT  11-23 13:45 candle range 4.61% = 13.8x its 24h median; trade's best point 2.62%, stop distance 4.89%, held 47h
+   stop ETHUSDT  11-23 13:45 candle range 5.47% = 15.1x its 24h median; trade's best point 2.59%, stop distance 5.45%, held 47h
+   stop XAUUSD   11-23 14:15 candle range 0.75% = 2.5x its 24h median; trade's best point 0.26%, stop distance 2.59%, held 12h
+markets short at the same moment: mean 4.9, max 7, share of time with 5 or more: 65%
+fees total 452.35; gross before fees 5656.78
+
+===== b_trail
+opened before the 21 Nov low   n=54 won=45 net= 11800.30 mean=  218.52
+opened after it                n= 6 won= 2 net= -1549.28 mean= -258.21
+next trade after a losing stop: n=11, same side 11, median gap 1.2h; won 8, net 1255.57
+   BRENT    gap   1.5h same side FORCED ->    219.59 TRAIL
+   BRENT    gap   1.5h same side FORCED ->    350.56 TRAIL
+   BTCUSDT  gap   1.2h same side FORCED ->   -442.23 STOP
+   BTCUSDT  gap   1.2h same side FORCED ->    464.56 TRAIL
+   ETHUSDT  gap   1.2h same side FORCED ->   -700.35 STOP
+   ETHUSDT  gap   1.2h same side FORCED ->    502.29 TRAIL
+   USDJPY   gap   1.2h same side FORCED ->    266.54 TRAIL
+   USDJPY   gap   1.2h same side FORCED ->   -220.16 STOP
+   USDJPY   gap   1.2h same side FORCED ->    115.70 TRAIL
+   WTI      gap   1.5h same side FORCED ->    395.37 TRAIL
+   WTI      gap   1.5h same side FORCED ->    303.72 TRAIL
+losing closes by day: {'11-12': 2, '11-17': 3, '11-20': 2, '11-21': 1, '11-22': 1, '11-23': 4}
+candles with 2+ losing closes: {'11-23 13:45': 2}
+   stop BRENT    11-12 17:45 candle range 0.95% = 2.8x its 24h median; trade's best point 1.35%, stop distance 2.80%, held 35h
+   stop WTI      11-12 19:30 candle range 0.50% = 1.4x its 24h median; trade's best point 1.75%, stop distance 2.80%, held 37h
+   stop USDJPY   11-17 04:00 candle range 0.07% = 1.2x its 24h median; trade's best point 0.19%, stop distance 0.34%, held 92h
+   stop BRENT    11-17 14:15 candle range 0.38% = 1.3x its 24h median; trade's best point 0.49%, stop distance 2.22%, held 6h
+   stop WTI      11-17 13:15 candle range 0.63% = 2.1x its 24h median; trade's best point 0.14%, stop distance 1.95%, held 5h
+   stop USDJPY   11-20 00:45 candle range 0.13% = 2.8x its 24h median; trade's best point 0.06%, stop distance 0.27%, held 9h
+   stop USDJPY   11-20 09:45 candle range 0.12% = 2.2x its 24h median; trade's best point 0.01%, stop distance 0.33%, held 8h
+   stop XAGUSD   11-23 14:00 candle range 1.65% = 2.7x its 24h median; trade's best point 2.48%, stop distance 4.44%, held 78h
+   stop XAUUSD   11-23 07:15 candle range 0.17% = 0.5x its 24h median; trade's best point 1.43%, stop distance 2.32%, held 72h
+   stop ETHUSDT  11-21 13:30 candle range 2.41% = 3.6x its 24h median; trade's best point 0.05%, stop distance 4.94%, held 7h
+   stop BTCUSDT  11-22 09:45 candle range 1.98% = 5.9x its 24h median; trade's best point 1.24%, stop distance 5.14%, held 26h
+   stop ETHUSDT  11-23 13:45 candle range 5.47% = 15.1x its 24h median; trade's best point 2.30%, stop distance 5.46%, held 47h
+   stop BTCUSDT  11-23 13:45 candle range 4.61% = 13.8x its 24h median; trade's best point 0.81%, stop distance 3.35%, held 27h
+markets short at the same moment: mean 6.4, max 7, share of time with 5 or more: 93%
+fees total 795.34; gross before fees 11046.35
+
+===== main books now
+BTCUSDT  closed-trade equity  11418.88  open: SHORT from 60268 (ENTER)  unrealised    52.93  stop 62351.427639309266  idle 0
+ETHUSDT  closed-trade equity  11634.04  open: SHORT from 1697.3 (ENTER)  unrealised    14.46  stop 1766.03013987544  idle 0
+XAUUSD   closed-trade equity  11557.36  open: flat  unrealised     0.00  stop None  idle 131
+XAGUSD   closed-trade equity  11678.08  open: flat  unrealised     0.00  stop None  idle 131
+USDJPY   closed-trade equity  10307.19  open: LONG from 158.87 (FORCED)  unrealised   112.86  stop 158.25557303967446  idle 0
+SPX      closed-trade equity  10160.00  open: SHORT from 7626.2 (FORCED)  unrealised   305.78  stop 7626.25  idle 0
+WTI      closed-trade equity  10301.76  open: flat  unrealised     0.00  stop None  idle 110
+BRENT    closed-trade equity  10269.42  open: flat  unrealised     0.00  stop None  idle 110
+all eight: 87812.77 on 80,000 = +9.77%
+
+ b_targets
+BTCUSDT  n= 7 planned loss at the stop: mean 3.2% of the book (min 1.9, max 4.9); size mean 1.0x; sum R +5.7; net $+1530
+ETHUSDT  n= 6 planned loss at the stop: mean 4.4% of the book (min 2.8, max 5.4); size mean 1.0x; sum R +3.0; net $+597
+XAUUSD   n= 7 planned loss at the stop: mean 2.1% of the book (min 2.0, max 2.6); size mean 1.3x; sum R +6.0; net $+1150
+XAGUSD   n= 4 planned loss at the stop: mean 2.5% of the book (min 2.2, max 2.8); size mean 1.0x; sum R +6.9; net $+1801
+USDJPY   n= 6 planned loss at the stop: mean 2.0% of the book (min 2.0, max 2.0); size mean 6.1x; sum R -0.9; net $-196
+SPX      n= 2 planned loss at the stop: mean 2.2% of the book (min 2.0, max 2.4); size mean 1.0x; sum R +1.8; net $+304
+WTI      n= 1 planned loss at the stop: mean 2.8% of the book (min 2.8, max 2.8); size mean 1.0x; sum R -1.0; net $-288
+BRENT    n= 2 planned loss at the stop: mean 2.8% of the book (min 2.8, max 2.9); size mean 1.0x; sum R +1.1; net $+305
+all: mean planned loss 2.8%; share of trades risking more than 2.5%: 17 of 35
+sum of R all markets +22.6; at a flat 2% of $10,000 per trade that is $+4526 (actual $+5204)
+losing trades: mean loss 3.8% of the book; crypto 5.6%, others 2.6%
+
+ b_trail
+BTCUSDT  n=12 planned loss at the stop: mean 3.2% of the book (min 2.0, max 5.1); size mean 1.0x; sum R +8.8; net $+2468
+ETHUSDT  n= 9 planned loss at the stop: mean 4.3% of the book (min 2.7, max 5.8); size mean 1.0x; sum R +5.6; net $+2154
+XAUUSD   n= 7 planned loss at the stop: mean 2.0% of the book (min 2.0, max 2.3); size mean 1.5x; sum R +8.2; net $+1708
+XAGUSD   n=10 planned loss at the stop: mean 2.7% of the book (min 2.0, max 4.4); size mean 1.0x; sum R +7.4; net $+1827
+USDJPY   n= 7 planned loss at the stop: mean 2.0% of the book (min 2.0, max 2.0); size mean 6.6x; sum R +1.4; net $+268
+SPX      n= 2 planned loss at the stop: mean 2.0% of the book (min 2.0, max 2.0); size mean 1.1x; sum R +2.3; net $+463
+WTI      n= 6 planned loss at the stop: mean 2.5% of the book (min 2.0, max 2.9); size mean 1.0x; sum R +2.4; net $+587
+BRENT    n= 7 planned loss at the stop: mean 2.6% of the book (min 2.2, max 3.3); size mean 1.0x; sum R +2.8; net $+775
+all: mean planned loss 2.8%; share of trades risking more than 2.5%: 33 of 60
+sum of R all markets +39.0; at a flat 2% of $10,000 per trade that is $+7797 (actual $+10251)
+losing trades: mean loss 3.9% of the book; crypto 5.7%, others 2.8%
+Lead (points) by market over the live span, and what price did over the next 4 hours and 24 hours
+
+BTCUSDT  steps 1339  Lead favours up in  2% of steps; |Lead| median 5.2, 90th pct 9.0, max 17.6; above 5: 53.5% of steps
+   |Lead| under 2  4h: n=  86 right side  40% mean move its way -0.21%   24h: n=  81 right side  60% mean move its way +0.10%
+   |Lead| 2 to 5   4h: n= 511 right side  62% mean move its way +0.21%   24h: n= 499 right side  65% mean move its way +1.21%
+   |Lead| 5 to 10  4h: n= 637 right side  54% mean move its way +0.19%   24h: n= 575 right side  65% mean move its way +1.61%
+   |Lead| over 10  4h: n=  87 right side  56% mean move its way +0.26%   24h: n=  87 right side  72% mean move its way +0.58%
+
+ETHUSDT  steps 1339  Lead favours up in  2% of steps; |Lead| median 5.2, 90th pct 10.0, max 31.2; above 5: 52.6% of steps
+   |Lead| under 2  4h: n=  70 right side  53% mean move its way +0.20%   24h: n=  62 right side  65% mean move its way +1.33%
+   |Lead| 2 to 5   4h: n= 539 right side  60% mean move its way +0.24%   24h: n= 524 right side  75% mean move its way +1.61%
+   |Lead| 5 to 10  4h: n= 577 right side  47% mean move its way +0.08%   24h: n= 521 right side  56% mean move its way +1.31%
+   |Lead| over 10  4h: n= 134 right side  49% mean move its way +0.14%   24h: n= 134 right side  51% mean move its way -0.42%
+
+XAUUSD   steps  862  Lead favours up in 19% of steps; |Lead| median 1.0, 90th pct 3.2, max 4.6; above 5: 0.0% of steps
+   |Lead| under 2  4h: n= 492 right side  55% mean move its way +0.04%   24h: n= 377 right side  55% mean move its way +0.48%
+   |Lead| 2 to 5   4h: n= 241 right side  63% mean move its way +0.20%   24h: n= 166 right side  74% mean move its way +1.83%
+   |Lead| 5 to 10  4h: n=   0 right side   0% mean move its way +0.00%   24h: n=   0 right side   0% mean move its way +0.00%
+   |Lead| over 10  4h: n=   0 right side   0% mean move its way +0.00%   24h: n=   0 right side   0% mean move its way +0.00%
+
+XAGUSD   steps  862  Lead favours up in 16% of steps; |Lead| median 1.1, 90th pct 3.4, max 4.7; above 5: 0.0% of steps
+   |Lead| under 2  4h: n= 500 right side  47% mean move its way -0.00%   24h: n= 386 right side  53% mean move its way +0.89%
+   |Lead| 2 to 5   4h: n= 239 right side  68% mean move its way +0.45%   24h: n= 159 right side  84% mean move its way +2.65%
+   |Lead| 5 to 10  4h: n=   0 right side   0% mean move its way +0.00%   24h: n=   0 right side   0% mean move its way +0.00%
+   |Lead| over 10  4h: n=   0 right side   0% mean move its way +0.00%   24h: n=   0 right side   0% mean move its way +0.00%
+
+USDJPY   steps  894  Lead favours up in 49% of steps; |Lead| median 1.1, 90th pct 2.7, max 5.0; above 5: 0.0% of steps
+   |Lead| under 2  4h: n= 589 right side  51% mean move its way +0.00%   24h: n= 406 right side  38% mean move its way -0.05%
+   |Lead| 2 to 5   4h: n= 216 right side  45% mean move its way -0.01%   24h: n= 158 right side  34% mean move its way -0.02%
+   |Lead| 5 to 10  4h: n=   1 right side   0% mean move its way -0.02%   24h: n=   1 right side   0% mean move its way -0.11%
+   |Lead| over 10  4h: n=   0 right side   0% mean move its way +0.00%   24h: n=   0 right side   0% mean move its way +0.00%
+
+SPX      steps  255  Lead favours up in 63% of steps; |Lead| median 0.7, 90th pct 1.8, max 3.5; above 5: 0.0% of steps
+   |Lead| under 2  4h: n=  90 right side  48% mean move its way -0.25%   24h: n= 171 right side  50% mean move its way +0.25%
+   |Lead| 2 to 5   4h: n=   4 right side  75% mean move its way +0.22%   24h: n=   2 right side  50% mean move its way +0.04%
+   |Lead| 5 to 10  4h: n=   0 right side   0% mean move its way +0.00%   24h: n=   0 right side   0% mean move its way +0.00%
+   |Lead| over 10  4h: n=   0 right side   0% mean move its way +0.00%   24h: n=   0 right side   0% mean move its way +0.00%
+
+WTI      steps  738  Lead favours up in 90% of steps; |Lead| median 1.2, 90th pct 3.0, max 4.2; above 5: 0.0% of steps
+   |Lead| under 2  4h: n= 405 right side  48% mean move its way -0.05%   24h: n= 317 right side  43% mean move its way -0.74%
+   |Lead| 2 to 5   4h: n= 184 right side  50% mean move its way +0.03%   24h: n= 146 right side  26% mean move its way -1.16%
+   |Lead| 5 to 10  4h: n=   0 right side   0% mean move its way +0.00%   24h: n=   0 right side   0% mean move its way +0.00%
+   |Lead| over 10  4h: n=   0 right side   0% mean move its way +0.00%   24h: n=   0 right side   0% mean move its way +0.00%
+
+BRENT    steps  738  Lead favours up in 85% of steps; |Lead| median 1.1, 90th pct 2.9, max 4.5; above 5: 0.0% of steps
+   |Lead| under 2  4h: n= 428 right side  54% mean move its way +0.11%   24h: n= 331 right side  55% mean move its way -0.01%
+   |Lead| 2 to 5   4h: n= 162 right side  56% mean move its way +0.12%   24h: n= 128 right side  38% mean move its way -0.79%
+   |Lead| 5 to 10  4h: n=   0 right side   0% mean move its way +0.00%   24h: n=   0 right side   0% mean move its way +0.00%
+   |Lead| over 10  4h: n=   0 right side   0% mean move its way +0.00%   24h: n=   0 right side   0% mean move its way +0.00%
+
+all eight markets together
+   |Lead| under 2  4h: n= 2660 right side  51% mean move its way +0.01%
+   |Lead| under 2  24h: n= 2131 right side  50% mean move its way +0.19%
+   |Lead| 2 to 5   4h: n= 2096 right side  59% mean move its way +0.20%
+   |Lead| 2 to 5   24h: n= 1782 right side  63% mean move its way +1.06%
+   |Lead| 5 to 10  4h: n= 1215 right side  51% mean move its way +0.14%
+   |Lead| 5 to 10  24h: n= 1097 right side  61% mean move its way +1.47%
+   |Lead| over 10  4h: n=  221 right side  52% mean move its way +0.19%
+   |Lead| over 10  24h: n=  221 right side  60% mean move its way -0.03%
+steps journalled per day (crypto full day = 96)
+         10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+BTCUSDT  43 96 96 96 96 96 96 96 96 96 96 96 96 96 48
+ETHUSDT  43 96 96 96 96 96 96 96 96 96 96 96 96 96 48
+XAUUSD   29 91 90 89  0  3 90 91 64 90 86  0  3 90 46
+XAGUSD   29 91 90 89  0  3 90 91 64 90 86  0  3 90 46
+USDJPY   32 96 96 89  0  0 95 95 66 95 88  0  0 95 47
+SPX      21 26 26 26  0  0 26 26 26 26 26  0  0 26  0
+WTI       0 66 82 84  0  0 82 82 57 82 81  0  0 82 40
+BRENT     0 66 82 84  0  0 82 82 57 82 81  0  0 82 40
+BTCUSDT {'ENTER': 4, 'HOLD': 1310, 'STEP_ASIDE': 1, 'IDLE': 20, 'FORCED': 4}
+ETHUSDT {'ENTER': 3, 'HOLD': 1326, 'IDLE': 8, 'FORCED': 2}
+XAUUSD {'IDLE': 135, 'FORCED': 1, 'HOLD': 726}
+XAGUSD {'IDLE': 139, 'FORCED': 2, 'HOLD': 721}
+USDJPY {'IDLE': 8, 'FORCED': 2, 'HOLD': 884}
+SPX {'IDLE': 8, 'FORCED': 2, 'HOLD': 245}
+WTI {'IDLE': 119, 'FORCED': 2, 'HOLD': 617}
+BRENT {'IDLE': 119, 'FORCED': 2, 'HOLD': 617}
+
+BTCUSDT {'edge_still_with_position': 1269, 'against_but_below_flip_bar': 21, 'release_guard_hold': 20, 'no_side_rewarding_high_risk': 13, 'no_side_rewarding': 7, 'edge_clears_bar': 4, 'mandate_with_trend': 3, 'high_risk_and_edge_gone': 1}
+ETHUSDT {'edge_still_with_position': 1288, 'release_guard_hold': 20, 'against_but_below_flip_bar': 18, 'no_side_rewarding': 4, 'no_side_rewarding_high_risk': 4, 'edge_clears_bar': 3, 'mandate_with_trend': 2}
+XAUUSD {'edge_still_with_position': 545, 'against_but_below_flip_bar': 166, 'wait_for_signal_after_trail': 127, 'release_guard_hold': 15, 'no_side_rewarding': 8, 'mandate_with_trend': 1}
+XAGUSD {'edge_still_with_position': 561, 'against_but_below_flip_bar': 145, 'wait_for_signal_after_trail': 127, 'release_guard_hold': 15, 'no_side_rewarding': 12, 'mandate_with_bias': 1, 'mandate_with_trend': 1}
+USDJPY {'edge_still_with_position': 438, 'against_but_below_flip_bar': 431, 'release_guard_hold': 15, 'no_side_rewarding': 8, 'mandate_with_trend': 2}
+SPX {'against_but_below_flip_bar': 148, 'edge_still_with_position': 87, 'release_guard_hold': 10, 'no_side_rewarding': 8, 'mandate_with_trend': 2}
+WTI {'against_but_below_flip_bar': 554, 'wait_for_signal_after_trail': 106, 'edge_still_with_position': 48, 'release_guard_hold': 15, 'no_side_rewarding': 13, 'mandate_with_trend': 2}
+BRENT {'against_but_below_flip_bar': 560, 'wait_for_signal_after_trail': 106, 'edge_still_with_position': 42, 'release_guard_hold': 15, 'no_side_rewarding': 13, 'mandate_with_trend': 2}
+BTCUSDT closes with no journal line: 0 []
+ETHUSDT closes with no journal line: 0 []
+USDJPY 2026-11-10 16:00 IDLE no_side_rewarding FLAT -1.2 SIT OUT, session 1 of 4: the better side leads by only 1.2 pts against a 5-pt bar.
+USDJPY 2026-11-10 17:00 FORCED mandate_with_trend FLAT -0.3 ENTER LONG at the next open BY MANDATE: flat for 4 sessions, the limit. Neither side cleared the 5-pt bar (the edge is 0.3 pts), so it takes the side 
+USDJPY 2026-11-10 17:15 HOLD against_but_below_flip_bar LONG -0.3 HOLD LONG: the odds lean against it (-0.3 pts) but not by the 10 pts a flip must pay for.
+USDJPY 2026-11-20 10:00 IDLE no_side_rewarding FLAT -1.6 SIT OUT, session 1 of 4: the better side leads by only 1.6 pts against a 5-pt bar.
+USDJPY 2026-11-20 11:00 FORCED mandate_with_trend FLAT -1.6 ENTER LONG at the next open BY MANDATE: flat for 4 sessions, the limit. Neither side cleared the 5-pt bar (the edge is 1.6 pts), so it takes the side 
+USDJPY 2026-11-20 11:15 HOLD against_but_below_flip_bar LONG -1.7 HOLD LONG: the odds lean against it (-1.7 pts) but not by the 10 pts a flip must pay for.

@@ -169,6 +169,87 @@ def _stats(pnls):
             "won_pct": round(100.0 * sum(1 for x in pnls if x > 0) / n, 1)}
 
 
+# Student's t, two-sided 90% (0.95 quantile), by degrees of freedom: the by-day read has few days, and 1.645 (the
+# bell-curve figure the per-trade range uses) would make a range from 5 or 10 days look tighter than it is.
+T90 = {1: 6.314, 2: 2.920, 3: 2.353, 4: 2.132, 5: 2.015, 6: 1.943, 7: 1.895, 8: 1.860, 9: 1.833, 10: 1.812, 11: 1.796,
+       12: 1.782, 13: 1.771, 14: 1.761, 15: 1.753, 16: 1.746, 17: 1.740, 18: 1.734, 19: 1.729, 20: 1.725, 21: 1.721,
+       22: 1.717, 23: 1.714, 24: 1.711, 25: 1.708, 26: 1.706, 27: 1.703, 28: 1.701, 29: 1.699, 30: 1.697, 40: 1.684,
+       60: 1.671, 120: 1.658}
+BY_DAY_NOTE = ("By day: trades that close on the same UTC day are not separate bets (BTC and ETH, gold and silver, WTI "
+               "and Brent open and close together, and one market move can stop several books at once). This second "
+               "range for the same mean per trade lets results move together within a day, so it is wider when they "
+               "do. It is shown beside the verdict; it does not replace it.")
+
+
+def _t90(df):
+    """The 0.95 quantile of Student's t for `df` degrees of freedom (the next smaller tabled value, so never too tight)."""
+    if df < 1:
+        return None
+    best = None
+    for k in sorted(T90):
+        if k <= df:
+            best = T90[k]
+    return 1.645 if df > 120 else best
+
+
+def per_entry_days(rows):
+    """per_entry for rows [(key, pnl_usd, close day)] -> [(pnl_usd, day)]: a trade closed in parts counts once, on the
+    day its last part closed. The results, and their order, are exactly per_entry's."""
+    out, at = [], {}
+    for key, pnl, day in rows:
+        if key in (None, "") or key not in at:
+            if key not in (None, ""):
+                at[key] = len(out)
+            out.append([float(pnl), day])
+        else:
+            i = at[key]
+            out[i][0] += float(pnl)
+            if day and (not out[i][1] or day > out[i][1]):
+                out[i][1] = day
+    return [(p, d) for p, d in out]
+
+
+def _day(v):
+    """The UTC day 'YYYY-MM-DD' of a close time as the books write it ('2026-11-23 13:45', '...+00:00', '...T13:45:00Z'),
+    or None."""
+    s = str(v or "").strip()[:10]
+    return s if len(s) == 10 and s[4] == "-" and s[7] == "-" and s.replace("-", "").isdigit() else None
+
+
+def by_day(pairs):
+    """The by-day read of one book (owner, 24 Nov 2026, after the live audit: "judge by day or by pair of markets, not by
+    trade"), from [(pnl_usd, close day)]. Same mean per trade as _stats; the 90% range is built from the days' sums of
+    (result - mean) instead of from single trades (a cluster-robust standard error, days as clusters, Student's t with
+    days - 1 degrees of freedom). A trade without a readable day is a day of its own. -> the three keys added to a row.
+    The registered verdict (_stats, research/VERDICT_RULES.md) is NOT changed by this."""
+    import math
+    n = len(pairs)
+    if not n:
+        return {"days": 0, "range90_by_day_usd": None, "verdict_by_day": "no trades yet"}
+    mean = sum(p for p, _d in pairs) / n
+    sums = {}
+    for i, (p, d) in enumerate(pairs):
+        k = d if d else ("?", i)
+        sums[k] = sums.get(k, 0.0) + (p - mean)
+    g = len(sums)
+    rng = None
+    if g > 1:
+        se = math.sqrt(g / (g - 1.0) * sum(v * v for v in sums.values())) / n
+        half = _t90(g - 1) * se
+        rng = [round(mean - half, 2), round(mean + half, 2)]
+    if n < MIN_TRADES:
+        verdict = "too few trades to judge (%d of %d)" % (n, MIN_TRADES)
+    elif rng is None:
+        verdict = "too few days to judge (%d of 2)" % g
+    elif rng[0] > 0:
+        verdict = "ahead: even the low end of the range is positive"
+    elif rng[1] < 0:
+        verdict = "behind: even the high end of the range is negative"
+    else:
+        verdict = "undecided: the range includes zero"
+    return {"days": g, "range90_by_day_usd": rng, "verdict_by_day": verdict}
+
+
 def _scoreboard_titles():
     """Book id -> scoreboard title, for the strategy-book modules whose BOOKS give a "scoreboard_title"
     (playbook4's loop books, so that "NOT passed" shows on the scoreboard); the others keep "Strategy: <id>"."""
@@ -206,14 +287,17 @@ def scoreboard(playbook_rows=None, log=print):
                         continue
                     if v == v:                                     # a trade closed in parts counts once (per_entry)
                         t_in = (r.get("time_in") or "").strip()
-                        out.append(((t_in, r.get("side")) if t_in else None, v))
+                        out.append(((t_in, r.get("side")) if t_in else None, v, _day(r.get("time_out"))))
         except OSError:
             pass
-        return per_entry(out)
+        return per_entry_days(out)                                 # [(pnl_usd, close day)]
+
+    def row(pairs):                                                # the registered per-trade read, then the by-day read
+        return dict(_stats([p for p, _d in pairs]), **by_day(pairs))
     main = []
     for p in glob.glob(os.path.join(live_dir, "trades_*.csv")):
         main += pnl_of(p)
-    rows.append(dict({"book": "main", "title": "Main books (live)", "kind": "main"}, **_stats(main)))
+    rows.append(dict({"book": "main", "title": "Main books (live)", "kind": "main"}, **row(main)))
     learner = None
     try:                                                           # the exit learner b_learn (learn_book.py, H109; owner,
         from . import learn_book                                   # 24 Nov 2026): recomputed from six shadow books' own
@@ -235,18 +319,19 @@ def scoreboard(playbook_rows=None, log=print):
         log("regime trust mind: %r" % (e,))
     for name, pn in sorted(shadow.items()):
         rows.append(dict({"book": name, "title": SHADOW_TITLES.get(name) or "Shadow: " + name, "kind": "shadow"},
-                         **_stats(pn)))
+                         **row(pn)))
         rows[-1].update(mind_rows.get(name) or {})
     by_book = {}
     for r in playbook_rows or []:
         if r.get("status") == "CLOSED" and r.get("pnl_usd") is not None:
-            by_book.setdefault(r.get("book"), []).append(float(r["pnl_usd"]))
+            by_book.setdefault(r.get("book"), []).append((float(r["pnl_usd"]), _day(r.get("exit_utc"))))
     titles = _scoreboard_titles()
     for b, pn in sorted(by_book.items()):
-        rows.append(dict({"book": b, "title": titles.get(b) or "Strategy: " + b, "kind": "strategy"}, **_stats(pn)))
+        rows.append(dict({"book": b, "title": titles.get(b) or "Strategy: " + b, "kind": "strategy"}, **row(pn)))
     out = {"generated_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "min_trades": MIN_TRADES, "rows": rows,
            "note": "Forward results only. A book is judged once it has %d trades: ahead if the low end of its 90%% range "
-                   "per trade is above zero, behind if the high end is below zero." % MIN_TRADES}
+                   "per trade is above zero, behind if the high end is below zero." % MIN_TRADES,
+           "note_by_day": BY_DAY_NOTE}
     if learner is not None:
         out["exit_learner"] = learner                              # its tables, whom it follows, the arms over the same days
     try:                                                           # the paper desk (paper_desk.py; owner, 22 Nov 2026):

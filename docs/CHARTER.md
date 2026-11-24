@@ -725,3 +725,19 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
 - **The vault's lead filter is ON** (24 Nov 2026, 09:25:52 UTC; the owner in the AI Trading session: "Switch it on
   now"; threshold 5.0, strict; a setup whose book carries no `lead_pts` is not joined). Reported by that session; the
   switch is theirs. From this project's side: the first book of every new BTC or ETH setup must carry `lead_pts`.
+- **Audit of the live trades, 10 to 24 Nov** (24 Nov 2026; owner: "audit all assets and the past open and close trade
+  so far for minds15. See anything we can studies or do better"). 207 trade rows of the main books and 16 shadow books
+  check out against the 15-minute bars; no missed step on BTC or ETH. The profit came from being short in one falling
+  market. Report, tables and method: `research/out/live_audit_20261124/report.md`. Of its seven proposals A to G the
+  owner took five ("Except D and G. Lets do the rest"): A below, and four studies on history registered as H111 (pairs
+  as one bet), H112 (an entry bar per market), H113 (the Lead after a capitulation low) and H114 (USDJPY's stop), each
+  written and run by a Fable agent on the laptop in its own worktree (`engine-15m-h111` to `-h114`). NOT taken: D
+  (sizing below 1x) and G (stopping the two strategy books judged "behind").
+- **The scoreboard's by-day read (proposal A)** (24 Nov 2026). Each row of `scoreboard.json` gains `days`,
+  `range90_by_day_usd` and `verdict_by_day`, and the file a `note_by_day`: the same mean per trade with a 90% range
+  that lets results of one UTC day move together (`reports.by_day`: days as clusters, Student's t). On today's records
+  the Setups book `b_targets` reads "ahead" per trade ([+24, +273]) and "undecided" by day ([-66, +364], 13 days);
+  `b_trail` is "ahead" on both. It is ADDED: the registered per-trade verdict (`reports._stats`,
+  `research/VERDICT_RULES.md`), everything the Setups page and the Telegram alerts read, and `signals.py` are exactly
+  as they were. Whether the by-day verdict should become the one shown is the owner's decision, not yet made. No
+  version bump (no constant and no trading rule changed).
