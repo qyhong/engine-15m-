@@ -801,3 +801,23 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   members' shorts earlier and withholds shorts while the long lives) and the vault's own rebound switch (default off,
   a log-only stage first, a size factor, a member notice and page wording because members were told the vault follows
   the Setups book with the Lead rule). That session's EMA-trail rule for member 4 comes first on its side.
+- **Live on 24 Nov 2026, all paper, all NOT passed, none reaching the vault** (think15-v5.2.10 throughout; full suite
+  before each deploy; the AI Trading session told after each, as the owner asked there: "Let me know when rebound rule
+  is done and updated to the minds 15 engine"):
+  - 13:49:02 UTC, commit 46df899: H115, the paper books `p9_rebound_a` / `p9_rebound_b` (H107 rules A and B) with the
+    Telegram trigger and close cards (1,787 tests). Started flat at the 13:45 close; the 14:00 and 14:15 steps normal.
+  - 14:49:28 UTC, commit b3b28d8: the low-zone notices (1,833 tests). First step: BTC 55,130 and ETH 1,538 armed and
+    untouched (zones up to 55,956.95 and 1,561.07, live until 21 Dec 06:45 UTC); five older levels dead or broken.
+  - 15:19:28 UTC, commit 869b5b5: H117, `b_rebound` (1,879 tests; `engine15/shadows.py` changed by additions only).
+    Independent review on Opus 5.5 before the deploy: safe; its one finding (a paper mind's view could stop a group's
+    summary, and with it b_targets' save) fixed in b4ad4ab. At the 15:30 step: `b_rebound` started flat and the Setups
+    rule opened its own paper shorts (BTC 59,883.11, ETH 1,678.04); `b_targets` identical to the 15:08 hourly state
+    copy; `setups.json` and the vault's books unchanged and on time.
+  - The owner's question "When the price break the all time low. At what price will we enter and how we position stop
+    loss" was answered from the rule: enter at the next open after a 15m close 2 x ATR(1h) above the new 30-day low
+    (about 1,300 on BTC at today's ATR), stop 3 x ATR(1h) under the entry (about 640 under that low), half at +1R, the
+    rest at +2R or after 48 hours; the low must also be 10% under the close a week earlier. Not an all-time low.
+- **Agents on Opus 5.5 from 24 Nov 2026 about 14:25 UTC** (owner: "utilise opus 5.5 for the pending tasks").
+- **H86 is done (laptop): the Setups book's volatility-fitted stops beat random stops of the month's sizes** (p 0.0025
+  pooled; halves agree, market groups do not; the book itself about flat). No forward test; nothing changes. Details in
+  HYPOTHESES.md "H86 results".

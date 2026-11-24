@@ -7454,3 +7454,27 @@ heading says "about 13:35"). What the registration left open, and what was seen 
 - **Not verified:** nothing was run on the live box, and the live `shadow_state.json` was not seen (the test uses a
   file written by main's own code on planted bars; the laptop's stale copy has the same keys). The full suite was
   not run here. The web tab was not opened: the page block is the generic one. No Telegram card was sent.
+
+### H86 results (24 Nov 2026; run on the LAPTOP, not on the box, 04:54 to 13:35 UTC, 31,287 s; 10,000 draws per group; `research/out/queue/H86/report.md` + `results.json`)
+
+The owner said on 24 Nov 2026 "For those sg box research still pending. Utilise this laptop to start 1": H86 was run
+from a worktree at 0a94526 with the box's `fits_today`, bars and evidence store copied over; the per-draw fits overlay
+was pre-filled with copies because Windows cannot make the symlinks the script uses (no code changed). Every market's
+run passed its gate (`run_is_engine_b_targets: true`). Data end at the last session at or before 2025-11-10 23:45 UTC;
+the holdout is not read.
+
+**Conclusion, in the registered words:** the Setups book IS distinguishable from the same book with stops of the
+month's typical sizes at random, at p = 0.0025 (primary: pooled mean R per trade over the eight markets, one-sided).
+Real -0.0021R a trade on 5,162 trades; placebo median -0.0278R (5%-95%: -0.0425 to -0.0131).
+- Halves, pooled: h1 p 0.022 (real +0.010R against -0.014R), h2 p 0.021 (-0.018R against -0.046R).
+- Market groups do NOT agree: vault (BTC, ETH) h1 p 0.0006 but h2 p 0.77 (real -0.081R against a placebo -0.061R);
+  the other six h1 p 0.52, h2 p 0.0003. Per market (descriptive): ETH p 0.010, USDJPY p 0.049, the rest 0.10 to 0.44.
+
+**Reading.** Stops fitted to the volatility of the moment do better than stops of the same month's sizes handed out at
+random; the engine's stop sizing does what it is meant to. This is NOT an edge: the book itself is about flat
+(-0.002R a trade). Two caveats registered beforehand apply: the in-month shuffle lets a placebo stop carry volatility
+from later in its month (its size was not measured), and R is counted against the stop, so a different stop changes the
+unit of the result. By the family's ledger a primary p well below 0.01 is worth a forward test only if it agrees across
+halves AND market groups; the halves agree pooled, the market groups do not. No forward test is proposed; nothing in
+the engine changes. H85 is still parked on the box at 17,436 of 65,000 draws with the research queue stopped (owner,
+24 Nov: "Keep it stop now"); H82 and the void H81 stay in `held/`.
