@@ -6024,3 +6024,128 @@ Nothing in the registered rule was changed. What the registration left open, and
   `wild_agree`. No forward number exists yet.
 - **Step cost, measured on the laptop** with synthetic records and a 21 MB bar file: about 0.03 s with today's two
   weeks of arm records, 0.08 s after three months, 0.23 s after a year. It grows with the length of the arms' records.
+
+## H111. Pairs as one bet: the Setups book's trades counted at half size when the pair partner already holds the same side, and a cap on trades open in one direction (registered 24 Nov 2026, about 12:35 UTC, before any H111 number on history was computed)
+
+**Prompted by:** the live audit of 24 Nov 2026 (`research/out/live_audit_20261124/report.md`, findings 1 and 10, row B
+of its table): BTC and ETH open and close in the same hours, as do gold and silver, and WTI and Brent; the main books
+were short on five or more markets at once 89% of the time; on 23 Nov the Setups book took five stops in one day
+(-$2,086). The owner: "count BTC+ETH, gold+silver and WTI+Brent as one bet each, or cap total risk in one direction".
+Research only: nothing in the engine, the books or the vault changes, whatever the result.
+
+**Known before registering.**
+- H65: on history the Setups book (`b_targets`) is flat per trade (+0.004R over 5,963 trades to 21 Nov 2026; first half
+  +29.6R, second half -7.1R; BTC+ETH -7.7R, the other six +30.3R); it earns with a market's own 30-day move and loses
+  against it. H67/H68: pooled worst fall of the eight books' summed equity -61.6%; paper net -$21,233 on $80,000; the
+  30-day filter and the wait after a stop looked better on the history they were found on. H87-H89: the current rule's
+  chance of a losing 12 months is about 54%; its sign turns when one year is left out (2022, 2023 or 2025); it breaks
+  even at a fee of 0.032% a side on eight markets. H80-H86, H81b, H82b: the odds are not distinguishable from shifted
+  odds; the side choice is a little better than its own recent mix (p 0.034). H81 was VOID because its placebo handed
+  a trade information from later in the month: a placebo must not borrow from the future.
+- The live audit's 14 days (10 to 24 Nov 2026, one falling market; Setups book 35 trades, 29 short, +$5,204; five stops
+  on 23 Nov). THE IDEA COMES FROM THOSE DAYS. They lie in the forward slice below, which is therefore not a test.
+- Nothing about how the eight books' results move together on history has been computed in this project (no entry in
+  this file on pairs, daily co-movement or trades open at once; H37 is a BTC/ETH relative-value book, another matter).
+- Before this registration one loader-only run was made on USDJPY to learn whether the cached fits reach today's
+  store (they stop at 2025-11-10; 38 weekly refits were recomputed in 44 s). It printed sessions, refits and seconds.
+  No book was run and no trade or result was computed.
+
+**What must be said first.** A replay on history is post-mortem material, not validation. The holdout (from 2025-11-11)
+was already read for this book by H65, H67 and H68, so no part of this history is blind for the Setups book, though
+no pair or direction measure was looked at. A pass below is a reason to propose a forward paper shadow and nothing more.
+
+**Source.** The current Setups rule (`shadows.CHALLENGERS["b_targets"]`, rule `{"targets": True, "early": True}`, as in
+think15-v5.2.10) replayed per market by the engine's own `shadows.run`, exactly as H68's "current" book, on all eight
+markets, each from its first decided session to its group's last stored session in the shared copy of the box's data
+(crypto and fx 24 Nov 2026 04:30 UTC, metals and energy 04:15, index 23 Nov 20:45). Loader:
+`research/queue/walkforward.prep_cut_lean` (H90-H106's line-for-line copy of `h59_half_be.prep_cut` that uses less
+memory); fits from this worktree's `fits_today`. Every book is checked to be the engine's own
+`run_challenger("b_targets")`, trade for trade; a failed check stops the run. Closed trades only: a trade still open at
+the end is left out. Reconciliation, reported whatever it shows: the trades closed by each group's last session at or
+before 2026-11-21 13:45 against H68's 5,963 trades and +22.5R (H68 ran on the research server with its own fits; the
+last year's fits are recomputed here on another machine, so small differences are possible and will be stated).
+
+**Points.** A trade's result = 100 x `pnl_usd` / (the book's equity just before the trade opened), where that equity
+is the trade row's `equity` (after the close) minus its `pnl_usd`. Position size is equity x leverage, and leverage
+depends only on the stop distance, so this percentage does not depend on how much the book had won or lost before. A
+trade is booked whole on the UTC day its exit bar opened (a Target 1 part taken earlier is booked with the rest).
+"Portfolio points" of a day = the sum over the eight books. Days without a close count zero.
+
+**"Open at moment T", fixed now.** A trade is open at T when it was entered before T (entry time < T) and its exit bar
+opens at or after T; an exit by FLIP or STEP_ASIDE is a fill at the bar's open, so such a trade is already closed at
+its exit bar's open. Times are `t_in_ms` and `t_out_ms`. Two trades with the same entry time opened "at once".
+
+**Variants.**
+- **V0 current:** every trade at full size.
+- **V1 pair-half (PRIMARY):** pairs BTCUSDT-ETHUSDT, XAUUSD-XAGUSD, WTI-BRENT (USDJPY and SPX have no partner and are
+  never changed). A trade that opens while its partner holds an open trade on the same side counts at half its points,
+  for its whole life. The trade already open is not changed. Two partner trades opened at once on the same side BOTH
+  count at half (together one bet). Because only the size changes, every entry, stop and exit is the book's own: V1 is
+  exact in points, with no change to any book's path.
+- **V1s (descriptive):** as V1, but two trades opened at once both stay at full size (the strict reading of "already
+  open").
+- **V2 direction cap (descriptive only):** trades taken in order of entry time (ties in the order BTCUSDT, ETHUSDT,
+  XAUUSD, XAGUSD, USDJPY, SPX, WTI, BRENT). A trade is dropped when four or more trades that V2 itself kept are open on
+  its side on other markets at its entry, counting kept trades entered at once and earlier in that order (it would be
+  the 5th or later). Descriptive because a real book that skips a trade is flat afterwards and would enter differently
+  later; here the trade is only removed from the record and every later trade of that book is kept as it was. This
+  flatters or harms V2 in ways the replay cannot show.
+- **Placebo for V1 (descriptive):** 2,000 draws (seed 2026112411); in each, the same NUMBER of trades as V1 halved is
+  halved in each market and segment, chosen at random among that market's trades of that segment. The choice uses
+  nothing about results or later bars. Reported: the share of draws whose ratio (below) is at least V1's, per segment.
+  It answers whether WHICH trades are halved matters, or only that some are.
+
+**Segments, by the day a trade is booked, not overlapping:** h1 = to 2023-06-07; h2 = 2023-06-08 to 2025-11-10;
+holdout = 2025-11-11 to 2026-11-10; forward = 2026-11-11 on (the days the idea came from; descriptive); all = everything.
+
+**Measures, per segment and variant.** Total points; worst day (the lowest daily portfolio points); worst fall = the
+largest drop of the running sum of daily points from its highest point so far, the running sum starting at zero at
+the segment's first day (a positive number); ratio = total / worst fall. The ratio does not change when every trade is
+made smaller by the same factor, so "just bet less" cannot raise it: V1's ratio beats V0's only if the halved trades
+are worse than the rest or sit inside the falls.
+
+**Descriptive tables.** (1) On a 15-minute grid over the days when all eight books have started (positions carried
+over closed hours): the share of time 5 or more markets hold the same side (long, short, either), by segment, and the
+spread of the largest same-side count. (2) Per pair: the correlation of the two members' daily points (all days, and
+only days on which both closed a trade), the share of time both hold the same side, and the share of each member's
+trades that V1 halves. (3) Of the 20 worst V0 portfolio days: on how many did both members of a pair lose (each
+member's daily points below zero), per pair and any pair, beside the same share over all days. (4) The mean points per
+trade of the trades V1 halves against the trades it leaves full, by segment (V0 size). (5) Counts: trades halved by V1
+and V1s, trades dropped by V2. (6) Per market: trades, total points.
+
+**PASS condition for V1, fixed now.** PASS only if ALL hold:
+1. in h1, V1's ratio is higher than V0's AND V1's total is above zero;
+2. the same in h2;
+3. the same in the holdout;
+4. V1's total over all history is at least 85% of V0's (if V0's total is zero or negative: V1's total is not below V0's).
+
+A worst fall of zero gives no ratio and that leg is not met. Anything else is "DOES NOT PASS". V1s, V2, the placebo and
+every table are descriptive and pass nothing. One primary test, so no correction for multiple tests; the descriptive
+looks (two variants, a placebo, six tables, five segments) are looks and nothing more.
+
+**What a pass changes.** Only a proposal, to be registered on its own and needing the owner's word, for a forward PAPER
+shadow of the pair rule. It never changes a live book, the Setups book, the vault or real money. A "does not pass"
+changes nothing either.
+
+**Limits known now.** Daily points come from closed trades, so a loss still open is not seen until it closes and the
+worst day and worst fall understate what a marked book would show. Points add across books without compounding. A real
+half-size trade may not be possible where the engine's size is already at its 1x floor; the halving here is counting.
+The three legs are three stretches of one history of eight markets that largely moved together; they are not three
+independent tests.
+
+### Changes from the brief, made before registering
+- Segments do not overlap: h2 ends at 2025-11-10 (H68's "second half" ran to the end), and the holdout leg ends at
+  2026-11-10, so the 14 days that prompted the idea (the forward slice) are in no leg of the pass condition.
+- The pass condition also needs V1's total above zero in each leg. With a negative total a "higher" ratio can come from
+  a deeper fall, which is not better. The report will also say what the brief's wording alone (ratio higher in the three
+  legs, 85% of the total) gives; the registered condition above is the one that decides.
+- What happens when V0's total over all history is zero or negative is defined (leg 4).
+- Two partner trades opened at once: both at half (the brief did not say); the strict reading is shown as V1s.
+- "Open" is defined to the bar, and V2's order among trades entered at once is fixed.
+- Added, descriptive only: the random-halving placebo, the halved-against-full table, the per-pair shares.
+- Data run to the end of the shared store (24 Nov 2026), not H68's cut of 21 Nov, so the forward slice holds 23 Nov;
+  the lean loader replaces `h59_half_be.prep_cut` for memory (the laptop has about 2 GB free); H68's numbers are
+  reconciled on the trades closed by its cut.
+
+**Code:** `research/h111_pair_bets.py`, tests `tests/test_h111_pair_bets.py`. Output: `research/out/h111_pair_bets/`
+(`report.md`, `results.json`).
