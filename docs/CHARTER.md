@@ -779,3 +779,25 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   that trade. The read is the scoreboard's at 30 and at 60 closed trades per rule: at H107's pace about a year and a
   half for rule A's first read and about six years for rule B's. A good read only opens a discussion with the owner;
   nothing reaches the Setups book or the vault. It goes live with the next deploy after the merge and the full suite.
+- **H116: buying the retest of a capitulation low: too few trades to judge, and both rules lost a little** (24 Nov
+  2026; owner: "You need to find the mechanism or way to able to take setup when market like btc and eth reach its all
+  time low and earn from the rebound. If there is a chance btc revisit 55k or 56k. What can we do. So we can earn the
+  short and then turn long"). Of 126 capitulation lows on BTC and ETH (2019 to Nov 2025), 61% were retested within 30
+  days; in 88% of those retests price traded under the old low within four days (median lowest point 6.6% below it).
+  C1 "holds the low" 48 trades, -0.18R each; C2 "sweep and reclaim" 37 trades, -0.11R each.
+  `research/out/h116_retest_capitulation_low/report.md`. The live levels (BTC 55,130, ETH 1,538) stay live until
+  21 Dec 2026 06:45 UTC; the retest zone starts at 55,957 and 1,561.
+- **The rebound plan, and what the owner decided** (24 Nov 2026). Proposed here in three steps: (1) a paper copy of the
+  Setups book, `b_rebound`, that on a rule A/B trigger closes its short and opens the long, with no forced short and no
+  flip to short while that long lives; (2) a tag on such setups (`setup_kind: "rebound"`) so the vault can treat them
+  under its own switch, built with sending off; (3) the vault follows that book, on the owner's word. Owner: step 1
+  "Yes"; the retest zone gets a Telegram notice only, no setup ("Your recommendation"); then "I want minds15 engine able
+  to take this opportunity", read here as: build the capability end to end and leave the real-money switches to the
+  owner. NOT decided: any real-money step. From the AI Trading session (its reading of vault package e63c6736, not an
+  approval): the live vault refuses a book with the unknown key `setup_kind`, and refuses the whole post for that
+  market, exits included, so the key stays OFF until that session confirms a package that accepts it; it prefers a
+  string, optional, only "rebound", only on a LONG book, first value kept for the setup's life, true `lead_pts` still
+  sent. Two separate real-money decisions, both the owner's: pointing the feed at `b_rebound` (this alone closes
+  members' shorts earlier and withholds shorts while the long lives) and the vault's own rebound switch (default off,
+  a log-only stage first, a size factor, a member notice and page wording because members were told the vault follows
+  the Setups book with the Lead rule). That session's EMA-trail rule for member 4 comes first on its side.
