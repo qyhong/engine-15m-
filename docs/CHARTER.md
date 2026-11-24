@@ -659,3 +659,6 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   while the engine slept; output `out_H86/`; the fits overlay was filled with copies because Windows refuses the
   harness's symlinks; no code changed). The AI Trading session reported the owner's choice there to cap the research
   runner's CPU (a slice at about 30%); it is not applied until the owner confirms it in this project.
+- **The research queue on the box stays stopped** (24 Nov 2026). Asked whether to restart it under the 30% CPU cap
+  or keep it stopped, the owner: "Keep it stop now". It is not restarted, capped or not, without the owner's word. H85
+  waits with its checkpoint; H86 runs on the laptop.
