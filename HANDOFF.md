@@ -1,4 +1,4 @@
-# Mind 15: where things stand (updated 22 Nov 2026: think15-v5.2.9; the vault feed is on the REAL-MONEY path)
+# Mind 15: where things stand (updated 24 Nov 2026: think15-v5.2.10; the vault feed is on the REAL-MONEY path)
 
 Main-book exit rules by market (config.py `be_t1`, `half_t1`, `t2_exit`, `trail_stop`, `trail_wait_signal`): USDJPY
 sells half at Target 1 and the rest at Target 2 with the stop to the entry after Target 1 (v5.2.7); the S&P 500 sells
@@ -10,6 +10,11 @@ exit at the entry stop or on a flip. The vault copies the Setups book (`b_target
 v5.2.9 (owner 22 Nov 2026, "Cut the 15-minute delay") changes WHEN that book shows a new BTC or ETH entry from flat:
 in the step that decides it, booked at that close's price (`CFG["early_entry"]`), so `opened_utc` equals the book's
 `as_of_utc` on its first post. Flips still appear one bar after the decision; exits are as they were.
+v5.2.10 (owner 23-24 Nov 2026) adds one key to the open book the vault gets: `lead_pts`, the Lead (P(up) minus P(down),
+points, positive favours LONG) of the step that opened the setup, fixed for its life (`vault_feed.SEND_LEAD`,
+`opening_lead`; kept in the feed's memory as `pos[sym]["lead_pts"]`, with each step's reading in `lead_seen` for a flip
+shown a step later). The vault's join filter on it (lead above 5.0 in the setup's direction) is the AI Trading Bot
+session's switch; a setup with no known opening Lead carries no key and does not pass that filter.
 Since 21 Nov 2026 a follower book runs beside the shadow books (`engine15/floor_book.py`, `shadows.FOLLOWERS`,
 book name `f_floor_33_3r`): the hold copy's trades with a third of the best closed profit locked once 3R up (H61).
 It started as a copy of the hold copy's book, is not a rule of `shadows.run`, and a failure in it is logged and

@@ -23,6 +23,11 @@ and every later change is in `VERSION_NOTE` in engine15/config.py)
   Not in H36's grid; its history read is H59, descriptive. Six markets still hold to the stop or a flip.
 - **Exits (think15-v5.2.7, 20 Nov 2026):** USDJPY's main book sells half at Target 1 and the rest at Target 2
   (`CFG["t2_exit"]`; the owner: "Sell at target").
+- **The opening Lead in the vault's book (think15-v5.2.10, 24 Nov 2026):** each BTC and ETH setup sent to the VIP
+  vault carries `lead_pts`, the Lead of the step that opened it. The owner's order (23 Nov, in the AI Trading session):
+  VIP accounts take a setup only when that Lead is above 5.0 points in its direction; the vault applies the cut. The
+  engine's own decisions and every book are unchanged: the forced entries still open and are still judged on paper.
+  Not a tested rule: on history (H65) setups opened on a real call and forced ones are both about flat per trade.
 - **The Setups book's entry (think15-v5.2.9, 22 Nov 2026):** on BTC and ETH the Setups book books a new entry from flat
   at the close that decides it, at that close's price, where it used to fill at the next bar's open one step later
   (owner: "Cut the 15-minute delay"). The same moment, closed bars only; the setup is on the page, in the signal and in

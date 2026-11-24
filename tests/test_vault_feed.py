@@ -37,7 +37,7 @@ VAULT_WT = r"C:\tmp\kronos\wt-vip-vault"
 SECRET = bytes(range(32, 64))
 OPENED = "2026-11-18T09:00:00Z"
 BOOK_KEYS = {"symbol", "side", "entry", "stop", "target_1", "target_2", "t1_taken", "entry_window_open", "price",
-             "rr_now_t2", "opened_utc", "as_of_utc"}
+             "rr_now_t2", "opened_utc", "as_of_utc", "lead_pts"}        # lead_pts: vault package 81c96bd4, 23 Nov 2026
 
 
 def ep(utc):
@@ -1149,8 +1149,9 @@ def test_a_setup_first_seen_after_its_window_gets_target_1_and_the_close(feed, f
 
 
 # ------------------------------------------------------------------ the opening Lead (23 Nov 2026)
-def test_lead_is_off_and_the_book_is_unchanged():
-    assert vf.SEND_LEAD is False
+def test_lead_is_on_since_v5_2_10_and_off_leaves_the_book_as_it_was(monkeypatch):
+    assert vf.SEND_LEAD is True
+    monkeypatch.setattr(vf, "SEND_LEAD", False)
     body, _ = vf.build_book(mkt(price=65203.2), bar(1), lead=7.3)
     assert "lead_pts" not in body["book"]
 
@@ -1181,13 +1182,60 @@ def test_a_new_setup_takes_its_own_lead(feed, fake):
 
 @pytest.mark.parametrize("bad", [None, True, float("nan"), 100.5, "7"])
 def test_a_bad_reading_records_no_lead(bad):
-    assert vf.opening_lead(mkt(opened=bar(1), at=bar(1), edge_with_position_pts=bad), "LONG") is None
+    assert vf.opening_lead(mkt(opened=bar(1), at=bar(1), edge_with_position_pts=bad)) is None
+
+
+def test_a_flip_takes_the_lead_the_feed_saw_at_the_deciding_close(feed, fake):
+    """A flip decided at the close of bar 2 is booked at the next open (opened_utc = that close) and shows at step 3."""
+    feed.step(mkt(opened=bar(1), at=bar(1), edge_with_position_pts=6.0))
+    feed.trade("BTCUSDT", "FLIP", 64900.0, opened=bar(1))
+    feed.step(mkt(opened=bar(1), at=bar(2), price=64900.0, edge_with_position_pts=-11.25))   # the long, lead now -11.25
+    assert feed.saved()["lead_seen"]["BTCUSDT"] == {"bar": bar(2), "lead": -11.25}
+    feed.step(mkt(side="SHORT", entry=64900.0, stop=65900.0, t1=63900.0, t2=62900.0, price=64800.0, opened=bar(2),
+                  at=bar(3), edge_with_position_pts=3.0))
+    assert feed.saved()["pos"]["BTCUSDT"]["lead_pts"] == -11.25         # the deciding close's, not this step's -3.0
+    feed.step(mkt(side="SHORT", entry=64900.0, stop=65900.0, t1=63900.0, t2=62900.0, price=64700.0, opened=bar(2),
+                  at=bar(4), edge_with_position_pts=1.0))               # the flip's book (held one step for the close)
+    sent = [b["book"] for b in fake.ops("submit_book") if b["book"]["side"] == "SHORT"]
+    assert sent and all(b["lead_pts"] == -11.25 for b in sent)
+
+
+def test_the_flip_rule_rests_on_btc_and_eth_having_no_fill_delay():
+    """A flip is booked at the open after the deciding close only while the market has no fill delay; with one, the
+    reading kept in lead_seen would belong to a close that did not decide it."""
+    from engine15.config import CFG
+    assert not any(CFG.get("fill_delay", {}).get(s) for s in vf.ALLOWED)
+
+
+def test_a_damaged_lead_memory_does_not_stop_the_feed(feed, fake):
+    feed.step(mkt(opened=bar(1), at=bar(1), edge_with_position_pts=6.0))
+    st = feed.saved()
+    st["lead_seen"] = None
+    with open(feed.state, "w", encoding="utf-8") as fh:
+        json.dump(st, fh)
+    feed.step(mkt(opened=bar(1), at=bar(2), edge_with_position_pts=4.0))
+    assert feed.saved()["lead_seen"]["BTCUSDT"] == {"bar": bar(2), "lead": 4.0}
+    assert feed.saved()["pos"]["BTCUSDT"]["lead_pts"] == 6.0 and len(fake.ops("submit_book")) == 2
+
+
+def test_a_flip_whose_deciding_close_the_feed_did_not_see_has_no_lead(feed, fake):
+    feed.step(mkt(opened=bar(1), at=bar(1), edge_with_position_pts=6.0))
+    feed.trade("BTCUSDT", "FLIP", 64900.0, opened=bar(1))
+    feed.step(mkt(side="SHORT", entry=64900.0, stop=65900.0, t1=63900.0, t2=62900.0, price=64800.0, opened=bar(3),
+                  at=bar(4), edge_with_position_pts=9.0))               # the reading at bar 3's close was never seen
+    assert "lead_pts" not in feed.saved()["pos"]["BTCUSDT"]
+
+
+def test_a_flat_step_clears_the_remembered_reading(feed, fake):
+    feed.step(mkt(opened=bar(1), at=bar(1), edge_with_position_pts=6.0))
+    feed.step(mkt(side="FLAT", at=bar(2)))
+    assert "BTCUSDT" not in feed.saved()["lead_seen"]
 
 
 def test_lead_on_adds_one_number_to_open_books_only(monkeypatch):
     monkeypatch.setattr(vf, "SEND_LEAD", True)
     body, _ = vf.build_book(mkt(price=65203.2), bar(1), lead=-7.256)
-    assert body["book"]["lead_pts"] == -7.26 and set(body["book"]) == BOOK_KEYS | {"lead_pts"}
+    assert body["book"]["lead_pts"] == -7.26 and set(body["book"]) == BOOK_KEYS
     assert json.loads(vf.encode(body))["book"]["lead_pts"] == -7.26     # a JSON number, not a string
     body, _ = vf.build_book(mkt(price=65203.2), bar(1), lead=None)
     assert "lead_pts" not in body["book"]                               # unknown opening Lead: left out
@@ -1196,11 +1244,8 @@ def test_lead_on_adds_one_number_to_open_books_only(monkeypatch):
 
 
 def test_lead_on_the_feed_sends_the_remembered_lead(feed, fake, monkeypatch):
-    import sys
     monkeypatch.setattr(vf, "SEND_LEAD", True)
     feed.step(mkt(opened=bar(1), at=bar(1), edge_with_position_pts=8.0))
-    assert not fake.ops("submit_book")                                  # today's vault refuses an unknown book key
-    monkeypatch.setattr(sys.modules[__name__], "BOOK_KEYS", BOOK_KEYS | {"lead_pts"})    # the updated vault
     feed.step(mkt(opened=bar(1), at=bar(2), edge_with_position_pts=2.0))
     books = [b["book"] for b in fake.ops("submit_book")]
     assert [b.get("lead_pts") for b in books][-1] == 8.0

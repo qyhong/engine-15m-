@@ -97,9 +97,13 @@ BOOK_SCHEMA = 1
 # edge_with_position_pts at the step whose price bar IS the setup's opened_utc (the early entry books the setup at that
 # close), kept in the feed's memory (pos[symbol]["lead_pts"]) and carried while the setup lasts. A setup first seen
 # later (the feed's memory lost, the feed switched on mid-setup) has no known opening Lead and the key is left out;
-# FLAT books never carry it. OFF: the live vault refuses a book with a key it does not know, so this stays False until
-# the AI Trading Bot session confirms the vault that accepts it is LIVE. The memory records the Lead either way.
-SEND_LEAD = False
+# FLAT books never carry it. A FLIP is booked at the open after the close that decided it and is on the page one step
+# later: its opening Lead is the reading the feed saw at that close (kept per market in the memory's "lead_seen").
+# ON since think15-v5.2.10 (24 Nov 2026): the AI Trading Bot session confirmed vault package 81c96bd4, installed
+# 2026-11-23T16:20:10Z, accepts the key (a JSON number, at most 2 decimals, -100..100, LONG/SHORT books only; the first
+# value per setup is kept), and the owner said "Yes, deploy it". The vault's own filter (lead-min 5.0) is that
+# session's switch. Do not switch this off while that filter is on: a book without the key does not pass it.
+SEND_LEAD = True
 LEAD_MAX = 100.0
 REF_MAX_OFF = Decimal("0.015")                   # a book exit / T1 price further than this from the price now is replaced
                                                  # by the price now (the vault refuses a reference > 2% off its own price)
@@ -194,15 +198,33 @@ def _lead_ok(v):
     return not isinstance(v, bool) and isinstance(v, (int, float)) and v == v and abs(v) <= LEAD_MAX
 
 
-def opening_lead(m, side):
-    """The setup's opening Lead from its setups.json entry, signed (positive favours LONG), or None when this step is
-    not the one that opened it or the reading is missing."""
-    if side not in ("LONG", "SHORT") or m.get("opened_utc") is None or m.get("opened_utc") != m.get("price_bar_utc"):
-        return None
-    e = m.get("edge_with_position_pts")
-    if not _lead_ok(e):
+def signed_lead(m):
+    """This step's Lead from a setups.json entry with an open position, signed (positive favours LONG), or None
+    (FLAT entries carry no reading)."""
+    side, e = m.get("side"), m.get("edge_with_position_pts")
+    if side not in ("LONG", "SHORT") or not _lead_ok(e):
         return None
     return round(float(e) * (1 if side == "LONG" else -1), 2) + 0.0
+
+
+def opening_lead(m, last=None):
+    """A new setup's opening Lead, or None when it cannot be known. An entry from flat is booked at the close that
+    decides it (v5.2.9), so its price bar IS its opened_utc: this step's reading. A flip is booked at the open after
+    the deciding close and shows one step later: the reading `last` ({"bar", "lead"}) the feed saw at that close."""
+    opened = m.get("opened_utc")
+    if not isinstance(opened, str):
+        return None
+    if opened == m.get("price_bar_utc"):
+        return signed_lead(m)
+    if isinstance(last, dict) and last.get("bar") == opened and _lead_ok(last.get("lead")):
+        return round(float(last["lead"]), 2) + 0.0
+    return None
+
+
+def remembered_lead(st, sym, m):
+    """The opening Lead the feed's memory holds for the setup this market shows now (after track()), or None."""
+    p = st.get("pos", {}).get(sym) if isinstance(st, dict) else None
+    return p.get("lead_pts") if isinstance(p, dict) and p.get("opened_utc") == m.get("opened_utc") else None
 
 
 def build_book(m, as_of, lead=None):
@@ -404,7 +426,10 @@ def track(sym, m, st, trades_dir, now):
     if isinstance(cur, dict):
         same = isinstance(prev, dict) and prev.get("side") == cur["side"] and prev.get("opened_utc") == cur["opened_utc"]
         cur["eligible"] = bool(m.get("entry_window_open") is True or (same and prev.get("eligible")))
-        lead = prev.get("lead_pts") if same else opening_lead(m, cur["side"])    # fixed at the opening step
+        # the opening Lead: fixed at the setup's first sighting, carried for its life
+        if not isinstance(st.get("lead_seen"), dict):            # a damaged memory never stops the feed
+            st["lead_seen"] = {}
+        lead = prev.get("lead_pts") if same else opening_lead(m, st["lead_seen"].get(sym))
         if _lead_ok(lead):
             cur["lead_pts"] = lead
     new = []
@@ -422,6 +447,13 @@ def track(sym, m, st, trades_dir, now):
             st["seq"] = int(st.get("seq", 0)) + 1
             queue[b["intent_id"]] = {"body": b, "status": "pending", "made": now, "seq": st["seq"]}
     seen[sym] = cur
+    now_lead, bar = signed_lead(m), m.get("price_bar_utc")       # this close's reading, for a flip shown next step
+    if not isinstance(st.get("lead_seen"), dict):
+        st["lead_seen"] = {}
+    if now_lead is not None and isinstance(bar, str):
+        st["lead_seen"][sym] = {"bar": bar, "lead": now_lead}
+    else:
+        st["lead_seen"].pop(sym, None)
     return None
 
 
@@ -673,9 +705,7 @@ def _run(setups_path, log, env, state_path, trades_dir, now):
         if why:                                                  # the position is kept as it was and the book waits too:
             _say(log, "vault: %s not sent (exit not queued: %s)" % (sym, why))    # every book sent was tracked first, so
             continue                                             # a close can never land on a newer setup's join
-        p = st.get("pos", {}).get(sym)
-        lead = p.get("lead_pts") if isinstance(p, dict) and p.get("opened_utc") == m.get("opened_utc") else None
-        books[sym] = build_book(m, m.get("price_bar_utc"), lead)
+        books[sym] = build_book(m, m.get("price_bar_utc"), remembered_lead(st, sym, m))
     memory_alarm(st, markets, syms, how, now, log)
     queue = st.setdefault("intents", {})
     for iid in list(queue):                                      # old finished ones go; stuck ones are given up

@@ -14,7 +14,7 @@ and the H61 profit-floor follower in
 rules A/B (`playbook4`), the RL agents (`playbook5`, `playbook6`) and the BTC/ETH pair book (`playbook7`, H37 V4).
 The paper desk (`engine15/paper_desk.py`, 22 Nov 2026) walks three paper wallets through the Setups book's BTC and ETH
 trades at three sizes; it is read only and lives in `scoreboard.json`.
-The engine version is `CFG["version"]` in `engine15/config.py` (think15-v5.2.9 on 22 Nov 2026); what each version changed
+The engine version is `CFG["version"]` in `engine15/config.py` (think15-v5.2.10 on 24 Nov 2026); what each version changed
 is in `VERSION_NOTE` there and in THOUGHT_PROCESS.md "Now". It runs on the Singapore box, not on this laptop (HANDOFF.md).
 `out/live/scoreboard.json` judges every book on live trades only.
 Hypotheses are registered in `research/HYPOTHESES.md` before they are graded.
@@ -63,6 +63,11 @@ The list as files is `tools/money_files.txt`. Rules for it:
   `/data/mind15/DEPLOYED.json` (the commit that is live). Deploy only with that script.
 - Do not add a key to the book or an intent until the AI Trading Bot session confirms the LIVE vault accepts it: the vault
   refuses a body with any key it does not know, and a refused book means members get no update.
+- Since v5.2.10 (24 Nov 2026) an open book carries `lead_pts`, the setup's opening Lead (`vault_feed.SEND_LEAD`; a
+  number, at most 2 decimals, -100..100, never on FLAT, left out when unknown). The vault can filter joins on it
+  (owner, 23 Nov: VIP accounts take a setup only when its opening Lead is above 5.0 in its direction; the filter is the
+  AI Trading Bot session's switch) and treats a missing value as "does not pass": do not switch `SEND_LEAD` off, lose
+  the feed's memory or change how the value is taken without telling that session first.
 - A restart is short, but a deploy that rebuilds the reading cache (a card or `CFG` change) takes about 15 minutes: the
   book ages, the vault stops joining after 30 minutes, and exits wait. Do it when BTC and ETH are flat or far from an exit.
 - The feed's memory is `data/vault_feed_state.json`; the book's is `data/shadow_state.json`. Losing or rolling back either

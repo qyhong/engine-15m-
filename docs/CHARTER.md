@@ -629,3 +629,21 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   flat for more than four sessions after their trailing-stop exits (01:00 and 04:00 UTC) and asked whether that was
   normal. Told it is the v5.2.8 rule (no forced entry after a trailing-stop exit until one side leads by 5 points; the
   4-session limit after every other exit; the Setups book unchanged), the owner: "Ok noted". No change.
+- **VIP joins only above a 5-point Lead; think15-v5.2.10** (23-24 Nov 2026). On 23 Nov a single 15-minute candle (13:45
+  UTC, BTC +4.2%, ETH +4.9%) stopped the forced shorts of every book, and the VIP member's two shorts on Binance
+  (wallet 17,215 to 16,670 USDT). The owner then ordered, in the AI Trading session (relayed here, "confirmed twice"):
+  VIP accounts take a setup only when the engine's Lead at the step that opened it is above 5.0 points in the setup's
+  direction. The vault applies the cut; Mind 15 supplies the number: `lead_pts` in the open book (`vault_feed.py`,
+  spec agreed by message with that session: a number, at most 2 decimals, -100..100, never on FLAT, left out when
+  unknown, and a missing value does not pass). Built with sending off on 23 Nov (commit 2e6c1c1); the vault that accepts
+  the key was installed 23 Nov 16:20 UTC (package 81c96bd4); asked here whether to bump the version, deploy and switch
+  sending on, the owner on 24 Nov: "Yes, deploy it". The golden record was rewritten for v5.2.10 (only `lead_pts` and
+  the version changed). Numbers given to the owner beforehand: live since 11 Nov on BTC and ETH, setups opened on a
+  real call 9 trades, 7 won, +$2,558, forced 4 trades, 2 won, -$430; on history (H65) both are about flat per trade.
+  The paper Setups book itself is unchanged and still takes forced entries. The two shorts opened 23 Nov 15:00 UTC
+  (forced, Lead 0.0 and 1.1 points toward up) were joined at 3x before the filter existed and carry no Lead.
+- **H107: buying a capitulation bounce does not pass** (23 Nov 2026; owner: "Deploy a study how we can take advantage
+  of last fri where price huge drop to 55k and then rally back to now"). Two long rules shaped by the 21 Nov low were
+  registered before any history number: rule A broke even over 123 trades (2019 to Nov 2025), rule B had 32 trades,
+  too few to judge. No shadow book proposed. `research/out/h107_capitulation_rebound/report.md`.
+- **Agents on Fable 5.2** (24 Nov 2026; owner: "utilise fable 5.2 agents").

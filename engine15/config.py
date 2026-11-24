@@ -17,13 +17,15 @@ ESTATE = os.environ.get("ENGINE15_ESTATE", os.path.join(os.path.dirname(ROOT), "
 LIBRARY_JSON = os.path.join(ESTATE, "research", "local", "library", "strategy_library.json")
 
 # Said once in the journal (each market group's next entry) after "version" changes (live.step_group).
-VERSION_NOTE = ("think15-v5.2.9: on BTC and ETH the Setups book now books a new entry from flat at the close that "
-                "decides it, at that close's price, instead of at the next bar's open one step later. It is the same "
-                "moment; the setup is now on the page, in the signal and in the book the vault reads in that same step, "
-                "about 15 minutes sooner. Flips, stops, targets, sizing and every other market and book are unchanged.")
+VERSION_NOTE = ("think15-v5.2.10: the BTC and ETH setups sent to the VIP vault now carry the Lead of the step that "
+                "opened them (P(up) minus P(down) in points, fixed for the setup's life), so the vault can take only "
+                "setups whose opening Lead is above 5 points in their direction. Nothing in the engine's own decisions, "
+                "entries, stops, targets, sizing or books changes.")
 
 CFG = {
-    "version": "think15-v5.2.9",      # v5.2.9 (22 Nov 2026): the Setups book's early entry on BTC and ETH ("early_entry",
+    "version": "think15-v5.2.10",     # v5.2.10 (24 Nov 2026): the vault's book carries the setup's opening Lead
+                                      #   (vault_feed.SEND_LEAD); owner's order of 23 Nov, "Yes, deploy it" on 24 Nov.
+                                      # v5.2.9 (22 Nov 2026): the Setups book's early entry on BTC and ETH ("early_entry",
                                       #   below); owner: "Cut the 15-minute delay", then "I want stick to my plan".
                                       # v5.2.8 (21 Nov 2026): the trailing stop on six main books ("trail_stop" and
                                       #   "trail_wait_signal", below); owner: "Update minds 15 with tight trailing stop".
