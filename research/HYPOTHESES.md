@@ -7229,3 +7229,29 @@ heading says "about 12:55"); `REGISTERED` is 12:50. What the registration left o
   coins, 34 ms to catch up five days.
 - **Not verified:** nothing was run on the live box. That the box's funding file is refreshed at every crypto step
   is read from `live._update_bars`, not observed there. No card was sent to Telegram: the texts are held by tests.
+
+### H115 note: the retest-level notice (24 Nov 2026; NOT a hypothesis, NOT a setup, nothing registered and nothing graded)
+
+After H116 the owner chose "a plain Telegram notice when price enters the zone, stating these base rates". It is built
+beside the H115 book and opens, closes and changes no trade:
+- **What it is.** `playbook9.levels_of` is H116's level exactly as the report words it (the low behind a rule A
+  trigger; the same-low rule; 30 days; dead, armed, first touch), plus one state that H116 did not name: broken, the
+  first bar from the first touch on with a low under the level. The bot sends the owner one notice at the first touch
+  and one at the break. The numbers on the first are H116's Part 1 base rates (77 retests, 2019 to 2025: under the
+  old low within four days in 88%, median lowest point 6.6% below it; higher a day after the first touch in 58%,
+  median +1.9%). They are descriptive counts, not a tested rule; the rules H116 did test (C1, C2) had too few trades
+  to judge and lost a little, and the notice says so.
+- **Stateless, from a 93-day tail.** The levels alive when the code is deployed were made before it, so nothing is
+  kept from triggers seen live: every new bar the levels are recomputed from the last 93 days of closed bars (32 days a
+  level is listed, 30 for the same-low rule before it, 30 of lows before those triggers, 1 spare).
+  `tests/test_capit_zone.py` holds this to `research/h116_retest_capitulation_low.machine` run on the whole file: at
+  338 test dates on BTC and 460 on ETH (every level's trigger bar, first-touch bar, break bar and last listed bar,
+  plus 30 random bars) the levels, low bars, arming bars, first-touch bars and states are the script's (787 and 1,341
+  level readings, no difference), and at the end of the data copy it finds the two levels of H116's `event.json`.
+  Those files include the holdout year; the test asserts equality and reports no result.
+- **What no tail can follow:** three or more triggers off exactly the same low price that chain across more than 30
+  days. It did not happen in these files: all 86 repeats of a low came within 3.5 hours of the level's own trigger.
+- **One message, not two,** when a level is first seen already broken (into the zone and under the low in one bar, or
+  the bot was away): the break notice names the touch. This is the bot's choice, not H116's.
+- **Not verified:** nothing was run on the live box and no notice was sent to Telegram; the texts are held by tests.
+  The page block carries the levels; the web tab does not show them.
