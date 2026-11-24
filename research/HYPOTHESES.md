@@ -6025,7 +6025,7 @@ Nothing in the registered rule was changed. What the registration left open, and
 - **Step cost, measured on the laptop** with synthetic records and a 21 MB bar file: about 0.03 s with today's two
   weeks of arm records, 0.08 s after three months, 0.23 s after a year. It grows with the length of the arms' records.
 
-## H114. USDJPY in the Setups book: a wider stop (3 barriers instead of 2), or leave the market out (registered 24 Nov 2026, about 12:40 UTC, before any H114 code existed or any H114 number on history was computed)
+## H114. USDJPY in the Setups book: a wider stop (3 barriers instead of 2), or leave the market out (registered 24 Nov 2026, 12:17 UTC, before any H114 code existed or any H114 number on history was computed)
 
 **Prompted by:** the live audit of 24 Nov 2026 (`research/out/live_audit_20261124/report.md`, finding 9 and row F) and
 the owner, 24 Nov 2026: "USDJPY: a wider stop, or leave it out of the Setups book". Research only: nothing in the engine,
