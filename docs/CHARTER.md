@@ -662,7 +662,6 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
 - **The research queue on the box stays stopped** (24 Nov 2026). Asked whether to restart it under the 30% CPU cap
   or keep it stopped, the owner: "Keep it stop now". It is not restarted, capped or not, without the owner's word. H85
   waits with its checkpoint; H86 runs on the laptop.
-<<<<<<< HEAD
 - **The book allocator `a_alloc` is built, paper only, NOT passed, NOT deployed** (24 Nov 2026; RL idea R2 of
   `docs/RL_NEXT.md`; the owner on the three RL ideas "run as a paper shadow first": "Ok lets do it"). Registered as
   H110 before any number. One paper wallet of $10,000 from 25 Nov 2026 00:00 UTC is split each UTC day between the 37
@@ -674,7 +673,6 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   has. Open: deploy with the next `tools/deploy.sh` (no `CFG` key, no cache rebuild); tell the AI Trading Bot session
   that `scoreboard_all` gains a block with paper dollars and a sentence with the word "edge" before it shows on a
   page; no Books tab entry is built.
-=======
 - **H108: card trust per regime bucket, built as a paper shadow mind. NOT passed, NOT deployed** (24 Nov 2026; RL
   idea R3 of `docs/RL_NEXT.md`; the owner, on the three RL-style ideas that "would run as a paper shadow first":
   "Ok lets do it"). Registered in `research/HYPOTHESES.md` H108 before any code or number (its own commit). There is
@@ -692,4 +690,3 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   cut-the-future tests). Only targeted tests were run; the full suite and the deploy are left for the merge.
   **Open for the owner:** all eight markets or BTC and ETH only (the brief allowed eight "if free"; eight costs about
   0.3 s more per step). Changing that before the first live bar needs a dated note under H108.
->>>>>>> worktree-agent-a5340299436c7a4b4

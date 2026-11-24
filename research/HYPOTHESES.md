@@ -5736,7 +5736,6 @@ Negative funding looks better but rests on 32 trades and is not significant. Thi
 ETH no rebound-long rule tested so far has held up across both halves. Nothing here supports a paper shadow book on the
 registered bar; nothing in the engine, the books or the vault was changed.
 
-<<<<<<< HEAD
 ## H110. The book allocator `a_alloc`: does moving one paper wallet toward the books that are doing well forward beat holding them all equally? (registered 24 Nov 2026, about 05:25 UTC, before any H110 number was computed; RL idea R2 of `docs/RL_NEXT.md`; owner, 24 Nov 2026: "Ok lets do it")
 
 **Paper only. NOT passed. It changes no book and no decision.** `a_alloc` is one paper wallet of $10,000 that is split
@@ -5818,7 +5817,6 @@ So a row that arrives late (gold, silver and oil step one bar behind) can still 
 first hour of that day; after that a day's shares do not change unless a record changes. A book whose records cannot
 be read at a step is left out of that step for both wallets, and the block says so. Constants live in the module, not
 in `CFG`. Tests: `tests/test_book_alloc.py`.
-=======
 ## H108. RL idea R3: card trust kept separately per regime bucket, as a paper shadow mind (registered 24 Nov 2026, about 05:25 UTC, before any H108 code existed or any H108 number, on history or live, was computed)
 
 **Prompted by:** `docs/RL_NEXT.md` section R3 ("Trust that depends on the regime") and the owner, in this project, 24 Nov
@@ -5891,4 +5889,3 @@ later is a new hypothesis each.
 **Code:** `engine15/regime_trust.py` (the buckets, the tables, the odds, the book's step, the comparison line),
 hooked into `engine15/shadows.py` `advance` as a guarded shadow mind (`shadows.MINDS`; a failure is logged in one
 line and skipped). Tests `tests/test_regime_trust.py`. Scoreboard label: "NOT passed, paper only".
->>>>>>> worktree-agent-a5340299436c7a4b4
