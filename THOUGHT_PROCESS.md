@@ -88,6 +88,13 @@ and every later change is in `VERSION_NOTE` in engine15/config.py)
 - **BTC/ETH pair book (13 Nov 2026, NOT passed):** `p7_rvbear` (`engine15/playbook7.py`, H37 V4), forward from
   2026-11-13 11:30 UTC. Outside a daily downtrend each sleeve holds its own coin 1x spot; in a downtrend (daily close
   below a falling 200-day average) it holds the stronger coin 0.75x spot and shorts the weaker 0.75x perp.
+- **Capitulation-long books (24 Nov 2026, H115, NOT passed):** `p9_rebound_a` and `p9_rebound_b`
+  (`engine15/playbook9.py`) buy BTC or ETH on paper when a fresh 30-day low, at least 10% under the price a week
+  earlier, is followed by a rebound of 2 x ATR(1h) (rule A), and the same only when shorts are paying funding (rule
+  B): H107's two rules, with its stop (3 x ATR 1h), half out at Target 1 and the rest out at Target 2 or 48 hours
+  after the signal. The owner asked for the book after the 21 Nov low; on history rule A was flat over 123 trades and
+  rule B had 32, so this is a record to watch, not a rule that passed. The Telegram bot sends the owner a card when a
+  rule fires. The books keep their own state, decide nothing for the main books and never reach the vault.
 - **Lean live step (11 Nov 2026, opt-in with `ENGINE15_LEAN=1`):** the live step no longer holds all history
   in memory. Every session's readings and feature matrix are kept on disk (`engine15/evcache.py`,
   `data/evcache/`, memory-mapped). Each step computes only the new sessions plus a 30-day refresh for late

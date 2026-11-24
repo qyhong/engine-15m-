@@ -22,6 +22,10 @@ the next trade of whichever of six exit shadow books (`b_targets`, `main`, `b_tr
 `reports.scoreboard`, keeps no state, is not a rule of `run()` and never reaches the vault.
 The book allocator `a_alloc` (`engine15/book_alloc.py`, H110, 24 Nov 2026; paper only, NOT passed) splits one paper wallet
 each UTC day between the forward books on the scoreboard; read only, in `scoreboard.json`.
+The capitulation-long books `p9_rebound_a` and `p9_rebound_b` (`engine15/playbook9.py`, H115, 24 Nov 2026; paper only,
+NOT passed) run H107's rules A and B forward on BTC and ETH because the owner asked for them, although history does not
+support the rule; they keep their own state in `data/capit_long_state.json`, the Telegram bot sends the owner one card
+per trigger, and they never reach the vault.
 The engine version is `CFG["version"]` in `engine15/config.py` (think15-v5.2.10 on 24 Nov 2026); what each version changed
 is in `VERSION_NOTE` there and in THOUGHT_PROCESS.md "Now". It runs on the Singapore box, not on this laptop (HANDOFF.md).
 `out/live/scoreboard.json` judges every book on live trades only.
