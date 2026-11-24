@@ -15,7 +15,8 @@ points, positive favours LONG) of the step that opened the setup, fixed for its 
 `opening_lead`; kept in the feed's memory as `pos[sym]["lead_pts"]`, with each step's reading in `lead_seen` for a flip
 shown a step later). The vault's join filter on it (lead above 5.0 in the setup's direction) is the AI Trading Bot
 session's switch; a setup with no known opening Lead carries no key and does not pass that filter. Live on the box since
-24 Nov 2026 08:33 UTC (commit 5ed3d6e). `tests/conftest.py` keeps the queue harnesses' BLAS thread settings from
+24 Nov 2026 08:33 UTC (commit 5ed3d6e); the vault's lead filter is ON since 09:25 UTC the same day (that session's
+switch). The three RL-style paper books (H108, H109, H110) are live since 09:52 UTC (commit 6f9c400). `tests/conftest.py` keeps the queue harnesses' BLAS thread settings from
 leaking into other tests (they crashed the parallel-step test's child engine on the Windows ARM64 laptop).
 Since 21 Nov 2026 a follower book runs beside the shadow books (`engine15/floor_book.py`, `shadows.FOLLOWERS`,
 book name `f_floor_33_3r`): the hold copy's trades with a third of the best closed profit locked once 3R up (H61).

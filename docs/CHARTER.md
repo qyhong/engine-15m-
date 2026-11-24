@@ -714,3 +714,14 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   09:00 UTC step took 113 s, no failed step and no refused book. The two shorts open since 23 Nov 15:00 UTC carry no
   `lead_pts`; the first book with one comes with the next new setup. The vault's own filter is still off (the AI
   Trading session's switch). A second VIP member (member 6) is funded since about 08:18 UTC.
+- **The three RL-style paper books are LIVE** (24 Nov 2026, deployed 09:52:37 UTC, commit 6f9c400, still
+  think15-v5.2.10; owner: "Ok lets do it"). Built by three Fable 5.2 agents in separate worktrees, each registered
+  before any number (H108 `m_regime_trust`, H109 `b_learn`, H110 `a_alloc`), merged on a side branch, 1,655 tests
+  passed there and 1,666 in the deploy's own run; the golden record is untouched and no `CFG` or reading file changed,
+  so there was no cache rebuild. First step with them (10:00 UTC close): 116 s (107 to 133 s before), the regime
+  trust mind 0.26 s for four groups, no error line, the 10:00 UTC books to the vault on time. `scoreboard.json` holds
+  the `a_alloc` and `exit_learner` blocks and a row for `m_regime_trust`, which started flat on all eight markets at
+  10:00 UTC; the exit learner and the allocator count from 25 Nov 00:00 UTC. All three are paper only and NOT passed.
+- **The vault's lead filter is ON** (24 Nov 2026, 09:25:52 UTC; the owner in the AI Trading session: "Switch it on
+  now"; threshold 5.0, strict; a setup whose book carries no `lead_pts` is not joined). Reported by that session; the
+  switch is theirs. From this project's side: the first book of every new BTC or ETH setup must carry `lead_pts`.
