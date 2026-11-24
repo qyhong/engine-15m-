@@ -36,6 +36,9 @@ every step it recomputes the four tables from the prep's graded calls. State: `s
 `<group>: regime trust mind (H108, paper) 0.0Ns: <market> <bucket>, ...`. Trades: `shadow_trades_m_regime_trust_<market>.csv`.
 Scoreboard: its row in `scoreboard.json` carries `label`, `passed: false` and `vs_main_copy` (H108's comparison line; no
 number and no word before 30 closed trades). The Telegram ranking shows it under its raw name (no short name was added).
+H109 (24 Nov 2026) adds the exit learner `b_learn` (`engine15/learn_book.py`, BTC and ETH, paper only, NOT passed): it
+copies the next trade of whichever of six exit shadow books leads in the entry's market state. It is not a rule of
+`shadows.run` and not in `shadows.FOLLOWERS`; `reports.scoreboard` runs it (see "Exit learner" below).
 
 Read `docs/CHARTER.md` first (purpose, every task and status, the owner's decisions), then
 `THOUGHT_PROCESS.md` ("Now" section) and `CLAUDE.md`. This file is only the moving parts.
@@ -238,6 +241,18 @@ crypto replay).
   one log line `book allocator: ...` and the scoreboard is written without the block. Output: the `a_alloc` block of
   `out/live/scoreboard.json` (today's shares, both wallets, daily rows, the reads at 30 and 60 completed days). It
   changes no book and no decision; the constants are in the module, not in `CFG`. Tests: `tests/test_book_alloc.py`.
+- Exit learner `b_learn` (24 Nov 2026, H109, owner "Ok lets do it"; paper only, NOT passed): `engine15/learn_book.py`,
+  called by `reports.scoreboard` inside a try/except, before the shadow rows are read. Arms: `b_targets`, `main` (the
+  hold copy), `b_trail`, `b_be_t1`, `b_ema20_1h_t1`, `b_sma20_1h_t1`, on BTC and ETH. It keeps NO state: every step it
+  reads the arms' `shadow_trades_<arm>_<coin>.csv`, `data/shadow_state.json` (open trades) and the tail of the two bar
+  files (from 40 days before the arms' first trade), recomputes the whole book from `learn_book.START_UTC` (25 Nov 2026
+  00:00 UTC) and rewrites `out/live/shadow_trades_b_learn_<coin>.csv` only when it changed; that file is what puts it
+  on the scoreboard (title in `reports.SHADOW_TITLES`). The `exit_learner` block of `scoreboard.json` holds the four
+  tables (scores, weights, leader), whom each coin follows, the arms over the same days and what was left out. If a
+  bar file or the state cannot be read at a step, the block says so and the record on file is left as it was. A
+  failure logs one line, `exit learner: ...`, and the scoreboard goes on. Constants are in the module (none in `CFG`);
+  they are H109's and are not to be tuned. To read it by hand: `py -3 -m engine15.learn_book` (prints the block, writes
+  nothing). Measured cost: about 0.03 s a step now, 0.23 s with a year of records. Tests: `tests/test_learn_book.py`.
 - "Setups moving against" alert (22 Nov 2026, owner asked for it): `telegram_notify.adverse_update`, hooked into
   `check()` in its own try/except. It reads the page's `b_targets` book and the market closes; its state is the key
   `adverse` in the bot's state (per market: trade id, entry, starting stop, flags a, b and t1). Thresholds
