@@ -309,6 +309,11 @@ crypto replay).
   on both coins, 34 ms to catch up five days. Page: block `playbook.playbook9` (`not_passed: true`, per-coin readings
   under `coins`: how far each coin is from a signal). `a_alloc` lists both books under `books_not_registered`
   (H110 fixed its 37 books). To read it by hand: `py -3 -m engine15.playbook9` (prints the state file, writes nothing).
+  THE REBOUND SIGNAL FILE (25 Nov 2026, for the VIP vault's dry run only): the live step also rewrites
+  `out/live/rebound_signal.json` (schema 1): per coin, `p9_rebound_a`'s trade as `state` none / waiting / open, its `id`
+  (`<coin>.<trigger close>.rebound`), `decided_utc`, `entry_utc`, the levels (`*_est` while waiting), `time_exit_utc`,
+  `rule_b_too`, and `last_closed`. Older than 30 minutes = unknown. A failed write is one line; the trades go on.
+  `data/capit_long_state.json` is in the hourly state copies since the same day (docs/RESTORE.md).
   THE ALERT: `telegram_notify.capit_check`, in the bot's own process (`mind15-telegram`; restart it after a deploy so
   it loads the new code). It reads the state file (never imports the book) and sends, to the owner's locked chat only,
   one card per coin and deciding close at which a rule opened a paper trade (rule(s), entry, stop, Target 1 and 2, the

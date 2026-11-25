@@ -4,7 +4,8 @@
 The vault feed's memory (data/vault_feed_state.json) says which open setup the feed saw inside its entry window and which
 exit instructions are still waiting; the shadow books' memory (data/shadow_state.json) holds the book the VIP vault
 copies. Before this, both were copied once a day, to the laptop only. Losing the first while a setup is open means no
-exit is sent for it.
+exit is sent for it. Since 25 Nov 2026 the capitulation-long books' memory (data/capit_long_state.json, playbook9, paper
+only) is copied too: lost, those books start flat and forget an open rebound long.
 
     python tools/server/state_copies.py copy               one copy of FILES into data/state_copies/<UTC stamp>/, each
                                                            checked to be readable JSON; the oldest beyond KEEP removed.
@@ -31,7 +32,8 @@ import time
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DATA_DIR = os.path.join(ROOT, "data")
 COPIES = "state_copies"
-FILES = ("vault_feed_state.json", "shadow_state.json", "live_state.json", "signals_state.json")
+FILES = ("vault_feed_state.json", "shadow_state.json", "live_state.json", "signals_state.json",
+         "capit_long_state.json")        # the capitulation-long books and the retest zone (H115; owner, 25 Nov 2026)
 DEFAULT_RESTORE = ("vault_feed_state.json",)
 KEEP = 48                                # two days of hourly copies
 SERVICE = "mind15"
@@ -76,6 +78,15 @@ def describe(name, doc):
                           "t1_taken": bool(b.get("t1_hit")), "entry": b.get("entry") if b.get("pos") else None}
             last = ((doc.get("groups") or {}).get("crypto") or {}).get("last_ms")
             return {"setups_book": out, "crypto_last_bar_utc": _utc(last) if last else None}
+        if name == "capit_long_state.json":
+            books = doc.get("books") if isinstance(doc.get("books"), dict) else {}
+            out = {}
+            for bk in sorted(books):
+                for s in VAULT_MARKETS:
+                    slot = (books.get(bk) or {}).get(s) or {}
+                    out["%s %s" % (bk, s)] = ("OPEN" if slot.get("open") else "WAITING" if slot.get("pending") else "none")
+            return {"rebound_longs": out, "closed": len(doc.get("closed") or []),
+                    "started_utc": doc.get("started_utc")}
     except Exception:
         pass
     return {}

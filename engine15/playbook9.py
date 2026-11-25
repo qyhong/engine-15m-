@@ -48,6 +48,13 @@ bars (levels_of; LEVEL_TAIL_DAYS says why 93), kept under the state's "zone" key
 keys are not touched) and shown on the page; telegram_notify.py sends the owner one notice at the first touch and one
 at the break. They open, close and change nothing in the two books.
 
+THE REBOUND SIGNAL FILE (owner, 25 Nov 2026: "(2) a dry run of the rebound in the vault"): out/live/rebound_signal.json,
+rewritten at every live step, holds rule A's trade per coin (p9_rebound_a: the trigger and the long b_rebound takes)
+as none / waiting / open, with its id, levels and time exit, and its last closed trade. It is for the VIP vault's DRY
+RUN only (log what it would have done per member, place nothing). Nothing on the money path reads it; it adds no key
+to the book or to an intent; it changes no trade here. Only the live step writes it (state_path None), or a caller
+that names signal_path.
+
 Rows follow docs/PLAYBOOK_INTERFACE.md (status WAITING / OPEN / CLOSED, side 1). A failure is logged in one line and
 skipped; it never stops the engine's step (reports.playbooks wraps the module too). Constants live here, not in CFG.
 """
@@ -63,7 +70,7 @@ import pandas as pd
 
 from . import data
 from . import indicators as ind
-from .config import DATA_DIR
+from .config import DATA_DIR, OUT_DIR
 
 REGISTERED = "2026-11-24 12:50"     # UTC: H115 committed; the record never starts before it
 STAKE = 10000.0
@@ -90,6 +97,9 @@ LATE_MS = BAR_MS                    # a trigger first seen after the next bar ha
 ALERTS_KEPT = 100
 STATE_VERSION = 1
 STATE_PATH = os.path.join(DATA_DIR, "capit_long_state.json")
+SIGNAL_PATH = os.path.join(OUT_DIR, "live", "rebound_signal.json")   # the vault's dry run reads it (25 Nov 2026)
+SIGNAL_SCHEMA = 1
+SIGNAL_BOOK = "p9_rebound_a"        # rule A: the trigger and the long that b_rebound (H117) takes
 
 # ---------------------------------------------------------------- the retest levels (H116's level; a notice, no trade)
 LEVEL_LIFE_DAYS = 30                # a level counts at bars that open at most this long after its trigger bar opened
@@ -605,6 +615,78 @@ def page_levels(st):
     return out
 
 
+# ---------------------------------------------------------------- the rebound signal file (the vault's dry run)
+def _iso(ms):
+    return None if ms is None else time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(int(ms) // 1000))
+
+
+def _sig_id(asset, decided_ms):
+    return "%s.%s.rebound" % (asset, time.strftime("%Y%m%dT%H%M%SZ", time.gmtime(int(decided_ms) // 1000)))
+
+
+def _rule_b(t):
+    """Was rule B's condition true at the trigger too (a fresh negative funding rate)? None when it could not be read."""
+    f = _f(t.get("funding"))
+    if f is None or not t.get("funding_fresh"):
+        return None
+    return bool(f < 0)
+
+
+def signal(st, now_ms):
+    """The rebound signal file's body from the state: per coin, rule A's trade as none / waiting / open and its last
+    closed trade. Pure; never raises on a state that _valid accepts. Times are ISO UTC; `decided_utc` is the close of
+    the trigger bar, which is also the open of the bar whose open fills the long."""
+    out = {"schema": SIGNAL_SCHEMA, "generated_utc": _iso(now_ms), "book": SIGNAL_BOOK,
+           "rule": "H107 rule A: the capitulation-rebound long that b_rebound (H117) takes from a short or flat book",
+           "paper_only": True, "passed": False,
+           "use": "the VIP vault's DRY RUN only: log what each member would have done; place nothing (owner, 25 Nov 2026)",
+           "stale_after_minutes": 30, "markets": {}}
+    books = (st.get("books") or {}).get(SIGNAL_BOOK) or {}
+    closed = [t for t in st.get("closed") or [] if t.get("book") == SIGNAL_BOOK]
+    for asset in ASSETS:
+        slot = books.get(asset) or {}
+        m = {"state": "none"}
+        t = slot.get("open")
+        if t is not None:
+            m = {"state": "open", "id": _sig_id(asset, t["decided_ms"]), "side": "LONG",
+                 "decided_utc": _iso(t["decided_ms"]), "entry_utc": _iso(t["entry_open_ms"]), "entry": _f(t["entry"], 6),
+                 "stop": _f(t["stop0"], 6), "stop_now": _f(t["stop"], 6), "target_1": _f(t["t1"], 6),
+                 "target_2": _f(t["t2"], 6), "t1_taken": bool(t["t1_taken"]), "t1_utc": _iso(t.get("t1_close_ms")),
+                 "time_exit_utc": _iso(int(t["decided_ms"]) + HOLD * BAR_MS), "rule_b_too": _rule_b(t),
+                 "late": bool(t.get("late"))}
+        elif slot.get("pending") is not None:
+            t = slot["pending"]
+            R = float(t["r_dist"])
+            m = {"state": "waiting", "id": _sig_id(asset, t["decided_ms"]), "side": "LONG",
+                 "decided_utc": _iso(t["decided_ms"]), "entry_utc": _iso(t["decided_ms"]),
+                 "entry_est": _f(t["close"], 6), "stop_est": _f(t["close"] - R, 6), "target_1_est": _f(t["close"] + R, 6),
+                 "target_2_est": _f(t["close"] + 2.0 * R, 6), "stop_distance": _f(R, 6),
+                 "time_exit_utc": _iso(int(t["decided_ms"]) + HOLD * BAR_MS), "rule_b_too": _rule_b(t),
+                 "late": bool(t.get("late")),
+                 "note": "the long fills at the open of the bar that opens at entry_utc; the levels are set from that "
+                         "open: stop = entry - stop_distance, Target 1 = entry + stop_distance, Target 2 = entry + 2 x"}
+        last = [c for c in closed if c.get("asset") == asset]
+        if last:
+            c = last[-1]
+            m["last_closed"] = {"id": _sig_id(asset, c["decided_ms"]), "entry": _f(c["entry"], 6),
+                                "exit": _f(c["exit"], 6), "exit_utc": _iso(c["exit_close_ms"]), "why_out": c["why_out"],
+                                "r": _f(c["r"], 4)}
+        out["markets"][asset] = m
+    return out
+
+
+def write_signal(st, now_ms, path=None):
+    """Write the signal file atomically (a reader never sees half a file)."""
+    path = path or SIGNAL_PATH
+    folder = os.path.dirname(path)
+    if folder:
+        os.makedirs(folder, exist_ok=True)
+    tmp = path + ".tmp"
+    with io.open(tmp, "w", encoding="utf-8") as fh:
+        json.dump(signal(st, now_ms), fh, allow_nan=False, sort_keys=True, indent=1)
+    os.replace(tmp, path)
+
+
 # ---------------------------------------------------------------- bars
 def tail_bars(asset, nrows, path=None):
     """The last `nrows` bars of the engine's 15m file, as data.load gives them, read from the end of the file."""
@@ -672,11 +754,13 @@ def _step_asset(st, asset, bars, funding, now, log):
     return True
 
 
-def step(bars=None, now_ms=None, funding=None, state_path=None, log=print, start_ms=None):
+def step(bars=None, now_ms=None, funding=None, state_path=None, log=print, start_ms=None, signal_path=None):
     """bars: {asset: 15m frame from engine15.data.load} (None reads the tails of the engine's files); funding:
     {asset: Series of rates keyed by set time} (None reads data/<asset>_funding.csv); state_path: default
     data/capit_long_state.json; start_ms: only for a state that does not exist yet (tests): the close after which bars
-    count; by default the last 15m close before this step's clock, never before REGISTERED.
+    count; by default the last 15m close before this step's clock, never before REGISTERED; signal_path: where the
+    rebound signal file goes (the live step, state_path None, writes SIGNAL_PATH; a caller that names a state_path
+    writes none unless it names signal_path too).
     -> rows (docs/PLAYBOOK_INTERFACE.md). Never raises."""
     t0 = time.perf_counter()
     rows = []
@@ -709,6 +793,11 @@ def step(bars=None, now_ms=None, funding=None, state_path=None, log=print, start
                 save_state(st, path)
             except Exception as e:
                 _say(log, "playbook9: the state could not be written (%r): this step is redone at the next one" % (e,))
+        if signal_path or not state_path:
+            try:
+                write_signal(st, now, signal_path or SIGNAL_PATH)
+            except Exception as e:
+                _say(log, "playbook9: the rebound signal file was not written (%r); the trades are not affected" % (e,))
         rows = rows_of(st)
         LAST_RUN.update({"started_utc": st.get("started_utc"), "skipped": copy.deepcopy(st.get("skipped")),
                          "readings": copy.deepcopy(st.get("readings")), "state_note": st.get("state_note"),

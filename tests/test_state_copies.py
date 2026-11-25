@@ -47,7 +47,8 @@ def test_a_copy_holds_the_files_a_manifest_and_what_they_say(data):
     assert st == "20261118T000800Z" and sc.copies(str(data)) == [st]
     m = sc.manifest(str(data), st)
     assert sorted(m["files"]) == ["shadow_state.json", "vault_feed_state.json"]
-    assert m["skipped"] == {"live_state.json": "not there", "signals_state.json": "not there"}
+    assert m["skipped"] == {"live_state.json": "not there", "signals_state.json": "not there",
+                            "capit_long_state.json": "not there"}
     holds = m["files"]["vault_feed_state.json"]["holds"]
     assert holds["positions"]["BTCUSDT"] == {"side": "LONG", "opened_utc": "2026-11-18T09:00:00Z", "t1_taken": False,
                                              "exits_will_be_sent": True}
@@ -132,3 +133,17 @@ def test_the_tool_stands_alone():
     assert "import engine15" not in src and "from engine15" not in src
     assert sc.BOOK == "b_targets" and sc.DEFAULT_RESTORE == ("vault_feed_state.json",)
     assert not [w for w in ("getenv", "os.environ", "open(\"/etc", "secrets/") if w in src]
+
+
+def test_the_capitulation_long_state_is_copied_and_described(data):
+    capit = {"version": 1, "started_utc": "2026-11-24 13:00", "closed": [{"id": "x"}],
+             "books": {"p9_rebound_a": {"BTCUSDT": {"open": {"entry": 1.0}, "pending": None},
+                                        "ETHUSDT": {"open": None, "pending": None}},
+                       "p9_rebound_b": {"BTCUSDT": {"open": None, "pending": {"close": 1.0}},
+                                        "ETHUSDT": {"open": None, "pending": None}}}}
+    put(data, "capit_long_state.json", capit)
+    st = sc.copy(str(data), now=T0 + 9 * 60, log=lambda *_: None)
+    held = sc.manifest(str(data), st)["files"]["capit_long_state.json"]
+    assert held["holds"] == {"rebound_longs": {"p9_rebound_a BTCUSDT": "OPEN", "p9_rebound_a ETHUSDT": "none",
+                                               "p9_rebound_b BTCUSDT": "WAITING", "p9_rebound_b ETHUSDT": "none"},
+                             "closed": 1, "started_utc": "2026-11-24 13:00"}

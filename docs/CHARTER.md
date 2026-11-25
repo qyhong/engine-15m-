@@ -832,3 +832,17 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   1,688.61 resting. No rejection. Noted from the feed's state: the new setup's `eligible` mark is False (its entry
   window was not seen open); that mark gates nothing since 20 Nov (`EXITS_ONLY_IF_WINDOW_SEEN = False`), so its exits
   will be sent. BTC's 23 Nov short (Target 1 taken, stop at entry) is still open, near its Target 2 (58,371.52).
+- **BTC's 23 Nov short closed at Target 2 and a new BTC short opened with a passing Lead** (25 Nov 2026). The 13:45 UTC
+  close took the rest of the 23 Nov short at 58,371.52 (the book's BTC realized went from $1,793.67 to $2,197.22) and
+  opened a new short: entry 58,298.09, stop 59,865.81, Target 1 52,137.45 (the 1h leg's Fibonacci 1.272, 3.9R, inside
+  `plan_targets`' 4R cap), Target 2 48,330.76 (6.3R). Reported by the AI Trading session: Lead -9.7 passed the filter;
+  member 4 0.309 BTC at 58,356.2 and member 6 0.022 BTC at 58,350.0, both at 13:48 UTC; stop resting.
+- **The owner chose two of four next moves** (25 Nov 2026, after "What can we do now"): "(2) a dry run of the rebound in
+  the vault, (3) hourly backup of the rebound records". Not chosen: testing rule A on more coins and years, and fewer
+  repeat Telegram cards.
+  - (3): `tools/server/state_copies.py` now copies `data/capit_long_state.json` every hour too (docs/RESTORE.md).
+  - (2), Mind 15's side: `playbook9.step` writes `out/live/rebound_signal.json` at every live step: rule A's trade per
+    coin (the trigger and the long `b_rebound` takes) as none / waiting / open, with an id `<coin>.<trigger close>.rebound`,
+    the levels, the time exit and the last closed one. For the vault's DRY RUN only (log what each member would have
+    done, place nothing). Not a money file; nothing on the money path reads it; no key added to the book or any intent.
+    The vault side is the AI Trading session's to build. Pointing real money at the rebound stays the owner's decision.

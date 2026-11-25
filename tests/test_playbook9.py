@@ -155,7 +155,7 @@ def test_the_module_imports_nothing_from_research_or_the_money_path_and_no_money
         elif isinstance(node, ast.ImportFrom):
             mods |= set("%s%s.%s" % ("." * node.level, node.module or "", a.name) for a in node.names)
     assert mods == {"copy", "io", "json", "math", "os", "time", "numpy", "pandas", "..data", "..indicators",
-                    ".config.DATA_DIR"}
+                    ".config.DATA_DIR", ".config.OUT_DIR"}
     assert "requests" not in src and "http" not in src and "socket" not in src     # no network: it sends nothing
     with open(os.path.join(ROOT, "tools", "money_files.txt"), encoding="utf-8") as fh:
         money = [ln.strip() for ln in fh if ln.strip() and not ln.startswith("#")]
@@ -965,3 +965,62 @@ def test_the_setups_document_the_vault_feed_reads_is_the_same_with_the_books_on_
     page["playbook"] = dict(page.get("playbook") or {}, playbook9=json.loads(json.dumps(p9.page_block(rows))))
     assert setups.build(json.loads(json.dumps(page))) == before
     assert sorted(os.listdir(str(tmp_path))) == ["s.json"]         # the book wrote its own state and nothing else
+
+
+# ---------------------------------------------------------------- 12. the rebound signal file (the vault's dry run)
+def _sig(path):
+    with open(path, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def test_the_signal_file_follows_rule_a_waiting_open_and_closed(up, tmp_path):
+    path, sig = str(tmp_path / "capit_long_state.json"), str(tmp_path / "out" / "rebound_signal.json")
+    fund = funding(up)
+    for i in list(range(4400, K)) + [K]:
+        p9.step(bars={BTC: up.iloc[:i + 1]}, now_ms=close_ms(up, i) + 20000, funding={BTC: fund}, state_path=path,
+                log=QUIET, signal_path=sig)
+        if i == 4400:
+            s = _sig(sig)
+            assert s["markets"][BTC] == {"state": "none"} and s["markets"][ETH] == {"state": "none"}
+    s = _sig(sig)
+    assert s["schema"] == 1 and s["book"] == "p9_rebound_a" and s["paper_only"] is True and s["passed"] is False
+    w = s["markets"][BTC]
+    assert w["state"] == "waiting" and w["id"] == "BTCUSDT.20270220T003000Z.rebound"
+    assert w["decided_utc"] == w["entry_utc"] == "2027-02-20T00:30:00Z" and w["rule_b_too"] is True
+    assert w["stop_est"] < w["entry_est"] < w["target_1_est"] < w["target_2_est"]
+    assert w["time_exit_utc"] == "2027-02-22T00:30:00Z"
+    p9.step(bars={BTC: up.iloc[:K + 2]}, now_ms=close_ms(up, K + 1) + 20000, funding={BTC: fund}, state_path=path,
+            log=QUIET, signal_path=sig)
+    o, row = _sig(sig)["markets"][BTC], [r for r in p9.rows_of(state_of(path)) if r["book"] == "p9_rebound_a"][0]
+    assert o["state"] == "open" and o["id"] == w["id"] and o["entry_utc"] == "2027-02-20T00:30:00Z"
+    assert (o["entry"], o["stop"], o["target_1"], o["target_2"]) == (row["entry"], row["stop"], row["target_1"],
+                                                                     row["target_2"])
+    assert o["stop_now"] == o["stop"] and o["t1_taken"] is False
+    for i in range(K + 2, K + 61):
+        p9.step(bars={BTC: up.iloc[:i + 1]}, now_ms=close_ms(up, i) + 20000, funding={BTC: fund}, state_path=path,
+                log=QUIET, signal_path=sig)
+    c = _sig(sig)["markets"][BTC]
+    assert c["state"] == "none" and c["last_closed"]["id"] == w["id"] and c["last_closed"]["why_out"] == "T1+T2"
+
+
+def test_only_the_live_step_writes_the_signal_file_by_default(up, tmp_path, monkeypatch):
+    path = str(tmp_path / "state" / "capit_long_state.json")
+    live = str(tmp_path / "live" / "rebound_signal.json")
+    monkeypatch.setattr(p9, "SIGNAL_PATH", live)
+    p9.step(bars={BTC: up.iloc[:4401]}, now_ms=close_ms(up, 4400) + 1, funding={}, state_path=path, log=QUIET)
+    assert not os.path.exists(live) and os.listdir(os.path.dirname(path)) == ["capit_long_state.json"]
+    monkeypatch.setattr(p9, "STATE_PATH", path)
+    p9.step(bars={BTC: up.iloc[:4402]}, now_ms=close_ms(up, 4401) + 1, funding={}, log=QUIET)
+    assert _sig(live)["generated_utc"] is not None and sorted(os.listdir(os.path.dirname(live))) == ["rebound_signal.json"]
+
+
+def test_a_signal_file_that_cannot_be_written_is_one_line_and_the_trades_go_on(up, tmp_path, monkeypatch):
+    path, said = str(tmp_path / "capit_long_state.json"), []
+    def boom(*_a, **_k):
+        raise OSError("disk full")
+    monkeypatch.setattr(p9, "write_signal", boom)
+    run_steps(up, funding(up), path, 4400, K + 1, log=said.append)
+    assert state_of(path)["books"]["p9_rebound_a"][BTC]["open"] is not None
+    p9.step(bars={BTC: up.iloc[:K + 3]}, now_ms=close_ms(up, K + 2) + 1, funding={}, state_path=path, log=said.append,
+            signal_path=str(tmp_path / "x.json"))
+    assert sum("rebound signal file was not written" in s for s in said) == 1

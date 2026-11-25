@@ -10,6 +10,7 @@ Written 20 Nov 2026. The steps were drilled in tests (`tests/test_vault_feed.py`
 | `vault_feed_state.json` | Which open setup the feed saw inside its entry window, the last book it sent, and every exit instruction (sent or still waiting). | The feed cannot know it may send exits for that setup, so it sends **none**, and waiting exits are gone. Members are covered only by their stop on the exchange. |
 | `shadow_state.json` | Every shadow book, including `b_targets`, the book the VIP vault copies. | The books start flat. The open setup disappears from the Setups page; the feed sees a position that ended and sends a close. |
 | `live_state.json`, `signals_state.json` | The main books; the signal record with the entry windows. | Not on the vault's exit path. Entry windows of new setups depend on `signals_state.json`. |
+| `capit_long_state.json` (hourly copies since 25 Nov 2026) | The capitulation-long paper books (`p9_rebound_a/b`), their alerts and the retest zone. | Not on the vault's exit path. The two books start flat and forget an open rebound long; `out/live/rebound_signal.json` (the vault's dry run) then shows none. |
 
 ## Where the copies are
 
