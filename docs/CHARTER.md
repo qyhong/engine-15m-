@@ -846,3 +846,17 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
     the levels, the time exit and the last closed one. For the vault's DRY RUN only (log what each member would have
     done, place nothing). Not a money file; nothing on the money path reads it; no key added to the book or any intent.
     The vault side is the AI Trading session's to build. Pointing real money at the rebound stays the owner's decision.
+- **The owner decided the VIP vault moves to a trailing-stop book on BTC and ETH; planned, not built** (26 Nov 2026).
+  Shown the forward numbers (BTC + ETH, 11-25 Nov, paper: `b_trail` 24 trades, 19 won, +$5,047 against `b_targets` 17,
+  11 won, +$2,780) and reminded of the history (H36: every tight trail made less than holding), the owner: "Lets
+  switch. But explain to me what is the changed." Asked whether the public Setups page moves too: "Ok. Lets plan for
+  this and apply for VIP", read as VIP auto-trading only (page, signals and cards stay on `b_targets`). The live vault
+  cannot follow a trail book (it needs both targets and a stop on the losing side); the AI Trading session reports the
+  owner confirmed there that the vault gets trail support in its next package. The plan, both sides' work, the order
+  and the risks: `docs/TRAIL_SWITCH_PLAN.md`. Nothing new is sent until that session confirms an installed package.
+  The B trail second check (60 trades, not before 10 Dec) still runs.
+- **Engine win rates shown to the owner** (26 Nov 2026, scoreboard of 25 Nov 22:33 UTC): Setups book 42 trades, 27 won
+  (64.3%), +$6,217, of which shorts 36 trades +$6,412 and longs 6 trades -$196; main books 21 trades, 57.1%, +$8,139.
+- **Agents on Fable 5.2 again** (owner, 26 Nov 2026: "Lets utilise fable 5.2 for all agents"). H118 (H107's rebound
+  rules on ten more coins and BTC/ETH before Oct 2019; owner: "Yes, test it", "Yes, download") was started before that
+  on Opus 5.5 and runs on the laptop.
