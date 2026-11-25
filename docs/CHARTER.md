@@ -821,3 +821,14 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
 - **H86 is done (laptop): the Setups book's volatility-fitted stops beat random stops of the month's sizes** (p 0.0025
   pooled; halves agree, market groups do not; the book itself about flat). No forward test; nothing changes. Details in
   HYPOTHESES.md "H86 results".
+- **The first setup with an opening Lead went out, and the vault joined it** (25 Nov 2026). The ETH short opened 23 Nov
+  15:00 UTC closed at its Target 2 (1,636.40) in the 07:30 UTC bar: Target 1 then Target 2, +1.62R, +$687.82 on paper; the
+  feed sent its close intent and the AI Trading session reports member 4's remaining 4.644 ETH bought back at market at
+  07:47:57 UTC. At the 07:45 UTC close the Setups book opened a NEW ETH short on a real call (Lead 8.3 points toward
+  down, above the 5-point bar): entry 1,641.06, stop 1,688.61, Target 1 1,576.31, Target 2 1,543.93. Its book carried
+  `lead_pts` -8.3 (the feed's memory holds it), the first since v5.2.10. Reported by the AI Trading session: it passed
+  the vault's Lead filter and both members joined at market at 07:48:00 UTC, 3 minutes after `as_of`, at 1,643.16
+  (2.10 better than the book's entry for a short): member 4 10.626 ETH, member 6 0.837 ETH (his first trade), stop
+  1,688.61 resting. No rejection. Noted from the feed's state: the new setup's `eligible` mark is False (its entry
+  window was not seen open); that mark gates nothing since 20 Nov (`EXITS_ONLY_IF_WINDOW_SEEN = False`), so its exits
+  will be sent. BTC's 23 Nov short (Target 1 taken, stop at entry) is still open, near its Target 2 (58,371.52).
