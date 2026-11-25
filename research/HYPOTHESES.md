@@ -7478,3 +7478,153 @@ unit of the result. By the family's ledger a primary p well below 0.01 is worth 
 halves AND market groups; the halves agree pooled, the market groups do not. No forward test is proposed; nothing in
 the engine changes. H85 is still parked on the box at 17,436 of 65,000 draws with the research queue stopped (owner,
 24 Nov: "Keep it stop now"); H82 and the void H81 stay in `held/`.
+
+## H118. H107's capitulation-rebound rules A and B, unchanged, on ten more coins and on BTC and ETH's years before October 2019 (registered 25 Nov 2026, about 22:40 UTC (26 Nov, 06:40 on the laptop's clock), before any H118 number was computed)
+
+**Prompted by:** the owner, 25-26 Nov 2026: "test the rebound rule on more coins and years", then "Yes, download".
+Research only: nothing in `engine15/`, the books, the vault or the Singapore box changes, whatever the result. A pass
+would lead only to a proposal; it changes no live or paper book by itself.
+
+**The question.** H107 found rule A flat after fees on BTC and ETH, 2019-10-01 to 2025-11-10 (123 trades, -0.006R a
+trade; lost in the first half, won in the second) and rule B too few (32 trades). Does the SAME rule, with not one
+number changed, earn on coins it was never shaped on, and on BTC and ETH's earlier years?
+
+**Seen before this registration (written honestly).** H107's code and its results (section above and
+`research/out/h107_capitulation_rebound/results.json`), including its descriptive variants and the 21 Nov 2026 event the
+rules were shaped on. H70 (18 rebound-long rules out of an oversold state all lost after fees on BTC/ETH 2020-02 to
+2023-06), H71 (no engine reading carried confirmed information in an oversold state; low funding came closest), H113
+(Setups shorts in the 48 hours after a rule A trigger: both halves passed, the holdout gave the opposite sign) and H116
+(retest rules C1/C2 after a rule A low: too few trades, both lost after fees), as written in their sections. The file
+LIST of `data/sources`: hourly close-only files for these ten alts (`binance_<coin>_1h.csv`) exist there; they were not
+opened for H118 and no H118 number was computed from them. Nothing from any alt's 15m bars, any alt's funding, or BTC/ETH
+before 2019-01-01 has been read or computed; none of those files existed on this laptop when this was written.
+
+**What must be said first.** The rules were shaped on one BTC/ETH event (Nov 2026, holdout). Alt coins move together
+with BTC: a BTC crash day is usually a crash day for all ten, so the coins' trades are not independent. The bootstrap
+below resamples calendar months with all coins' trades of a month together for that reason, but the coins still count
+as one market more than as ten. Fees: the same 0.10% a side on every coin. Alts' real trading costs and slippage, above
+all after a crash, are usually higher than BTC's, so this fee is GENEROUS to the rule.
+
+**Data (downloaded after this registration).** Binance SPOT 15m klines from the public host
+`https://data-api.binance.vision/api/v3/klines` (the source `engine15/data.py` uses; its fetch pattern: 1000 bars a page,
+a pause of about 0.2 s, retries on errors), columns as the engine's 15m files: `ts_ms,open,high,low,close,volume,
+taker_buy`. Coins: ADAUSDT, AVAXUSDT, BNBUSDT, DOGEUSDT, DOTUSDT, LINKUSDT, LTCUSDT, SOLUSDT, TRXUSDT, XRPUSDT, each from
+its first bar to the bar opening 2025-11-10 23:45 UTC; BTCUSDT and ETHUSDT from their first bar (Aug 2017) to the bar
+opening 2019-10-05 23:45 UTC (separate files; the extra five days past 30 Sep only let a trade decided by 30 Sep finish,
+also for the 96-hour variant; those bars lie inside H107's window and were already seen). Funding: Binance USDT-M futures
+`https://fapi.binance.com/fapi/v1/fundingRate` (symbol, startTime, limit 1000), columns `ts_ms,rate`, for the ten alts,
+from each perpetual's first rate. Before a coin's perpetual existed there is no funding and rule B cannot fire (as for
+ETH in Oct-Nov 2019 in H107); BTC and ETH have no funding before 2019-09/11, so rule B cannot fire in test 2. If fapi is
+refused from this laptop, rule B is "not tested" and only rule A is run. Saved under `data/sources/h118/`
+(`<coin>_15m.csv`, `<coin>_funding.csv`, `btcusdt_15m_pre2019.csv`, `ethusdt_15m_pre2019.csv`); the H107 files in
+`data/` are not touched. Nothing from 2025-11-11 on is downloaded (the sealed holdout); every input is also cut at the
+bar opening 2025-11-10 23:45 UTC (funding: rates set up to that bar's close) before anything is computed. md5 of every
+file goes into results.json. Bars are used as Binance gives them: gaps (exchange outages) are not filled, and the rule
+counts bars, as H107 does. If the download heads well past 300 MB, it is stopped and reported.
+
+**Rules, trade, fees: exactly H107's, imported from its script.** `REG = {look 16, low_days 30, drop_days 7, drop 10%,
+bounce_atr 2.0, hold 192}`: a fresh 30-day low within the last 4 hours, that low at least 10% under the close a week
+earlier, close at least 2 x ATR(1h) above it, onset only; rule B = rule A and the last funding rate < 0. Long at the next
+open; stop 3 x ATR(14) of 1h bars (`data.resample`, `indicators.atr_wilder`, `data.htf_on_15`); Target 1 at +1R for
+half, then the stop to entry from the next bar; Target 2 at +2R; out at the close of bar k+192 otherwise; the stop is
+looked at first in a bar; fee 0.10% of notional a side on the entry and on each part's exit; funding not charged; one
+trade at a time per rule and coin. The code calls H107's `features`, `walk`, `walk_loop`, `trades_of`, `baseline`,
+`summary`, `boot`, `holm`; H107's script is not edited.
+
+**Window.** Deciding bars from 30 days after each coin's first bar (H107's `features` already requires a full 30 days
+behind a bar) to the cut 2025-11-10 23:45 UTC; a trade must END by the cut, else it is not taken. Test 2: deciding bars
+from 30 days after BTC's / ETH's first bar to 2019-09-30 23:45 UTC; its trades must end by 2019-10-05 23:45. Halves
+split at 2023-06-08 00:00 UTC by the deciding bar (H107's).
+
+**Statistics.** Month-clustered bootstrap, H107's method: calendar months (UTC, of the deciding bar) from the first month
+any coin of the test can decide to the cut's month, months without a trade included, resampled with replacement with all
+coins' trades of a month together; 10,000 draws, seed 20261126; the statistic is summed R over summed trades of the
+drawn months; 95% interval = 2.5th and 97.5th percentiles; one-sided p for mean R > 0 = (1 + #{draw - observed >=
+observed}) / (draws + 1). Halves: first-half months up to and including June 2023, second-half months from June 2023
+(June 2023 is in both lists; each half carries only its own trades). Holm over the two rules (m = 2) on the pooled
+whole-window p of test 1. **Baseline (drift), H107's:** for each coin-month with a trade, the same trade entered at
+EVERY bar of that coin-month (the trade inside the window); excess = R minus that mean.
+
+**Test 1, the decision: the ten new coins pooled, rule A and rule B, each judged by itself. PASS only if all hold:**
+(a) at least 100 trades pooled and at least 30 in EACH half; (b) pooled mean R > 0 in BOTH halves; (c) mean R > 0 on at
+least 7 of the coins that have 5 or more trades (if fewer than 7 coins have 5 or more trades, (c) fails); (d) the
+Holm-adjusted one-sided p < 0.05; (e) pooled excess over the drift baseline > 0 (point estimate). Fewer trades than (a):
+"too few trades to judge" (no pass). Anything else: FAIL.
+
+**Test 2, descriptive, decides nothing: BTC and ETH, Sep 2017 to 2019-09-30 (deciding bars).** Rule A (rule B cannot
+fire: no funding): trades, share won, mean R with the month-clustered interval, sum of R, per coin. About two years on
+two coins is too short to decide anything; it is reported as such.
+
+**Read-outs.** Per rule, as H107: trades, share won, mean R with interval and p, sum of R, median R, percent return,
+exits by kind, longest losing run, deepest fall of cumulative R, months with a trade; pooled / each coin x whole / first
+half / second half; by year; signals skipped while a trade was open; the trade list. **Descriptive only:** (1) all 12
+coins x all years together: H107's BTC/ETH trades (read from its results.json, not recomputed) plus tests 1 and 2, by
+year and by coin; (2) H107's one-setting-at-a-time variants (rebound 1.5 and 2.5 ATR, drop 8% and 12%, hold 24 and 96
+hours) on test 1's ten coins.
+
+**Look-ahead guards (H107's two; any mismatch must be fixed before results count).** (i) For every signal bar, up to
+200 trigger bars and 40 random bars per coin (tests 1 and 2), the readings (A, B, trigger, ATR) are recomputed on data
+cut at that bar (funding at its close) and must equal the full run exactly; (ii) the vectorised trade walk must equal
+the bar-by-bar walk on every trade. Mismatches are reported.
+
+**Code:** `research/h118_rebound_more_coins.py` (`--download` fetches the data; the default run reads it). Output:
+`research/out/h118_rebound_more_coins/` (`results.json`, `report.md`).
+
+### H118 results (25 Nov 2026 UTC; download 22:42 to 23:20 UTC, 2,262 s, 233.2 MB; run 23:22 UTC on the laptop, 70 s; `research/out/h118_rebound_more_coins/report.md` + `results.json`; data `data/sources/h118/`)
+
+**Verdict by the registered rule: NO PASS. Rule A FAILS and rule B FAILS on test 1 (the ten new coins pooled).** Both
+have enough trades; both fail the same three checks: first-half mean R not above 0, fewer than 7 of the 10 coins with a
+positive mean, Holm p not under 0.05. Funding was reachable, so rule B was tested. The holdout was not downloaded (last
+bar opening 2025-11-10 23:45 UTC; last funding rate 2025-11-10 16:00). Nothing in the engine, the books, the vault or the
+box was changed.
+
+Each cell: trades, share won, mean R [95% month-clustered interval], one-sided p for mean R > 0, sum of R.
+- **Rule A, ten coins pooled:** 891, 54%, +0.041 [-0.067, +0.152], p 0.245 (Holm 0.491), +36.8R. First half 610, 50%,
+  -0.017 [-0.150, +0.125], p 0.615, -10.5R; second half 281, 62%, +0.168 [+0.038, +0.320], p 0.015, +47.3R. Positive on
+  5 of 10 coins (AVAX, DOT, LINK, TRX, XRP); every coin has 64 or more trades. Excess over random longs in the same
+  coin-months +0.236 [+0.120, +0.351]. Exits: 337 stopped, 98 T1 then entry, 121 T1 and T2, 160 T1 then time, 175 time;
+  median +0.202; longest losing run 19; deepest fall of cumulative R -40.1R. By year (trades, mean): 2018 101 -0.211,
+  2019 91 +0.158, 2020 76 -0.100, 2021 86 +0.301, 2022 205 -0.087, 2023 103 -0.028, 2024 124 +0.239, 2025 105 +0.156.
+- **Rule A per coin (mean R, trades):** ADA -0.021 (125), AVAX +0.094 (80), BNB -0.108 (81), DOGE -0.001 (82), DOT
+  +0.087 (85), LINK +0.248 (82; interval [+0.045, +0.464]), LTC -0.041 (114), SOL -0.029 (90), TRX +0.123 (64), XRP
+  +0.143 (88). In the second half all ten are positive; in the first half 5 of 10 are negative (ADA, BNB, DOGE, LTC, SOL).
+- **Rule B, ten coins pooled:** 284, 53%, +0.022 [-0.137, +0.208], p 0.429 (Holm 0.491), +6.3R. First half 184, 51%,
+  -0.007, p 0.562; second half 100, 57%, +0.076 [-0.120, +0.299], p 0.241. Positive on 6 of 10 coins (BNB, DOT, LINK,
+  LTC, TRX, XRP). 145 of the 284 trades are in 2022 (-0.077 a trade). Excess +0.209 [+0.035, +0.408].
+- **Test 2, BTC and ETH from 16 Sep 2017 to 30 Sep 2019 (descriptive; too short to decide anything):** rule A 65 trades,
+  34% won, -0.265 [-0.411, -0.038], -17.3R (BTC 24, -0.233; ETH 41, -0.284); 56 of the 65 trades in 2018 (-0.308 a
+  trade). Rule B cannot fire (no funding), 0 trades, as registered.
+- **All 12 coins x all years (descriptive; H107's 123 + 32 trades from its results.json plus tests 1 and 2):** rule A
+  1,079 trades, 52% won, +0.017 a trade, +18.8R; by year 2018 -0.245 (157), 2019 +0.139, 2020 -0.166, 2021 +0.323,
+  2022 -0.128 (249), 2023 -0.015, 2024 +0.254, 2025 +0.165. Rule B 316 trades, +0.040 a trade, +12.5R.
+- **One setting at a time on test 1 (descriptive, decides nothing):** rule A's first half stays at or below zero in 5 of
+  6 variants (-0.057 to -0.000); only the 24-hour hold is positive in both halves (+0.084 on 621, +0.167 on 282; 903
+  trades, 8 of 10 coins positive). That variant was not registered and is one of twelve looked at; it decides nothing.
+- **Look-ahead guards:** (i) 3,492 bars recomputed on data cut at the bar over the 12 coins, 0 mismatches; (ii) the
+  vectorised walk equals the bar-by-bar walk on every trade (largest difference 4.4e-16 R).
+
+**Deviations (stated honestly).** (1) The registration time is written in UTC as 25 Nov 2026 about 22:40 (26 Nov 06:40
+on the laptop's clock), not "26 Nov ... UTC" as the title asked: the 26 Nov date was local time. (2) The brief said the
+BTC/ETH pre-2019 files run "to 2019-10-01"; they run to the bar opening 2019-10-05 23:45 so that trades decided by 30 Sep
+can finish. This was written into the registration before any download; deciding bars still end 2019-09-30 23:45.
+(3) Funding was fetched strictly before 2025-11-11 00:00, so the rate set at exactly 00:00 (the cut bar's close), which
+H107's cut would have allowed, is absent. It could only affect the last bar, which cannot open a trade that ends by the
+cut. (4) Per-coin bootstrap cells use calendar months from that coin's first deciding month (the registration fixed the
+pooled months only); the pooled cells, which decide, use months from the first month any coin could decide (Dec 2017).
+(5) A smoke test of the loader on ADA, after the registration and before the download finished, printed the count of
+rule A onsets on ADA's bars (203, before the one-at-a-time filter; no R). (6) The first full run crashed in the report
+writer (a literal % in a format string) after results.json was written and before any verdict or R was printed; it was
+fixed and the whole run repeated. A second fix only changed how variant names print in report.md's table (regenerated
+from the same results.json). No rule, number or window was changed by either fix. (7) Data quality: Binance spot gaps are
+used as they are (largest 33.8 hours, the Feb 2018 outage on BNB, LTC, BTC and ETH; at most 0.2% of bars missing on an
+alt, 0.53% on the BTC/ETH pre-2019 files). The same 0.10% fee on every coin flatters the alts.
+
+**Reading.** On ten coins it was never shaped on, the rebound long behaves as on BTC and ETH: it lost in the first half
+and earned in the second, and it is not significant overall (+0.04R a trade on 891 trades). Half the coins lose money
+on it over the whole period. On BTC and ETH's earlier years (mostly 2018) it lost clearly (-0.27R a trade on 65 trades).
+The pattern is consistent across all twelve coins: the rule earns in years when crashes are bought back (2019, 2021,
+2024, 2025) and loses in falling years (2018, 2020, 2022). It beats random longs in the same months, but
+mostly because random longs in those crash months lose more. Rule B (negative funding) does not help on the alts. What
+looked like H107's second half is a period effect, not an edge that holds across coins and years. Nothing here supports
+a paper or live book on the registered bar; the forward books `p9_rebound_a/b` and `b_rebound` remain unsupported by
+history, as before.

@@ -860,3 +860,12 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
 - **Agents on Fable 5.2 again** (owner, 26 Nov 2026: "Lets utilise fable 5.2 for all agents"). H118 (H107's rebound
   rules on ten more coins and BTC/ETH before Oct 2019; owner: "Yes, test it", "Yes, download") was started before that
   on Opus 5.5 and runs on the laptop.
+- **H118: the rebound rules on ten more coins and on BTC and ETH before October 2019: NO PASS** (run 25 Nov 2026 23:22
+  UTC on the laptop; owner: "Yes, test it", "Yes, download"). H107's rules A and B, unchanged, on ADA, AVAX, BNB, DOGE,
+  DOT, LINK, LTC, SOL, TRX and XRP (Binance spot 15m bars and futures funding, 233 MB in `data/sources/h118/`, nothing
+  from 2025-11-11 on). Rule A: 891 trades, 54% won, +0.041R a trade [-0.067, +0.152], Holm p 0.49; first half -0.017R
+  (610 trades), second half +0.168R (281); positive on 5 of 10 coins. Rule B: 284 trades, +0.022R, positive on 6 of 10.
+  Both fail the same three registered checks (first half, 7 of 10 coins, significance). BTC and ETH 2017-2019
+  (descriptive): rule A 65 trades, 34% won, -0.265R a trade. All 12 coins and all years: +0.017R a trade over 1,079
+  trades; it loses in 2018, 2020 and 2022 and earns in 2019, 2021, 2024 and 2025. Look-ahead guards clean. The paper
+  books `p9_rebound_a/b` and `b_rebound` run on as the owner asked; nothing was changed. `research/HYPOTHESES.md` H118.
