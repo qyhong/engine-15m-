@@ -941,3 +941,9 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   reading rebuild. Trial on the box before the deploy: 16 bars each, two venues within 0.03% of each other, gold
   3,595.9 against Yahoo's quote 3,597.5. In the unseen hours neither gold nor silver touched a stop of the Setups or
   B trail books (bridged highs 3,631.9 and 42.51).
+- **The bridge is live and caught the four markets up** (26 Nov 2026, deployed 09:19 UTC, commit d3912e2, full suite
+  2,043 passed; owner: "Yes deploy"). At the restart 18 bars each (04:45 to 09:00 UTC) were bridged for gold, silver
+  and WTI from Binance futures and for Brent from Hyperliquid; from the 09:30 step one bar a step. Walking those bars
+  the paper books found three stops in the 05:30 bar: Setups Brent short (-$263), B trail Brent short (-$269) and
+  B trail WTI short (-$335); the Setups book re-entered Brent short at 90.773. Gold and silver touched no stop. BTC
+  and ETH books went to the vault unchanged.
