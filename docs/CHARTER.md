@@ -919,3 +919,11 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   Trading session confirms an installed vault package that accepts it. What the research says was shown first: H68
   (forced entries right after a stop-out on BTC + ETH, 2020-2026: 762 trades, -0.07R each, negative in both halves; the
   book that waits for a signal +64.5R against -7.7R; forward `b_wait_stop` 8 trades, 2 won, too few).
+- **The dry run of the trail book is live** (26 Nov 2026). The first deploy (06:33 UTC) wrote no preview file: the step
+  hands over the path of page.json and the writer expected the page itself (one log line, nothing else affected).
+  Fixed and deployed at 07:18 UTC (commit 02f84d6, full suite 2,036 passed). At the 07:30 step
+  `out/live/trail_book_preview.json` held its first trail body: `b_trail_setups` opened a BTC short at that close
+  (ENTER, entry 60,576.56, stop 62,307.63, Lead -6.8). The AI Trading session reports vault package f7609091 was
+  installed at 07:04 UTC and accepts the trail shape; it runs its `book-check` on the preview. Both trail switches
+  stay off until the owner says yes in both sessions. `opened_by` now also says "FLIP" (the vault asked; local,
+  switched off, not accepted by that package yet).
