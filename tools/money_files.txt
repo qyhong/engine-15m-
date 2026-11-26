@@ -7,11 +7,14 @@ engine15/policy.py
 engine15/backtest.py
 engine15/exits.py
 engine15/setups.py
+engine15/setups_voice.py
 engine15/signals.py
 engine15/vault_feed.py
 engine15/config.py
 tests/test_money_path_golden.py
 tests/fixtures/money_path_bars.json
 tests/fixtures/money_path_golden.json
+tests/test_money_path_trail_golden.py
+tests/fixtures/money_path_trail_golden.json
 tools/deploy.sh
 tools/money_files.txt

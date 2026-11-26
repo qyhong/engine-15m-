@@ -869,3 +869,42 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   (descriptive): rule A 65 trades, 34% won, -0.265R a trade. All 12 coins and all years: +0.017R a trade over 1,079
   trades; it loses in 2018, 2020 and 2022 and earns in 2019, 2021, 2024 and 2025. Look-ahead guards clean. The paper
   books `p9_rebound_a/b` and `b_rebound` run on as the owner asked; nothing was changed. `research/HYPOTHESES.md` H118.
+- **The trailing-stop switch is for the Setups page, the signals and the VIP vault together** (owner in this project,
+  26 Nov 2026, asked whether the page and the signals move with the vault: "Page and VIP"). This replaces the "VIP
+  only" reading in the bullet above. One book, `b_trail_setups` (`{"trail": True, "early": True}`), speaks for a
+  switched market on the page, in the signals and Telegram cards and to the vault. Built with both switches OFF
+  (`setups_voice.TRAIL_MARKETS = ()`, `vault_feed.SEND_TRAIL = False`): nothing on the page and nothing sent to the vault
+  changes until the AI Trading session confirms an installed vault package that accepts the trail bodies, the page shows
+  a trail market correctly, and the owner says yes in both sessions. A voice changes only between setups; a trail setup
+  already open at the changeover is never shown (agreed with the AI Trading session, 26 Nov). The dry run:
+  `out/live/trail_book_preview.json`. The forward read and the trail signal's rules are registered as H119.
+  Still the owner's to choose: which markets move (BTC and ETH only, or all eight; forward, 11-26 Nov, `b_trail` is
+  ahead of `b_targets` in seven of the eight markets and level in Brent). Design and order:
+  `docs/TRAIL_SWITCH_PLAN.md`.
+- **The research queue on the box runs again** (owner, 26 Nov 2026: "Lets resume"). Started 05:05 UTC with one worker
+  (`tools/research_queue.py start --workers 1`), as the 23 Nov rule says: never two jobs at once, no T2 Unlimited. H85
+  continues from its checkpoint (17,436 of 65,000 draws; the runner's estimate 11.6 hours). The box had been idle for
+  two days (steal about 0, step time about 110 s). No CPU cap was applied: the owner has not confirmed one in this
+  project. If the engine's step time climbs well above 3 minutes, stop it first (`touch /data/research_queue/STOP`).
+- **The trail voice is built on Mind 15's side, both switches off; not pushed, not deployed** (26 Nov 2026). The new
+  paper book `b_trail_setups`, `engine15/setups_voice.py` (which book speaks for a market), the trail mode of
+  setups.json, the trail signal rules and cards, the vault feed's trail body and stop moves, the dry run
+  (`engine15/trail_preview.py` -> `out/live/trail_book_preview.json`) and a second frozen record
+  (`tests/test_money_path_trail_golden.py`: 147 trades, 260 book bodies, 242 intents). The first golden test is green
+  and untouched; full suite 1,930 passed, 7 skipped. With the switches off setups.json, the signals and the vault's
+  bodies are byte-for-byte what they were. The AI Trading session reports its page change is built off too (branch
+  `setups-trail`) and its vault package is being built. It also reports the owner chose there that VIP accounts skip
+  FORCED re-entries after a stop-out, and asked for a book key `opened_by`; not built here until the owner says so in
+  this project.
+- **Post-mortem of the decision cards on BTC and ETH, live sessions 10-26 Nov** (owner, 26 Nov 2026: "How does 61
+  decision cards so far work for btc and eth. Can we do a post mortem"). Descriptive, 16 days of one falling market
+  (price was lower 24 hours later in 68% of BTC sessions and 66% of ETH sessions), so nothing here is evidence for a
+  change. `research/cards_postmortem.py`, `research/out/cards_postmortem/results.json`. (1) Of the 61 cards about ten
+  carry any trust; "Support and resistance" alone has trust 0.38 and pulled 4.2-4.5 points a session, about four fifths
+  of the Lead. (2) The Lead leaned short in 98% of sessions and was right on the next 24 hours 66% (BTC) and 64% (ETH)
+  of the time: the same as always leaning short; its size said nothing about the size of the move (rank correlation
+  -0.02 BTC, -0.20 ETH). (3) Cards whose leans went with the next 24 hours on both coins, up leans included: News and
+  economic events (77% / 73%, right on 14 and 13 of 16 days), Fear and Greed, Mass Index; none of them carries weight
+  today. (4) Voting cards that pointed the wrong way on both coins: Coinbase premium (leaned up about 70% of the time,
+  right 20% / 28%, 1 and 2 days of 16) and Perp basis and premium (right 32% / 30%). No change was made; a change of
+  trust needs a registered test.

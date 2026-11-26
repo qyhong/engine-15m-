@@ -1002,7 +1002,9 @@ def test_a_state_file_written_by_main_loads_and_every_book_goes_on_as_on_main(tm
     assert differences(sst, fx["at_420"]) == []
     _v, closed = shadows.advance(prep, "crypto", ["BTCUSDT"], 700, sst)
     now = json.loads(json.dumps(sst, default=float))
-    assert set(fx["at_700"]["books"]) | {rb.NAME} == set(now["books"])
+    # (26 Nov 2026: the trailing-stop Setups book b_trail_setups is a second book main's file does not hold. Like
+    # b_rebound it starts flat at the first new bar, and every book that was in the file goes on as it did.)
+    assert set(fx["at_700"]["books"]) | {rb.NAME, "b_trail_setups"} == set(now["books"])
     for name, want in fx["at_700"]["books"].items():             # b_targets first of all
         assert differences(want, now["books"][name]) == [], name
     assert differences(fx["at_700"]["groups"], now["groups"]) == []
@@ -1013,9 +1015,11 @@ def test_a_state_file_written_by_main_loads_and_every_book_goes_on_as_on_main(tm
     assert "b_targets|BTCUSDT" in fx["closed_420_700"] and fx["closed_420_700"]["b_targets|BTCUSDT"]["n"] > 5
     late = dict(now.get("late_starts") or {})
     ls = late.pop(rb.NAME)["BTCUSDT"]
+    ls_trail = late.pop("b_trail_setups")["BTCUSDT"]
     assert late == (fx["at_700"].get("late_starts") or {})
     t420 = shadows._ms(prep["times"][420])
     assert ls["ms"] == t420 and ls["main_eq"] == fx["at_420"]["books"]["main"]["BTCUSDT"]["equity_marked"]
+    assert (ls_trail["ms"], ls_trail["main_eq"]) == (ls["ms"], ls["main_eq"])     # flat at bar 420 as well
     mine = now["books"][rb.NAME]["BTCUSDT"]
     first = closed[(rb.NAME, "BTCUSDT")].iloc[0]
     assert first.t_in_ms >= t420 and mine["stats"]["n"] == len(closed[(rb.NAME, "BTCUSDT")]) > 3    # flat at bar 420

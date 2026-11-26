@@ -44,7 +44,7 @@ import csv
 import io
 import json
 
-from . import signals as s1
+from . import setups_voice, signals as s1
 from .config import CFG
 
 BAR_MS = s1.BAR_MS
@@ -66,6 +66,12 @@ def pending_entry(view):
     if side is None or view.get("status") == SIDE_WORD[side]:
         return None
     return side
+
+
+def on_trail(page, asset, vst):
+    """True when this market's signals are, or are about to be, the trailing-stop book's (setups_voice: the voice it has
+    or the voice the switch asks for is "trail"). S2 announces a b_targets order with targets: it has nothing to say there."""
+    return setups_voice.TRAIL in (setups_voice.want(asset), setups_voice.published(page, asset, vst)["rule"])
 
 
 def fingerprint(view):
@@ -223,14 +229,17 @@ def _no_levels(sig, now_ms, send, log):
 
 
 # ------------------------------------------------------------------ one check
-def run(page, now, send, data_dir, live_dir, state_path, log_path):
+def run(page, now, send, data_dir, live_dir, state_path, log_path, voice_path=None):
     """ONE check: follow the early signals out, then issue one for every new pending b_targets entry on the page.
     send(text, reply_to=None) -> (delivered, message id). Running it twice on the same records changes nothing.
+    Nothing new is issued for a market on (or going to) the trailing-stop book (`on_trail`; voice_path: the engine's
+    setups_voice state, default setups_voice.STATE_PATH; a file that cannot be read raises, as in S1).
     -> {"started", "new", "events", "bars_unread"}"""
     info = {"started": False, "new": 0, "events": 0, "bars_unread": []}
     views = s1.book_views(page)
     if views is None:
         return info
+    vst = setups_voice.load(voice_path or setups_voice.STATE_PATH)
     now_ms = s1._ms(now)
     st, log = s1.load_state(state_path), []
     if st is None:                                                    # the first run: orders already waiting are not signalled
@@ -257,7 +266,7 @@ def run(page, now, send, data_dir, live_dir, state_path, log_path):
             del st["open"][sid]                                       # both records are final: it lives on in the log
     for asset, view in sorted(views.items()):
         side = pending_entry(view)
-        if side is None or st["seen"].get(asset) == fingerprint(view):
+        if side is None or st["seen"].get(asset) == fingerprint(view) or on_trail(page, asset, vst):
             continue
         dec_ms = s1.as_of_ms(page, asset)
         e0 = decision_close(data_dir, asset, dec_ms) if dec_ms is not None else None

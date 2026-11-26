@@ -7628,3 +7628,63 @@ mostly because random longs in those crash months lose more. Rule B (negative fu
 looked like H107's second half is a period effect, not an edge that holds across coins and years. Nothing here supports
 a paper or live book on the registered bar; the forward books `p9_rebound_a/b` and `b_rebound` remain unsupported by
 history, as before.
+
+
+## H119. The Setups page, the signals and the vault on a trailing-stop book (`b_trail_setups`): the forward read after the switch, and the followable rules of a trail signal (registered 26 Nov 2026, about 04:40 UTC, before the book had run one step, before any trail signal existed and before any switch)
+
+**Prompted by:** the owner, 26 Nov 2026: "Lets switch. But explain to me what is the changed.", "Ok. Lets plan for this
+and apply for VIP", then "Page and VIP". The plan and the design: `docs/TRAIL_SWITCH_PLAN.md`.
+
+**This is not a test that decides the switch.** The owner decided it. On 2020-2026 history every tight trail made less
+than holding (H36: `b_trail` -$48,808 against the main book's +$329,439; `b_targets` -$28,862). This section fixes, before
+any number exists, how the switch is read afterwards, so that the read cannot be shaped by what it shows.
+
+**Seen before this registration (written honestly).** The forward paper record of `b_trail` and `b_targets`, 11-26 Nov
+2026, one falling market (trade files on the box, 26 Nov 04:33 UTC): `b_trail` BTC 14 trades 11 won +$2,457, ETH 11 / 8
+/ +$2,088, Gold 9 / 8 / +$2,167, Silver 13 / 12 / +$3,021, Brent 8 / 5 / +$475, WTI 7 / 4 / +$288, USDJPY 7 / 4 / +$268,
+S&P 3 / 3 / +$764; `b_targets` BTC 9 / 7 / +$1,844, ETH 8 / 4 / +$935, Gold 7 / 5 / +$1,150, Silver 6 / 5 / +$1,980,
+Brent 3 / 2 / +$486, WTI 1 / 0 / -$288, USDJPY 6 / 3 / -$196, S&P 2 / 1 / +$304. H36's history. Nothing of
+`b_trail_setups` (it does not exist yet) and no trail signal.
+
+**The book.** `b_trail_setups`: `shadows.run` under `{"trail": True, "early": True}`: the main rule's entries, on BTC and
+ETH booked at the close that decides them (v5.2.9); no targets; once price has gone 1R in favour the stop becomes, at
+each 15-minute close, the tighter of the last confirmed 15m swing and 2 x ATR(14, 15m) from the close, never looser. It
+starts flat at its deploy. It differs from `b_trail` only by the early entry on BTC and ETH.
+
+**Read 1: the trail book against the targets book, after the switch.** Markets: those the owner switches. Per market,
+from its changeover time (`from_utc` in `data/setups_voice_state.json`): the closed trades of `b_trail_setups` opened at
+or after it, against the closed trades of `b_targets` (which keeps running on paper) opened at or after it. Read at 30
+and at 60 closed trail trades, all switched markets pooled, each read made once:
+- each book's trades, wins, net $ after fees, total R, fees, median hold;
+- the difference in total net $ (trail minus targets) over the same span, with a 90% range from a block bootstrap over
+  UTC days (a day's trades of both books stay together; 5,000 draws, seed 119);
+- the words: "trail ahead" when the range's low end is above zero, "trail behind" when its high end is below zero,
+  else "undecided".
+A "trail behind" at 60 trades is put to the owner as a proposal to switch back; nothing switches by itself. Before the
+switch the same table is shown from the book's deploy as a description only.
+
+**Read 2: the trail signal a person can follow.** H53's record is closed to trail signals: the two are never pooled. A
+signal is issued when a market on the trail voice shows a new open setup. It carries the side, the entry E and the stop
+S0; 1R = |E - S0|. Rules, fixed now:
+1. Entry: a limit at E, filled on the first of the FOUR bars after the alert's bar whose range holds E (as H53).
+2. No fill: S0 trades first; or price reaches E + side x 1R in any bar from the book's fill bar up to the fill (the trail
+   has armed; a bar that holds both E and that level is a no fill); or the four bars pass; or the book closes first.
+3. After the fill there are no targets. In each bar the stop is the one the book had published at the close before that
+   bar; the stop is looked at first; a gap through it fills at the bar's open. (When a check is late and several bars
+   are processed together, the older, looser stop is used for them.)
+4. The book closes its own trade for another reason: the followable trade closes at the open of the bar after the bar
+   in which that exit alert was sent (as H53 rule 4).
+5. Costs as H53: the market's own fee a side, $10,000 a signal, results in $, % and R on S0.
+Judged at 30 closed followable trail trades with the scoreboard's own verdict sentence; fill rate and the share of
+"ran first" no fills reported beside it.
+
+**Read 3: real fills (descriptive).** For each member trade the AI Trading session reports: the fill at the join against
+the book's entry, and the fill at the stop against the book's exit. No bar is set; the question is how much a moving
+stop-market order costs against the paper book.
+
+**Constants declared here, not tuned later.** The trail's own (1R to arm, 2 x ATR(14, 15m), the 15m swing: H36's
+`b_trail`). The cards a follower gets for a moving stop: when the trail arms, when the stop first passes the entry, then
+whenever it has moved at least 0.5R since the last card.
+
+**What this cannot show.** Thirty or sixty trades in one kind of market say little about the next kind; the history
+(H36) is the larger sample and it is against the rule.

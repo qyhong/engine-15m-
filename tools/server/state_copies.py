@@ -33,7 +33,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 DATA_DIR = os.path.join(ROOT, "data")
 COPIES = "state_copies"
 FILES = ("vault_feed_state.json", "shadow_state.json", "live_state.json", "signals_state.json",
-         "capit_long_state.json")        # the capitulation-long books and the retest zone (H115; owner, 25 Nov 2026)
+         "capit_long_state.json",        # the capitulation-long books and the retest zone (H115; owner, 25 Nov 2026)
+         "setups_voice_state.json")      # which book speaks for each market (setups_voice.py, 26 Nov 2026); it exists
+                                         # only once a market has left the targets voice
 DEFAULT_RESTORE = ("vault_feed_state.json",)
 KEEP = 48                                # two days of hourly copies
 SERVICE = "mind15"
@@ -78,6 +80,11 @@ def describe(name, doc):
                           "t1_taken": bool(b.get("t1_hit")), "entry": b.get("entry") if b.get("pos") else None}
             last = ((doc.get("groups") or {}).get("crypto") or {}).get("last_ms")
             return {"setups_book": out, "crypto_last_bar_utc": _utc(last) if last else None}
+        if name == "setups_voice_state.json":
+            marks = doc.get("markets") if isinstance(doc.get("markets"), dict) else {}
+            return {"voices": dict((s, {"rule": (e or {}).get("rule"), "from_utc": (e or {}).get("from_utc"),
+                                        "pending": bool((e or {}).get("pending"))})
+                                   for s, e in sorted(marks.items()) if isinstance(e, dict))}
         if name == "capit_long_state.json":
             books = doc.get("books") if isinstance(doc.get("books"), dict) else {}
             out = {}

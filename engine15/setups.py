@@ -31,6 +31,28 @@ Added to setups.json (schema 1, keys added only):
             shadows.run already books as the quantity-weighted average of both parts when Target 1 was taken.
 build_events(log) -> setup_events.json: the followable S1 record (signals_log.jsonl) as coded events, newest first.
 
+THE TRAIL MODE (26 Nov 2026; docs/TRAIL_SWITCH_PLAN.md section 3; OFF while setups_voice.TRAIL_MARKETS is empty). Which
+book speaks for a market is setups_voice.py's decision, not this module's: write() moves the voices one step
+(setups_voice.load / update / save, state in data/setups_voice_state.json) and build() asks setups_voice.published
+for every market. A market with no entry in that state takes the code path it always took, so with the switch off the
+file is byte for byte what it was. A market whose voice is the trail book (b_trail_setups) has, keys added only:
+    markets[].exit_rule            "trail"
+    markets[].trail_active         true once the trail has armed (price has gone 1R in favour); false before, and FLAT
+    markets[].exit_rule_from_utc   the bar close from which the trail book speaks for this market (the voice state's
+            from_utc). These three are there on a FLAT trail market too: setups_voice.recover rebuilds a lost state
+            file from them.
+    and in that entry: stop is the book's stop as it stands (it moves); target_1, target_2, rr_now_t1, rr_now_t2 and
+            held_share are null, t1_taken false; closed / wins / realized_usd are what the page showed: the targets
+            book's closed trades opened before exit_rule_from_utc plus the trail book's opened at or after it
+            (out/live/shadow_trades_b_trail_setups_<ASSET>.csv). Its rows in closed_setups follow the same split;
+            why_out gains the code TRAIL_STOP (the trailing stop traded).
+    book.verdict is null while any market is on the trail voice (one scoreboard row no longer describes the record);
+            book.rule is one of three fixed texts (targets, trail, mixed).
+    A market that is changing over, or has changed back, shows only the setup setups_voice lets through and reads FLAT
+            otherwise, whatever its book holds.
+    setup_events.json: the type STOP_MOVED (stop = the new stop; reason_code TRAIL_ARMED, PAST_ENTRY or STEP) and the
+            reason codes TRAIL_STOP (CLOSED) and RAN_FIRST (NO_FILL: price went 1R in favour before the fill).
+
 Nothing here places an order, opens a socket or changes a file other than setups.json and setup_events.json. Every
 text in the files comes from a short fixed list (codes, names, times; no reading, no research wording, no book
 name) and passes the page's own wording rule (export.py: the forecast model is never named).
@@ -44,13 +66,20 @@ import re
 import time
 from datetime import datetime, timedelta, timezone
 
+from . import setups_voice
 from .config import CFG, DATA_DIR, OUT_DIR
 
 BOOK = "b_targets"                      # the one voice (shadows.py); fixed by H53
+TRAIL = setups_voice.TRAIL              # the other voice's name, and its book (setups_voice.py; off until the switch)
+TRAIL_BOOK = setups_voice.BOOKS[TRAIL]
 SCHEMA = 1
 NOTE = "Experimental model. Paper only. Not advice."
 BOOK_NAME = "Setups"
 BOOK_RULE = "half at target 1, rest at target 2, stop to entry after target 1"
+BOOK_RULE_TRAIL = "no targets; from 1R in favour the stop trails the 15m swing or 2 ATR"   # every market on the trail voice
+BOOK_RULE_MIXED = ("by market: half at target 1, rest at target 2, stop to entry after target 1; or no targets, "
+                   "from 1R in favour the stop trails the 15m swing or 2 ATR")                 # some markets on each
+START_EQUITY = 10000.0                  # each market's paper book starts with this (= shadows.START_EQUITY)
 FILE = "setups.json"
 WEB_ENV = "MIND15_SETUPS_WEB_DIR"       # set on the server: the folder the site serves; unset = no web copy
 WEB_MODE = 0o644
@@ -74,13 +103,19 @@ TRADE_FILE = re.compile(r"^shadow_trades_%s_([A-Z0-9]+)\.csv$" % BOOK)
 WHY_OUT = {"T1+T2": "TARGET_2", "STOP": "STOP", "T1+STOP_BE": "T1_THEN_ENTRY"}
 FLIPS = ("FLIP", "FLIP_MKT", "FLIP_LMT")                        # a flip (FLIP_* are H3's limit-flip words)
 EXITS = ("STEP_ASIDE",)                                         # the model's own exit to flat
+TRAIL_WORD, TRAIL_CODE = "TRAIL", "TRAIL_STOP"                  # the trail book only: its trailing stop traded
+TRAIL_DROP = ("target_1", "target_2", "t1_taken", "held_share")  # never read from a trail view: that book has no targets
 # setup_events.json
 EVENTS_FILE = "setup_events.json"
 EVENTS_SCHEMA = 1
 EVENTS_N = 100
-EV_TYPE = {"signal": "NEW_SETUP", "filled": "ENTRY_FILLED", "no_fill": "NO_FILL", "t1": "TARGET_1", "closed": "CLOSED"}
-NO_FILL_CODE = {"window": "WINDOW", "stop": "STOP_FIRST", "target": "TARGET_FIRST", "model": "MODEL_CLOSED"}
-CLOSED_CODE = {"t2": "TARGET_2", "stop": "STOP", "stop_be": "T1_THEN_ENTRY", "model": "MODEL_CLOSED"}
+# (stop_moved, "ran" and "trail" come only from a trail signal: signals.py logs none while the switch is off)
+EV_TYPE = {"signal": "NEW_SETUP", "filled": "ENTRY_FILLED", "no_fill": "NO_FILL", "t1": "TARGET_1", "closed": "CLOSED",
+           "stop_moved": "STOP_MOVED"}
+NO_FILL_CODE = {"window": "WINDOW", "stop": "STOP_FIRST", "target": "TARGET_FIRST", "model": "MODEL_CLOSED",
+                "ran": "RAN_FIRST"}
+CLOSED_CODE = {"t2": "TARGET_2", "stop": "STOP", "stop_be": "T1_THEN_ENTRY", "model": "MODEL_CLOSED", "trail": TRAIL_CODE}
+MOVED_CODE = {"armed": "TRAIL_ARMED", "past_entry": "PAST_ENTRY", "step": "STEP"}          # a stop_moved row's `kind`
 
 
 # ------------------------------------------------------------------ small helpers
@@ -326,16 +361,18 @@ def _closes(rows, end_ms, prev):
 
 
 # ------------------------------------------------------------------ the setups book's closed trades (read only)
-def read_trades(trades_dir):
-    """[(market, row dict)] from every shadow_trades_b_targets_<ASSET>.csv in trades_dir, as written (strings).
+def read_trades(trades_dir, book=BOOK):
+    """[(market, row dict)] from every shadow_trades_<book>_<ASSET>.csv in trades_dir (the setups book b_targets; the
+    trail book for a market on the trail voice), as written (strings).
     A file larger than TRADES_MAX_BYTES or that cannot be read is skipped. Never raises."""
     out = []
+    pattern = TRADE_FILE if book == BOOK else re.compile(r"^shadow_trades_%s_([A-Z0-9]+)\.csv$" % re.escape(str(book)))
     try:
         names = sorted(os.listdir(trades_dir))
     except (OSError, TypeError):
         return out
     for name in names:
-        m = TRADE_FILE.match(name)
+        m = pattern.match(name)
         path = os.path.join(trades_dir, name)
         try:
             if not m or os.path.getsize(path) > TRADES_MAX_BYTES:
@@ -348,9 +385,12 @@ def read_trades(trades_dir):
     return out
 
 
-def why_code(why):
-    """The page's code for a raw why_out (see WHY_OUT, FLIPS, EXITS); anything else is OTHER."""
+def why_code(why, trail=False):
+    """The page's code for a raw why_out (see WHY_OUT, FLIPS, EXITS); anything else is OTHER.
+    trail: the row is the trail book's, where "TRAIL" (the trailing stop traded) is TRAIL_STOP."""
     w = str(why or "").strip()
+    if trail and w == TRAIL_WORD:
+        return TRAIL_CODE
     if w in WHY_OUT:
         return WHY_OUT[w]
     t1, tail = (True, w[3:]) if w.startswith("T1+") else (False, w)
@@ -361,8 +401,9 @@ def why_code(why):
     return "OTHER"
 
 
-def _closed_trade(sym, r):
-    """One closed-setup entry from a trade row, or None for a row that is not a whole closed trade."""
+def _closed_trade(sym, r, trail=False):
+    """One closed-setup entry from a trade row, or None for a row that is not a whole closed trade.
+    trail: a row of the trail book (its file has no targets: both are null there)."""
     if None in r or None in r.values():                           # a row with too many or too few fields
         return None
     t_in, t_out, p_in, p_out, pct = (_num(r.get(k)) for k in ("t_in_ms", "t_out_ms", "p_in", "p_out", "pnl_pct"))
@@ -372,23 +413,66 @@ def _closed_trade(sym, r):
     why = str(r.get("why_out") or "").strip()
     return {"symbol": sym, "side": side, "opened_utc": _iso(int(t_in)), "closed_utc": _iso(int(t_out)),
             "entry": _px(p_in), "exit": _px(p_out), "stop": _px(r.get("stop0")), "target_1": _px(r.get("target_1")),
-            "target_2": _px(r.get("target_2")), "t1_taken": why.startswith("T1"), "why_out": why_code(why),
+            "target_2": _px(r.get("target_2")), "t1_taken": why.startswith("T1"), "why_out": why_code(why, trail),
             "result_pct": _r(pct), "result_usd": _r(r.get("pnl_usd")), "r": _r(r.get("r_mult"))}
 
 
-def _closed_setups(trades):
-    """The last CLOSED_N closed trades over every market, newest first by exit time (a row written twice counts once)."""
+def _closed_setups(trades, trail_trades=None):
+    """The last CLOSED_N closed trades over every market, newest first by exit time (a row written twice counts once).
+    trail_trades: rows of the trail book (already cut to the markets and the time it speaks for: _shown_trades)."""
     keep = {}
-    for item in trades if isinstance(trades, (list, tuple)) else ():
-        try:
-            sym, r = item
-            t = _closed_trade(str(sym), r) if isinstance(r, dict) else None
-        except (TypeError, ValueError):
-            continue
-        if t is not None:
-            keep[(t["symbol"], t["opened_utc"], t["closed_utc"])] = t
+    for rows, trail in ((trades, False), (trail_trades, True)):
+        for item in rows if isinstance(rows, (list, tuple)) else ():
+            try:
+                sym, r = item
+                t = _closed_trade(str(sym), r, trail) if isinstance(r, dict) else None
+            except (TypeError, ValueError):
+                continue
+            if t is not None:
+                keep[(t["symbol"], t["opened_utc"], t["closed_utc"])] = t
     rows = sorted(keep.values(), key=lambda t: (t["closed_utc"], t["opened_utc"], t["symbol"]), reverse=True)
     return rows[:CLOSED_N]
+
+
+def _shown_trades(trades, trail_trades, since):
+    """What the page showed. since: {market on the trail voice: its from_utc in ms}. -> (rows of the targets book, rows
+    of the trail book): for such a market the targets book's trades CLOSED before that moment (the setup the page was
+    showing ended in the bar that closes at it; a targets setup opened by a flip in that same bar is never shown, and
+    is not counted) and the trail book's trades opened at or after it (the line setups_voice.published draws for the
+    open setup); every other market keeps the targets book's rows as they are and has no trail row."""
+    def cut(rows, trail):
+        out = []
+        for item in rows if isinstance(rows, (list, tuple)) else ():
+            try:
+                sym, r = item
+                t = _num(r.get("t_in_ms" if trail else "t_out_ms")) if str(sym) in since else None
+            except (TypeError, ValueError, AttributeError):
+                if not trail:
+                    out.append(item)                              # not a row: _closed_setups leaves it out, as before
+                continue
+            if str(sym) not in since:
+                if not trail:
+                    out.append(item)
+            elif t is not None and (t >= since[str(sym)]) == trail:
+                out.append(item)
+        return out
+    return cut(trades, False), cut(trail_trades, True)
+
+
+def _record(sym, trades, trail_trades):
+    """(closed, wins, realized $) of one market over rows _shown_trades already cut: every whole closed trade once, a
+    win as the books count one (net result above zero), the realized net summed unrounded."""
+    keep = {}
+    for rows, trail in ((trades, False), (trail_trades, True)):
+        for item in rows:
+            try:
+                s, r = item
+                t = _closed_trade(sym, r, trail) if str(s) == sym and isinstance(r, dict) else None
+            except (TypeError, ValueError):
+                continue
+            if t is not None:
+                keep[(t["opened_utc"], t["closed_utc"])] = _num(r.get("pnl_usd")) or 0.0
+    return len(keep), sum(1 for x in keep.values() if x > 0), sum(keep.values())
 
 
 # ------------------------------------------------------------------ the blocks
@@ -450,6 +534,53 @@ def _market(page, sym, asset, view, waiting, now_ms, bars=None, prev=None):
     return m
 
 
+def _moved(shown):
+    """True for a market that has an entry in the voice state (it is changing over, is on the trail voice, or has
+    changed back): setups_voice.published then says something the default does not."""
+    return shown["rule"] != setups_voice.TARGETS or shown["from_utc"] is not None or bool(shown["pending"])
+
+
+def _view_totals(view):
+    """(closed, wins, realized, marked equity) as a book's own view counts them: what _book sums."""
+    v = view if isinstance(view, dict) else {}
+    return _int(v.get("trades")), _int(v.get("wins")), _num(v.get("realized_usd")), _num(v.get("equity"))
+
+
+def _voiced_market(page, sym, asset, shown, waiting, now_ms, bars, prev, record):
+    """One market that has left the default voice. shown: setups_voice.published's answer for it; record: _record's
+    (closed, wins, realized) over what the page showed (used on the trail voice only).
+    -> (its entry, (closed, wins, realized, equity) for the book block).
+    When `shown` says the voice's open setup is not the one to show, the market reads FLAT whatever the book holds.
+    On the targets voice (waiting for the changeover, or changed back) the entry is today's, with no new key, and the
+    totals are that book's own view, as today. KNOWN SIMPLIFICATION: after a change BACK they (and the market's rows
+    in closed_setups) are the targets book's whole record, which includes trades it made while the trail book was the
+    voice and none of the trail book's, and its marked equity counts a setup that is not shown.
+    On the trail voice: no targets (never read from the view), the stop as the book holds it now, exit_rule,
+    trail_active and exit_rule_from_utc (also when FLAT), and the record the page showed."""
+    view = shown["view"] if isinstance(shown["view"], dict) else {}
+    trail = shown["rule"] == TRAIL
+    v = dict((k, x) for k, x in view.items() if not (trail and k in TRAIL_DROP))
+    if not shown["open"]:
+        v["status"] = "FLAT"
+    m = _market(page, sym, asset, v, waiting, now_ms, bars, prev)
+    if not trail:
+        return m, _view_totals(view)
+    closed, wins, net = record
+    unreal = _num(view.get("unrealized_usd")) if shown["open"] else None
+    m.update(target_1=None, target_2=None, t1_taken=False, held_share=None, rr_now_t1=None, rr_now_t2=None,
+             closed=closed, wins=wins, realized_usd=_r(net), exit_rule=TRAIL,
+             trail_active=bool(shown["open"] and view.get("trailing") is True),
+             exit_rule_from_utc=_iso(_ms(shown["from_utc"])))
+    # trail_from: the price at which the trail arms (1R in favour), while the setup is open and not armed. The book's
+    # stop does not move before that, so it is entry + (entry - stop) on either side, from the two numbers shown; the
+    # page and the Telegram card then show one number. Page data only: it is not part of the vault's book.
+    e, s = _num(m.get("entry")), _num(m.get("stop"))
+    m["trail_from"] = _px(2.0 * e - s) if (shown["open"] and not m["trail_active"] and None not in (e, s)) else None
+    # the marked equity of what the page showed: the starting $10,000, the realized record above and the open result
+    # of the shown setup (no book's own equity is this number once two books have spoken for the market)
+    return m, (closed, wins, net, START_EQUITY + net + (unreal or 0.0))
+
+
 def _book(page, views):
     """The book over every market shown: closed trades, wins, realized net and marked equity summed from its
     per-market views (so the totals are the sum of the rows below), the verdict from the forward scoreboard."""
@@ -465,6 +596,23 @@ def _book(page, views):
             "net_usd": _r(sum(x for x in net if x is not None)) if any(x is not None for x in net) else None,
             "equity_usd": _r(sum(x for x in eq if x is not None)) if any(x is not None for x in eq) else None,
             "verdict": _verdict((row or {}).get("verdict"))}
+
+
+def _book_voiced(page, views, totals, rules):
+    """The book block when a market has left the default voice. totals: each market's (closed, wins, realized,
+    equity), so the block stays the sum of the rows below; rules: each market's voice. While any market is on the trail
+    voice the verdict is null (the scoreboard's b_targets row no longer describes this record) and the rule text names
+    what is in force: one of BOOK_RULE, BOOK_RULE_TRAIL, BOOK_RULE_MIXED."""
+    b = _book(page, views)
+    closed, won = sum(t[0] for t in totals), sum(t[1] for t in totals)
+    net, eq = [t[2] for t in totals], [t[3] for t in totals]
+    b.update(closed=closed, won=won, won_pct=_r(100.0 * won / closed) if closed else None,
+             net_usd=_r(sum(x for x in net if x is not None)) if any(x is not None for x in net) else None,
+             equity_usd=_r(sum(x for x in eq if x is not None)) if any(x is not None for x in eq) else None)
+    n_trail = sum(1 for r in rules if r == TRAIL)
+    if n_trail:
+        b.update(verdict=None, rule=BOOK_RULE_TRAIL if n_trail == len(rules) else BOOK_RULE_MIXED)
+    return b
 
 
 def _learning(page):
@@ -486,14 +634,18 @@ def _prev_markets(prev):
     return dict((m.get("symbol"), m) for m in ms if isinstance(m, dict)) if isinstance(ms, list) else {}
 
 
-def build(page, s1=None, now=None, bars=None, trades=None, prev=None):
+def build(page, s1=None, now=None, bars=None, trades=None, prev=None, voice=None, trail_trades=None):
     """The Setups file as a dict. page: the engine's page (page.json); s1: load_s1()'s record, or None (no
     record: zeros and nulls); now: the moment the trading hours and the entry windows are asked about (a
     datetime, an ISO time or epoch ms; default: the page's own generated_utc, so the same page always gives the
     same file). bars: {market: read_closes() of its bar file, or None when it could not be read}; trades:
     read_trades(); prev: the previous setups.json as a dict (its closes stand in for a bar file that cannot be
     read). Raises ValueError when the page has no view of the book at all: a file that would call every
-    market FLAT for want of data is never written."""
+    market FLAT for want of data is never written.
+    voice: setups_voice's state as write() loaded and moved it (None, {} or a state with no market: every market on
+    the targets voice and the file exactly as it always was); trail_trades: read_trades(dir, TRAIL_BOOK), looked at
+    only for a market on the trail voice. With a market on the trail voice a page without the trail book raises
+    ValueError the same way."""
     if not isinstance(page, dict):
         raise ValueError("the page is not a JSON object")
     views = book_views(page)
@@ -506,12 +658,36 @@ def build(page, s1=None, now=None, bars=None, trades=None, prev=None):
     now_ms = _ms(now) if now is not None else _ms(page.get("generated_utc"))
     waiting = _waiting((s1 or {}).get("state") if isinstance(s1, dict) else None, now_ms)
     bars, old = bars if isinstance(bars, dict) else {}, _prev_markets(prev)
+    shown = dict((a, setups_voice.published(page, a, voice if isinstance(voice, dict) else None)) for a in order)
+    moved = [a for a in order if _moved(shown[a])]
+    if not moved:               # the switch is off, or no market has left the default voice: the file as it always was
+        return _clean({"generated_utc": page.get("generated_utc"), "version": page.get("version"), "schema": SCHEMA,
+                       "note": NOTE, "book": _book(page, [views.get(a) for a in order]), "followable": _followable(s1),
+                       "learning": _learning(page),
+                       "markets": [_market(page, a, assets.get(a), views.get(a), waiting, now_ms, bars.get(a), old.get(a))
+                                   for a in order],
+                       "closed_setups": _closed_setups(trades)})
+    on_trail = [a for a in moved if shown[a]["rule"] == TRAIL]
+    if on_trail and not isinstance(_get(page, "shadows", "books", TRAIL_BOOK, "assets"), dict):
+        raise ValueError("the page has no %s view" % TRAIL_BOOK)   # never FLAT for want of data (a FLAT ends a setup)
+    # (a trail voice without its starting time shows whatever the trail book holds: its whole record then)
+    since = dict((a, _ms(shown[a]["from_utc"]) or 0) for a in on_trail)
+    t_rows, trail_rows = _shown_trades(trades, trail_trades, since)
+    markets, totals = [], []
+    for a in order:
+        if a in moved:
+            m, tot = _voiced_market(page, a, assets.get(a), shown[a], waiting, now_ms, bars.get(a), old.get(a),
+                                    _record(a, t_rows, trail_rows) if a in since else None)
+        else:
+            m, tot = (_market(page, a, assets.get(a), views.get(a), waiting, now_ms, bars.get(a), old.get(a)),
+                      _view_totals(views.get(a)))
+        markets.append(m)
+        totals.append(tot)
     return _clean({"generated_utc": page.get("generated_utc"), "version": page.get("version"), "schema": SCHEMA,
-                   "note": NOTE, "book": _book(page, [views.get(a) for a in order]), "followable": _followable(s1),
-                   "learning": _learning(page),
-                   "markets": [_market(page, a, assets.get(a), views.get(a), waiting, now_ms, bars.get(a), old.get(a))
-                               for a in order],
-                   "closed_setups": _closed_setups(trades)})
+                   "note": NOTE,
+                   "book": _book_voiced(page, [views.get(a) for a in order], totals, [shown[a]["rule"] for a in order]),
+                   "followable": _followable(s1), "learning": _learning(page), "markets": markets,
+                   "closed_setups": _closed_setups(t_rows, trail_rows)})
 
 
 # ------------------------------------------------------------------ setup_events.json (the followable S1 record)
@@ -530,7 +706,11 @@ def build_events(log_events, generated_utc=None, live_since=None):
     suffix (:<bar or event time>, then :2, :3 ...) is added only when a signal id comes back for another position
     (the ids carry no year, and a new state file restarts the day's counter). The ids are given in log order over
     the whole log before the newest EVENTS_N are kept: the same log always gives the same ids.
-    live_since: the log's first start line, else this argument (the state file's)."""
+    live_since: the log's first start line, else this argument (the state file's).
+    From a trail signal (signals.py, rule "trail"; none while the switch is off): stop_moved -> STOP_MOVED, as often as
+    the stop moved, so its id always carries its bar (<signal_id>:STOP_MOVED:<bar>); its `stop` is the NEW stop (the
+    row's px), its reason_code says which move (MOVED_CODE). The signal's own targets are null there; closed with why
+    "trail" is TRAIL_STOP, no_fill with reason "ran" is RAN_FIRST."""
     rows = [e for e in (log_events or ()) if isinstance(e, dict)]
     sigs = {}
     for e in rows:
@@ -546,25 +726,27 @@ def build_events(log_events, generated_utc=None, live_since=None):
         t_ms, bar_ms = _ms(e.get("t")), _ms(e.get("bar_utc"))
         base = "%s:%s" % (sid, typ)
         eid, when = base, _stamp(bar_ms if bar_ms is not None else t_ms) or str(n)
-        if owner.setdefault(base, k) != k or base in taken:
+        if typ == "STOP_MOVED" or owner.setdefault(base, k) != k or base in taken:
             eid = "%s:%s" % (base, when)
         j = 2
         while eid in taken:
             eid, j = "%s:%s:%d" % (base, when, j), j + 1
         taken.add(eid)
         sym = e.get("asset") or sig.get("asset") or (str(k).split("|")[0] if k else None)
-        why = e.get("reason") if typ == "NO_FILL" else e.get("why") if typ == "CLOSED" else None
+        why = (e.get("reason") if typ == "NO_FILL" else e.get("why") if typ == "CLOSED" else
+               e.get("kind") if typ == "STOP_MOVED" else None)
+        codes = NO_FILL_CODE if typ == "NO_FILL" else MOVED_CODE if typ == "STOP_MOVED" else CLOSED_CODE
         out.append((t_ms, n, {
             "id": eid, "signal_id": sid, "type": typ, "symbol": sym,
             "side": {1: "LONG", -1: "SHORT"}.get(_int(sig.get("side"))),
             "utc": _iso(t_ms), "bar_utc": _iso(bar_ms),
-            "entry": _px(sig.get("entry")), "stop": _px(sig.get("stop")),
+            "entry": _px(sig.get("entry")), "stop": _px(e.get("px") if typ == "STOP_MOVED" else sig.get("stop")),
             "target_1": _px(sig.get("t1")), "target_2": _px(sig.get("t2")),
             "price": _px(e.get("px")) if typ in ("ENTRY_FILLED", "TARGET_1", "CLOSED") else None,
             "entry_valid_until_utc": _iso(_ms(sig.get("valid_until_utc"))) if typ == "NEW_SETUP" else None,
             "result_pct": _r(e.get("pct")) if typ == "CLOSED" else None,
             "r": _r(e.get("r")) if typ == "CLOSED" else None,
-            "reason_code": (NO_FILL_CODE if typ == "NO_FILL" else CLOSED_CODE).get(why) if why is not None else None}))
+            "reason_code": codes.get(why) if why is not None else None}))
     out.sort(key=lambda x: (x[0] if x[0] is not None else -1, x[1]), reverse=True)
     return _clean({"generated_utc": generated_utc, "schema": EVENTS_SCHEMA, "live_since_utc": _iso(_ms(live_since)),
                    "events": [x[2] for x in out[:EVENTS_N]]})
@@ -598,6 +780,8 @@ def _state(m):
         return "flat"
     if m.get("entry_window_open"):
         return "new"
+    if m.get("exit_rule") == TRAIL:                               # a trail market has no Target 1 to be "near"
+        return "running"
     e, st, t1, px = _num(m.get("entry")), _num(m.get("stop")), _num(m.get("target_1")), _num(m.get("price"))
     if not m.get("t1_taken") and None not in (e, st, t1, px) and e != st:
         lo, hi = sorted((st, t1))
@@ -715,6 +899,11 @@ def write(page, out_dir=None, s1=None, now=None, data_dir=None, log=None, bars_d
     is written first and on its own: its failure is one line through `log` ("setup_events: not written (...)")
     and setups.json is written all the same; a page setups.json cannot use (or cannot read) still gets the events
     file and then raises, as before.
+    The voices (setups_voice.py) are moved one step here, before the file is built: the state is read from
+    <data_dir>/setups_voice_state.json (default setups_voice.STATE_PATH; a lost file is rebuilt from the previous
+    setups.json), moved on this page and saved, and only then is setups.json built from it. A state that cannot be
+    read or saved raises: nothing is published that step (the step logs it) rather than a market on the wrong voice.
+    With the switch off there is no state, no file is written and setups.json is what it always was.
     -> {"markets": how many, "path": the local file, "web_path": the web copy or None}"""
     err = None
     if not isinstance(page, dict):
@@ -736,8 +925,16 @@ def write(page, out_dir=None, s1=None, now=None, data_dir=None, log=None, bars_d
     assets = page.get("assets") if isinstance(page, dict) and isinstance(page.get("assets"), dict) else {}
     syms = _order(page, assets) if isinstance(page, dict) else []
     bars =dict((a, read_closes(bar_path(bars_dir or BARS_DIR, a))) for a in syms if isinstance(a, str))
+    prev = _read_json(os.path.join(out_dir, FILE))
+    # saved BEFORE the file is published: a changeover that was shown but not remembered would be made again at the
+    # next step with a later starting time, and the setup shown in between would vanish from the page and the vault
+    vpath = (os.path.join(data_dir, os.path.basename(setups_voice.STATE_PATH)) if data_dir else setups_voice.STATE_PATH)
+    voice = setups_voice.load(vpath, prev_doc=prev)
+    setups_voice.update(page, voice)
+    setups_voice.save(vpath, voice)
     doc = build(page, s1=load_s1(data_dir) if s1 is None else s1, now=now, bars=bars,
-                trades=read_trades(trades_dir or TRADES_DIR), prev=_read_json(os.path.join(out_dir, FILE)))
+                trades=read_trades(trades_dir or TRADES_DIR), prev=prev, voice=voice,
+                trail_trades=read_trades(trades_dir or TRADES_DIR, TRAIL_BOOK) if voice.get("markets") else None)
     path, web = _publish(FILE, doc, out_dir, log, "setups")
     try:                                                          # the open landing file: its own guard, one line
         lp, lw = _publish(LANDING_FILE, build_landing(doc, page), out_dir, log, "landing")

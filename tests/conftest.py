@@ -35,3 +35,14 @@ def pytest_collection_finish(session):
 def _thread_settings_do_not_leak_between_tests():
     yield
     _restore()
+
+
+@pytest.fixture(autouse=True)
+def _no_test_reads_the_real_setups_voice_state(monkeypatch, tmp_path_factory):
+    """engine15/setups_voice.py's state (data/setups_voice_state.json) decides which paper book the Setups page, the
+    signals and the vault feed read. A test that does not name its own file would read the real one: on a machine where
+    a market is on the trail voice, tests of the targets voice would then fail (or pass for the wrong reason). Every
+    test gets a path in a temp folder instead; nothing is written there unless the test's own code does."""
+    from engine15 import setups_voice
+    monkeypatch.setattr(setups_voice, "STATE_PATH",
+                        str(tmp_path_factory.mktemp("voice") / "setups_voice_state.json"))

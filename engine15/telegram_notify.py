@@ -75,6 +75,10 @@ SETUPS MOVING AGAINST (owner, 22 Nov 2026: "A Telegram alert when price moves sh
   with no price, changes nothing and forgets nothing. R comes from the first stop this bot saw for the trade, kept in its
   state (the page shows the current stop, which equals the entry stop until Target 1). These thresholds are a first
   setting chosen by the engine author, not by the owner. An alert only: no stop, book or setting changes. Its own guard.
+  Since the trail switch (setups_voice.py, 26 Nov 2026): a market with an entry in data/setups_voice_state.json is read
+  from the book the Setups page shows for it (setups_voice.published; a setup the page does not show reads as FLAT), and
+  a trade whose trailing stop has armed gets no card any more (its stop has moved in the trade's favour). A market with
+  no entry there is read from b_targets as before; with the switch off no market has one.
 
 CAPITULATION LONG (H115; owner, 24 Nov 2026: "build the paper capitulation-long book with the Telegram alert"): the paper
   books p9_rebound_a / p9_rebound_b (playbook9.py: H107's rules A and B, NOT passed) keep their own state file,
@@ -110,7 +114,7 @@ import sys
 import time
 from datetime import datetime, timedelta, timezone
 
-from . import livecheck, signals
+from . import livecheck, setups_voice, signals
 from .config import DATA_DIR, JOURNAL_DIR, OUT_DIR, ROOT
 
 TOKEN_FILE = os.environ.get("MIND15_TELEGRAM_TOKEN_FILE", os.path.join(ROOT, "secrets", "telegram_token"))
@@ -251,6 +255,7 @@ def _usd_short(v):
 
 
 NAMES = {"main": "Main engine", "b_trail": "B trail (shadow)", "b_targets": "B targets (shadow)",
+         "b_trail_setups": "Setups trail (shadow)",
          "b_trend30": "Trend 30d (shadow)", "b_wait_stop": "Wait after stop (shadow)",
          "b_rebound": "Setups + rebound long (shadow, NOT passed)",
          "b_ema20_1h_t1": "EMA20 trail (shadow)", "b_sma20_1h_t1": "SMA20 trail (shadow)", "b_be_t1": "Break-even trail",
@@ -271,7 +276,7 @@ def _esc(t):
     return str(t).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
-TABLE = {"b_trail": "B trail", "b_targets": "B targets",
+TABLE = {"b_trail": "B trail", "b_targets": "B targets", "b_trail_setups": "Setups trail",
          "b_trend30": "Trend 30d", "b_wait_stop": "Wait stop", "b_ema20_1h_t1": "EMA20 trail", "b_sma20_1h_t1": "SMA20 trail",
          "b_rebound": "Rebound",
          "b_be_t1": "BE trail", "p8_fvg": "P8 FVG", "p3_orb": "P3 ORB", "p6_vwap": "P6 VWAP", "p10_round": "P10 round",
@@ -1588,10 +1593,24 @@ def _adv_card(kind, a, side, entry, stop0, price, frac, at):
     return u"\n".join(L)
 
 
-def adverse_update(prev, page):
+def _adv_view(page, a, v, voice):
+    """The view to judge for one market. No entry for it in the voice state (setups_voice; always so with the switch
+    off): v, its b_targets view, as before. With an entry: the view of the book the Setups page shows for it, FLAT when
+    that book's setup is not the one shown, None (nothing changes) when the page does not carry that book."""
+    marks = voice.get("markets") if isinstance(voice, dict) else None
+    if not isinstance(marks, dict) or not isinstance(marks.get(a), dict):
+        return v
+    p = setups_voice.published(page, a, voice)
+    if p["view"] is None:
+        return None
+    return p["view"] if p["open"] else {"status": "FLAT"}
+
+
+def adverse_update(prev, page, voice=None):
     """-> (state {market: {"id", "entry", "stop0", "a", "b", "t1"}}, [cards]) for the Setups book's open trades.
     A FLAT market drops its entry; a page without the book, a market missing from it, a view that cannot be read, or a
-    market with no price changes nothing. R comes from stop0, the first stop seen for the trade."""
+    market with no price changes nothing. R comes from stop0, the first stop seen for the trade.
+    voice: the setups_voice state (None = every market on b_targets, as before the trail switch); see _adv_view."""
     prev = prev if isinstance(prev, dict) else {}
     if not isinstance(page, dict) or not isinstance(page.get("shadows"), dict):
         return prev, []
@@ -1603,6 +1622,7 @@ def adverse_update(prev, page):
     prices = _adv_prices(page)
     cur, cards = dict(prev), []
     for a, v in sorted(views.items()):
+        v = _adv_view(page, a, v, voice)
         if not isinstance(v, dict):
             continue
         status = v.get("status")
@@ -1617,8 +1637,8 @@ def adverse_update(prev, page):
         old = prev.get(a)
         st = dict(old) if isinstance(old, dict) and old.get("id") == tid else {
             "id": tid, "entry": entry, "stop0": stop, "a": False, "b": False, "t1": False}
-        if v.get("t1_taken") is True:
-            st["t1"] = True                                           # the stop sits at the entry: no card any more
+        if v.get("t1_taken") is True or v.get("trailing") is True:
+            st["t1"] = True                                           # the stop sits at the entry (or trails): no card any more
         cur[a] = st
         if st["t1"] or (st["a"] and st["b"]) or a not in prices:
             continue
@@ -1800,7 +1820,7 @@ def check(st, tok, send=True, now=None):
     except Exception as e:
         print(time.strftime("%Y-%m-%d %H:%M:%S"), "give-back check failed: %s" % type(e).__name__, flush=True)
     try:                                                              # Setups trade moving against (alert only)
-        st["adverse"], cards = adverse_update(st.get("adverse"), page)
+        st["adverse"], cards = adverse_update(st.get("adverse"), page, setups_voice.load())
         ev.extend(cards)
     except Exception as e:
         print(time.strftime("%Y-%m-%d %H:%M:%S"), "setups adverse check failed: %s" % type(e).__name__, flush=True)

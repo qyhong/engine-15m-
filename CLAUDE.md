@@ -66,6 +66,18 @@ real futures trades from it. So a change in any of these changes real entries, s
   the vault identifies a setup by its entry and `opened_utc`, so neither may change after the first post.
 - `engine15/backtest.py`: `leverage` (position size). `engine15/exits.py`: `PART`, `reached`, `be_stop`.
 - `engine15/setups.py` (the market entry of setups.json the feed reads) and `engine15/signals.py` (the entry window).
+- `engine15/setups_voice.py`: which book speaks for each market (the switch `TRAIL_MARKETS`, off = `()`; the state in
+  `data/setups_voice_state.json`; docs/TRAIL_SWITCH_PLAN.md). Naming a market there is the owner's decision only.
+
+**The trail voice (built 26 Nov 2026, both switches OFF).** The owner decided the Setups page, the signals and the vault
+move to a trailing-stop book ("Lets switch", "Page and VIP"; docs/TRAIL_SWITCH_PLAN.md, H119). The book is
+`b_trail_setups` (`{"trail": True, "early": True}`): the same `run()`, so the rule above about leaving `b_targets`
+exactly as it was now covers this book too. It is published nowhere until `setups_voice.TRAIL_MARKETS` names a market,
+and nothing of it is sent to the vault until `vault_feed.SEND_TRAIL` is True as well. Both go on together, only on the
+owner's word in this project AND after the AI Trading Bot session confirms an installed vault package that accepts the
+trail bodies (`out/live/trail_book_preview.json`, written every step by `engine15/trail_preview.py`, is the dry run it
+checks; that module never posts). `tests/test_money_path_trail_golden.py` freezes what the vault is told on the trail
+voice; from the day the switches go on it is a golden test like the first one.
 - `engine15/vault_feed.py`: all of it (the book body, the exit intents, the state in `data/vault_feed_state.json`).
 - `engine15/config.py`: every constant the above read (`idle_max`, `stop_units`, `risk_per_trade`, fees, flip and edge
   thresholds, the release guard, the higher-timeframe bias).

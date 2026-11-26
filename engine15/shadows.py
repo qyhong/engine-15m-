@@ -16,6 +16,9 @@ Promotion is decided later on forward results (docs/CHARTER.md), never here.
                    the stop to break-even once Target 1 is taken; flips and stops as the main book
     b_trail        task B: once price has gone 1R in favour, the stop trails the last confirmed 15m
                    swing or 2 x ATR(14, 15m), whichever is tighter; otherwise the main book
+    b_trail_setups b_trail with the early entry (BTC and ETH): the book the Setups page, the signals and the VIP vault
+                   read for a market on the trail voice (setups_voice.py; owner, 26 Nov 2026). Published nowhere
+                   while setups_voice.TRAIL_MARKETS is empty.
     b_be_t1        task B / H36: the stop moves to the entry price once Target 1 trades (live from the next bar)
     b_ema20_1h_t1  task B / H36: once Target 1 has traded, a 15m close beyond the EMA20 of the 1h chart (ratcheted,
     b_sma20_1h_t1  never loosening; SMA20 for the second) exits at the next open; engine15/exits.py holds the rule
@@ -90,6 +93,12 @@ CHALLENGERS = OrderedDict([
     ("b_wait_stop", {"title": "Setups waiting for a signal after a stop-out (H68)",
                      "rule": {"targets": True, "early": True, "wait_after_stop": True}, "cfg": {}}),
     ("b_trail", {"title": "B: trailing swing / 2 ATR stop after 1R", "rule": {"trail": True}, "cfg": {}}),
+    # The trailing-stop Setups book (owner, 26 Nov 2026: "Lets switch"; docs/TRAIL_SWITCH_PLAN.md): b_trail's exit with
+    # the Setups book's early entry on BTC and ETH (CFG["early_entry"]). It starts flat at its deploy and is published
+    # nowhere (not the Setups page, not the signals, not the vault) until setups_voice.TRAIL_MARKETS names a market.
+    # b_trail itself is not touched and stays the yardstick.
+    ("b_trail_setups", {"title": "Setups with the trailing stop: swing / 2 ATR stop after 1R, early entry on BTC and ETH",
+                        "rule": {"trail": True, "early": True}, "cfg": {}}),
     ("a_pullback", {"title": "A: wait up to 8 bars for a pullback fill", "rule": {"pullback": True}, "cfg": {}}),
     # Y, the charter's yardstick (11 Nov 2026): the same engine and odds, deciding only at 4h / daily closes
     ("y_4h", {"title": "Y: same engine, decides at 4h closes only", "rule": {"every_ms": 4 * 3600000}, "cfg": {}}),

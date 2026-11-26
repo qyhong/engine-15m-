@@ -408,6 +408,22 @@ crypto replay).
   Target 1 when the rule began: `live.adopt_be_t1(..., half=True)` sets `half_due`, and the half is closed at the
   next bar's open (`T1_LATE`). Journal: `half_closed`; open-trade view: `t1_half*`. Tests: `tests/test_half_t1.py`.
 
+## The trail voice (26 Nov 2026; built, both switches OFF)
+The owner decided the Setups page, the signals and the VIP vault move to a trailing-stop book ("Page and VIP").
+Plan, contract and order: `docs/TRAIL_SWITCH_PLAN.md`; the forward read: H119.
+- The book: `b_trail_setups` in `shadows.CHALLENGERS` (`{"trail": True, "early": True}`), starts flat at its deploy.
+- Which book speaks for a market: `engine15/setups_voice.py` (`TRAIL_MARKETS`, state `data/setups_voice_state.json`,
+  `published()` is the one rule). `setups.write` moves the state; `signals.py` and the adverse alert read it.
+- The vault: `vault_feed.SEND_TRAIL` (the trail body, `move_stop` per step when tighter, `close`; never `reduce`).
+- The dry run: `engine15/trail_preview.py` writes `out/live/trail_book_preview.json` every step while `SEND_TRAIL` is
+  off. It posts nothing and keeps its own memory inside that file.
+- Tests: `test_setups_voice.py`, `test_setups_trail.py`, `test_signals_trail.py`, `test_vault_trail.py`,
+  `test_trail_preview.py`, `test_money_path_trail_golden.py` (the frozen record of the trail voice).
+- To switch on (owner's word in both sessions, the AI Trading session's confirmation of an installed vault package and
+  of the page): set `setups_voice.TRAIL_MARKETS` and `vault_feed.SEND_TRAIL`, bump the version with a `VERSION_NOTE`,
+  update the two "switches are off" tests, deploy with `tools/deploy.sh`. Each market changes over by itself when its
+  open targets setup ends; a trail setup already open then is not shown. Going back is the same switch.
+
 ## Open items
 See the task tables and the dated status notes at the end of `docs/CHARTER.md`.
 - **Bars note (15 Nov 2026):** `data.load("BTCUSDT"/"ETHUSDT")` returns Binance SPOT 15m bars (the stored bar matches the

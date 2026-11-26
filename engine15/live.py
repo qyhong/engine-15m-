@@ -506,6 +506,13 @@ def step(log=print, fetch=True):
         except Exception as e:
             log("vault: not sent (%r)" % (e,))
         tm.lap("vault")
+    try:                                                           # the trail book's dry run (docs/TRAIL_SWITCH_PLAN.md):
+        from . import vault_feed                                   # what WOULD go to the vault, as a file; never posted,
+        if sinfo and not vault_feed.SEND_TRAIL:                    # and never stops the step
+            from . import trail_preview
+            log(trail_preview.write(page, LIVE_OUT))
+    except Exception as e:
+        log("trail preview: not written (%r)" % (e,))
     try:                                                           # stocks.json: the S&P 500 model read on the Setups
         from . import stocks                                       # page's top five stocks (stocks.py: paper, read only,
         info = stocks.maybe_run(out, out_dir=LIVE_OUT, data_dir=os.path.dirname(STATE), log=log)   # its own files);

@@ -48,7 +48,7 @@ def test_a_copy_holds_the_files_a_manifest_and_what_they_say(data):
     m = sc.manifest(str(data), st)
     assert sorted(m["files"]) == ["shadow_state.json", "vault_feed_state.json"]
     assert m["skipped"] == {"live_state.json": "not there", "signals_state.json": "not there",
-                            "capit_long_state.json": "not there"}
+                            "capit_long_state.json": "not there", "setups_voice_state.json": "not there"}
     holds = m["files"]["vault_feed_state.json"]["holds"]
     assert holds["positions"]["BTCUSDT"] == {"side": "LONG", "opened_utc": "2026-11-18T09:00:00Z", "t1_taken": False,
                                              "exits_will_be_sent": True}

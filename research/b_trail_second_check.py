@@ -58,6 +58,8 @@ def read_trades(live_dir):
     rows = []
     for path in sorted(glob.glob(os.path.join(live_dir, "shadow_trades_%s_*.csv" % BOOK))):
         market = os.path.basename(path)[len("shadow_trades_%s_" % BOOK):-len(".csv")]
+        if not market.isalnum():                                  # "setups_BTCUSDT": another book's file (b_trail_setups,
+            continue                                              # 26 Nov 2026), never pooled into this registered check
         with open(path, encoding="utf-8") as fh:
             for r in csv.DictReader(fh):
                 try:

@@ -66,7 +66,7 @@ import ssl
 import time
 from decimal import ROUND_HALF_EVEN, Decimal, InvalidOperation
 
-from . import exits
+from . import exits, setups_voice
 from .config import DATA_DIR
 
 ALLOWED = ("BTCUSDT", "ETHUSDT")                 # the owner's scope; anything else is ignored even if listed
@@ -116,6 +116,22 @@ INTENT_KEYS = {"close": {"intent_id", "market", "symbol", "action", "reference_p
                "reduce": {"intent_id", "market", "symbol", "action", "fraction", "reference_price"},
                "move_stop": {"intent_id", "market", "symbol", "action", "side", "stop_price", "reference_price"}}
 LEVELS = ("entry", "stop", "target_1", "target_2")
+# THE TRAIL BOOK (owner, 26 Nov 2026: "Lets switch", "Page and VIP"; docs/TRAIL_SWITCH_PLAN.md). A setups.json market on
+# the trail voice carries exit_rule "trail" (setups_voice.py). Its book has no targets: the body is entry, stop (the
+# stop as it stands), price, exit_rule, trail_active, entry_window_open, opened_utc, as_of_utc and lead_pts; NO
+# target_1, target_2, rr_now_t2, t1_taken (agreed with the AI Trading session, 26 Nov 2026). Its intents: `move_stop`
+# (futures only) at a step where the stop is tighter than the last one sent for that setup, and `close` when the setup
+# leaves; never `reduce`.
+# OFF: the live vault refuses a body with a key it does not know. It stays False until the AI Trading session confirms
+# an installed vault package that accepts these bodies AND the owner says yes in both sessions. It goes on together
+# with setups_voice.TRAIL_MARKETS (tests/test_vault_trail.py refuses a vault market on the trail voice while this is
+# False). If that ever happens all the same, the vault is told FLAT for that market, with an ALARM line every step.
+SEND_TRAIL = False
+TRAIL = setups_voice.TRAIL
+MS = "ms"                                        # the id word of a trail move_stop: <SYM>.<opened>.ms.<DDHHMM of as_of>
+PREVIEW_FILE = "trail_book_preview.json"         # the dry run (preview(), below): what WOULD be posted; never posted
+PREVIEW_SCHEMA = 1
+PREVIEW_INTENTS = 50
 
 
 # ------------------------------------------------------------------ signing (a copy of the vault's api.body_sig)
@@ -227,10 +243,11 @@ def remembered_lead(st, sym, m):
     return p.get("lead_pts") if isinstance(p, dict) and p.get("opened_utc") == m.get("opened_utc") else None
 
 
-def build_book(m, as_of, lead=None):
+def build_book(m, as_of, lead=None, force=False):
     """One market's submit_book body {"book": {...}} from its setups.json entry, or (None, short reason). Nothing is
     'fixed': a market whose levels are missing or out of order is not sent. `lead`: the setup's opening Lead from the
-    feed's memory, added as lead_pts only when SEND_LEAD is on."""
+    feed's memory, added as lead_pts only when SEND_LEAD is on. A market on the trail voice (exit_rule "trail") gets
+    the trail body (build_trail_book); `force` is the preview's: it builds that body while SEND_TRAIL is off."""
     sym, side = m.get("symbol"), m.get("side")
     if side not in ("LONG", "SHORT", "FLAT"):
         return None, "bad side"
@@ -242,6 +259,8 @@ def build_book(m, as_of, lead=None):
         if price is not None:
             b["price"] = price
         return {"book": _contract(b)}, None
+    if is_trail(m):
+        return build_trail_book(m, as_of, lead, force=force)
     lv = dict((k, dec_text(m.get(k))) for k in LEVELS)
     missing = [k for k in LEVELS if lv[k] is None]
     if missing:
@@ -279,6 +298,47 @@ def build_book(m, as_of, lead=None):
     return {"book": _contract(b, m)}, None
 
 
+def is_trail(m):
+    """A setups.json market on the trail voice (setups_voice.py)."""
+    return isinstance(m, dict) and m.get("exit_rule") == TRAIL
+
+
+def build_trail_book(m, as_of, lead=None, force=False):
+    """The submit_book body of an OPEN trail setup, or (None, short reason). No targets. Before the trail has armed the
+    stop is strictly on the losing side of the entry; always it is strictly on the losing side of the price (the book
+    sets it at a close, from that close, and a stop that traded closed the book)."""
+    if not (SEND_TRAIL or force):
+        return None, "trail book while SEND_TRAIL is off"
+    sym, side = m.get("symbol"), m.get("side")
+    if side not in ("LONG", "SHORT"):
+        return None, "bad side"
+    entry, stop, price = dec_text(m.get("entry")), dec_text(m.get("stop")), dec_text(m.get("price"))
+    missing = [k for k, v in (("entry", entry), ("stop", stop)) if v is None]
+    if missing:
+        return None, "levels missing (%s)" % ",".join(missing)
+    if price is None:
+        return None, "no price"
+    for k in ("trail_active", "entry_window_open"):
+        if not isinstance(m.get(k), bool):
+            return None, "bad %s" % k
+    if m.get("t1_taken") is True or m.get("target_1") is not None or m.get("target_2") is not None:
+        return None, "a trail book with targets"
+    opened = m.get("opened_utc")
+    if not isinstance(opened, str) or not UTC_RE.match(opened):
+        return None, "bad opened_utc"
+    e, s, p, sgn = Decimal(entry), Decimal(stop), Decimal(price), (1 if side == "LONG" else -1)
+    if not m["trail_active"] and not sgn * (e - s) > 0:
+        return None, "levels out of order"
+    if not sgn * (p - s) > 0:
+        return None, "stop not on the losing side of the price"
+    b = {"symbol": sym, "side": side, "entry": entry, "stop": stop, "price": price, "exit_rule": TRAIL,
+         "trail_active": m["trail_active"], "entry_window_open": m["entry_window_open"], "opened_utc": opened,
+         "as_of_utc": as_of}
+    if SEND_LEAD and _lead_ok(lead):
+        b["lead_pts"] = round(float(lead), 2) + 0.0
+    return {"book": _contract(b)}, None
+
+
 def _content(book):
     return hashlib.sha256(encode(dict((k, v) for k, v in book.items() if k != "as_of_utc"))).hexdigest()
 
@@ -304,6 +364,9 @@ def _pos_of(m):
     opened, entry = m.get("opened_utc"), dec_text(m.get("entry"))
     if not isinstance(opened, str) or not UTC_RE.match(opened) or entry is None:
         return "unknown"
+    if is_trail(m):                                              # no targets; the stop as it stands is remembered
+        return {"side": side, "opened_utc": opened, "entry": entry, "target_1": None, "t1_taken": False,
+                "exit_rule": TRAIL, "stop": dec_text(m.get("stop"))}
     return {"side": side, "opened_utc": opened, "entry": entry, "target_1": dec_text(m.get("target_1")),
             "t1_taken": m.get("t1_taken") is True}
 
@@ -312,6 +375,41 @@ def intent_id(sym, opened_utc, action, market):
     """Deterministic: (market symbol, the setup's opening time, action, vault market). Never join- / k3- (it starts with
     the symbol)."""
     return "%s.%s.%s.%s" % (sym, opened_utc.replace("-", "").replace(":", ""), action, market)
+
+
+def _compact(opened_utc):
+    return opened_utc.replace("-", "").replace(":", "")
+
+
+def ms_id(sym, opened_utc, as_of):
+    """A trail move_stop's id: (symbol, the setup's opening time, "ms", day-hour-minute of the book's as_of), so each
+    15-minute step has its own; None when as_of is not a time."""
+    if not isinstance(as_of, str) or not UTC_RE.match(as_of):
+        return None
+    return "%s.%s.%s.%s" % (sym, _compact(opened_utc), MS, as_of[8:10] + as_of[11:13] + as_of[14:16])
+
+
+def _ms_prefix(sym, opened_utc):
+    return "%s.%s.%s." % (sym, _compact(opened_utc), MS)
+
+
+def tighter(side, new, old):
+    """True when the stop `new` is strictly tighter than `old` for a book on this side (decimal texts)."""
+    if new is None or old is None:
+        return False
+    return Decimal(new) > Decimal(old) if side == "LONG" else Decimal(new) < Decimal(old)
+
+
+def trail_intents(sym, pos, stop_sent, now_px, as_of):
+    """The trail book's stop moved: ONE futures move_stop to the stop as it stands, when it is tighter than the last
+    stop sent for this setup. -> [] when there is nothing to send, None when it cannot be built (no price, no as_of)."""
+    if not tighter(pos["side"], pos.get("stop"), stop_sent):
+        return []
+    iid = ms_id(sym, pos["opened_utc"], as_of)
+    if iid is None or now_px is None:
+        return None
+    return [{"intent_id": iid, "market": "futures", "symbol": sym, "action": "move_stop", "reference_price": now_px,
+             "side": "BUY" if pos["side"] == "LONG" else "SELL", "stop_price": pos["stop"]}]
 
 
 def _ref(book_px, now_px):
@@ -372,9 +470,11 @@ def exit_price(row, now_px):
 
 
 def find_trade(trades_dir, sym, pos):
-    """The setups book's closed-trade row for that position (shadow_trades_b_targets_<SYM>.csv: same side, t_in_ms =
-    opened_utc), the newest such row, or None."""
-    path = os.path.join(trades_dir, "shadow_trades_b_targets_%s.csv" % sym)
+    """The closed-trade row of that position in its own book's file (shadow_trades_b_targets_<SYM>.csv, or the trail
+    book's shadow_trades_b_trail_setups_<SYM>.csv for a trail setup: same side, t_in_ms = opened_utc), the newest such
+    row, or None."""
+    book = setups_voice.book_of(TRAIL if pos.get("exit_rule") == TRAIL else setups_voice.TARGETS)
+    path = os.path.join(trades_dir, "shadow_trades_%s_%s.csv" % (book, sym))
     try:
         if os.path.getsize(path) > 5 * 1024 * 1024:
             return None
@@ -432,16 +532,30 @@ def track(sym, m, st, trades_dir, now):
         lead = prev.get("lead_pts") if same else opening_lead(m, st["lead_seen"].get(sym))
         if _lead_ok(lead):
             cur["lead_pts"] = lead
-    new = []
+        if cur.get("exit_rule") == TRAIL:                        # the last stop the vault was given for this setup:
+            sent = prev.get("stop_sent") if same and prev.get("exit_rule") == TRAIL else None    # at first sight, the
+            cur["stop_sent"] = sent if sent is not None else cur.get("stop")                      # book's own stop
+    new, over = [], None
     if not first and prev and (prev.get("eligible") or not EXITS_ONLY_IF_WINDOW_SEEN):
         if cur is not None and cur["side"] == prev["side"] and cur["opened_utc"] == prev["opened_utc"]:
-            if cur["t1_taken"] and not prev.get("t1_taken"):
+            if cur.get("exit_rule") == TRAIL:
+                if prev.get("exit_rule") == TRAIL:               # the trail moved: one move_stop, only when tighter
+                    new = trail_intents(sym, cur, cur["stop_sent"], now_px, m.get("price_bar_utc"))
+                    if new:
+                        cur["stop_sent"], over = cur["stop"], prev
+            elif cur["t1_taken"] and not prev.get("t1_taken"):
                 new = t1_intents(sym, dict(prev, target_1=cur.get("target_1") or prev.get("target_1")), now_px)
         else:                                                    # stopped, target 2, flip, the model's exit
             new = close_intents(sym, prev, find_trade(trades_dir, sym, prev), now_px)
+            over = prev if prev.get("exit_rule") == TRAIL else None
     if new is None:
         return "no reference price for the exit"
     queue = st.setdefault("intents", {})
+    if new and over is not None:                                 # a stop move that never went out is overtaken by the
+        pre = _ms_prefix(sym, over["opened_utc"])                # newer one (or by the close): it must not hold the book
+        for iid, it in queue.items():
+            if iid.startswith(pre) and isinstance(it, dict) and it.get("status") == "pending":
+                it["status"] = "superseded"
     for b in new:
         if b["intent_id"] not in queue and intent_ok(b):
             st["seq"] = int(st.get("seq", 0)) + 1
@@ -663,6 +777,55 @@ def _say(log, text):
         pass
 
 
+# ------------------------------------------------------------------ the dry run of the trail book (never posted)
+def preview(markets, prev=None, trades_dir=None, now=None, generated_utc=None):
+    """trail_book_preview.json as a dict: what the feed WOULD post if these markets were on the trail voice. `markets`:
+    {symbol: its setups.json entry built on the trail voice}; `prev`: the previous preview (its "state" is this dry
+    run's own memory, the same shape as the feed's: track() fills it exactly as it would the real one). Nothing here
+    opens a socket. books: {symbol: {"body": the submit_book body or None, "reason": why not}}; intents: the last
+    PREVIEW_INTENTS move_stop / close bodies it would have made, oldest first, each with made_utc."""
+    now = time.time() if now is None else now
+    st = prev.get("state") if isinstance(prev, dict) and isinstance(prev.get("state"), dict) else {}
+    st = json.loads(json.dumps(st))
+    books = {}
+    for sym in ALLOWED:
+        m = markets.get(sym) if isinstance(markets, dict) else None
+        if not isinstance(m, dict):
+            books[sym] = {"body": None, "reason": "no trail entry for this market"}
+            continue
+        why = track(sym, m, st, trades_dir or "", now)
+        if why:
+            books[sym] = {"body": None, "reason": why}
+            continue
+        body, why = build_book(m, m.get("price_bar_utc"), remembered_lead(st, sym, m), force=True)
+        books[sym] = {"body": body, "reason": why}
+    queue = st.get("intents") if isinstance(st.get("intents"), dict) else {}
+    keep = sorted(queue.items(), key=lambda kv: kv[1].get("seq", 0))[-PREVIEW_INTENTS:]
+    st["intents"] = dict(keep)
+    return {"generated_utc": generated_utc or _utc(now), "schema": PREVIEW_SCHEMA,
+            "note": "Dry run. What Mind 15 would post for a trail book. Nothing here was sent.",
+            "books": books,
+            "intents": [dict(it["body"], made_utc=_utc(it.get("made", now)), ok=bool(intent_ok(it["body"])))
+                        for _iid, it in keep if isinstance(it.get("body"), dict)],
+            "state": st}
+
+
+def write_preview(markets, out_dir, trades_dir=None, now=None, generated_utc=None):
+    """Write the preview beside setups.json (atomic). -> its path. The caller guards it: it never stops a step."""
+    path = os.path.join(out_dir, PREVIEW_FILE)
+    try:
+        with io.open(path, encoding="utf-8") as fh:
+            prev = json.load(fh)
+    except (OSError, ValueError):
+        prev = None
+    doc = preview(markets, prev, trades_dir=trades_dir or out_dir, now=now, generated_utc=generated_utc)
+    tmp = path + ".tmp"
+    with io.open(tmp, "w", encoding="utf-8") as fh:
+        json.dump(doc, fh, sort_keys=True)
+    os.replace(tmp, path)
+    return path
+
+
 # ------------------------------------------------------------------ one pass
 def run(setups_path, log=print, environ=None, state_path=None, trades_dir=None, now=None):
     """Send what changed. -> {"books": [symbols sent], "intents": [ids sent]} or None when the feature is off. Never
@@ -701,6 +864,11 @@ def _run(setups_path, log, env, state_path, trades_dir, now):
         if m is None:
             _say(log, "vault: %s not sent (not in setups.json)" % sym)
             continue
+        if is_trail(m) and not SEND_TRAIL and m.get("side") in ("LONG", "SHORT"):
+            # must never happen (the two switches go on together, and a test says so). If it does: the vault cannot
+            # read a trail book, so it is told FLAT, loudly, and an earlier setup's exit still goes out.
+            _say(log, "vault: ALARM %s is on the trail voice while SEND_TRAIL is off: the vault is told FLAT" % sym)
+            m = markets[sym] = dict(m, side="FLAT")
         why = track(sym, m, st, trades_dir, now)
         if why:                                                  # the position is kept as it was and the book waits too:
             _say(log, "vault: %s not sent (exit not queued: %s)" % (sym, why))    # every book sent was tracked first, so
@@ -746,7 +914,9 @@ def _run(setups_path, log, env, state_path, trades_dir, now):
             done["intents"].append(iid)
             _say(log, "vault: %s sent (id %s%s)" % (label, iid, ", duplicate" if out.get("duplicate") else ""))
         else:
-            if status in (400, 409):                             # the same id and body would always be refused
+            if status in (400, 409) or (status == 403 and (".%s." % MS) in iid):
+                # the same id and body would always be refused (403 on a trail stop move: not tighter than the member's
+                # own stop, or past the price; the next step's move has its own id)
                 it["status"] = "refused"
                 it["why"] = _why(status, out)                    # the vault's code, kept for the Telegram card
             _say(log, "vault: %s not sent (%s)" % (label, _why(status, out)))

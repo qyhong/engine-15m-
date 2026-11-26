@@ -32,6 +32,40 @@ Bars are processed only once CLOSED, only once each (state keeps the last bar pr
 close the page's own shadow books have reached, so the book's state and the bars never disagree. A bar file that cannot be
 read (missing, empty, half-written) changes nothing: the same bars are read again at the next check.
 
+WHICH BOOK SPEAKS (docs/TRAIL_SWITCH_PLAN.md; setups_voice.py): a market's signals come from the book the Setups page
+shows for it: b_targets (the rules above), or the trailing-stop book b_trail_setups once setups_voice.TRAIL_MARKETS names
+the market and its open b_targets setup has ended. Every check reads data/setups_voice_state.json (the engine writes it);
+a file that cannot be read raises, so there is no check that time. A NEW signal is issued only for the setup
+setups_voice.published() shows, and only while the voice the market has is the voice the switch asks for: a market that
+is changing voice gets nothing new (and nothing is marked as seen for it). A signal remembers its rule (`rule: "trail"`;
+a b_targets signal carries no such key) and is followed to its end in its OWN book, whatever the market's voice becomes.
+With the switch off there is no state file, every market is on b_targets, and the state, the log and the cards are what
+they were.
+
+THE FOLLOWABLE RULES OF A TRAIL SIGNAL, as implemented (plan section 4, the trail version of H53; its record is kept
+apart from H53's and the two are never pooled). The signal carries E and the stop S0 as the page shows them at the alert;
+1R = |E - S0|; it has no targets. `stop0` keeps S0; `stop` is the stop in force for the next bar.
+  1 entry as H53 rule 1 (a limit at E, the four bars after bar A; bars F .. A never fill).
+  2 no fill: S0 trades in any bar from F up to the fill ("stop"); price reaches E + 1R in favour in any such bar ("ran":
+          the book's trail has armed, the line the vault uses for a join; a bar that holds E and that price together is
+          a no fill); the four bars pass ("window"); or the book closes its own trade first (its trailing stop reads
+          as "ran", its first stop as "stop", anything else as "model"). A view that already shows the trail armed
+          (`trailing`) when the setup is first seen, or while the signal still waits and every bar up to the page's
+          close has been looked at, is a "ran" no fill at once.
+  3 after the fill: no targets. In every bar the stop is looked at first; a gap through it fills at that bar's open.
+          The exit is "stop" while the stop is still S0, else "trail". After the bars of a check have been processed,
+          the stop the book's view shows (only while the view still shows this very setup, and only when every bar up
+          to the page's close has been looked at) becomes the stop for the bars that follow, only ever tighter. So
+          with one check a bar, each bar meets the stop the book published at the close before it. When several bars
+          are processed in one check (the bot was away), the older, looser stop is used for all of them; if the book
+          was stopped in one of them, rule 4 then ends the followable trade.
+  4 the book closes its own trade for another reason while the followable trade is open: exactly H53 rule 4.
+  5 costs and results as H53 rule 5; R is measured on S0.
+A "stop moved" card and its `stop_moved` log line go out only for the larger moves (in the state the stop moves at
+every check): `armed` the first time the stop leaves S0, `past_entry` the first time it is on the profit side of E (when
+the first move is already past E, ONE card is sent, as `past_entry`), and `step` whenever it has moved CARD_MOVE_R (0.5)
+R or more since the last such card. At most one a check.
+
 Cards (HTML) are subscriber-facing: no research, no book names, no server details, no dollar size.
 """
 import calendar
@@ -42,10 +76,15 @@ import math
 import os
 from datetime import datetime, timedelta, timezone
 
-from . import exits
+from . import exits, setups_voice
 from .config import CFG
 
 BOOK = "b_targets"                      # the signal source (shadows.py); fixed by H53
+TARGETS, TRAIL = setups_voice.TARGETS, setups_voice.TRAIL             # a signal's rule; TRAIL's book: setups_voice.BOOKS
+ARM_R = exits.TRAIL_ARM_R               # trail rule 2: the R in favour at which the book's trail arms (ONE constant)
+CARD_MOVE_R = 0.5                       # a "stop moved" card once the stop has moved this many R since the last card
+STOP_MOVED = "stop_moved"               # the log line of a "stop moved" card, and its `kind`:
+ARMED, PAST_ENTRY, STEP = "armed", "past_entry", "step"
 BAR_MS = int(CFG.get("bar_ms", 900000))
 WINDOW = 4                              # H53 rule 1: the bars after bar A in which the limit may fill
 PART = exits.PART                       # H53 rule 3: the share closed at Target 1 (ONE constant: exits.PART)
@@ -61,8 +100,10 @@ FOOT = u"<i>Paper signal from a model, not financial advice.</i>"
 GREEN, RED, WHITE, TICK, TARGET, FLAG, WARN, CHART, DISH = (
     u"\U0001f7e2", u"\U0001f534", u"⚪", u"✅", u"\U0001f3af", u"\U0001f3c1", u"⚠️", u"\U0001f4ca",
     u"\U0001f4e1")
+SHIELD = u"\U0001f6e1\ufe0f"            # the "stop moved" cards of a trail signal
 NO_FILL_WHY = {"window": "the entry window passed without price trading at the entry",
                "target": "price reached Target 1 before the entry filled",
+               "ran": "price moved one risk unit in the trade's favour before the entry filled",    # a trail signal
                "stop": "the stop traded before the entry filled",
                "model": "the model closed its own trade before the entry filled",
                "levels": "the model's order gave no stop and targets"}           # S2 only (signals_early.py)
@@ -160,8 +201,22 @@ def bar_path(data_dir, asset):
     return os.path.join(data_dir, "%s_15m.csv" % asset.lower())
 
 
-def trades_path(live_dir, asset):
-    return os.path.join(live_dir, "shadow_trades_%s_%s.csv" % (BOOK, asset))
+def trades_path(live_dir, asset, book=None):
+    return os.path.join(live_dir, "shadow_trades_%s_%s.csv" % (book or BOOK, asset))
+
+
+def is_trail(sig):
+    return sig.get("rule") == TRAIL
+
+
+def book_of(sig):
+    """The book a signal follows: its own, from the rule it was issued under (no rule = b_targets)."""
+    return setups_voice.book_of(TRAIL) if is_trail(sig) else BOOK
+
+
+def _s0(sig):
+    """The stop R is measured on: the stop at the alert (a trail signal's `stop` moves; a b_targets signal's never does)."""
+    return sig.get("stop0", sig["stop"])
 
 
 def _parse_bars(lines):
@@ -268,7 +323,7 @@ def _no_fill(sig, ts, reason):
 def _close(sig, ts, px, why):
     f = sig["follow"]
     f["exits"].append([px, 1.0 - sum(x[1] for x in f["exits"]), why])
-    res = result(sig["side"], sig["entry"], sig["stop"], sig["fee"], [(p, w) for p, w, _y in f["exits"]])
+    res = result(sig["side"], sig["entry"], _s0(sig), sig["fee"], [(p, w) for p, w, _y in f["exits"]])
     f.update(state=CLOSED, end_ms=ts, why=why, result=res)
     return [dict({"ev": "closed", "why": why, "px": px, "bar_ms": ts}, **res)]
 
@@ -276,11 +331,53 @@ def _close(sig, ts, px, why):
 def _book_reason(sig):
     """Why a signal that was still waiting ends when the book closed first, from the book's own exit words."""
     why = str(sig["book"].get("why_out") or "")
+    if is_trail(sig):                                                 # its trailing stop: the trail had armed
+        return "ran" if "TRAIL" in why else "stop" if "STOP" in why else "model"
     return "target" if "T1" in why else "stop" if "STOP" in why else "model"
+
+
+def arm_price(sig):
+    """Trail rule 2: the price, 1R in favour of E, at which the book's trail arms (R on the stop at the alert)."""
+    return sig["entry"] + sig["side"] * ARM_R * abs(sig["entry"] - _s0(sig))
+
+
+def _step_trail(sig, bar):
+    """step_bar for a trail signal (trail rules 1-4): no targets; `stop` is the stop in force for this bar. It is the
+    one _trail_view took at the end of the last check: bars processed together in one check all meet that same, older
+    stop, and if the book was stopped in one of them H53's rule 4 ends the trade."""
+    ts, o, h, l, _c = bar
+    f, side, E, S, S0 = sig["follow"], sig["side"], sig["entry"], sig["stop"], _s0(sig)
+    if f["state"] == WAITING:
+        b = sig["book"]
+        if ts >= sig["valid_until_ms"]:
+            return _no_fill(sig, ts, "window")                        # a bar after the stated validity (a session gap)
+        if b.get("closed") and (b.get("t_out_ms") is None or ts >= b["t_out_ms"]):
+            return _no_fill(sig, ts, _book_reason(sig))               # rule 2: the book closed its own trade first
+        if _stop_traded(side, l, h, S0):
+            return _no_fill(sig, ts, "stop")                          # rule 2, also when the bar holds E
+        if _reached(side, l, h, arm_price(sig)):
+            return _no_fill(sig, ts, "ran")                           # rule 2: 1R in favour, also when the bar holds E
+        if ts < sig.get("first_ms", sig["a_ms"] + BAR_MS):
+            return []                                                 # bar A and the bars before it never fill
+        f["bars_after_a"] += 1
+        if l <= E <= h:
+            f.update(state=FILLED, fill_ms=ts)
+            return [{"ev": "filled", "px": E, "bar_ms": ts}]
+        return _no_fill(sig, ts, "window") if f["bars_after_a"] >= sig.get("window", WINDOW) else []
+    if f["state"] != FILLED:
+        return []
+    alert = f.get("exit_alert_ms")
+    if alert is not None and ts > alert:
+        return _close(sig, ts, o, "model")                            # rule 4: the open of the bar after the exit alert's bar
+    if _stop_traded(side, l, h, S):                                   # rule 3: the stop first; "stop" while it is still S0
+        return _close(sig, ts, _stop_fill(side, o, S), "stop" if S == S0 else "trail")
+    return []
 
 
 def step_bar(sig, bar):
     """Advance ONE signal by ONE closed bar (ts, open, high, low, close). Changes sig; -> the events of this bar."""
+    if is_trail(sig):
+        return _step_trail(sig, bar)
     ts, o, h, l, _c = bar
     f, side, E, S, T1, T2 = sig["follow"], sig["side"], sig["entry"], sig["stop"], sig["t1"], sig["t2"]
     if f["state"] == WAITING:
@@ -357,7 +454,8 @@ def append_log(path, rows):
 
 
 def read_log(path):
-    """Every event once, in order ((signal, event) is the key: a line written twice after a crash counts once)."""
+    """Every event once, in order ((signal, event) is the key: a line written twice after a crash counts once).
+    A trail signal has several stop_moved lines, one a bar at most: there the bar is part of the key."""
     out, seen = [], set()
     try:
         with io.open(path, encoding="utf-8") as fh:
@@ -367,6 +465,8 @@ def read_log(path):
                 except ValueError:
                     continue
                 k = (e.get("k"), e.get("ev"))
+                if k[1] == STOP_MOVED:
+                    k += (e.get("bar_utc"),)
                 if isinstance(e, dict) and k not in seen:
                     seen.add(k)
                     out.append(e)
@@ -382,8 +482,29 @@ def _next_id(st, asset, now):
     return key, n, "%s-%s-%02d" % (CODE.get(asset, asset[:3]), now.strftime("%m%d"), n)
 
 
-def build_signal(asset, view, now_ms):
+def _build_trail(asset, view, now_ms):
+    """build_signal for a view of the trailing-stop book: the entry and the stop as they stand, no targets."""
+    side = {"LONG": 1, "SHORT": -1}.get(view.get("status"))
+    f_ms = _parse_utc(view.get("opened_utc"))
+    E, S = (_num(view.get(k)) for k in ("entry", "stop"))
+    if side is None or f_ms is None or None in (E, S) or min(E, S) <= 0:
+        return None, "the page gives no complete entry and stop"
+    ran = bool(view.get("trailing"))                                  # the trail armed before the alert: the stop shown has moved
+    if side * (E - S) <= 0 and not ran:
+        return None, "the stop is not on its own side of the entry"
+    a_ms = max(now_ms - now_ms % BAR_MS, f_ms)                        # bar A: the bar during which the alert is sent
+    sig = {"asset": asset, "rule": TRAIL, "side": side, "entry": E, "stop": S, "stop0": S, "t1": None, "t2": None,
+           "fee": fee_side(asset), "opened_utc": str(view.get("opened_utc")), "f_ms": f_ms, "sent_ms": now_ms, "a_ms": a_ms,
+           "valid_until_ms": a_ms + (WINDOW + 1) * BAR_MS, "msg_id": None, "early_t1": False, "early_ran": ran,
+           "follow": {"state": WAITING, "last_bar_ms": f_ms - BAR_MS, "bars_after_a": 0, "exits": []},
+           "book": {"closed": False}}
+    return sig, None
+
+
+def build_signal(asset, view, now_ms, rule=TARGETS):
     """-> (signal, None) from the page's view of a new open position, or (None, why it cannot be a signal)."""
+    if rule == TRAIL:
+        return _build_trail(asset, view, now_ms)
     side = {"LONG": 1, "SHORT": -1}.get(view.get("status"))
     f_ms = _parse_utc(view.get("opened_utc"))
     E, S, T1, T2 = (_num(view.get(k)) for k in ("entry", "stop", "target_1", "target_2"))
@@ -442,7 +563,31 @@ def _dist(sig, level):
     return 100.0 * d / sig["entry"], (d / risk if risk > 0 else None)
 
 
+def _trail_signal_card(sig, asset_page=None):
+    """signal_card for a trail signal: the entry, the stop, and the price from which the stop follows. No targets."""
+    rows = ["%-8s %10s %5s %4s" % ("Level", "Price", "%", "R"), "-" * 30, "%-8s %10s" % ("Entry", _p(sig["entry"]))]
+    if sig.get("early_ran"):
+        rows.append("%-8s %10s" % ("Stop", _p(sig["stop"])))          # a stop that has already moved: no distance, no R
+    else:
+        pct, r = _dist(sig, sig["stop"])
+        rows.append("%-8s %10s %5.2f %4s" % ("Stop", _p(sig["stop"]), pct, "-" if r is None else "%.1f" % r))
+    L = [u"%s <b>%s</b> · signal <code>%s</code>" % (GREEN if sig["side"] > 0 else RED, _head(sig), sig["id"]),
+         u"Limit order at <b>%s</b>" % _p(sig["entry"]),
+         u"Valid until <b>%s UTC</b> (the next four 15-minute bars)" % _hm(sig["valid_until_ms"]),
+         "<pre>%s</pre>" % _esc("\n".join(rows)), _esc(why_sentence(asset_page, sig["side"]))]
+    if sig.get("early_ran"):
+        L.append(u"%s Price had already moved one risk unit in the trade's favour before this alert, and the stop has "
+                 u"started to follow it: do not enter." % WARN)
+    else:
+        L.append(u"Plan: no fixed target. Once price reaches <b>%s</b> (one risk unit in the trade's favour) the stop "
+                 u"starts to follow price, and the trade runs until the stop is hit. If the stop or that price trades "
+                 u"before the entry fills, the signal is void." % _p(arm_price(sig)))
+    return "\n".join(L + [FOOT])
+
+
 def signal_card(sig, asset_page=None):
+    if is_trail(sig):
+        return _trail_signal_card(sig, asset_page)
     rows = ["%-8s %10s %5s %4s" % ("Level", "Price", "%", "R"), "-" * 30, "%-8s %10s" % ("Entry", _p(sig["entry"]))]
     for name, level in (("Stop", sig["stop"]), ("Target 1", sig["t1"]), ("Target 2", sig["t2"])):
         pct, r = _dist(sig, level)
@@ -463,9 +608,35 @@ def _result_line(res):
     return u"Result <b>%s</b> · <b>%s</b> after fees" % (_pct(res["pct"]), _r(res.get("r")))
 
 
+def _trail_follow_card(sig, e):
+    """The two follow-ups only a trail signal has: its fill (no targets to name) and a stop that moved."""
+    sid, head = sig["id"], _head(sig)
+    at = u"%s UTC bar" % _hm(e["bar_ms"]) if e.get("bar_ms") is not None else ""
+    if e["ev"] == "filled":
+        L = [u"%s <b>Entry filled</b> · <code>%s</code>" % (TICK, sid),
+             u"%s at %s (%s)." % (head, _p(e["px"]), at),
+             u"Stop %s · no fixed target. The stop starts to follow price once price reaches %s."
+             % (_p(sig["stop"]), _p(arm_price(sig)))]
+    else:
+        res = result(sig["side"], sig["entry"], _s0(sig), sig["fee"], [(e["px"], 1.0)])
+        title = {ARMED: u"Stop moved: it now follows price", PAST_ENTRY: u"Stop moved past the entry"}.get(
+            e.get("kind"), u"Stop moved")
+        L = [u"%s <b>%s</b> · <code>%s</code>" % (SHIELD, title, sid),
+             u"%s: the stop is now <b>%s</b>%s." % (head, _p(e["px"]), u" (after the %s)" % at if at else u"")]
+        if e.get("kind") == ARMED:
+            L.append(u"Price has moved one risk unit in the trade's favour: from here the stop follows price and is "
+                     u"never moved back.")
+        elif e.get("kind") == PAST_ENTRY:
+            L.append(u"The stop follows price and is now past the entry.")
+        L.append(u"Stopped there: <b>%s</b> · <b>%s</b> after fees." % (_pct(res["pct"]), _r(res.get("r"))))
+    return "\n".join(L + [FOOT])
+
+
 def follow_card(sig, e):
     """The follow-up message of one event (sent as a reply to the signal's own message)."""
     sid, head, ev = sig["id"], _head(sig), e["ev"]
+    if is_trail(sig) and ev in ("filled", STOP_MOVED):
+        return _trail_follow_card(sig, e)
     at = u"%s UTC bar" % _hm(e["bar_ms"]) if e.get("bar_ms") is not None else ""
     if ev == "filled":
         L = [u"%s <b>Entry filled</b> · <code>%s</code>" % (TICK, sid),
@@ -487,6 +658,7 @@ def follow_card(sig, e):
         title, line = {
             "t2": (u"%s <b>Target 2 hit: closed</b>" % FLAG, u"%s: the rest closed at %s (%s)." % (head, _p(e["px"]), at)),
             "stop": (u"%s <b>Stopped</b>" % dot, u"%s: stopped at %s (%s)." % (head, _p(e["px"]), at)),
+            "trail": (u"%s <b>Trailing stop hit: closed</b>" % dot, u"%s: closed at %s (%s)." % (head, _p(e["px"]), at)),
             "stop_be": (u"%s <b>Stopped at entry</b>" % dot,
                         u"%s: half was taken at Target 1, the rest closed at %s (%s)." % (head, _p(e["px"]), at)),
             "model": (u"%s <b>Closed by the model</b>" % dot, u"%s: closed at %s, the open of the %s." % (head, _p(e["px"]), at)),
@@ -523,11 +695,45 @@ def _emit(sig, e, now_ms, send, log):
     log.append(_row(sig, now_ms, e["ev"], delivered=ok, **kw))
 
 
+def _trail_view(sig, view, upto, now_ms, send, log):
+    """A trail signal after the bars of a check: what the book's view says now, while it still shows this very setup
+    and every bar up to the page's close has been looked at (a bar still to come keeps the stop it was to meet).
+    Waiting: a trail that has armed is a "ran" no fill (rule 2). In the trade: the book's stop is the stop for the bars
+    that follow, only ever tighter (rule 3), and a card goes out for the larger moves (ARMED, PAST_ENTRY, STEP)."""
+    f, side, E, S0 = sig["follow"], sig["side"], sig["entry"], _s0(sig)
+    same = (isinstance(view, dict) and view.get("status") in ("LONG", "SHORT")
+            and str(view.get("opened_utc")) == sig["opened_utc"])
+    if sig["book"]["closed"] or not same or f["last_bar_ms"] + BAR_MS < upto:
+        return
+    if f["state"] == WAITING:
+        if view.get("trailing"):
+            for e in _no_fill(sig, None, "ran"):
+                _emit(sig, e, now_ms, send, log)
+        return
+    new = _num(view.get("stop"))
+    if new is None or new <= 0 or side * (new - sig["stop"]) <= 0:
+        return                                                        # not a stop, or not tighter: the stop stays
+    sig["stop"] = new
+    last, past = f.get("stop_card"), side * (new - E) > 0
+    if past and not f.get("past_entry"):
+        kind = PAST_ENTRY                                             # also when this is the first move off S0: one card
+    elif last is None:
+        kind = ARMED
+    elif abs(new - last) >= CARD_MOVE_R * abs(E - S0) * (1.0 - 1e-9):
+        kind = STEP
+    else:
+        return                                                        # a small move: in the state, no card, no log line
+    f["stop_card"] = new
+    if past:
+        f["past_entry"] = True
+    _emit(sig, {"ev": STOP_MOVED, "kind": kind, "px": new, "bar_ms": upto - BAR_MS}, now_ms, send, log)
+
+
 def _advance(sig, view, page, now_ms, send, data_dir, live_dir, log, info):
     asset, f, b = sig["asset"], sig["follow"], sig["book"]
     if not b["closed"] and isinstance(view, dict) and view.get("status") is not None:     # a missing view is not a close
         if view.get("status") not in ("LONG", "SHORT") or str(view.get("opened_utc")) != sig["opened_utc"]:
-            row = read_trade(trades_path(live_dir, asset), sig["f_ms"])
+            row = read_trade(trades_path(live_dir, asset, book_of(sig)), sig["f_ms"])
             if row is None:
                 b.setdefault("gone_ms", now_ms)
                 if now_ms - b["gone_ms"] < CSV_WAIT_MS:
@@ -536,8 +742,8 @@ def _advance(sig, view, page, now_ms, send, data_dir, live_dir, log, info):
                 log.append(_row(sig, now_ms, "book_closed", known=False))
             else:
                 r = row["r"]
-                if r is None and row["p_in"] and abs(sig["entry"] - sig["stop"]) > 0:
-                    r = row["pct"] / 100.0 * row["p_in"] / abs(sig["entry"] - sig["stop"])
+                if r is None and row["p_in"] and abs(sig["entry"] - _s0(sig)) > 0:
+                    r = row["pct"] / 100.0 * row["p_in"] / abs(sig["entry"] - _s0(sig))
                 b.update(closed=True, known=True, t_out_ms=row["t_out_ms"], p_out=row["p_out"], why_out=row["why_out"],
                          pct=row["pct"], r=r, usd=NOTIONAL * row["pct"] / 100.0)
                 log.append(_row(sig, now_ms, "book_closed", known=True, t_out_utc=_iso(row["t_out_ms"]), p_out=row["p_out"],
@@ -569,29 +775,44 @@ def _advance(sig, view, page, now_ms, send, data_dir, live_dir, log, info):
         elif f.get("exit_alert_ms") is None:                          # rule 4: the exit alert goes out now, in this bar
             f["exit_alert_ms"] = now_ms - now_ms % BAR_MS
             _emit(sig, {"ev": "model_exit", "alert_bar_utc": _iso(f["exit_alert_ms"])}, now_ms, send, log)
+    if is_trail(sig) and f["state"] in (WAITING, FILLED):
+        _trail_view(sig, view, upto, now_ms, send, log)
     if f["state"] == WAITING and upto >= sig["valid_until_ms"]:       # every bar inside the validity has been looked at
         for e in _no_fill(sig, None, "window"):
             _emit(sig, e, now_ms, send, log)
 
 
-def run(page, now, send, data_dir, live_dir, state_path, log_path):
+def _markets(page, views):
+    """Every market either voice's book shows on this page, in order."""
+    try:
+        more = page["shadows"]["books"][setups_voice.book_of(TRAIL)]["assets"]
+    except (KeyError, TypeError):
+        more = None
+    return sorted(set(views) | set(more if isinstance(more, dict) else ()))
+
+
+def run(page, now, send, data_dir, live_dir, state_path, log_path, voice_path=None):
     """ONE check: follow the signals already out, then issue a signal for every new open position on the page.
     send(text, reply_to=None) -> (delivered, message id). Light: the page in hand, the state file, and the tail of the bar
     file of each market with a signal in progress. Running it twice on the same records changes nothing the second time.
+    voice_path: the engine's setups_voice state (default setups_voice.STATE_PATH); a file that cannot be read raises:
+    no check this time is better than a wrong signal.
     -> {"started", "new", "events", "bars_unread"}"""
     info = {"started": False, "new": 0, "events": 0, "bars_unread": []}
     views = book_views(page)
     if views is None:
         return info
+    vst = setups_voice.load(voice_path or setups_voice.STATE_PATH)
+    shown = dict((asset, setups_voice.published(page, asset, vst)) for asset in _markets(page, views))
     now_ms = _ms(now)
     st, log = load_state(state_path), []
     if st is None:                                                    # the first run: nothing already open is signalled
         st = {"version": 1, "live_since": _iso(now_ms), "seen": {}, "seq": {}, "open": {}}
         log.append({"t": _iso(now_ms), "k": "start", "ev": "start", "live_since": st["live_since"]})
-        for asset, view in sorted(views.items()):
-            if isinstance(view, dict) and view.get("status") in ("LONG", "SHORT") and view.get("opened_utc"):
-                st["seen"][asset] = str(view["opened_utc"])
-                log.append({"t": _iso(now_ms), "k": "%s|%s" % (asset, view["opened_utc"]), "ev": "seen_not_signalled",
+        for asset, p in sorted(shown.items()):
+            if p["open"]:                                             # the setup the market shows, in either voice
+                st["seen"][asset] = setups_voice.opened_of(p["view"])
+                log.append({"t": _iso(now_ms), "k": "%s|%s" % (asset, st["seen"][asset]), "ev": "seen_not_signalled",
                             "asset": asset, "why": "already open when the preview started"})
         append_log(log_path, log)
         save_state(state_path, st)
@@ -600,17 +821,18 @@ def run(page, now, send, data_dir, live_dir, state_path, log_path):
     before = json.dumps(st, sort_keys=True)
     for sid in sorted(st["open"], key=lambda k: (st["open"][k]["sent_ms"], k)):
         sig = st["open"][sid]
-        _advance(sig, views.get(sig["asset"]), page, now_ms, send, data_dir, live_dir, log, info)
+        own = setups_voice.view_of(page, sig.get("rule", TARGETS), sig["asset"])     # its OWN book, whatever the voice now
+        _advance(sig, own, page, now_ms, send, data_dir, live_dir, log, info)
         if sig["follow"]["state"] not in ACTIVE and sig["book"]["closed"]:
             del st["open"][sid]                                       # both records are final: it lives on in the log
     live_ms = _parse_utc(st.get("live_since")) or now_ms
-    for asset, view in sorted(views.items()):
-        if not isinstance(view, dict) or view.get("status") not in ("LONG", "SHORT") or not view.get("opened_utc"):
-            continue
-        key = str(view["opened_utc"])
+    for asset, p in sorted(shown.items()):
+        if not p["open"] or setups_voice.want(asset) != p["rule"]:
+            continue                                                  # nothing shown, or the market is changing voice
+        view, key = p["view"], setups_voice.opened_of(p["view"])
         if st["seen"].get(asset) == key:
             continue
-        sig, why_not = build_signal(asset, view, now_ms)
+        sig, why_not = build_signal(asset, view, now_ms, p["rule"])
         if sig is not None and sig["f_ms"] + BAR_MS <= live_ms:
             sig, why_not = None, "already open when the preview started"
         if sig is None:
@@ -630,9 +852,13 @@ def run(page, now, send, data_dir, live_dir, state_path, log_path):
         info["new"] += 1
         log.append(_row(sig, now_ms, "signal", side=sig["side"], entry=sig["entry"], stop=sig["stop"], t1=sig["t1"],
                         t2=sig["t2"], fee=sig["fee"], opened_utc=sig["opened_utc"], bar_a_utc=_iso(sig["a_ms"]),
-                        valid_until_utc=_iso(sig["valid_until_ms"]), msg_id=mid))
+                        valid_until_utc=_iso(sig["valid_until_ms"]), msg_id=mid,
+                        **({"rule": TRAIL} if is_trail(sig) else {})))
         if sig["early_t1"]:                                           # Target 1 traded before the alert: rule 2, at once
             for e in _no_fill(sig, None, "target"):
+                _emit(sig, e, now_ms, send, log)
+        if sig.get("early_ran"):                                      # a trail signal whose trail had armed: rule 2, at once
+            for e in _no_fill(sig, None, "ran"):
                 _emit(sig, e, now_ms, send, log)
     info["events"] = len(log)
     if log:
@@ -662,33 +888,46 @@ def _sum(rows):
             "won_pct": s.get("won_pct"), "verdict": s["verdict"]}
 
 
-def scoreboard(events):
-    """The running record over the log: signals sent, the fill rate, the followable trades (the judged record), the book
-    result of the SAME signals, and what the signals that did not fill made at the book's own price."""
-    by = {}
-    for e in events:
-        if e.get("id"):
-            by.setdefault(e["k"], {})[e["ev"]] = e
-    sigs = [s for s in by.values() if "signal" in s]
+def _record(sigs, last):
+    """The record of ONE set of signals (each {event: its log line}); `last` is the newest log time that counts for it."""
     filled = [s for s in sigs if "filled" in s]
     nofill = [s for s in sigs if "no_fill" in s]
     closed = [s["closed"] for s in filled if "closed" in s]
     book = lambda rows: [s["book_closed"] for s in rows if s.get("book_closed", {}).get("known")]   # noqa: E731
-    start = next((e for e in events if e.get("ev") == "start"), None)
     first = min((s["signal"]["t"] for s in sigs), default=None)
-    last = max((e.get("t") for e in events if e.get("t")), default=None)
     days = None
     if first and last:
         days = round((_parse_utc(last) - _parse_utc(first)) / 86400000.0, 1)
     follow = _sum(closed)
-    return {"live_since": (start or {}).get("live_since"), "first_signal_utc": first, "days": days,
+    return {"first_signal_utc": first, "days": days,
             "sent": len(sigs), "filled": len(filled), "no_fill": len(nofill),
             "waiting": len(sigs) - len(filled) - len(nofill), "in_trade": len(filled) - len(closed),
             "fill_rate_pct": round(100.0 * len(filled) / len(sigs), 1) if sigs else None,
             "follow": follow, "verdict": follow["verdict"],
-            "book_same": _sum(book(sigs)), "book_of_filled": _sum(book(filled)), "book_of_no_fill": _sum(book(nofill)),
-            "gate": {"signals": len(sigs), "min_signals": 100, "days": days, "min_days": 60,
-                     "met": bool(len(sigs) >= 100 and (days or 0) >= 60 and follow["verdict"].startswith("ahead"))}}
+            "book_same": _sum(book(sigs)), "book_of_filled": _sum(book(filled)), "book_of_no_fill": _sum(book(nofill))}
+
+
+def scoreboard(events):
+    """The running record over the log: signals sent, the fill rate, the followable trades (the judged record), the book
+    result of the SAME signals, and what the signals that did not fill made at the book's own price.
+    This is H53's record, over the b_targets signals only. The trail signals are never pooled into it: their record,
+    the same numbers (no gate: none is registered yet), is under "trail" (zeros and None while there is none)."""
+    by = {}
+    for e in events:
+        if e.get("id"):
+            by.setdefault(e["k"], {})[e["ev"]] = e
+    every = [s for s in by.values() if "signal" in s]
+    sigs = [s for s in every if s["signal"].get("rule") != TRAIL]
+    trail = [s for s in every if s["signal"].get("rule") == TRAIL]
+    theirs = set(s["signal"].get("k") for s in trail)
+    start = next((e for e in events if e.get("ev") == "start"), None)
+    last = max((e.get("t") for e in events if e.get("t") and e.get("k") not in theirs), default=None)
+    out = {"live_since": (start or {}).get("live_since")}
+    out.update(_record(sigs, last))
+    out["gate"] = {"signals": len(sigs), "min_signals": 100, "days": out["days"], "min_days": 60,
+                   "met": bool(len(sigs) >= 100 and (out["days"] or 0) >= 60 and out["verdict"].startswith("ahead"))}
+    out["trail"] = _record(trail, max((e.get("t") for e in events if e.get("t") and e.get("k") in theirs), default=None))
+    return out
 
 
 def _since(iso):
@@ -733,10 +972,20 @@ def _live_line(sb, st=None):
     return u"Live since %s: positions already open then were not signalled." % _since(since)
 
 
+def _records(sb):
+    """The record lines of a card: today's, and once a trail signal exists the two records under their own headings
+    (never one pooled number; a log with trail signals only shows theirs alone)."""
+    t = sb.get("trail") or {}
+    if not t.get("sent"):
+        return _record_lines(sb)
+    trail = [u"<b>Signals with a trailing stop</b>"] + _record_lines(t)
+    return trail if not sb["sent"] else [u"<b>Signals with two targets</b>"] + _record_lines(sb)[:-1] + trail
+
+
 def record_card(log_path, st=None):
     """The /record answer: the running record of the signals."""
     sb = scoreboard(read_log(log_path))
-    return "\n".join([u"%s <b>Signals · the record</b>" % CHART, _live_line(sb, st)] + _record_lines(sb) + [FOOT])
+    return "\n".join([u"%s <b>Signals · the record</b>" % CHART, _live_line(sb, st)] + _records(sb) + [FOOT])
 
 
 def _outcome(s):
@@ -764,7 +1013,7 @@ def recap_card(log_path, now, st=None, extra=None):
          "<pre>%s</pre>" % _esc("\n".join(rows)) if rows else u"No signals yesterday.",
          u"<b>Running record</b>"]
     sb = scoreboard(events)
-    return "\n".join(L + [_live_line(sb, st)] + _record_lines(sb) + [x for x in (extra or []) if x] + [FOOT])
+    return "\n".join(L + [_live_line(sb, st)] + _records(sb) + [x for x in (extra or []) if x] + [FOOT])
 
 
 def open_card(st, now=None):
@@ -782,9 +1031,16 @@ def open_card(st, now=None):
             rows += ["%-11s %-4s %13s" % (sid, side, "being checked" if late else "waiting"),
                      " limit %s to %s" % (_p(s["entry"]), _hm(s["valid_until_ms"]))]
         else:
-            rows += ["%-11s %-4s %13s" % (sid, side, "T1 hit" if f["state"] == T1_TAKEN else "in trade"),
-                     " stop %s" % _p(s["entry"] if f["state"] == T1_TAKEN else s["stop"]),
-                     " next %s" % _p(s["t2"] if f["state"] == T1_TAKEN else s["t1"])]
+            if is_trail(s):                                           # no targets: the stop as it stands
+                moved = s["stop"] != _s0(s)
+                rows += ["%-11s %-4s %13s" % (sid, side, "in trade"),
+                         " stop %s%s" % (_p(s["stop"]), ", trailing" if moved else "")]
+                if not moved:
+                    rows.append(" trails from %s" % _p(arm_price(s)))
+            else:
+                rows += ["%-11s %-4s %13s" % (sid, side, "T1 hit" if f["state"] == T1_TAKEN else "in trade"),
+                         " stop %s" % _p(s["entry"] if f["state"] == T1_TAKEN else s["stop"]),
+                         " next %s" % _p(s["t2"] if f["state"] == T1_TAKEN else s["t1"])]
             if f.get("exit_alert_ms") is not None:
                 rows.append(" model closed: exit now")
     if st is None:
