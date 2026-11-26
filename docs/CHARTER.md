@@ -947,3 +947,12 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   the paper books found three stops in the 05:30 bar: Setups Brent short (-$263), B trail Brent short (-$269) and
   B trail WTI short (-$335); the Setups book re-entered Brent short at 90.773. Gold and silver touched no stop. BTC
   and ETH books went to the vault unchanged.
+- **A price check every 8 hours** (owner, 26 Nov 2026: "Create a every 8 hours check daily on pricing so the issue of no
+  data wont gone off notice so long like today"). `tools/price_check.py` (read only, from the laptop over ssh): for
+  each of the eight markets, is it open by the engine's calendar, how old is the engine's last bar, and does the
+  engine's price agree with an independent live quote (Binance spot for BTC and ETH, the feed's own live quote for the
+  others); plus both services and the last step. A market open with no bar for 45 minutes, or a price more than 1% off
+  the quote, is a PROBLEM (exit code 1); bars taken from the second source are a NOTE. A scheduled task of the desktop
+  app, `mind15-price-check`, runs it at 00:00, 08:00 and 16:00 laptop time and sends a push notification on a
+  problem. It runs only while the app is open on the laptop (a missed run starts at the next launch). First run by
+  hand, 11:25 UTC: all eight fresh; the bridged gold, silver, WTI and Brent prices within 0.04% of the feed's quote.
