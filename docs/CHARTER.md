@@ -908,3 +908,14 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   today. (4) Voting cards that pointed the wrong way on both coins: Coinbase premium (leaned up about 70% of the time,
   right 20% / 28%, 1 and 2 days of 16) and Perp basis and premium (right 32% / 30%). No change was made; a change of
   trust needs a registered test.
+- **The switch-off trail build is live on the box** (26 Nov 2026 06:33 UTC, commit abd8cca, `tools/deploy.sh`, full
+  suite 1,930 passed; owner: "Yes, deploy"). No version change (think15-v5.2.10): nothing published or sent differs.
+  The paper book `b_trail_setups` starts flat and `out/live/trail_book_preview.json` is written every step.
+- **Two more decisions of the owner on the trail switch** (26 Nov 2026, asked in this project). Which markets move at
+  switch-on: "BTC and ETH only" (the other six stay on targets; looked at again after the B trail second check, not
+  before 10 Dec). The book key `opened_by` for the vault ("ENTER" / "FORCED"), so VIP accounts can skip forced
+  re-entries after a stop-out: "Yes, add it". Built in `vault_feed.py` behind `SEND_OPENED_BY = False`
+  (`tests/test_vault_opened_by.py`); the word is read from page.json, not put into setups.json; not sent until the AI
+  Trading session confirms an installed vault package that accepts it. What the research says was shown first: H68
+  (forced entries right after a stop-out on BTC + ETH, 2020-2026: 762 trades, -0.07R each, negative in both halves; the
+  book that waits for a signal +64.5R against -7.7R; forward `b_wait_stop` 8 trades, 2 won, too few).

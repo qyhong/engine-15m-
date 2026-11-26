@@ -16,8 +16,9 @@ the vault and nothing on the page changes until the switches go on.**
   the history on 21 Nov (v5.2.8) and again today.
 - This sets aside the 17 Nov verdict rule that a trail proposal waits for the second check (60 trades, not before
   10 Dec). That check still runs and is still reported.
-- Open, the owner's to choose before the switch: WHICH markets move. The vault trades BTC and ETH only; the page shows
-  eight. The build takes a list of markets, so either answer (BTC and ETH only, or all eight) is the same code.
+- WHICH markets move: **BTC and ETH only** (owner, 26 Nov 2026, on the recommendation: the two markets real accounts
+  trade; the other six stay on Target 1 / Target 2 and are looked at again after the B trail second check, not before
+  10 Dec). So at switch-on `setups_voice.TRAIL_MARKETS = ("BTCUSDT", "ETHUSDT")`.
 
 ## What changes for a follower or a VIP member
 

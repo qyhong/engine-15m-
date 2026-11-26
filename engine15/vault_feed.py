@@ -128,6 +128,17 @@ LEVELS = ("entry", "stop", "target_1", "target_2")
 # False). If that ever happens all the same, the vault is told FLAT for that market, with an ALARM line every step.
 SEND_TRAIL = False
 TRAIL = setups_voice.TRAIL
+# HOW THE SETUP WAS OPENED (owner, 26 Nov 2026: "Yes, add it"; the AI Trading session reports the owner chose there that
+# VIP accounts do not join a FORCED setup on a coin after a stop-out there). `opened_by`: an OPTIONAL book key on an open
+# book of either voice, "ENTER" (a real signal) or "FORCED" (the entry after idle_max flat sessions): the book's own word
+# for the entry (shadows.asset_view's opened_by = the trade's why_in), read from page.json beside setups.json, only when
+# that page's view shows the very setup setups.json shows (same side, same opening time). Any other word (a flip) or no
+# match: the key is left out. setups.json does not carry the word, so subscribers' data is unchanged.
+# OFF: the live vault refuses a book with a key it does not know. It stays False until the AI Trading session confirms
+# an installed vault package that accepts the key (and its exact spelling) and the owner says yes.
+SEND_OPENED_BY = False
+OPENED_BY = ("ENTER", "FORCED")
+PAGE_FILE = "page.json"
 MS = "ms"                                        # the id word of a trail move_stop: <SYM>.<opened>.ms.<DDHHMM of as_of>
 PREVIEW_FILE = "trail_book_preview.json"         # the dry run (preview(), below): what WOULD be posted; never posted
 PREVIEW_SCHEMA = 1
@@ -243,7 +254,47 @@ def remembered_lead(st, sym, m):
     return p.get("lead_pts") if isinstance(p, dict) and p.get("opened_utc") == m.get("opened_utc") else None
 
 
-def build_book(m, as_of, lead=None, force=False):
+def read_page(setups_path):
+    """page.json beside setups.json (the page the step just wrote), or None. Never raises."""
+    try:
+        with io.open(os.path.join(os.path.dirname(os.path.abspath(setups_path)), PAGE_FILE), encoding="utf-8") as fh:
+            page = json.load(fh)
+        return page if isinstance(page, dict) else None
+    except (OSError, ValueError):
+        return None
+
+
+def opened_by_of(page, m):
+    """The book's own word for how it opened the setup this market shows ("ENTER" / "FORCED"), from the page's view of
+    the market in the voice's book; None when the view does not show this very setup or the word is another one."""
+    if not isinstance(page, dict) or m.get("side") not in ("LONG", "SHORT"):
+        return None
+    v = setups_voice.view_of(page, TRAIL if is_trail(m) else setups_voice.TARGETS, m.get("symbol"))
+    if not isinstance(v, dict) or v.get("status") != m.get("side"):
+        return None
+    a, b = setups_voice._ms(v.get("opened_utc")), setups_voice._ms(m.get("opened_utc"))
+    if a is None or a != b:
+        return None
+    return v.get("opened_by") if v.get("opened_by") in OPENED_BY else None
+
+
+def remembered_opened_by(st, sym, m, page=None):
+    """After track(): the word for the setup this market shows, from the page now, else from the feed's memory (where
+    it is kept for the setup's life, so the body does not change when a page cannot be read). None while the switch
+    is off."""
+    if not SEND_OPENED_BY:
+        return None
+    p = st.get("pos", {}).get(sym) if isinstance(st, dict) else None
+    if not isinstance(p, dict) or p.get("opened_utc") != m.get("opened_utc"):
+        return None
+    word = opened_by_of(page, m) or p.get("opened_by")
+    if word in OPENED_BY:
+        p["opened_by"] = word
+        return word
+    return None
+
+
+def build_book(m, as_of, lead=None, force=False, opened_by=None):
     """One market's submit_book body {"book": {...}} from its setups.json entry, or (None, short reason). Nothing is
     'fixed': a market whose levels are missing or out of order is not sent. `lead`: the setup's opening Lead from the
     feed's memory, added as lead_pts only when SEND_LEAD is on. A market on the trail voice (exit_rule "trail") gets
@@ -260,7 +311,7 @@ def build_book(m, as_of, lead=None, force=False):
             b["price"] = price
         return {"book": _contract(b)}, None
     if is_trail(m):
-        return build_trail_book(m, as_of, lead, force=force)
+        return build_trail_book(m, as_of, lead, force=force, opened_by=opened_by)
     lv = dict((k, dec_text(m.get(k))) for k in LEVELS)
     missing = [k for k in LEVELS if lv[k] is None]
     if missing:
@@ -295,6 +346,8 @@ def build_book(m, as_of, lead=None, force=False):
                 b["rr_now_t2"] = t
     if SEND_LEAD and _lead_ok(lead):
         b["lead_pts"] = round(float(lead), 2) + 0.0
+    if SEND_OPENED_BY and opened_by in OPENED_BY:
+        b["opened_by"] = opened_by
     return {"book": _contract(b, m)}, None
 
 
@@ -303,7 +356,7 @@ def is_trail(m):
     return isinstance(m, dict) and m.get("exit_rule") == TRAIL
 
 
-def build_trail_book(m, as_of, lead=None, force=False):
+def build_trail_book(m, as_of, lead=None, force=False, opened_by=None):
     """The submit_book body of an OPEN trail setup, or (None, short reason). No targets. Before the trail has armed the
     stop is strictly on the losing side of the entry; always it is strictly on the losing side of the price (the book
     sets it at a close, from that close, and a stop that traded closed the book)."""
@@ -336,6 +389,8 @@ def build_trail_book(m, as_of, lead=None, force=False):
          "as_of_utc": as_of}
     if SEND_LEAD and _lead_ok(lead):
         b["lead_pts"] = round(float(lead), 2) + 0.0
+    if SEND_OPENED_BY and opened_by in OPENED_BY:
+        b["opened_by"] = opened_by
     return {"book": _contract(b)}, None
 
 
@@ -532,6 +587,8 @@ def track(sym, m, st, trades_dir, now):
         lead = prev.get("lead_pts") if same else opening_lead(m, st["lead_seen"].get(sym))
         if _lead_ok(lead):
             cur["lead_pts"] = lead
+        if same and prev.get("opened_by") in OPENED_BY:          # how the setup was opened (SEND_OPENED_BY), once known
+            cur["opened_by"] = prev["opened_by"]
         if cur.get("exit_rule") == TRAIL:                        # the last stop the vault was given for this setup:
             sent = prev.get("stop_sent") if same and prev.get("exit_rule") == TRAIL else None    # at first sight, the
             cur["stop_sent"] = sent if sent is not None else cur.get("stop")                      # book's own stop
@@ -859,6 +916,7 @@ def _run(setups_path, log, env, state_path, trades_dir, now):
     if how == "unreadable":
         _keep_bad(state_path, now)
     books = {}
+    page = read_page(setups_path) if SEND_OPENED_BY else None     # off: the page is not even read
     for sym in syms:
         m = markets.get(sym)
         if m is None:
@@ -873,7 +931,8 @@ def _run(setups_path, log, env, state_path, trades_dir, now):
         if why:                                                  # the position is kept as it was and the book waits too:
             _say(log, "vault: %s not sent (exit not queued: %s)" % (sym, why))    # every book sent was tracked first, so
             continue                                             # a close can never land on a newer setup's join
-        books[sym] = build_book(m, m.get("price_bar_utc"), remembered_lead(st, sym, m))
+        books[sym] = build_book(m, m.get("price_bar_utc"), remembered_lead(st, sym, m), False,
+                                remembered_opened_by(st, sym, m, page))
     memory_alarm(st, markets, syms, how, now, log)
     queue = st.setdefault("intents", {})
     for iid in list(queue):                                      # old finished ones go; stuck ones are given up
