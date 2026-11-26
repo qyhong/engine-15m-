@@ -272,7 +272,15 @@ def _update_bars(a):
         data.update_funding(a)
         return df
     from . import extdata
-    df, _ = extdata.update(a, log=lambda *_: None)
+    df, n = extdata.update(a, log=lambda *_: None)
+    if not n:                                                      # the usual feed served no new bar: when it has
+        try:                                                       # fallen behind an OPEN market (a US holiday, an
+            from . import bridge                                   # outage), a second source carries the moves
+            got, k = bridge.fill(a, log=lambda t: print(t, flush=True))        # (bridge.py; paper markets only)
+            if k:
+                df = got
+        except Exception:
+            pass
     return df
 
 

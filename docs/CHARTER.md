@@ -927,3 +927,17 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   installed at 07:04 UTC and accepts the trail shape; it runs its `book-check` on the preview. Both trail switches
   stay off until the owner says yes in both sessions. `opened_by` now also says "FLIP" (the vault asked; local,
   switched off, not accepted by that package yet).
+- **A second bar source for gold, silver, WTI and Brent when the usual feed serves none** (26 Nov 2026, US Thanksgiving;
+  owner, shown gold and silver lagging: "Should check on future or other source. The price still moving from my
+  endd"). Yahoo's chart for GC=F, SI=F, CL=F and BZ=F stopped at midnight New York (04:45 UTC) although the futures
+  traded on and its own quote kept moving; asked every way (other intervals, explicit times) it returned no bar. The
+  four paper markets had no bar for over four hours: no decision, no stop looked at, a stale price on the Setups page
+  with the market shown open. `engine15/bridge.py` (called from `live._update_bars` when the usual feed gave no new
+  bar): when a market is open by the engine's calendar and its store is 45 minutes or more behind, it takes the same
+  market's 15-minute bars from a public exchange (Binance futures XAUUSDT, XAGUSDT, CLUSDT, then OKX; Brent from
+  Hyperliquid xyz:BRENTOIL), scales them to the last stored close so there is no jump, keeps only the market's own
+  hours, sets volume to 0, and goes on bar by bar until the usual feed is alive again. Each bridge is a log line and a
+  row in `data/bridge_bars.csv`. Paper markets only (a test says none is a vault market). Not a cache-hash file: no
+  reading rebuild. Trial on the box before the deploy: 16 bars each, two venues within 0.03% of each other, gold
+  3,595.9 against Yahoo's quote 3,597.5. In the unseen hours neither gold nor silver touched a stop of the Setups or
+  B trail books (bridged highs 3,631.9 and 42.51).
