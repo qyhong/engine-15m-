@@ -34,7 +34,7 @@ def on(monkeypatch):
 def test_the_switch_is_off_in_the_shipped_code_and_then_nothing_changes(tmp_path):
     """Switching it on needs the AI Trading session's word that an installed vault package accepts the key, and the
     owner's yes (CLAUDE.md, the money path)."""
-    assert vf.SEND_OPENED_BY is False and vf.OPENED_BY == ("ENTER", "FORCED")
+    assert vf.SEND_OPENED_BY is False and vf.OPENED_BY == ("ENTER", "FORCED", "FLIP")
     b = vf.build_book(targets(), bar(0), opened_by="FORCED")[0]["book"]
     assert "opened_by" not in b
     st = {"pos": {"BTCUSDT": {"opened_utc": OPENED, "opened_by": "FORCED"}}}
@@ -45,7 +45,8 @@ def test_the_word_is_read_from_the_books_own_view_of_this_very_setup():
     m = targets()
     assert vf.opened_by_of(page(view()), m) == "FORCED"
     assert vf.opened_by_of(page(view(by="ENTER")), m) == "ENTER"
-    assert vf.opened_by_of(page(view(by="FLIP")), m) is None                     # a flip: the key is left out
+    assert vf.opened_by_of(page(view(by="FLIP")), m) == "FLIP"                   # said, so it is not "unknown"
+    assert vf.opened_by_of(page(view(by="REBOUND")), m) is None                  # any other word: the key is left out
     assert vf.opened_by_of(page(view(by=None)), m) is None
     assert vf.opened_by_of(page(view(opened="2026-11-25 19:00")), m) is None     # another setup
     assert vf.opened_by_of(page(view(side="LONG")), m) is None
@@ -59,7 +60,8 @@ def test_the_word_is_read_from_the_books_own_view_of_this_very_setup():
 def test_on_both_bodies_carry_it_and_only_the_two_words(on, monkeypatch):
     b = vf.build_book(targets(), bar(0), opened_by="FORCED")[0]["book"]
     assert b["opened_by"] == "FORCED"
-    assert "opened_by" not in vf.build_book(targets(), bar(0), opened_by="FLIP")[0]["book"]
+    assert vf.build_book(targets(), bar(0), opened_by="FLIP")[0]["book"]["opened_by"] == "FLIP"
+    assert "opened_by" not in vf.build_book(targets(), bar(0), opened_by="REBOUND")[0]["book"]
     assert "opened_by" not in vf.build_book(targets(), bar(0))[0]["book"]
     assert "opened_by" not in vf.build_book(targets(side="FLAT"), bar(0), opened_by="FORCED")[0]["book"]
     monkeypatch.setattr(vf, "SEND_TRAIL", True)

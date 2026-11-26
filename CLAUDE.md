@@ -101,7 +101,7 @@ The list as files is `tools/money_files.txt`. Rules for it:
   (owner, 23 Nov: VIP accounts take a setup only when its opening Lead is above 5.0 in its direction; the filter is the
   AI Trading Bot session's switch) and treats a missing value as "does not pass": do not switch `SEND_LEAD` off, lose
   the feed's memory or change how the value is taken without telling that session first.
-- `vault_feed.SEND_OPENED_BY` (built 26 Nov 2026, OFF): an optional book key `opened_by` ("ENTER" or "FORCED", the
+- `vault_feed.SEND_OPENED_BY` (built 26 Nov 2026, OFF): an optional book key `opened_by` ("ENTER", "FORCED" or "FLIP", the
   book's own word for the entry, read from page.json beside setups.json; setups.json does not carry it). The owner wants
   VIP accounts to skip FORCED re-entries after a stop-out (H68: those entries lost on BTC and ETH in history); the rule
   is the vault's. Do not switch it on until the AI Trading Bot session confirms an installed package that accepts the

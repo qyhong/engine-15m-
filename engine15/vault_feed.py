@@ -130,14 +130,16 @@ SEND_TRAIL = False
 TRAIL = setups_voice.TRAIL
 # HOW THE SETUP WAS OPENED (owner, 26 Nov 2026: "Yes, add it"; the AI Trading session reports the owner chose there that
 # VIP accounts do not join a FORCED setup on a coin after a stop-out there). `opened_by`: an OPTIONAL book key on an open
-# book of either voice, "ENTER" (a real signal) or "FORCED" (the entry after idle_max flat sessions): the book's own word
-# for the entry (shadows.asset_view's opened_by = the trade's why_in), read from page.json beside setups.json, only when
-# that page's view shows the very setup setups.json shows (same side, same opening time). Any other word (a flip) or no
-# match: the key is left out. setups.json does not carry the word, so subscribers' data is unchanged.
+# book of either voice, "ENTER" (a real signal), "FORCED" (the entry after idle_max flat sessions) or "FLIP" (the book
+# turned straight from the other side; the vault treats it as a real signal and asked for it to be said, so that "opened
+# by a flip" is not the same as "unknown"): the book's own word for the entry (shadows.asset_view's opened_by = the
+# trade's why_in), read from page.json beside setups.json, only when that page's view shows the very setup setups.json
+# shows (same side, same opening time). Any other word or no match: the key is left out (the vault then joins as
+# today). setups.json does not carry the word, so subscribers' data is unchanged.
 # OFF: the live vault refuses a book with a key it does not know. It stays False until the AI Trading session confirms
 # an installed vault package that accepts the key (and its exact spelling) and the owner says yes.
 SEND_OPENED_BY = False
-OPENED_BY = ("ENTER", "FORCED")
+OPENED_BY = ("ENTER", "FORCED", "FLIP")
 PAGE_FILE = "page.json"
 MS = "ms"                                        # the id word of a trail move_stop: <SYM>.<opened>.ms.<DDHHMM of as_of>
 PREVIEW_FILE = "trail_book_preview.json"         # the dry run (preview(), below): what WOULD be posted; never posted
@@ -974,8 +976,9 @@ def _run(setups_path, log, env, state_path, trades_dir, now):
             _say(log, "vault: %s sent (id %s%s)" % (label, iid, ", duplicate" if out.get("duplicate") else ""))
         else:
             if status in (400, 409) or (status == 403 and (".%s." % MS) in iid):
-                # the same id and body would always be refused (403 on a trail stop move: not tighter than the member's
-                # own stop, or past the price; the next step's move has its own id)
+                # the same id and body would always be refused. (The vault of 26 Nov 2026, package f7609091, never
+                # answers 403 to a move_stop: "not tighter" and "past the price" are refused per member at signing and
+                # never come back here. The 403 case stays as a guard: such an answer must never hold the book.)
                 it["status"] = "refused"
                 it["why"] = _why(status, out)                    # the vault's code, kept for the Telegram card
             _say(log, "vault: %s not sent (%s)" % (label, _why(status, out)))
