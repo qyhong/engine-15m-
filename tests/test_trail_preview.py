@@ -87,3 +87,15 @@ def test_a_page_without_the_trail_book_writes_nothing(tmp_path):
     del p["shadows"]["books"][TRAIL]
     assert "not written" in trail_preview.write(p, str(tmp_path))
     assert not os.path.exists(os.path.join(str(tmp_path), vf.PREVIEW_FILE))
+
+
+def test_the_step_hands_over_the_path_of_page_json(tmp_path):
+    """live.step holds the PATH of page.json after export.rewrite_merged, not the dict (found on the box, 26 Nov 2026:
+    the first deploy wrote no preview). Both are taken."""
+    src = tmp_path / "page.json"
+    src.write_text(json.dumps(page("2026-11-26 10:15", short("2026-11-26 10:15", 60000.0, 61500.0), None)), encoding="utf-8")
+    out = tmp_path / "live"
+    out.mkdir()
+    line = trail_preview.write(str(src), str(out))
+    assert line.startswith("trail preview: BTCUSDT SHORT, ETHUSDT FLAT")      # opened at this very close: shown
+    assert read(out)["generated_utc"] == "2026-11-26T10:15:40Z"

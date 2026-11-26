@@ -60,6 +60,12 @@ def entries(page, from_utc):
 
 
 def write(page, out_dir, log=None, now=None):
+    """page: the page dict, or the path of page.json (what live.step holds after export.rewrite_merged)."""
+    if not isinstance(page, dict):
+        with io.open(str(page), encoding="utf-8") as fh:
+            page = json.load(fh)
+        if not isinstance(page, dict):
+            raise ValueError("the page is not a JSON object")
     prev = _prev(out_dir) or {}
     st = prev.get("state") if isinstance(prev.get("state"), dict) else {}
     frm = dict(st.get("preview_from_utc") or {}) if isinstance(st.get("preview_from_utc"), dict) else {}
