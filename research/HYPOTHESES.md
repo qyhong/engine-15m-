@@ -7764,3 +7764,47 @@ made (A, B); both are reported whatever they show.
 **What follows from it.** Nothing by itself. A pass of A would support the vault skipping every FORCED setup (its own
 switch, with the `opened_by` key it already receives); a pass of B would be a proposal for the owner to change the trust
 cap (a new engine version). Either needs the owner's word.
+
+
+### H120 results (27 Nov 2026; run on the box 07:40 to 08:05 UTC at low priority while the research queue was empty; `research/out/h120_forced_and_cap/report.md` + `results.json` + `run.log`)
+
+**Verdicts, in the registered words, on BTC and ETH together:**
+- **A, no forced entry: does not survive as a rule.** Sum of R +19.8 against current +40.3 in the first half (fails),
+  +7.1 against -51.9 in the second; mean R above zero in both halves (+0.022, +0.009); worst fall -88.0% against
+  -84.9% (deeper: fails). Over all: 1,689 trades, +0.016R, +27.0R against 2,029 trades, -0.006R, -11.6R.
+- **B, no card above 20%: does not survive as a rule.** First half +14.3R against +40.3 (fails), second half -32.6R
+  (mean R below zero: fails); worst fall -84.6% (not deeper).
+
+**What the numbers show beside the verdicts.**
+- A is two different stories on the two coins. BTC: +15.2R against -62.7R, the second half -2.7R against -74.4R, worst
+  fall -81.5% against -97.5%. ETH: +11.8R against +51.0R, worse in both halves, worst fall -93.0% against -76.2%. So
+  "no forced entry" would have helped BTC a great deal and hurt ETH, and the pair does not pass.
+- In dollars A did worse on BTC and ETH (-$14,438 against -$10,983) although its R was better: the trades it kept
+  carried wider stops on average, so a losing R cost more dollars. The bar is in R, as registered.
+- A leaves each coin flat about 30% of the time; the longest wait for a signal was 375 hours on BTC (about 16 days)
+  and 262 hours on ETH.
+- B changes little on history: the largest card held a median 18% of the say on BTC and ETH (13-21% elsewhere), so a
+  20% cap seldom binds; the Lead's side differs from the live one in 2.7% of sessions. The 40% weight of "Support and
+  resistance" today is recent, not the rule over history.
+- Descriptive: A and B together on BTC and ETH +43.4R, positive in both halves (+21.6, +21.8), first half below
+  current; not tested. "Equal shares" was worse than current (-24.0R).
+- The other six (descriptive): without forced entries those books mostly stop trading (1,246 trades against 3,803; no
+  trade at all in the forward slice), as H68 found; their sum of R is higher (+54.6 against -15.1) and their worst fall
+  much smaller (-21.3% against -64.8%), but a book that seldom trades is not the same product.
+
+**Checks and deviations.**
+- The copied fits were not reused (0 from the cache): the live engine keeps only its newest refits, so every refit was
+  computed again by the engine's own walk-forward (356 for crypto). Same procedure, same data.
+- The registration asked for the largest card's share "of the Lead"; the script reports its share of the say (the
+  weights), which is what the cap acts on.
+- A check of mine was wrong in the first, crypto-only run (it compared up against "neither", so it showed 0% side
+  differences); fixed before the full run. The books themselves were not affected; the crypto numbers are identical in
+  both runs.
+- The replay's current book matches few live Setups trades since 11 Nov (BTC 4 of 10, ETH 2 of 8): the replay runs
+  continuously from 2020 while the live book started flat on 11 Nov, and the live engine changed version during that
+  time (the early entry from 22 Nov). Descriptive.
+
+**Reading.** Neither change passes. Skipping forced entries on BTC and ETH is not supported as a rule: it helped BTC
+and hurt ETH, and its worst fall was deeper. The narrower rule already live in the vault (skip a forced entry only
+after a losing first stop, H68) remains the one with history behind it. Capping the dominant card would have changed
+little in the past, because that card's dominance is new. Nothing follows from H120 for the engine or the vault.

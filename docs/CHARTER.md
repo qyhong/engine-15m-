@@ -984,3 +984,11 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   by the made-up bars (expected). Limit: book-check runs the vault's intake checks only; the checks at signing (tighter
   than the resting stop, a position exists) are covered by the vault's own tests. With this every part of the trail
   shape has been checked. Both switches stay off until the owner says yes in both sessions.
+- **H120: no forced entries on BTC and ETH (A) and no card above 20% of the say (B): neither passes** (27 Nov 2026;
+  owner: "Yes run it"). Replay 2020 to 26 Nov 2026, odds built as the live engine builds them. A: +27.0R against
+  -11.6R over all, but below the live rule in the first half and a deeper worst fall; it helped BTC (+15.2R against
+  -62.7R) and hurt ETH (+11.8R against +51.0R), and leaves each coin flat about 30% of the time. B: worse in the first
+  half and still negative in the second; the 40% weight of "Support and resistance" is recent (over history the
+  largest card held a median 18%), so the cap seldom binds. Found on the way: the research helper used by H59-H68
+  builds odds without the v5.2 trust cap; H120 uses the engine's own mixing. Nothing changes.
+  `research/HYPOTHESES.md` "H120 results".
