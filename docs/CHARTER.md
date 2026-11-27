@@ -1002,3 +1002,10 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   to the owner first: the new trail book 0 for 5 so far; real fills at a moving stop; trail cards not yet seen live;
   the slow first step; the rollback order. Added with it, on the owner's word ("Yes, add it"): the paper book
   `b_no_forced` (H120 A, forward).
+- **think15-v5.2.12 is LIVE: BTC and ETH are switched to the trail voice** (27 Nov 2026, restart 08:40 UTC, commit 83f970e,
+  full suite 2,046 passed). Conditions met first: the owner's yes in both sessions ("Yes. Any concern" here; "Yes,
+  switch on" and "Go ahead as planned" in the AI Trading session), its Setups page change live at 08:21 UTC, no member
+  notice (the owner's choice there), both members flat. The first step (08:45 close) rebuilt the cache (694 s). Both
+  coins are "pending" in `data/setups_voice_state.json`: they keep their open targets setups (BTC short 27 Nov 03:30,
+  ETH short 25 Nov 19:30, both FORCED) until those end, then change over. The trail dry-run file stops updating (it
+  runs only while `SEND_TRAIL` is off). The paper book `b_no_forced` started (ETH short, the others flat).
