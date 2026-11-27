@@ -976,3 +976,11 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   post with the key: ETH short, "FORCED", as_of 02:45 UTC, accepted. BTC carries none: its Setups short of 25 Nov was
   stopped in the 02:15 bar (61,777.82; paper -$445) and the book is flat. UNDO: switch the key off BEFORE any rollback
   of the vault below 0a74aa29.
+- **The trail book's stop moves pass the vault's checks (a drill)** (27 Nov 2026; owner: "Dont switch off but do the
+  dry run"). Instead of waiting for a paper trail trade to go 1R into profit, the real BTC trail setup was run through
+  the feed's own code over four made-up later bars (`/tmp/trail_book_drill.json` on the box; nothing sent). The AI
+  Trading session's `book-check` (07:30 UTC): both `move_stop` intents (SELL for a SHORT book, the arming move and a
+  step past the entry) and the close would be accepted. The only refusal was the drill's FLAT book, dated in the future
+  by the made-up bars (expected). Limit: book-check runs the vault's intake checks only; the checks at signing (tighter
+  than the resting stop, a position exists) are covered by the vault's own tests. With this every part of the trail
+  shape has been checked. Both switches stay off until the owner says yes in both sessions.
