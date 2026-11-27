@@ -44,8 +44,10 @@ def test_the_switch_is_the_rule_and_the_market_together():
         assert shadows.asset_cfg(a, dict(CFG))["early_fill"] is False and live.asset_cfg(a, dict(CFG))["early_fill"] is False
     only = [k for k, v in shadows.CHALLENGERS.items() if v["rule"].get("early")]
     # no other book of run() asks for it, except the shadows that are b_targets plus one change (H67, H68) and the
-    # trailing-stop Setups book (26 Nov 2026, docs/TRAIL_SWITCH_PLAN.md: b_trail's exit with this entry)
-    assert only == ["b_targets", "b_trend30", "b_wait_stop", "b_trail_setups"]
+    # trailing-stop Setups book (26 Nov 2026, docs/TRAIL_SWITCH_PLAN.md: b_trail's exit with this entry) and H120 A's
+    # book without forced entries (27 Nov 2026: b_targets with idle_max out of reach)
+    assert only == ["b_targets", "b_trend30", "b_wait_stop", "b_trail_setups", "b_no_forced"]
+    assert shadows.CHALLENGERS["b_no_forced"]["cfg"] == {"idle_max": 10 ** 9}
 
 
 @pytest.mark.parametrize("seed", [3, 11, 17])

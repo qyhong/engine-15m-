@@ -992,3 +992,13 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   largest card held a median 18%), so the cap seldom binds. Found on the way: the research helper used by H59-H68
   builds odds without the v5.2 trust cap; H120 uses the engine's own mixing. Nothing changes.
   `research/HYPOTHESES.md` "H120 results".
+- **The switch-on of the trail voice is built (think15-v5.2.12) and waits for the Setups page** (27 Nov 2026). The owner
+  in this project, asked "Do you want the trailing stop switched on for real?": "Yes. Any concern"; the AI Trading
+  session reports the owner's "Yes, switch on" there (about 08:15 UTC) and the owner's choice of no member notice.
+  `setups_voice.TRAIL_MARKETS = ("BTCUSDT", "ETHUSDT")`, `vault_feed.SEND_TRAIL = True`; tests keep running on the
+  default voice (`tests/conftest.py`). Simulated against the box's live page: the first step after the switch
+  publishes and sends exactly what it does today (both coins wait for their open targets setups to end). The deploy
+  waits until the AI Trading session says its Setups page change is live, with both members' positions. Concerns said
+  to the owner first: the new trail book 0 for 5 so far; real fills at a moving stop; trail cards not yet seen live;
+  the slow first step; the rollback order. Added with it, on the owner's word ("Yes, add it"): the paper book
+  `b_no_forced` (H120 A, forward).

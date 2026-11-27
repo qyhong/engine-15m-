@@ -255,7 +255,7 @@ def _usd_short(v):
 
 
 NAMES = {"main": "Main engine", "b_trail": "B trail (shadow)", "b_targets": "B targets (shadow)",
-         "b_trail_setups": "Setups trail (shadow)",
+         "b_trail_setups": "Setups trail (shadow)", "b_no_forced": "No forced entries (shadow, NOT passed)",
          "b_trend30": "Trend 30d (shadow)", "b_wait_stop": "Wait after stop (shadow)",
          "b_rebound": "Setups + rebound long (shadow, NOT passed)",
          "b_ema20_1h_t1": "EMA20 trail (shadow)", "b_sma20_1h_t1": "SMA20 trail (shadow)", "b_be_t1": "Break-even trail",
@@ -276,7 +276,7 @@ def _esc(t):
     return str(t).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
-TABLE = {"b_trail": "B trail", "b_targets": "B targets", "b_trail_setups": "Setups trail",
+TABLE = {"b_trail": "B trail", "b_targets": "B targets", "b_trail_setups": "Setups trail", "b_no_forced": "No forced",
          "b_trend30": "Trend 30d", "b_wait_stop": "Wait stop", "b_ema20_1h_t1": "EMA20 trail", "b_sma20_1h_t1": "SMA20 trail",
          "b_rebound": "Rebound",
          "b_be_t1": "BE trail", "p8_fvg": "P8 FVG", "p3_orb": "P3 ORB", "p6_vwap": "P6 VWAP", "p10_round": "P10 round",

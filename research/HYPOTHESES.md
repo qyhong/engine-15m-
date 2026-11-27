@@ -7808,3 +7808,9 @@ cap (a new engine version). Either needs the owner's word.
 and hurt ETH, and its worst fall was deeper. The narrower rule already live in the vault (skip a forced entry only
 after a losing first stop, H68) remains the one with history behind it. Capping the dominant card would have changed
 little in the past, because that card's dominance is new. Nothing follows from H120 for the engine or the vault.
+
+**H120, forward (27 Nov 2026).** The owner, asked whether to watch A from today: "Yes, add it". The paper shadow book
+`b_no_forced` (`shadows.CHALLENGERS`: the Setups rule with `idle_max` out of reach; run() not touched) starts flat at
+its deploy, with think15-v5.2.12. NOT passed on history; paper only; it never reaches the page, the signals or the
+vault. Read on BTC and ETH at 30 closed trades against `b_targets` over the same days (scoreboard row and its
+verdict); the other six markets are shown but not read (without forced entries they mostly stay flat).

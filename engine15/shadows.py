@@ -19,6 +19,7 @@ Promotion is decided later on forward results (docs/CHARTER.md), never here.
     b_trail_setups b_trail with the early entry (BTC and ETH): the book the Setups page, the signals and the VIP vault
                    read for a market on the trail voice (setups_voice.py; owner, 26 Nov 2026). Published nowhere
                    while setups_voice.TRAIL_MARKETS is empty.
+    b_no_forced    H120 A (27 Nov 2026): b_targets that never takes a forced entry (idle_max out of reach); paper only
     b_be_t1        task B / H36: the stop moves to the entry price once Target 1 trades (live from the next bar)
     b_ema20_1h_t1  task B / H36: once Target 1 has traded, a 15m close beyond the EMA20 of the 1h chart (ratcheted,
     b_sma20_1h_t1  never loosening; SMA20 for the second) exits at the next open; engine15/exits.py holds the rule
@@ -99,6 +100,12 @@ CHALLENGERS = OrderedDict([
     # b_trail itself is not touched and stays the yardstick.
     ("b_trail_setups", {"title": "Setups with the trailing stop: swing / 2 ATR stop after 1R, early entry on BTC and ETH",
                         "rule": {"trail": True, "early": True}, "cfg": {}}),
+    # H120 A, forward (owner, 27 Nov 2026: "Yes, add it"): the Setups book that never takes a forced entry: it enters
+    # only when one side clears the entry bar by itself (or flips). Did NOT pass on history (it helped BTC, hurt ETH and
+    # fell deeper); a paper shadow to watch on BTC and ETH, read at 30 closed trades. Only its cfg differs (idle_max out
+    # of reach), so run() is not touched; on the other six markets it mostly stays flat, as H68 found.
+    ("b_no_forced", {"title": "Setups without forced entries (H120 A; NOT passed, paper only)",
+                     "rule": {"targets": True, "early": True}, "cfg": {"idle_max": 10 ** 9}}),
     ("a_pullback", {"title": "A: wait up to 8 bars for a pullback fill", "rule": {"pullback": True}, "cfg": {}}),
     # Y, the charter's yardstick (11 Nov 2026): the same engine and odds, deciding only at 4h / daily closes
     ("y_4h", {"title": "Y: same engine, decides at 4h closes only", "rule": {"every_ms": 4 * 3600000}, "cfg": {}}),
