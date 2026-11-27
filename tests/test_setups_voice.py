@@ -78,7 +78,7 @@ def test_the_switch_in_the_shipped_code_is_btc_and_eth():
     # another book. That is the owner's word, a version bump and the vault's own key together: never a change made to
     # get a test through. ON for BTC and ETH since think15-v5.2.12 (owner, 27 Nov 2026). Inside the other tests both
     # switches are off (tests/conftest.py); the shipped values are read from there.
-    from conftest import SHIPPED
+    from shipped_values import SHIPPED
     assert SHIPPED["TRAIL_MARKETS"] == ("BTCUSDT", "ETHUSDT")
     # the two keys go together: no vault market on the trail voice while the feed may not send a trail book
     assert SHIPPED["SEND_TRAIL"] or not set(SHIPPED["TRAIL_MARKETS"]) & set(vf.ALLOWED)

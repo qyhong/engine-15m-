@@ -195,7 +195,7 @@ def test_the_names_the_trail_voice_relies_on():
     assert BOOK == "b_trail_setups"
     assert shadows.CHALLENGERS[BOOK]["rule"] == {"trail": True, "early": True} and shadows.CHALLENGERS[BOOK]["cfg"] == {}
     assert (shadows.TRAIL_ARM_R, shadows.TRAIL_ATR) == (1.0, 2.0)
-    from conftest import SHIPPED                                            # ON since think15-v5.2.12
+    from shipped_values import SHIPPED                                            # ON since think15-v5.2.12
     assert SHIPPED["SEND_TRAIL"] is True and SHIPPED["TRAIL_MARKETS"] == ("BTCUSDT", "ETHUSDT")
 
 

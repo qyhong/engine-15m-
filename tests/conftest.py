@@ -50,14 +50,12 @@ def _no_test_reads_the_real_setups_voice_state(monkeypatch, tmp_path_factory):
 
 # The trail voice's two switches (setups_voice.TRAIL_MARKETS, vault_feed.SEND_TRAIL) are ON in the shipped code since
 # think15-v5.2.12. The tests were written for, and keep testing, the default voice: every test runs with both OFF unless it
-# turns them on itself (monkeypatch). The shipped values are recorded here, before the switch-off, for the tests that check
-# them (test_setups_voice.py, test_vault_trail.py).
-SHIPPED = {}
+# turns them on itself (monkeypatch). The tests that check the shipped values read them from the source files
+# (tests/shipped_values.py; not from here: tests/rl has a conftest of its own, so "import conftest" is ambiguous).
 
 
 @pytest.fixture(autouse=True)
 def _trail_switches_off_inside_tests(monkeypatch):
     from engine15 import setups_voice, vault_feed
-    SHIPPED.update(TRAIL_MARKETS=setups_voice.TRAIL_MARKETS, SEND_TRAIL=vault_feed.SEND_TRAIL)
     monkeypatch.setattr(setups_voice, "TRAIL_MARKETS", ())
     monkeypatch.setattr(vault_feed, "SEND_TRAIL", False)

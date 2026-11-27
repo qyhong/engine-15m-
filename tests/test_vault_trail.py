@@ -73,13 +73,13 @@ def test_both_switches_are_on_in_the_shipped_code():
     """ON since think15-v5.2.12 (27 Nov 2026): the owner's word in both sessions, vault package f7609091 accepts the
     trail bodies. Changing either is a real-money decision and a version bump (docs/TRAIL_SWITCH_PLAN.md). Inside the
     other tests both are off (tests/conftest.py)."""
-    from conftest import SHIPPED
+    from shipped_values import SHIPPED
     assert SHIPPED["SEND_TRAIL"] is True
     assert SHIPPED["TRAIL_MARKETS"] == ("BTCUSDT", "ETHUSDT")
 
 
 def test_a_vault_market_is_never_on_the_trail_voice_while_the_feed_cannot_send_it():
-    from conftest import SHIPPED
+    from shipped_values import SHIPPED
     assert SHIPPED["SEND_TRAIL"] or not (set(vf.ALLOWED) & set(SHIPPED["TRAIL_MARKETS"]))
     assert vf.SEND_TRAIL or not (set(vf.ALLOWED) & set(sv.TRAIL_MARKETS))
 
