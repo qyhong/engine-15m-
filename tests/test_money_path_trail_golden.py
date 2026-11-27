@@ -100,7 +100,9 @@ def play(fx, trades_dir):
                     assert vf.intent_ok(it["body"]), it["body"]
                     sent.add(iid)
                     intents.append({"i": i, "body": it["body"]})
-            body, reason = vf.build_book(m, m.get("price_bar_utc"), vf.remembered_lead(feed, SYM, m))
+            view = {"shadows": {"books": {BOOK: {"assets": {SYM: shadows.asset_view(state)}}}}}
+            body, reason = vf.build_book(m, m.get("price_bar_utc"), vf.remembered_lead(feed, SYM, m), False,
+                                         vf.remembered_opened_by(feed, SYM, m, view))        # v5.2.11: opened_by
             if body is None:
                 refused.append({"i": i, "reason": reason})
                 continue

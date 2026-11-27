@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""vault_feed's optional book key `opened_by` ("ENTER" / "FORCED"), switched OFF in the shipped code. No network.
+"""vault_feed's optional book key `opened_by` ("ENTER" / "FORCED" / "FLIP"). ON since think15-v5.2.11. No network.
 
     py -3 -m pytest tests/test_vault_opened_by.py -q
 """
@@ -31,10 +31,11 @@ def on(monkeypatch):
     monkeypatch.setattr(vf, "SEND_OPENED_BY", True)
 
 
-def test_the_switch_is_off_in_the_shipped_code_and_then_nothing_changes(tmp_path):
-    """Switching it on needs the AI Trading session's word that an installed vault package accepts the key, and the
-    owner's yes (CLAUDE.md, the money path)."""
-    assert vf.SEND_OPENED_BY is False and vf.OPENED_BY == ("ENTER", "FORCED", "FLIP")
+def test_the_switch_is_on_since_v5_2_11_and_off_means_nothing_is_sent(tmp_path, monkeypatch):
+    """On since 27 Nov 2026: vault package 0a74aa29 accepts the key and the owner said "Yes, switch on". Switch it OFF
+    before the vault is ever rolled back to an older package (that code refuses a book with the key)."""
+    assert vf.SEND_OPENED_BY is True and vf.OPENED_BY == ("ENTER", "FORCED", "FLIP")
+    monkeypatch.setattr(vf, "SEND_OPENED_BY", False)
     b = vf.build_book(targets(), bar(0), opened_by="FORCED")[0]["book"]
     assert "opened_by" not in b
     st = {"pos": {"BTCUSDT": {"opened_utc": OPENED, "opened_by": "FORCED"}}}
@@ -91,6 +92,7 @@ def test_a_pass_reads_the_page_only_when_the_switch_is_on(passes, tmp_path, monk
     read = []
     real = vf.read_page
     monkeypatch.setattr(vf, "read_page", lambda p: read.append(p) or real(p))
+    monkeypatch.setattr(vf, "SEND_OPENED_BY", False)
     run([targets(at=bar(0))], ep(bar(0)))
     assert read == [] and "opened_by" not in calls[-1][1]["book"]                # off: not read, not sent
     monkeypatch.setattr(vf, "SEND_OPENED_BY", True)

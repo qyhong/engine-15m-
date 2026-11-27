@@ -62,7 +62,8 @@ def test_the_preview_follows_a_trail_setup_from_its_opening_and_never_posts(tmp_
     b = read(d)["books"]["BTCUSDT"]["body"]["book"]
     assert b == {"symbol": "BTCUSDT", "side": "SHORT", "entry": "60000", "stop": "61500", "price": "60000",
                  "exit_rule": "trail", "trail_active": False, "entry_window_open": True,
-                 "opened_utc": "2026-11-26T10:15:00Z", "as_of_utc": "2026-11-26T10:15:00Z", "lead_pts": -8.0}
+                 "opened_utc": "2026-11-26T10:15:00Z", "as_of_utc": "2026-11-26T10:15:00Z", "lead_pts": -8.0,
+                 "opened_by": "ENTER"}                           # v5.2.11: how the book opened it
     # step 3: six bars on, the trail has armed and the stop moved: one move_stop; the window has shut
     trail_preview.write(page("2026-11-26 11:45", short("2026-11-26 10:15", 60000.0, 59700.0, trailing=True), None,
                              price=(58400.0, 1700.0)), d)

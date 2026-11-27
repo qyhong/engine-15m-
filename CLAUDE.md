@@ -31,7 +31,7 @@ The Setups copy `b_rebound` (`engine15/rebound_book.py` and the rule key `reboun
 rule A trigger a short or flat book goes long at the next open (H107's trade) and the Setups rule is not consulted
 while that long lives. Started on the owner's word although history does not support the rule; its state is its own key
 in `data/shadow_state.json`, and it never reaches the vault.
-The engine version is `CFG["version"]` in `engine15/config.py` (think15-v5.2.10 on 24 Nov 2026); what each version changed
+The engine version is `CFG["version"]` in `engine15/config.py` (think15-v5.2.11 on 27 Nov 2026); what each version changed
 is in `VERSION_NOTE` there and in THOUGHT_PROCESS.md "Now". It runs on the Singapore box, not on this laptop (HANDOFF.md).
 `out/live/scoreboard.json` judges every book on live trades only.
 Hypotheses are registered in `research/HYPOTHESES.md` before they are graded.
@@ -101,11 +101,12 @@ The list as files is `tools/money_files.txt`. Rules for it:
   (owner, 23 Nov: VIP accounts take a setup only when its opening Lead is above 5.0 in its direction; the filter is the
   AI Trading Bot session's switch) and treats a missing value as "does not pass": do not switch `SEND_LEAD` off, lose
   the feed's memory or change how the value is taken without telling that session first.
-- `vault_feed.SEND_OPENED_BY` (built 26 Nov 2026, OFF): an optional book key `opened_by` ("ENTER", "FORCED" or "FLIP", the
-  book's own word for the entry, read from page.json beside setups.json; setups.json does not carry it). The owner wants
-  VIP accounts to skip FORCED re-entries after a stop-out (H68: those entries lost on BTC and ETH in history); the rule
-  is the vault's. Do not switch it on until the AI Trading Bot session confirms an installed package that accepts the
-  key and its spelling, and the owner says yes.
+- Since v5.2.11 (27 Nov 2026) an open book carries `opened_by` (`vault_feed.SEND_OPENED_BY`): "ENTER", "FORCED" or
+  "FLIP", the book's own word for the entry, read from page.json beside setups.json (setups.json does not carry it);
+  never on FLAT, left out when unknown. The vault (package 0a74aa29) uses it so that a member skips a FORCED setup after
+  a losing first stop on that coin (owner; H68: those entries lost on BTC and ETH in history); the rule is the AI
+  Trading Bot session's switch. If the vault is ever rolled back to an older package, switch `SEND_OPENED_BY` off
+  FIRST: the older code refuses a book that carries the key.
 - A restart is short, but a deploy that rebuilds the reading cache (a card or `CFG` change) takes about 15 minutes: the
   book ages, the vault stops joining after 30 minutes, and exits wait. Do it when BTC and ETH are flat or far from an exit.
 - The feed's memory is `data/vault_feed_state.json`; the book's is `data/shadow_state.json`. Losing or rolling back either

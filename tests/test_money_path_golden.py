@@ -159,7 +159,9 @@ def play(fx, trades_dir):
                     assert vf.intent_ok(it["body"]), it["body"]
                     sent.add(iid)
                     intents.append({"i": i, "body": it["body"]})
-            body, reason = vf.build_book(m, m.get("price_bar_utc"), vf.remembered_lead(feed, SYM, m))   # as vf._run
+            view = {"shadows": {"books": {setups.BOOK: {"assets": {SYM: shadows.asset_view(state)}}}}}
+            body, reason = vf.build_book(m, m.get("price_bar_utc"), vf.remembered_lead(feed, SYM, m), False,
+                                         vf.remembered_opened_by(feed, SYM, m, view))        # v5.2.11: opened_by   # as vf._run
             if body is None:
                 refused.append({"i": i, "reason": reason})
                 continue
@@ -252,6 +254,7 @@ def test_the_names_and_shares_the_vault_relies_on():
     assert vf.ALLOWED == ("BTCUSDT", "ETHUSDT")                           # the owner's two markets, no more
     assert vf.SEND_CONTRACT_1 is False                                    # no key the live vault does not know
     assert vf.SEND_LEAD is True                                           # v5.2.10: lead_pts, accepted by vault 81c96bd4
+    assert vf.SEND_OPENED_BY is True and vf.OPENED_BY == ("ENTER", "FORCED", "FLIP")     # v5.2.11: vault 0a74aa29
 
 
 # ------------------------------------------------------------------ writing the record (owner's word only)

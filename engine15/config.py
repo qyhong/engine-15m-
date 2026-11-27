@@ -17,13 +17,16 @@ ESTATE = os.environ.get("ENGINE15_ESTATE", os.path.join(os.path.dirname(ROOT), "
 LIBRARY_JSON = os.path.join(ESTATE, "research", "local", "library", "strategy_library.json")
 
 # Said once in the journal (each market group's next entry) after "version" changes (live.step_group).
-VERSION_NOTE = ("think15-v5.2.10: the BTC and ETH setups sent to the VIP vault now carry the Lead of the step that "
-                "opened them (P(up) minus P(down) in points, fixed for the setup's life), so the vault can take only "
-                "setups whose opening Lead is above 5 points in their direction. Nothing in the engine's own decisions, "
-                "entries, stops, targets, sizing or books changes.")
+VERSION_NOTE = ("think15-v5.2.11: the BTC and ETH setups sent to the VIP vault now say how the book opened them: by a "
+                "real signal (ENTER), by the forced entry after an hour flat (FORCED), or by a flip (FLIP). The vault uses "
+                "it so that an account skips a forced re-entry after a losing stop. Nothing in the engine's own "
+                "decisions, entries, stops, targets, sizing or books changes.")
 
 CFG = {
-    "version": "think15-v5.2.10",     # v5.2.10 (24 Nov 2026): the vault's book carries the setup's opening Lead
+    "version": "think15-v5.2.11",     # v5.2.11 (27 Nov 2026): the vault's book says how the setup was opened
+                                      #   (vault_feed.SEND_OPENED_BY: ENTER / FORCED / FLIP); owner: "Yes, add it",
+                                      #   then "Yes, switch on" once vault package 0a74aa29 accepted the key.
+                                      # v5.2.10 (24 Nov 2026): the vault's book carries the setup's opening Lead
                                       #   (vault_feed.SEND_LEAD); owner's order of 23 Nov, "Yes, deploy it" on 24 Nov.
                                       # v5.2.9 (22 Nov 2026): the Setups book's early entry on BTC and ETH ("early_entry",
                                       #   below); owner: "Cut the 15-minute delay", then "I want stick to my plan".

@@ -189,7 +189,7 @@ def test_a_running_trade_gets_its_planned_target_2():
 
 def test_only_usdjpy_sells_the_rest_at_target_2():
     assert CFG["t2_exit"] == ("USDJPY",) and CFG["half_t1"] == ("SPX", "USDJPY") and CFG["be_t1"] == ("USDJPY", "SPX")
-    assert CFG["version"] == "think15-v5.2.10" and CFG["idle_max"] == 4          # the mandate is unchanged (v5.2.8: trail)
+    assert CFG["version"] == "think15-v5.2.11" and CFG["idle_max"] == 4          # the mandate is unchanged (v5.2.8: trail)
     u, s = live.asset_cfg("USDJPY", CFG), live.asset_cfg("SPX", CFG)
     assert (u["be_t1"], u["half_t1"], u["t2_exit"]) == (True, True, True)
     assert (s["be_t1"], s["half_t1"], s["t2_exit"]) == (True, True, False)

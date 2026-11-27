@@ -78,7 +78,8 @@ def write(page, out_dir, log=None, now=None):
     if not marks:
         return "trail preview: not written (the page has no %s view)" % setups_voice.book_of(setups_voice.TRAIL)
     prev["state"] = dict(st, preview_from_utc=frm)
-    doc = vault_feed.preview(marks, prev, trades_dir=out_dir, now=now, generated_utc=page.get("generated_utc"))
+    doc = vault_feed.preview(marks, prev, trades_dir=out_dir, now=now, generated_utc=page.get("generated_utc"),
+                             page=page)
     doc["state"]["preview_from_utc"] = frm
     path = os.path.join(out_dir, vault_feed.PREVIEW_FILE)
     tmp = path + ".tmp"

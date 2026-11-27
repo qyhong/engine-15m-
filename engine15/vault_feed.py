@@ -136,9 +136,14 @@ TRAIL = setups_voice.TRAIL
 # trade's why_in), read from page.json beside setups.json, only when that page's view shows the very setup setups.json
 # shows (same side, same opening time). Any other word or no match: the key is left out (the vault then joins as
 # today). setups.json does not carry the word, so subscribers' data is unchanged.
-# OFF: the live vault refuses a book with a key it does not know. It stays False until the AI Trading session confirms
-# an installed vault package that accepts the key (and its exact spelling) and the owner says yes.
-SEND_OPENED_BY = False
+# ON since think15-v5.2.11 (27 Nov 2026): the AI Trading session confirmed vault package 0a74aa29, installed
+# 2026-11-27T01:22Z, accepts the key: exactly "ENTER", "FORCED" or "FLIP", on a LONG or SHORT book only (targets or
+# trail); the first value seen for a setup is kept; the key on a FLAT book, null, lower case or any other value refuses
+# that market's WHOLE book. So it is never on FLAT and it is left out when unknown. The owner: "Yes, switch on". The
+# vault's rule (that session's switch): after a member's losing first stop on a coin, that member skips the next setup
+# there if it is FORCED. UNDO: if the vault is ever rolled back to a package before 0a74aa29, switch this off FIRST:
+# the older code refuses a book that carries the key.
+SEND_OPENED_BY = True
 OPENED_BY = ("ENTER", "FORCED", "FLIP")
 PAGE_FILE = "page.json"
 MS = "ms"                                        # the id word of a trail move_stop: <SYM>.<opened>.ms.<DDHHMM of as_of>
@@ -837,7 +842,7 @@ def _say(log, text):
 
 
 # ------------------------------------------------------------------ the dry run of the trail book (never posted)
-def preview(markets, prev=None, trades_dir=None, now=None, generated_utc=None):
+def preview(markets, prev=None, trades_dir=None, now=None, generated_utc=None, page=None):
     """trail_book_preview.json as a dict: what the feed WOULD post if these markets were on the trail voice. `markets`:
     {symbol: its setups.json entry built on the trail voice}; `prev`: the previous preview (its "state" is this dry
     run's own memory, the same shape as the feed's: track() fills it exactly as it would the real one). Nothing here
@@ -856,7 +861,8 @@ def preview(markets, prev=None, trades_dir=None, now=None, generated_utc=None):
         if why:
             books[sym] = {"body": None, "reason": why}
             continue
-        body, why = build_book(m, m.get("price_bar_utc"), remembered_lead(st, sym, m), force=True)
+        body, why = build_book(m, m.get("price_bar_utc"), remembered_lead(st, sym, m), force=True,
+                               opened_by=remembered_opened_by(st, sym, m, page))
         books[sym] = {"body": body, "reason": why}
     queue = st.get("intents") if isinstance(st.get("intents"), dict) else {}
     keep = sorted(queue.items(), key=lambda kv: kv[1].get("seq", 0))[-PREVIEW_INTENTS:]
