@@ -122,11 +122,13 @@ LEVELS = ("entry", "stop", "target_1", "target_2")
 # target_1, target_2, rr_now_t2, t1_taken (agreed with the AI Trading session, 26 Nov 2026). Its intents: `move_stop`
 # (futures only) at a step where the stop is tighter than the last one sent for that setup, and `close` when the setup
 # leaves; never `reduce`.
-# OFF: the live vault refuses a body with a key it does not know. It stays False until the AI Trading session confirms
-# an installed vault package that accepts these bodies AND the owner says yes in both sessions. It goes on together
-# with setups_voice.TRAIL_MARKETS (tests/test_vault_trail.py refuses a vault market on the trail voice while this is
-# False). If that ever happens all the same, the vault is told FLAT for that market, with an ALARM line every step.
-SEND_TRAIL = False
+# ON since think15-v5.2.12 (27 Nov 2026), together with setups_voice.TRAIL_MARKETS: vault package f7609091 (installed
+# 26 Nov 07:04 UTC) accepts these bodies (book-check on the live preview and on the stop-move drill of 27 Nov), and
+# the owner said yes. tests/test_vault_trail.py refuses a vault market on the trail voice while this is False; if
+# that ever happens all the same, the vault is told FLAT for that market, with an ALARM line every step.
+# UNDO: take the markets out of TRAIL_MARKETS (the changeover back runs by itself); switch this off only once no
+# vault market is on the trail voice any more, and BEFORE any rollback of the vault below f7609091.
+SEND_TRAIL = True
 TRAIL = setups_voice.TRAIL
 # HOW THE SETUP WAS OPENED (owner, 26 Nov 2026: "Yes, add it"; the AI Trading session reports the owner chose there that
 # VIP accounts do not join a FORCED setup on a coin after a stop-out there). `opened_by`: an OPTIONAL book key on an open

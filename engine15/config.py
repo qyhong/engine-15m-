@@ -17,13 +17,16 @@ ESTATE = os.environ.get("ENGINE15_ESTATE", os.path.join(os.path.dirname(ROOT), "
 LIBRARY_JSON = os.path.join(ESTATE, "research", "local", "library", "strategy_library.json")
 
 # Said once in the journal (each market group's next entry) after "version" changes (live.step_group).
-VERSION_NOTE = ("think15-v5.2.11: the BTC and ETH setups sent to the VIP vault now say how the book opened them: by a "
-                "real signal (ENTER), by the forced entry after an hour flat (FORCED), or by a flip (FLIP). The vault uses "
-                "it so that an account skips a forced re-entry after a losing stop. Nothing in the engine's own "
-                "decisions, entries, stops, targets, sizing or books changes.")
+VERSION_NOTE = ("think15-v5.2.12: BTC and ETH move to the trailing-stop book on the Setups page, in the signals and "
+                "for the VIP vault. No fixed targets: once price has gone one risk unit in the trade's favour the stop "
+                "follows price at every 15-minute close and is never moved back. Each coin changes over when its "
+                "current setup ends; a trailing-stop setup already open then is not shown. The other six markets keep "
+                "Target 1 and Target 2. The engine's own decisions and entries do not change.")
 
 CFG = {
-    "version": "think15-v5.2.11",     # v5.2.11 (27 Nov 2026): the vault's book says how the setup was opened
+    "version": "think15-v5.2.12",     # v5.2.12 (27 Nov 2026): BTC and ETH on the trail voice (setups_voice.TRAIL_MARKETS,
+                                      #   vault_feed.SEND_TRAIL); owner: "Page and VIP", "BTC and ETH only", "Yes. Any concern".
+                                      # v5.2.11 (27 Nov 2026): the vault's book says how the setup was opened
                                       #   (vault_feed.SEND_OPENED_BY: ENTER / FORCED / FLIP); owner: "Yes, add it",
                                       #   then "Yes, switch on" once vault package 0a74aa29 accepted the key.
                                       # v5.2.10 (24 Nov 2026): the vault's book carries the setup's opening Lead

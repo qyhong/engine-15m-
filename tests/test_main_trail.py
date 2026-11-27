@@ -197,7 +197,7 @@ def test_six_markets_trail_and_the_two_target_markets_do_not():
     for a in ("USDJPY", "SPX"):
         c = live.asset_cfg(a, CFG)
         assert c["trail_stop"] is False and c["trail_wait"] is False and c["be_t1"] is True
-    assert CFG["version"] == "think15-v5.2.11" and CFG["idle_max"] == 4
+    assert CFG["version"] == "think15-v5.2.12" and CFG["idle_max"] == 4
 
 
 def test_the_page_says_where_the_stop_stands_and_what_it_locks():

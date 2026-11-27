@@ -40,7 +40,10 @@ from .config import DATA_DIR
 TARGETS, TRAIL = "targets", "trail"
 BOOKS = {TARGETS: "b_targets", TRAIL: "b_trail_setups"}
 RULES = (TARGETS, TRAIL)
-TRAIL_MARKETS = ()                      # THE SWITCH (see above). () = off. Never changed without the owner's word.
+# THE SWITCH (see above). () = off. ON for BTC and ETH since think15-v5.2.12 (27 Nov 2026): the owner, in this project,
+# asked "Do you want the trailing stop switched on for real?": "Yes. Any concern"; markets "BTC and ETH only" (26 Nov).
+# Taking a market out is the way back (the same changeover in reverse); never changed without the owner's word.
+TRAIL_MARKETS = ("BTCUSDT", "ETHUSDT")
 SCHEMA = 1
 STATE_PATH = os.path.join(DATA_DIR, "setups_voice_state.json")
 
