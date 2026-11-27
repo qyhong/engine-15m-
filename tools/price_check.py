@@ -5,7 +5,8 @@ hours check daily on pricing so the issue of no data wont gone off notice so lon
 On 26 Nov 2026 (US Thanksgiving) the bar feed served nothing for gold, silver, WTI and Brent for more than four hours
 while the markets traded, and nobody was told. This asks the box, for each of the eight markets:
 
-    1. Is the market open now, by the engine's own calendar?
+    1. Is the market open now, by the engine's own calendar? (A market group steps as one: WTI waits while Brent is
+       shut between 23:00 and 01:00 UTC every day, so a market counts as open only when its whole group is.)
     2. How old is the engine's last bar (setups.json: price_bar_utc)?           open and older than STALE_MIN -> PROBLEM
     3. Does the engine's price agree with an independent quote taken right now?   off by more than OFF_PCT   -> PROBLEM
        (BTC and ETH: Binance spot; the others: the feed's own live quote, which kept moving on 26 Nov while its bars
@@ -64,10 +65,17 @@ try:
                 b["bars"] += int(r["bars"]); b["last"] = r["t_utc"]
     except (OSError, KeyError, ValueError):
         pass
+    t_now = pd.Timestamp(int(now * 1000), unit="ms", tz="UTC")
+    own = dict((m["symbol"], True if m["symbol"] in CFG.get("crypto", ()) else bool(market_calendar.is_open(m["symbol"], t_now)))
+               for m in doc["markets"])
+    group_of = dict((a, g) for g, members in CFG.get("universes", ()) for a in members)
     for m in doc["markets"]:
         sym = m["symbol"]
-        crypto = sym in CFG.get("crypto", ())
-        is_open = True if crypto else bool(market_calendar.is_open(sym, pd.Timestamp(int(now * 1000), unit="ms", tz="UTC")))
+        mates = [a for a in own if group_of.get(a) == group_of.get(sym)] or [sym]
+        is_open = all(own[a] for a in mates)                     # the group steps as one: every member must be open
+        if own[sym] and not is_open:
+            notes.append("%s is open but waits for %s (the group steps together)" % (
+                sym, ", ".join(a for a in mates if not own[a])))
         bar_age = (now - ep(m["price_bar_utc"])) / 60.0 if m.get("price_bar_utc") else None
         q, q_age = quote(sym)
         off = None if (q is None or not m.get("price")) else (float(m["price"]) / q - 1.0) * 100.0
@@ -85,7 +93,7 @@ try:
             notes.append("%s: %d bars came from the second source (%s) in the last %d hours, the last at %s: the usual feed "
                          "was down" % (sym, b["bars"], b["source"], BRIDGE_H, b["last"][11:16]))
         lines.append("%-8s %-7s %-6s price %-10s bar %-11s age %-5s quote %-10s (%s) off %s" % (
-            sym, word, "open" if is_open else "closed", m.get("price"), (m.get("price_bar_utc") or "?")[5:16].replace("T", " "),
+            sym, word, "open" if is_open else ("waits" if own[sym] else "closed"), m.get("price"), (m.get("price_bar_utc") or "?")[5:16].replace("T", " "),
             "?" if bar_age is None else "%.0fm" % bar_age, "-" if q is None else q,
             "-" if q is None else "%.0fm old" % q_age, "-" if off is None else "%+.2f%%" % off))
 except Exception as e:

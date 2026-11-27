@@ -7688,3 +7688,26 @@ whenever it has moved at least 0.5R since the last card.
 
 **What this cannot show.** Thirty or sixty trades in one kind of market say little about the next kind; the history
 (H36) is the larger sample and it is against the rule.
+
+
+### H85 results (26 Nov 2026; run on the box 23 Nov 01:53 UTC to 26 Nov 13:25 UTC with the queue stopped from 24 Nov 04:48 to 26 Nov 05:05 UTC, resumed from its checkpoint; 13,000 draws per group, 65,000 in all; `research/out/queue/H85/report.md` + `results.json`)
+
+Every market's run passed its gate (`run_is_engine_b_targets: true`). Data end at the last session at or before
+2025-11-10 23:45 UTC; the holdout is not read.
+
+**Conclusion, in the registered words:** the Setups book is NOT distinguishable from the same book run on time-shifted
+bias and tide, at p = 0.1037 (primary: pooled mean R per trade over the eight markets, one-sided). Real -0.0021R a trade
+on 5,162 trades; placebo median -0.0278R (5%-95%: -0.0564 to +0.0060). The real book sits on the better side of the
+placebo, but inside what chance gives.
+- Halves, pooled: h1 p 0.11 (real +0.010R against -0.020R), h2 p 0.25 (-0.018R against -0.038R).
+- BTC and ETH: all p 0.13; h1 p 0.051 (+0.045R against -0.023R); h2 p 0.59 (-0.081R against -0.071R: no better than the
+  shifted bias). The other six: all p 0.19; h1 p 0.39, h2 p 0.18.
+- Per market (descriptive): ETH p 0.031, USDJPY 0.11, SPX 0.14, the rest 0.37 to 0.63; BTC 0.49.
+- The placebo trades more (median 6,006 trades against 5,162): a bias that is wrong in time flips and forces more.
+
+**Reading.** The higher-timeframe bias and the tide decide the side of most entries, yet shifting them in time by a
+month or more leaves a book that cannot be told from the real one at the registered bar. That is the same picture as
+the card post-mortem of 26 Nov (the Lead did no better than always leaning with the fall): on this history the
+direction inputs carry little that their moment gives them. It is not proof that they carry nothing: the real book is
+better than nine placebo draws in ten, and the first half comes close on BTC and ETH. One of seven placebo tests in
+this family (ledger above); no change follows from it alone.

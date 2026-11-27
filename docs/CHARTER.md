@@ -956,3 +956,13 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   app, `mind15-price-check`, runs it at 00:00, 08:00 and 16:00 laptop time and sends a push notification on a
   problem. It runs only while the app is open on the laptop (a missed run starts at the next launch). First run by
   hand, 11:25 UTC: all eight fresh; the bridged gold, silver, WTI and Brent prices within 0.04% of the feed's quote.
+- **H85 is done: the Setups book is NOT distinguishable from the same book with its higher-timeframe bias and tide
+  shifted in time** (finished on the box 26 Nov 2026 13:25 UTC after the queue was resumed; 13,000 draws). Pooled over
+  the eight markets p = 0.104: real -0.002R a trade on 5,162 trades, placebo median -0.028R. BTC and ETH: first half
+  p 0.051, second half p 0.59. Per market only ETH stands out (p 0.031, descriptive). The queue on the box is now
+  empty and idle. `research/HYPOTHESES.md` "H85 results".
+- **Status, 27 Nov 2026 00:52 UTC.** The usual feed (Yahoo) has still served no futures bar since 26 Nov 04:30 UTC, also
+  after the 23:00 UTC reopen; gold, silver, WTI and Brent run on the second source (prices within 0.1% of the feed's
+  own quote). The price check's first alarm was false: WTI is open but its group waits while Brent is shut (23:00 to
+  01:00 UTC, every day); `tools/price_check.py` now counts a market as open only when its whole group is. The trail
+  dry run holds BTC and ETH shorts, no stop move yet.
