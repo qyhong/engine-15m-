@@ -966,3 +966,13 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   own quote). The price check's first alarm was false: WTI is open but its group waits while Brent is shut (23:00 to
   01:00 UTC, every day); `tools/price_check.py` now counts a market as open only when its whole group is. The trail
   dry run holds BTC and ETH shorts, no stop move yet.
+- **think15-v5.2.11 is live: the vault's book says how the setup was opened** (27 Nov 2026, restart 02:33 UTC, commit
+  037be2b, full suite 2,043 passed; owner, asked in this project: "Yes, switch on (Recommended)"). The AI Trading
+  session had reported vault package 0a74aa29 installed at 01:22 UTC, accepting `opened_by` ("ENTER", "FORCED",
+  "FLIP"; never on FLAT), and its re-entry rule on: after a member's losing first stop on a coin that member skips the
+  next setup there if it is FORCED. `vault_feed.SEND_OPENED_BY = True`. Both frozen records were rewritten on that
+  word: trades, intents and every other body field unchanged; the only difference is the key on open books. The first
+  step rebuilt the reading cache (689 s); both members were flat (that session's report), so no exit waited. First
+  post with the key: ETH short, "FORCED", as_of 02:45 UTC, accepted. BTC carries none: its Setups short of 25 Nov was
+  stopped in the 02:15 bar (61,777.82; paper -$445) and the book is flat. UNDO: switch the key off BEFORE any rollback
+  of the vault below 0a74aa29.
