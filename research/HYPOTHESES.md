@@ -7711,3 +7711,56 @@ the card post-mortem of 26 Nov (the Lead did no better than always leaning with 
 direction inputs carry little that their moment gives them. It is not proof that they carry nothing: the real book is
 better than nine placebo draws in ten, and the first half comes close on BTC and ETH. One of seven placebo tests in
 this family (ledger above); no change follows from it alone.
+
+
+## H120. The Setups book on BTC and ETH without forced entries (A), and with no card above 20% of the say (B) (registered 27 Nov 2026, about 07:20 UTC, before any H120 code was run or any H120 number was computed)
+
+**Prompted by:** 25-27 Nov 2026, seven Setups exits in a row at the entry stop, all shorts, while BTC, ETH and silver
+rose; five of the seven were FORCED entries, and on the live page one card ("Support and resistance", trust 0.40, the
+cap) makes about four fifths of the Lead on BTC and ETH (pull -4.5 and -4.3 points; every other card 0.4 or less). The
+AI Trading session asked, for the owner, why the members had no trade for two days; the owner, in this project, on my
+recommendation to test both: "Yes run it". Research only: nothing in `engine15/`, the books, the vault or the box's
+engine changes, whatever the result.
+
+**Seen before this registration (written honestly).** H68 and its results (forced entries right after a losing stop,
+BTC + ETH 2020-2026: 762 trades, -0.070R each, -53.1R, both halves negative; the book that waits for a signal after a
+stop +64.5R against -7.7R); H85 (the bias and tide shifted in time: not distinguishable, p 0.104); the card post-mortem
+of 26 Nov (live sessions 10-26 Nov: the Lead leaned short in 98% of sessions, no better than always short); the live
+forward record by entry word (Setups book since 11 Nov: ENTER 11 trades +$1,855, FORCED 35 trades +$2,833, of which
+BTC + ETH 7 trades +$480). Nothing of the A or B books on history has been computed.
+
+**Found while preparing (a deviation from earlier studies, said first).** The research helper that H59-H68 used to
+build the odds on history (`research/h59_half_be.py prep_cut`) does not apply the trust cap of v5.2 (15 Nov 2026,
+`trust_cap` 0.40); the engine does (`leanprep`). Those studies therefore ran the book on odds a little different from the
+live engine's. H120 builds the odds exactly as `leanprep` does, cap included, so its "current" book is the live rule.
+Its "current" figures will differ from H68's for that reason.
+
+**The books** (all `shadows.run` under the Setups rule `{"targets": True, "early": True}`, the engine's own code):
+- **current**: the live rule: `trust_cap` 0.40, `idle_max` 4 (a forced entry after four flat sessions).
+- **A, no forced entry**: as current, but `idle_max` set out of reach: the book enters only when one side clears the
+  entry bar by itself (ENTER) or flips; after any exit it waits for a real signal, however long.
+- **B, cap 20%**: as current, but `trust_cap` 0.20 in both places the engine applies it (the trust path and the
+  per-session weights), so no voting card holds more than a fifth of the say; the odds are re-mixed from the same
+  voices' walk-forward calls (the cached fits; no voice is refitted differently).
+- Descriptive only (no bar): A and B together; and "equal": every voting card that speaks has the same share.
+
+**Data.** The evidence store and the cached fits of the live engine (fits copied to a scratch folder first; the engine's
+own are not written), each group from its first decided session to its last stored session at or before 2026-11-26
+23:45 UTC. Halves split at 2023-06-08 (as H68). Shown apart: the holdout (2025-11-11 on) and the forward slice
+(2026-11-11 on). Run on the box at low priority while the research queue is empty.
+
+**Primary: BTC and ETH together** (the markets real accounts follow). Read-outs per book: trades, share won, mean R, sum
+of R, paper net, worst fall of the two books' summed marked equity, share of bars flat; all, first half, second half,
+holdout, forward. For A also: entries by word (ENTER / FLIP), the longest wait flat. For B: how often its side differs
+from current's, and the share of the Lead the largest card holds (median). Descriptive: the same for the other six
+markets and all eight pooled.
+
+**Bar, fixed now, for each of A and B against current, on BTC and ETH together.** "Survives as a rule" only if ALL hold:
+(1) its sum of R is above current's in BOTH halves; (2) its mean R per trade is above zero in BOTH halves; (3) its worst
+fall is not deeper than current's. Anything else is "does not survive as a rule". Like H67 and H68 this is a replay on
+the history the ideas were drawn from: a pass is a reason to run it forward as a shadow book, not proof. Two tests are
+made (A, B); both are reported whatever they show.
+
+**What follows from it.** Nothing by itself. A pass of A would support the vault skipping every FORCED setup (its own
+switch, with the `opened_by` key it already receives); a pass of B would be a proposal for the owner to change the trust
+cap (a new engine version). Either needs the owner's word.
