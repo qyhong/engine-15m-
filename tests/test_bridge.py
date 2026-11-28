@@ -94,7 +94,8 @@ def test_the_usual_lag_never_starts_a_bridge_and_a_shut_market_never_does(store)
     assert bridge.fill("XAUUSD", now=T0 + 3 * BAR + 30, fetch=f, is_open=OPEN, alive=DEAD) == (None, 0)   # 2 bars behind
     shut = (lambda a, t: False, OPEN[1])
     assert bridge.fill("XAUUSD", now=T0 + 8 * BAR, fetch=f, is_open=shut, alive=DEAD) == (None, 0)
-    assert bridge.fill("USDJPY", now=T0 + 8 * BAR, fetch=f, is_open=OPEN, alive=DEAD) == (None, 0)      # not a bridged market
+    assert bridge.fill("BTCUSDT", now=T0 + 8 * BAR, fetch=f, is_open=OPEN, alive=DEAD) == (None, 0)     # not a bridged market
+    assert bridge.SOURCES["USDJPY"] == (("hyperliquid", "xyz:JPY"),)    # the rough bridge (owner, 28 Nov 2026)
     assert len(data.load("XAUUSD")) == 6 and not os.path.exists(os.path.join(str(store), bridge.LOG_FILE))
 
 
@@ -151,7 +152,7 @@ def test_no_source_is_one_line_and_nothing_is_written_and_it_never_raises(store,
 
 def test_every_bridged_market_is_a_paper_market():
     from engine15 import vault_feed
-    assert set(bridge.SOURCES) == {"XAUUSD", "XAGUSD", "WTI", "BRENT", "SPX"} == set(extdata.ROLL_ASSETS) | {"SPX"}
+    assert set(bridge.SOURCES) == {"XAUUSD", "XAGUSD", "WTI", "BRENT", "SPX", "USDJPY"} == set(extdata.ROLL_ASSETS) | {"SPX", "USDJPY"}
     assert not set(bridge.SOURCES) & set(vault_feed.ALLOWED)
     assert all(src in bridge.FETCH for cands in bridge.SOURCES.values() for src, _sym in cands)
     assert all(a in extdata.MARKETS for a in bridge.SOURCES)

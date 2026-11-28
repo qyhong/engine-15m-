@@ -9,7 +9,8 @@ permanent feed could be. Every number below was measured from the Singapore box 
 
 - Hit: the four futures charts. Not hit: USDJPY (JPY=X: 95 bars stored on 26 Nov, a full day) and the S&P 500
   (^GSPC: 14 bars on the 27 Nov half day, a full session; 26 Nov was a holiday).
-- So Yahoo is not one feed that fails as one. USDJPY and SPX still had no backup; SPX has one now (below).
+- So Yahoo is not one feed that fails as one. USDJPY and SPX had no backup; both have one now (SPX below; USDJPY the
+  rough xyz:JPY bridge, on the owner's word "Add rough bridge", 28 Nov 2026).
 
 ## What was tested
 

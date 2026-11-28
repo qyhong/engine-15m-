@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """bridge -- 15-minute bars from a second source when the usual feed serves none for an open market. PAPER MARKETS ONLY
-(gold, silver, WTI, Brent, and since 28 Nov 2026 the S&P 500: none of them reaches the VIP vault).
+(gold, silver, WTI, Brent, and since 28 Nov 2026 the S&P 500 and USDJPY: none of them reaches the VIP vault).
 
 Why (owner, 26 Nov 2026, US Thanksgiving: "Should check on future or other source. The price still moving from my
 end"): Yahoo's chart for GC=F / SI=F / CL=F / BZ=F stopped at midnight New York although the futures traded on and its own
@@ -33,8 +33,11 @@ xyz:SP500 follows the index itself, the SPY contracts follow the fund at about a
 that up). Only bars inside the cash session are kept, so the first bridged bar of a day opens where the contract stood
 at 09:30 New York: the overnight move arrives as the opening gap, as it does on the usual feed. Measured from the box
 over 19-27 Nov 2026 against the stored ^GSPC bars (138 pairs of 15-minute returns): correlation 0.998 / 0.998 / 0.997.
-USDJPY has no source here: the best one found (xyz:JPY) follows the level within about 5 basis points, but its
-15-minute returns correlate only 0.79 with the stored ones, under the 0.9 asked for.
+USDJPY (added 28 Nov 2026 as a ROUGH bridge, on the owner's word in this project: "Add rough bridge", after first
+leaving it out): Hyperliquid's xyz:JPY, quoted as yen per dollar like the stored JPY=X (159.39 against 159.52 on 28 Nov).
+It follows the level within about 5 basis points (p95 after scaling), but its 15-minute returns correlate only 0.79 with
+the stored ones (0.93 at 1 hour, 0.97 at 4 hours; docs/FEED_PLAN.md): a bridged USDJPY bar is noisier than a usual one.
+It is used, like every source here, only while the usual feed serves no bar for an open market.
 """
 import os
 import time
@@ -58,6 +61,7 @@ SOURCES = {
     "WTI": (("binance", "CLUSDT"), ("okx", "CL-USDT-SWAP")),
     "BRENT": (("hyperliquid", "xyz:BRENTOIL"),),
     "SPX": (("hyperliquid", "xyz:SP500"), ("okx", "SPY-USDT-SWAP"), ("binance", "SPYUSDT")),
+    "USDJPY": (("hyperliquid", "xyz:JPY"),),                  # rough (owner, 28 Nov 2026): see the docstring
 }
 
 
