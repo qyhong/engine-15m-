@@ -28,7 +28,8 @@ from engine15 import export, live, setups, signals  # noqa: E402
 TOP = ["generated_utc", "version", "schema", "note", "book", "followable", "learning", "markets", "closed_setups"]
 MARKET = ["symbol", "short", "group", "side", "entry", "stop", "target_1", "target_2", "t1_taken", "held_share",
           "opened_utc", "price",
-          "price_bar_utc", "unrealized_usd", "unrealized_pct", "market_open", "next_open_utc", "edge_with_position_pts",
+          "price_bar_utc", "unrealized_usd", "unrealized_pct", "market_open", "next_open_utc", "bar_age_min", "stale",
+          "edge_with_position_pts",
           "hit_24h_30d_pct", "rr_now_t1", "rr_now_t2", "stop_dist_now_pct", "entry_window_open", "entry_valid_until_utc",
           "closed", "wins", "realized_usd", "closes", "closes_step_min", "closes_end_utc"]
 POSITION = ["entry", "stop", "target_1", "target_2", "opened_utc", "unrealized_usd", "unrealized_pct",

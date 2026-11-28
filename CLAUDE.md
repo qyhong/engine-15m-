@@ -31,7 +31,7 @@ The Setups copy `b_rebound` (`engine15/rebound_book.py` and the rule key `reboun
 rule A trigger a short or flat book goes long at the next open (H107's trade) and the Setups rule is not consulted
 while that long lives. Started on the owner's word although history does not support the rule; its state is its own key
 in `data/shadow_state.json`, and it never reaches the vault.
-The engine version is `CFG["version"]` in `engine15/config.py` (think15-v5.2.11 on 27 Nov 2026); what each version changed
+The engine version is `CFG["version"]` in `engine15/config.py` (think15-v5.2.12 on 27 Nov 2026); what each version changed
 is in `VERSION_NOTE` there and in THOUGHT_PROCESS.md "Now". It runs on the Singapore box, not on this laptop (HANDOFF.md).
 `out/live/scoreboard.json` judges every book on live trades only.
 Hypotheses are registered in `research/HYPOTHESES.md` before they are graded.
@@ -66,18 +66,23 @@ real futures trades from it. So a change in any of these changes real entries, s
   the vault identifies a setup by its entry and `opened_utc`, so neither may change after the first post.
 - `engine15/backtest.py`: `leverage` (position size). `engine15/exits.py`: `PART`, `reached`, `be_stop`.
 - `engine15/setups.py` (the market entry of setups.json the feed reads) and `engine15/signals.py` (the entry window).
-- `engine15/setups_voice.py`: which book speaks for each market (the switch `TRAIL_MARKETS`, off = `()`; the state in
-  `data/setups_voice_state.json`; docs/TRAIL_SWITCH_PLAN.md). Naming a market there is the owner's decision only.
+- `engine15/setups_voice.py`: which book speaks for each market (the switch `TRAIL_MARKETS`, `("BTCUSDT", "ETHUSDT")`
+  since v5.2.12; the state in `data/setups_voice_state.json`; docs/TRAIL_SWITCH_PLAN.md). Naming or removing a market
+  there is the owner's decision only.
 
-**The trail voice (built 26 Nov 2026, both switches OFF).** The owner decided the Setups page, the signals and the vault
-move to a trailing-stop book ("Lets switch", "Page and VIP"; docs/TRAIL_SWITCH_PLAN.md, H119). The book is
-`b_trail_setups` (`{"trail": True, "early": True}`): the same `run()`, so the rule above about leaving `b_targets`
-exactly as it was now covers this book too. It is published nowhere until `setups_voice.TRAIL_MARKETS` names a market,
-and nothing of it is sent to the vault until `vault_feed.SEND_TRAIL` is True as well. Both go on together, only on the
-owner's word in this project AND after the AI Trading Bot session confirms an installed vault package that accepts the
-trail bodies (`out/live/trail_book_preview.json`, written every step by `engine15/trail_preview.py`, is the dry run it
-checks; that module never posts). `tests/test_money_path_trail_golden.py` freezes what the vault is told on the trail
-voice; from the day the switches go on it is a golden test like the first one.
+**The trail voice (LIVE for BTC and ETH since think15-v5.2.12, 27 Nov 2026 08:40 UTC).** The owner decided the Setups
+page, the signals and the vault move to a trailing-stop book ("Lets switch", "Page and VIP", "BTC and ETH only", "Yes.
+Any concern"; docs/TRAIL_SWITCH_PLAN.md, H119). The book is `b_trail_setups` (`{"trail": True, "early": True}`): the
+same `run()`, so the rule above about leaving `b_targets` exactly as it was covers this book too, and for BTC and ETH
+it is now the book the vault copies (`setups_voice.TRAIL_MARKETS` and `vault_feed.SEND_TRAIL = True`, vault package
+f7609091 or later). Each coin changed over when its targets setup ended: BTC at 15:15 UTC on 27 Nov (first trail setup
+a short at 16:45, both VIP members joined); ETH waits for its short of 25 Nov 19:30. `vault_feed.py` still holds the
+targets path for every other market and for a coin taken out of `TRAIL_MARKETS`. Tests run with both switches OFF
+(`tests/conftest.py`); the shipped values are read from the source by `tests/shipped_values.py`.
+`tests/test_money_path_trail_golden.py` is a golden test like the first one: never rewritten to make a change pass.
+`engine15/trail_preview.py` (the dry run) writes nothing while `SEND_TRAIL` is on. UNDO: take the coin out of
+`TRAIL_MARKETS` (the changeover back runs by itself); switch `SEND_TRAIL` off only once no vault market is on the trail
+voice, and BEFORE any rollback of the vault below f7609091.
 - `engine15/vault_feed.py`: all of it (the book body, the exit intents, the state in `data/vault_feed_state.json`).
 - `engine15/config.py`: every constant the above read (`idle_max`, `stop_units`, `risk_per_trade`, fees, flip and edge
   thresholds, the release guard, the higher-timeframe bias).
@@ -107,6 +112,9 @@ The list as files is `tools/money_files.txt`. Rules for it:
   a losing first stop on that coin (owner; H68: those entries lost on BTC and ETH in history); the rule is the AI
   Trading Bot session's switch. If the vault is ever rolled back to an older package, switch `SEND_OPENED_BY` off
   FIRST: the older code refuses a book that carries the key.
+- Since 28 Nov 2026 each market in setups.json also carries `bar_age_min` and `stale` (`engine15/feed_watch.py`: three
+  15-minute bars due and missing while the market's whole group is open). The vault body does not read them; the
+  Telegram service sends "Prices stopped" / "Prices back" from them.
 - A restart is short, but a deploy that rebuilds the reading cache (a card or `CFG` change) takes about 15 minutes: the
   book ages, the vault stops joining after 30 minutes, and exits wait. Do it when BTC and ETH are flat or far from an exit.
 - The feed's memory is `data/vault_feed_state.json`; the book's is `data/shadow_state.json`. Losing or rolling back either

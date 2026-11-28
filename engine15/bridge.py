@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """bridge -- 15-minute bars from a second source when the usual feed serves none for an open market. PAPER MARKETS ONLY
-(gold, silver, WTI, Brent: none of them reaches the VIP vault).
+(gold, silver, WTI, Brent, and since 28 Nov 2026 the S&P 500: none of them reaches the VIP vault).
 
 Why (owner, 26 Nov 2026, US Thanksgiving: "Should check on future or other source. The price still moving from my
 end"): Yahoo's chart for GC=F / SI=F / CL=F / BZ=F stopped at midnight New York although the futures traded on and its own
@@ -27,6 +27,14 @@ it always did.
 A source's answer is checked before it is used: every bar on the 15-minute grid, prices positive, high >= low, and the
 bridged move since the anchor not beyond MAX_MOVE (a wrong contract or a broken answer is refused, not appended).
 Sources are tried in order; a failure is one log line and the next step tries again. Nothing here raises.
+
+The S&P 500 (added 28 Nov 2026; docs/FEED_PLAN.md has the numbers). Its sources trade round the clock: Hyperliquid's
+xyz:SP500 follows the index itself, the SPY contracts follow the fund at about a tenth of the index (the scale takes
+that up). Only bars inside the cash session are kept, so the first bridged bar of a day opens where the contract stood
+at 09:30 New York: the overnight move arrives as the opening gap, as it does on the usual feed. Measured from the box
+over 19-27 Nov 2026 against the stored ^GSPC bars (138 pairs of 15-minute returns): correlation 0.998 / 0.998 / 0.997.
+USDJPY has no source here: the best one found (xyz:JPY) follows the level within about 5 basis points, but its
+15-minute returns correlate only 0.79 with the stored ones, under the 0.9 asked for.
 """
 import os
 import time
@@ -49,6 +57,7 @@ SOURCES = {
     "XAGUSD": (("binance", "XAGUSDT"), ("okx", "XAG-USDT-SWAP")),
     "WTI": (("binance", "CLUSDT"), ("okx", "CL-USDT-SWAP")),
     "BRENT": (("hyperliquid", "xyz:BRENTOIL"),),
+    "SPX": (("hyperliquid", "xyz:SP500"), ("okx", "SPY-USDT-SWAP"), ("binance", "SPYUSDT")),
 }
 
 

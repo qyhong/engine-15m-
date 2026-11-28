@@ -408,7 +408,7 @@ crypto replay).
   Target 1 when the rule began: `live.adopt_be_t1(..., half=True)` sets `half_due`, and the half is closed at the
   next bar's open (`T1_LATE`). Journal: `half_closed`; open-trade view: `t1_half*`. Tests: `tests/test_half_t1.py`.
 
-## The trail voice (26 Nov 2026; built, both switches OFF)
+## The trail voice (26 Nov 2026; ON for BTC and ETH since think15-v5.2.12, 27 Nov 2026 08:40 UTC)
 The owner decided the Setups page, the signals and the VIP vault move to a trailing-stop book ("Page and VIP").
 Plan, contract and order: `docs/TRAIL_SWITCH_PLAN.md`; the forward read: H119.
 - The book: `b_trail_setups` in `shadows.CHALLENGERS` (`{"trail": True, "early": True}`), starts flat at its deploy.
@@ -416,13 +416,28 @@ Plan, contract and order: `docs/TRAIL_SWITCH_PLAN.md`; the forward read: H119.
   `published()` is the one rule). `setups.write` moves the state; `signals.py` and the adverse alert read it.
 - The vault: `vault_feed.SEND_TRAIL` (the trail body, `move_stop` per step when tighter, `close`; never `reduce`).
 - The dry run: `engine15/trail_preview.py` writes `out/live/trail_book_preview.json` every step while `SEND_TRAIL` is
-  off. It posts nothing and keeps its own memory inside that file.
+  off (so not since v5.2.12). It posts nothing and keeps its own memory inside that file.
+- Live since v5.2.12: `TRAIL_MARKETS = ("BTCUSDT", "ETHUSDT")`, `SEND_TRAIL = True`. BTC changed over at 15:15 UTC on
+  27 Nov (its first trail setup: SHORT 16:45, entry 60,298.01, stop 62,126.09, both VIP members joined); ETH changes
+  over when its targets short of 25 Nov 19:30 ends. Tests run with both switches off (`tests/conftest.py`); the
+  shipped values are read by `tests/shipped_values.py`.
 - Tests: `test_setups_voice.py`, `test_setups_trail.py`, `test_signals_trail.py`, `test_vault_trail.py`,
   `test_trail_preview.py`, `test_money_path_trail_golden.py` (the frozen record of the trail voice).
-- To switch on (owner's word in both sessions, the AI Trading session's confirmation of an installed vault package and
-  of the page): set `setups_voice.TRAIL_MARKETS` and `vault_feed.SEND_TRAIL`, bump the version with a `VERSION_NOTE`,
-  update the two "switches are off" tests, deploy with `tools/deploy.sh`. Each market changes over by itself when its
-  open targets setup ends; a trail setup already open then is not shown. Going back is the same switch.
+- To take a coin off (owner's word): remove it from `setups_voice.TRAIL_MARKETS`, bump the version, update the two
+  "shipped switches" tests, deploy with `tools/deploy.sh`. It changes back by itself when its open trail setup ends.
+  `SEND_TRAIL` goes off only once no vault market is on the trail voice, and before any vault rollback below f7609091.
+
+## Price feed watch (28 Nov 2026)
+- `engine15/feed_watch.py`: a market is stale when three 15-minute bars are due and missing while its whole group is
+  open (market_calendar hours, holidays and early closes; WTI waits for Brent). Weekends and breaks never count.
+- setups.json: `bar_age_min` and `stale` per market (setups.py). The website can show a badge from `stale`.
+- Telegram (`telegram_notify.feed_stale_update`, on the box, every minute): "Prices stopped" once, "Prices back" once.
+- `tools/trail_check.py` (laptop, read only): the trail side of BTC and ETH: voice, setup, every move_stop made for it
+  and its status, the stop-moved cards; PROBLEM on a refused move or a Setups stop tighter than the last one sent.
+- The laptop's `tools/price_check.py` (scheduled `mind15-price-check`, every 8 h, only while the app is open) still runs
+  and also compares prices with an outside quote.
+- Backup bars: `engine15/bridge.py` (gold, silver, WTI, Brent; see `docs/FEED_PLAN.md` for the other two and a
+  permanent replacement).
 
 ## Open items
 See the task tables and the dated status notes at the end of `docs/CHARTER.md`.

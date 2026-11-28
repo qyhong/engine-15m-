@@ -285,6 +285,7 @@ def test_a_trail_market_armed():
                  "target_1": None, "target_2": None, "t1_taken": False, "held_share": None,
                  "opened_utc": "2026-11-17T02:45:00Z", "price": 101000.0, "price_bar_utc": "2026-11-17T03:15:00Z",
                  "unrealized_usd": 160.0, "unrealized_pct": 0.8, "market_open": True, "next_open_utc": None,
+                 "bar_age_min": 27.3, "stale": False,                  # 27 Nov 2026: feed_watch (one bar due)
                  "edge_with_position_pts": 2.5, "hit_24h_30d_pct": 53.9, "rr_now_t1": None, "rr_now_t2": None,
                  "stop_dist_now_pct": 0.35, "entry_window_open": False, "entry_valid_until_utc": None,
                  "closed": 0, "wins": 0, "realized_usd": 0.0,        # no trade file: what the page showed is nothing yet

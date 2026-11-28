@@ -66,7 +66,7 @@ import re
 import time
 from datetime import datetime, timedelta, timezone
 
-from . import setups_voice
+from . import feed_watch, setups_voice
 from .config import CFG, DATA_DIR, OUT_DIR
 
 BOOK = "b_targets"                      # the one voice (shadows.py); fixed by H53
@@ -503,11 +503,15 @@ def _market(page, sym, asset, view, waiting, now_ms, bars=None, prev=None):
     if bar is None:
         bar = _ms(_get(page, "shadows", "markets", group, "as_of_utc"))
     is_open, next_open = market_hours(sym, now_ms)
+    groups = page.get("markets") if isinstance(page.get("markets"), dict) else {}
+    mates = [a for a in (groups.get(group) or ()) if isinstance(a, str)] if group in groups else [sym]
+    bar_age, stale = feed_watch.view(sym, mates or [sym], bar, now_ms)  # 27 Nov 2026: has this market's feed stopped?
     m = {"symbol": sym, "short": asset.get("short") or sym, "group": group, "side": side,
          "entry": None, "stop": None, "target_1": None, "target_2": None, "t1_taken": False, "held_share": None,
          "opened_utc": None,
          "price": _px(price), "price_bar_utc": _iso(bar), "unrealized_usd": None, "unrealized_pct": None,
-         "market_open": is_open, "next_open_utc": next_open, "edge_with_position_pts": None,
+         "market_open": is_open, "next_open_utc": next_open, "bar_age_min": bar_age, "stale": stale,
+         "edge_with_position_pts": None,
          "hit_24h_30d_pct": _r(_get(page, "horizon_skill", "markets", sym, "24h", "d30", 0)),
          "rr_now_t1": None, "rr_now_t2": None, "stop_dist_now_pct": None,
          "entry_window_open": False, "entry_valid_until_utc": None,

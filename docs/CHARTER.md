@@ -1009,3 +1009,18 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   coins are "pending" in `data/setups_voice_state.json`: they keep their open targets setups (BTC short 27 Nov 03:30,
   ETH short 25 Nov 19:30, both FORCED) until those end, then change over. The trail dry-run file stops updating (it
   runs only while `SEND_TRAIL` is off). The paper book `b_no_forced` started (ETH short, the others flat).
+- **BTC changed over to the trail voice** (27 Nov 2026 15:15 UTC, after its targets short took Target 2 at 15:00,
+  +$385.54, +1.58R). First trail setup: SHORT 16:45, entry 60,298.01, stop 62,126.09, trailing from 58,469.93,
+  opened_by ENTER; the vault stored it without a refusal and both VIP members joined (AI Trading session's report). The
+  Setups page shows it with "Exit: trailing stop" and no target. ETH still waits for its short of 25 Nov 19:30.
+- **The owner's ten tasks of 28 Nov 2026** ("any 10 tasks we can do today": "ok let's do this 10"). Built, not yet
+  deployed: (1) a server-side "Prices stopped" / "Prices back" Telegram alert (`telegram_notify.feed_stale_update`);
+  (2) `bar_age_min` and `stale` per market in setups.json (`engine15/feed_watch.py`: three bars due and missing while
+  the whole group is open; the page badge is the AI Trading session's); (3) the S&P 500 in `bridge.SOURCES`
+  (Hyperliquid xyz:SP500, OKX and Binance SPY contracts; correlation 0.997-0.998 on 19-27 Nov); USDJPY has no backup
+  (best source 0.79, under the 0.9 asked for: the owner's choice); (6) `tools/trail_check.py`, a read-only check of the
+  trail side for the first stop move; (7) CLAUDE.md and HANDOFF.md say the trail voice is live; (8) `docs/FEED_PLAN.md`
+  (keep Yahoo, the exchange contracts as the standing second feed, record them beside Yahoo for a month before any
+  replacement); (9) H121 registered (do the post-mortem's best and worst cards stay that way; graded 29 Dec);
+  (4, 5, 10) checks: the Setups page and the Telegram log show the trail trade correctly; the new paper books have 1-3
+  trades each, far too few to read.

@@ -121,6 +121,8 @@ TOKEN_FILE = os.environ.get("MIND15_TELEGRAM_TOKEN_FILE", os.path.join(ROOT, "se
 STATE = os.path.join(DATA_DIR, "telegram_state.json")
 PAGE = os.path.join(OUT_DIR, "live", "page.json")
 SCORE = os.path.join(OUT_DIR, "live", "scoreboard.json")
+SETUPS = os.path.join(OUT_DIR, "live", "setups.json")                 # read only: each market's "stale" key (feed_watch.py)
+SETUPS_OLD_MIN = 40                                                   # an older Setups file is not read for the price alert
 REFIT_LOGS = (os.path.join(ROOT, "research", "out", "rl", "forward5", "update.log"),
               os.path.join(ROOT, "research", "out", "rl", "forward6", "update.log"))
 API = "https://api.telegram.org/bot%s/%s"
@@ -392,6 +394,53 @@ def events(prev, cur, page, now=None):
         if age <= STALE_MIN and prev.get("stale"):
             ev.append(u"%s <b>Engine back</b>\nPage updated %s UTC." % (OK, page["generated_utc"][11:16]))
     return ev
+
+
+# ------------------------------------------------------------------ prices stopped (setups.json "stale", feed_watch.py)
+# Owner, 27 Nov 2026 ("any 10 tasks", task 1): an alert from the server itself when a market's prices stop while it is
+# open, so an outage like gold, silver and oil on 26-27 Nov is not missed while the laptop sleeps. The rule is
+# feed_watch.py's (three bars due and missing while the market's whole group is open), written by the engine into
+# setups.json each step; this only reads it. One message per check for every market that stopped, one when it is back.
+# A Setups file older than SETUPS_OLD_MIN is not read: "Engine quiet" covers an engine that stopped.
+def feed_stale_update(prev, doc, now):
+    """-> (the new state {symbol: the price_bar_utc it stopped at}, one message or None)."""
+    prev = dict(prev) if isinstance(prev, dict) else {}
+    if not isinstance(doc, dict) or not isinstance(doc.get("markets"), list):
+        return prev, None
+    try:
+        gen = datetime.strptime(str(doc.get("generated_utc"))[:19], "%Y-%m-%dT%H:%M:%S").replace(tzinfo=timezone.utc)
+    except ValueError:
+        return prev, None
+    if (now - gen).total_seconds() / 60.0 > SETUPS_OLD_MIN:
+        return prev, None
+    cur, gone, back = {}, [], []
+    for m in doc["markets"]:
+        sym = m.get("symbol") if isinstance(m, dict) else None
+        if not isinstance(sym, str):
+            continue
+        if m.get("stale") is True:
+            cur[sym] = prev.get(sym) or m.get("price_bar_utc")
+            if sym not in prev:
+                gone.append(m)
+        elif m.get("stale") is False and sym in prev:
+            back.append(m)
+        elif sym in prev:                                             # cannot be told now: keep what we had
+            cur[sym] = prev[sym]
+    L = []
+    if gone:
+        L.append(u"%s <b>Prices stopped</b>" % WARN)
+        for m in gone:
+            age = m.get("bar_age_min")
+            L.append(u"• %s · no new bar since %s UTC%s while the market is open" % (
+                _esc(_mk(m["symbol"])), str(m.get("price_bar_utc") or "?")[11:16],
+                u" (%.0f min)" % age if isinstance(age, (int, float)) else ""))
+        L.append(u"The engine waits for prices on these markets. Where a backup source exists it fills in by itself.")
+    if back:
+        L.append(u"%s <b>Prices back</b>" % OK)
+        for m in back:
+            L.append(u"• %s · new bars again (last %s UTC)" % (
+                _esc(_mk(m["symbol"])), str(m.get("price_bar_utc") or "?")[11:16]))
+    return cur, ("\n".join(L + [u"<i>paper only · an alert, nothing changes</i>"]) if L else None)
 
 
 # ------------------------------------------------------------------ data health (the page's cards) and live calibration
@@ -1840,6 +1889,12 @@ def check(st, tok, send=True, now=None):
             ev.append(feeds)
     except Exception as e:                                            # a page shaped unexpectedly never stops the other alerts
         print(time.strftime("%Y-%m-%d %H:%M:%S"), "data health failed: %s" % type(e).__name__, flush=True)
+    try:                                                              # prices stopped / back (setups.json, read only)
+        st["feed_stale"], card = feed_stale_update(st.get("feed_stale"), _load(SETUPS), now)
+        if card:
+            ev.append(card)
+    except Exception as e:                                            # never stops the other alerts
+        print(time.strftime("%Y-%m-%d %H:%M:%S"), "price feed check failed: %s" % type(e).__name__, flush=True)
     free = disk_free_gb()
     if free is not None:                                              # server health: the data disk filling up
         if free < DISK_LOW_GB and not st.get("disk_low"):

@@ -151,6 +151,39 @@ def test_no_source_is_one_line_and_nothing_is_written_and_it_never_raises(store,
 
 def test_every_bridged_market_is_a_paper_market():
     from engine15 import vault_feed
-    assert set(bridge.SOURCES) == {"XAUUSD", "XAGUSD", "WTI", "BRENT"} == set(extdata.ROLL_ASSETS)
+    assert set(bridge.SOURCES) == {"XAUUSD", "XAGUSD", "WTI", "BRENT", "SPX"} == set(extdata.ROLL_ASSETS) | {"SPX"}
     assert not set(bridge.SOURCES) & set(vault_feed.ALLOWED)
     assert all(src in bridge.FETCH for cands in bridge.SOURCES.values() for src, _sym in cands)
+    assert all(a in extdata.MARKETS for a in bridge.SOURCES)
+
+
+def test_the_index_is_bridged_inside_cash_hours_only_and_the_night_arrives_as_the_opening_gap(store):
+    close = calendar.timegm(time.strptime("2026-11-24 20:45", "%Y-%m-%d %H:%M"))      # the last bar of Tuesday's session
+    opens = calendar.timegm(time.strptime("2026-11-25 14:30", "%Y-%m-%d %H:%M"))      # Wednesday 09:30 New York
+    ts = [(close - k * BAR) * 1000 for k in range(3, -1, -1)]
+    c = [7290.0, 7294.0, 7298.0, 7300.0]
+    extdata._save("SPX", extdata._tidy("SPX", extdata._frame(ts, c, [x + 2 for x in c], [x - 2 for x in c], c, [9.0] * 4)))
+    night = (opens - close) // BAR                               # the contract trades all night: 71 bars to the open
+    rows = src(night + 3, start=close, first=730.0, step=0.01)   # a fund contract at a tenth of the index
+    cash = (lambda a, t: True, lambda a, idx: np.asarray([int(x.value // 1000000) >= opens * 1000 for x in idx]))
+    calls, said = [], []
+
+    def broken(symbol, start_ms, end_ms):
+        calls.append(symbol)
+        raise OSError("down")
+
+    def fund(symbol, start_ms, end_ms):
+        calls.append(symbol)
+        return [r for r in rows if start_ms <= r[0] <= end_ms]
+
+    df, n = bridge.fill("SPX", log=said.append, now=opens + 3 * BAR + 30, is_open=cash, alive=DEAD,
+                        fetch={"hyperliquid": broken, "okx": fund, "binance": broken})
+    assert calls == ["xyz:SP500", "SPY-USDT-SWAP"] and n == 3 and len(df) == 7
+    assert [int(x.value // 1000000) for x in df.index[4:]] == [(opens + k * BAR) * 1000 for k in (0, 1, 2)]
+    ratio = 7300.0 / 730.0
+    assert df["open"].iloc[4] == pytest.approx((730.0 + (night - 1) * 0.01) * ratio, abs=0.01)  # the night's move, at the open
+    assert df["close"].iloc[-1] == pytest.approx((730.0 + (night + 2) * 0.01) * ratio, abs=0.01)
+    assert (df["volume"].iloc[4:] == 0).all() and extdata.ohlc_violations(df) == 0
+    assert said == ["SPX: 3 bars bridged from okx SPY-USDT-SWAP (the usual feed served none since 21:00 UTC); "
+                    "scaled by %.6f" % ratio]
+    assert bridge.bridged_last("SPX") == (opens + 2 * BAR) * 1000 and bridge.bridged_last("XAUUSD") is None

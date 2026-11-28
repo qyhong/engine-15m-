@@ -7814,3 +7814,38 @@ little in the past, because that card's dominance is new. Nothing follows from H
 its deploy, with think15-v5.2.12. NOT passed on history; paper only; it never reaches the page, the signals or the
 vault. Read on BTC and ETH at 30 closed trades against `b_targets` over the same days (scoreboard row and its
 verdict); the other six markets are shown but not read (without forced entries they mostly stay flat).
+
+## H121. Do the cards the post-mortem ranked best and worst on BTC and ETH stay that way, forward? (registered 28 Nov 2026, about 02:40 UTC, before any session of the forward window existed)
+
+**Prompted by:** the card post-mortem of 26 Nov (`research/cards_postmortem.py`, `research/out/cards_postmortem/`; live
+sessions 10-26 Nov 2026, descriptive). Some cards' leans went with the next 24 hours (rank correlation up to +0.41),
+others against it (down to -0.31). On two weeks of one falling market that can be pure chance. The owner, in this
+project, picked "a registered test for the good/bad cards" from a list of tasks (27 Nov: "ok let's do this 10").
+Research only: nothing in `engine15/`, the books, the trust or the vault changes, whatever the result.
+
+**Fixed now, from that post-mortem's results.json** (cards that leaned both up and down on at least 10 days; ranked by
+ic_24h, the rank correlation of the lean with the next 24-hour move):
+- BTCUSDT good: Liquidation pressure (proxy) +0.408; Working strategies +0.340; Fear and Greed +0.327; News and economic
+  events +0.327; Spot vs perp leadership +0.273. Bad: Bitfinex margin positions -0.159; Regime -0.167; Pivot points (daily
+  and weekly) -0.189; Volume profile (session and 7 days) -0.200; Coinbase premium -0.311.
+- ETHUSDT good: RSI divergence (15m to 4h) +0.415; News and economic events +0.349; Fear and Greed +0.245; Working
+  strategies +0.207; Market breadth and ETH/BTC +0.200. Bad: Fibonacci retracement -0.268; Bitfinex margin positions
+  -0.273; Coinbase premium -0.284; Pivot points (daily and weekly) -0.300; Perp basis and premium -0.302.
+
+**Window.** Live sessions (journal/<day>.jsonl on the box) from 2026-11-28 00:00 UTC to 2026-12-28 00:00 UTC; graded
+once the last 24-hour outcome is known (29 Dec). Nothing in it has happened at registration. A card renamed or removed
+in the window is reported as missing and left out of its set's mean (said, not replaced).
+
+**Measure.** The same arithmetic as the post-mortem (its own functions): per coin and card, ic_24h over the window's
+sessions where the card leaned. Set score = the plain mean of its cards' ic_24h. Spread = good score minus bad score.
+Uncertainty: a day-block bootstrap (resample whole UTC days of the window, 2,000 draws, seed 121) of the spread with
+both coins pooled.
+
+**Bar, fixed now.** "The ranking persisted" only if ALL hold: (1) the good set's score is above zero on BOTH coins;
+(2) the spread is above zero on BOTH coins; (3) the pooled spread's 90% bootstrap interval lies above zero. Anything
+else: "the ranking did not persist" (what pure chance would mostly give). Reported whatever it shows, with the Lead's
+own ic_24h and the "always down" drift beside it as yardsticks.
+
+**What follows from it.** Nothing by itself. A pass would be a reason to propose, to the owner, a card-trust change or
+a shadow mind that weighs these cards differently (a new engine version, the owner's word); a fail closes the idea of
+reweighting cards from the post-mortem.
