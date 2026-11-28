@@ -439,6 +439,18 @@ Plan, contract and order: `docs/TRAIL_SWITCH_PLAN.md`; the forward read: H119.
 - Backup bars: `engine15/bridge.py` (gold, silver, WTI, Brent; see `docs/FEED_PLAN.md` for the other two and a
   permanent replacement).
 
+## H122 commodity cards (28 Nov 2026; paper only, NOT passed)
+- Registration and rules: research/HYPOTHESES.md H122 (and its code note). Owner: "Yes, build all six" (separate paper
+  test, the switch calendar first). Built: C1 release impulse, C2 leader lag, C5 time-of-week drift. To build: C3 weekly
+  reopen gap, C4 fix and settlement fade, C6 curve momentum (oil).
+- `engine15/cards6.py`: the votes (pure functions) and the mind mixing; `engine15/cards6_books.py`: the five books as
+  `shadows.MINDS` entries (card books first, then m_cards6 / m_cards6_nf); kill state in `sst["cards6"]`
+  (`data/shadow_state.json`). Metals and energy groups only.
+- `engine15/rolls.py`: contract switches seen (CL, BZ 18 Nov; GC, SI 25 Nov 2026) and forecast by rule (next: ES 10 Dec,
+  CL and BZ 17 Dec). Add each switch seen to `SEEN`. The stored bars carry the past switches' steps unadjusted (the
+  owner chose to leave history as it is, 28 Nov).
+- Tests: `tests/test_cards6.py`, `tests/test_rolls.py`.
+
 ## Open items
 See the task tables and the dated status notes at the end of `docs/CHARTER.md`.
 - **Bars note (15 Nov 2026):** `data.load("BTCUSDT"/"ETHUSDT")` returns Binance SPOT 15m bars (the stored bar matches the

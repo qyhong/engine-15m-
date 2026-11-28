@@ -31,6 +31,11 @@ The Setups copy `b_rebound` (`engine15/rebound_book.py` and the rule key `reboun
 rule A trigger a short or flat book goes long at the next open (H107's trade) and the Setups rule is not consulted
 while that long lives. Started on the owner's word although history does not support the rule; its state is its own key
 in `data/shadow_state.json`, and it never reaches the vault.
+The H122 commodity cards (`engine15/cards6.py`, 28 Nov 2026; paper only, NOT passed; owner: "Yes, build all six") vote on
+gold, silver, WTI and Brent outside the live engine (not in `sources.MODULES`); their five books (`engine15/cards6_books.py`:
+c6_c1, c6_c2, c6_c5 per card, the minds m_cards6 and m_cards6_nf) are `shadows.MINDS` entries and never reach the page's
+Setups, the signals or the vault. `engine15/rolls.py` is the futures contract-switch calendar they read (the stored
+bars are NOT adjusted at a switch). C3, C4 and C6 are still to be built.
 The engine version is `CFG["version"]` in `engine15/config.py` (think15-v5.2.12 on 27 Nov 2026); what each version changed
 is in `VERSION_NOTE` there and in THOUGHT_PROCESS.md "Now". It runs on the Singapore box, not on this laptop (HANDOFF.md).
 `out/live/scoreboard.json` judges every book on live trades only.

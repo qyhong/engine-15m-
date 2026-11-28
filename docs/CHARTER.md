@@ -1024,3 +1024,9 @@ max DD 79%); momentum -100%; random -95% +- spread. Waiting for the owner's revi
   replacement); (9) H121 registered (do the post-mortem's best and worst cards stay that way; graded 29 Dec);
   (4, 5, 10) checks: the Setups page and the Telegram log show the trail trade correctly; the new paper books have 1-3
   trades each, far too few to read.
+- **H122, the six commodity cards: the first three built** (28 Nov 2026). The owner, prompted here: "Yes, build all six"
+  (separate paper test, the contract-switch calendar first; the AI Trading session's plan), "Leave it out" (USDJPY's
+  rough backup source), "Leave history as is" (the oil steps of 18 Nov). Found first: Brent's feared 30 Nov switch had
+  already happened on 18 Nov (WTI the same day, gold and silver 25 Nov), each a step left unadjusted in the stored bars.
+  Built: `engine15/rolls.py` (the switch calendar), H122 registered, `engine15/cards6.py` C1 / C2 / C5 and five paper
+  books in `shadows.MINDS`. C3, C4, C6 to come. Paper only; the vault, the Setups page and the live cards unchanged.

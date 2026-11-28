@@ -7849,3 +7849,84 @@ own ic_24h and the "always down" drift beside it as yardsticks.
 **What follows from it.** Nothing by itself. A pass would be a reason to propose, to the owner, a card-trust change or
 a shadow mind that weighs these cards differently (a new engine version, the owner's word); a fail closes the idea of
 reweighting cards from the post-mortem.
+
+## H122. Six commodity cards for gold, silver, WTI and Brent, as a separate paper test (registered 28 Nov 2026, about 04:30 UTC, before any H122 card code was written or any card vote was computed)
+
+**Prompted by:** on gold, silver, WTI and Brent the engine's Lead seldom reaches the 5-point bar (15-28 Nov: |Lead| >= 5
+in 0% of about 800 sessions on each; >= 3 in 24-30% metals, 7-13% oil), so the books there are mostly flat or forced.
+The AI Trading session's planner proposed six cards built for these markets (its plan, 28 Nov 2026). The owner, in this
+project, asked directly: "Yes, build all six"; separate paper test, the contract-switch calendar first (owner's choices
+relayed by the AI Trading session and confirmed here). Paper only: nothing in the live engine's cards, trust, books, the
+Setups page, the signals or the vault changes, whatever the result.
+
+**Seen before this registration (written honestly).** H12/H48 (session-range breaks), H50 (post-release drift, unstable),
+H51 (twin divergence), H112 (a lower bar per market): no pass. The planner's figures above. Brent's curve m1/m2 from Yahoo
+since 2 Nov (S 3.0% -> 5.1%). No vote, hit rate or return of any of the six cards below has been computed by anyone.
+
+**Where it runs.** `engine15/cards6.py` (outside `sources.MODULES`: the live engine never reads it) computes each card's
+vote at every 15-minute close of XAUUSD, XAGUSD, WTI and BRENT from what is known at that close (closed bars only, 1-hour
+values through `data.htf_on_15`). The books are shadow MINDS (`shadows.MINDS`, the m_regime_trust pattern: advanced after
+every other book, inside a try/except, writing only their own state). Contract switches: `engine15/rolls.py` (built
+first; measured 28 Nov: CL and BZ switched 18 Nov, GC and SI 25 Nov, none adjusted).
+
+**Votes.** Each card says v in {-1, -0.5, 0, +0.5, +1} (0 = silent). ATR1h = the engine's own `atr1h` reading.
+- **C1 Release impulse.** WTI and Brent on the EIA weekly crude report (Wednesday 10:30 New York; Thursday 11:00 in a
+  week with a US federal holiday Monday to Wednesday; history from calhistory); gold and silver on FOMC, CPI, PCE and the
+  advance GDP (history from calhistory, forward from the engine's live calendar; NFP not used). R = the 15-minute bar in
+  which the release falls. I = (close of R+1 - open of R) / ATR1h at the close of R-1. Full |I| >= 1.5, half 1.0 to 1.5,
+  sign of I; it speaks at the closes of R+1 .. R+16 and goes silent for good on a close back beyond R's open.
+- **C2 Leader lag.** Gold and silver led by USDJPY (Yahoo spot, the engine's own fx bars); WTI and Brent led by the S&P
+  e-mini (ES=F 15m, the overnight card's file). Over the last 20 x 92 bars with both markets present: beta and rho of the
+  asset's 15m log returns on the leader's; z_L = the leader's latest 15m return over its standard deviation there.
+  When |rho| >= 0.20 and |z_L| >= 2.0: E = beta x the leader's return, A = the asset's return on the same bar; A/E <= 0.25
+  full, <= 0.5 half, in the direction of E; it speaks at that close and the next 3, and goes silent once the asset's move
+  since that bar's open reaches 0.8 E. Silent when either bar is missing, within 1 business day of a contract switch of
+  the asset or of ES. Deviation from the plan, said now: no BoJ / Japan MoF window (there is no calendar for them here).
+- **C3 Weekly reopen gap** (built after the calendar; all four). G = (first open after the weekend - last close before) /
+  ATR1h; fade toward the fill: half 0.75 to 1.5, full >= 1.5; up to 16 bars; silent on the fill, or if the price runs 0.5
+  ATR1h further beyond within 4 bars; silent within 1 business day of a switch and on OPEC+ weekends.
+- **C4 Fix and settlement fade** (later). Gold the LBMA PM fix 15:00 London; silver LBMA 12:00 London; WTI NYMEX settle
+  14:30 New York; Brent ICE settle 19:30 London. M = the 45-minute run-in / ATR1h; fade: half 1.0 to 1.5, full >= 1.5;
+  4 bars; silent beyond the run-in's extreme.
+- **C5 Time-of-week drift** (all four). Slot = (weekday, half hour, New York time) of the bar's close. From the 104 weeks
+  before (samples whose 4-hour outcome is complete): the mean and t of the next 4-hour log return from that slot. Full
+  |t| >= 3.0, half 2.5 to 3.0, and only when both 52-week halves have the same sign; sign of the mean. Samples within 1
+  business day of a switch, on a holiday or in a US clock-change week are left out of the table; the card is silent in
+  those times itself.
+- **C6 Curve momentum** (oil, later). S = (m1 - m2) / m2 in % a month (the engine's own curve file); dS5 over 5 trading
+  days, the same contract pair only; long half dS5 >= +0.5, full >= +1.0; short the mirror.
+
+**How a card enters the minds.** Each speaking card is a fixed voice with share 0.10 and odds (up, down) = (0.35 + 0.10v,
+0.35 - 0.10v), neither 0.30; with k cards speaking, mind odds = (1 - 0.10k) x the live engine's odds + 0.10 x each card's.
+So a full card moves the Lead by 2.0 points (half 1.0); one card alone cannot clear 5 points.
+
+**Books (all paper, all forward only, starting flat at their deploy).**
+- `m_cards6`: the Setups rule (`{"targets": True, "early": True}`) on the mind odds, against `b_targets` on the same four
+  markets and days. `m_cards6_nf`: the same with `idle_max` out of reach, against `b_no_forced`.
+- One book per card, `c6_c1` .. `c6_c6`: opens at the next bar's open when the card turns from silent to a side or flips;
+  the engine's stop (stop_units x barrier x ATR1h from the fill); closes at the stop or at the next open after the card
+  leaves that side; 2% risk per trade, the engine's fees and leverage caps.
+
+**Kill rules (paper muting only; un-muting needs the owner's word).** K1: a card book's sum <= -4.0R: the card is muted in
+both minds. K2: from 12 trades, mean R < 0 and win share below break-even: muted. K3: the card silent for want of data on
+more than 10% of open bars, or speaking on more than 40% of them (60% for C5 and C6): paused. K4: |rho| >= 0.70 between
+the card's votes and the live "levels" or "StochRSI" card's leans over its speaking bars: muted (read at each checkpoint
+from the journal). M1: a mind book behind its yardstick by 6R or more: stopped. Checkpoints every 6 trades of a book.
+
+**Bar, fixed now (each card book, and each mind against its yardstick, at 30 closed trades).** "Passes" only if ALL
+hold: mean R above zero in both halves of its trades (in time order); sum of R above zero; worst fall of its marked
+equity no deeper than its yardstick's over the same days (a card book's yardstick: `b_targets` on its markets). Anything
+else: "does not pass". A muted or stopped book is graded as it stood. Reported whatever they show.
+
+**What follows from it.** Nothing by itself. A passing card is proposed to the owner one at a time as a new card of the
+live engine (a new version); a passing mind is a reason to propose that card set. Either needs the owner's word.
+
+**H122, code (28 Nov 2026, written before any forward trade).** `engine15/rolls.py` (the switch calendar, measured 28 Nov;
+WTI and Brent switched 18 Nov, gold and silver 25 Nov, the S&P futures' next 10 Dec), `engine15/cards6.py` (C1, C2, C5)
+and `engine15/cards6_books.py` (c6_c1, c6_c2, c6_c5, m_cards6, m_cards6_nf in `shadows.MINDS`). Two details the
+registration did not fix, fixed in the code now: C2 needs at least 500 valid return pairs in its window (fewer: silent);
+C5 needs at least 26 samples in each 52-week half (fewer: silent). Said honestly: the no-look-ahead test computes the
+three cards' votes on the stored gold and WTI bars; it checks only that votes before a cut stay the same and that some
+vote exists. No hit rate or return of any card was computed or looked at. Measured on pure noise (synthetic): C5 speaks
+on 3-10% of bars by chance (240 slots; the multiple-testing risk H122 named; K3 pauses it above 60%). The card books'
+Telegram trade alerts are quiet (alerts at 30 trades and verdicts only); the minds' are not.

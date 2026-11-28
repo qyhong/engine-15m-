@@ -31,6 +31,8 @@ Promotion is decided later on forward results (docs/CHARTER.md), never here.
     m_swing_4h     the 1h / 4h minds of engine15/intraday.py (H19): enter when the expected value after
                    costs clears the margin (1h: 0.05 R, 4h: 0), stop at structure or 1 barrier, target
                    1.5R (1h) / 1R (4h), out at the horizon; flat is allowed (no mandate). intraday.run_swing is its book.
+    c6_c1 c6_c2 c6_c5, m_cards6, m_cards6_nf   H122 (28 Nov 2026): the commodity cards' paper books, shadow MINDS (below,
+                   engine15/cards6_books.py) on gold, silver, WTI and Brent only. NOT passed, paper only.
     m_regime_trust H108 (RL idea R3), a shadow MIND (MINDS below, engine15/regime_trust.py): the main rule, unchanged, on
                    odds mixed with card trust kept per regime bucket (trend / range x high / low volatility). NOT
                    passed, paper only. Not a rule of run(): advanced after every book here, guarded.
@@ -155,6 +157,15 @@ try:
     from . import rebound_book  # noqa: E402  (it imports shadows only inside its functions)
     MINDS[rebound_book.NAME] = {"title": rebound_book.TITLE, "module": rebound_book, "label": rebound_book.LABEL}
 except Exception:                                                # ... nor on this book
+    pass
+try:
+    # H122 (registered 28 Nov 2026; owner: "Yes, build all six"): the commodity cards on gold, silver, WTI and Brent.
+    # Five paper books (engine15/cards6_books.py): one per built card (c6_c1, c6_c2, c6_c5), then the two minds
+    # (m_cards6, m_cards6_nf). NOT passed, paper only; the live engine, the Setups page and the vault never read them.
+    from . import cards6_books  # noqa: E402  (it imports shadows only inside its functions)
+    for _b in cards6_books.BOOKS:
+        MINDS[_b.NAME] = {"title": _b.TITLE, "module": _b, "label": _b.LABEL}
+except Exception:                                                # ... nor on these
     pass
 TARGET_COLS = ["fib_1h_dir", "fib_1h_t1_px", "fib_1h_t2_px", "fib_4h_dir", "fib_4h_t1_px", "fib_4h_t2_px",
                "reach_24h_med_pct"]

@@ -189,7 +189,8 @@ def disk_free_gb(path=None):
     except Exception:
         return None
 SUMMARY_UTC = (0, 0)
-QUIET = ("p1_", "p2_", "p3_", "p6_vwap", "p7_session", "p8_", "p9_", "p10_", "p11_", "p12_")
+QUIET = ("p1_", "p2_", "p3_", "p6_vwap", "p7_session", "p8_", "p9_", "p10_", "p11_", "p12_",
+         "c6_")                                                     # H122 card books: alerts at 30 trades only
 FORWARD = ("playbook4", "playbook5", "playbook6", "playbook7")
 # "p9_" also covers the H115 books p9_rebound_a / p9_rebound_b (playbook9): their closes get their own card with the
 # trade's R (capit_check), not the generic one; 30 trades and a verdict change still alert like any book.
@@ -260,6 +261,7 @@ NAMES = {"main": "Main engine", "b_trail": "B trail (shadow)", "b_targets": "B t
          "b_trail_setups": "Setups trail (shadow)", "b_no_forced": "No forced entries (shadow, NOT passed)",
          "b_trend30": "Trend 30d (shadow)", "b_wait_stop": "Wait after stop (shadow)",
          "b_rebound": "Setups + rebound long (shadow, NOT passed)",
+         "m_cards6": "Commodity cards mind (H122, NOT passed)", "m_cards6_nf": "Commodity cards mind, no forced (H122)",
          "b_ema20_1h_t1": "EMA20 trail (shadow)", "b_sma20_1h_t1": "SMA20 trail (shadow)", "b_be_t1": "Break-even trail",
          "a_pullback": "A pullback (shadow)", "h3_flip_limit": "H3 flip limit", "h5_damp": "H5 damped", "v4": "v4 (old rules)",
          "y_4h": "4h yardstick", "y_1d": "Daily yardstick", "m_swing_1h": "1h swing mind", "m_swing_4h": "4h swing mind",
