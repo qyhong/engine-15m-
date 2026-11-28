@@ -31,13 +31,20 @@ REMOTE_DIR = "/var/www/aitrading/mind15"
 REMOTE = ("cat > %(d)s/.page.json.tmp && mv -f %(d)s/.page.json.tmp %(d)s/page.json && "
           "echo PUSHED $(md5sum < %(d)s/page.json | cut -d' ' -f1)") % {"d": REMOTE_DIR}
 PAGE = os.path.join(OUT_DIR, "live", "page.json")
+# the other files allowed beside page.json (fixed names only: the remote command is built from this list, never from input)
+EXTRA = ("page.zh.json",)          # 28 Nov 2026: the Chinese map of page.json (engine15/zh_live.py)
+
+
+def _remote(name):
+    return ("cat > %(d)s/.%(n)s.tmp && mv -f %(d)s/.%(n)s.tmp %(d)s/%(n)s && "
+            "echo PUSHED $(md5sum < %(d)s/%(n)s | cut -d' ' -f1)") % {"d": REMOTE_DIR, "n": name}
 
 
 def enabled():
     return os.environ.get("ENGINE15_PUSH", "0") == "1"
 
 
-def push(path=PAGE, timeout=60):
+def push(path=PAGE, timeout=60, _remote_cmd=None):
     """-> (ok, message). One ssh connection; ok only on the server's own md5 confirmation."""
     if not enabled():
         return False, "push is off (set ENGINE15_PUSH=1 to switch it on)"
@@ -45,7 +52,7 @@ def push(path=PAGE, timeout=60):
         body = fh.read()
     local = hashlib.md5(body).hexdigest()
     try:
-        r = subprocess.run(["ssh", "-i", KEY, "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", HOST, REMOTE],
+        r = subprocess.run(["ssh", "-i", KEY, "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", HOST, _remote_cmd or REMOTE],
                            input=body, capture_output=True, timeout=timeout)
     except Exception as e:
         return False, "push failed: %r" % (e,)
@@ -55,6 +62,13 @@ def push(path=PAGE, timeout=60):
         return True, "pushed %d bytes, md5 %s" % (len(body), local)
     return False, "push NOT confirmed (exit %s): %s %s" % (r.returncode, confirm or "no confirmation line",
                                                            r.stderr.decode("utf-8", "replace")[-200:].strip())
+
+
+def push_file(path, name, timeout=60):
+    """Push one of the EXTRA files (same rules as page.json). -> (ok, message)"""
+    if name not in EXTRA:
+        return False, "push refused: %s is not one of %s" % (name, ", ".join(EXTRA))
+    return push(path, timeout=timeout, _remote_cmd=_remote(name))
 
 
 def main(argv):

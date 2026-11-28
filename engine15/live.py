@@ -541,9 +541,28 @@ def step(log=print, fetch=True):
     if push.enabled():                                             # to the web server, only when switched on
         log("web push: %s" % push.push(page)[1])
         tm.lap("push")
+    start_zh(log)                                                  # the Chinese maps, in their own process (zh_live.py)
     tm.say(log, "step")
     log("step done in %.0fs: %d entries ; page %s" % (time.time() - t0, len(out), page))
     return out
+
+
+def start_zh(log=print):
+    """Start engine15.zh_live as its own process and do not wait (owner, 28 Nov 2026: the site's Chinese pages fully
+    translated). Nothing happens without the key file; a failure to start is one log line and stops nothing."""
+    try:
+        from . import zh_live
+        if not zh_live.ready():
+            return False
+        import subprocess
+        import sys
+        subprocess.Popen([sys.executable, "-m", "engine15.zh_live"], cwd=os.path.dirname(os.path.dirname(__file__)),
+                         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                         start_new_session=True)
+        return True
+    except Exception as e:
+        log("zh: not started (%r)" % (e,))
+        return False
 
 
 def parallel_workers():

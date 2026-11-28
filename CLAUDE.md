@@ -140,4 +140,5 @@ The list as files is `tools/money_files.txt`. Rules for it:
 - Closed bars only; anything computed on 1h/4h/1d bars goes through `data.htf_on_15`.
   `tests/test_engine.py::test_evidence_never_reads_the_future` must stay green.
 - The web tab on alphaprediction.ai/aitrading is deployed by the AI Trading Bot session's
-  page pipeline (`C:\tmp\kronos\aitrading-pages`), on the owner's word. This project only writes `page.json`.
+  page pipeline (`C:\tmp\kronos\aitrading-pages`), on the owner's word. This project only writes `page.json`
+  (and, since 28 Nov 2026, the Chinese maps `*.zh.json` beside its files: `engine15/zh.py`, HANDOFF.md).

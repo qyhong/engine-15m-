@@ -451,6 +451,23 @@ Plan, contract and order: `docs/TRAIL_SWITCH_PLAN.md`; the forward read: H119.
   owner chose to leave history as it is, 28 Nov).
 - Tests: `tests/test_cards6.py`, `tests/test_rolls.py`.
 
+## Chinese maps for the website (28 Nov 2026)
+
+Owner: "Ensure all other locale in the website are fully translate", then "Automatic" and "Translate them" (headlines too).
+Every label on the site was already in 繁中/简中; what stayed English was the text inside the data files.
+`engine15/zh.py` (self-contained: copy it unchanged to other jobs) writes `X.zh.json` beside a data file:
+`{"schema": 1, "generated_utc", "source_md5", "strings", "translated", "zh-TW": {english: chinese}, "zh-CN": {...}}`.
+Strings are cut at "; " and " · ", numbers are masked ("lead of [[0]] pts"), each pattern is translated once by Claude
+(`claude-opus-5-5`, effort low, server-side fallbacks, JSON schema output) and kept in a cache (`data/zh_cache.json`).
+Checks: every [[n]] kept, Chinese present, no banned word. Limits: 600 new patterns a run, 400k output tokens a UTC day.
+Keys use the brand in place of the model's old name (the Mind 15 page renames it before reading page.json).
+`engine15/zh_live.py` runs after each step as its own process (`live.start_zh`, never waited for) and only when the key
+file exists: `/etc/mind15/anthropic.key` (owner places it, root:mind15 0640; read at run time, never printed). It writes
+page/setups/stocks/b_trail_book/landing `.zh.json` in out/live, copies the four Setups-side ones into
+MIND15_SETUPS_WEB_DIR, and pushes `page.zh.json` with `push.push_file` (fixed names in `push.EXTRA`). Log: out/live/zh.log.
+Needs the `anthropic` package in /data/venv. The pages read the maps on branch `zh-data-maps` of the page repo (the AI
+Trading Bot session merges and deploys); nginx needs the new names served beside their files.
+
 ## Open items
 See the task tables and the dated status notes at the end of `docs/CHARTER.md`.
 - **Bars note (15 Nov 2026):** `data.load("BTCUSDT"/"ETHUSDT")` returns Binance SPOT 15m bars (the stored bar matches the
