@@ -141,10 +141,10 @@ def test_live_run_writes_maps_and_web_copies(tmp_path, monkeypatch):
     monkeypatch.setattr(zh_live, "CACHE", str(data / "zh_cache.json"))
     monkeypatch.setattr(zh_live, "LOG", str(live / "zh.log"))
     monkeypatch.setenv("MIND15_SETUPS_WEB_DIR", str(web))
-    done = zh_live.run(client=FakeClient(), push_page=False)
+    done = zh_live.run(client=FakeClient())
     assert set(done) == {"page.json", "setups.json"}
     assert (live / "page.zh.json").exists() and (live / "setups.zh.json").exists()
-    assert (web / "setups.zh.json").exists() and not (web / "page.zh.json").exists()   # page.zh.json goes by push
+    assert (web / "setups.zh.json").exists() and (web / "page.zh.json").exists()   # served from the SG folder (no push)
     m = json.loads((web / "setups.zh.json").read_text(encoding="utf-8"))
     assert m["zh-CN"]["No side clears the bar."] == "简:No side clears the bar."
 
@@ -157,12 +157,19 @@ def test_live_does_nothing_without_a_key(tmp_path, monkeypatch):
     assert live.start_zh(log=lambda *a: None) is False
 
 
-def test_push_file_only_takes_listed_names(monkeypatch):
-    from engine15 import push
-    monkeypatch.setenv("ENGINE15_PUSH", "1")
-    ok, msg = push.push_file("x", "../../etc/passwd")
-    assert not ok and "refused" in msg
-    assert "page.zh.json" in push._remote("page.zh.json") and "/var/www/aitrading/mind15" in push._remote("page.zh.json")
+def test_names_are_never_sent():
+    got = zh.collect({"books": [{"name": "BH ALPHA (paper)", "note": "flat since the stop"}], "tags": ["trend follow"],
+                      "items": [{"title": "Gold rises", "source": "Reuters Business"}]})
+    assert got == {"flat since the stop", "Gold rises"}
+
+
+def test_book_money_wording_must_survive():
+    en = "+[[0]] USD on the $[[1]] paper book"
+    assert zh.good(en, "在 $[[1]] 模擬帳本上 +[[0]] USD", "zh-TW")
+    assert not zh.good(en, "在 $[[1]] 模擬帳本上 +[[0]] 美元", "zh-TW")      # USD dropped
+    assert not zh.good(en, "在 $[[1]] 的模擬帳本 +[[0]] USD", "zh-TW")              # words between
+    assert zh.good(en, "在 $[[1]] 模拟账本上 +[[0]] USD", "zh-CN")
+    assert not zh.good(en, "在 $[[1]] 模擬帳本上 +[[0]] USD", "zh-CN")             # zh-TW words in zh-CN
 
 
 def test_old_model_name_becomes_the_brand_in_keys():

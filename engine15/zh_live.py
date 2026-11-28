@@ -8,8 +8,9 @@ translation never slows or stops a step, the vault feed or the push. It does not
 (zh.KEY_FILE, /etc/mind15/anthropic.key: placed by the owner, root:mind15 0640; read at run time, never printed).
 
 For each of out/live/page.json, setups.json, stocks.json, b_trail_book.json and landing.json it writes X.zh.json
-beside it; the four Setups-side files are also copied into MIND15_SETUPS_WEB_DIR (as setups.py does), and
-page.zh.json goes to the web box through push.push_file (the same one-connection rule as page.json).
+beside it, and copies each map into MIND15_SETUPS_WEB_DIR (as setups.py does). page.zh.json is served from there too
+(an SG nested alias /mind15/page.zh.json): the web box's push gate accepts page.json's exact command only, so the map is
+never pushed (review of 28 Nov).
 One run at a time (a lock file); one cache for every file (data/zh_cache.json); one line per run in out/live/zh.log.
 
     py -3 -m engine15.zh_live          one run now
@@ -29,7 +30,7 @@ CACHE = os.path.join(DATA, "zh_cache.json")
 LOCK = os.path.join(DATA, "zh.lock")
 LOG = os.path.join(LIVE, "zh.log")
 FILES = ("page.json", "setups.json", "stocks.json", "b_trail_book.json", "landing.json")
-WEB_FILES = ("setups.json", "stocks.json", "b_trail_book.json", "landing.json")
+WEB_FILES = FILES
 WEB_ENV = "MIND15_SETUPS_WEB_DIR"
 STALE_LOCK_S = 3600
 
@@ -70,7 +71,7 @@ def _say(line):
         pass
 
 
-def run(client=None, push_page=True):
+def run(client=None):
     """One pass over FILES. -> {name: (translated, total)}"""
     if client is None:
         key = zh.read_key()
@@ -96,10 +97,6 @@ def run(client=None, push_page=True):
                 os.replace(tmp, os.path.join(web_dir, os.path.basename(out)))
             except OSError as e:
                 _say("web copy of %s not written (%r)" % (os.path.basename(out), e))
-        if name == "page.json" and push_page:
-            from . import push
-            if push.enabled():
-                _say("push page.zh.json: %s" % push.push_file(out, "page.zh.json")[1])
     return done
 
 

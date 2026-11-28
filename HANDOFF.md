@@ -463,8 +463,10 @@ Checks: every [[n]] kept, Chinese present, no banned word. Limits: 600 new patte
 Keys use the brand in place of the model's old name (the Mind 15 page renames it before reading page.json).
 `engine15/zh_live.py` runs after each step as its own process (`live.start_zh`, never waited for) and only when the key
 file exists: `/etc/mind15/anthropic.key` (owner places it, root:mind15 0640; read at run time, never printed). It writes
-page/setups/stocks/b_trail_book/landing `.zh.json` in out/live, copies the four Setups-side ones into
-MIND15_SETUPS_WEB_DIR, and pushes `page.zh.json` with `push.push_file` (fixed names in `push.EXTRA`). Log: out/live/zh.log.
+page/setups/stocks/b_trail_book/landing `.zh.json` in out/live and copies all five into MIND15_SETUPS_WEB_DIR
+(page.zh.json is served from there by an SG nested alias /mind15/page.zh.json: the web box's push gate accepts page.json's
+exact command only, so the map is not pushed). Names (name, tags, source, ...) are never sent; "USD" and the
+"$N paper book" wording must survive or the line is not kept (the Mind 15 page scales book money by 15). Log: out/live/zh.log.
 Needs the `anthropic` package in /data/venv. The pages read the maps on branch `zh-data-maps` of the page repo (the AI
 Trading Bot session merges and deploys); nginx needs the new names served beside their files.
 

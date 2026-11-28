@@ -47,7 +47,8 @@ BANNED = ("kronos", "\u514b\u7f85\u8afe\u65af", "\u514b\u7f57\u8bfa\u65af", "\u3
 SKIP_KEYS = {"url", "link", "href", "id", "uid", "src", "image", "img", "icon", "md5", "sha", "hash", "schema",
              "generated_utc", "as_of", "ts", "time", "t", "utc", "date", "since", "until", "opened", "closed",
              "entry_utc", "exit_utc", "next_open_utc", "sym", "symbol", "ticker", "asset", "code", "why_out",
-             "side", "dir", "direction", "status", "kind", "type", "key", "voice_key", "book", "tf", "interval"}
+             "side", "dir", "direction", "status", "kind", "type", "key", "voice_key", "book", "tf", "interval",
+             "name", "names", "short_name", "label", "tag", "tags", "source", "sources", "site", "publisher"}
 WORD = re.compile(r"[A-Za-z]{2,}")
 LOWER_WORD = re.compile(r"\b[a-z]{2,}\b")
 ISO = re.compile(r"^\d{4}-\d\d-\d\d([ T]\d\d:\d\d(:\d\d)?(\.\d+)?(Z|[+-]\d\d:?\d\d)?)?$")
@@ -71,10 +72,12 @@ Rules:
 - Keep tickers, codes and symbols as written (BTC, ETHUSDT, XAUUSD, USD/JPY, SPX, WTI, ATR(14, 15m), RSI, EMA, T02, R, sd).
 - Keep product and source names as written: AlphaPrediction AI, Mind 15, Binance, OKX, Bybit, Hyperliquid, CoinDesk,
   Cointelegraph, Bloomberg, Reuters and other publishers.
-- Keep "USD" as written. Translate "paper book" as 模擬帳本 (zh-TW) / 模拟账本 (zh-CN).
-- "edge" (an advantage claim) and "lead" both become 領先 / 领先 ("lead of [[0]] pts" -> 領先 [[0]] 分 / 领先 [[0]] 分).
-  "pts" = 分. "long" = 做多, "short" = 做空, "flat" = 空手 (zh-TW) / 空仓 (zh-CN), "stop" = 止損 / 止损,
-  "target" = 目標 / 目标, "trailing stop" = 移動止損 / 移动止损, "setup" = 交易設定 / 交易设定.
+- Keep "USD" as written, right after its number. "$[[0]] paper book" -> "$[[0]] 模擬帳本" (zh-TW) / "$[[0]] 模拟账本" (zh-CN),
+  the amount directly before those words.
+- Use the website's own words (zh-TW / zh-CN): "edge" (an advantage claim) and "lead" both = 領先 / 领先
+  ("lead of [[0]] pts" -> 領先 [[0]] 點 / 领先 [[0]] 点); "pts" = 點 / 点; "long" = 做多; "short" = 做空;
+  "flat" = 空手 / 空仓; "stop" = 停損 / 止损; "trailing stop" = 移動停損 / 移动止损; "target" = 目標 / 目标;
+  "take profit" = 止盈; "setup" = 交易設定 / 交易设定.
 - Words in capitals that are plain English (HOLD SHORT, ENTER LONG, FLAT, UP, DOWN) are translated, not kept.
 - Never add claims, advice, or words that are not in the English. Keep it as short as the English.
 - Plain, natural trading Chinese; no explanations, no quotes around the answer.
@@ -136,13 +139,24 @@ def unmask(pattern, nums):
     return MARK.sub(lambda m: nums[int(m.group(1))] if int(m.group(1)) < len(nums) else m.group(0), pattern)
 
 
-def good(en, zh):
+PAPER_BOOK = {"zh-TW": "模擬帳本", "zh-CN": "模拟账本"}
+
+
+def good(en, zh, lang=None):
     """A translation is kept only when it keeps every mark once, is not empty, has Chinese in it (or equals the
-    English for a name), and has no banned word."""
+    English for a name), and has no banned word. Book money (review of 28 Nov, H3): the Mind 15 page scales "N USD",
+    "$N paper book" and "$Nk" by 15, so "USD" must stay as often as in the English, and each "$[[n]] paper book" must
+    come back as "$[[n]] 模擬帳本" (zh-TW) / "$[[n]] 模拟账本" (zh-CN)."""
     if not isinstance(zh, str) or not zh.strip():
         return False
     if sorted(MARK.findall(en)) != sorted(MARK.findall(zh)):
         return False
+    if en.count("USD") != zh.count("USD"):
+        return False
+    pb = re.findall(r"\$(\[\[\d+\]\]) paper book", en)
+    if pb and lang in PAPER_BOOK:
+        if sorted(re.findall(r"\$(\[\[\d+\]\])\s?" + PAPER_BOOK[lang], zh)) != sorted(pb):
+            return False
     low = zh.lower()
     if any(b in low for b in BANNED):
         return False
@@ -212,7 +226,7 @@ def ask(client, patterns):
         if isinstance(i, int) and 0 <= i < len(patterns):
             p = patterns[i]
             tw, cn = it.get("zh_TW"), it.get("zh_CN")
-            if good(p, tw) and good(p, cn):
+            if good(p, tw, "zh-TW") and good(p, cn, "zh-CN"):
                 out[p] = (tw.strip(), cn.strip())
     return out, spent
 
